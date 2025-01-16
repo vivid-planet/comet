@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as ToolbarStories from "./Toolbar.stories";
 
@@ -18,9 +18,9 @@ Currently supported and built-in components:
 -   `ToolbarBackButton`
 -   `ToolbarBreadcrumbs`
 -   `ToolbarAutomaticTitleItem`
--   `ToolbarFillSpace`
 -   `ToolbarItem`
 -   `ToolbarActions`
+-   `FillSpace`
 
 ### Toolbar
 
@@ -32,23 +32,17 @@ The `ToolbarAutomaticTitleItem` uses the StackApi to evaluate the title. Just dr
 
 If you need a custom title, simple build your own `CustomToolbarTitleItem`. For custom appearance - see more on custom title stories.
 
-<Canvas>
-    <Story of={ToolbarStories.AutomaticTitleItem} />
-</Canvas>
+<Canvas of={ToolbarStories.AutomaticTitleItem} />
 
 ### ToolbarTitleItem
 
 If you only want a consistent Title over the all application, we recommend to use our ToolbarTitleItem. Simple put your Component in it, and if it is a string, it will get a consistent styling over the whole application
 
-<Canvas>
-    <Story of={ToolbarStories.TitleItem} />
-</Canvas>
+<Canvas of={ToolbarStories.TitleItem} />
 
 ### ToolbarTitleItem internationalization
 
-<Canvas>
-    <Story of={ToolbarStories.LocalizedTitleItem} />
-</Canvas>
+<Canvas of={ToolbarStories.LocalizedTitleItem} />
 
 ### ToolbarBreadcrumbs
 
@@ -56,9 +50,7 @@ The ToolbarBreadcrumbs Component uses the StackApi to evaluate all necessary Bre
 
 Breadcrumb entries get displayed side by side and are clickable.
 
-<Canvas>
-    <Story of={ToolbarStories.Breadcrumbs} />
-</Canvas>
+<Canvas of={ToolbarStories.Breadcrumbs} />
 
 ### ToolbarBackButton
 
@@ -66,115 +58,77 @@ The `ToolbarBackButton` uses the `StackApiContext` to evaluate, if the user can 
 
 The back button will only be shown, if there is a `StackApiContext` and the user can go back. If you want to use a custom back button - see more how to customize the back button on custom back button story.
 
-<Canvas>
-    <Story of={ToolbarStories.BackButton} />
-</Canvas>
+<Canvas of={ToolbarStories.BackButton} />
 
-### ToolbarFillSpace
+### FillSpace
 
-The `ToolbarFillSpace` Component is a layout component that can fill space between components, so one can simple move e.g. the buttons to the right side or center them.
+The `FillSpace` Component is a layout component that can fill space between components, so one can simple move e.g. the buttons to the right side or center them.
 
 Here are some examples how one can use this component.
 
-<Canvas>
-    <Story of={ToolbarStories.FillSpaceLeft} />
-</Canvas>
+<Canvas of={ToolbarStories.FillSpaceLeft} />
 
-<Canvas>
-    <Story of={ToolbarStories.FillSpaceRight} />
-</Canvas>
+<Canvas of={ToolbarStories.FillSpaceRight} />
 
-<Canvas>
-    <Story of={ToolbarStories.FillSpaceMiddle} />
-</Canvas>
+<Canvas of={ToolbarStories.FillSpaceMiddle} />
 
-<Canvas>
-    <Story of={ToolbarStories.FillSpaceMiddle2} />
-</Canvas>
+<Canvas of={ToolbarStories.FillSpaceMiddle2} />
 
 ### ToolbarItem
 
 This component is meant to separate components in the toolbar, it adds a consistent separator on the right side.
 
-<Canvas>
-    <Story of={ToolbarStories._ToolbarItem} />
-</Canvas>
+<Canvas of={ToolbarStories._ToolbarItem} />
 
 The `ToolbarItem` can be easily mixed up with other drop in compoents like `ToolbarAutomaticTitleItem`
 
-<Canvas>
-    <Story of={ToolbarStories.ToolbarItemMixingWithOtherComponents} />
-</Canvas>
+<Canvas of={ToolbarStories.ToolbarItemMixingWithOtherComponents} />
 
 ### ToolbarActions
 
-<Canvas>
-    <Story of={ToolbarStories.ToolbarActionsOneAction} />
-</Canvas>
+<Canvas of={ToolbarStories.ToolbarActionsOneAction} />
 
-<Canvas>
-    <Story of={ToolbarStories.ToolbarActionsTwoActions} />
-</Canvas>
+<Canvas of={ToolbarStories.ToolbarActionsTwoActions} />
 
 ### Custom Title Item
 
 Here one can find some examples, how one can deal with custom titles. Add a `ToolbarItem` which encapsulates a `Typography` or maybe any other React component.
 
-<Canvas>
-    <Story of={ToolbarStories.CustomTitleH1} />
-</Canvas>
+<Canvas of={ToolbarStories.CustomTitleH1} />
 
-<Canvas>
-    <Story of={ToolbarStories.CustomTitleH2} />
-</Canvas>
+<Canvas of={ToolbarStories.CustomTitleH2} />
 
 One can also use totally custom components in it.
 
-<Canvas>
-    <Story of={ToolbarStories.CustomTitleH3} />
-</Canvas>
+<Canvas of={ToolbarStories.CustomTitleH3} />
 
 The Toolbar expands automatically if it needs more space
 
-<Canvas>
-    <Story of={ToolbarStories.CustomTitleH4} />
-</Canvas>
+<Canvas of={ToolbarStories.CustomTitleH4} />
 
 ### Custom Back Button
 
-<Canvas>
-    <Story of={ToolbarStories.CustomBackButton} />
-</Canvas>
+<Canvas of={ToolbarStories.CustomBackButton} />
 
 ### Search - Final Form Search
 
-<Canvas>
-    <Story of={ToolbarStories.FinalFormSearch} />
-</Canvas>
+<Canvas of={ToolbarStories.FinalFormSearch} />
 
 ### Search - Final Form Search Custom Icon
 
-<Canvas>
-    <Story of={ToolbarStories.FinalFormSearchCustomIcon} />
-</Canvas>
+<Canvas of={ToolbarStories.FinalFormSearchCustomIcon} />
 
 ### Search - Final Form Input
 
-<Canvas>
-    <Story of={ToolbarStories.WithFinalFormInput} />
-</Canvas>
+<Canvas of={ToolbarStories.WithFinalFormInput} />
 
 ### Search - Autocomplete
 
-<Canvas>
-    <Story of={ToolbarStories.SearchAutocomplete} />
-</Canvas>
+<Canvas of={ToolbarStories.SearchAutocomplete} />
 
 ### Save
 
-<Canvas>
-    <Story of={ToolbarStories.Save} />
-</Canvas>
+<Canvas of={ToolbarStories.Save} />
 
 ### Final Form Save Button
 
@@ -182,17 +136,13 @@ There is also a component (`FinalFormSaveButton`) which automatically handles sa
 
 This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying statuses (disabled, saving, error, success).
 
-<Canvas>
-    <Story of={ToolbarStories._FinalFormSaveButton} />
-</Canvas>
+<Canvas of={ToolbarStories._FinalFormSaveButton} />
 
 ### SplitButton Save
 
 > ⚠️`SplitButton` is deprecated since v7 and shouldn't be used
 
-<Canvas>
-    <Story of={ToolbarStories.SaveSplitButton} />
-</Canvas>
+<Canvas of={ToolbarStories.SaveSplitButton} />
 
 ### Final Form Save Split Button
 
@@ -202,6 +152,4 @@ The `FinalFormSaveSplitButton` component automatically handles **saving** and **
 
 This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying statuses (disabled, saving, saving successfully) and also handles back navigation on automatically.
 
-<Canvas>
-    <Story of={ToolbarStories._FinalFormSaveSplitButton} />
-</Canvas>
+<Canvas of={ToolbarStories._FinalFormSaveSplitButton} />

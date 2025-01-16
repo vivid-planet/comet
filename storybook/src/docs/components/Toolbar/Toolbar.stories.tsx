@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveButton,
@@ -15,7 +16,6 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarBreadcrumbs,
-    ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
     useStackApi,
@@ -23,7 +23,7 @@ import {
 } from "@comet/admin";
 import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
 import { Autocomplete, Button, Grid, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -66,7 +66,7 @@ export const Breadcrumbs = () => {
         <Toolbar>
             <ToolbarBackButton />
             <ToolbarBreadcrumbs />
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <StackSwitchApiContext.Consumer>
                     {(stackSwitchApi) => (
@@ -106,7 +106,7 @@ export const BackButton = () => {
         <Toolbar>
             <ToolbarBackButton />
             <ToolbarAutomaticTitleItem />
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <StackSwitchApiContext.Consumer>
                     {(stackSwitchApi) => (
@@ -130,7 +130,7 @@ export const FillSpaceLeft = {
     render: () => {
         return (
             <Toolbar>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
@@ -145,11 +145,11 @@ export const FillSpaceRight = {
     render: () => {
         return (
             <Toolbar>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
             </Toolbar>
         );
     },
@@ -164,7 +164,7 @@ export const FillSpaceMiddle = {
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
@@ -182,7 +182,7 @@ export const FillSpaceMiddle2 = {
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <Grid container spacing={4}>
                         <Grid item>
@@ -209,7 +209,7 @@ export const FillSpaceMiddle2 = {
                         </Grid>
                     </Grid>
                 </ToolbarActions>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
@@ -262,7 +262,7 @@ export const ToolbarActionsOneAction = {
         return (
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <Button
                         color="primary"
@@ -286,7 +286,7 @@ export const ToolbarActionsTwoActions = {
         return (
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <Grid container spacing={4}>
                         <Grid item>
@@ -404,7 +404,7 @@ export const CustomBackButton = () => {
                             </IconButton>
                         </ToolbarItem>
                     )}
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <StackSwitchApiContext.Consumer>
                             {(stackSwitchApi) => (
@@ -550,11 +550,11 @@ export const SearchAutocomplete = () => {
 };
 
 export const Save = () => {
-    const [saving, setSaving] = React.useState(false);
+    const [saving, setSaving] = useState(false);
     return (
         <Toolbar>
             <ToolbarTitleItem>Save Button</ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <SaveButton
                     color="primary"
@@ -605,7 +605,7 @@ export const _FinalFormSaveButton = () => {
                         <Toolbar>
                             <ToolbarBackButton />
                             <ToolbarTitleItem>Final Form Save Button</ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 {canGoBack ? (
                                     <FinalFormSaveButton />
@@ -635,11 +635,11 @@ export const _FinalFormSaveButton = () => {
 };
 
 export const SaveSplitButton = () => {
-    const [saving, setSaving] = React.useState(false);
+    const [saving, setSaving] = useState(false);
     return (
         <Toolbar>
             <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <SplitButton localStorageKey="Page5.SaveSplitButton" color="primary" variant="contained">
                     <SaveButton
@@ -701,7 +701,7 @@ export const _FinalFormSaveSplitButton = () => {
                         <Toolbar>
                             <ToolbarBackButton />
                             <ToolbarTitleItem>Final Form Save Split Button</ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 {canGoBack ? (
                                     <FinalFormSaveSplitButton localStorageKey="finalformsavesplitbutton" />

@@ -56,6 +56,7 @@ export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
 export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
+export type { FileWithDamUploadMetadata } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { useDamFileUpload } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { createDamFileDependency } from "./dam/dependencies/createDamFileDependency";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
@@ -75,8 +76,13 @@ export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FileUploadField, FileUploadFieldProps } from "./form/file/FileUploadField";
-export { FinalFormFileUpload, finalFormFileUploadFragment, FinalFormFileUploadProps } from "./form/file/FinalFormFileUpload";
-export { GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
+export {
+    FinalFormFileUpload,
+    finalFormFileUploadDownloadableFragment,
+    finalFormFileUploadFragment,
+    FinalFormFileUploadProps,
+} from "./form/file/FinalFormFileUpload";
+export { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
 export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";

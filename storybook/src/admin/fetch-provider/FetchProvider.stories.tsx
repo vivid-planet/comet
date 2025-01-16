@@ -1,10 +1,10 @@
 import { createFetch, FetchProvider, useFetch } from "@comet/admin";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 function ExampleFetch() {
     const fetch = useFetch();
-    const [data, setData] = React.useState<object | null>(null);
-    React.useEffect(() => {
+    const [data, setData] = useState<object | null>(null);
+    useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(`/launches`);
             setData(await response.json());

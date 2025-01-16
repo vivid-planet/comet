@@ -1,6 +1,7 @@
 import { BlobStorageConfig } from "@comet/cms-api";
+import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -143,4 +144,8 @@ export class EnvironmentVariables {
     @MinLength(16)
     @ValidateIf(() => process.env.NODE_ENV === "production")
     SITE_PREVIEW_SECRET: string;
+
+    @IsArray()
+    @Transform(({ value }) => JSON.parse(Buffer.from(value, "base64").toString()))
+    PRIVATE_SITE_CONFIGS: PrivateSiteConfig[];
 }

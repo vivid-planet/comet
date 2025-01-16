@@ -1,5 +1,74 @@
 # @comet/cms-api
 
+## 7.11.0
+
+### Patch Changes
+
+-   fb2297b2d: Fix `notEqual` operation for enum filter
+-   6778c4e97: Prevent the creation of a second home page
+-   Updated dependencies [58a99bbdd]
+    -   @comet/blocks-api@7.11.0
+
+## 7.10.0
+
+### Patch Changes
+
+-   7b2adae8b: API Generator: Don't generate an update input for the single generator
+    -   @comet/blocks-api@7.10.0
+
+## 7.9.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   45fbc54c1: Rename `User` to `UserPermissionsUser` in GraphQL schema
+
+    This prevents naming collisions if a web wants to use a `User` type.
+
+    Additionally prefix remaining user permissions-specific actions with `UserPermissions`.
+
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   02a5bdc68: API Generator: Fix generated types for position code
+-   f20ec6ce5: Make class-validator a peer dependency
+-   Updated dependencies [f20ec6ce5]
+    -   @comet/blocks-api@7.8.0
+
 ## 7.7.0
 
 ### Patch Changes
@@ -404,7 +473,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
@@ -920,7 +989,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 

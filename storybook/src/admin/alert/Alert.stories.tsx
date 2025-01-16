@@ -2,7 +2,6 @@ import { Alert, OkayButton, SaveButton } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import React from "react";
 
 export default {
     title: "@comet/admin/alert/Alert",

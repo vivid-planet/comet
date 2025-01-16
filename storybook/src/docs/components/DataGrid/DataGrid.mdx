@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as DataGridStories from "./DataGrid.stories";
 
@@ -29,21 +29,15 @@ It's up to the application code to pass filterModel, sortModel and page/pageSize
 
 #### Example
 
-<Canvas>
-    <Story of={DataGridStories.UseDataGridRemote} />
-</Canvas>
+<Canvas of={DataGridStories.UseDataGridRemote} />
 
 #### Example Initial Sort
 
-<Canvas>
-    <Story of={DataGridStories.UseDataGridRemoteInitialSort} />
-</Canvas>
+<Canvas of={DataGridStories.UseDataGridRemoteInitialSort} />
 
 #### Example Initial Filter
 
-<Canvas>
-    <Story of={DataGridStories.UseDataGridRemoteInitialFilter} />
-</Canvas>
+<Canvas of={DataGridStories.UseDataGridRemoteInitialFilter} />
 
 ## usePersistentColumnState
 
@@ -64,9 +58,7 @@ Supported states:
 
 #### Example
 
-<Canvas>
-    <Story of={DataGridStories.UsePersistentColumnState} />
-</Canvas>
+<Canvas of={DataGridStories.UsePersistentColumnState} />
 
 ## useBufferedRowCount
 
@@ -85,9 +77,7 @@ Hook for excel export functionality. To use it, the following steps are necessar
 
 Typical Usage Example:
 
-<Canvas>
-    <Story of={DataGridStories.UseDataGridExcelExport} />
-</Canvas>
+<Canvas of={DataGridStories.UseDataGridExcelExport} />
 
 ## Responsive column visibility
 
@@ -101,17 +91,13 @@ When defining the columns, use the `GridColDef` type from `@comet/admin` instead
 In this example, the `First name` and `Last name` columns are combined into a single `Full name` column when the screen size is below 900px.
 Since the `ID` column has no `visible` setting, it will always be shown.
 
-<Canvas>
-    <Story of={DataGridStories.ResponsiveColumns} />
-</Canvas>
+<Canvas of={DataGridStories.ResponsiveColumns} />
 
 ## GridFilterButton
 
 Small Component that can be placed in the Toolbar that will show the Filter. Must be used as DataGrid child as shown in the story below.
 
-<Canvas>
-    <Story of={DataGridStories._GridFilterButton} />
-</Canvas>
+<Canvas of={DataGridStories._GridFilterButton} />
 
 ## CrudContextMenu
 
@@ -123,9 +109,7 @@ Component that can be rendered as ContextMenu in a row that has some basic CRUD 
 -   `onDelete: (options: { client: ApolloClient<object> }) => Promise<void>;`: Shows a "Delete" Menu Item, implementation should delete the row.
 -   `refetchQueries: RefetchQueriesOptions<any, unknown>["include"];`: called on apollo after executing delete or paste
 
-<Canvas>
-    <Story of={DataGridStories._CrudContextMenu} />
-</Canvas>
+<Canvas of={DataGridStories._CrudContextMenu} />
 
 ## CrudMoreActionsMenu
 
@@ -137,13 +121,11 @@ This component is a button with a context menu, that can also display of the num
 
 The `ActionItem` type has the following properties:
 
--   `label: React.ReactNode`: The label of the action.
--   `icon?: React.ReactNode`: The icon of the action displayed at the start of an action.
+-   `label: ReactNode`: The label of the action.
+-   `icon?: ReactNode`: The icon of the action displayed at the start of an action.
 -   `divider?: boolean`: If true, a divider will be displayed below the action.
 
-<Canvas>
-    <Story of={DataGridStories._CrudMoreActionsMenu} />
-</Canvas>
+<Canvas of={DataGridStories._CrudMoreActionsMenu} />
 
 ## DataGrid to Comet Graphl API Converter
 

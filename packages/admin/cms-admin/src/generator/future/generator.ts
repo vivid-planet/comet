@@ -3,7 +3,7 @@ import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { IconProps } from "@mui/material";
-import { GridSortDirection } from "@mui/x-data-grid";
+import { GridFilterItem, GridSortDirection } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -17,7 +17,7 @@ import { UsableFields } from "./generateGrid/usableFields";
 import { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
-type ImportReference = {
+export type ImportReference = {
     name: string;
     import: string;
 };
@@ -29,12 +29,12 @@ type IconObject = Pick<IconProps, "color" | "fontSize"> & {
 type Icon = IconName | IconObject | ImportReference;
 export type Adornment = string | { icon: Icon };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
@@ -55,7 +55,7 @@ export type FormFieldConfig<T> = (
       } & InputBaseFieldConfig)
     | { type: "boolean" }
     | ({ type: "date" } & InputBaseFieldConfig)
-    // TODO | { type: "dateTime"; }
+    | ({ type: "dateTime" } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
           values?: Array<{ value: string; label: string } | string>;
@@ -123,6 +123,7 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
+    fieldName?: string; // this can be used to overwrite field-prop of column-config
 };
 
 export type StaticSelectLabelCellContent = {
@@ -139,9 +140,14 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & BaseColumnConfig;
+) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
+
+type InitialFilterConfig = {
+    items: GridFilterItem[];
+    linkOperator?: "and" | "or";
+};
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
@@ -157,6 +163,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     copyPaste?: boolean;
     readOnly?: boolean;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
+    initialFilter?: InitialFilterConfig;
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
@@ -210,7 +217,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
-                import { finalFormFileUploadFragment } from "@comet/cms-admin";
+                import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 
                 ${gqlDocumentsOutputCode}
             `;
