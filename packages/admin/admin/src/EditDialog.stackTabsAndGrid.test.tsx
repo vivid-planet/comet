@@ -164,6 +164,20 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
+    it("should navigate to the customers tab when clicking on the customers tab", async () => {
+        const rendered = render(
+            <Router history={history}>
+                <StackWithGridAndEditDialog />
+            </Router>,
+        );
+
+        expect(history.location.pathname).toBe("/");
+        expect(rendered.getByText("Add product")).toBeInTheDocument();
+        rendered.getByText("Customers").click();
+        expect(screen.getByText("Customers Page")).toBeInTheDocument();
+        expect(history.location.pathname).toBe("/index/customers"); // TODO: Find out why this is /index/*
+    });
+
     it("should open add dialog when clicking on Add product button in grid toolbar", async () => {
         const rendered = render(
             <Router history={history}>
