@@ -1,6 +1,6 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { LoadingButton, LoadingButtonProps } from "@mui/lab";
-import { ButtonClassKey, ComponentsOverrides } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import { ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -36,7 +36,7 @@ export interface FeedbackButtonProps
             root: typeof LoadingButton;
             tooltip: typeof CometTooltip;
         }>,
-        Omit<LoadingButtonProps, "loading"> {
+        Omit<ButtonProps, "loading"> {
     onClick?: () => void | Promise<void>;
     hasErrors?: boolean;
     loading?: boolean;
