@@ -15,16 +15,17 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
         return <span className={className}>{children}</span>;
     }
 
+    if (targetPage.scope == null) {
+        throw new Error("InternalLinkBlock: targetPage.scope is required");
+    }
+
     return (
         <Link
             href={createSiteUrl({
                 baseUrl: "/",
-                scope:
-                    targetPage.scope != null
-                        ? {
-                              language: (targetPage.scope as Record<string, string>).language,
-                          }
-                        : null,
+                scope: {
+                    language: (targetPage.scope as Record<string, string>).language,
+                },
                 path: targetPage.path,
                 anchor: targetPageAnchor,
             })}
