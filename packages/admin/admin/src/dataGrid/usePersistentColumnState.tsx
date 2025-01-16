@@ -125,7 +125,7 @@ export function usePersistentColumnState(stateKey: string): GridProps {
     }, [columnDimensionsKey]);
 
     const handleColumnWidthChange = useCallback(() => {
-        const newState = apiRef.current.exportState().columns?.dimensions ?? {};
+        const newState = apiRef.current?.exportState().columns?.dimensions ?? {};
         window.localStorage.setItem(columnDimensionsKey, JSON.stringify(newState));
     }, [columnDimensionsKey, apiRef]);
 
@@ -136,7 +136,7 @@ export function usePersistentColumnState(stateKey: string): GridProps {
         return serializedState ? JSON.parse(serializedState) : undefined;
     }, [columnOrderKey]);
     const handleColumnOrderChange = useCallback(() => {
-        const newState = apiRef.current.exportState().columns?.orderedFields ?? undefined;
+        const newState = apiRef.current?.exportState().columns?.orderedFields ?? undefined;
         window.localStorage.setItem(columnOrderKey, JSON.stringify(newState));
     }, [columnOrderKey, apiRef]);
 
