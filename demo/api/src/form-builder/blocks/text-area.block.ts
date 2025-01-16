@@ -1,5 +1,6 @@
 import { BlockField, createBlock, inputToData } from "@comet/blocks-api";
-import { IsString, IsUndefinable } from "class-validator";
+import { IsUndefinable } from "@comet/cms-api";
+import { IsString } from "class-validator";
 
 import { BaseFieldBlockData, BaseFieldBlockInput } from "./base-field.block";
 
