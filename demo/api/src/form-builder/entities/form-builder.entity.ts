@@ -10,7 +10,7 @@ import { FormBuilderInterface } from "../types";
 import { FormRequest } from "./form-request.entity";
 
 @Embeddable()
-@ObjectType("")
+@ObjectType()
 @InputType("FormBuilderContentScopeInput")
 export class FormBuilderContentScope {
     @Property({ columnType: "text" })
