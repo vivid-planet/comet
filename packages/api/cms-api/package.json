@@ -55,7 +55,7 @@
         "graphql-parse-resolve-info": "^4.13.0",
         "graphql-scalars": "^1.23.0",
         "hasha": "^5.2.2",
-        "jose": "^5.2.4",
+        "jose": "^5.9.6",
         "jsonwebtoken": "^9.0.0",
         "jszip": "^3.10.1",
         "jwks-rsa": "^3.0.0",
