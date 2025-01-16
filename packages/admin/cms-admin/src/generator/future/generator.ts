@@ -60,14 +60,12 @@ export type FormFieldConfig<T> = (
           type: "staticSelect";
           values?: Array<{ value: string; label: string } | string>;
           inputType?: "select" | "radio";
-          startAdornment?: Adornment;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
-          startAdornment?: Adornment;
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
