@@ -59,15 +59,6 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     };
 
-    const rows = [
-        { id: "0", productId: "0", amount: "3" },
-        { id: "1", productId: "0", amount: "6" },
-        { id: "2", productId: "0", amount: "2" },
-        { id: "3", productId: "1", amount: "4" },
-        { id: "4", productId: "1", amount: "5" },
-        { id: "5", productId: "1", amount: "7" },
-    ];
-
     function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
         return (
             <DataGridToolbar>
@@ -114,7 +105,14 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                                 },
                                             },
                                         ]}
-                                        rows={rows}
+                                        rows={[
+                                            { id: "0", productId: "0", amount: "3" },
+                                            { id: "1", productId: "0", amount: "6" },
+                                            { id: "2", productId: "0", amount: "2" },
+                                            { id: "3", productId: "1", amount: "4" },
+                                            { id: "4", productId: "1", amount: "5" },
+                                            { id: "5", productId: "1", amount: "7" },
+                                        ]}
                                         components={{
                                             Toolbar: Toolbar,
                                         }}
