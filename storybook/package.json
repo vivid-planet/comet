@@ -44,7 +44,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^6.0.0",
         "ts-dedent": "^2.2.0",
-        "use-debounce": "^6.0.1",
+        "use-debounce": "^10.0.4",
         "uuid": "^11.0.5"
     },
     "devDependencies": {

@@ -150,8 +150,8 @@ importers:
         specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       use-debounce:
-        specifier: ^6.0.1
-        version: 6.0.1(react@17.0.2)
+        specifier: ^10.0.4
+        version: 10.0.4(react@17.0.2)
       uuid:
         specifier: ^11.0.5
         version: 11.0.5
@@ -1023,8 +1023,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
       use-debounce:
-        specifier: ^6.0.1
-        version: 6.0.1(react@17.0.2)
+        specifier: ^10.0.4
+        version: 10.0.4(react@17.0.2)
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -1608,8 +1608,8 @@ importers:
         specifier: ^1.6.6
         version: 1.6.6
       use-debounce:
-        specifier: ^6.0.1
-        version: 6.0.1(react@17.0.2)
+        specifier: ^10.0.4
+        version: 10.0.4(react@17.0.2)
       uuid:
         specifier: ^11.0.5
         version: 11.0.5
@@ -2363,8 +2363,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       use-debounce:
-        specifier: ^6.0.1
-        version: 6.0.1(react@17.0.2)
+        specifier: ^10.0.4
+        version: 10.0.4(react@17.0.2)
       uuid:
         specifier: ^11.0.5
         version: 11.0.5
@@ -15349,11 +15349,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  use-debounce@6.0.1:
-    resolution: {integrity: sha512-kpvIxpa0vOLz/2I2sfNJ72mUeaT2CMNCu5BT1f2HkV9qZK27UVSOFf1sSSu+wjJE4TcR2VTXS2SM569+m3TN7Q==}
-    engines: {node: '>= 10.0.0'}
+  use-debounce@10.0.4:
+    resolution: {integrity: sha512-6Cf7Yr7Wk7Kdv77nnJMf6de4HuDE4dTxKij+RqE9rufDsI6zsbjyAxcH5y2ueJCQAnfgKbzXbZHYlkFwmBlWkw==}
+    engines: {node: '>= 16.0.0'}
     peerDependencies:
-      react: '>=16.8.0'
+      react: '*'
 
   use-isomorphic-layout-effect@1.1.2:
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
@@ -32867,7 +32867,7 @@ snapshots:
     dependencies:
       react: 17.0.2
 
-  use-debounce@6.0.1(react@17.0.2):
+  use-debounce@10.0.4(react@17.0.2):
     dependencies:
       react: 17.0.2
 
