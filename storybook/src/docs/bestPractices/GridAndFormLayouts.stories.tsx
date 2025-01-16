@@ -196,7 +196,7 @@ export const LargeFormOnAPage = {
 
 export const SimpleFormInADialog = {
     render: () => {
-        const Form = ({ id, mode }: { id?: string; mode?: "edit" | "add" }) => {
+        const Form = ({ id, mode = "add" }: { id?: string; mode?: "edit" | "add" }) => {
             const { rows, loading } = useData();
 
             if (mode === "edit" && loading) {
@@ -208,7 +208,7 @@ export const SimpleFormInADialog = {
                     onSubmit={async ({ title, description }) => {
                         window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
-                    mode={mode ?? "add"}
+                    mode={mode}
                     initialValues={rows.find((row) => row.id === id)}
                 >
                     <TextField name="title" required fullWidth variant="horizontal" label="Title" />
