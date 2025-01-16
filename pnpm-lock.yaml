@@ -1822,8 +1822,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0
       dataloader:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.3
+        version: 2.2.3
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
