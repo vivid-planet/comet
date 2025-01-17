@@ -1,4 +1,5 @@
 import {
+    Button,
     CancelButton,
     CrudMoreActionsMenu,
     DataGridToolbar,
@@ -29,7 +30,7 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
@@ -229,9 +230,7 @@ export const SimpleFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" onClick={() => setShowDialog(true)}>
-                            Open dialog
-                        </Button>
+                        <Button onClick={() => setShowDialog(true)}>Open dialog</Button>
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
@@ -297,9 +296,7 @@ export const LargeFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" onClick={() => setShowDialog(true)}>
-                            Open dialog
-                        </Button>
+                        <Button onClick={() => setShowDialog(true)}>Open dialog</Button>
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
@@ -437,7 +434,7 @@ export const GridWithFormInADialog = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setEditingId("add")}>
+                        <Button startIcon={<Add />} onClick={() => setEditingId("add")}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -523,7 +520,7 @@ export const GridWithFormOnAPage = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} component={StackLink} pageName="add" payload="add">
+                        <Button startIcon={<Add />} component={StackLink} pageName="add" payload="add">
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -635,7 +632,7 @@ export const NestedGridsAndFormsWithTabs = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
+                        <Button startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -765,7 +762,7 @@ export const NestedFormInGridInTabsInGrid = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
+                        <Button startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -976,7 +973,7 @@ export const GridWithSelectionInDialog = {
                     <ToolbarAutomaticTitleItem />
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<SelectIcon />} onClick={() => setShowDialog(true)}>
+                        <Button startIcon={<SelectIcon />} onClick={() => setShowDialog(true)}>
                             Select items
                         </Button>
                     </ToolbarActions>

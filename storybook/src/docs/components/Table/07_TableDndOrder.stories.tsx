@@ -1,5 +1,4 @@
-import { TableDndOrder, TableLocalChanges } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, TableDndOrder, TableLocalChanges } from "@comet/admin";
 
 import { dndProviderDecorator } from "../../../dnd.decorator";
 

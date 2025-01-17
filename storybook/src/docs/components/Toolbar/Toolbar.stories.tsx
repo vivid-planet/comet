@@ -1,4 +1,5 @@
 import {
+    Button,
     Field,
     FillSpace,
     FinalForm,
@@ -22,7 +23,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
-import { Autocomplete, Button, Grid, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
+import { Autocomplete, Grid, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -73,8 +74,6 @@ export const Breadcrumbs = () => {
                         <Grid container spacing={4}>
                             <Grid item>
                                 <Button
-                                    color="primary"
-                                    variant="contained"
                                     onClick={() => {
                                         stackSwitchApi.activatePage("page-1", "details");
                                     }}
@@ -84,8 +83,6 @@ export const Breadcrumbs = () => {
                             </Grid>
                             <Grid item>
                                 <Button
-                                    color="primary"
-                                    variant="contained"
                                     onClick={() => {
                                         stackSwitchApi.activatePage("page-2", "details");
                                     }}
@@ -111,8 +108,6 @@ export const BackButton = () => {
                 <StackSwitchApiContext.Consumer>
                     {(stackSwitchApi) => (
                         <Button
-                            variant="contained"
-                            color="primary"
                             onClick={() => {
                                 stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                             }}
@@ -187,8 +182,6 @@ export const FillSpaceMiddle2 = {
                     <Grid container spacing={4}>
                         <Grid item>
                             <Button
-                                color="primary"
-                                variant="contained"
                                 onClick={() => {
                                     alert("clicked Action 1");
                                 }}
@@ -198,8 +191,7 @@ export const FillSpaceMiddle2 = {
                         </Grid>
                         <Grid item>
                             <Button
-                                color="secondary"
-                                variant="contained"
+                                variant="secondary"
                                 onClick={() => {
                                     alert("clicked Action 2");
                                 }}
@@ -265,8 +257,6 @@ export const ToolbarActionsOneAction = {
                 <FillSpace />
                 <ToolbarActions>
                     <Button
-                        color="primary"
-                        variant="contained"
                         onClick={() => {
                             alert("clicked Action");
                         }}
@@ -291,8 +281,6 @@ export const ToolbarActionsTwoActions = {
                     <Grid container spacing={4}>
                         <Grid item>
                             <Button
-                                color="primary"
-                                variant="contained"
                                 onClick={() => {
                                     alert("clicked Action 1");
                                 }}
@@ -302,8 +290,7 @@ export const ToolbarActionsTwoActions = {
                         </Grid>
                         <Grid item>
                             <Button
-                                color="secondary"
-                                variant="contained"
+                                variant="secondary"
                                 onClick={() => {
                                     alert("clicked Action 2");
                                 }}
@@ -409,8 +396,6 @@ export const CustomBackButton = () => {
                         <StackSwitchApiContext.Consumer>
                             {(stackSwitchApi) => (
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     onClick={() => {
                                         stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                                     }}
@@ -611,8 +596,6 @@ export const _FinalFormSaveButton = () => {
                                     <FinalFormSaveButton />
                                 ) : (
                                     <Button
-                                        variant="contained"
-                                        color="primary"
                                         onClick={() => {
                                             stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                                         }}
@@ -707,8 +690,6 @@ export const _FinalFormSaveSplitButton = () => {
                                     <FinalFormSaveSplitButton localStorageKey="finalformsavesplitbutton" />
                                 ) : (
                                     <Button
-                                        variant="contained"
-                                        color="primary"
                                         onClick={() => {
                                             stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                                         }}

@@ -1,5 +1,5 @@
-import { FormSection, useStoredState } from "@comet/admin";
-import { Button, InputBase } from "@mui/material";
+import { Button, FormSection, useStoredState } from "@comet/admin";
+import { InputBase, Stack } from "@mui/material";
 
 export default {
     title: "Docs/Hooks/useStoredState",
@@ -10,23 +10,23 @@ export const LocalStorage = {
         const [storedState, setStoredState] = useStoredState<number>("stored_state_stories_key", 0);
         return (
             <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        setStoredState(storedState + 1);
-                    }}
-                >
-                    Increment Stored State
-                </Button>
-                <Button
-                    color="primary"
-                    onClick={() => {
-                        setStoredState(0);
-                    }}
-                >
-                    Reset
-                </Button>
+                <Stack direction="row" spacing={2}>
+                    <Button
+                        onClick={() => {
+                            setStoredState(storedState + 1);
+                        }}
+                    >
+                        Increment Stored State
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            setStoredState(0);
+                        }}
+                    >
+                        Reset
+                    </Button>
+                </Stack>
             </FormSection>
         );
     },

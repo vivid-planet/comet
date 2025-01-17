@@ -1,5 +1,4 @@
-import { Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
 import { Form } from "react-final-form";
 
 interface Option {
@@ -112,9 +111,7 @@ export const AutocompleteAsyncSelect = {
                                     multiple
                                     fullWidth
                                 />
-                                <Button color="primary" variant="contained" type="submit">
-                                    Submit
-                                </Button>
+                                <Button type="submit">Submit</Button>
                             </form>
                         )}
                     />

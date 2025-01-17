@@ -1,4 +1,5 @@
 import {
+    Button,
     Stack,
     StackBackButton,
     StackBreadcrumbs,
@@ -14,7 +15,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft, ArrowRight } from "@comet/admin-icons";
-import { Button, IconButton, Link } from "@mui/material";
+import { IconButton, Link } from "@mui/material";
 
 import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
@@ -336,6 +337,7 @@ export const StackLinkButton = {
                 <StackSwitch>
                     <StackPage name="page1">
                         <h3>Page 1</h3>
+                        {/* @ts-expect-error TODO: Fix component-prop in Button */}
                         <Button component={StackLink} pageName="page2" payload="test">
                             StackLink-based Button to page2
                         </Button>
@@ -347,6 +349,7 @@ export const StackLinkButton = {
                     </StackPage>
                     <StackPage name="page2">
                         <h3>Page 2</h3>
+                        {/* @ts-expect-error TODO: Fix component-prop in Button */}
                         <Button component={StackLink} pageName="page1" payload="test">
                             StackLink-based Button to page1
                         </Button>
