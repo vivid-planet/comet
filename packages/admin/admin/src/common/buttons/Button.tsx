@@ -9,7 +9,7 @@ import {
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -62,7 +62,7 @@ const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps,
     return mobileIcon;
 };
 
-export const Button = (inProps: ButtonProps) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>((inProps, ref) => {
     const {
         slotProps,
         variant = "primary",
@@ -94,6 +94,7 @@ export const Button = (inProps: ButtonProps) => {
         ...restProps,
         ownerState,
         ...slotProps?.root,
+        ref,
     };
 
     if (ownerState.usingResponsiveBehavior) {
@@ -111,7 +112,7 @@ export const Button = (inProps: ButtonProps) => {
             {children}
         </Root>
     );
-};
+});
 
 const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
     componentName: "Button",
