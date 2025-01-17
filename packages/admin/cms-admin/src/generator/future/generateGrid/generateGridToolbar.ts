@@ -22,23 +22,18 @@ export const generateGridToolbar = ({
     instanceGqlType,
     gqlType,
 }: Options) => {
-    const showMoreActionsMenu = excelExport;
-
     return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
-                ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
-              ${
-                  allowAdding
-                      ? renderToolbarActions(
-                            forwardToolbarAction,
-                            getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
-                        )
-                      : ""
-              }
+              ${renderToolbarActions({
+                  forwardToolbarAction,
+                  addItemText: getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
+                  excelExport,
+                  allowAdding,
+              })}
             </DataGridToolbar>
         );
     }`.replace(/^\s+\n/gm, "");
@@ -83,31 +78,44 @@ const filterItem = `<ToolbarItem>
     <GridFilterButton />
 </ToolbarItem>`;
 
-const renderMoreActionsMenu = (excelExport: boolean | undefined) => {
-    return `<CrudMoreActionsMenu
+type RenderToolbarActionsOptions = {
+    forwardToolbarAction: boolean | undefined;
+    addItemText: string;
+    excelExport: boolean | undefined;
+    allowAdding: boolean | undefined;
+};
+
+const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, allowAdding }: RenderToolbarActionsOptions) => {
+    const showMoreActionsMenu = excelExport;
+
+    if (!showMoreActionsMenu && !allowAdding) {
+        return "";
+    }
+
+    const moreActionsMenu = `<CrudMoreActionsMenu
+        responsive
         overallActions={[
             ${
                 excelExport
                     ? `{
-                label: <FormattedMessage {...messages.downloadAsExcel} />,
-                icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                onClick: () => exportApi.exportGrid(),
-                disabled: exportApi.loading,
-            }`
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    }`
                     : ""
             }
         ]}
     />`;
-};
 
-const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
-    if (forwardToolbarAction) {
-        return `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`;
-    }
+    const defaultAddItemButton = `<Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+        ${addItemText}
+    </Button>`;
+
+    const addAction = forwardToolbarAction ? "{toolbarAction}" : defaultAddItemButton;
 
     return `<ToolbarActions>
-        <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-            ${addItemText}
-        </Button>
+        ${showMoreActionsMenu ? moreActionsMenu : ""}
+        ${allowAdding ? addAction : ""}
     </ToolbarActions>`;
 };
