@@ -1925,8 +1925,8 @@ importers:
         specifier: workspace:^7.11.0
         version: link:../../eslint-config
       '@golevelup/ts-jest':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.6.1
+        version: 0.6.1
       '@kubernetes/client-node':
         specifier: ^0.18.1
         version: 0.18.1
@@ -4950,8 +4950,8 @@ packages:
       '@nestjs/common': ^10.x
       '@nestjs/core': ^10.x
 
-  '@golevelup/ts-jest@0.4.0':
-    resolution: {integrity: sha512-ehgllV/xU8PC+yVyEUtTzhiSQKsr7k5Jz74B6dtCaVJz7/Vo7JiaACsCLvD7/iATlJUAEqvBson0OHewD3JDzQ==}
+  '@golevelup/ts-jest@0.6.1':
+    resolution: {integrity: sha512-ubs2xao8q2BsFWD6g2GnkWLLIeVHsPQKYMihzk3v0ptegKJhlNRZvk8wodDx2U2MI7cyKh43mueafZ9xpYdwHQ==}
 
   '@graphql-codegen/add@3.2.3':
     resolution: {integrity: sha512-sQOnWpMko4JLeykwyjFTxnhqjd/3NOG2OyMuvK76Wnnwh8DRrNf2VEs2kmSvLl7MndMlOj7Kh5U154dVcvhmKQ==}
@@ -20246,7 +20246,7 @@ snapshots:
       '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       lodash: 4.17.21
 
-  '@golevelup/ts-jest@0.4.0': {}
+  '@golevelup/ts-jest@0.6.1': {}
 
   '@graphql-codegen/add@3.2.3(graphql@15.10.1)':
     dependencies:
