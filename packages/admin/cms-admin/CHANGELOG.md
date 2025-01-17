@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 6.18.1
+
+### Patch Changes
+
+-   e61ebdd9e: Hide the "Dependents" tab in the DAM for users without the permission `dependencies`
+    -   @comet/admin@6.18.1
+    -   @comet/admin-date-time@6.18.1
+    -   @comet/admin-icons@6.18.1
+    -   @comet/admin-rte@6.18.1
+    -   @comet/admin-theme@6.18.1
+    -   @comet/blocks-admin@6.18.1
+
 ## 6.18.0
 
 ### Minor Changes
