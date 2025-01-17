@@ -1,16 +1,5 @@
 import { gql } from "@apollo/client";
-import {
-    Loading,
-    MainContent,
-    messages,
-    RouterPrompt,
-    RouterTab,
-    RouterTabs,
-    Toolbar,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { FillSpace, Loading, MainContent, messages, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { AdminComponentRoot } from "@comet/blocks-admin";
 import { ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
@@ -48,7 +37,7 @@ const usePage = createUsePage({
     `,
     updateMutation: gql`
         mutation UpdateLink($pageId: ID!, $input: LinkInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
-            saveLink(linkId: $pageId, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
+            saveLink(id: $pageId, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
                 id
                 content
                 updatedAt
@@ -109,7 +98,7 @@ export const EditLink = ({ id }: Props) => {
                     </IconButton>
                 </ToolbarItem>
                 <PageName pageId={id} />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>{pageSaveButton}</ToolbarItem>
             </Toolbar>
             <MainContent>

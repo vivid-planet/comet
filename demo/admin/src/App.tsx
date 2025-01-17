@@ -26,6 +26,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
 
 import { ContentScopeProvider } from "./common/ContentScopeProvider";
+import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
@@ -67,7 +68,7 @@ export function App() {
                                         siteConfig.scope.domain === "secondary"
                                             ? `${siteConfig.url}/block-preview`
                                             : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
-                                    sitePreviewApiUrl: `${siteConfig.url}/api/site-preview`,
+                                    sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
                                 };
                             },
                         }}
@@ -109,6 +110,7 @@ export function App() {
                                                         }}
                                                         pageTreeCategories={pageTreeCategories}
                                                         pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                     >
                                                         <ErrorDialogHandler />
                                                         <CurrentUserProvider>

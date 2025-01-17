@@ -1,7 +1,7 @@
 import { createBlocksBlock } from "@comet/blocks-admin";
 import { AnchorBlock, DamImageBlock } from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
-import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
+import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
@@ -19,7 +19,6 @@ import { BillboardTeaserBlock } from "./BillboardTeaserBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
 import { ContentGroupBlock } from "./ContentGroupBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
-import { ImageLinkBlock } from "./ImageLinkBlock";
 import { KeyFactsBlock } from "./KeyFactsBlock";
 import { TeaserBlock } from "./TeaserBlock";
 
@@ -29,23 +28,23 @@ export const PageContentBlock = createBlocksBlock({
         accordion: AccordionBlock,
         anchor: AnchorBlock,
         billboardTeaser: BillboardTeaserBlock,
-        callToActionList: StandaloneCallToActionListBlock,
-        columns: ColumnsBlock,
-        contentGroup: ContentGroupBlock,
-        fullWidthImage: FullWidthImageBlock,
-        heading: StandaloneHeadingBlock,
-        image: DamImageBlock,
-        imageLink: ImageLinkBlock,
-        keyFacts: KeyFactsBlock,
-        linkList: LinkListBlock,
-        media: StandaloneMediaBlock,
-        mediaGallery: MediaGalleryBlock,
-        newsDetail: NewsDetailBlock,
-        newsList: NewsListBlock,
-        richText: RichTextBlock,
         space: SpaceBlock,
         teaser: TeaserBlock,
+        richtext: RichTextBlock,
+        heading: StandaloneHeadingBlock,
+        columns: ColumnsBlock,
+        callToActionList: StandaloneCallToActionListBlock,
+        keyFacts: KeyFactsBlock,
+        media: StandaloneMediaBlock,
+        contentGroup: ContentGroupBlock,
+        mediaGallery: MediaGalleryBlock,
+
+        image: DamImageBlock,
+        newsDetail: NewsDetailBlock,
+        newsList: NewsListBlock,
+        layout: LayoutBlock,
         textImage: TextImageBlock,
+        fullWidthImage: FullWidthImageBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
