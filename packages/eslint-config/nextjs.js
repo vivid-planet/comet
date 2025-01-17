@@ -36,8 +36,21 @@ module.exports = {
                     "error",
                     {
                         selector:
-                            "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name=NODE_ENV]",
-                        message: "Avoid using environment variables other than NODE_ENV",
+                            "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name!=NODE_ENV]",
+                        message: "Environment variables other than NODE_ENV are not allowed in next.config.js",
+                    },
+                ],
+            },
+        },
+        {
+            files: ["*.loader.ts"],
+            rules: {
+                "no-restricted-syntax": [
+                    "error",
+                    {
+                        selector:
+                            "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier]",
+                        message: "Environment variables are not allowed in loaders",
                     },
                 ],
             },
