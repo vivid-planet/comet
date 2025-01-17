@@ -56,7 +56,7 @@
         "pnpm": "9.15.4"
     },
     "dependencies": {
-        "@changesets/cli": "^2.26.0"
+        "@changesets/cli": "^2.27.11"
     },
     "pnpm": {
         "packageExtensions": {
