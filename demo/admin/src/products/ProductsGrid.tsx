@@ -57,7 +57,6 @@ function ProductsGridToolbar() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarItem>
-                {/* @ts-expect-error TODO: Fix component-prop in Button */}
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>

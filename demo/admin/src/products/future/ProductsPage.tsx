@@ -47,7 +47,6 @@ export function ProductsPage() {
                     <StackMainContent fullHeight>
                         <ProductsGrid
                             toolbarAction={
-                                // @ts-expect-error TODO: Fix component-prop in Button
                                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                                 </Button>
