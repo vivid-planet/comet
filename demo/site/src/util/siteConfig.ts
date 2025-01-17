@@ -1,5 +1,5 @@
-import { previewParams } from "@comet/cms-site";
-import type { PublicSiteConfig } from "@src/site-configs";
+import { previewParams, SitePreviewData } from "@comet/cms-site";
+import type { ContentScope, PublicSiteConfig } from "@src/site-configs";
 import { headers } from "next/headers";
 
 export function getHostByHeaders(headers: Headers) {
@@ -39,4 +39,48 @@ export async function getSiteConfig() {
     const siteConfig = await getSiteConfigForHost(host);
     if (!siteConfig) throw new Error(`SiteConfig not found for host ${host}`);
     return siteConfig;
+}
+
+type DomainInfo = {
+    domain: string;
+    previewData?: SitePreviewData;
+};
+
+export async function createEncodedDomain(headers: Headers) {
+    const host = getHostByHeaders(headers);
+    const sitePreviewParams = await previewParams({ skipDraftModeCheck: true });
+    const siteConfig = await getSiteConfigForHost(host);
+    if (!siteConfig) throw new Error(`SiteConfig not found for host ${host}`);
+
+    const domainInfo: DomainInfo = {
+        domain: siteConfig.scope.domain,
+        previewData: sitePreviewParams?.previewData,
+    };
+    return Buffer.from(JSON.stringify(domainInfo)).toString("base64");
+}
+
+type DecodedPageProps<T> = T & {
+    scope: ContentScope;
+    siteConfig: PublicSiteConfig;
+    previewData?: SitePreviewData;
+    isDraftModeEnabled: boolean;
+};
+
+export function decodePageProps<T extends { params: { domain: string; language?: string } }>(props: T): DecodedPageProps<T> {
+    const params = props.params;
+    const domainInfo = JSON.parse(Buffer.from(decodeURIComponent(params.domain), "base64").toString("utf-8")) as DomainInfo;
+    return {
+        scope: {
+            domain: domainInfo.domain,
+            language: params.language || "en",
+        },
+        ...props,
+        params: {
+            ...params,
+            domain: domainInfo.domain,
+        },
+        siteConfig: getSiteConfigForDomain(domainInfo.domain),
+        isDraftModeEnabled: !!domainInfo.previewData,
+        previewData: domainInfo.previewData,
+    };
 }

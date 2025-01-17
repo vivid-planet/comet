@@ -1,9 +1,11 @@
-import { gql, previewParams } from "@comet/cms-site";
+export const dynamic = "error";
+
+import { gql, SitePreviewData } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
-import { GQLPageTreeNodeScope, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import { decodePageProps, getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
@@ -27,9 +29,9 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode({ domain, language, path }: Props["params"]) {
+async function fetchPageTreeNode({ domain, language, path }: Props["params"], previewData: SitePreviewData | undefined) {
     const skipPage = !getSiteConfigForDomain(domain).scope.languages.includes(language);
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language }, previewData: undefined };
+    const scope = { domain, language };
     const graphQLFetch = createGraphQLFetch(previewData);
     const pathname = `/${(path ?? []).join("/")}`;
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
@@ -37,7 +39,7 @@ async function fetchPageTreeNode({ domain, language, path }: Props["params"]) {
         {
             skipPage,
             path: pathname,
-            scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
+            scope,
             redirectSource: `/${language}${pathname !== "/" ? pathname : ""}`,
             redirectScope: { domain: scope.domain },
         },
@@ -49,11 +51,10 @@ type Props = {
     params: { path: string[]; domain: string; language: string };
 };
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-    // TODO support multiple domains, get domain by Host header
-    const { scope } = (await previewParams()) || { scope: { domain: params.domain, language: params.language } };
+export async function generateMetadata(pageProps: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const { scope, params, previewData } = decodePageProps(pageProps);
 
-    const data = await fetchPageTreeNode(params);
+    const data = await fetchPageTreeNode(params, previewData);
 
     if (!data.pageTreeNodeByPath?.documentType) {
         return {};
@@ -71,11 +72,10 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     return generateMetadata(props, parent);
 }
 
-export default async function Page({ params }: Props) {
-    // TODO support multiple domains, get domain by Host header
-    const { scope } = (await previewParams()) || { scope: { domain: params.domain, language: params.language } };
+export default async function Page(pageProps: Props) {
+    const { scope, params, previewData } = decodePageProps(pageProps);
 
-    const data = await fetchPageTreeNode(params);
+    const data = await fetchPageTreeNode(params, previewData);
 
     if (!data.pageTreeNodeByPath?.documentType) {
         if (data.redirectBySource?.target) {
