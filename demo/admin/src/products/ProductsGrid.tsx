@@ -72,7 +72,7 @@ function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
                         },
                     ]}
                 />
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarActions>

@@ -37,12 +37,12 @@ function ProductVariantsGridToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
+            <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newVariant" defaultMessage="New Variant" />
                 </Button>
             </ToolbarItem>
