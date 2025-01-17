@@ -41,7 +41,7 @@ function ManufacturersGridToolbar() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>
