@@ -82,7 +82,7 @@
         "@aws-sdk/types": "3.723.0",
         "@comet/eslint-config": "workspace:^7.11.0",
         "@golevelup/ts-jest": "^0.6.1",
-        "@kubernetes/client-node": "^0.18.1",
+        "@kubernetes/client-node": "^0.22.3",
         "@mikro-orm/cli": "^6.4.3",
         "@mikro-orm/core": "^6.4.3",
         "@mikro-orm/migrations": "^6.4.3",
