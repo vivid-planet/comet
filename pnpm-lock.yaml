@@ -21,8 +21,8 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0
       '@formatjs/cli':
-        specifier: ^6.3.15
-        version: 6.3.15
+        specifier: ^6.4.0
+        version: 6.4.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
@@ -163,8 +163,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@formatjs/cli':
-        specifier: ^6.3.15
-        version: 6.3.15
+        specifier: ^6.4.0
+        version: 6.4.0
       '@graphql-codegen/add':
         specifier: ^3.2.3
         version: 3.2.3(graphql@15.10.1)
@@ -422,8 +422,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/site/cms-site
       '@formatjs/cli':
-        specifier: ^6.3.15
-        version: 6.3.15
+        specifier: ^6.4.0
+        version: 6.4.0
       '@next/bundle-analyzer':
         specifier: ^14.2.23
         version: 14.2.23
@@ -540,8 +540,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/site/cms-site
       '@formatjs/cli':
-        specifier: ^6.3.15
-        version: 6.3.15
+        specifier: ^6.4.0
+        version: 6.4.0
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
@@ -4864,8 +4864,8 @@ packages:
   '@fontsource/roboto@4.5.8':
     resolution: {integrity: sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==}
 
-  '@formatjs/cli@6.3.15':
-    resolution: {integrity: sha512-2H2xwKSRCgb43LAGU6bFPZI7a6U6Nn1C/bb9bgEdUKULzvphJxrrUoE+rUWyDByUGcZmuV2ZySWCoeSbWGCoUQ==}
+  '@formatjs/cli@6.4.0':
+    resolution: {integrity: sha512-6mPutYISyrlzweo0faboyiu++K452wr0GQKAOb0hRlKVp74ZeQTyEU3EOLFCtZF/4tn+zJmSUQups7MH+O0hSw==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
@@ -20157,7 +20157,7 @@ snapshots:
 
   '@fontsource/roboto@4.5.8': {}
 
-  '@formatjs/cli@6.3.15': {}
+  '@formatjs/cli@6.4.0': {}
 
   '@formatjs/ecma402-abstract@1.14.3':
     dependencies:
