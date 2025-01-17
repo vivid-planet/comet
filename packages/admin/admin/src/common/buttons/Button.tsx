@@ -9,7 +9,8 @@ import {
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { forwardRef, ReactNode } from "react";
+import { OverridableComponent, OverridableTypeMap } from "@mui/material/OverridableComponent";
+import { ElementType, ForwardedRef, forwardRef, ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -20,7 +21,7 @@ type Slot = "root" | "mobileTooltip";
 type ComponentState = Variant | "usingResponsiveBehavior";
 export type ButtonClassKey = Slot | ComponentState;
 
-export type ButtonProps = Omit<MuiButtonProps, "variant" | "color"> &
+export type ButtonProps<C extends ElementType = "button"> = Omit<MuiButtonProps<C>, "variant" | "color"> &
     ThemedComponentBaseProps<{
         root: typeof MuiButton;
         mobileTooltip: typeof Tooltip;
@@ -30,6 +31,11 @@ export type ButtonProps = Omit<MuiButtonProps, "variant" | "color"> &
         mobileIcon?: "auto" | "startIcon" | "endIcon" | ReactNode;
         mobileBreakpoint?: Breakpoint;
     };
+
+interface ButtonTypeMap<C extends ElementType = "button"> extends OverridableTypeMap {
+    props: ButtonProps<C>;
+    defaultComponent: C;
+}
 
 type OwnerState = {
     variant: Variant;
@@ -62,7 +68,7 @@ const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps,
     return mobileIcon;
 };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>((inProps, ref) => {
+export const Button = forwardRef(<C extends ElementType = "button">(inProps: ButtonProps<C>, ref: ForwardedRef<any>) => {
     const {
         slotProps,
         variant = "primary",
@@ -112,7 +118,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((inProps, ref) 
             {children}
         </Root>
     );
-});
+}) as OverridableComponent<ButtonTypeMap>;
 
 const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
     componentName: "Button",
