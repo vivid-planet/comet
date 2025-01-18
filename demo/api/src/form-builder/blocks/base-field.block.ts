@@ -1,16 +1,29 @@
-import { BlockData, BlockField, BlockInput, inputToData } from "@comet/blocks-api";
+import {
+    BlockData,
+    BlockDataInterface,
+    BlockField,
+    BlockInput,
+    ChildBlock,
+    ChildBlockInput,
+    ExtractBlockInput,
+    inputToData,
+} from "@comet/blocks-api";
 import { IsUndefinable } from "@comet/cms-api";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsBoolean, IsString } from "class-validator";
 
 export class BaseFieldBlockData extends BlockData {
     @BlockField({ nullable: true })
     label?: string;
 
-    @BlockField()
-    required: boolean;
+    @BlockField({ nullable: true })
+    fieldName?: string;
 
     @BlockField()
-    name: string;
+    mandatory: boolean;
+
+    @ChildBlock(RichTextBlock)
+    helperText?: BlockDataInterface;
 }
 
 export class BaseFieldBlockInput extends BlockInput {
@@ -19,13 +32,17 @@ export class BaseFieldBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     label?: string;
 
+    @IsString()
+    @IsUndefinable()
+    @BlockField({ nullable: true })
+    fieldName?: string;
+
     @IsBoolean()
     @BlockField()
-    required: boolean;
+    mandatory: boolean;
 
-    @IsString()
-    @BlockField()
-    name: string;
+    @ChildBlockInput(RichTextBlock)
+    helperText?: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): BaseFieldBlockData {
         return inputToData(BaseFieldBlockData, this);

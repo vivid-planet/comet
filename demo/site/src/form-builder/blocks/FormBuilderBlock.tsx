@@ -7,13 +7,19 @@ import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 import { styled } from "styled-components";
 
-import { TextAreaBlock } from "./TextAreaBlock";
-import { TextInputBlock } from "./TextInputBlock";
+import { CheckboxListBlock } from "./fields/CheckboxListBlock";
+import { RadioBlock } from "./fields/RadioBlock";
+import { SelectBlock } from "./fields/SelectBlock";
+import { TextAreaBlock } from "./fields/TextAreaBlock";
+import { TextInputBlock } from "./fields/TextInputBlock";
 
 const getSupportedBlocks = (formId: string): SupportedBlocks => {
     return {
         textInput: (props) => <TextInputBlock data={props} formId={formId} />,
         textArea: (props) => <TextAreaBlock data={props} formId={formId} />,
+        select: (props) => <SelectBlock data={props} formId={formId} />,
+        checkboxList: (props) => <CheckboxListBlock data={props} formId={formId} />,
+        radio: (props) => <RadioBlock data={props} formId={formId} />,
     };
 };
 

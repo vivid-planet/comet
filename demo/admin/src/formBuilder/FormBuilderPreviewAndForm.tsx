@@ -27,7 +27,6 @@ import {
 } from "@comet/cms-admin";
 import { Button } from "@mui/material";
 import { GQLFormBuilderInput } from "@src/graphql.generated";
-import isEqual from "lodash.isequal";
 import { Fragment } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
@@ -152,7 +151,6 @@ export default function FormBuilderPreviewAndForm({ id }: FormBuilderPreviewAndF
                 <FinalForm<FormBuilderState>
                     mode="edit"
                     onSubmit={handleSubmit}
-                    initialValuesEqual={isEqual}
                     initialValues={{
                         name: state.name,
                         submitButtonText: state.submitButtonText,
@@ -231,7 +229,7 @@ const FormAndPreview = ({ state }: FormContentProps) => {
                     ),
                     content: (
                         <AdminComponentRoot>
-                            <Field name="blocks" isEqual={isEqual} component={FFFormBuilderBlock} fullWidth />
+                            <Field name="blocks" component={FFFormBuilderBlock} fullWidth />
                         </AdminComponentRoot>
                     ),
                 },

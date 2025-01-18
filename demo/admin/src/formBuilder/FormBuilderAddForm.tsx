@@ -4,7 +4,6 @@ import { useApolloClient } from "@apollo/client";
 import { FinalForm, FinalFormSubmitEvent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { GQLFormBuilderContentScopeInput } from "@src/graphql.generated";
 import { FormApi } from "final-form";
-import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -50,14 +49,7 @@ export function FormBuilderAddForm({ scope }: FormProps): React.ReactElement {
     };
 
     return (
-        <FinalForm<FormValues>
-            apiRef={formApiRef}
-            onSubmit={handleSubmit}
-            mode="add"
-            initialValues={initialValues}
-            initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
-        >
+        <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode="add" initialValues={initialValues} subscription={{}}>
             {() => (
                 <>
                     <TextField
