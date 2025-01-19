@@ -238,14 +238,19 @@ export const createUsePage: CreateUsePage =
 
             // manage sync of page state and gql-api
             useEffect(() => {
-                const generateStateFromSession = async (sessionState: string): Promise<PS> => {
-                    const { output, pageState } = JSON.parse(sessionState) as { output: Output; pageState: PS };
-                    for (const [key, value] of Object.entries(rootBlocks)) {
-                        const state = await value.output2State(output[key], blockContext);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (pageState as any).document[key] = state;
+                const generateStateFromSession = async (sessionState: string): Promise<PS | undefined> => {
+                    try {
+                        const { output, pageState } = JSON.parse(sessionState) as { output: Output; pageState: PS };
+                        for (const [key, value] of Object.entries(rootBlocks)) {
+                            const state = await value.output2State(output[key], blockContext);
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (pageState as any).document[key] = state;
+                        }
+                        return { ...pageState };
+                    } catch (error) {
+                        console.error(error);
+                        return undefined;
                     }
-                    return { ...pageState };
                 };
                 const loadPageState = async () => {
                     const sessionStoragePageState = window.sessionStorage.getItem(`pageState_${pageId}`);
@@ -271,7 +276,7 @@ export const createUsePage: CreateUsePage =
 
                         if (sessionStoragePageState) {
                             const state = await generateStateFromSession(sessionStoragePageState);
-                            setPageState(state);
+                            setPageState(state ? state : page);
                             setReferenceOutput(generateOutput(page));
                             window.sessionStorage.removeItem(`pageState_${pageId}`);
                         } else if (!pageState) {
