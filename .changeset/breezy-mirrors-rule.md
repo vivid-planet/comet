@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-Fix a Bug that results in duplicate ContentScopes
+Prevent duplicate content scopes in `UserPermissionsService.getContentScopes`

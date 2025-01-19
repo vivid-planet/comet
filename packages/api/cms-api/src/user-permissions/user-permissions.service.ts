@@ -6,6 +6,7 @@ import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
+import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
@@ -145,12 +146,10 @@ export class UserPermissionsService {
                 contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
             }
         }
-
-        return contentScopes
-            .map((cs) => JSON.stringify(cs))
-            .filter((value, index, self) => self.indexOf(value) === index)
-            .map((cs) => JSON.parse(cs))
-            .map((cs) => sortContentScopeKeysAlphabetically(cs));
+        return uniqWith(
+            contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs)),
+            isEqual,
+        );
     }
 
     normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
