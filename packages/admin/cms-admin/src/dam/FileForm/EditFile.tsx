@@ -51,10 +51,9 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    license?:
-        | Omit<GQLLicenseInput, "type"> & {
-              type: LicenseType;
-          };
+    license?: Omit<GQLLicenseInput, "type"> & {
+        type: LicenseType;
+    };
 }
 
 interface EditFormProps {

@@ -8,23 +8,23 @@
 
 ### Minor Changes
 
--   7cea765fe: Add UI for Impersonation Feature
+- 7cea765fe: Add UI for Impersonation Feature
 
-    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
-    -   Add button to allow users to switch on impersonation in the `UserGrid`
-    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
-    -   Add `ImpersonateUser` icon
+    - Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    - Add button to allow users to switch on impersonation in the `UserGrid`
+    - Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    - Add `ImpersonateUser` icon
 
 ### Patch Changes
 
--   55d40ef08: Add icon for indeterminate checkbox
+- 55d40ef08: Add icon for indeterminate checkbox
 
 ## 7.8.0
 
 ### Minor Changes
 
--   e78315c9c: Add `ContactPage` icon
--   c6d3ac36b: Add new icons `Backward` and `Forward`
+- e78315c9c: Add `ContactPage` icon
+- c6d3ac36b: Add new icons `Backward` and `Forward`
 
 ## 7.7.0
 
@@ -46,12 +46,12 @@
 
 ### Minor Changes
 
--   5364ecb37: Add new "DragIndicator" icon
--   2ab7b688e: Add `Api` icon
+- 5364ecb37: Add new "DragIndicator" icon
+- 2ab7b688e: Add `Api` icon
 
 ### Patch Changes
 
--   a1f4c0dec: Replace `YouTube` and `Vimeo` icon with correctly colored versions
+- a1f4c0dec: Replace `YouTube` and `Vimeo` icon with correctly colored versions
 
 ## 7.2.1
 
@@ -61,7 +61,7 @@
 
 ### Minor Changes
 
--   b1bbd6a0c: Export a type for all icon names: `IconName`
+- b1bbd6a0c: Export a type for all icon names: `IconName`
 
 ## 7.0.0
 
@@ -91,7 +91,7 @@
 
 ### Minor Changes
 
--   406027806: Add `RteUppercase` icon
+- 406027806: Add `RteUppercase` icon
 
 ## 6.14.1
 
@@ -99,7 +99,7 @@
 
 ### Minor Changes
 
--   efccc42a3: Add `YouTube` and `Vimeo` icons
+- efccc42a3: Add `YouTube` and `Vimeo` icons
 
 ## 6.13.0
 
@@ -135,17 +135,17 @@
 
 ### Patch Changes
 
--   08e0da09: Fix icons inside tooltips by forwarding the ref
+- 08e0da09: Fix icons inside tooltips by forwarding the ref
 
 ## 6.0.0
 
 ### Major Changes
 
--   a525766c: Remove deprecated icons `Betrieb`, `Logische Filter`, `Pool`, `Pool 2`, `State Green`, `State Green Ring`, `State Orange`, `State Orange Ring`, `State Red`, `State Red Ring`, `Vignette 1` and `Vignette 2`.
+- a525766c: Remove deprecated icons `Betrieb`, `Logische Filter`, `Pool`, `Pool 2`, `State Green`, `State Green Ring`, `State Orange`, `State Orange Ring`, `State Red`, `State Red Ring`, `Vignette 1` and `Vignette 2`.
 
 ### Patch Changes
 
--   76e50aa8: Fix broken `Logout` icon
+- 76e50aa8: Fix broken `Logout` icon
 
 ## 5.6.0
 
@@ -157,11 +157,11 @@
 
 ### Minor Changes
 
--   0ff9b9ba: Deprecate icons `StateGreen`, `StateGreenRing`, `StateOrange`, `StateOrangeRing`, `StateRed`, and `StateRedRing`,
+- 0ff9b9ba: Deprecate icons `StateGreen`, `StateGreenRing`, `StateOrange`, `StateOrangeRing`, `StateRed`, and `StateRedRing`,
 
 ### Patch Changes
 
--   0ff9b9ba: Fix various icons
+- 0ff9b9ba: Fix various icons
 
     Since version 5.2.0 several icons were not displayed correctly. This problem has been fixed.
 
@@ -169,7 +169,7 @@
 
 ### Minor Changes
 
--   9fc7d474: Add new icons from the Comet UX library. Replace existing icons with new versions. Mark icons Pool, Pool2, Vignette1, Vignette2, Betrieb, LogischeFilter as deprecated.
+- 9fc7d474: Add new icons from the Comet UX library. Replace existing icons with new versions. Mark icons Pool, Pool2, Vignette1, Vignette2, Betrieb, LogischeFilter as deprecated.
 
 ## 5.1.0
 
@@ -177,13 +177,13 @@
 
 ### Minor Changes
 
--   ed692f50: Add new open and close hamburger icons and use them in the `AppHeaderMenuButton`
+- ed692f50: Add new open and close hamburger icons and use them in the `AppHeaderMenuButton`
 
 ## 4.7.0
 
 ### Minor Changes
 
--   dbdc0f55: Add support for non-breaking spaces to RTE
+- dbdc0f55: Add support for non-breaking spaces to RTE
 
     Add `"non-breaking-space"` to `supports` when creating an RTE:
 
@@ -214,11 +214,11 @@
 
 ### Minor Changes
 
--   c3b7f992: Add new icons intended to be used in the RTE
--   c3b7f992: Change how `maxVisible` in `FeaturesButtonGroup` works:
+- c3b7f992: Add new icons intended to be used in the RTE
+- c3b7f992: Change how `maxVisible` in `FeaturesButtonGroup` works:
 
-    -   If maxVisible = 4 and there are four features -> all four features (and no dropdown) are shown
-    -   If maxVisible = 4 and there are five features -> three features and the dropdown (containing two features) are shown
+    - If maxVisible = 4 and there are four features -> all four features (and no dropdown) are shown
+    - If maxVisible = 4 and there are five features -> three features and the dropdown (containing two features) are shown
 
 ## 4.5.0
 
@@ -238,4 +238,4 @@
 
 ### Minor Changes
 
--   51466b1a: Add `QuestionMark` and `Block` icon
+- 51466b1a: Add `QuestionMark` and `Block` icon

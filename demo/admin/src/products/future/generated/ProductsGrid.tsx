@@ -193,12 +193,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                         row.type == null ? (
                                             <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
                                         ) : (
-                                            typeLabels[`${row.type}`] ?? row.type
+                                            (typeLabels[`${row.type}`] ?? row.type)
                                         ),
                                     category: row.category?.title ?? (
                                         <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
                                     ),
-                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                                    inStock: row.inStock == null ? "-" : (inStockLabels[`${row.inStock}`] ?? row.inStock),
                                 }}
                             />
                         }

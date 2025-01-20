@@ -9,19 +9,18 @@ export const Root = createComponentSlot("div")<RteToolbarClassKey>({
     componentName: "RteToolbar",
     slotName: "root",
 })(
-    ({ theme }) =>
-        css`
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            display: flex;
-            flex-wrap: wrap;
-            border-top: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.border};
-            background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.toolbarBackground};
-            padding-left: 6px;
-            padding-right: 6px;
-            overflow: hidden;
-        `,
+    ({ theme }) => css`
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        border-top: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.border};
+        background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.toolbarBackground};
+        padding-left: 6px;
+        padding-right: 6px;
+        overflow: hidden;
+    `,
 );
 
 export const Slot = createComponentSlot("div")<RteToolbarClassKey>({

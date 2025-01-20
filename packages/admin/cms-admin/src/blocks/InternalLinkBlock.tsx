@@ -131,7 +131,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                         }}
                         initialValues={{
                             targetPage: state.targetPage,
-                            targetPageAnchor: anchorsLoading ? "" : state.targetPageAnchor ?? "none",
+                            targetPageAnchor: anchorsLoading ? "" : (state.targetPageAnchor ?? "none"),
                         }}
                     >
                         <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth fieldContainerProps={{ fieldMargin: "never" }} />

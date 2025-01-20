@@ -280,8 +280,8 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarItem>
                             <ToolbarTitleItem>
                                 <FormattedMessage id="${instanceNamePlural}.${classNameSingular}" defaultMessage="${camelCaseToHumanReadable(
-        classNameSingular,
-    )}" />
+                                    classNameSingular,
+                                )}" />
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>

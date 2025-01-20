@@ -118,7 +118,7 @@ export function createEditPageNode({
 
         const slug = data?.page?.slug;
 
-        const parentId = mode === "add" ? parent : data?.page?.parentId ?? null;
+        const parentId = mode === "add" ? parent : (data?.page?.parentId ?? null);
 
         const { data: parentNodeData } = useQuery<GQLEditPageParentNodeQuery, GQLEditPageParentNodeQueryVariables>(editPageParentNodeQuery, {
             variables: {
@@ -343,8 +343,8 @@ export function createEditPageNode({
                                                         {values.slug === "home" && parentPath === null
                                                             ? "/"
                                                             : parentPath === null
-                                                            ? `/${values.slug}`
-                                                            : `${parentPath}/${values.slug}`}
+                                                              ? `/${values.slug}`
+                                                              : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
                                                 {mode === "edit" && dirtyFields.slug && (

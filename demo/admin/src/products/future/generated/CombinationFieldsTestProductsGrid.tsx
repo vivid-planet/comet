@@ -125,7 +125,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                     Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
                 };
                 return (
-                    <GridCellContent primaryText={row.type == null ? "-" : typeLabels[`${row.type}`] ?? row.type} secondaryText={row.type ?? "-"} />
+                    <GridCellContent primaryText={row.type == null ? "-" : (typeLabels[`${row.type}`] ?? row.type)} secondaryText={row.type ?? "-"} />
                 );
             },
             flex: 1,
@@ -147,7 +147,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                             row.inStock == null ? (
                                 <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />
                             ) : (
-                                inStockLabels[`${row.inStock}`] ?? row.inStock
+                                (inStockLabels[`${row.inStock}`] ?? row.inStock)
                             )
                         }
                     />

@@ -44,7 +44,10 @@ type BlockGQLData<T extends RootBlocksInterface> = {
 // all static configuration options needed to create a usePage hook
 
 interface CreateUsePage {
-    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: { rootBlocks: RootBlocks; pageType: PageType }): <
+    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: {
+        rootBlocks: RootBlocks;
+        pageType: PageType;
+    }): <
         GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null, // the page state is infered from this
         GQLEditPageQueryVariables extends { id: string } = { id: string }, // for type-safety, query must match this shape
         GQLUpdatePageMutation extends { id: string } & BlockGQLData<RootBlocks> = {

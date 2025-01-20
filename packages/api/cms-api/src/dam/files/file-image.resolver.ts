@@ -9,7 +9,10 @@ import { FilesService } from "./files.service";
 @Resolver(() => DamFileImage)
 @RequiredPermission(["dam"])
 export class FileImagesResolver {
-    constructor(private readonly imagesService: ImagesService, private readonly filesService: FilesService) {}
+    constructor(
+        private readonly imagesService: ImagesService,
+        private readonly filesService: FilesService,
+    ) {}
 
     @ResolveField(() => String, { nullable: true })
     async url(

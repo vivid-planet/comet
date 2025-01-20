@@ -77,34 +77,28 @@ const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuC
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "chip",
-})(
-    css`
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-        border-radius: 20px;
-        margin-left: 6px;
-    `,
-);
+})(css`
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    margin-left: 6px;
+`);
 
 const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "button",
-})(
-    css`
-        margin: 0 10px;
-    `,
-);
+})(css`
+    margin: 0 10px;
+`);
 
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "menuItem",
-})(
-    css`
-        padding: 8px 15px 8px 30px !important;
-        column-gap: 10px;
-    `,
-);
+})(css`
+    padding: 8px 15px 8px 30px !important;
+    column-gap: 10px;
+`);
 
 export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const {

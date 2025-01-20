@@ -186,15 +186,15 @@ export function generateForm(
                     : ``
             }$input: ${gqlType}Input!) {
                 ${createMutationType.name}(${
-                gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
-                    ? `${gqlArgs
-                          .filter((gqlArg) => !gqlArg.isInputArgSubfield)
-                          .map((gqlArg) => {
-                              return `${gqlArg.name}: $${gqlArg.name}`;
-                          })
-                          .join(", ")}, `
-                    : ``
-            }input: $input) {
+                    gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
+                        ? `${gqlArgs
+                              .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                              .map((gqlArg) => {
+                                  return `${gqlArg.name}: $${gqlArg.name}`;
+                              })
+                              .join(", ")}, `
+                        : ``
+                }input: $input) {
                     id
                     updatedAt
                     ...${formFragmentName}
@@ -435,13 +435,13 @@ export function generateForm(
                                   .join(",")} }`
                             : "output"
                     }${
-                              gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
-                                  ? `, ${gqlArgs
-                                        .filter((prop) => !prop.isInputArgSubfield)
-                                        .map((arg) => arg.name)
-                                        .join(",")}`
-                                  : ""
-                          } },
+                        gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
+                            ? `, ${gqlArgs
+                                  .filter((prop) => !prop.isInputArgSubfield)
+                                  .map((arg) => arg.name)
+                                  .join(",")}`
+                            : ""
+                    } },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.${createMutationType.name}.id;
