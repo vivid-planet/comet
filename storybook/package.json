@@ -8,11 +8,11 @@
     ],
     "scripts": {
         "build-storybook": "storybook build",
-        "storybook": "storybook dev -p 26638 --no-version-updates",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json .storybook/",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit"
+        "lint:tsc": "tsc --noEmit",
+        "storybook": "storybook dev -p 26638 --no-version-updates"
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
