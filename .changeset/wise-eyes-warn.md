@@ -1,4 +1,5 @@
 ---
+"@comet/cms-admin": patch
 "@comet/cms-api": patch
 ---
 
