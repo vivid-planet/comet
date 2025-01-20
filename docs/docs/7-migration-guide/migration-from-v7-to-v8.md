@@ -16,6 +16,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 - Run MUI codemods
 - Upgrade MUI X packages to v6
 - Upgrade NestJS packages to v10
+- Upgrade Prettier to v3
 
 </details>
 
