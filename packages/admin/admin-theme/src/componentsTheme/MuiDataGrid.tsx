@@ -59,6 +59,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             backgroundColor: "white",
         },
         columnHeader: ({ ownerState }) => ({
+            /* !important is required to override inline styles */
             height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             "&:focus": {
                 outline: "none",
@@ -72,6 +73,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             boxShadow: shadows[2],
         },
         row: ({ ownerState }) => ({
+            /* !important is required to override inline styles */
             height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             minHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             maxHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
@@ -93,6 +95,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             boxSizing: "border-box",
+            /* !important is required to override inline styles */
             height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             minHeight: getDensityHeightValue(ownerState?.density, spacing),
             maxHeight: getDensityHeightValue(ownerState?.density, spacing),
