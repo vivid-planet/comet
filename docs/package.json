@@ -65,7 +65,6 @@
         "react-live": "^2.4.1",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "react-select": "^3.2.0",
         "search-insights": "^2.7.0"
     },
     "devDependencies": {
