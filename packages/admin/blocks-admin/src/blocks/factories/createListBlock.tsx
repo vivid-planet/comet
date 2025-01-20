@@ -83,7 +83,7 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
-    overrideCategory?: BlockCategory;
+    category?: BlockCategory;
 }
 
 export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
@@ -98,7 +98,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
     additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-    overrideCategory,
+    category,
 }: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
     ListBlockFragment<AdditionalItemFields>,
     ListBlockState<T, AdditionalItemFields>,
@@ -143,7 +143,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                     : [],
         }),
 
-        category: overrideCategory ?? block.category,
+        category: category ?? block.category,
 
         input2State: (input) => {
             return {
