@@ -22,7 +22,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
-import { Autocomplete, Button, Grid, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
+import { Autocomplete, Button, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -70,30 +70,26 @@ export const Breadcrumbs = () => {
             <ToolbarActions>
                 <StackSwitchApiContext.Consumer>
                     {(stackSwitchApi) => (
-                        <Grid container spacing={4}>
-                            <Grid item>
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    onClick={() => {
-                                        stackSwitchApi.activatePage("page-1", "details");
-                                    }}
-                                >
-                                    1
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    onClick={() => {
-                                        stackSwitchApi.activatePage("page-2", "details");
-                                    }}
-                                >
-                                    2
-                                </Button>
-                            </Grid>
-                        </Grid>
+                        <>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    stackSwitchApi.activatePage("page-1", "details");
+                                }}
+                            >
+                                1
+                            </Button>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    stackSwitchApi.activatePage("page-2", "details");
+                                }}
+                            >
+                                2
+                            </Button>
+                        </>
                     )}
                 </StackSwitchApiContext.Consumer>
             </ToolbarActions>
@@ -131,9 +127,9 @@ export const FillSpaceLeft = {
         return (
             <Toolbar>
                 <FillSpace />
-                <ToolbarItem>
+                <ToolbarActions>
                     <Typography>Item</Typography>
-                </ToolbarItem>
+                </ToolbarActions>
             </Toolbar>
         );
     },
@@ -184,30 +180,24 @@ export const FillSpaceMiddle2 = {
                 </ToolbarItem>
                 <FillSpace />
                 <ToolbarActions>
-                    <Grid container spacing={4}>
-                        <Grid item>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 1");
-                                }}
-                            >
-                                Action 1
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 2");
-                                }}
-                            >
-                                Action 2
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 1");
+                        }}
+                    >
+                        Action 1
+                    </Button>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 2");
+                        }}
+                    >
+                        Action 2
+                    </Button>
                 </ToolbarActions>
                 <FillSpace />
                 <ToolbarItem>
@@ -288,30 +278,24 @@ export const ToolbarActionsTwoActions = {
                 <ToolbarAutomaticTitleItem />
                 <FillSpace />
                 <ToolbarActions>
-                    <Grid container spacing={4}>
-                        <Grid item>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 1");
-                                }}
-                            >
-                                Action 1
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 2");
-                                }}
-                            >
-                                Action 2
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 1");
+                        }}
+                    >
+                        Action 1
+                    </Button>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 2");
+                        }}
+                    >
+                        Action 2
+                    </Button>
                 </ToolbarActions>
             </Toolbar>
         );
