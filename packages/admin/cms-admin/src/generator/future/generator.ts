@@ -44,6 +44,8 @@ type InputBaseFieldConfig = {
     endAdornment?: Adornment;
 };
 
+export type ComponentFormFieldConfig = { type: "component"; component: ImportReference };
+
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
     | ({ type: "number" } & InputBaseFieldConfig)
@@ -99,7 +101,7 @@ export type FormLayoutConfig<T> =
           supportText?: string; // can contain field-placeholder
           collapsible?: boolean; // default true
           initiallyExpanded?: boolean; // default false
-          fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T>)[];
+          fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T> | ComponentFormFieldConfig)[];
       }
     | OptionalNestedFieldsConfig<T>;
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -113,7 +115,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
-    fields: (FormFieldConfig<T> | FormLayoutConfig<T>)[];
+    fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
