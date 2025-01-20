@@ -15,10 +15,6 @@ const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
-
-        ${theme.breakpoints.up("md")} {
-            gap: ${theme.spacing(4)};
-        }
     `,
 );
 

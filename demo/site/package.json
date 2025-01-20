@@ -29,6 +29,7 @@
         "@opentelemetry/instrumentation-runtime-node": "^0.11.0",
         "@opentelemetry/sdk-node": "^0.53.0",
         "cache-manager": "^5.7.6",
+        "filesize": "^10.1.6",
         "graphql": "^15.10.1",
         "ioredis": "^5.4.2",
         "lru-cache": "^11.0.2",
