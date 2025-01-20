@@ -20,26 +20,14 @@ import type {} from "@mui/x-data-grid/themeAugmentation";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-const getDensityStyles = (density: string | unknown, spacing: Spacing) => {
+const getDensityHeightValue = (density: string | unknown, spacing: Spacing) => {
     switch (density) {
         case "compact":
-            return {
-                minHeight: `${spacing(8)} !important`,
-                maxHeight: `${spacing(8)} !important`,
-                height: `${spacing(8)} !important`,
-            };
+            return spacing(8);
         case "comfortable":
-            return {
-                minHeight: `${spacing(16)} !important`,
-                maxHeight: `${spacing(16)} !important`,
-                height: `${spacing(16)} !important`,
-            };
+            return spacing(16);
         default:
-            return {
-                minHeight: `${spacing(12)} !important`,
-                maxHeight: `${spacing(12)} !important`,
-                height: `${spacing(12)} !important`,
-            };
+            return spacing(12);
     }
 };
 
@@ -71,20 +59,22 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             backgroundColor: "white",
         },
         columnHeader: ({ ownerState }) => ({
+            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             "&:focus": {
                 outline: "none",
             },
             "&:focus-within": {
                 outline: "none",
             },
-            ...getDensityStyles(ownerState?.density, spacing),
         }),
         pinnedColumns: {
             backgroundColor: "white",
             boxShadow: shadows[2],
         },
         row: ({ ownerState }) => ({
-            ...getDensityStyles(ownerState?.density, spacing),
+            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
+            minHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
+            maxHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
         }),
         cell: {
             borderTop: `1px solid ${palette.grey[100]}`,
@@ -100,12 +90,14 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
-            ...getDensityStyles(ownerState?.density, spacing),
+            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
+            minHeight: getDensityHeightValue(ownerState?.density, spacing),
+            maxHeight: getDensityHeightValue(ownerState?.density, spacing),
 
             ...(ownerState?.density === "compact" && {
                 "& .MuiTablePagination-root > .MuiToolbar-root": {
-                    height: spacing(8),
-                    minHeight: spacing(8),
+                    height: getDensityHeightValue(ownerState?.density, spacing),
+                    minHeight: getDensityHeightValue(ownerState?.density, spacing),
                 },
             }),
         }),
