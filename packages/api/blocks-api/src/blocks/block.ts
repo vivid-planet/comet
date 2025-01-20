@@ -53,10 +53,24 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
+// TODO: import from WarningModule after the warning module is in the package (this enum is currently duplicated)
+enum WarningEntityWarningSeverity {
+    critical = "critical",
+    high = "high",
+    low = "low",
+}
+export type WarningSeverity = `${WarningEntityWarningSeverity}`;
+
+interface BlockWarning {
+    message: string;
+    severity: WarningSeverity;
+}
+
 export interface BlockDataInterface {
     transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
+    warnings(): BlockWarning[];
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined>;
@@ -74,6 +88,11 @@ export abstract class BlockData implements BlockDataInterface {
     indexData(): BlockIndexData {
         return {};
     }
+
+    warnings(): BlockWarning[] {
+        return [];
+    }
+
     childBlocksInfo(): ChildBlockInfo[] {
         const ret: ChildBlockInfo[] = [];
         for (const key of getFieldKeys({ prototype: Object.getPrototypeOf(this) })) {
