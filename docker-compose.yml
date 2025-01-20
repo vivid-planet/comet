@@ -1,7 +1,6 @@
-version: "3.5"
 services:
     postgres:
-        image: bitnami/postgresql:12
+        image: bitnami/postgresql:15
         tty: true
         volumes:
             - postgres:/bitnami/postgresql
@@ -15,7 +14,7 @@ services:
             - postgres
 
     imgproxy:
-        image: darthsim/imgproxy:latest
+        image: darthsim/imgproxy:v3
         volumes:
             - ./demo/uploads:/uploads:ro
         ports:
