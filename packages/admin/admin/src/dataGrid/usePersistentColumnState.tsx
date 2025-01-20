@@ -1,6 +1,7 @@
 import { DataGridProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
 import { type DataGridProProps, type GridPinnedColumnFields } from "@mui/x-data-grid-pro";
 import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouteMatch } from "react-router";
 
 import { useStoredState } from "../hooks/useStoredState";
 import { GridColDef } from "./GridColDef";
@@ -70,10 +71,13 @@ type GridProps = {
 export function usePersistentColumnState(stateKey: string): GridProps {
     const apiRef = useGridApiRef();
     const columns = useGridColumns(apiRef);
+    const match = useRouteMatch();
+
+    const storageKeyPrefix = `${match.path}${stateKey}`;
 
     const mediaQueryColumnVisibilityModel = useVisibilityModelFromColumnMediaQueries(columns);
     const [storedColumnVisibilityModel, setStoredColumnVisibilityModel] = useStoredState<GridColumnVisibilityModel>(
-        `${stateKey}ColumnVisibility`,
+        `${storageKeyPrefix}ColumnVisibility`,
         {},
     );
 
@@ -95,7 +99,12 @@ export function usePersistentColumnState(stateKey: string): GridProps {
         [mediaQueryColumnVisibilityModel, setStoredColumnVisibilityModel],
     );
 
+<<<<<<< HEAD
     const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumnFields>(`${stateKey}PinnedColumns`, {});
+=======
+    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumns>(`${storageKeyPrefix}PinnedColumns`, {});
+
+>>>>>>> main
     const handlePinnedColumnsChange = useCallback(
         (newModel: GridPinnedColumnFields) => {
             setPinnedColumns(newModel);
@@ -118,7 +127,7 @@ export function usePersistentColumnState(stateKey: string): GridProps {
     }, [columns, setPinnedColumns, pinnedColumns]);
 
     //no API for column dimensions as controlled state, export on change instead
-    const columnDimensionsKey = `${stateKey}ColumnDimensions`;
+    const columnDimensionsKey = `${storageKeyPrefix}ColumnDimensions`;
     const initialColumnDimensions = useMemo(() => {
         const serializedState = window.localStorage.getItem(columnDimensionsKey);
         return serializedState ? JSON.parse(serializedState) : undefined;
@@ -130,7 +139,7 @@ export function usePersistentColumnState(stateKey: string): GridProps {
     }, [columnDimensionsKey, apiRef]);
 
     //no API for column order as controlled state, export on change instead
-    const columnOrderKey = `${stateKey}ColumnOrder`;
+    const columnOrderKey = `${storageKeyPrefix}ColumnOrder`;
     const initialColumnOrder = useMemo(() => {
         const serializedState = window.localStorage.getItem(columnOrderKey);
         return serializedState ? JSON.parse(serializedState) : undefined;

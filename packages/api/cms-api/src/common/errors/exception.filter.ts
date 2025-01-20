@@ -43,7 +43,7 @@ export class ExceptionFilter implements NestExceptionFilter {
         } else {
             returnedError = this.debug ? exception : new InternalServerErrorException();
             statusCode = "getStatus" in returnedError && typeof returnedError.getStatus === "function" ? returnedError.getStatus() : 500;
-            this.logger.error(exception); // Log for debugging
+            this.logger.error(exception, exception.stack); // Log for debugging
         }
 
         const ctxType = host.getType<"http" | "graphql">(); // Check if it's an HTTP or GraphQL request

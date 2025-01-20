@@ -28,7 +28,7 @@ export function getSiteConfigs() {
     if (!siteConfigs) {
         const json = process.env.PUBLIC_SITE_CONFIGS;
         if (!json) throw new Error("process.env.PUBLIC_SITE_CONFIGS must be set.");
-        siteConfigs = JSON.parse(json) as PublicSiteConfig[];
+        siteConfigs = JSON.parse(atob(json)) as PublicSiteConfig[];
     }
     return siteConfigs;
 }

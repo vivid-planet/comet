@@ -7,12 +7,21 @@
     },
     "license": "BSD-2-Clause",
     "scripts": {
+<<<<<<< HEAD
         "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs -d",
         "build:storybook": "pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@comet/*' run build",
         "build:docs": "pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
         "clean": "pnpm --recursive run clean",
+=======
+        "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
+        "build:storybook": "pnpm recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
+        "build:packages": "pnpm recursive --filter '@comet/*' run build",
+        "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
+        "clean": "pnpm recursive run clean",
+>>>>>>> main
         "copy-schema-files": "node copy-schema-files.js",
+        "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
         "dev:admin": "dev-pm start @comet-admin",
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",

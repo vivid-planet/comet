@@ -3,11 +3,11 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRangeInput,
     FinalFormSubmitEvent,
@@ -383,14 +383,12 @@ export function ProductForm({ id }: FormProps) {
                                     }
                                 }}
                             </OnChangeField>
-                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                        control={<FinalFormCheckbox {...props} />}
-                                    />
-                                )}
-                            </Field>
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"

@@ -24,10 +24,8 @@ export const MediaGalleryBlock = createCompositeBlock(
                 block: createCompositeBlockSelectField<MediaGalleryBlockData["aspectRatio"]>({
                     defaultValue: "16x9",
                     options: mediaAspectRatioOptions,
-                    fieldProps: {
-                        label: <FormattedMessage id="mediaGalleryBlock.mediaGallery.aspectRatio" defaultMessage="Aspect Ratio" />,
-                        fullWidth: true,
-                    },
+                    label: <FormattedMessage id="mediaGalleryBlock.mediaGallery.aspectRatio" defaultMessage="Aspect Ratio" />,
+                    fullWidth: true,
                 }),
                 hiddenInSubroute: true,
             },
