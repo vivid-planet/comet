@@ -1,4 +1,4 @@
-import { Block, BlockInput, FlatBlocks } from "@comet/blocks-api";
+import { Block, BlockData, FlatBlocks } from "@comet/blocks-api";
 import { DiscoverService } from "@comet/cms-api/lib/dependencies/discover.service";
 import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -42,17 +42,17 @@ export class WarningCheckerConsole {
                 .select(["id", ...rootBlockData.map(({ column }) => column)])
                 .from(tableName)
                 .limit(queryBuilderLimit);
-            let rootBlocks: Array<{ [key: string]: BlockInput }> = [];
+            let rootBlocks: Array<{ [key: string]: BlockData }> = [];
             let offset = 0;
 
             do {
                 const queryBuilder = baseQueryBuilder.clone();
                 queryBuilder.offset(offset);
-                rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockInput }>;
+                rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockData }>;
 
                 for (const { column, block } of rootBlockData) {
                     for (const rootBlock of rootBlocks) {
-                        const blockData = block.blockDataFactory(block.blockInputFactory(rootBlock[column]));
+                        const blockData = rootBlock[column];
 
                         const flatBlocks = new FlatBlocks(blockData, {
                             name: block.name,
