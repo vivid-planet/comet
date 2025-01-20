@@ -90,6 +90,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
+            boxSizing: "border-box",
             height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             minHeight: getDensityHeightValue(ownerState?.density, spacing),
             maxHeight: getDensityHeightValue(ownerState?.density, spacing),
