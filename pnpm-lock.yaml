@@ -217,8 +217,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       dotenv-cli:
-        specifier: ^4.1.1
-        version: 4.1.1
+        specifier: ^7.4.4
+        version: 7.4.4
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -9650,10 +9650,6 @@ packages:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
 
-  dotenv-cli@4.1.1:
-    resolution: {integrity: sha512-XvKv1pa+UBrsr3CtLGBsR6NdsoS7znqaHUf4Knj0eZO+gOI/hjj9KgWDP+KjpfEbj6wAba1UpbhaP9VezNkWhg==}
-    hasBin: true
-
   dotenv-cli@7.4.4:
     resolution: {integrity: sha512-XkBYCG0tPIes+YZr4SpfFv76SQrV/LeCE8CI7JSEMi3VR9MvTihCGTOtbIexD6i2mXF+6px7trb1imVCXSNMDw==}
     hasBin: true
@@ -9666,9 +9662,6 @@ packages:
     resolution: {integrity: sha512-zIHwmZPRshsCdpMDyVsqGmgyP0yT8GAgXUnkdAoJisxvf33k7yO6OuoKmcTGuXPWSsm8Oh88nZicRLA9Y0rUeA==}
     engines: {node: '>=12'}
 
-  dotenv-expand@5.1.0:
-    resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
-
   dotenv-expand@8.0.3:
     resolution: {integrity: sha512-SErOMvge0ZUyWd5B0NXMQlDkN+8r+HhVUsxgOO7IoPDOdDRD2JjExpN6y3KnFR66jsJMwSn1pqIivhU5rcJiNg==}
     engines: {node: '>=12'}
@@ -9680,10 +9673,6 @@ packages:
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
     engines: {node: '>=12'}
-
-  dotenv@8.6.0:
-    resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
-    engines: {node: '>=10'}
 
   draft-js-export-html@1.4.1:
     resolution: {integrity: sha512-G4VGBSalPowktIE4wp3rFbhjs+Ln9IZ2FhXeHjsZDSw0a2+h+BjKu5Enq+mcsyVb51RW740GBK8Xbf7Iic51tw==}
@@ -10440,15 +10429,6 @@ packages:
     resolution: {integrity: sha512-NCj3XlayA2UsapRpM7va6wU1+9rE5FIL7qoMcmxWHRzbp0yujihMBm9BBHZ1MDIk5h5o2Bl6eGiCe8rYELAmYw==}
     peerDependencies:
       react: ^15.0.2 || ^16.0.0 || ^17.0.0
-
-  follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
 
   follow-redirects@1.15.9:
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
@@ -19725,7 +19705,7 @@ snapshots:
     dependencies:
       '@docusaurus/logger': 2.4.3
       '@docusaurus/utils': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
-      joi: 17.7.0
+      joi: 17.13.3
       js-yaml: 4.1.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -24521,13 +24501,13 @@ snapshots:
 
   axios@0.21.4:
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.9
     transitivePeerDependencies:
       - debug
 
   axios@0.25.0:
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.9
     transitivePeerDependencies:
       - debug
 
@@ -26292,13 +26272,6 @@ snapshots:
     dependencies:
       is-obj: 2.0.0
 
-  dotenv-cli@4.1.1:
-    dependencies:
-      cross-spawn: 7.0.6
-      dotenv: 8.6.0
-      dotenv-expand: 5.1.0
-      minimist: 1.2.8
-
   dotenv-cli@7.4.4:
     dependencies:
       cross-spawn: 7.0.6
@@ -26312,15 +26285,11 @@ snapshots:
     dependencies:
       dotenv: 16.4.7
 
-  dotenv-expand@5.1.0: {}
-
   dotenv-expand@8.0.3: {}
 
   dotenv@16.4.5: {}
 
   dotenv@16.4.7: {}
-
-  dotenv@8.6.0: {}
 
   draft-js-export-html@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6):
     dependencies:
@@ -27328,8 +27297,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  follow-redirects@1.15.2: {}
-
   follow-redirects@1.15.9: {}
 
   for-each@0.3.3:
@@ -28122,7 +28089,7 @@ snapshots:
   http-proxy@1.18.1:
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.9
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -33737,7 +33704,7 @@ snapshots:
   wait-on@6.0.1:
     dependencies:
       axios: 0.25.0
-      joi: 17.7.0
+      joi: 17.13.3
       lodash: 4.17.21
       minimist: 1.2.8
       rxjs: 7.8.1
