@@ -8,11 +8,11 @@
     ],
     "scripts": {
         "build-storybook": "storybook build",
-        "storybook": "storybook dev -p 26638 --no-version-updates",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json .storybook/",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit"
+        "lint:tsc": "tsc --noEmit",
+        "storybook": "storybook dev -p 26638 --no-version-updates"
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
@@ -79,7 +79,7 @@
         "eslint-plugin-storybook": "^0.11.0",
         "graphql-mocks": "^0.10.0",
         "msw": "^0.35.0",
-        "npm-run-all": "^4.1.5",
+        "npm-run-all2": "^5.0.0",
         "prettier": "^2.8.8",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",
