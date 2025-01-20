@@ -33,7 +33,7 @@ export const DamUploadFooter = ({ open, folderName }: DamFooterProps) => {
                     id="comet.dam.footer.dropFilesHereToUpload"
                     defaultMessage="Drop files here to upload them to the folder: <strong>{folderName}</strong>"
                     values={{
-                        strong: (chunks: string) => (
+                        strong: (chunks) => (
                             <strong>
                                 {/*Otherwise there is no whitespace between other text and strong*/}
                                 &nbsp;

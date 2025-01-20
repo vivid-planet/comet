@@ -16,7 +16,7 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { PrettyBytes } from "../../helpers/PrettyBytes";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useElementIsOverflowing } from "../../hooks/useElementIsOverflowing";
-import { FileSelectItem } from "./fileSelectItemTypes";
+import { ErrorFileSelectItem, FileSelectItem } from "./fileSelectItemTypes";
 
 type OwnerState = {
     hasFilePreview: boolean;
@@ -170,7 +170,8 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                 <ErrorDetails {...slotProps?.errorDetails}>
                     {errorIcon}
                     <ErrorDetailsText variant="caption" {...slotProps?.errorDetailsText}>
-                        {file.error}
+                        {/* TODO create type guard to avoid as cast */}
+                        {(file as ErrorFileSelectItem).error}
                     </ErrorDetailsText>
                 </ErrorDetails>
             )}

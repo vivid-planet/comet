@@ -32,7 +32,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                             <FormattedMessage
                                 id="comet.saveConflictDialog.whatHappened.description"
                                 defaultMessage="Someone else made changes to this page while you were editing it. <strong>You can't save this page.</strong> Otherwise, your changes would overwrite the other changes."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
                     </Box>

@@ -26,8 +26,6 @@ export interface BlockAdminComponentProps<S = any> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BlockAdminComponent<S = any> = ComponentType<BlockAdminComponentProps<S>>;
-export type BindBlockAdminComponent<T extends BlockAdminComponent> =
-    T extends ComponentType<infer BlockAdminComponentProps> ? ComponentType<Partial<BlockAdminComponentProps>> : never;
 
 export interface AdminComponentPart {
     key: string;

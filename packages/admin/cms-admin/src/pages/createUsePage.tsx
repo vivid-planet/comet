@@ -1,13 +1,6 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import {
-    BindBlockAdminComponent,
-    BlockInterface,
-    BlockState,
-    DispatchSetStateAction,
-    parallelAsyncEvery,
-    resolveNewState,
-} from "@comet/blocks-admin";
+import { BlockInterface, BlockState, DispatchSetStateAction, parallelAsyncEvery, resolveNewState } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
 import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -94,7 +87,7 @@ type PageState<
 // hook exposes a block-api
 type BlockNodeApi<RootBlocks extends RootBlocksInterface> = {
     [K in keyof RootBlocks]: {
-        adminUI: BindBlockAdminComponent<RootBlocks[K]["AdminComponent"]>; // state and updateState props are bound to the state handler of usePageHook
+        adminUI: ReactNode;
         isValid: () => Promise<boolean>;
     };
 };
