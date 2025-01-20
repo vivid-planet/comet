@@ -19,12 +19,8 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
         "lint:generated-files-not-modified": "$npm_execpath admin-generator && git diff --exit-code HEAD -- src/**/generated",
-<<<<<<< HEAD
-        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs  -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
-=======
         "serve": "node server",
-        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.site-configs -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
->>>>>>> main
+        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs  -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",

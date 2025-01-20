@@ -99,12 +99,7 @@ export function usePersistentColumnState(stateKey: string): GridProps {
         [mediaQueryColumnVisibilityModel, setStoredColumnVisibilityModel],
     );
 
-<<<<<<< HEAD
-    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumnFields>(`${stateKey}PinnedColumns`, {});
-=======
-    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumns>(`${storageKeyPrefix}PinnedColumns`, {});
-
->>>>>>> main
+    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumnFields>(`${storageKeyPrefix}PinnedColumns`, {});
     const handlePinnedColumnsChange = useCallback(
         (newModel: GridPinnedColumnFields) => {
             setPinnedColumns(newModel);

@@ -54,17 +54,11 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
     const { palette } = useTheme();
     return (
         <>
-<<<<<<< HEAD
-            <Typography variant="overline" color={palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
-                {groupTitle}
-            </Typography>
-=======
             {groupTitle && (
-                <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+                <Typography variant="overline" color={palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
                     {groupTitle}
                 </Typography>
             )}
->>>>>>> main
             <MenuList {...menuListProps}>{children}</MenuList>
         </>
     );

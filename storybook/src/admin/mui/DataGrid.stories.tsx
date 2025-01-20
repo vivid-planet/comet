@@ -46,8 +46,8 @@ export const Default = {
                     density={density}
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: ToolbarForGrid,
+                    slots={{
+                        toolbar: ToolbarForGrid,
                     }}
                 />
             </Box>
