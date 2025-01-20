@@ -76,7 +76,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             minHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             maxHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
         }),
-        cell: {
+        cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
                 outline: "none",
@@ -87,7 +87,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${getDataGridUtilityClass("booleanCell")}`]: {
                 color: palette.grey[900],
             },
-        },
+            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
+            alignContent: "center",
+        }),
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             boxSizing: "border-box",
@@ -95,12 +97,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             minHeight: getDensityHeightValue(ownerState?.density, spacing),
             maxHeight: getDensityHeightValue(ownerState?.density, spacing),
 
-            ...(ownerState?.density === "compact" && {
-                "& .MuiTablePagination-root > .MuiToolbar-root": {
-                    height: getDensityHeightValue(ownerState?.density, spacing),
-                    minHeight: getDensityHeightValue(ownerState?.density, spacing),
-                },
-            }),
+            "& .MuiTablePagination-root > .MuiToolbar-root": {
+                height: getDensityHeightValue(ownerState?.density, spacing),
+                minHeight: getDensityHeightValue(ownerState?.density, spacing),
+            },
         }),
 
         iconSeparator: {
