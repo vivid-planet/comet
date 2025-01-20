@@ -1,9 +1,15 @@
 import { previewParams } from "@comet/cms-site";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
-import { NewsList } from "@src/news/NewsList";
-import { fetchNewsList } from "@src/news/NewsList.loader";
+import { NewsPage } from "@src/news/NewsPage";
+import { fetchNewsList } from "@src/news/NewsPage.loader";
 
-export default async function NewsIndexPage({ params: { domain, language } }: { params: { domain: string; language: string } }) {
+export type PageParams = {
+    domain: string;
+    language: string;
+};
+
+export default async function NewsIndexPage({ params: { domain, language } }: { params: PageParams }) {
     const scope = ((await previewParams())?.scope || { domain, language }) as GQLNewsContentScopeInput;
-    return <NewsList fallbackData={await fetchNewsList({ scope })} />;
+    const limit = 2;
+    return <NewsPage initialData={await fetchNewsList({ scope, limit })} limit={limit} />;
 }

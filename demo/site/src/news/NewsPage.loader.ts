@@ -1,12 +1,13 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { GQLNewsCategory, GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 
-import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./NewsList.loader.generated";
+import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";
 
 export type NewsListParams = {
     scope: GQLNewsContentScopeInput;
-    category?: GQLNewsCategory;
+    offset?: number;
+    limit: number;
 };
 
 export async function fetchNewsList(params: NewsListParams) {
@@ -14,8 +15,8 @@ export async function fetchNewsList(params: NewsListParams) {
 
     const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
         gql`
-            query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!, $filter: NewsFilter!) {
-                newsList(scope: $scope, sort: $sort, filter: $filter) {
+            query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!, $offset: Int!, $limit: Int!) {
+                newsList(scope: $scope, sort: $sort, offset: $offset, limit: $limit) {
                     nodes {
                         id
                         title
@@ -25,16 +26,17 @@ export async function fetchNewsList(params: NewsListParams) {
                         scope {
                             language
                         }
-                        category
                     }
+                    totalCount
                 }
             }
         `,
         {
             scope: params.scope,
             sort: [{ field: "createdAt", direction: "DESC" }],
-            filter: { category: { equal: params.category } },
+            offset: params.offset || 0,
+            limit: params.limit,
         },
     );
-    return newsList.nodes;
+    return newsList;
 }
