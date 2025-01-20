@@ -102,7 +102,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             borderTop: `1px solid ${palette.grey[100]}`,
             ...getDensityStyles(ownerState?.density, spacing),
 
-            ...(ownerState.density === "compact" && {
+            ...(ownerState?.density === "compact" && {
                 "& .MuiTablePagination-root > .MuiToolbar-root": {
                     height: spacing(8),
                     minHeight: spacing(8),
