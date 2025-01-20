@@ -67,7 +67,7 @@ const recursiveIsValidSvgNode = (node: SvgNode): boolean => {
     }
 
     for (const [tagOrAttributeName, value] of Object.entries(node)) {
-        const containsDisallowedTags = disallowedSvgTags.map((tag) => tag.toLowerCase()).includes(tagOrAttributeName.toLowerCase());
+        const containsDisallowedTags = disallowedSvgTags.some((tag) => tag.toLowerCase() === tagOrAttributeName.toLowerCase());
 
         const containsEventHandler = tagOrAttributeName.toLowerCase().startsWith("on"); // can execute JavaScript
 
