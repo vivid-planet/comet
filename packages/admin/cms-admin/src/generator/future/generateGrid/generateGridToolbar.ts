@@ -1,7 +1,7 @@
+import { camelCase } from "change-case";
+
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { getFormattedMessageNode } from "../utils/intl";
-
-const lowerCaseFirst = (string: string) => string.charAt(0).toLowerCase() + string.substring(1);
 
 type Options = {
     componentName: string;
@@ -113,7 +113,7 @@ const renderToolbarActions = (
     return `<ToolbarActions>
         <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
             ${getFormattedMessageNode(
-                `${instanceGqlType}.${lowerCaseFirst(fragmentName)}.newEntry`,
+                `${instanceGqlType}.${camelCase(fragmentName)}.newEntry`,
                 newEntryText ?? `New ${camelCaseToHumanReadable(gqlType)}`,
             )}
         </Button>
