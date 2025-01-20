@@ -401,8 +401,8 @@ export function generateFormField({
                       .map((value) => {
                           return `{
                                 label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
-                              value.value.charAt(0).toLowerCase() + value.value.slice(1)
-                          }" defaultMessage="${value.label}" />,
+                                    value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                                }" defaultMessage="${value.label}" />,
                                 value: "${value.value}",
                             }`;
                       })
@@ -551,8 +551,10 @@ export function generateFormField({
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
-            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
-        } {
+                            filterConfig
+                                ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})`
+                                : ``
+                        } {
                             ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id

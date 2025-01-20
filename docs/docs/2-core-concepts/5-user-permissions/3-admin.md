@@ -41,8 +41,8 @@ Since this function also checks the content scope, it requires the `ContentScope
 
 The `MasterMenuData` data type provides a unified format for
 
--   the `menu` prop in `MasterMenu`
--   the `menu` prop in `MasterMenuRoutes`
+- the `menu` prop in `MasterMenu`
+- the `menu` prop in `MasterMenuRoutes`
 
 Regarding user permissions, `MasterMenuData` also provides a `requiredPermission` field. Both of the mentioned components use this field to filter the data.
 

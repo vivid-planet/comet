@@ -27,7 +27,10 @@ const Root = createComponentSlot("button")<RteControlButtonClassKey, OwnerState>
         background-color: transparent;
         border: 1px solid transparent;
         box-sizing: border-box;
-        transition: background-color 200ms, border-color 200ms, color 200ms;
+        transition:
+            background-color 200ms,
+            border-color 200ms,
+            color 200ms;
         font-size: 20px;
         color: ${rteTheme.colors?.buttonIcon};
 

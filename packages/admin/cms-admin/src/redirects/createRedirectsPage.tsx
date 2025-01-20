@@ -27,10 +27,13 @@ function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirects
         const intl = useIntl();
 
         const { scope: completeScope } = useContentScope();
-        const scope = scopeParts.reduce((acc, scopePart) => {
-            acc[scopePart] = completeScope[scopePart];
-            return acc;
-        }, {} as { [key: string]: unknown });
+        const scope = scopeParts.reduce(
+            (acc, scopePart) => {
+                acc[scopePart] = completeScope[scopePart];
+                return acc;
+            },
+            {} as { [key: string]: unknown },
+        );
         const isGlobalScoped = Object.keys(scope).length === 0;
 
         return (

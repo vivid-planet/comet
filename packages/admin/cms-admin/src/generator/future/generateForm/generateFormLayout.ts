@@ -163,8 +163,8 @@ export function generateFormLayout({
                     name="${String(config.name)}Enabled"
                     type="checkbox"
                     label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.${String(
-            config.name,
-        )}Enabled" defaultMessage="${checkboxLabel}" />}
+                        config.name,
+                    )}Enabled" defaultMessage="${checkboxLabel}" />}
                 >
                     {(props) => (
                         <FormControlLabel

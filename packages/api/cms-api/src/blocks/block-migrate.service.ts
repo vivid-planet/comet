@@ -10,7 +10,10 @@ import { transformToBlockSaveIndex } from "./transformToBlockSaveIndex/transform
 export class BlockMigrateService {
     private connection: Connection;
 
-    constructor(entityManager: EntityManager, private readonly discoverEntitiesService: DiscoverService) {
+    constructor(
+        entityManager: EntityManager,
+        private readonly discoverEntitiesService: DiscoverService,
+    ) {
         this.connection = entityManager.getConnection();
     }
     async migrateBlocks(): Promise<void> {
