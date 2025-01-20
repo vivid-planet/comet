@@ -2,18 +2,47 @@
 "@comet/admin": minor
 ---
 
-Add new `Button` with optional responsive behavior to use in favor of MUI's `Button`
+Add a new `Button` component to replace `ToolbarActionButton` and MUI's `Button`
 
-When setting the `responsive` prop, the button will only show the icon on mobile and show the text content in a tooltip.
-
-This works the same as MUI's `Button` component, with the exception of the `variant` and `color` props that are not supported in the same way.
-This `Button` only supports values for `variant` that are defined by the Comet design guidelines, the `color` prop cannot be used.
+Compared to MUI's `Button` component, the `color` prop has been removed, and the `variant` prop now defines those variants, defined by the Comet design guidelines, `primary` is the default variant.
 
 ```diff
 -import { Button } from "@mui/material";
 +import { Button } from "@comet/admin";
 
-const MyComponent = () => {
-    return <Button onClick={() => console.log("Hello")}>Hello</Button>;
-};
+ export const AllButtonVariants = () => (
+     <>
+-        <Button variant="contained" color="primary">Primary</Button>
++        <Button>Primary</Button>
+-        <Button variant="contained" color="secondary">Secondary</Button>
++        <Button variant="secondary">Secondary</Button>
+-        <Button variant="outlined">Outlined</Button>
++        <Button variant="outlined">Outlined</Button>
+-        <Button variant="outlined" color="error">Destructive</Button>
++        <Button variant="destructive">Destructive</Button>
+-        <Button variant="contained" color="success">Success</Button>
++        <Button variant="success">Success</Button>
+-        <Button variant="text" sx={{ color: "white" }}>Text Light</Button>
++        <Button variant="textLight">Text Light</Button>
+-        <Button variant="text" sx={{ color: "black" }}>Text Dark</Button>
++        <Button variant="textDark">Text Dark</Button>
+     </>
+ );
+```
+
+**Responsive behavior**
+
+`ToolbarActionButton` is now deprecated.
+Previously, `ToolbarActionButton` would hide its text content on mobile and add it with a tooltip instead.
+This behavior can now be achieved by setting the `responsive` prop on the `Button` component.
+
+```diff
+-import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
++import { Button } from "@comet/admin";
+ import { Favorite } from "@comet/admin-icons";
+
+ const Example = () => {
+-    return <ToolbarActionButton startIcon={<Favorite />}>Hello</ToolbarActionButton>;
++    return <Button responsive startIcon={<Favorite />}>Hello</Button>;
+ };
 ```
