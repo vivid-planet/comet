@@ -68,6 +68,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 outline: "none",
             },
         }),
+        columnHeaderTitleContainer: ({ ownerState }) => ({
+            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
+        }),
         pinnedColumns: {
             backgroundColor: "white",
             boxShadow: shadows[2],
