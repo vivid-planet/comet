@@ -46,8 +46,8 @@ module.exports = {
                     },
                     {
                         name: "@mui/material",
-                        importNames: ["DialogTitle"],
-                        message: "Please use DialogTitle from @comet/admin instead",
+                        importNames: ["Dialog"],
+                        message: "Please use Dialog from @comet/admin instead",
                     },
                     {
                         name: "@mui/x-data-grid",
