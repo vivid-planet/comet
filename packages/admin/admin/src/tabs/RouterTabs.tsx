@@ -80,6 +80,7 @@ export function RouterTabs(inProps: Props) {
     const isActiveStackSwitch = useIsActiveStackSwitch();
 
     const childrenArr = Children.toArray(children);
+
     const handleChange = (event: SyntheticEvent, value: number) => {
         const paths = childrenArr.map((child) => {
             return isValidElement<TabProps>(child) ? child.props.path : null;
