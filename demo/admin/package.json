@@ -59,7 +59,7 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@formatjs/cli": "^6.4.0",
+        "@formatjs/cli": "^6.5.0",
         "@graphql-codegen/add": "^3.2.3",
         "@graphql-codegen/cli": "^2.16.5",
         "@graphql-codegen/fragment-matcher": "^2.0.1",
