@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 6.18.2
+
+### Patch Changes
+
+-   d16b369b8: Export `useDamScope` hook
+
+    This allows accessing the DAM scope in the application. This might be necessary when developing integrations with a third-party DAM.
+
+    -   @comet/admin@6.18.2
+    -   @comet/admin-date-time@6.18.2
+    -   @comet/admin-icons@6.18.2
+    -   @comet/admin-rte@6.18.2
+    -   @comet/admin-theme@6.18.2
+    -   @comet/blocks-admin@6.18.2
+
 ## 6.18.1
 
 ### Patch Changes
