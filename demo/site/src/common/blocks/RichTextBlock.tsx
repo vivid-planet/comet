@@ -2,6 +2,7 @@
 import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { Children, isValidElement } from "react";
 import redraft, { Renderers, TextBlockRenderFn } from "redraft";
 import styled, { css } from "styled-components";
 
@@ -76,7 +77,8 @@ const defaultRichTextRenderers: Renderers = {
     entities: {
         // key is the entity key value from raw
         LINK: (children, data: LinkBlockData, { key }) => {
-            const mergedKey = key + children?.toString();
+            const childrenString = extractTextFromChildren(children);
+            const mergedKey = childrenString + key;
 
             return isValidLink(data) ? (
                 <InlineLink key={mergedKey} data={data}>
@@ -88,6 +90,19 @@ const defaultRichTextRenderers: Renderers = {
         },
     },
 };
+
+function extractTextFromChildren(children: React.ReactNode): string {
+    return Children.toArray(children)
+        .map((child) => {
+            if (typeof child === "string" || typeof child === "number") {
+                return String(child);
+            } else if (isValidElement(child)) {
+                return child.props.children ? extractTextFromChildren(child.props.children) : "";
+            }
+            return "";
+        })
+        .join("");
+}
 
 interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
     renderers?: Renderers;
