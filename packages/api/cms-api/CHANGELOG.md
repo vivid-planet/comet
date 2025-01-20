@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 6.18.3
+
+### Patch Changes
+
+-   3f6a819f9: Pass `x-preview-dam-urls` header to `url` field resolver in `FileImagesResolver`
+    -   @comet/blocks-api@6.18.3
+
 ## 6.18.2
 
 ### Patch Changes
