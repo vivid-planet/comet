@@ -2,4 +2,4 @@
 "@comet/blocks-admin": major
 ---
 
-Make fields full-width by default when using `createCompositeBlockTextField` and `createCompositeBlockSelectField`
+Make fields full-width by default when using `createCompositeBlockTextField` or `createCompositeBlockSelectField`
