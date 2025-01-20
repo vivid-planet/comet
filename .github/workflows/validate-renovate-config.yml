@@ -32,7 +32,6 @@ jobs:
               with:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
-                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
             - name: Validate renovate config
               run: npx --yes --package renovate -- renovate-config-validator
