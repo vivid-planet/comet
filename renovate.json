@@ -73,6 +73,10 @@
         {
             "matchDepTypes": ["peerDependencies"],
             "rangeStrategy": "widen"
+        },
+        {
+            "groupName": "Test",
+            "matchPackageNames": ["/^test/*/"]
         }
     ],
     "labels": ["dependencies"],
