@@ -1,5 +1,28 @@
 # @comet/cms-api
 
+## 6.19.0
+
+### Minor Changes
+
+-   2fd22e7db: Add `ExceptionFilter` to replace `ExceptionInterceptor`
+
+    The main motivation for this change was that the `ExceptionInterceptor` didn't capture exceptions thrown in guards. This could lead to information leaks, e.g., details about the database schema or the underlying code. This is considered a security risk.
+
+    The `ExceptionFilter` also catches error within guards. The error format remains unchanged.
+
+    Switching from the `ExceptionInterceptor` to the `ExceptionFilter` must be done in the project:
+
+    ```diff
+    // main.ts
+
+    - app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
+    + app.useGlobalFilters(new ExceptionFilter(config.debug));
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@6.19.0
+
 ## 6.18.3
 
 ### Patch Changes
