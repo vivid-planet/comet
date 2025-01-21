@@ -78,7 +78,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         row: ({ ownerState }) => ({
             height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
             /* !important is required to override inline styles */
-            "--height": `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             minHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             maxHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
         }),
