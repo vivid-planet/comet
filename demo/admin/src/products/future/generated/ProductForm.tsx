@@ -40,6 +40,7 @@ import React from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { validateTitle } from "../validateTitle";
 import {
     GQLManufacturersSelectQuery,
@@ -407,6 +408,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     </InputAdornment>
                                 }
                             />
+                            <FutureProductNotice />
                             <Field
                                 name="image"
                                 isEqual={isEqual}
