@@ -15,8 +15,7 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import mime from "mime";
-import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
@@ -152,17 +151,22 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
                 const response = await fetch(this.imgproxyService.getSignedUrl(path));
+                if (response.body === null) {
+                    throw new Error("Response body is null");
+                }
+
                 const headers: Record<string, string> = {};
                 for (const [key, value] of response.headers.entries()) {
                     headers[key] = value;
                 }
-
                 res.writeHead(response.status, headers);
-                response.body.pipe(new PassThrough()).pipe(res);
+
+                const readableBody = Readable.fromWeb(response.body);
+                readableBody.pipe(new PassThrough()).pipe(res);
 
                 if (response.ok) {
                     await this.cacheService.set(file.contentHash, path, {
-                        file: response.body.pipe(new PassThrough()),
+                        file: readableBody.pipe(new PassThrough()),
                         metaData: {
                             size: Number(headers["content-length"]),
                             headers,
