@@ -41,7 +41,7 @@
         "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.5.1",
         "@types/node": "^22.10.7",
-        "knip": "^5.42.2",
+        "knip": "^5.42.3",
         "cspell": "^8.17.2",
         "dotenv-cli": "^7.4.4",
         "husky": "^7.0.4",

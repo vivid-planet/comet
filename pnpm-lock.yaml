@@ -36,8 +36,8 @@ importers:
         specifier: ^7.0.4
         version: 7.0.4
       knip:
-        specifier: ^5.42.2
-        version: 5.42.2(@types/node@22.10.7)(typescript@5.7.2)
+        specifier: ^5.42.3
+        version: 5.42.3(@types/node@22.10.7)(typescript@5.7.2)
       lint-staged:
         specifier: ^12.5.0
         version: 12.5.0(enquirer@2.4.1)
@@ -11987,8 +11987,8 @@ packages:
       tedious:
         optional: true
 
-  knip@5.42.2:
-    resolution: {integrity: sha512-hVtZ6V59COFz3Y0/BHrWMlPAx82EdX/xFHXbutIRSNfJFPMGmIpxLBWTg35F4XQJGwlu5uWiJf8rBYYkmlYWWQ==}
+  knip@5.42.3:
+    resolution: {integrity: sha512-Bytayxld9Ksd7ObL4zNwRjSq11n+NtsN3SemTfEbqW8WEQnfeW4i0wx6QtY+WeVdmWeWNJGNjrmsC87FdaEAHw==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -29258,7 +29258,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  knip@5.42.2(@types/node@22.10.7)(typescript@5.7.2):
+  knip@5.42.3(@types/node@22.10.7)(typescript@5.7.2):
     dependencies:
       '@nodelib/fs.walk': 3.0.1
       '@snyk/github-codeowners': 1.1.0
