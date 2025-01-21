@@ -78,7 +78,7 @@
         "@types/react-router-dom": "^5.0.0",
         "@vitejs/plugin-react-swc": "^3.6.0",
         "chokidar-cli": "^3.0.0",
-        "dotenv-cli": "^4.1.1",
+        "dotenv-cli": "^7.4.4",
         "eslint": "^8.0.0",
         "eslint-plugin-graphql": "^4.0.0",
         "kill-port": "^2.0.1",
