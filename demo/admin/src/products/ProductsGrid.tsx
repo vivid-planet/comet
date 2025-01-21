@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudVisibility,
     dataGridDateColumn,
@@ -21,7 +22,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
+import { IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -51,12 +52,12 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <FillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
+            <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>

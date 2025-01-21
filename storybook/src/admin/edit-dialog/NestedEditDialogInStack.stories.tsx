@@ -1,5 +1,6 @@
 import { FinalForm, MainContent, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, TextField, useEditDialog } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
+import { Edit } from "@comet/admin-icons";
+import { IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -28,14 +29,15 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
                         {
                             field: "actions",
                             headerName: "",
+                            width: 52,
                             renderCell: ({ row }) => (
-                                <Button
+                                <IconButton
                                     onClick={() => {
                                         editDialogApi.openEditDialog(row.id);
                                     }}
                                 >
-                                    Edit
-                                </Button>
+                                    <Edit color="primary" />
+                                </IconButton>
                             ),
                         },
                     ]}

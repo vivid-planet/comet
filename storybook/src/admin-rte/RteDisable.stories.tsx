@@ -1,6 +1,6 @@
-import { FillSpace, Toolbar, ToolbarActions } from "@comet/admin";
+import { Button, FillSpace, Toolbar, ToolbarActions } from "@comet/admin";
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import { useReducer, useRef } from "react";
 
 import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
@@ -26,9 +26,7 @@ export const RteDisable = {
                     <Toolbar>
                         <FillSpace />
                         <ToolbarActions>
-                            <Button variant="contained" color="primary" onClick={toggleDisabled}>
-                                {disabled ? "Enable" : "Disable"}
-                            </Button>
+                            <Button onClick={toggleDisabled}>{disabled ? "Enable" : "Disable"}</Button>
                         </ToolbarActions>
                     </Toolbar>
                 </Box>
