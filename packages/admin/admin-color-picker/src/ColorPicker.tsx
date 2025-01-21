@@ -104,7 +104,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
      * Debouncing those events ensures the picker is always responsive and prevents it from sometimes crashing.
      */
     const debouncedOnChange = useDebouncedCallback((color) => {
-        onChange && onChange(color);
+        onChange?.(color);
     }, 250);
 
     const onChangeColor = (color: string) => {
@@ -164,7 +164,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                 setDisplayValue(e.currentTarget.value);
             }}
             onBlur={(e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                onBlur && onBlur(e);
+                onBlur?.(e);
                 onChangeColor(displayValue);
             }}
             components={inputWithPopperComponents}
