@@ -1,8 +1,11 @@
 import { CheckboxField, FinalForm, TextField } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
-storiesOf("@comet/admin/form", module).add("Conditional required fields", function () {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const ConditionalRequiredFields = () => {
     type FormValues = {
         description?: string;
         descriptionRequired?: boolean;
@@ -18,4 +21,4 @@ storiesOf("@comet/admin/form", module).add("Conditional required fields", functi
             )}
         </FinalForm>
     );
-});
+};
