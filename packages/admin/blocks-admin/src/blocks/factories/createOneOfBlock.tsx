@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FinalFormRadio, FinalFormSelect } from "@comet/admin";
-import { Box, Divider, FormControlLabel, MenuItem, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
+import { Field, RadioGroupField, SelectField } from "@comet/admin";
+import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import { ReactNode, useCallback } from "react";
@@ -366,17 +366,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field name="blockType" fullWidth>
-                                                {(props) => (
-                                                    <FinalFormSelect {...props} fullWidth>
-                                                        {options.map((option) => (
-                                                            <MenuItem value={option.value} key={option.value}>
-                                                                {option.label}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </FinalFormSelect>
-                                                )}
-                                            </Field>
+                                            <SelectField name="blockType" options={options} fullWidth required={!allowEmpty} />
                                         </Box>
                                         {isInPaper && activeBlock.block && <Divider />}
                                     </>
@@ -384,13 +374,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <FieldContainer>
-                                                {options.map((option) => (
-                                                    <Field key={option.value} name="blockType" type="radio" value={option.value} fullWidth>
-                                                        {(props) => <FormControlLabel label={option.label} control={<FinalFormRadio {...props} />} />}
-                                                    </Field>
-                                                ))}
-                                            </FieldContainer>
+                                            <RadioGroupField name="blockType" fullWidth options={options} />
                                         </Box>
                                         {activeBlock.block && <Divider />}
                                     </>

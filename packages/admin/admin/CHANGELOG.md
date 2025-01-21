@@ -1,5 +1,420 @@
 # @comet/admin
 
+## 7.12.0
+
+### Minor Changes
+
+-   af51bb408: Make the width of `GridToolbarQuickFilter` responsive when used inside `DataGridToolbar`
+-   92b3255d2: Hide group title in `CrudMoreActionsMenu` when only one group is present
+-   e8003f9c7: Add a new `FillSpace` component to replace `ToolbarFillSpace` and `AppHeaderFillSpace`
+
+    `ToolbarFillSpace` and `AppHeaderFillSpace` are now deprecated.
+
+-   4f6e6b011: Deprecate `FinalFormRadio` and `FinalFormCheckbox`
+-   5583c9cff: Export `renderFinalFormChildren` helper
+-   7da81fa2e: Add a new `Button` component to replace `ToolbarActionButton` and MUI's `Button`
+
+    Compared to MUI's `Button` component, the `color` prop has been removed, and the `variant` prop now defines those variants, defined by the Comet design guidelines, `primary` is the default variant.
+
+    ```diff
+    -import { Button } from "@mui/material";
+    +import { Button } from "@comet/admin";
+
+     export const AllButtonVariants = () => (
+         <>
+    -        <Button variant="contained" color="primary">Primary</Button>
+    +        <Button>Primary</Button>
+    -        <Button variant="contained" color="secondary">Secondary</Button>
+    +        <Button variant="secondary">Secondary</Button>
+    -        <Button variant="outlined">Outlined</Button>
+    +        <Button variant="outlined">Outlined</Button>
+    -        <Button variant="outlined" color="error">Destructive</Button>
+    +        <Button variant="destructive">Destructive</Button>
+    -        <Button variant="contained" color="success">Success</Button>
+    +        <Button variant="success">Success</Button>
+    -        <Button variant="text" sx={{ color: "white" }}>Text Light</Button>
+    +        <Button variant="textLight">Text Light</Button>
+    -        <Button variant="text" sx={{ color: "black" }}>Text Dark</Button>
+    +        <Button variant="textDark">Text Dark</Button>
+         </>
+     );
+    ```
+
+    **Responsive behavior**
+
+    `ToolbarActionButton` is now deprecated.
+    Previously, `ToolbarActionButton` would hide its text content on mobile and add it with a tooltip instead.
+    This behavior can now be achieved by setting the `responsive` prop on the `Button` component.
+
+    ```diff
+    -import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
+    +import { Button } from "@comet/admin";
+     import { Favorite } from "@comet/admin-icons";
+
+     const Example = () => {
+    -    return <ToolbarActionButton startIcon={<Favorite />}>Hello</ToolbarActionButton>;
+    +    return <Button responsive startIcon={<Favorite />}>Hello</Button>;
+     };
+    ```
+
+### Patch Changes
+
+-   954635630: Fix mobile styling of `AppHeaderMenuButton`
+-   3ddc2278b: Adjust the spacings inside `Toolbar` and `DataGridToolbar` to match the Comet design
+-   0bb181a52: `usePersistentColumnState`: Prevent Data Grids with the same name to overwrite each others pinned and column-visibility states
+-   Updated dependencies [47be4ebd3]
+-   Updated dependencies [ee597535a]
+-   Updated dependencies [af51bb408]
+    -   @comet/admin-theme@7.12.0
+    -   @comet/admin-icons@7.12.0
+
+## 7.11.0
+
+### Minor Changes
+
+-   b8b8e2747: Make `GridFilterButton` and `GridColumnsButton` responsive by moving their text to a tooltip on mobile
+
+    -   This also makes the button's styles consistent with the standard `Button` component
+    -   `GridFilterButton` now supports props to override the default button props
+
+-   e9f547d95: Adjust how tooltips are triggered
+
+    This is to achieve a more consistent and user-friendly experience by ensuring tooltips are always shown when the user interacts with the underlying element.
+
+    -   When using the default `hover` trigger, tooltips will now be shown on both `hover` and `focus`. Previously, you had to choose between `hover` and `focus`.
+    -   The `trigger` prop is deprecated and will be removed in a future major version. The combined `hover`/`focus` trigger will be the only supported behavior.
+    -   Tooltips on touch devices will be shown immediately when the user starts interacting with the underlying element.
+
+### Patch Changes
+
+-   1e01cca21: Prevent scrolling of `DialogTitle` and `DialogActions` in `EditDialog`
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+-   20f63417e: Prevent the page content from overflowing the window, causing a horizontal scrollbar
+
+    This happened when using elements like `Tabs` that are intended to be horizontally scrollable and could, therefore, be wider than the window.
+
+-   8114a6ae7: Fix `onClick` and other props not being passed to the icon version of some button components
+-   Updated dependencies [9f2a1272b]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [a4fcdeb51]
+-   Updated dependencies [5ba64aab6]
+    -   @comet/admin-theme@7.11.0
+    -   @comet/admin-icons@7.11.0
+
+## 7.10.0
+
+### Minor Changes
+
+-   8f924d591: Add new custom `Dialog`
+
+    The component extends the MUI `Dialog` component to enable common use cases:
+
+    -   The `title` prop can be used to set the dialog title
+    -   A close button is shown when the `onClose` is used
+
+    **Example**
+
+    ```tsx
+    <Dialog
+        title="Dialog Title"
+        onClose={() => {
+            // Handle dialog closing here
+        }}
+    />
+    ```
+
+-   6eba5abea: Add a `forceVerticalContainerSize` prop to `FieldContainer`
+
+    Use it to define below which container size the `vertical` styling is applied when using the `horizontal` variant.
+
+-   589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
+
+    -   `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
+    -   `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
+
+    **Example:**
+
+    ```tsx
+    <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon" secondaryHelperText="0/100">
+        <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+    </FieldContainer>
+    ```
+
+### Patch Changes
+
+-   aa02ca13f: Fix a bug in `useDataGridExcelExport` that would cause an Excel export to fail when a cell's value was `undefined`
+-   6eba5abea: Prevent unintended layout shift after the initial render of `FieldContainer` when using the `horizontal` variant
+-   bf6b03fe0: Fix alignment of `Alert` icon with the title
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin-icons@7.10.0
+
+## 7.9.0
+
+### Minor Changes
+
+-   6d6131b16: Add the `dataGridDateColumn` and `dataGridDateTimeColumn` helpers for using the "date" and "dateTime" types in Data Grid
+
+    ```diff
+    -import { GridColDef } from "@comet/admin";
+    +import { GridColDef, dataGridDateColumn, dataGridDateTimeColumn } from "@comet/admin";
+
+     // ...
+
+     const columns: GridColDef[] = [
+         {
+    -       type: "date",
+    -       valueGetter: ({ value }) => value && new Date(value),
+    -       renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" />,
+    +       ...dataGridDateColumn,
+            field: "createdAt",
+            headerName: "Created At",
+         },
+         {
+    -      type: "dateTime",
+    -      valueGetter: ({ value }) => value && new Date(value),
+    -      renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" timeStyle="short" />,
+    +      ...dataGridDateTimeColumn,
+           field: "updatedAt",
+           headerName: "Updated At",
+         },
+     ];
+    ```
+
+-   7cea765fe: Add UI for Impersonation Feature
+
+    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    -   Add button to allow users to switch on impersonation in the `UserGrid`
+    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    -   Add `ImpersonateUser` icon
+
+### Patch Changes
+
+-   48cac4dac: Fix styling issues of inputs like `FinalFormInput`, `FinalFormNumberInput`, `FinalFormSelect`, `TextAreaField`
+
+    -   Change background-color, border-color and color of the label for different states (`default`, `disabled` and `focused`).
+    -   For required inputs, fix spacing between the label and asterisk.
+    -   Fix font-weight and margin of `helperText`.
+
+-   0919e3ba6: Remove right padding from form fields without an end adornment
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [55d40ef08]
+-   Updated dependencies [9aa6947b7]
+    -   @comet/admin-icons@7.9.0
+    -   @comet/admin-theme@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   139616be6: Add `FullHeightContent` component
+
+    Used to help components take advantage of all the available content height, e.g., when using a `DataGrid` inside `Tabs` already contained in a `MainContent` component.
+
+    Usage example for `FullHeightContent`:
+
+    ```tsx
+    <MainContent>
+        <RouterTabs>
+            <RouterTab label="DataGrid Example" path="">
+                <FullHeightContent>
+                    <DataGrid />
+                </FullHeightContent>
+            </RouterTab>
+            <RouterTab label="Another tab" path="/another-tab">
+                Content of another tab
+            </RouterTab>
+        </RouterTabs>
+    </MainContent>
+    ```
+
+    Example where `MainContent` with `fullHeight` should be used, instead of `FullHeightContent`:
+
+    ```tsx
+    <MainContent fullHeight>
+        <DataGrid />
+    </MainContent>
+    ```
+
+-   d8fca0522: Add second `InitialFormValues` generic to `FinalForm`
+
+    This allows differentiating between a form's values and initial values.
+
+-   d8298d59a: Add the `StackMainContent` component
+
+    This version of `MainContent` only adds content spacing and height when it's the last visible `StackSwitch`.
+    Using `StackMainContent` instead of `MainContent` prevents unintended or duplicate spacings in cases where multiple `MainContent` components are used inside nested `StackSwitch` components.
+
+### Patch Changes
+
+-   a168e5514: Open collapsible menu item on refresh if its child or sub-child is selected
+-   e16ad1a02: Fix a bug that prevented dynamically rendered tabs in `Tabs`
+-   139616be6: Fix the `fullHeight` behavior of `MainContent`
+
+    When used inside certain elements, e.g. with `position: relative`, the height would be calculated incorrectly.
+
+-   eefb0546f: Render empty values correctly when using `renderStaticSelectCell` as a `DataGrid` column's `renderCell` function
+-   795ec73d9: Fix the spacing between the text and chip in `CrudMoreActionsMenu`
+-   8617c3bcd: Fix URL prefix in `SubRouteIndexRoute`
+-   daacf1ea6: Fix a bug in `ToolbarBreadcrumbs` where it was possible to open the mobile breadcrumbs menu when there were no items to be shown in the menu
+-   9cc75c141: Prevent the width of the mobile breadcrumbs menu of `ToolbarBreadcrumbs` from being far too small
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+    -   @comet/admin-icons@7.8.0
+    -   @comet/admin-theme@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.7.0
+-   @comet/admin-theme@7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+-   bc19fb18c: `useDataGridExcelExport`: Add support for `number` and `null` values in the Data Grid Excel export without the need for a `valueFormatter`
+-   00d7ddae1: Allow hiding the header (summary) of `FieldSet` by making the `title` prop optional
+
+### Patch Changes
+
+-   37d71a89a: Fix hover styling of `ToolbarBackButton`
+-   cf2ee898f: Fix missing key error in `CrudMoreActionsMenu`
+-   03afcd073: Allow customizing `CrudContextMenu`
+
+    Customize existing parts of `CrudContextMenu` using the `slotProps`, `iconMapping` and `messagesMapping` props.
+    Add custom actions by adding instances of `RowActionsItem` to the `children`:
+
+    ```tsx
+    <CrudContextMenu
+    // ...
+    >
+        <RowActionsItem
+            icon={<Favorite />}
+            onClick={() => {
+                // Do something
+            }}
+        >
+            Custom action
+        </RowActionsItem>
+        <Divider />
+    </CrudContextMenu>
+    ```
+
+-   fe8909404: Slightly adjust the color of the clear button of inputs to match the Comet CI
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-theme@7.6.0
+
+## 7.5.0
+
+### Minor Changes
+
+-   bb7c2de72: Adapt the `DeleteDialog` in `CrudContextMenu` to match the updated Comet CI
+-   c59a60023: Add a `CrudMoreActionsMenu` component
+
+    The component can be used to create a "More actions" menu for a list of items.
+    It is typically used in a toolbar above a Data Grid.
+
+    **Example**
+
+    ```tsx
+    <CrudMoreActionsMenu
+        selectionSize={selectionSize}
+        overallActions={[
+            {
+                label: "Export to excel",
+                onClick: handleExportToExcelClick,
+            },
+        ]}
+        selectiveActions={[
+            {
+                label: "move",
+                onClick: handleMoveClick,
+                icon: <Move />,
+                divider: true,
+            },
+            {
+                label: "download",
+                onClick: handleDownloadClick,
+                icon: <Download />,
+            },
+        ]}
+    />
+    ```
+
+-   4cea3e31b: Make it easier to render DataGrid cell content based on the cell's `valueOptions`
+
+    Objects inside a cell's `valueOptions` now support an optional `cellContent` property to allow defining a React node in addition to the `label`, which can only be a string.
+
+    When using the new `renderStaticSelectCell` helper as the `renderCell` function in the column definition, the helper will render the `cellContent` node of the selected option if defined.
+    The `label` or the string value of the option will be used as the cell's content if no `cellContent` node is provided.
+
+    The following example would behave as follows:
+
+    -   If the cell's value is "Shirt", it will render the `cellContent` node (the H2 Typography)
+    -   If the cell's value is "Cap", it will render the `label` (the string "This Cap")
+    -   If the cell's value is anything else, it will render the value as a string, e.g. "Tie"
+
+    ```tsx
+    {
+        headerName: "Category",
+        field: "category",
+        valueOptions: [
+            {
+                value: "Shirt",
+                label: "Shirt"
+                cellContent: (
+                    <Typography variant="h2">
+                        A Shirt
+                    </Typography>
+                ),
+            },
+            {
+                value: "Cap",
+                label: "This Cap",
+            },
+            "Tie",
+        ],
+        renderCell: renderStaticSelectCell,
+    }
+    ```
+
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   9a6a64ef3: Fix a bug where the initial values of `RadioGroupField` and `CheckboxListField` would not be shown in the input
+-   b5838209b: Fix an issue where the clear button of `SelectField` would be shown, even if the value is `undefined`
+-   c8f37fbd1: Allow setting all props of `FinalFormSelect` via `componentsProps` in `SelectField`
+    -   @comet/admin-icons@7.5.0
+    -   @comet/admin-theme@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes

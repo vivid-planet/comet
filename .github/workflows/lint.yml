@@ -18,7 +18,7 @@ jobs:
         steps:
             - run: echo "${{ github.actor }}"
 
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
             - run: |
@@ -26,28 +26,28 @@ jobs:
                   git config user.email github-actions@github.com
 
             - name: "Library: Clone translations"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   repository: vivid-planet/comet-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
             - name: "Demo Admin: Clone translations"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
 
             - name: "Demo Site: Clone translations"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/site/lang/comet-demo-lang"
 
             - name: "Demo Site Pages: Clone translations"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
@@ -55,10 +55,10 @@ jobs:
 
             - uses: pnpm/action-setup@v4
 
-            - name: Use Node.js 18.x
-              uses: actions/setup-node@v3
+            - name: Use Node.js 22.x
+              uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 22
                   registry-url: "https://registry.npmjs.org"
                   cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 

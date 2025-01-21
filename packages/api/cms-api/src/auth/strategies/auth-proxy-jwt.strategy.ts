@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
+import { Request } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { passportJwtSecret } from "jwks-rsa";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
@@ -30,11 +31,12 @@ export function createAuthProxyJwtStrategy({
                 }),
                 audience,
                 ...strategyOptions,
+                passReqToCallback: true,
             });
         }
 
-        async validate(data: JwtPayload): Promise<CurrentUser> {
-            return this.service.createCurrentUser(await this.service.createUserFromIdToken(data));
+        async validate(request: Request, idToken: JwtPayload): Promise<CurrentUser> {
+            return this.service.createCurrentUser(await this.service.createUser(request, idToken), request);
         }
     }
     return AuthProxyJwtStrategy;

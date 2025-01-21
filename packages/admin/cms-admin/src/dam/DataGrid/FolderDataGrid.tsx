@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     BreadcrumbItem,
     EditDialog,
+    GridCellContent,
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
@@ -14,7 +15,7 @@ import { Slide, SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
+import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamItemType } from "../../graphql.generated";
@@ -22,6 +23,7 @@ import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
+import { licenseTypeLabels } from "../FileForm/licenseType";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
 import { isFile } from "../helpers/isFile";
@@ -46,6 +48,7 @@ import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
+import { LicenseValidityTags } from "./tags/LicenseValidityTags";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 export { damFolderQuery } from "./FolderDataGrid.gql";
@@ -87,7 +90,7 @@ const FolderDataGrid = ({
     const damSelectionActionsApi = useDamSelectionApi();
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
-    const { importSources } = useDamConfig();
+    const { importSources, enableLicenseFeature } = useDamConfig();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -350,6 +353,7 @@ const FolderDataGrid = ({
                 defaultMessage: "Name",
             }),
             flex: 1,
+            minWidth: 300,
             renderCell: ({ row }) => {
                 return (
                     <DamItemLabelColumn
@@ -443,6 +447,49 @@ const FolderDataGrid = ({
             hideSortIcons: true,
             disableColumnMenu: true,
         },
+        ...(enableLicenseFeature
+            ? ([
+                  {
+                      field: "license",
+                      headerName: intl.formatMessage({
+                          id: "comet.dam.file.license",
+                          defaultMessage: "License",
+                      }),
+                      headerAlign: "left",
+                      align: "left",
+                      minWidth: 200,
+                      renderCell: ({ row }) => {
+                          if (isFile(row) && row.license && row.license.type) {
+                              return (
+                                  <GridCellContent
+                                      primaryText={licenseTypeLabels[row.license.type]}
+                                      secondaryText={
+                                          row.license.expiresWithinThirtyDays || row.license.hasExpired ? (
+                                              <LicenseValidityTags
+                                                  {...row.license}
+                                                  expirationDate={row.license.expirationDate ? new Date(row.license.expirationDate) : undefined}
+                                              />
+                                          ) : (
+                                              <>
+                                                  <FormattedMessage id="comet.dam.file.license.validUntil" defaultMessage="Valid until:" />{" "}
+                                                  {row.license.durationTo ? (
+                                                      <FormattedDate value={row.license.durationTo} dateStyle="medium" />
+                                                  ) : (
+                                                      <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
+                                                  )}
+                                              </>
+                                          )
+                                      }
+                                  />
+                              );
+                          }
+                      },
+                      sortable: false,
+                      hideSortIcons: true,
+                      disableColumnMenu: true,
+                  },
+              ] as GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment>)
+            : []),
         {
             field: "createdAt",
             headerName: intl.formatMessage({
@@ -452,13 +499,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.createdAt} />
-                </div>
-            ),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -472,13 +513,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.updatedAt} />
-                </div>
-            ),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,

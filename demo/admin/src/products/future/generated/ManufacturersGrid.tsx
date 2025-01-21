@@ -95,7 +95,7 @@ function ManufacturersGridToolbar() {
             <ToolbarFillSpace />
             <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
@@ -105,7 +105,12 @@ function ManufacturersGridToolbar() {
 export function ManufacturersGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "manufacturers",
+        }),
+        ...usePersistentColumnState("ManufacturersGrid"),
+    };
 
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
         {
@@ -239,8 +244,8 @@ export function ManufacturersGrid(): React.ReactElement {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <EditIcon color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <EditIcon />
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {

@@ -1,5 +1,264 @@
 # @comet/cms-api
 
+## 7.12.0
+
+### Minor Changes
+
+-   604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+-   575f1a77f: Add `ExceptionFilter` to replace `ExceptionInterceptor`
+
+    The main motivation for this change was that the `ExceptionInterceptor` didn't capture exceptions thrown in guards. This could lead to information leaks, e.g., details about the database schema or the underlying code. This is considered a security risk.
+
+    The `ExceptionFilter` also catches error within guards. The error format remains unchanged.
+
+    Switching from the `ExceptionInterceptor` to the `ExceptionFilter` must be done in the project:
+
+    ```diff
+    // main.ts
+
+    - app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
+    + app.useGlobalFilters(new ExceptionFilter(config.debug));
+    ```
+
+### Patch Changes
+
+-   64173b513: Fix page tree node slug validation to prevent URL encoded characters
+-   c66a403d2: Migrate from deprecated `@azure/openai` package to `openai`
+
+    See https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/migration-javascript for more information.
+
+-   6b4866a12: Pass `x-preview-dam-urls` and `x-relative-dam-urls` headers to `url` field resolver in `FileImagesResolver`
+-   cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    -   `video/avi` doesn't actually exist
+    -   `image/psd` doesn't exist / is non-standard
+    -   `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+        instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+-   cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+-   ff0a037a4: Prevent image uploads from failing if exif data cannot be parsed
+    -   @comet/blocks-api@7.12.0
+
+## 7.11.0
+
+### Patch Changes
+
+-   fb2297b2d: Fix `notEqual` operation for enum filter
+-   6778c4e97: Prevent the creation of a second home page
+-   Updated dependencies [58a99bbdd]
+    -   @comet/blocks-api@7.11.0
+
+## 7.10.0
+
+### Patch Changes
+
+-   7b2adae8b: API Generator: Don't generate an update input for the single generator
+    -   @comet/blocks-api@7.10.0
+
+## 7.9.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   45fbc54c1: Rename `User` to `UserPermissionsUser` in GraphQL schema
+
+    This prevents naming collisions if a web wants to use a `User` type.
+
+    Additionally prefix remaining user permissions-specific actions with `UserPermissions`.
+
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   02a5bdc68: API Generator: Fix generated types for position code
+-   f20ec6ce5: Make class-validator a peer dependency
+-   Updated dependencies [f20ec6ce5]
+    -   @comet/blocks-api@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   af892c106: Prevent the API from crashing because of stream errors when delivering a file
+-   253aebbc1: Allow overriding `requestHandler` in `BlobStorageS3Storage`
+-   af892c106: Prevent socket exhaustion in `BlobStorageS3Storage`
+
+    By default, the S3 client allows a maximum of 50 open sockets.
+    A socket is only released once a file is streamed completely.
+    Meaning, it can remain open forever if a file stream is interrupted (e.g., when the user leaves the site).
+    This could lead to socket exhaustion, preventing further file delivery.
+
+    To resolve this, the following changes were made:
+
+    1. Add a close handler to destroy the stream when the client disconnects
+    2. Set a 60-second `requestTimeout` to close unused connections
+
+    -   @comet/blocks-api@7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+-   73c07ea6e: Set content scopes in request object
+
+    This allows accessing the affected content scopes inside a block's transformer service.
+
+    **Example**
+
+    ```ts
+    import { Inject, Injectable } from "@nestjs/common";
+    import { CONTEXT } from "@nestjs/graphql";
+
+    /* ... */
+
+    @Injectable()
+    export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformResponse> {
+        constructor(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            @Inject(CONTEXT) private readonly context: any,
+        ) {}
+
+        async transformToPlain(block: PixelImageBlockData) {
+            // Get the affected content scopes
+            const contentScopes = this.context.req.contentScopes;
+
+            // Do something with the content scopes
+
+            /* ... */
+        }
+    }
+    ```
+
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   f8ae0843c: API Generator: Add support for disabling sort/filter using the `@CrudField()` decorator for embeddables
+-   d535e3207: Improve error message for empty IDs arrays in `@AffectedEntity`
+-   44ec9eb3f: Redirects: Add `redirectBySource` query that can be used to query for a single redirect by source
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+### Patch Changes
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   979d5f455: Improve error message in `Migration20240702123233`
+
+    `Migration20240702123233` adds a valid file extension to every DamFile#name that doesn't have an extension yet.
+    Previously, the migration crashed without a helpful error message if the mimetype of a file wasn't in [mime-db](https://www.npmjs.com/package/mime-db).
+    Now, the migration throws an error including the problematic mimetype.
+
+-   b03f3dfc1: Call `createUserFromRequest` before `createUserFromIdToken`
+
+    The latter is marked as deprecated and should only be used if the
+    first one is not defined.
+
+-   cc2a11781: Redirects: Improve GraphQL API performance by preloading the page tree to speed up target page lookup
+
+    Also, increase the maximum limit from 100 to 1000.
+
+-   72cf8fd12: Treat `null` and `undefined` scope dimensions the same in `AccessControlService#isAllowed`
+
+    Optional scope dimensions may sometimes be `null` or `undefined` depending on how the scope object is created.
+    For instance, when the scope is loaded from the database, the optional dimension will be `null`, but when the scope is coming from GraphQL, the dimension can be `undefined`.
+    Due to strict equality comparison, this led to incorrect access control checks in `AccessControlService#isAllowed`.
+    This is now prevented by treating `null` and `undefined` dimensions as the same when checking the scope.
+
+-   6b0ecebed: DAM: Fix/set cache-control headers
+
+    -   Public endpoints should cache files for 1 day
+    -   Private endpoints should cache files for 1 year - but only in local caches (not CDN)
+
+-   6f931911c: Avoid duplicate file extension in `createFileUploadInputFromUrl`
+-   Updated dependencies [9e2b0fac8]
+    -   @comet/blocks-api@7.6.0
+
+## 7.5.0
+
+### Minor Changes
+
+-   f2da11db1: API Generator: Add support for position field
+
+    Add a field named `position` to enable this feature. This field will hold and update the position. This should be an integer number field >= 1. It's also possible to define fields (in CrudGenerator-Decorator) to group position by.
+
+-   5a48ae482: Add file size to `DamFileDownloadLinkBlock`
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes
@@ -264,7 +523,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
@@ -780,7 +1039,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 

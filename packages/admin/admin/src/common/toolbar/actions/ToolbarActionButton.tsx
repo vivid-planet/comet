@@ -65,6 +65,9 @@ const StyledButton = createComponentSlot(Button)<ToolbarActionButtonClassKey, Ow
     },
 })();
 
+/**
+ * @deprecated Use `Button` from `@comet/admin` with the `responsive` prop instead.
+ */
 export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
     const { children, slotProps = {}, ...restProps } = useThemeProps({ props, name: "CometAdminToolbarActionButton" });
     const { iconButton: iconButtonProps, tooltip: tooltipProps, button: buttonProps } = slotProps;
@@ -78,7 +81,7 @@ export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
 
     return useIconButton && icon ? (
         <StyledTooltip title={children} {...tooltipProps}>
-            <StyledIconButton ownerState={ownerState} {...iconButtonProps}>
+            <StyledIconButton ownerState={ownerState} {...restProps} {...iconButtonProps}>
                 {icon}
             </StyledIconButton>
         </StyledTooltip>

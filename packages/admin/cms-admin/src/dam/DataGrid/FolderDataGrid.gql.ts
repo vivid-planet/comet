@@ -12,6 +12,7 @@ export const damFileTableFragment = gql`
         mimetype
         contentHash
         license {
+            type
             durationFrom
             durationTo
             expirationDate

@@ -1,19 +1,20 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudVisibility,
+    dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridColumnsButton,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -21,11 +22,12 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
+import { IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
+import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -50,12 +52,12 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
+            <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>
@@ -85,8 +87,8 @@ export function ProductsGrid() {
                     row.type,
                     row.category?.title,
                     row.inStock
-                        ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In Stock" })
-                        : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of Stock" }),
+                        ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In stock" })
+                        : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of stock" }),
                 ];
                 return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
@@ -190,11 +192,10 @@ export function ProductsGrid() {
             minWidth: 80,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: "Available Since",
             width: 130,
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
         },
         {
             field: "status",
@@ -222,18 +223,25 @@ export function ProductsGrid() {
             },
         },
         {
-            field: "action",
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ value }) => value?.name,
+            filterOperators: [ManufacturerFilterOperator],
+        },
+        {
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
-            width: 106,
+            width: 116,
             pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
                         <ProductsGridPreviewAction {...params} />
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
@@ -287,20 +295,18 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            error={error}
+            components={{
+                Toolbar: ProductsGridToolbar,
+            }}
+        />
     );
 }
 
@@ -330,6 +336,9 @@ const productsFragment = gql`
         }
         variants {
             id
+        }
+        manufacturer {
+            name
         }
         articleNumbers
         discounts {

@@ -1,8 +1,8 @@
-import { SiteConfig } from "@comet/cms-admin";
 import { createContext, PropsWithChildren, useContext } from "react";
 
 import cometConfig from "./comet-config.json";
 import { environment } from "./environment";
+import { PublicSiteConfig } from "./site-configs";
 
 export function createConfig() {
     const environmentVariables = {} as Record<(typeof environment)[number], string>;
@@ -21,11 +21,12 @@ export function createConfig() {
         ...cometConfig,
         apiUrl: environmentVariables.API_URL,
         adminUrl: environmentVariables.ADMIN_URL,
-        sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG) as SitesConfig,
+        sitesConfig: JSON.parse(atob(environmentVariables.PUBLIC_SITE_CONFIGS)) as PublicSiteConfig[],
+        buildDate: environmentVariables.BUILD_DATE,
+        buildNumber: environmentVariables.BUILD_NUMBER,
+        commitSha: environmentVariables.COMMIT_SHA,
     };
 }
-
-export type SitesConfig = Record<string, SiteConfig>;
 
 export type Config = ReturnType<typeof createConfig>;
 

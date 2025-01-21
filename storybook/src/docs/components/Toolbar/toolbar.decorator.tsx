@@ -1,23 +1,26 @@
 import { Stack, StackPage, StackPageTitle, StackSwitch } from "@comet/admin";
-import { LegacyStoryFn } from "@storybook/addons";
-import * as React from "react";
+import { Decorator } from "@storybook/react";
 
-import { DecoratorContext } from "../../../storyHelpers";
-
-export function toolbarDecorator<StoryFnReturnType = unknown>() {
-    return (fn: LegacyStoryFn<StoryFnReturnType>, c: DecoratorContext<StoryFnReturnType>) => {
+export function toolbarDecorator(): Decorator {
+    return (Story) => {
         return (
             <Stack topLevelTitle="Automatic Title from Stack">
                 <StackSwitch initialPage="automaticTitle">
-                    <StackPage name="automaticTitle">{fn(c)}</StackPage>
+                    <StackPage name="automaticTitle">
+                        <Story />
+                    </StackPage>
                     <StackPage name="automaticTitleDetail" title="Automatic Title from Stack - Detail">
-                        {fn(c)}
+                        <Story />
                     </StackPage>
                     <StackPage name="page-1">
-                        <StackPageTitle title="page1">{fn(c)} </StackPageTitle>
+                        <StackPageTitle title="page1">
+                            <Story />
+                        </StackPageTitle>
                     </StackPage>
                     <StackPage name="page-2">
-                        <StackPageTitle title="page2">{fn(c)} </StackPageTitle>
+                        <StackPageTitle title="page2">
+                            <Story />
+                        </StackPageTitle>
                     </StackPage>
                 </StackSwitch>
             </Stack>

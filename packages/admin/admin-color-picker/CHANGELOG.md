@@ -1,5 +1,114 @@
 # @comet/admin-color-picker
 
+## 7.12.0
+
+### Patch Changes
+
+-   Updated dependencies [af51bb408]
+-   Updated dependencies [92b3255d2]
+-   Updated dependencies [954635630]
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [4f6e6b011]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [7da81fa2e]
+-   Updated dependencies [3ddc2278b]
+-   Updated dependencies [0bb181a52]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-icons@7.12.0
+
+## 7.11.0
+
+### Patch Changes
+
+-   Updated dependencies [b8b8e2747]
+-   Updated dependencies [1e01cca21]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [20f63417e]
+-   Updated dependencies [e9f547d95]
+-   Updated dependencies [8114a6ae7]
+    -   @comet/admin@7.11.0
+    -   @comet/admin-icons@7.11.0
+
+## 7.10.0
+
+### Patch Changes
+
+-   Updated dependencies [8f924d591]
+-   Updated dependencies [aa02ca13f]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [bf6b03fe0]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin@7.10.0
+    -   @comet/admin-icons@7.10.0
+
+## 7.9.0
+
+### Patch Changes
+
+-   1d73f3f45: Add missing spacing to the clear-color button of `ColorPicker`
+-   Updated dependencies [6d6131b16]
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [0919e3ba6]
+-   Updated dependencies [55d40ef08]
+    -   @comet/admin@7.9.0
+    -   @comet/admin-icons@7.9.0
+
+## 7.8.0
+
+### Patch Changes
+
+-   Updated dependencies [139616be6]
+-   Updated dependencies [d8fca0522]
+-   Updated dependencies [a168e5514]
+-   Updated dependencies [e16ad1a02]
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+-   Updated dependencies [139616be6]
+-   Updated dependencies [eefb0546f]
+-   Updated dependencies [795ec73d9]
+-   Updated dependencies [8617c3bcd]
+-   Updated dependencies [d8298d59a]
+-   Updated dependencies [daacf1ea6]
+-   Updated dependencies [9cc75c141]
+    -   @comet/admin@7.8.0
+    -   @comet/admin-icons@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/admin@7.7.0
+-   @comet/admin-icons@7.7.0
+
+## 7.6.0
+
+### Patch Changes
+
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [37d71a89a]
+-   Updated dependencies [cf2ee898f]
+-   Updated dependencies [03afcd073]
+-   Updated dependencies [00d7ddae1]
+-   Updated dependencies [fe8909404]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-icons@7.6.0
+
+## 7.5.0
+
+### Patch Changes
+
+-   Updated dependencies [bb7c2de72]
+-   Updated dependencies [9a6a64ef3]
+-   Updated dependencies [c59a60023]
+-   Updated dependencies [b5838209b]
+-   Updated dependencies [c8f37fbd1]
+-   Updated dependencies [4cea3e31b]
+-   Updated dependencies [216d93a10]
+    -   @comet/admin@7.5.0
+    -   @comet/admin-icons@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes

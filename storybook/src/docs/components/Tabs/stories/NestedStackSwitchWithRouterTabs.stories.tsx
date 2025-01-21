@@ -1,13 +1,15 @@
 import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
-storiesOf("stories/components/Tabs/Nested StackSwitch with RouterTabs", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Nested StackSwitch with RouterTabs", () => {
+export default {
+    title: "stories/components/Tabs/Nested StackSwitch with RouterTabs",
+    decorators: [storyRouterDecorator()],
+};
+
+export const NestedStackSwitchWithRouterTabs = {
+    render: () => {
         const location = useLocation();
 
         return (
@@ -64,4 +66,7 @@ storiesOf("stories/components/Tabs/Nested StackSwitch with RouterTabs", module)
                 </Stack>
             </div>
         );
-    });
+    },
+
+    name: "Nested StackSwitch with RouterTabs",
+};
