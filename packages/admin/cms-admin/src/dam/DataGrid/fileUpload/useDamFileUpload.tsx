@@ -450,7 +450,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response?.data.message === "Rejected File Upload: SVG must not contain JavaScript") {
+                    } else if (typedErr.response?.data.message.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
                     } else if (typedErr.response === undefined && typedErr.request) {
                         addValidationError(file, <NetworkError />);
