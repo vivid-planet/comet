@@ -547,7 +547,7 @@ function unserializeInitialValues(initialValues: string | null = null): InitialV
             if ("pos" in parsed && typeof parsed.pos === "number") {
                 ret.pos = parsed.pos as number;
             }
-        } catch (e) {
+        } catch {
             // failing to parse the initial-values is ok, we use the defaults in this case
         }
     }

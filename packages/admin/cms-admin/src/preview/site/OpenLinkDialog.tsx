@@ -38,7 +38,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps) {
                 <Typography>
                     <FormattedMessage
                         id="comet.preview.openExternalLink.description"
-                        defaultMessage={'Do you want to open "{url}" in a new Browser tab?'}
+                        defaultMessage='Do you want to open "{url}" in a new Browser tab?'
                         values={{
                             url: link?.targetUrl,
                         }}

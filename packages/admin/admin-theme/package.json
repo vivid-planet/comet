@@ -1,30 +1,4 @@
 {
-    "name": "@comet/admin-theme",
-    "version": "7.11.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/admin/admin-theme"
-    },
-    "license": "BSD-2-Clause",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "files": [
-        "lib"
-    ],
-    "scripts": {
-        "build": "$npm_execpath run clean && run-p build:babel build:types",
-        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
-        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit",
-        "start": "run-p start:babel start:types",
-        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
-    },
     "dependencies": {
         "@comet/admin-icons": "workspace:^7.11.0",
         "@mui/utils": "^6.3.0"
@@ -47,6 +21,12 @@
         "rimraf": "^6.0.1",
         "typescript": "^4.0.0"
     },
+    "files": [
+        "lib"
+    ],
+    "license": "BSD-2-Clause",
+    "main": "lib/index.js",
+    "name": "@comet/admin-theme",
     "peerDependencies": {
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
@@ -55,5 +35,25 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
-    }
+    },
+    "repository": {
+        "directory": "packages/admin/admin-theme",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "scripts": {
+        "build": "$npm_execpath run clean && run-p build:babel build:types",
+        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
+        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
+        "clean": "rimraf lib",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "start": "run-p start:babel start:types",
+        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
+    },
+    "types": "lib/index.d.ts",
+    "version": "7.11.0"
 }

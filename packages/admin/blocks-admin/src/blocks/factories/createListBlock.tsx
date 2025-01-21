@@ -21,7 +21,7 @@ import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type DefaultAdditionalItemFields = {};
 
 export type ListBlockItem<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> = {

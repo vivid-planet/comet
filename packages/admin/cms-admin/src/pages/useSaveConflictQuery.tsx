@@ -30,7 +30,7 @@ export function useSaveConflictQuery<TData, TVariables>(
             });
             if (error) return false;
             return resolveHasConflict(data);
-        } catch (error) {
+        } catch {
             return false;
         }
     };

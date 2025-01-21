@@ -266,7 +266,7 @@ export const createUsePage: CreateUsePage =
                     });
 
                     if (!isValid) {
-                        onValidationFailed && onValidationFailed();
+                        onValidationFailed?.();
                         setSaving(false);
                         setSaveError("invalid");
                         return;

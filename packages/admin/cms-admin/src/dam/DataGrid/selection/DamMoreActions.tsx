@@ -49,7 +49,9 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
         );
 
         downloadSelected();
-        isFolderInSelection && snackbarApi.showSnackbar(snackbarElement);
+        if (isFolderInSelection) {
+            snackbarApi.showSnackbar(snackbarElement);
+        }
     };
 
     const {
@@ -122,7 +124,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
             />
 
             {/* the directory property is needed for the folder upload to work but not known to eslint */}
-            {/* eslint-disable-next-line react/no-unknown-property */}
+            {}
             <input type="file" hidden {...getInputProps()} webkitdirectory="webkitdirectory" directory="directory" ref={folderInputRef} />
             {fileUploadDialogs}
         </>

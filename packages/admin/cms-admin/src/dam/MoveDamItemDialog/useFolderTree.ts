@@ -91,7 +91,6 @@ export const useFolderTree = ({ damFoldersFlat }: UseFolderTreeProps): UseFolder
         setFoldersToRender(newFoldersToRender);
 
         // This should only be executed if the searchQuery changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expandedIds, tree]);
 
     return { tree, foldersToRender, expandedIds, setExpandedIds, toggleExpand, selectedId, setSelectedId };

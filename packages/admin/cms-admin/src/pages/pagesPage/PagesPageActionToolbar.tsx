@@ -273,8 +273,7 @@ export const PagesPageActionToolbar = ({
                                     variables: { id: node.id },
                                 });
                             }
-                        } catch (e) {
-                            // eslint-disable-next-line no-console
+                        } catch {
                             console.error("Error deleting pages");
                         } finally {
                             client.refetchQueries({ include: ["Pages"] });

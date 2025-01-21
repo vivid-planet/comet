@@ -132,7 +132,6 @@ export function cleanBlockTypeMap(map: IBlocktypeMap) {
         unsupportedKeysForUnstyled.forEach((c) => {
             if (map.unstyled[c]) {
                 map.unstyled[c] = undefined;
-                // eslint-disable-next-line no-console
                 console.warn(
                     `'unstyled' in BlocktypeMap does not support the key '${c}' with the given value '${map.unstyled[c]}'. The value is ignored.`,
                 );
