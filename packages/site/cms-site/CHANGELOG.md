@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.12.0
+
+### Patch Changes
+
+-   e92e6df03: Prevent the block-preview from becoming unresponsive when rendering an `input`
+
 ## 7.11.0
 
 ## 7.10.0
