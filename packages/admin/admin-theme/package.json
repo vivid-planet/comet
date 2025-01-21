@@ -39,7 +39,7 @@
         "@mui/x-data-grid": "^7.23.6",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
-        "eslint": "^8.0.0",
+        "eslint": "^9.18.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
         "react": "^18.3.1",

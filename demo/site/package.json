@@ -56,7 +56,7 @@
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "chokidar-cli": "^3.0.0",
-        "eslint": "^8.0.0",
+        "eslint": "^9.18.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
         "typescript": "^4.0.0"
