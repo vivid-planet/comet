@@ -9,14 +9,14 @@ type AccordionBlockProps = PropsWithData<AccordionBlockData>;
 
 export const AccordionBlock = withPreview(
     ({ data }: AccordionBlockProps) => {
-        const getOpenByDefaultBlockKeys = useMemo(
+        const openByDefaultBlockKeys = useMemo(
             () => data.blocks.filter((block) => block.props.openByDefault).map((block) => block.key),
             [data.blocks],
         );
 
         const [expandedItems, setExpandedItems] = useState<Set<string>>(() => {
             // Create a Set containing the keys of blocks where openByDefault is set to true
-            return new Set(getOpenByDefaultBlockKeys);
+            return new Set(openByDefaultBlockKeys);
         });
 
         const { showPreviewSkeletons, isSelected, isHovered } = usePreview();
@@ -37,7 +37,7 @@ export const AccordionBlock = withPreview(
                     return focusedBlock?.key;
                 };
 
-                const expandedItemsInPreview = new Set<string>(getOpenByDefaultBlockKeys);
+                const expandedItemsInPreview = new Set<string>(openByDefaultBlockKeys);
                 const focusedBlockKey = getFocusedBlockKey();
 
                 if (focusedBlockKey) {
@@ -46,7 +46,7 @@ export const AccordionBlock = withPreview(
 
                 setExpandedItems(expandedItemsInPreview);
             }
-        }, [showPreviewSkeletons, data.blocks, isSelected, isHovered, getOpenByDefaultBlockKeys]);
+        }, [showPreviewSkeletons, data.blocks, isSelected, isHovered, openByDefaultBlockKeys]);
 
         const handleChange = (itemKey: string) => {
             const newExpandedItems = new Set(expandedItems);
