@@ -1,24 +1,37 @@
 import { gql, useQuery } from "@apollo/client";
-import { GridColDef, Loading, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import {
+    CancelButton,
+    GridColDef,
+    Loading,
+    messages,
+    SaveBoundary,
+    SaveBoundarySaveButton,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarTitleItem,
+} from "@comet/admin";
 import { Select } from "@comet/admin-icons";
-import { Button, Card, CardContent, Toolbar, Typography } from "@mui/material";
+import { Button, Card, CardContent, Dialog, DialogActions, DialogTitle, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
-import { FormattedMessage, IntlShape, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { GQLContentScopesQuery, GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
-import { SelectScopesDialog } from "./selectScopesDialog/SelectScopesDialog";
+import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
+import { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
+
+type ContentScope = {
+    [key: string]: string;
+};
 
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
-    const intl = useIntl();
     const [open, setOpen] = useState(false);
 
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
                 userContentScopes: userPermissionsContentScopes(userId: $userId)
                 userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
@@ -63,7 +76,28 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     />
                 </CardContent>
             </Card>
-            <SelectScopesDialog open={open} onClose={() => setOpen(false)} data={data} userId={userId} />
+            <SaveBoundary
+                onAfterSave={() => {
+                    setOpen(false);
+                }}
+            >
+                <Dialog open={open} maxWidth="lg">
+                    <DialogTitle>
+                        <FormattedMessage id="comet.userScopes.dialog.title" defaultMessage="Select scopes" />
+                    </DialogTitle>
+                    <SelectScopesDialogContent
+                        userId={userId}
+                        userContentScopes={data.userContentScopes}
+                        userContentScopesSkipManual={data.userContentScopesSkipManual}
+                    />
+                    <DialogActions>
+                        <CancelButton onClick={() => setOpen(false)}>
+                            <FormattedMessage {...messages.close} />
+                        </CancelButton>
+                        <SaveBoundarySaveButton />
+                    </DialogActions>
+                </Dialog>
+            </SaveBoundary>
         </>
     );
 };
@@ -74,8 +108,7 @@ const CardToolbar = styled(Toolbar)`
 `;
 
 export function generateGridColumnsFromContentScopeProperties(
-    data: GQLContentScopesQuery["userContentScopes"] | GQLContentScopesQuery["availableContentScopes"],
-    intl: IntlShape,
+    data: GQLContentScopesQuery["userContentScopes"] | GQLAvailableContentScopesQuery["availableContentScopes"],
 ): GridColDef[] {
     const uniquePropertyNames = Array.from(new Set(data.flatMap((item) => Object.keys(item))));
     return uniquePropertyNames.map((propertyName) => {
@@ -84,10 +117,8 @@ export function generateGridColumnsFromContentScopeProperties(
             flex: 1,
             pinnable: false,
             sortable: false,
-            filterable: false,
-            headerName: camelCaseToHumanReadable(
-                intl.formatMessage({ id: `comet.userPermissions.contentScope.${propertyName}`, defaultMessage: propertyName }),
-            ),
+            filterable: true,
+            headerName: camelCaseToHumanReadable(propertyName),
             renderCell: ({ row }) => {
                 if (row[propertyName] != null) {
                     return <Typography variant="subtitle2">{camelCaseToHumanReadable(row[propertyName])}</Typography>;
