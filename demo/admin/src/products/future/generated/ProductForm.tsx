@@ -41,6 +41,7 @@ import React from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { validateTitle } from "../validateTitle";
 import {
     GQLManufacturerCountriesSelectQuery,
@@ -453,6 +454,19 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                                 />
                             )}
 
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="availableSince"
+                                component={FinalFormDatePicker}
+                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
+                            />
+                            <FutureProductNotice />
                             <Field
                                 name="image"
                                 isEqual={isEqual}
