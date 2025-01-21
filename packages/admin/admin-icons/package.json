@@ -33,7 +33,7 @@
         "@comet/eslint-config": "workspace:^7.11.0",
         "@mui/material": "^6.3.0",
         "@types/cli-progress": "^3.11.6",
-        "@types/node": "^22.0.0",
+        "@types/node": "^22.10.7",
         "@types/react": "^17.0.83",
         "@types/react-dom": "^17.0.26",
         "change-case": "^4.1.2",
