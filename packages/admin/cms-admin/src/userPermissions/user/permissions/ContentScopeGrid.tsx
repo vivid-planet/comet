@@ -28,13 +28,14 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         },
     );
 
-    const columns: GridColDef<{ [key in string]: string }>[] = generateGridColumnsFromContentScopeProperties(data?.userContentScopes || [], intl);
-
     if (error) throw new Error(error.message);
 
     if (!data) {
         return <Loading />;
     }
+
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.userContentScopes);
+
     return (
         <>
             <Card>
