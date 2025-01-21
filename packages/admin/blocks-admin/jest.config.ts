@@ -22,19 +22,7 @@ export default {
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
     testPathIgnorePatterns: ["/node_modules/"],
 
-    // A map from regular expressions to paths to transformers
-    transform: {
-        "^.+\\.(ts|tsx)$": "ts-jest",
-    },
-    // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    // transformIgnorePatterns: ["<rootDir>/node_modules/(?!(@mui)/)"],
-    //transformIgnorePatterns: ["<rootDir>/node_modules/(?!@react-dnd|react-dnd|core-dnd|@react-dnd|dnd-core|react-dnd-html5-backend)"],
-    transformIgnorePatterns: ["node_modules/(?!(react-dnd|dnd-core|react-dnd-html5-backend)/)"],
-
     moduleNameMapper: {
         "^react-dnd$": "<rootDir>/testing/stub-file.ts",
-        // "^react-dnd$": "react-dnd/dist/cjs",
-        // "^react-dnd-html5-backend$": "react-dnd-html5-backend/dist/cjs",
-        // "^dnd-core$": "dnd-core/dist/cjs",
     },
 };
