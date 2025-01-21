@@ -1,16 +1,16 @@
 import {
+    FillSpace,
     Stack,
     StackLink,
     StackPage,
     StackSwitch,
     Toolbar,
+    ToolbarActionButton,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
-import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { ReactNode } from "react";
@@ -43,7 +43,7 @@ function Story() {
             <ToolbarItem>
                 <Chip label="Chip text" />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <ToolbarActionButton startIcon={<ArrowRight />}>Secondary button</ToolbarActionButton>
                 <ToolbarActionButton startIcon={<Save />} variant="contained">

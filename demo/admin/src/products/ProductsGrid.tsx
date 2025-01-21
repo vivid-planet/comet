@@ -4,6 +4,7 @@ import {
     CrudVisibility,
     dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
@@ -13,7 +14,6 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -51,7 +51,7 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
@@ -299,7 +299,6 @@ export function ProductsGrid() {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

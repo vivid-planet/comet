@@ -37,7 +37,7 @@ import {
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
@@ -128,13 +128,13 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarTo
 
 type Props = {
     filter?: GQLProductFilter;
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
+export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -143,6 +143,9 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" },
             ],
+            initialFilter: {
+                items: [{ field: "type", operator: "is", value: "Shirt" }],
+            },
             queryParamsPrefix: "products",
         }),
         ...usePersistentColumnState("ProductsGrid"),
@@ -190,12 +193,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                         row.type == null ? (
                                             <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
                                         ) : (
-                                            typeLabels[`${row.type}`] ?? row.type
+                                            (typeLabels[`${row.type}`] ?? row.type)
                                         ),
                                     category: row.category?.title ?? (
                                         <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
                                     ),
-                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                                    inStock: row.inStock == null ? "-" : (inStockLabels[`${row.inStock}`] ?? row.inStock),
                                 }}
                             />
                         }
@@ -227,7 +230,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             renderHeader: () => (
                 <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
-                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                    <Tooltip title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
                         <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>
@@ -395,7 +398,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

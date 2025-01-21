@@ -63,6 +63,7 @@ export {
     BaseBlocksBlockItemData,
     BaseBlocksBlockItemInput,
     BlocksBlockFixturesGeneratorMap,
+    BlocksBlockInputInterface,
     createBlocksBlock,
 } from "./blocks/factories/createBlocksBlock";
 export { createImageLinkBlock } from "./blocks/factories/createImageLinkBlock";
@@ -113,6 +114,7 @@ export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInte
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
+export { ExceptionFilter } from "./common/errors/exception.filter";
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";

@@ -23,7 +23,7 @@ export const pageTreePageFragment = gql`
     }
 `;
 
-export interface PageTreePageAdditionalFieldsForUi {
+interface PageTreePageAdditionalFieldsForUi {
     selected: boolean;
     expanded: boolean | null;
     ancestorIds: Array<string>;

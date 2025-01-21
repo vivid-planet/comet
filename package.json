@@ -7,12 +7,13 @@
     },
     "license": "BSD-2-Clause",
     "scripts": {
-        "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs -d",
-        "build:storybook": "pnpm recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
-        "build:packages": "pnpm recursive --filter '@comet/*' run build",
-        "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
-        "clean": "pnpm recursive run clean",
+        "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
+        "build:storybook": "pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
+        "build:packages": "pnpm --recursive --filter '@comet/*' run build",
+        "build:docs": "pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
+        "clean": "pnpm --recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
+        "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
         "dev:admin": "dev-pm start @comet-admin",
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",
@@ -25,37 +26,38 @@
         "dev:docs": "dev-pm start docs",
         "postinstall": "husky install",
         "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
-        "lint": "pnpm lint:root && pnpm recursive run lint",
-        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
-        "lint:eslint": "pnpm recursive run lint:eslint",
-        "lint:tsc": "pnpm recursive run lint:tsc",
+        "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
+        "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
+        "lint:eslint": "pnpm --recursive run lint:eslint",
+        "lint:tsc": "pnpm --recursive run lint:tsc",
+        "lint:knip": "knip --exports --files --dependencies --tags=-knipignore",
         "storybook": "dev-pm start storybook",
-        "test": "pnpm recursive run test",
+        "test": "pnpm --recursive run test",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
-        "@comet/dev-process-manager": "^2.5.1",
-        "@comet/eslint-plugin": "workspace:*",
-        "@formatjs/cli": "^6.0.0",
-        "@types/node": "^22.0.0",
-        "cspell": "^8.15.4",
-        "dotenv-cli": "^7.0.0",
+        "@comet/dev-process-manager": "^2.7.0",
+        "@formatjs/cli": "^6.5.0",
+        "@types/node": "^22.10.7",
+        "knip": "^5.42.2",
+        "cspell": "^8.17.2",
+        "dotenv-cli": "^7.4.4",
         "husky": "^7.0.4",
-        "lint-staged": "^12.3.7",
-        "prettier": "^2.0.0",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.2.2",
+        "lint-staged": "^12.5.0",
+        "prettier": "^3.4.2",
+        "rimraf": "^6.0.1",
+        "typescript": "^5.7.2",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@9.14.2",
+    "packageManager": "pnpm@9.15.4",
     "engines": {
         "node": "22",
-        "pnpm": "9.14.2"
+        "pnpm": "9.15.4"
     },
     "dependencies": {
-        "@changesets/cli": "^2.26.0"
+        "@changesets/cli": "^2.27.11"
     },
     "pnpm": {
         "packageExtensions": {
@@ -77,6 +79,11 @@
             "react-intl": {
                 "peerDependencies": {
                     "@types/react": "*"
+                }
+            },
+            "swiper": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
                 }
             }
         }

@@ -1,19 +1,20 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Edit, ImpersonateUser } from "@comet/admin-icons";
-import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
+import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
@@ -38,7 +39,7 @@ function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGr
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );

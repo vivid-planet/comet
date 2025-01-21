@@ -66,7 +66,6 @@ export const NewsListBlock: BlockInterface<NewsListBlockData, State, NewsListBlo
                     ]}
                     loading={loading}
                     checkboxSelection
-                    disableRowSelectionOnClick
                     keepNonExistentRowsSelected
                     rowSelectionModel={state.ids}
                     onRowSelectionModelChange={(newSelection) => {

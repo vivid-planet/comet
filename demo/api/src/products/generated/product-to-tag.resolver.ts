@@ -13,11 +13,11 @@ import { ProductToTag } from "../entities/product-to-tag.entity";
 export class ProductToTagResolver {
     @ResolveField(() => Product)
     async product(@Parent() productToTag: ProductToTag): Promise<Product> {
-        return productToTag.product.load();
+        return productToTag.product.loadOrFail();
     }
 
     @ResolveField(() => ProductTag)
     async tag(@Parent() productToTag: ProductToTag): Promise<ProductTag> {
-        return productToTag.tag.load();
+        return productToTag.tag.loadOrFail();
     }
 }

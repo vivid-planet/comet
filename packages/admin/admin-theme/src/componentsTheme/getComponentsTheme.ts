@@ -13,7 +13,9 @@ import { getMuiAutocomplete } from "./MuiAutocomplete";
 import { getMuiBadge } from "./MuiBadge";
 import { getMuiButton } from "./MuiButton";
 import { getMuiButtonGroup } from "./MuiButtonGroup";
+import { getMuiCard } from "./MuiCard";
 import { getMuiCardContent } from "./MuiCardContent";
+import { getMuiCardHeader } from "./MuiCardHeader";
 import { getMuiCheckbox } from "./MuiCheckbox";
 import { getMuiChip } from "./MuiChip";
 import { getMuiDataGrid } from "./MuiDataGrid";
@@ -76,7 +78,9 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiBadge: getMuiBadge(components.MuiBadge, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
     MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
+    MuiCard: getMuiCard(components.MuiCard, themeData),
     MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),
+    MuiCardHeader: getMuiCardHeader(components.MuiCardHeader, themeData),
     MuiCheckbox: getMuiCheckbox(components.MuiCheckbox, themeData),
     MuiChip: getMuiChip(components.MuiChip, themeData),
     MuiDataGrid: getMuiDataGrid(components.MuiDataGrid, themeData),

@@ -3,8 +3,10 @@ import {
     CrudMoreActionsMenu,
     DataGridToolbar,
     FieldSet,
+    FillSpace,
     FinalForm,
     FormSection,
+    FullHeightContent,
     GridColDef,
     GridFilterButton,
     Loading,
@@ -24,13 +26,12 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -124,7 +125,7 @@ export const SimpleFormOnAPage = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
@@ -181,7 +182,7 @@ export const LargeFormOnAPage = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
@@ -226,7 +227,7 @@ export const SimpleFormInADialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" onClick={() => setShowDialog(true)}>
                             Open dialog
@@ -294,7 +295,7 @@ export const LargeFormInADialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" onClick={() => setShowDialog(true)}>
                             Open dialog
@@ -350,7 +351,7 @@ export const SingleGridFullHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid disableRowSelectionOnClick columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
             </>
         );
@@ -386,14 +387,7 @@ export const SingleGridAutoHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent>
-                    <DataGrid
-                        disableRowSelectionOnClick
-                        columns={columns}
-                        rows={rows}
-                        loading={loading}
-                        slots={{ toolbar: GridToolbar }}
-                        autoHeight
-                    />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight />
                 </StackMainContent>
             </>
         );
@@ -436,7 +430,7 @@ export const GridWithFormInADialog = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setEditingId("add")}>
                             Add new item
@@ -468,7 +462,7 @@ export const GridWithFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                    <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
                 <Dialog open={!!editingId} onClose={() => setEditingId(undefined)}>
                     <SaveBoundary onAfterSave={() => setEditingId(undefined)}>
@@ -522,7 +516,7 @@ export const GridWithFormOnAPage = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} component={StackLink} pageName="add" payload="add">
                             Add new item
@@ -551,7 +545,7 @@ export const GridWithFormOnAPage = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -566,7 +560,7 @@ export const GridWithFormOnAPage = {
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
                     <StackMainContent fullHeight>
-                        <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                        <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add">
@@ -634,7 +628,7 @@ export const NestedGridsAndFormsWithTabs = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
                             Add new item
@@ -668,7 +662,7 @@ export const NestedGridsAndFormsWithTabs = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -684,7 +678,7 @@ export const NestedGridsAndFormsWithTabs = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -700,9 +694,9 @@ export const NestedGridsAndFormsWithTabs = {
                                                 </FieldSet>
                                             </RouterTab>
                                             <RouterTab path="/child-items" label="Child items in Grid">
-                                                <FullHeightGridContainer>
-                                                    <DataGrid disableRowSelectionOnClick rows={rows} columns={childGridColumns} loading={loading} />
-                                                </FullHeightGridContainer>
+                                                <FullHeightContent>
+                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
+                                                </FullHeightContent>
                                             </RouterTab>
                                         </RouterTabs>
                                     </StackMainContent>
@@ -764,7 +758,7 @@ export const NestedFormInGridInTabsInGrid = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
                             Add new item
@@ -793,7 +787,7 @@ export const NestedFormInGridInTabsInGrid = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -809,7 +803,7 @@ export const NestedFormInGridInTabsInGrid = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -827,9 +821,9 @@ export const NestedFormInGridInTabsInGrid = {
                                             <RouterTab path="/child-items" label="Child items in Grid">
                                                 <StackSwitch>
                                                     <StackPage name="grid">
-                                                        <FullHeightGridContainer>
-                                                            <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} />
-                                                        </FullHeightGridContainer>
+                                                        <FullHeightContent>
+                                                            <DataGrid rows={rows} columns={columns} loading={loading} />
+                                                        </FullHeightContent>
                                                     </StackPage>
                                                     <StackPage name="edit">
                                                         {(id) => {
@@ -887,7 +881,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <CrudMoreActionsMenu
                             selectionSize={selectionModel.length}
@@ -931,7 +925,6 @@ export const GridWithSelectionAndMoreActionsMenu = {
                 </StackToolbar>
                 <StackMainContent fullHeight>
                     <DataGrid
-                        disableRowSelectionOnClick
                         rows={rows}
                         columns={columns}
                         loading={loading}
@@ -975,7 +968,7 @@ export const GridWithSelectionInDialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<SelectIcon />} onClick={() => setShowDialog(true)}>
                             Select items
@@ -1008,7 +1001,6 @@ export const GridWithSelectionInDialog = {
                 <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                     <DialogTitle>Selected items</DialogTitle>
                     <DataGrid
-                        disableRowSelectionOnClick
                         rows={rows}
                         columns={columns}
                         loading={loading}
@@ -1025,22 +1017,4 @@ export const GridWithSelectionInDialog = {
             </>
         );
     },
-};
-
-// TODO: Use new/updated component: https://vivid-planet.atlassian.net/browse/COM-1231
-const FullHeightGridContainer = ({ children }: { children: ReactNode }) => {
-    const elementRef = useRef<HTMLDivElement>(null);
-    const [topOffset, setTopOffset] = useState(0);
-
-    useEffect(() => {
-        if (elementRef.current) {
-            setTopOffset(elementRef.current.getBoundingClientRect().top);
-        }
-    }, []);
-
-    return (
-        <Box ref={elementRef} height={`calc(100vh - ${topOffset + 20}px)`}>
-            {children}
-        </Box>
-    );
 };

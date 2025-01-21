@@ -1,10 +1,10 @@
-import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 @ObjectType("FileUpload")
 @Entity({ tableName: "CometFileUpload" })
-export class FileUpload extends BaseEntity<FileUpload, "id"> {
+export class FileUpload extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @Field(() => ID)
@@ -16,7 +16,7 @@ export class FileUpload extends BaseEntity<FileUpload, "id"> {
     name: string;
 
     @Field(() => Int)
-    @Property({ type: BigIntType })
+    @Property({ type: new BigIntType("number") })
     size: number;
 
     @Field()

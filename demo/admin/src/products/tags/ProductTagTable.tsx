@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
@@ -9,7 +10,6 @@ import {
     StackLink,
     Toolbar,
     ToolbarAutomaticTitleItem,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -38,7 +38,7 @@ function ProductTagsTableToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
@@ -114,7 +114,6 @@ function ProductTagsTable() {
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
                 {...dataGridProps}
-                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}

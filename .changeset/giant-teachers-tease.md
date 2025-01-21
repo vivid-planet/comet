@@ -10,20 +10,20 @@ Therefore, the `@comet/blocks-api` is merged into this package.
 
 **Breaking changes**
 
--   The `@comet/blocks-api` package doesn't exist anymore
--   The `getFieldKeys` function has been removed from the public API
--   Multiple exports that were too generic have been renamed
-    -   `getMostSignificantPreviewImageUrlTemplate` -> `getMostSignificantPreviewImageUrlTemplateFromBlock`
-    -   `getPreviewImageUrlTemplates` -> `getPreviewImageUrlTemplatesFromBlock`
-    -   `getSearchText` -> `getSearchTextFromBlock`
-    -   `inputToData` -> `blockInputToData`
-    -   `TransformResponse` -> `TransformBlockResponse`
-    -   `TransformResponseArray` -> `TransformBlockResponseArray`
-    -   `transformToSave` -> `transformToBlockSave`
-    -   `transformToSaveIndex` -> `transformToBlockSaveIndex`
-    -   `TraversableTransformResponse` -> `TraversableTransformBlockResponse`
-    -   `TraversableTransformResponseArray` -> `TraversableTransformBlockResponseArray`
-    -   `typesafeMigrationPipe` -> `typeSafeBlockMigrationPipe`
+- The `@comet/blocks-api` package doesn't exist anymore
+- The `getFieldKeys` function has been removed from the public API
+- Multiple exports that were too generic have been renamed
+    - `getMostSignificantPreviewImageUrlTemplate` -> `getMostSignificantPreviewImageUrlTemplateFromBlock`
+    - `getPreviewImageUrlTemplates` -> `getPreviewImageUrlTemplatesFromBlock`
+    - `getSearchText` -> `getSearchTextFromBlock`
+    - `inputToData` -> `blockInputToData`
+    - `TransformResponse` -> `TransformBlockResponse`
+    - `TransformResponseArray` -> `TransformBlockResponseArray`
+    - `transformToSave` -> `transformToBlockSave`
+    - `transformToSaveIndex` -> `transformToBlockSaveIndex`
+    - `TraversableTransformResponse` -> `TraversableTransformBlockResponse`
+    - `TraversableTransformResponseArray` -> `TraversableTransformBlockResponseArray`
+    - `typesafeMigrationPipe` -> `typeSafeBlockMigrationPipe`
 
 **How to upgrade**
 

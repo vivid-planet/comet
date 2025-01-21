@@ -1,6 +1,6 @@
 import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormLayoutConfig } from "../generator";
+import { FormConfig, FormLayoutConfig, GQLDocumentConfigMap } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
 import { generateFields, GenerateFieldsReturn } from "./generateFields";
@@ -32,7 +32,7 @@ export function generateFormLayout({
     let hooksCode = "";
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
-    const gqlDocuments: Record<string, string> = {};
+    const gqlDocuments: GQLDocumentConfigMap = {};
     const imports: Imports = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
@@ -163,8 +163,8 @@ export function generateFormLayout({
                     name="${String(config.name)}Enabled"
                     type="checkbox"
                     label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.${String(
-            config.name,
-        )}Enabled" defaultMessage="${checkboxLabel}" />}
+                        config.name,
+                    )}Enabled" defaultMessage="${checkboxLabel}" />}
                 >
                     {(props) => (
                         <FormControlLabel

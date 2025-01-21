@@ -12,7 +12,7 @@ export interface WithPreviewProps {
     data: WithPreviewPropsData;
 }
 
-export interface WithPreviewPropsData {
+interface WithPreviewPropsData {
     adminMeta?: AdminMetaInterface;
 }
 

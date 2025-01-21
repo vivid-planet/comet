@@ -26,9 +26,8 @@ export interface BlockAdminComponentProps<S = any> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BlockAdminComponent<S = any> = ComponentType<BlockAdminComponentProps<S>>;
-export type BindBlockAdminComponent<T extends BlockAdminComponent> = T extends ComponentType<infer BlockAdminComponentProps>
-    ? ComponentType<Partial<BlockAdminComponentProps>>
-    : never;
+export type BindBlockAdminComponent<T extends BlockAdminComponent> =
+    T extends ComponentType<infer BlockAdminComponentProps> ? ComponentType<Partial<BlockAdminComponentProps>> : never;
 
 export interface AdminComponentPart {
     key: string;
@@ -39,7 +38,7 @@ export interface AdminComponentPart {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BlockContext = any;
 
-export interface PreviewImage {
+interface PreviewImage {
     src: string;
     width: number;
     height: number;
@@ -50,7 +49,7 @@ export function isPreviewContentTextRule(content: PreviewContent): content is Pr
     return content.type === "text";
 }
 
-export type PreviewContentText = { type: "text"; content: ReactNode };
+type PreviewContentText = { type: "text"; content: ReactNode };
 
 export function isPreviewContentImageRule(content: PreviewContent): content is PreviewContentImage {
     return content.type === "image";

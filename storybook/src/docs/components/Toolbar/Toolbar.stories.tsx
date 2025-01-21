@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveButton,
@@ -15,14 +16,13 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarBreadcrumbs,
-    ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
 import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
-import { Autocomplete, Button, Grid, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
+import { Autocomplete, Button, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -66,34 +66,30 @@ export const Breadcrumbs = () => {
         <Toolbar>
             <ToolbarBackButton />
             <ToolbarBreadcrumbs />
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <StackSwitchApiContext.Consumer>
                     {(stackSwitchApi) => (
-                        <Grid container spacing={4}>
-                            <Grid item>
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    onClick={() => {
-                                        stackSwitchApi.activatePage("page-1", "details");
-                                    }}
-                                >
-                                    1
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    onClick={() => {
-                                        stackSwitchApi.activatePage("page-2", "details");
-                                    }}
-                                >
-                                    2
-                                </Button>
-                            </Grid>
-                        </Grid>
+                        <>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    stackSwitchApi.activatePage("page-1", "details");
+                                }}
+                            >
+                                1
+                            </Button>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    stackSwitchApi.activatePage("page-2", "details");
+                                }}
+                            >
+                                2
+                            </Button>
+                        </>
                     )}
                 </StackSwitchApiContext.Consumer>
             </ToolbarActions>
@@ -106,7 +102,7 @@ export const BackButton = () => {
         <Toolbar>
             <ToolbarBackButton />
             <ToolbarAutomaticTitleItem />
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <StackSwitchApiContext.Consumer>
                     {(stackSwitchApi) => (
@@ -130,10 +126,10 @@ export const FillSpaceLeft = {
     render: () => {
         return (
             <Toolbar>
-                <ToolbarFillSpace />
-                <ToolbarItem>
+                <FillSpace />
+                <ToolbarActions>
                     <Typography>Item</Typography>
-                </ToolbarItem>
+                </ToolbarActions>
             </Toolbar>
         );
     },
@@ -145,11 +141,11 @@ export const FillSpaceRight = {
     render: () => {
         return (
             <Toolbar>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
             </Toolbar>
         );
     },
@@ -164,7 +160,7 @@ export const FillSpaceMiddle = {
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
@@ -182,34 +178,28 @@ export const FillSpaceMiddle2 = {
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
-                    <Grid container spacing={4}>
-                        <Grid item>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 1");
-                                }}
-                            >
-                                Action 1
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 2");
-                                }}
-                            >
-                                Action 2
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 1");
+                        }}
+                    >
+                        Action 1
+                    </Button>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 2");
+                        }}
+                    >
+                        Action 2
+                    </Button>
                 </ToolbarActions>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>
                     <Typography>Item</Typography>
                 </ToolbarItem>
@@ -262,7 +252,7 @@ export const ToolbarActionsOneAction = {
         return (
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <Button
                         color="primary"
@@ -286,32 +276,26 @@ export const ToolbarActionsTwoActions = {
         return (
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
-                    <Grid container spacing={4}>
-                        <Grid item>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 1");
-                                }}
-                            >
-                                Action 1
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                onClick={() => {
-                                    alert("clicked Action 2");
-                                }}
-                            >
-                                Action 2
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 1");
+                        }}
+                    >
+                        Action 1
+                    </Button>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action 2");
+                        }}
+                    >
+                        Action 2
+                    </Button>
                 </ToolbarActions>
             </Toolbar>
         );
@@ -404,7 +388,7 @@ export const CustomBackButton = () => {
                             </IconButton>
                         </ToolbarItem>
                     )}
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <StackSwitchApiContext.Consumer>
                             {(stackSwitchApi) => (
@@ -554,7 +538,7 @@ export const Save = () => {
     return (
         <Toolbar>
             <ToolbarTitleItem>Save Button</ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <SaveButton
                     color="primary"
@@ -605,7 +589,7 @@ export const _FinalFormSaveButton = () => {
                         <Toolbar>
                             <ToolbarBackButton />
                             <ToolbarTitleItem>Final Form Save Button</ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 {canGoBack ? (
                                     <FinalFormSaveButton />
@@ -639,7 +623,7 @@ export const SaveSplitButton = () => {
     return (
         <Toolbar>
             <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <SplitButton localStorageKey="Page5.SaveSplitButton" color="primary" variant="contained">
                     <SaveButton
@@ -701,7 +685,7 @@ export const _FinalFormSaveSplitButton = () => {
                         <Toolbar>
                             <ToolbarBackButton />
                             <ToolbarTitleItem>Final Form Save Split Button</ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 {canGoBack ? (
                                     <FinalFormSaveSplitButton localStorageKey="finalformsavesplitbutton" />

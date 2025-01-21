@@ -10,6 +10,7 @@ import {
     StackSwitch,
     Toolbar,
     ToolbarActions,
+    ToolbarItem,
     useEditDialog,
     useFocusAwarePolling,
     useStoredState,
@@ -127,11 +128,15 @@ export function PagesPage({
                 <StackSwitch>
                     <StackPage name="table">
                         <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
-                            <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
-                            <FormControlLabel
-                                control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
-                                label={<FormattedMessage id="comet.pages.pages.archivedItems" defaultMessage="Archived items" />}
-                            />
+                            <ToolbarItem sx={{ flexGrow: 1 }}>
+                                <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <FormControlLabel
+                                    control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
+                                    label={<FormattedMessage id="comet.pages.pages.archivedItems" defaultMessage="Archived items" />}
+                                />
+                            </ToolbarItem>
                             <ToolbarActions>
                                 <Button
                                     variant="contained"

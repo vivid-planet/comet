@@ -24,7 +24,7 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
 
-export interface ActionItem extends ComponentProps<typeof MenuItem> {
+interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
     icon?: ReactNode;
 }
@@ -44,7 +44,7 @@ export interface CrudMoreActionsMenuProps
 }
 
 interface CrudMoreActionsGroupProps {
-    groupTitle: ReactNode;
+    groupTitle?: ReactNode;
     menuListProps?: MenuListProps;
     typographyProps?: ComponentProps<typeof Typography>;
 }
@@ -53,9 +53,11 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
     const { palette } = useTheme();
     return (
         <>
-            <Typography variant="overline" color={palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
-                {groupTitle}
-            </Typography>
+            {groupTitle && (
+                <Typography variant="overline" color={palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+                    {groupTitle}
+                </Typography>
+            )}
             <MenuList {...menuListProps}>{children}</MenuList>
         </>
     );
@@ -69,24 +71,20 @@ const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuC
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "chip",
-})(
-    css`
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-        border-radius: 20px;
-        margin-left: 6px;
-    `,
-);
+})(css`
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    margin-left: 6px;
+`);
 
 const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "button",
-})(
-    css`
-        margin: 0 10px;
-    `,
-);
+})(css`
+    margin: 0 10px;
+`);
 
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
@@ -107,11 +105,13 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
 
     const handleClose = () => setAnchorEl(null);
+    const hasOverallActions = !!overallActions?.length;
+    const hasSelectiveActions = !!selectiveActions?.length;
 
     return (
         <>
             <MoreActionsButton variant="text" color="inherit" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
-                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More actions" />
+                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>
             <Menu
@@ -124,9 +124,13 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     menuProps?.onClose?.(event, reason);
                 }}
             >
-                {!!overallActions?.length && (
+                {hasOverallActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />}
+                        groupTitle={
+                            hasSelectiveActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
@@ -155,10 +159,15 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
-                {!!selectiveActions?.length && (
+                {hasOverallActions && hasSelectiveActions && <CrudMoreActionsDivider {...dividerProps} />}
+
+                {hasSelectiveActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
+                        groupTitle={
+                            hasOverallActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {

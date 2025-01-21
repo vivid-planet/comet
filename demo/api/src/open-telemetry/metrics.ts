@@ -9,7 +9,7 @@ import {
     UpDownCounter,
 } from "@opentelemetry/api";
 
-export enum MetricType {
+enum MetricType {
     "Counter" = "Counter",
     "UpDownCounter" = "UpDownCounter",
     "Histogram" = "Histogram",
@@ -17,10 +17,10 @@ export enum MetricType {
     "ObservableCounter" = "ObservableCounter",
     "ObservableUpDownCounter" = "ObservableUpDownCounter",
 }
-export type GenericMetric = Counter | UpDownCounter | Histogram | ObservableGauge | ObservableCounter | ObservableUpDownCounter;
-export const OTEL_METER_NAME = "nestjs-otel";
+type GenericMetric = Counter | UpDownCounter | Histogram | ObservableGauge | ObservableCounter | ObservableUpDownCounter;
+const OTEL_METER_NAME = "nestjs-otel";
 
-export const meterData: Map<string, GenericMetric> = new Map();
+const meterData: Map<string, GenericMetric> = new Map();
 
 function getOrCreate(name: string, options: MetricOptions = {}, type: MetricType): GenericMetric | undefined {
     let metric = meterData.get(name);
@@ -40,6 +40,8 @@ export function getOrCreateCounter(name: string, options: MetricOptions = {}): C
     return getOrCreate(name, options, MetricType.Counter) as Counter;
 }
 
+// TODO: metric functions below are here for demonstration purpose. More metrics will be added in the future which will probably need this functions.
+/*
 export function getOrCreateUpDownCounter(name: string, options: MetricOptions = {}): UpDownCounter {
     return getOrCreate(name, options, MetricType.UpDownCounter) as UpDownCounter;
 }
@@ -55,3 +57,4 @@ export function getOrCreateObservableCounter(name: string, options: MetricOption
 export function getOrCreateObservableUpDownCounter(name: string, options: MetricOptions = {}): ObservableUpDownCounter {
     return getOrCreate(name, options, MetricType.ObservableUpDownCounter) as ObservableUpDownCounter;
 }
+*/

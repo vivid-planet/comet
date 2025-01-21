@@ -1,6 +1,6 @@
 import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
+import { Adornment, FormConfig, FormFieldConfig, GQLDocumentConfigMap, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
@@ -125,7 +125,7 @@ export function generateFormField({
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
-    const gqlDocuments: Record<string, string> = {};
+    const gqlDocuments: GQLDocumentConfigMap = {};
     const hooksCode = "";
     let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 
@@ -260,21 +260,21 @@ export function generateFormField({
 
         formFragmentField = `${name} { min max }`;
     } else if (config.type == "boolean") {
-        code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
-            {(props) => (
-                <FormControlLabel
-                    label={${fieldLabel}}
-                    control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
-                    ${
-                        config.helperText
-                            ? `helperText={<FormattedMessage id=` +
-                              `"${formattedMessageRootId}.${name}.helperText" ` +
-                              `defaultMessage="${config.helperText}" />}`
-                            : ""
-                    }
-                />
-            )}
-        </Field>`;
+        code = `<CheckboxField
+                        label={${fieldLabel}}
+                        name="${nameWithPrefix}"
+                        fullWidth
+                        variant="horizontal"
+                        ${config.readOnly ? readOnlyProps : ""}
+                        ${
+                            config.helperText
+                                ? `helperText={<FormattedMessage id=` +
+                                  `"${formattedMessageRootId}.${name}.helperText" ` +
+                                  `defaultMessage="${config.helperText}" />}`
+                                : ""
+                        }
+                        ${validateCode}
+                    />`;
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
@@ -292,6 +292,33 @@ export function generateFormField({
                 fullWidth
                 name="${nameWithPrefix}"
                 component={FinalFormDatePicker}
+                label={${fieldLabel}}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
+                ${validateCode}
+            />`;
+        formValuesConfig = [
+            {
+                ...defaultFormValuesConfig,
+                ...{
+                    initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                },
+            },
+        ];
+    } else if (config.type == "dateTime") {
+        code = `<DateTimeField
+                ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
+                fullWidth
+                name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
@@ -374,8 +401,8 @@ export function generateFormField({
                       .map((value) => {
                           return `{
                                 label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
-                              value.value.charAt(0).toLowerCase() + value.value.slice(1)
-                          }" defaultMessage="${value.label}" />,
+                                    value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                                }" defaultMessage="${value.label}" />,
                                 value: "${value.value}",
                             }`;
                       })
@@ -524,8 +551,10 @@ export function generateFormField({
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
-            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
-        } {
+                            filterConfig
+                                ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})`
+                                : ``
+                        } {
                             ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id

@@ -1,4 +1,4 @@
-import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
@@ -47,7 +47,7 @@ export class RedirectEntityFactory {
             source: string;
 
             @RootBlock(linkBlock)
-            @Property({ customType: new RootBlockType(linkBlock) })
+            @Property({ type: new RootBlockType(linkBlock) })
             @Field(() => GraphQLJSONObject)
             target: BlockDataInterface;
 

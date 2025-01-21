@@ -3,9 +3,9 @@
 import { gql, useApolloClient } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormSubmitEvent,
     TextAreaField,
     TextField,
@@ -16,11 +16,10 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment } from "@mui/material";
+import { InputAdornment } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
@@ -44,7 +43,7 @@ interface FormProps {
     type: GQLProductType;
 }
 
-export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
+export function CreateCapProductForm({ type }: FormProps) {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
@@ -133,14 +132,12 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                         }}
                         getOptionLabel={(option) => option.title}
                     />
-                    <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                        {(props) => (
-                            <FormControlLabel
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                control={<FinalFormCheckbox {...props} />}
-                            />
-                        )}
-                    </Field>
+                    <CheckboxField
+                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                        name="inStock"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
                     <Field
                         variant="horizontal"

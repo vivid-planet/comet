@@ -13,7 +13,7 @@ import { useDependenciesConfig } from "./DependenciesConfig";
 import * as sc from "./DependencyList.sc";
 import { DependencyInterface } from "./types";
 
-export type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
+type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
     id: string;
     graphqlObjectType: string;
 };
@@ -159,7 +159,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     return (
         <>
             <sc.Toolbar>
-                <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
+                <Tooltip title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
                     <IconButton
                         onClick={() => {
                             refetch({
@@ -195,7 +195,6 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     },
                 }}
                 rowHeight={60}
-                disableRowSelectionOnClick
                 disableColumnMenu
                 loading={loading && data != null}
                 autoHeight={true}

@@ -1,20 +1,10 @@
-import { Button, Link } from "@mui/material";
+import { Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const Root = styled("div")`
     display: flex;
     flex-direction: column;
     height: 100vh;
-`;
-
-export const StyledButton = styled(Button)`
-    width: 50px;
-    height: 50px;
-    border: none;
-    border-radius: 0;
-    border-bottom: 2px solid transparent;
-    border-left: 1px solid #2e3440;
-    color: ${({ theme }) => theme.palette.common.white};
 `;
 
 export const SiteInformation = styled("div")`

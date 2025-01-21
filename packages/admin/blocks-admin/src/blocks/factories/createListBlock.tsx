@@ -1,6 +1,6 @@
-import { StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { StackPage, StackSwitch, StackSwitchApiContext, Tooltip } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
@@ -137,8 +137,8 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 minVisibleBlocks !== undefined
                     ? Array.from({ length: minVisibleBlocks }, getDefaultListEntry)
                     : createDefaultListEntry
-                    ? [getDefaultListEntry()]
-                    : [],
+                      ? [getDefaultListEntry()]
+                      : [],
         }),
 
         category: block.category,

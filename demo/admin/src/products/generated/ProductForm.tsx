@@ -3,10 +3,10 @@
 
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    CheckboxField,
     Field,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveButton,
     FinalFormSelect,
@@ -27,10 +27,10 @@ import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createProductMutation, productFormFragment, productFormQuery, updateProductMutation } from "./ProductForm.gql";
@@ -57,7 +57,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps) {
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
@@ -69,7 +69,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
@@ -215,14 +215,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
-                        <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                        <CheckboxField
+                            label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                            name="inStock"
+                            fullWidth
+                            variant="horizontal"
+                        />
 
                         <DateField
                             variant="horizontal"
