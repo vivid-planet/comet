@@ -30,7 +30,7 @@ import {
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
