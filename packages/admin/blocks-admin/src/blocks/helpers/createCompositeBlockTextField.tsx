@@ -11,7 +11,7 @@ interface Options extends Partial<TextFieldProps> {
     fieldProps?: Partial<TextFieldProps>;
 }
 
-export function createCompositeBlockTextField({ defaultValue = "", fieldProps: legacyFieldProps, ...fieldProps }: Options) {
+export function createCompositeBlockTextField({ defaultValue = "", fullWidth = true, fieldProps: legacyFieldProps, ...fieldProps }: Options) {
     return createCompositeSetting<string>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
@@ -19,7 +19,7 @@ export function createCompositeBlockTextField({ defaultValue = "", fieldProps: l
                 onSubmit={({ value }) => updateState(value ?? "")}
                 initialValues={{ value: state || undefined }}
             >
-                <TextField name="value" {...legacyFieldProps} {...fieldProps} />
+                <TextField name="value" fullWidth={fullWidth} {...legacyFieldProps} {...fieldProps} />
             </BlocksFinalForm>
         ),
     });

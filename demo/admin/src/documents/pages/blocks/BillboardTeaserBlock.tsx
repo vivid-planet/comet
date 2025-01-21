@@ -41,7 +41,6 @@ export const BillboardTeaserBlock = createCompositeBlock(
                 block: createCompositeBlockSelectField<BillboardTeaserBlockData["overlay"]>({
                     defaultValue: 50,
                     options: overlayOptions,
-                    fullWidth: true,
                 }),
                 title: <FormattedMessage id="billboardTeaserBlock.overlay" defaultMessage="Overlay" />,
                 hiddenInSubroute: true,
