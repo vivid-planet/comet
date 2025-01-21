@@ -2,27 +2,26 @@ import { isWithPreviewPropsData, PropsWithData, usePreview, withPreview } from "
 import { AccordionBlockData } from "@src/blocks.generated";
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 type AccordionBlockProps = PropsWithData<AccordionBlockData>;
 
 export const AccordionBlock = withPreview(
     ({ data }: AccordionBlockProps) => {
+        const getOpenByDefaultBlockKeys = useCallback(() => {
+            return data.blocks.filter((block) => block.props.openByDefault).map((block) => block.key);
+        }, [data.blocks]);
+
         const [expandedItems, setExpandedItems] = useState<Set<string>>(() => {
             // Create a Set containing the keys of blocks where openByDefault is set to true
-
-            const defaultExpandedItems = data.blocks.filter((block) => block.props.openByDefault).map((block) => block.key);
-
-            return new Set(defaultExpandedItems);
+            return new Set(getOpenByDefaultBlockKeys());
         });
 
         const { showPreviewSkeletons, isSelected, isHovered } = usePreview();
 
         useEffect(() => {
             if (showPreviewSkeletons) {
-                const getOpenByDefaultBlockKeys = () => data.blocks.filter((block) => block.props.openByDefault).map((block) => block.key);
-
                 const getFocusedBlockKey = () => {
                     const focusedBlock = data.blocks.find((block) => {
                         if (!isWithPreviewPropsData(block)) {
@@ -48,7 +47,7 @@ export const AccordionBlock = withPreview(
                     return expandedItemsInPreview;
                 });
             }
-        }, [showPreviewSkeletons, data.blocks, isSelected, isHovered]);
+        }, [showPreviewSkeletons, data.blocks, isSelected, isHovered, getOpenByDefaultBlockKeys]);
 
         const handleChange = (itemKey: string) => {
             const newExpandedItems = new Set(expandedItems);
