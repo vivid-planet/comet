@@ -36,16 +36,14 @@ export const AccordionBlock = withPreview(
                     return focusedBlock?.key;
                 };
 
-                setExpandedItems(() => {
-                    const expandedItemsInPreview = new Set<string>(getOpenByDefaultBlockKeys());
-                    const focusedBlockKey = getFocusedBlockKey();
+                const expandedItemsInPreview = new Set<string>(getOpenByDefaultBlockKeys());
+                const focusedBlockKey = getFocusedBlockKey();
 
-                    if (focusedBlockKey) {
-                        expandedItemsInPreview.add(focusedBlockKey);
-                    }
+                if (focusedBlockKey) {
+                    expandedItemsInPreview.add(focusedBlockKey);
+                }
 
-                    return expandedItemsInPreview;
-                });
+                setExpandedItems(expandedItemsInPreview);
             }
         }, [showPreviewSkeletons, data.blocks, isSelected, isHovered, getOpenByDefaultBlockKeys]);
 
