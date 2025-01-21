@@ -39,29 +39,34 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
+type InputBaseFieldConfig = {
+    startAdornment?: Adornment;
+    endAdornment?: Adornment;
+};
+
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | {
+    | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
+    | ({ type: "number" } & InputBaseFieldConfig)
+    | ({
           type: "numberRange";
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
-      }
+      } & InputBaseFieldConfig)
     | { type: "boolean" }
-    | { type: "date" }
-    | { type: "dateTime" } // TODO add InputBaseFieldConfig once merged (!2645)
-    | {
+    | ({ type: "date" } & InputBaseFieldConfig)
+    | ({ type: "dateTime" } & InputBaseFieldConfig)
+    | ({
           type: "staticSelect";
           values?: Array<{ value: string; label: string } | string>;
           inputType?: "select" | "radio";
-      }
-    | {
+      } & Omit<InputBaseFieldConfig, "endAdornment">)
+    | ({
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
-      }
+      } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
@@ -73,8 +78,6 @@ export type FormFieldConfig<T> = (
     validate?: ImportReference;
     helperText?: string;
     readOnly?: boolean;
-    startAdornment?: Adornment;
-    endAdornment?: Adornment;
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
