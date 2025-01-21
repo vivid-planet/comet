@@ -24,7 +24,8 @@ module.exports = {
             {
                 selector:
                     "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name=/^NEXT_PUBLIC/]",
-                message: "Avoid using NEXT_PUBLIC_ environment variables. Use SiteConfig or a custom Context instead",
+                message:
+                    "Using NEXT_PUBLIC_ environment variables is not supported, as we deploy the sam e build across multiple environments. Use SiteConfig or a custom Context instead",
             },
         ],
     },
@@ -38,7 +39,7 @@ module.exports = {
                         selector:
                             "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name!=NODE_ENV]",
                         message:
-                            "Environment variables other than NODE_ENV are not allowed in next.config.js. Use SiteConfig or a custom Context instead",
+                            "Environment variables other than NODE_ENV are not supported in next.config.js, as we deploy the same build across multiple environments. Use a middleware instead.",
                     },
                 ],
             },
@@ -51,7 +52,7 @@ module.exports = {
                     {
                         selector:
                             "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier]",
-                        message: "Environment variables are not allowed in loaders. Use SiteConfig or a custom Context instead",
+                        message: "Environment variables are not supported in loaders, as they also get called client side for block preview.",
                     },
                 ],
             },

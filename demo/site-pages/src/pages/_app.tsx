@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { SitePreviewProvider } from "@comet/cms-site";
 import theme from "@src/theme";
 import { AppProps, NextWebVitalsMetric } from "next/app";
