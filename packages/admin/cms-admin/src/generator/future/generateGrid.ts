@@ -676,6 +676,8 @@ export function generateGrid(
                   instanceGqlType,
                   gqlType,
                   excelExport: config.excelExport,
+                  newEntryText: config.newEntryText,
+                  fragmentName,
               })
             : ""
     }
