@@ -50,7 +50,7 @@ export const AccordionBlock = withPreview(
             }
         }, [showPreviewSkeletons, data.blocks, isSelected, isHovered]);
 
-        const handleItemClick = (itemKey: string) => {
+        const handleChange = (itemKey: string) => {
             const newExpandedItems = new Set(expandedItems);
 
             newExpandedItems.has(itemKey) ? newExpandedItems.delete(itemKey) : newExpandedItems.add(itemKey);
@@ -64,7 +64,7 @@ export const AccordionBlock = withPreview(
                     <AccordionItemBlock
                         key={block.key}
                         data={block.props}
-                        onItemClick={() => handleItemClick(block.key)}
+                        onChange={() => handleChange(block.key)}
                         isExpanded={expandedItems.has(block.key)}
                     />
                 ))}

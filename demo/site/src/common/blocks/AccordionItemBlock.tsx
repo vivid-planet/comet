@@ -26,11 +26,11 @@ const AccordionContentBlock = withPreview(
 
 type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData> & {
     isExpanded: boolean;
-    onItemClick: () => void;
+    onChange: () => void;
 };
 
 export const AccordionItemBlock = withPreview(
-    ({ data: { title, content }, isExpanded, onItemClick }: AccordionItemBlockProps) => {
+    ({ data: { title, content }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const intl = useIntl();
 
         const ariaLabelText = isExpanded
@@ -39,7 +39,7 @@ export const AccordionItemBlock = withPreview(
 
         return (
             <>
-                <TitleWrapper onClick={() => onItemClick()} aria-label={ariaLabelText}>
+                <TitleWrapper onClick={() => onChange()} aria-label={ariaLabelText}>
                     <Typography variant="h350">{title}</Typography>
                     <IconWrapper>
                         <AnimatedChevron href="/assets/icons/chevron-down.svg#chevron-down" $isExpanded={isExpanded} />
