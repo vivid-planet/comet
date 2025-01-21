@@ -2,20 +2,21 @@ import { isWithPreviewPropsData, PropsWithData, usePreview, withPreview } from "
 import { AccordionBlockData } from "@src/blocks.generated";
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 type AccordionBlockProps = PropsWithData<AccordionBlockData>;
 
 export const AccordionBlock = withPreview(
     ({ data }: AccordionBlockProps) => {
-        const getOpenByDefaultBlockKeys = useCallback(() => {
-            return data.blocks.filter((block) => block.props.openByDefault).map((block) => block.key);
-        }, [data.blocks]);
+        const getOpenByDefaultBlockKeys = useMemo(
+            () => data.blocks.filter((block) => block.props.openByDefault).map((block) => block.key),
+            [data.blocks],
+        );
 
         const [expandedItems, setExpandedItems] = useState<Set<string>>(() => {
             // Create a Set containing the keys of blocks where openByDefault is set to true
-            return new Set(getOpenByDefaultBlockKeys());
+            return new Set(getOpenByDefaultBlockKeys);
         });
 
         const { showPreviewSkeletons, isSelected, isHovered } = usePreview();
@@ -36,7 +37,7 @@ export const AccordionBlock = withPreview(
                     return focusedBlock?.key;
                 };
 
-                const expandedItemsInPreview = new Set<string>(getOpenByDefaultBlockKeys());
+                const expandedItemsInPreview = new Set<string>(getOpenByDefaultBlockKeys);
                 const focusedBlockKey = getFocusedBlockKey();
 
                 if (focusedBlockKey) {
