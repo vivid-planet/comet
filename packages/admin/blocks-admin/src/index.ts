@@ -29,6 +29,7 @@ export { createCompositeSetting } from "./blocks/helpers/composeBlocks/createCom
 export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCompositeSettings";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
 export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
+export { createCompositeBlockSwitchField } from "./blocks/helpers/createCompositeBlockSwitchField";
 export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
 export { default as decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";

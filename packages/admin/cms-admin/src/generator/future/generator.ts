@@ -162,6 +162,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
+    newEntryText?: string;
     rowActionProp?: boolean;
 };
 
