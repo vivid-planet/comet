@@ -59,7 +59,7 @@ export function useExportPagedTableQuery<IVariables>(
                     await setProgress(progressInPercent);
                 }
                 createExcelExportDownload<any>(tableRef.props.columns, exportData, excelOptions);
-            } catch (e) {
+            } catch {
                 throw new Error("Error happend while exporting data");
             } finally {
                 await setLoading(false);

@@ -22,7 +22,6 @@ export type CrudContextMenuClassKey =
     | "copyItem"
     | "pasteItem"
     | "itemsDivider"
-    | "deleteItem"
     | "deleteDialog";
 
 export interface CrudContextMenuProps<CopyData>
@@ -53,7 +52,7 @@ export interface CrudContextMenuProps<CopyData>
     url?: string;
     onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: () => Promise<CopyData> | CopyData;
     /**
@@ -111,7 +110,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
             });
             if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
             setDeleteDialogOpen(false);
-        } catch (_) {
+        } catch {
             throw new Error("Delete failed");
         }
     };

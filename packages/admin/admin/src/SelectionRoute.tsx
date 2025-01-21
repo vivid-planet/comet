@@ -68,7 +68,7 @@ export interface ISelectionRouterRenderPropArgs {
     selectionApi: ISelectionApi;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface IProps {}
 export const SelectionRouteInner = ({ children }: PropsWithChildren<IProps>) => {
     const { path } = useRouteMatch();

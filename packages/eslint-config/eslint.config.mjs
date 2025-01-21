@@ -6,13 +6,9 @@ import prettierPlugin from "eslint-plugin-prettier/recommended";
 import unusedImports from "eslint-plugin-unused-imports";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
-import importPlugin from "eslint-plugin-import";
 
 /** @type {import('eslint')} */
 const config = [
-    {
-        ignores: ["lib/**/*", "bin/**/*"],
-    },
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     prettierConfig,
@@ -35,14 +31,6 @@ const config = [
         },
     },
     {
-        ...importPlugin.flatConfigs.recommended,
-        rules: {
-            "import/no-duplicates": "error",
-            "import/newline-after-import": "error",
-            "import/no-extraneous-dependencies": "error",
-        },
-    },
-    {
         languageOptions: {
             globals: {
                 ...globals.node,
@@ -62,7 +50,7 @@ const config = [
             "no-return-await": "error",
         },
     },
-    /* order matters -> json rules must be after typescript rules */
+    /* order matters -> json rules must be after typescript rules*/
     ...eslintPluginJsonc["flat/recommended-with-json"],
     {
         rules: {

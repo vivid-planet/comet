@@ -77,7 +77,6 @@ export function useStackSwitch(): [ComponentType<IProps>, IStackSwitchApi] {
             if (apiRef.current) {
                 return apiRef.current.getTargetUrl(pageName, payload, subUrl);
             } else {
-                // eslint-disable-next-line no-console
                 console.error("apiRef is not attached to a StackSwitch component");
                 return "";
             }

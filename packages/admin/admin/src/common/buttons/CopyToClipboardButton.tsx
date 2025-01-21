@@ -65,7 +65,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps) => {
                         {...slotProps?.copyButton}
                         onClick={(e) => {
                             copyTextToClipboard();
-                            slotProps?.copyButton?.onClick && slotProps.copyButton.onClick(e);
+                            slotProps?.copyButton?.onClick?.(e);
                         }}
                     >
                         {copyIcon}
@@ -79,7 +79,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps) => {
                         {...slotProps?.successButton}
                         onClick={(e) => {
                             copyTextToClipboard();
-                            slotProps?.successButton?.onClick && slotProps.successButton.onClick(e);
+                            slotProps?.successButton?.onClick?.(e);
                         }}
                     >
                         {successIcon}

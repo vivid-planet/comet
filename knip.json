@@ -28,7 +28,7 @@
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
         },
-        "packages/eslint-plugin-react": {
+        "packages/eslint-plugin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },

@@ -1,45 +1,43 @@
 {
-    "name": "@comet/eslint-config",
-    "version": "7.11.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/eslint-config"
-    },
-    "license": "BSD-2-Clause",
-    "main": "core.js",
-    "scripts": {
-        "lint": "run-p lint:prettier lint:eslint",
-        "lint:eslint": "eslint --max-warnings 0 package.json",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'"
-    },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
-        "@comet/eslint-plugin": "workspace:^7.11.0",
-        "@next/eslint-plugin-next": "^14.2.23",
-        "@typescript-eslint/eslint-plugin": "^8.21.0",
-        "@typescript-eslint/parser": "^8.21.0",
-        "eslint-config-next": "^15.1.5",
-        "eslint-config-prettier": "^10.0.1",
-        "eslint-import-resolver-typescript": "^3.5.3",
+        "@eslint/js": "^9.14.0",
+        "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-formatjs": "^5.2.13",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-json-files": "^4.4.2",
-        "eslint-plugin-prettier": "^5.2.3",
-        "eslint-plugin-react": "^7.32.1",
+        "eslint-plugin-jsonc": "^2.18.2",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-react": "^7.37.4",
         "eslint-plugin-react-hooks": "^5.1.0",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
-        "npm-run-all2": "^5.0.2"
+        "globals": "^15.12.0",
+        "npm-run-all2": "^5.0.2",
+        "typescript-eslint": "^8.13.0"
     },
     "devDependencies": {
         "eslint": "^9.18.0",
         "prettier": "^3.4.2",
-        "typescript": "^4.0.0"
+        "typescript": "^5.7.3"
     },
+    "exports": {
+        "./core.js": {
+            "import": "./core.js"
+        },
+        "./nestjs.js": {
+            "import": "./nestjs.js"
+        },
+        "./nextjs.js": {
+            "import": "./nextjs.js"
+        },
+        "./react.js": {
+            "import": "./react.js"
+        }
+    },
+    "license": "BSD-2-Clause",
+    "name": "@comet/eslint-config",
     "peerDependencies": {
-        "eslint": ">= 8",
-        "prettier": "^3.0.0"
+        "eslint": ">= 9",
+        "prettier": ">= 3"
     },
     "peerDependenciesMeta": {
         "next": {
@@ -49,5 +47,17 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
-    }
+    },
+    "repository": {
+        "directory": "packages/eslint-config",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "scripts": {
+        "lint": "run-p lint:prettier lint:eslint",
+        "lint:eslint": "eslint --max-warnings 0 package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'"
+    },
+    "type": "module",
+    "version": "7.11.0"
 }
