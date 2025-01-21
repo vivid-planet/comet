@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
 import { Type } from "@nestjs/common";
 import { isFunction } from "@nestjs/common/utils/shared.utils";
 import { Field } from "@nestjs/graphql";
@@ -53,6 +52,7 @@ export function PartialType<T>(classRef: Type<T>, decorator?: ClassDecoratorFact
     return PartialObjectType as Type<Partial<T>>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 function applyIsOptionalDecorator(targetClass: Function, propertyKey: string): void {
     //don't conditionally use class-validator (as @nestjs/mapped-types does), as we depend on it anyway
     const decoratorFactory = IsUndefinable();

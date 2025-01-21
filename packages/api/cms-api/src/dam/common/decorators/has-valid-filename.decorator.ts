@@ -10,7 +10,7 @@ import { FILE_ENTITY, FileInterface } from "../../files/entities/file.entity";
 import { slugifyFilename } from "../../files/files.utils";
 
 export const HasValidFilename = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return (object: Object, propertyName: string): void => {
         registerDecorator({
             target: object.constructor,

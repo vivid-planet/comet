@@ -17,7 +17,6 @@ export class TestEntityWithScopedEntity extends BaseEntity {
     @Property({ columnType: "text" })
     langauge: string;
 }
-1;
 
 describe("GenerateCrud with ScopedEntity", () => {
     it("resolver must not have skipScopeCheck", async () => {

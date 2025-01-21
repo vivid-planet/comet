@@ -14,7 +14,7 @@ export interface EntityInfoServiceInterface<Entity extends AnyEntity = AnyEntity
 export type EntityInfoGetter<Entity extends AnyEntity = AnyEntity> = GetEntityInfo<Entity> | Type<EntityInfoServiceInterface<Entity>>;
 
 export function EntityInfo<Entity extends AnyEntity = AnyEntity>(entityInfoGetter: EntityInfoGetter<Entity>): ClassDecorator {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return (target: Function) => {
         Reflect.defineMetadata(`data:entityInfo`, entityInfoGetter, target);
     };

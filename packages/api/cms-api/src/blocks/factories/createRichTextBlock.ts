@@ -197,7 +197,7 @@ export function createRichTextBlock<LinkBlock extends Block>(
 }
 
 function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return function (object: Object, propertyName: string) {
         registerDecorator({
             name: "isDraftContent",
