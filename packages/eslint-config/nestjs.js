@@ -1,6 +1,5 @@
 import coreConfig from "./core.js";
 import globals from "globals";
-import react from "eslint-plugin-react";
 
 /** @type {import('eslint')} */
 const config = [
