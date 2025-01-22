@@ -10,4 +10,9 @@ export class DamScope {
     @Field()
     @IsString()
     domain: string;
+
+    @Property({ columnType: "text" })
+    @Field()
+    @IsString()
+    language: string;
 }

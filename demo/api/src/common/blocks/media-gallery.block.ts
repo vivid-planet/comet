@@ -14,10 +14,10 @@ import { MediaGalleryItemBlock } from "@src/common/blocks/media-gallery-item.blo
 import { MediaAspectRatios } from "@src/util/mediaAspectRatios";
 import { IsEnum } from "class-validator";
 
-const MediaGalleryListBlock = createListBlock({ block: MediaGalleryItemBlock }, "MediaGalleryList");
+export const MediaGalleryBlock = createListBlock({ block: MediaGalleryItemBlock }, "MediaGalleryList");
 
 class MediaGalleryBlockData extends BlockData {
-    @ChildBlock(MediaGalleryListBlock)
+    @ChildBlock(MediaGalleryBlock)
     items: BlockDataInterface;
 
     @BlockField({ type: "enum", enum: MediaAspectRatios })
@@ -25,7 +25,7 @@ class MediaGalleryBlockData extends BlockData {
 }
 
 class MediaGalleryBlockInput extends BlockInput {
-    @ChildBlockInput(MediaGalleryListBlock)
+    @ChildBlockInput(MediaGalleryBlock)
     items: ExtractBlockInput<typeof MediaGalleryListBlock>;
 
     @IsEnum(MediaAspectRatios)
@@ -37,4 +37,4 @@ class MediaGalleryBlockInput extends BlockInput {
     }
 }
 
-export const MediaGalleryBlock = createBlock(MediaGalleryBlockData, MediaGalleryBlockInput, "MediaGallery");
+const MediaGalleryListBlock = createBlock(MediaGalleryBlockData, MediaGalleryBlockInput, "MediaGallery");

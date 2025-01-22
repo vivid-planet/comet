@@ -9,6 +9,7 @@ import { StageBlock } from "@src/documents/pages/blocks/stage.block";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
+import { UserGroup } from "@src/user-groups/user-group";
 import slugify from "slugify";
 
 import { BlockCategory, PageContentBlockFixtureService } from "./page-content-block-fixture.service";
@@ -53,6 +54,8 @@ export class DocumentGeneratorService {
                     type: "Page",
                 },
                 parentId,
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+                userGroup: UserGroup.All,
             },
             category,
             scope,

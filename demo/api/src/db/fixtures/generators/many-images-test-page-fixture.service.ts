@@ -37,6 +37,7 @@ export class ManyImagesTestPageFixtureService {
 
         const damScope: DamScope = {
             domain: "main",
+            language: "en",
         };
 
         const manyImagesTestPageTreeNode = await this.pageTreeService.createNode(

@@ -534,7 +534,7 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGalleryList"
                             },
                             "nullable": false
                         }
@@ -575,7 +575,7 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGalleryList"
                             },
                             "nullable": false
                         }
@@ -658,7 +658,7 @@
                                 "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery",
+                                "mediaGallery": "MediaGalleryList",
                                 "richtext": "RichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
@@ -702,7 +702,7 @@
                                 "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery",
+                                "mediaGallery": "MediaGalleryList",
                                 "richtext": "RichText",
                                 "space": "Space",
                                 "teaser": "Teaser"
@@ -2041,7 +2041,7 @@
                                 "image": "DamImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery",
+                                "mediaGallery": "MediaGalleryList",
                                 "anchor": "Anchor",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "linkList": "LinkList",
@@ -2102,7 +2102,7 @@
                                 "image": "DamImage",
                                 "fullWidthImage": "FullWidthImage",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery",
+                                "mediaGallery": "MediaGalleryList",
                                 "anchor": "Anchor",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "linkList": "LinkList",
