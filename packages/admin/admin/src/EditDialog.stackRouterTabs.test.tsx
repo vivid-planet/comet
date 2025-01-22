@@ -157,26 +157,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
-    it("should open edit stack page when clicking on edit button in grid", async () => {
-        const history = createMemoryHistory();
-
-        const rendered = render(
-            <Router history={history}>
-                <EditDialogInStackTabs />
-            </Router>,
-        );
-
-        rendered.getByText("Products").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
-
-        expect(rendered.getByText("Add product")).toBeInTheDocument();
-        expect(rendered.queryAllByTestId("edit.row")).toHaveLength(6);
-        rendered.queryAllByTestId("edit.row")[5].click();
-        expect(screen.getByText("Product Edit Page")).toBeInTheDocument();
-        expect(history.location.pathname).toBe("/5/productEdit");
-    });
-
-    it("should navigate back to products page when clicking on back button in edit stack page", async () => {
+    it("should not open edit dialog when navigating back to products page", async () => {
         const history = createMemoryHistory();
 
         const rendered = render(
@@ -195,5 +176,10 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         within(rendered.getByTestId("editPage.backButton")).getByRole("button").click();
         expect(screen.getByText("Products")).toBeInTheDocument();
         expect(history.location.pathname).toBe("/index/products");
+
+        // Check that the Edit Dialog is not open, there was a bug that was fixed
+        // where the edit dialog was open when navigating to a page
+        // with an edit dialog component
+        expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
     });
 });
