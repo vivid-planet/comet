@@ -1,4 +1,4 @@
-import { ComponentType, createContext, Dispatch, FunctionComponent, SetStateAction } from "react";
+import { ComponentType, createContext, Dispatch, FunctionComponent, SetStateAction, useContext } from "react";
 
 export interface MainNavigationContext {
     open: boolean;
@@ -25,4 +25,12 @@ export const withMainNavigation = <P extends object>(WrappedComponent: Component
     return (props: P) => {
         return <MainNavigationContext.Consumer>{(value) => <WrappedComponent {...props} mainNavigation={value!} />}</MainNavigationContext.Consumer>;
     };
+};
+
+export const useMainNavigation = (): MainNavigationContext => {
+    const context = useContext(MainNavigationContext);
+    if (!context) {
+        throw new Error("useMainNavigation must be used within a MainNavigationProvider");
+    }
+    return context;
 };

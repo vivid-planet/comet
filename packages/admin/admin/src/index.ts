@@ -203,7 +203,7 @@ export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots
 export { messages } from "./messages";
 export { MainNavigationCollapsibleItem, MainNavigationCollapsibleItemProps } from "./mui/mainNavigation/CollapsibleItem";
 export { MainNavigationCollapsibleItemClassKey } from "./mui/mainNavigation/CollapsibleItem.styles";
-export { MainNavigationContext, WithMainNavigation, withMainNavigation } from "./mui/mainNavigation/Context";
+export { useMainNavigation, WithMainNavigation, withMainNavigation } from "./mui/mainNavigation/Context";
 export { MainNavigationItem, MainNavigationItemProps } from "./mui/mainNavigation/Item";
 export { MainNavigationItemClassKey } from "./mui/mainNavigation/Item.styles";
 export { MainNavigationItemAnchorLink, MainNavigationItemAnchorLinkProps } from "./mui/mainNavigation/ItemAnchorLink";
