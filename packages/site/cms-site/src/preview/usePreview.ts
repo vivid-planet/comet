@@ -4,8 +4,8 @@ import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
 import { PreviewContext, PreviewContextOptions } from "./PreviewContext";
 
 export interface PreviewHookReturn extends PreviewContextOptions {
-    isSelected: (url: string, options?: { exactMatch?: boolean }) => boolean | undefined;
-    isHovered: (url: string, options?: { exactMatch?: boolean }) => boolean | undefined;
+    isSelected: (url: string, options?: { exactMatch?: boolean }) => boolean;
+    isHovered: (url: string, options?: { exactMatch?: boolean }) => boolean;
 }
 
 export function usePreview(): PreviewHookReturn {
@@ -13,6 +13,10 @@ export function usePreview(): PreviewHookReturn {
     const previewContext = useContext(PreviewContext);
     const isSelected = useCallback(
         (url: string, options?: { exactMatch?: boolean }) => {
+            if (!iFrameBridge.selectedAdminRoute) {
+                return false;
+            }
+
             const exactMatch = options?.exactMatch ?? true;
 
             if (exactMatch) {
@@ -26,6 +30,10 @@ export function usePreview(): PreviewHookReturn {
 
     const isHovered = useCallback(
         (url: string, options?: { exactMatch?: boolean }) => {
+            if (!iFrameBridge.hoveredAdminRoute) {
+                return false;
+            }
+
             const exactMatch = options?.exactMatch ?? true;
 
             if (exactMatch) {
