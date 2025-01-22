@@ -2,16 +2,16 @@ import {
     MainNavigation,
     MainNavigationCollapsibleItem,
     MainNavigationCollapsibleItemProps,
-    MainNavigationContext,
     MainNavigationItemAnchorLink,
     MainNavigationItemAnchorLinkProps,
     MainNavigationItemGroup,
     MainNavigationItemGroupProps,
     MainNavigationItemRouterLink,
     MainNavigationItemRouterLinkProps,
+    useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -137,7 +137,7 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
 export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
-    const { open, toggleOpen } = useContext(MainNavigationContext);
+    const { open, toggleOpen } = useMainNavigation();
     const windowSize = useWindowSize();
     const match = useRouteMatch();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;

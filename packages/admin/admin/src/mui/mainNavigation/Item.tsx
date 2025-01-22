@@ -1,8 +1,8 @@
 import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
-import { ReactElement, ReactNode, useContext } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MainNavigationContext } from "./Context";
+import { useMainNavigation } from "./Context";
 import { Icon, MainNavigationItemClassKey, OwnerState, Root, Text } from "./Item.styles";
 
 export type MainNavigationItemLevel = 1 | 2 | 3;
@@ -38,7 +38,7 @@ export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMainNavigationItem" });
 
-    const { drawerVariant } = useContext(MainNavigationContext);
+    const { drawerVariant } = useMainNavigation();
 
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 

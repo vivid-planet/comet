@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography, useThemeProps } from "@mui/material";
-import { Children, cloneElement, MouseEvent, ReactElement, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Children, cloneElement, MouseEvent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -12,7 +12,7 @@ import {
     OwnerState,
     Root,
 } from "./CollapsibleItem.styles";
-import { MainNavigationContext } from "./Context";
+import { useMainNavigation } from "./Context";
 import { MainNavigationItem as CometMainNavigationItem, MainNavigationItemLevel, MainNavigationItemProps } from "./Item";
 import { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
@@ -62,7 +62,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
         secondLevelHoverIndicator: secondLevelHoverIndicatorIcon = <ChevronRight color="inherit" fontSize="inherit" />,
     } = iconMapping ?? {};
 
-    const { drawerVariant } = useContext(MainNavigationContext);
+    const { drawerVariant } = useMainNavigation();
     const itemLevel: MainNavigationItemLevel = level ?? 1;
     const hasSelectedChild = useRef(false);
     const location = useLocation();

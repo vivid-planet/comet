@@ -1,9 +1,9 @@
 import { Close, Hamburger, HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
 import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { MainNavigationContext } from "../../mui/mainNavigation/Context";
+import { useMainNavigation } from "../../mui/mainNavigation/Context";
 
 export type AppHeaderMenuButtonProps = IconButtonProps;
 
@@ -11,7 +11,7 @@ export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
 export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderMenuButton" });
-    const { toggleOpen, open, drawerVariant } = useContext(MainNavigationContext);
+    const { toggleOpen, open, drawerVariant } = useMainNavigation();
 
     const closeIcons: Record<typeof drawerVariant, ReactNode> = {
         temporary: <Close />,

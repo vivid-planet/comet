@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MainNavigationChild, MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
-import { MainNavigationContext } from "./Context";
+import { useMainNavigation } from "./Context";
 import { MainNavigationItemProps } from "./Item";
 import { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 import { MainNavigationClassKey, OwnerState, PermanentDrawer, TemporaryDrawer } from "./MainNavigation.styles";
@@ -34,7 +34,7 @@ export const MainNavigation = (inProps: MainNavigationProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMainNavigation" });
     const history = useHistory();
-    const { open, toggleOpen, setDrawerVariant, drawerVariant } = useContext(MainNavigationContext);
+    const { open, toggleOpen, setDrawerVariant, drawerVariant } = useMainNavigation();
     const initialRender = useRef(true);
     const { headerHeight } = useContext(MasterLayoutContext);
 

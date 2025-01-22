@@ -6,15 +6,15 @@ import {
     MainContent,
     MainNavigation,
     MainNavigationCollapsibleItem,
-    MainNavigationContext,
     MainNavigationItemAnchorLink,
     MainNavigationItemRouterLink,
     MasterLayout,
+    useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
 
 const AppMenu = () => {
-    const { open, toggleOpen } = useContext(MainNavigationContext);
+    const { open, toggleOpen } = useMainNavigation();
     const windowSize = useWindowSize();
     const location = useLocation();
 
