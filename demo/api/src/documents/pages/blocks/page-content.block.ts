@@ -1,6 +1,7 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
 import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
+import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
@@ -13,35 +14,51 @@ import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/content-group.block";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
-import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
-import { NewsListBlock } from "@src/news/blocks/news-list.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
 
-const supportedBlocks = {
+export const layoutBlocks = {
     accordion: AccordionBlock,
-    anchor: AnchorBlock,
-    billboardTeaser: BillboardTeaserBlock,
-    space: SpaceBlock,
-    teaser: TeaserBlock,
-    richtext: RichTextBlock,
-    heading: StandaloneHeadingBlock,
     columns: ColumnsBlock,
-    callToActionList: StandaloneCallToActionListBlock,
-    keyFacts: KeyFactsBlock,
-    media: StandaloneMediaBlock,
     contentGroup: ContentGroupBlock,
-    mediaGallery: MediaGalleryBlock,
-
-    image: DamImageBlock,
-    newsDetail: NewsDetailBlock,
-    newsList: NewsListBlock,
     layout: LayoutBlock,
-    textImage: TextImageBlock,
+    space: SpaceBlock,
+};
+
+export const mediaBlocks = {
+    image: DamImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    media: StandaloneMediaBlock,
+    mediaGallery: MediaGalleryBlock,
+};
+
+export const navigationBlocks = {
+    anchor: AnchorBlock,
+    callToActionList: StandaloneCallToActionListBlock,
+    linkList: LinkListBlock,
+};
+
+export const teaserBlocks = {
+    billboardTeaserBlock: BillboardTeaserBlock,
+    teaser: TeaserBlock,
+};
+
+export const textAndContentBlocks = {
+    heading: StandaloneHeadingBlock,
+    keyFacts: KeyFactsBlock,
+    richtext: RichTextBlock,
+    textImage: TextImageBlock,
+};
+
+const supportedBlocks = {
+    ...layoutBlocks,
+    ...mediaBlocks,
+    ...navigationBlocks,
+    ...teaserBlocks,
+    ...textAndContentBlocks,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

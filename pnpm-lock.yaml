@@ -402,6 +402,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@hapi/accept':
         specifier: ^5.0.0
         version: 5.0.2
@@ -510,6 +513,9 @@ importers:
       graphql:
         specifier: ^15.0.0
         version: 15.8.0
+      graphql-request:
+        specifier: ^4.3.0
+        version: 4.3.0(graphql@15.8.0)
       graphql-scalars:
         specifier: ^1.23.0
         version: 1.23.0(graphql@15.8.0)
@@ -9054,6 +9060,11 @@ packages:
     resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
     dev: true
+
+  /@faker-js/faker@8.4.1:
+    resolution: {integrity: sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
+    dev: false
 
   /@fast-csv/format@4.3.5:
     resolution: {integrity: sha512-8iRn6QF3I8Ak78lNAa+Gdl5MJJBM5vRHivFtMRUWINdevNo00K7OXxS2PshawLKTejVwieIlPmK5YlLu6w4u8A==}
@@ -23559,6 +23570,19 @@ packages:
 
   /graphql-request@3.7.0(graphql@15.8.0):
     resolution: {integrity: sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==}
+    peerDependencies:
+      graphql: 14 - 16
+    dependencies:
+      cross-fetch: 3.1.5
+      extract-files: 9.0.0
+      form-data: 3.0.1
+      graphql: 15.8.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /graphql-request@4.3.0(graphql@15.8.0):
+    resolution: {integrity: sha512-2v6hQViJvSsifK606AliqiNiijb1uwWp6Re7o0RTyH+uRTv/u7Uqm2g4Fjq/LgZIzARB38RZEvVBFOQOVdlBow==}
     peerDependencies:
       graphql: 14 - 16
     dependencies:

@@ -1,14 +1,11 @@
 import { createOneOfBlock } from "@comet/blocks-api";
-import { DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-api";
+import { DamImageBlock, DamVideoBlock, YouTubeVideoBlock } from "@comet/cms-api";
 
-export const MediaBlock = createOneOfBlock(
-    {
-        supportedBlocks: {
-            image: DamImageBlock,
-            damVideo: DamVideoBlock,
-            youTubeVideo: YouTubeVideoBlock,
-            vimeoVideo: VimeoVideoBlock,
-        },
-    },
-    "Media",
-);
+const supportedBlocks = {
+    image: DamImageBlock,
+    damVideo: DamVideoBlock,
+    youTubeVideo: YouTubeVideoBlock,
+};
+
+export const MediaTypeBlock = createOneOfBlock({ supportedBlocks }, "MediaType");
+export const MediaBlock = createOneOfBlock({ supportedBlocks }, "Media");

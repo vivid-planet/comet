@@ -653,15 +653,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "RichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -697,15 +697,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "RichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -1564,8 +1564,7 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "vimeoVideo": "VimeoVideo"
+                                "youTubeVideo": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -1594,8 +1593,7 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "vimeoVideo": "VimeoVideo"
+                                "youTubeVideo": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -1754,6 +1752,71 @@
         ]
     },
     {
+        "name": "MediaType",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "image": "DamImage",
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "image": "DamImage",
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "NewsContent",
         "fields": [
             {
@@ -1831,23 +1894,6 @@
         ]
     },
     {
-        "name": "NewsDetail",
-        "fields": [
-            {
-                "name": "id",
-                "kind": "String",
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "id",
-                "kind": "String",
-                "nullable": true
-            }
-        ]
-    },
-    {
         "name": "NewsLink",
         "fields": [
             {
@@ -1899,25 +1945,6 @@
                 "name": "id",
                 "kind": "String",
                 "nullable": true
-            }
-        ]
-    },
-    {
-        "name": "NewsList",
-        "fields": [
-            {
-                "name": "ids",
-                "kind": "String",
-                "nullable": false,
-                "array": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "ids",
-                "kind": "String",
-                "nullable": false,
-                "array": true
             }
         ]
     },
@@ -2007,24 +2034,23 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "accordion": "Accordion",
-                                "anchor": "Anchor",
-                                "billboardTeaser": "BillboardTeaser",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
                                 "columns": "Columns",
-                                "callToActionList": "StandaloneCallToActionList",
-                                "keyFacts": "KeyFacts",
-                                "media": "StandaloneMedia",
                                 "contentGroup": "ContentGroup",
-                                "mediaGallery": "MediaGallery",
-                                "image": "DamImage",
-                                "newsDetail": "NewsDetail",
-                                "newsList": "NewsList",
                                 "layout": "Layout",
-                                "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "space": "Space",
+                                "image": "DamImage",
+                                "fullWidthImage": "FullWidthImage",
+                                "media": "StandaloneMedia",
+                                "mediaGallery": "MediaGallery",
+                                "anchor": "Anchor",
+                                "callToActionList": "StandaloneCallToActionList",
+                                "linkList": "LinkList",
+                                "billboardTeaserBlock": "BillboardTeaser",
+                                "teaser": "Teaser",
+                                "heading": "StandaloneHeading",
+                                "keyFacts": "KeyFacts",
+                                "richtext": "RichText",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         },
@@ -2069,24 +2095,23 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "accordion": "Accordion",
-                                "anchor": "Anchor",
-                                "billboardTeaser": "BillboardTeaser",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
                                 "columns": "Columns",
-                                "callToActionList": "StandaloneCallToActionList",
-                                "keyFacts": "KeyFacts",
-                                "media": "StandaloneMedia",
                                 "contentGroup": "ContentGroup",
-                                "mediaGallery": "MediaGallery",
-                                "image": "DamImage",
-                                "newsDetail": "NewsDetail",
-                                "newsList": "NewsList",
                                 "layout": "Layout",
-                                "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "space": "Space",
+                                "image": "DamImage",
+                                "fullWidthImage": "FullWidthImage",
+                                "media": "StandaloneMedia",
+                                "mediaGallery": "MediaGallery",
+                                "anchor": "Anchor",
+                                "callToActionList": "StandaloneCallToActionList",
+                                "linkList": "LinkList",
+                                "billboardTeaserBlock": "BillboardTeaser",
+                                "teaser": "Teaser",
+                                "heading": "StandaloneHeading",
+                                "keyFacts": "KeyFacts",
+                                "richtext": "RichText",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         },
