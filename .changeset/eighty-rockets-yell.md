@@ -27,4 +27,4 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 - `MenuItemRouterLink` → `MainNavigationItemRouterLink`
 - `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
 
-Add `useMainNavigation()` hook to use instead of `MainNavigationContext`
+Remove export of `MainNavigationContent`. Use `useMainNavigation()` hook instead.
