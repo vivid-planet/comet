@@ -85,23 +85,29 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
-export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
-    name,
-    block,
-    displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
-    itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
-    itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
-    minVisibleBlocks,
-    maxVisibleBlocks,
-    createDefaultListEntry,
-    additionalItemFields,
-    AdditionalItemContextMenuItems,
-    AdditionalItemContent,
-}: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
-    ListBlockFragment<AdditionalItemFields>,
-    ListBlockState<T, AdditionalItemFields>,
-    ListBlockOutput<AdditionalItemFields>
-> {
+export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
+    {
+        name,
+        block,
+        displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
+        itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
+        itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
+        minVisibleBlocks,
+        maxVisibleBlocks,
+        createDefaultListEntry,
+        additionalItemFields,
+        AdditionalItemContextMenuItems,
+        AdditionalItemContent,
+        category,
+    }: CreateListBlockOptions<T, AdditionalItemFields>,
+    override?: (
+        block: BlockInterface<
+            ListBlockFragment<AdditionalItemFields>,
+            ListBlockState<T, AdditionalItemFields>,
+            ListBlockOutput<AdditionalItemFields>
+        >,
+    ) => BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>>,
+): BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
     if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
         throw new Error(
@@ -530,6 +536,9 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             return `${blockItem.key}/edit/${childPath}`;
         },
     };
+    if (override) {
+        return override(BlockListBlock);
+    }
     return BlockListBlock;
 }
 
