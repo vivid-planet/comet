@@ -12,22 +12,22 @@ export const MediaBlock: BlockInterface = createOneOfBlock({
     variant: "toggle",
     labels: {
         image: (
-            <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.image" defaultMessage="Image" />}>
+            <Tooltip title={DamImageBlock.displayName}>
                 <Image />
             </Tooltip>
         ),
         damVideo: (
-            <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.video.dam" defaultMessage="Video (DAM)" />}>
+            <Tooltip title={DamVideoBlock.displayName}>
                 <Video />
             </Tooltip>
         ),
         youTubeVideo: (
-            <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.video.youtube" defaultMessage="Video (YouTube)" />}>
+            <Tooltip title={YouTubeVideoBlock.displayName}>
                 <Youtube />
             </Tooltip>
         ),
         vimeoVideo: (
-            <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.video.vimeo" defaultMessage="Video (Vimeo)" />}>
+            <Tooltip title={VimeoVideoBlock.displayName}>
                 <Vimeo />
             </Tooltip>
         ),
