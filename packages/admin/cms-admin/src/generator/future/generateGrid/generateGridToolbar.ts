@@ -1,3 +1,5 @@
+import { camelCase } from "change-case";
+
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { getFormattedMessageNode } from "../utils/intl";
 
@@ -10,6 +12,8 @@ type Options = {
     allowAdding: boolean;
     instanceGqlType: string;
     gqlType: string;
+    newEntryText: string | undefined;
+    fragmentName: string;
 };
 
 export const generateGridToolbar = ({
@@ -21,6 +25,8 @@ export const generateGridToolbar = ({
     allowAdding,
     instanceGqlType,
     gqlType,
+    newEntryText,
+    fragmentName,
 }: Options) => {
     const showMoreActionsMenu = excelExport;
 
@@ -31,14 +37,7 @@ export const generateGridToolbar = ({
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
                 ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
-              ${
-                  allowAdding
-                      ? renderToolbarActions(
-                            forwardToolbarAction,
-                            getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
-                        )
-                      : ""
-              }
+              ${allowAdding ? renderToolbarActions(forwardToolbarAction, instanceGqlType, gqlType, newEntryText, fragmentName) : ""}
             </DataGridToolbar>
         );
     }`.replace(/^\s+\n/gm, "");
@@ -100,14 +99,23 @@ const renderMoreActionsMenu = (excelExport: boolean | undefined) => {
     />`;
 };
 
-const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
+const renderToolbarActions = (
+    forwardToolbarAction: boolean | undefined,
+    instanceGqlType: string,
+    gqlType: string,
+    newEntryText: string | undefined,
+    fragmentName: string,
+) => {
     if (forwardToolbarAction) {
         return `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`;
     }
 
     return `<ToolbarActions>
         <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-            ${addItemText}
+            ${getFormattedMessageNode(
+                `${instanceGqlType}.${camelCase(fragmentName)}.newEntry`,
+                newEntryText ?? `New ${camelCaseToHumanReadable(gqlType)}`,
+            )}
         </Button>
     </ToolbarActions>`;
 };

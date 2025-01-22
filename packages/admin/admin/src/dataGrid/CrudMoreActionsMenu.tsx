@@ -1,6 +1,5 @@
 import { MoreVertical } from "@comet/admin-icons";
 import {
-    Button,
     Chip,
     ComponentsOverrides,
     css,
@@ -18,6 +17,7 @@ import { Maybe } from "graphql/jsutils/Maybe";
 import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
@@ -123,7 +123,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
     return (
         <>
-            <MoreActionsButton variant="text" color="inherit" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
+            <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
                 <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>
