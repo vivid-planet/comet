@@ -277,6 +277,7 @@ export const createUsePage: CreateUsePage =
                         if (sessionStoragePageState) {
                             const state = await generateStateFromSession(sessionStoragePageState);
                             setPageState(state ? state : page);
+                            // set reference output to the loaded page to enable the user to save the page
                             setReferenceOutput(generateOutput(page));
                             window.sessionStorage.removeItem(`pageState_${pageId}`);
                         } else if (!pageState) {
@@ -355,6 +356,9 @@ export const createUsePage: CreateUsePage =
                     } catch (error) {
                         if (hasChanges) {
                             const output = generateOutput(pageState);
+                            for (const [key] of Object.entries(rootBlocks)) {
+                                delete pageState.document[key];
+                            }
                             window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify({ output, pageState }));
                         }
                         console.error(error);
