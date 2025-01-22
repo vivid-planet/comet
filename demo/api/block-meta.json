@@ -1093,7 +1093,7 @@
                 "nullable": false
             },
             {
-                "name": "headline",
+                "name": "heading",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -1120,7 +1120,7 @@
                 "nullable": false
             },
             {
-                "name": "headline",
+                "name": "heading",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false

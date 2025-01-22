@@ -13,7 +13,7 @@ import { IsEnum } from "class-validator";
 
 import { RichTextBlock } from "./rich-text.block";
 
-enum HeadlineTag {
+export enum HeadingTag {
     H1 = "H1",
     H2 = "H2",
     H3 = "H3",
@@ -27,10 +27,10 @@ class HeadingBlockData extends BlockData {
     eyebrow: BlockDataInterface;
 
     @ChildBlock(RichTextBlock)
-    headline: BlockDataInterface;
+    heading: BlockDataInterface;
 
-    @BlockField({ type: "enum", enum: HeadlineTag })
-    htmlTag: HeadlineTag;
+    @BlockField({ type: "enum", enum: HeadingTag })
+    htmlTag: HeadingTag;
 }
 
 class HeadingBlockInput extends BlockInput {
@@ -38,11 +38,11 @@ class HeadingBlockInput extends BlockInput {
     eyebrow: ExtractBlockInput<typeof RichTextBlock>;
 
     @ChildBlockInput(RichTextBlock)
-    headline: ExtractBlockInput<typeof RichTextBlock>;
+    heading: ExtractBlockInput<typeof RichTextBlock>;
 
-    @IsEnum(HeadlineTag)
-    @BlockField({ type: "enum", enum: HeadlineTag })
-    htmlTag: HeadlineTag;
+    @IsEnum(HeadingTag)
+    @BlockField({ type: "enum", enum: HeadingTag })
+    htmlTag: HeadingTag;
 
     transformToBlockData(): HeadingBlockData {
         return inputToData(HeadingBlockData, this);
