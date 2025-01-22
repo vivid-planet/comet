@@ -6,9 +6,9 @@ import { matchPath, useLocation } from "react-router";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import {
     CollapsibleIndicator,
+    CollapsibleItemMainNavigationItem,
     ItemTitle,
     MainNavigationCollapsibleItemClassKey,
-    MainNavigationItem,
     OwnerState,
     Root,
 } from "./CollapsibleItem.styles";
@@ -168,7 +168,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
 
     return (
         <Root {...slotProps?.root} {...restProps} ownerState={ownerState}>
-            <MainNavigationItem
+            <CollapsibleItemMainNavigationItem
                 id={itemId}
                 aria-haspopup="true"
                 aria-controls={isSubmenuOpen ? mouseOverMenuId : undefined}

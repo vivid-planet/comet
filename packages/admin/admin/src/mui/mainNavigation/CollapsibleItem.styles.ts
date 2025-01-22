@@ -3,7 +3,7 @@ import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MainNavigationContextValue } from "./Context";
-import { MainNavigationItem as CometMainNavigationItem, MainNavigationItemLevel } from "./Item";
+import { MainNavigationItem, MainNavigationItemLevel } from "./Item";
 
 export type MainNavigationCollapsibleItemClassKey = "root" | "open" | "childSelected" | "mainNavigationItem" | "itemTitle" | "collapsibleIndicator";
 
@@ -32,7 +32,7 @@ export const Root = createComponentSlot("div")<MainNavigationCollapsibleItemClas
     `,
 );
 
-export const MainNavigationItem = createComponentSlot(CometMainNavigationItem)<MainNavigationCollapsibleItemClassKey, OwnerState>({
+export const CollapsibleItemMainNavigationItem = createComponentSlot(MainNavigationItem)<MainNavigationCollapsibleItemClassKey, OwnerState>({
     componentName: "MainNavigationCollapsibleItem",
     slotName: "mainNavigationItem",
 })(
