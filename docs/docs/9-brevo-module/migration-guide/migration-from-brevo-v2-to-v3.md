@@ -58,7 +58,7 @@ It is now necessary to import the `PublicUploadsModule` in the project's `AppMod
 The files for the brevo contact import now get temporarily stored in the public uploads until the import is concluded.
 This change prepares for future imports to be handled in a separate job, allowing more than 100 contacts to be imported without exhausting api resources or blocking the event loop.
 
-### Remove brevo configugration variables from environment variables
+### Remove brevo configuration variables from environment variables
 
 Env vars containing brevo configuration information can be removed and are set on the `BrevoConfigurationPage` in the admin interface from now on.
 
