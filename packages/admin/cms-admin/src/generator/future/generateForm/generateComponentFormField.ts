@@ -8,6 +8,8 @@ export function generateComponentFormField({ config }: { config: ComponentFormFi
 
     return {
         imports,
+        props: [],
+        gqlArgs: [],
         hooksCode: "",
         formFragmentFields: [],
         formValueToGqlInputCode: "",

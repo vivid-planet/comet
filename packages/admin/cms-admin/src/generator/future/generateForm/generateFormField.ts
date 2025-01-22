@@ -810,9 +810,10 @@ export function generateFormField({
                   let filterVarName = undefined;
                   let filterVarValue = undefined;
 
-                  const filterVar = filterField
-                      ? `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`
-                      : `${config.filter.name}`;
+                  const filterVar =
+                      filterField && "name" in filterField
+                          ? `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`
+                          : `${config.filter.name}`;
                   let filterVarType = "unknown";
 
                   if (filterType) {
@@ -948,9 +949,13 @@ export function generateFormField({
                     return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
-                ${filterConfig && filterConfig.filterField ? `disabled={!values?.${String(filterConfig.filterField.name)}}` : ``}
+                ${
+                    filterConfig && filterConfig.filterField && "name" in filterConfig.filterField
+                        ? `disabled={!values?.${String(filterConfig.filterField.name)}}`
+                        : ``
+                }
             />${
-                filterConfig && filterConfig.filterField
+                filterConfig && filterConfig.filterField && "name" in filterConfig.filterField
                     ? `<OnChangeField name="${String(filterConfig.filterField.name)}">
                             {(value, previousValue) => {
                                 if (value.id !== previousValue.id) {
