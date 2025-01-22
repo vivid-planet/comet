@@ -293,6 +293,13 @@ Example:
 ></Tooltip>
 ```
 
+### Import `Dialog` from `@comet/admin` package
+
+```diff
+- import { Dialog } from "@mui/material";
++ import { Dialog } from "@comet/admin";
+```
+
 ### Update MUI - X Packages
 
 In `package.json` update the version of the MUI X packages to `^7.22.3`.
