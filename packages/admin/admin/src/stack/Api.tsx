@@ -40,5 +40,4 @@ type Subtract<T, K> = Omit<T, keyof K>;
 // TODO implement ref forwarding with typescript
 export const withStackApi =
     <P extends IWithApiProps>(WrappedComponent: ComponentType<P>): SFC<Subtract<P, IWithApiProps>> =>
-    (props: any) =>
-        <StackApiContext.Consumer>{(stackApi) => <WrappedComponent {...props} stackApi={stackApi} />}</StackApiContext.Consumer>;
+    (props: any) => <StackApiContext.Consumer>{(stackApi) => <WrappedComponent {...props} stackApi={stackApi} />}</StackApiContext.Consumer>;

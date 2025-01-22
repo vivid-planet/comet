@@ -1,5 +1,5 @@
 import { SitePreviewProvider } from "@comet/cms-site";
-import theme from "@src/theme";
+import { theme } from "@src/theme";
 import { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
         -webkit-text-size-adjust: none;
-        color: ${({ theme }) => theme.colors.textPrimary};
+        color: ${({ theme }) => theme.palette.text.primary};
         font-family: ${({ theme }) => theme.fonts.primary};
         font-weight: 400;
     }

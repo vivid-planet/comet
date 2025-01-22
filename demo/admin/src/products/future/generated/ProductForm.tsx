@@ -3,11 +3,11 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRangeInput,
     FinalFormSubmitEvent,
@@ -21,7 +21,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
@@ -108,6 +108,7 @@ export function ProductForm({ id }: FormProps) {
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
+                      lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
                   }
                 : {
                       inStock: false,
@@ -382,14 +383,12 @@ export function ProductForm({ id }: FormProps) {
                                     }
                                 }}
                             </OnChangeField>
-                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                        control={<FinalFormCheckbox {...props} />}
-                                    />
-                                )}
-                            </Field>
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"
@@ -424,6 +423,12 @@ export function ProductForm({ id }: FormProps) {
                                 variant="horizontal"
                                 multiple
                                 maxFileSize={4194304}
+                            />
+                            <DateTimeField
+                                variant="horizontal"
+                                fullWidth
+                                name="lastCheckedAt"
+                                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
                             />
                         </FieldSet>
                     </>

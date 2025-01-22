@@ -5,9 +5,9 @@ import { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect
 import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
+import { renderFinalFormChildren } from "./renderFinalFormChildren";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
 import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
@@ -217,7 +217,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
                     <form onSubmit={submit}>
                         <div>
-                            {renderComponent<FormValues, InitialFormValues>(
+                            {renderFinalFormChildren<FormValues, InitialFormValues>(
                                 {
                                     children: props.children,
                                     component: props.component,

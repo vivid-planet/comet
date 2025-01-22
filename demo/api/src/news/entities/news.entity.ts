@@ -9,7 +9,7 @@ import {
     RootBlockEntity,
     RootBlockType,
 } from "@comet/cms-api";
-import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { v4 as uuid } from "uuid";
@@ -52,7 +52,7 @@ export class NewsContentScope {
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class News extends BaseEntity<News, "id"> {
+export class News extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -84,12 +84,12 @@ export class News extends BaseEntity<News, "id"> {
     category: NewsCategory;
 
     @RootBlock(DamImageBlock)
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))
     image: BlockDataInterface;
 
     @RootBlock(NewsContentBlock)
-    @Property({ customType: new RootBlockType(NewsContentBlock) })
+    @Property({ type: new RootBlockType(NewsContentBlock) })
     @Field(() => RootBlockDataScalar(NewsContentBlock))
     content: BlockDataInterface;
 

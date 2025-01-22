@@ -1,12 +1,11 @@
-import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 
 import { generateCrudInput } from "./generate-crud-input";
 import { lintSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string;
 }
@@ -17,6 +16,7 @@ describe("GenerateCrudInput", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity],
             }),
         );

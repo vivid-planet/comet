@@ -249,11 +249,11 @@ export async function writeCrudGrid(
     
     const ${instanceNamePlural}Query = gql\`
         query ${classNamePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${entityName}Sort!]` : ""}${
-        hasSearch ? `, $search: String` : ""
-    }${hasFilter ? `, $filter: ${entityName}Filter` : ""}${hasScope ? `, $scope: ${entityName}ContentScopeInput!` : ""}) {
+            hasSearch ? `, $search: String` : ""
+        }${hasFilter ? `, $filter: ${entityName}Filter` : ""}${hasScope ? `, $scope: ${entityName}ContentScopeInput!` : ""}) {
             ${gridQuery}(offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
-        hasFilter ? `, filter: $filter` : ""
-    }${hasScope ? `, scope: $scope` : ""}) {
+                hasFilter ? `, filter: $filter` : ""
+            }${hasScope ? `, scope: $scope` : ""}) {
                 nodes {
                     ...${classNamePlural}List
                 }

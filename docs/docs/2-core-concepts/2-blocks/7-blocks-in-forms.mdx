@@ -1,0 +1,123 @@
+---
+title: Blocks in forms
+---
+
+# Using blocks in forms
+
+This guide describes how to use a block in a Final Form.
+We use a product form with a `DamImageBlock` as an example.
+The product has the following schema in GraphQL:
+
+```graphql
+type Product {
+    id: ID!
+    title: String!
+    // highlight-next-line
+    image: DamImageBlockData!
+}
+```
+
+The following steps are necessary to add the `image` field to the form:
+
+1. Create a Final Form component for the block
+2. Create the block state when initializing the form
+3. Create the block output when submitting the form
+
+:::info
+
+The block transitions between the various states when being used in a form.
+The states and transitions can be viewed [here](/docs/core-concepts/blocks/lifecycle#the-block-in-the-admin).
+
+:::
+
+## Create a Final Form component for the block
+
+The block's `AdminComponent` API (`state`, `updateState`) must be converted to the `Field` API (`input.value`, `input.onChange`).
+Use the [createFinalFormBlock](https://github.com/vivid-planet/comet/blob/main/packages/admin/blocks-admin/src/form/createFinalFormBlock.tsx) helper for this:
+
+```tsx
+import { createFinalFormBlock } from "@comet/blocks-admin";
+
+const FinalFormDamImageBlock = createFinalFormBlock(DamImageBlock);
+```
+
+Use the newly created component in the corresponding `Field` via the `component` prop:
+
+```tsx
+import isEqual from "lodash.isequal";
+
+<Field
+    name="image"
+    isEqual={isEqual}
+    // highlight-next-line
+    component={FinalFormDamImageBlock}
+/>;
+```
+
+:::note
+
+A deep equality check using `isEqual` is necessary because the block state is an object.
+
+:::
+
+## Create the block state when initializing the form
+
+The block state needs to be created when initializing the form.
+If a product exists (i.e., in edit mode), transform the block input to the block state.
+When creating a new product, use the block's default values:
+
+```tsx
+import { BlockState } from "@comet/blocks-admin";
+import isEqual from "lodash.isequal";
+
+type FormValues = Omit<GQLProductFormFragment, "image"> & {
+    // highlight-next-line
+    image: BlockState<typeof DamImageBlock>;
+};
+
+const { data } = useQuery(productFormQuery, id ? { variables: { id } } : { skip: true });
+
+const initialValues = useMemo<Partial<FormValues>>(
+    () =>
+        data?.product
+            ? {
+                  ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
+                  // highlight-next-line
+                  image: DamImageBlock.input2State(data.product.image),
+              }
+            : {
+                  inStock: false,
+                  // highlight-next-line
+                  image: DamImageBlock.defaultValues(),
+              },
+    [data],
+);
+
+<FinalForm
+    // highlight-next-line
+    initialValues={initialValues}
+    initialValuesEqual={isEqual}
+/>;
+```
+
+:::note
+
+A deep equality check using `initialValuesEqual` is necessary when using blocks in a form.
+
+:::
+
+## Create the block output when submitting the form
+
+Transform the block state to the block output before submitting the form:
+
+```tsx
+const handleSubmit = async (values: FormValues) => {
+    const input = {
+        ...values,
+        // highlight-next-line
+        image: DamImageBlock.state2Output(values.image),
+    };
+
+    /* Create or update the product... */
+};
+```

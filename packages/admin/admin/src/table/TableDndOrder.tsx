@@ -41,7 +41,7 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
             ({
                 id: props.row.id,
                 index: props.index,
-            } as DragItem),
+            }) as DragItem,
         collect: (monitor: any) => ({
             isDragging: monitor.isDragging(),
         }),

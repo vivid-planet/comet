@@ -137,8 +137,8 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 minVisibleBlocks !== undefined
                     ? Array.from({ length: minVisibleBlocks }, getDefaultListEntry)
                     : createDefaultListEntry
-                    ? [getDefaultListEntry()]
-                    : [],
+                      ? [getDefaultListEntry()]
+                      : [],
         }),
 
         category: block.category,

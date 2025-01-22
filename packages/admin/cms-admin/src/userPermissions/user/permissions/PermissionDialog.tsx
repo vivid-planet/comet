@@ -81,13 +81,11 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
     const { data: availablePermissionsData, error: availablePermissionsError } = useQuery<
         GQLAvailablePermissionsQuery,
         GQLAvailablePermissionsQueryVariables
-    >(
-        gql`
-            query AvailablePermissions {
-                availablePermissions: userPermissionsAvailablePermissions
-            }
-        `,
-    );
+    >(gql`
+        query AvailablePermissions {
+            availablePermissions: userPermissionsAvailablePermissions
+        }
+    `);
 
     if (error) {
         throw new Error(error.message);

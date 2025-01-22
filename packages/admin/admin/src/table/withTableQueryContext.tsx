@@ -27,5 +27,6 @@ type Subtract<T, K> = Omit<T, keyof K>;
  */
 export const withTableQueryContext =
     <P extends IWithTableQueryProps>(WrappedComponent: ComponentType<P>): SFC<Subtract<P, IWithTableQueryProps>> =>
-    (props: any) =>
-        <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>;
+    (props: any) => (
+        <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>
+    );

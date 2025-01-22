@@ -1,8 +1,8 @@
 import {
     AppHeader,
     AppHeaderButton,
-    AppHeaderFillSpace,
     AppHeaderMenuButton,
+    FillSpace,
     MainContent,
     MainNavigation,
     MainNavigationItem,
@@ -44,7 +44,7 @@ export const Master = {
                 <>
                     <AppHeader>
                         <AppHeaderMenuButton />
-                        <AppHeaderFillSpace />
+                        <FillSpace />
                         <AppHeaderButton startIcon={<Wrench />} onClick={() => setShowDrawer(true)}>
                             Open drawer
                         </AppHeaderButton>

@@ -3,7 +3,7 @@ import { Checkbox } from "@mui/material";
 import { CSSProperties, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { DebouncedState } from "use-debounce/lib/useDebouncedCallback";
+import { DebouncedState } from "use-debounce";
 
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
 import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";

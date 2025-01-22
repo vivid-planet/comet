@@ -5,6 +5,7 @@ import {
     dataGridDateTimeColumn,
     DataGridToolbar,
     FileIcon,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     Loading,
@@ -12,7 +13,6 @@ import {
     RowActionsItem,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
@@ -286,7 +286,7 @@ export const _GridFilterButton = {
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
@@ -439,7 +439,7 @@ export const UseDataGridExcelExport = {
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <>
                             <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
@@ -504,7 +504,7 @@ export const _CrudMoreActionsMenu = {
         function DemoToolBar() {
             return (
                 <DataGridToolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <CrudMoreActionsMenu
                             selectionSize={selectionModel.length}

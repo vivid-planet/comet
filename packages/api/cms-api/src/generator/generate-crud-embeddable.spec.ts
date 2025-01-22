@@ -1,5 +1,4 @@
-import { BaseEntity, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -18,7 +17,7 @@ export class TestEmbedded {
 }
 
 @Entity()
-export class TestEntityWithEmbedded extends BaseEntity<TestEntityWithEmbedded, "id"> {
+export class TestEntityWithEmbedded extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -38,7 +37,7 @@ export class TestWithoutEmbedded {
 }
 
 @Entity()
-export class TestEntityWithoutEmbedded extends BaseEntity<TestEntityWithoutEmbedded, "id"> {
+export class TestEntityWithoutEmbedded extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -59,6 +58,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEmbedded, TestEmbedded],
                 }),
             );
@@ -156,6 +156,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithoutEmbedded, TestWithoutEmbedded],
                 }),
             );

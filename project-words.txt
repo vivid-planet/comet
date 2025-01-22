@@ -18,3 +18,5 @@ subcomponent
 subpage
 typesafe
 exceljs
+ormconfig
+exif
