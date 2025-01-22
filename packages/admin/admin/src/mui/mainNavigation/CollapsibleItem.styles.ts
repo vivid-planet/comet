@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { MainNavigationContextValue } from "./Context";
+import { MainNavigationContext } from "./Context";
 import { MainNavigationItem, MainNavigationItemLevel } from "./Item";
 
 export type MainNavigationCollapsibleItemClassKey = "root" | "open" | "childSelected" | "mainNavigationItem" | "itemTitle" | "collapsibleIndicator";
@@ -13,7 +13,7 @@ export type OwnerState = {
     menuOpen: boolean;
     subMenuOpen: boolean;
     level: MainNavigationItemLevel;
-    variant: MainNavigationContextValue["drawerVariant"];
+    variant: MainNavigationContext["drawerVariant"];
 };
 
 export const Root = createComponentSlot("div")<MainNavigationCollapsibleItemClassKey, OwnerState>({

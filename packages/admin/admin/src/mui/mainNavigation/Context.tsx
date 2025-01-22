@@ -1,6 +1,6 @@
 import { ComponentType, createContext, Dispatch, FunctionComponent, SetStateAction } from "react";
 
-export interface MainNavigationContextValue {
+export interface MainNavigationContext {
     open: boolean;
     toggleOpen: () => void;
     drawerVariant: "temporary" | "permanent";
@@ -8,9 +8,9 @@ export interface MainNavigationContextValue {
 }
 
 export interface WithMainNavigation {
-    mainNavigation: MainNavigationContextValue;
+    mainNavigation: MainNavigationContext;
 }
-export const MainNavigationContext = createContext<MainNavigationContextValue>({
+export const MainNavigationContext = createContext<MainNavigationContext>({
     open: false,
     toggleOpen: () => {
         // nothing
