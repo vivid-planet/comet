@@ -1,4 +1,4 @@
-import { isWithPreviewPropsData, PropsWithData, usePreview, withPreview } from "@comet/cms-site";
+import { PropsWithData, usePreview, withPreview } from "@comet/cms-site";
 import { AccordionBlockData } from "@src/blocks.generated";
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";
@@ -24,15 +24,9 @@ export const AccordionBlock = withPreview(
         useEffect(() => {
             if (showPreviewSkeletons) {
                 const getFocusedBlockKey = () => {
-                    const focusedBlock = data.blocks.find((block) => {
-                        if (!isWithPreviewPropsData(block)) {
-                            return false;
-                        }
-
-                        const url = block.adminMeta?.route;
-
-                        return url && (isSelected(url, { exactMatch: false }) || isHovered(url, { exactMatch: false }));
-                    });
+                    const focusedBlock = data.blocks.find(
+                        (block) => isSelected(block, { exactMatch: false }) || isHovered(block, { exactMatch: false }),
+                    );
 
                     return focusedBlock?.key;
                 };
