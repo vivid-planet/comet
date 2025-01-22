@@ -125,7 +125,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
-    it("should navigate to the products page and route when clicking on the products tab", async () => {
+    it("should not open edit dialog when navigating to the products page", async () => {
         const history = createMemoryHistory({
             initialEntries: ["/", "/products"],
             initialIndex: 0,
