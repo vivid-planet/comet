@@ -13,10 +13,8 @@ export const MediaGalleryItemBlock = createCompositeBlock(
             },
             caption: {
                 block: createCompositeBlockTextField({
-                    fieldProps: {
-                        fullWidth: true,
-                        label: <FormattedMessage id="mediaGalleryBlock.mediaGalleryItem.caption" defaultMessage="Caption" />,
-                    },
+                    fullWidth: true,
+                    label: <FormattedMessage id="mediaGalleryBlock.mediaGalleryItem.caption" defaultMessage="Caption" />,
                 }),
                 hiddenInSubroute: true,
             },

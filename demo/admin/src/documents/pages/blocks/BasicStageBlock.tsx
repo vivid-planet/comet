@@ -40,7 +40,7 @@ export const BasicStageBlock = createCompositeBlock({
             block: createCompositeBlockSelectField<BasicStageBlockData["overlay"]>({
                 defaultValue: 50,
                 options: overlayOptions,
-                fieldProps: { fullWidth: true },
+                fullWidth: true,
             }),
             title: <FormattedMessage id="basicStageBlock.overlay" defaultMessage="Overlay" />,
             hiddenInSubroute: true,
@@ -52,7 +52,7 @@ export const BasicStageBlock = createCompositeBlock({
                     { value: "left", label: <FormattedMessage id="basicStageBlock.alignment.left" defaultMessage="left" /> },
                     { value: "center", label: <FormattedMessage id="basicStageBlock.alignment.center" defaultMessage="center" /> },
                 ],
-                fieldProps: { fullWidth: true },
+                fullWidth: true,
             }),
             title: <FormattedMessage id="basicStageBlock.alignment" defaultMessage="Alignment" />,
             hiddenInSubroute: true,
