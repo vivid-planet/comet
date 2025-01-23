@@ -1,7 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
+import { MediaGalleryListBlock } from "@src/common/blocks/media-gallery.block";
 
 import { MediaGalleryItemBlockFixtureService } from "./media-gallery-item-block-fixture.service";
 
@@ -9,7 +9,7 @@ import { MediaGalleryItemBlockFixtureService } from "./media-gallery-item-block-
 export class MediaGalleryBlockFixtureService {
     constructor(private readonly mediaGalleryItemBlockFixtureService: MediaGalleryItemBlockFixtureService) {}
 
-    async generateBlockInput(min = 2, max = 6): Promise<ExtractBlockInputFactoryProps<typeof MediaGalleryBlock>> {
+    async generateBlockInput(min = 2, max = 6): Promise<ExtractBlockInputFactoryProps<typeof MediaGalleryListBlock>> {
         const blockAmount = faker.number.int({ min, max });
         const blocks = [];
 

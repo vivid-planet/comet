@@ -2,7 +2,7 @@ import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBl
 import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
-import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
+import { MediaGalleryListBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
@@ -32,7 +32,7 @@ export const mediaBlocks = {
     image: DamImageBlock,
     fullWidthImage: FullWidthImageBlock,
     media: StandaloneMediaBlock,
-    mediaGallery: MediaGalleryBlock,
+    mediaGallery: MediaGalleryListBlock,
 };
 
 export const navigationBlocks = {
