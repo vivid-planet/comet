@@ -112,4 +112,4 @@ Instead define them in the `BrevoConfigProvider` once:
 
 Install `@comet/brevo-mail-rendering` in your project's site. This package offers reuseable frontend components for rendering emails.
 
-Optional: You can use the `NewsLetterImageBlock` for rendering Images in your Newsletter campaigns.
+Optional: You can use the `NewsletterImageBlock` for rendering Images in your Newsletter campaigns.
