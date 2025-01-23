@@ -78,7 +78,7 @@
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/generated/**"],
-            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port"]
+            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port", "cosmiconfig-toml-loader"]
         },
         "demo/api": {
             "entry": [
