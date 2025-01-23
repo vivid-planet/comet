@@ -1,5 +1,6 @@
 import { Entity, Enum, ManyToOne, Property, Ref, types } from "@mikro-orm/core";
 import { CsvColumn } from "@src/importer/decorators/csv-column.decorator";
+import { TargetEntity } from "@src/importer/decorators/target-entity.decorator";
 import { BaseTargetEntity } from "@src/importer/entities/base-target.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
@@ -8,6 +9,7 @@ import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus }
 import { ProductType } from "./product-type.enum";
 
 @Entity()
+@TargetEntity()
 export class RawProduct extends BaseTargetEntity {
     @Property()
     @CsvColumn("title")
