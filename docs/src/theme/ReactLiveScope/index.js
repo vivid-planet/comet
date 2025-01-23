@@ -42,13 +42,21 @@ const findDuplicateImports = (imports) => {
 };
 
 if (ExecutionEnvironment.canUseDOM) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const cometAdminImports = require("@comet/admin");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Visible: VisibleIcon, Grid: GridIcon, ...cometAdminIconsImports } = require("@comet/admin-icons");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const cometAdminDateTimeImports = require("@comet/admin-date-time");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Toolbar, ...cometAdminRteImports } = require("@comet/admin-rte");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const cometAdminColorPickerImports = require("@comet/admin-color-picker");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const cometAdminThemeImports = require("@comet/admin-theme");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Card, CardContent, FormControlLabel, Grid, Chip, IconButton, Typography, Box } = require("@mui/material");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Form } = require("react-final-form");
 
     ReactLiveScope = generateScope([
