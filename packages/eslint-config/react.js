@@ -49,6 +49,11 @@ module.exports = {
                         message: "Please use Alert from @comet/admin instead",
                     },
                     {
+                        name: "@mui/material",
+                        importNames: ["Dialog"],
+                        message: "Please use Dialog from @comet/admin instead",
+                    },
+                    {
                         name: "@mui/x-data-grid",
                         importNames: ["GridColDef"],
                         message: "Please use GridColDef from @comet/admin instead",
