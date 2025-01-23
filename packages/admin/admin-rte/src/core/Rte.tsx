@@ -376,7 +376,7 @@ const Editor = createComponentSlot("div")<RteClassKey, OwnerState>({
 
             ${ownerState.minHeight !== undefined &&
             css`
-                min-height: ${ownerState.minHeight};
+                min-height: ${`${ownerState.minHeight}px`};
             `}
 
             padding: 20px;
