@@ -7,7 +7,7 @@ export class FileUploadsFixtureService {
     constructor(private readonly fileUploadsService: FileUploadsService) {}
 
     async generateFileUploads(): Promise<FileUpload[]> {
-        console.log("Generating file uploads...");
+        console.log("Generate File Uploads...");
 
         const images = ["01.jpg", "02.jpg", "03.jpg", "04.jpg", "05.jpg"];
         const fileUploads: FileUpload[] = [];

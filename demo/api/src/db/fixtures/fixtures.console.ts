@@ -13,7 +13,6 @@ import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
-import { GraphQLClient } from "graphql-request";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
 
@@ -46,7 +45,6 @@ const getDefaultPageInput = (): PageInput => {
 @Console()
 export class FixturesConsole {
     private readonly logger = new Logger(FixturesConsole.name);
-    client: GraphQLClient;
 
     constructor(
         @Inject(CONFIG) private readonly config: Config,
@@ -55,7 +53,6 @@ export class FixturesConsole {
         private readonly dependenciesService: DependenciesService,
         private readonly entityManager: EntityManager,
         private readonly productsFixtureService: ProductsFixtureService,
-    ) {}
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
@@ -64,9 +61,7 @@ export class FixturesConsole {
         private readonly pageTreeService: PageTreeService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
-    ) {
-        this.client = new GraphQLClient("http://localhost:4000/graphql");
-    }
+    ) {}
 
     @Command({
         command: "fixtures",
@@ -191,10 +186,8 @@ export class FixturesConsole {
         }
         console.log("Lorem Ispum Fixtures created");
 
-        console.log("Generate File Uploads...");
         await this.fileUploadsFixtureService.generateFileUploads();
 
-        console.log("Generate Redirects...");
         await this.redirectsFixtureService.generateRedirects();
 
         await this.dependenciesService.createViews();

@@ -11,7 +11,7 @@ export class RedirectsFixtureService {
     ) {}
 
     async generateRedirects(): Promise<void> {
-        console.log("Generating redirects...");
+        console.log("Generate Redirects...");
 
         for (let i = 0; i < 7000; i++) {
             this.repository.create({
