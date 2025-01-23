@@ -26,7 +26,7 @@ class MediaGalleryBlockData extends BlockData {
 
 class MediaGalleryBlockInput extends BlockInput {
     @ChildBlockInput(MediaGalleryListBlock)
-    items: ExtractBlockInput<typeof MediaGalleryBlock>;
+    items: ExtractBlockInput<typeof MediaGalleryListBlock>;
 
     @IsEnum(MediaAspectRatios)
     @BlockField({ type: "enum", enum: MediaAspectRatios })
@@ -37,4 +37,4 @@ class MediaGalleryBlockInput extends BlockInput {
     }
 }
 
-const MediaGalleryBlock = createBlock(MediaGalleryBlockData, MediaGalleryBlockInput, "MediaGallery");
+export const MediaGalleryBlock = createBlock(MediaGalleryBlockData, MediaGalleryBlockInput, "MediaGallery");
