@@ -18,13 +18,15 @@ describe("createBlocksBlock", () => {
         resolveDependencyPath: () => "",
     };
 
+    const TestBlock2 = TestBlock;
+
     it("should override block's values", () => {
         const nameOverride = "override name";
         const block = createBlocksBlock(
             {
                 name: "testBlocksBlock",
                 displayName: "Test List Block",
-                supportedBlocks: { TestBlock },
+                supportedBlocks: { TestBlock, TestBlock2 },
             },
             (block) => {
                 block.name = nameOverride;
