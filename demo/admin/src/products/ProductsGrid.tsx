@@ -28,7 +28,14 @@ import {
 import { Add as AddIcon, Disabled, Edit, Excel, Online, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import {
+    DataGridPro,
+    GridFilterInputSingleSelect,
+    GridFilterInputValue,
+    GridSelectionModel,
+    GridToolbarQuickFilter,
+    useGridApiContext,
+} from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -52,6 +59,7 @@ import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportApi; selectionModel: GridSelectionModel }) {
     const client = useApolloClient();
     const theme = useTheme();
+    const apiRef = useGridApiContext();
 
     return (
         <DataGridToolbar>
@@ -91,6 +99,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportA
                                     });
                                 }
                             },
+                            disabled: selectionModel.every((id) => apiRef.current.getRow(id)?.status === "Published"),
                         },
                         {
                             label: "Unpublish",
@@ -107,6 +116,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportA
                                     });
                                 }
                             },
+                            disabled: selectionModel.every((id) => apiRef.current.getRow(id)?.status === "Unpublished"),
                         },
                     ]}
                     selectionSize={selectionModel.length}
