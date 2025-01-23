@@ -1,8 +1,8 @@
 import { css } from "@mui/material";
 
-export const previewGlobalStyles = (theme) =>
+export const previewGlobalStyles = (theme: any) =>
     css(`
-    body {
+    body { 
         margin: 0;
         background-color: ${theme.palette.background.default};
 

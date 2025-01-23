@@ -1,19 +1,4 @@
 {
-    "name": "comet-storybook",
-    "version": "1.0.0",
-    "private": true,
-    "license": "BSD-2-Clause",
-    "files": [
-        "src"
-    ],
-    "scripts": {
-        "build-storybook": "storybook build",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json .storybook/",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit",
-        "storybook": "storybook dev -p 26638 --no-version-updates"
-    },
     "dependencies": {
         "@apollo/client": "^3.7.0",
         "@comet/admin": "workspace:*",
@@ -75,7 +60,7 @@
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.1",
         "eslint": "^9.18.0",
-        "eslint-plugin-storybook": "^0.11.0",
+        "eslint-plugin-storybook": "^0.11.2",
         "graphql-mocks": "^0.10.0",
         "msw": "^0.35.0",
         "npm-run-all2": "^5.0.2",
@@ -86,9 +71,24 @@
         "react-router-dom": "^5.3.4",
         "remark-gfm": "^4.0.0",
         "storybook": "^8.5.2",
-        "typescript": "^4.0.0"
+        "typescript": "^5.7.3"
     },
+    "files": [
+        "src"
+    ],
+    "license": "BSD-2-Clause",
     "msw": {
         "workerDirectory": "public"
-    }
+    },
+    "name": "comet-storybook",
+    "private": true,
+    "scripts": {
+        "build-storybook": "storybook build",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json .storybook/",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "storybook": "storybook dev -p 26638 --no-version-updates"
+    },
+    "version": "1.0.0"
 }
