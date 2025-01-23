@@ -42,16 +42,16 @@ Pass both to the `AppModule`:
       });
 ```
 
-### Import `PublicUploadsModule` in the project's `AppModule`
+### Import `FileUploadsModule` in the project's `AppModule`
 
-It is now necessary to import the `PublicUploadsModule` in the project's `AppModule` and configure it to accept csv files.
+It is now necessary to import the `FileUploadsModule` in the project's `AppModule` and configure it to accept csv files.
 
 ```ts
-        PublicUploadModule.register({
-            acceptedMimeTypes: ["text/csv"],
-            maxFileSize: config.publicUploads.maxFileSize,
-            directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
-        }),
+        FileUploadsModule.register({
+                acceptedMimeTypes: ["text/csv"],
+                maxFileSize: config.fileUploads.maxFileSize,
+                directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
+                }),
 ```
 
 The files for the brevo contact import now get temporarily stored in the public uploads until the import is concluded.
