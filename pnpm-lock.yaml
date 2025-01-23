@@ -513,9 +513,6 @@ importers:
       graphql:
         specifier: ^15.0.0
         version: 15.8.0
-      graphql-request:
-        specifier: ^4.3.0
-        version: 4.3.0(graphql@15.8.0)
       graphql-scalars:
         specifier: ^1.23.0
         version: 1.23.0(graphql@15.8.0)
@@ -23570,19 +23567,6 @@ packages:
 
   /graphql-request@3.7.0(graphql@15.8.0):
     resolution: {integrity: sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==}
-    peerDependencies:
-      graphql: 14 - 16
-    dependencies:
-      cross-fetch: 3.1.5
-      extract-files: 9.0.0
-      form-data: 3.0.1
-      graphql: 15.8.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /graphql-request@4.3.0(graphql@15.8.0):
-    resolution: {integrity: sha512-2v6hQViJvSsifK606AliqiNiijb1uwWp6Re7o0RTyH+uRTv/u7Uqm2g4Fjq/LgZIzARB38RZEvVBFOQOVdlBow==}
     peerDependencies:
       graphql: 14 - 16
     dependencies:

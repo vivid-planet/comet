@@ -13,7 +13,7 @@ export class FileUploadsFixtureService {
         const fileUploads: FileUpload[] = [];
 
         for (const image of images) {
-            const file = await createFileUploadInputFromUrl(path.resolve(`./src/db/fixtures/generators/images/${image}`));
+            const file = await createFileUploadInputFromUrl(path.resolve(`./src/db/fixtures/assets/images/${image}`));
             fileUploads.push(await this.fileUploadsService.upload(file));
         }
 

@@ -95,13 +95,13 @@ export class FixturesConsole {
         const migrator = this.orm.getMigrator();
         await migrator.up();
 
-        const scope = { domain: "demo.comet-dxp.com", language: "en" };
+        const scope = { domain: "main", language: "en" };
 
         console.log("Generate Images...");
-        await this.imageFixtureService.generateImages(5, scope);
+        await this.imageFixtureService.generateImages(5, { domain: "main" });
 
         console.log("Generate Videos...");
-        await this.videoFixtureService.generateVideos(scope);
+        await this.videoFixtureService.generateVideos({ domain: "main" });
 
         console.log("Generate Pages...");
         await this.documentGeneratorService.generatePage({ name: "Home", scope });
