@@ -775,6 +775,9 @@ importers:
       cspell:
         specifier: ^8.17.3
         version: 8.17.3
+      eslint:
+        specifier: ^9.18.0
+        version: 9.19.0(jiti@2.4.2)
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -851,6 +854,9 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:^7.11.0
         version: link:../../eslint-config
+      '@comet/eslint-plugin':
+        specifier: workspace:^7.11.0
+        version: link:../../eslint-plugin
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.18)(react@18.3.1)

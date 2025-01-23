@@ -42,7 +42,7 @@
         "url": "https://github.com/vivid-planet/comet"
     },
     "scripts": {
-        "build": "run-s clean generate-icons && run-p build:babel build:types",
+        "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
         "clean": "rimraf lib",

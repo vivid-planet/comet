@@ -21,6 +21,7 @@
         "@babel/core": "^7.26.7",
         "@comet/admin-babel-preset": "workspace:^7.11.0",
         "@comet/eslint-config": "workspace:^7.11.0",
+        "@comet/eslint-plugin": "workspace:^7.11.0",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@mui/material": "^6.3.0",
