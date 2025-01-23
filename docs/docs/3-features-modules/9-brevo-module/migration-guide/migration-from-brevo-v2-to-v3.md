@@ -2,10 +2,9 @@
 title: Migrating from v2 to v3
 ---
 
-Make sure, that your project is compatible with COMET v7:
-
--   Now requires >= v7.10.0 for @comet packages
--   Now requires >= 5.9.8 for @mikro-orm packages (except @mikro-orm/nestjs where >= 5.2.3 is required)
+:::caution
+Make sure, that your project uses COMET v7.10.0 or later.
+:::
 
 ## API
 
