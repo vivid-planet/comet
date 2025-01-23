@@ -238,14 +238,17 @@ export const createUsePage: CreateUsePage =
 
             // manage sync of page state and gql-api
             useEffect(() => {
-                const generateStateFromSession = async (sessionState: string): Promise<PS | undefined> => {
+                const generateStateFromSession = async (sessionState: string, page: PS): Promise<PS | undefined> => {
                     try {
-                        const { output, pageState } = JSON.parse(sessionState) as { output: Output; pageState: PS };
+                        const output = JSON.parse(sessionState) as Output;
+                        const pageState = JSON.parse(JSON.stringify(page)) as PS;
+
                         for (const [key, value] of Object.entries(rootBlocks)) {
                             const state = await value.output2State(output[key], blockContext);
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             (pageState as any).document[key] = state;
                         }
+
                         return { ...pageState };
                     } catch (error) {
                         console.error(error);
@@ -275,8 +278,12 @@ export const createUsePage: CreateUsePage =
                         } as unknown as PS;
 
                         if (sessionStoragePageState) {
-                            const state = await generateStateFromSession(sessionStoragePageState);
-                            setPageState(state ? state : page);
+                            const state = await generateStateFromSession(sessionStoragePageState, page);
+                            if (state) {
+                                setPageState(state);
+                            } else {
+                                setPageState(page);
+                            }
                             // set reference output to the loaded page to enable the user to save the page
                             setReferenceOutput(generateOutput(page));
                             window.sessionStorage.removeItem(`pageState_${pageId}`);
@@ -356,10 +363,7 @@ export const createUsePage: CreateUsePage =
                     } catch (error) {
                         if (hasChanges) {
                             const output = generateOutput(pageState);
-                            for (const [key] of Object.entries(rootBlocks)) {
-                                delete pageState.document[key];
-                            }
-                            window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify({ output, pageState }));
+                            window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify(output));
                         }
                         console.error(error);
                         setSaveError("error");
