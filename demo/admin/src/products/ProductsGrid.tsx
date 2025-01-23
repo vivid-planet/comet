@@ -25,11 +25,12 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, Excel, StateFilled as StateFilledIcon } from "@comet/admin-icons";
+import { Add as AddIcon, Disabled, Edit, Excel, Online, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
+import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
@@ -48,7 +49,10 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
+function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportApi; selectionModel: GridSelectionModel }) {
+    const client = useApolloClient();
+    const theme = useTheme();
+
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -71,6 +75,41 @@ function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
                             disabled: exportApi.loading,
                         },
                     ]}
+                    selectiveActions={[
+                        {
+                            label: "Publish",
+                            icon: <Online htmlColor={theme.palette.success.main} />,
+                            onClick: () => {
+                                for (const id of selectionModel) {
+                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                        mutation: updateProductStatusMutation,
+                                        variables: { id: id as string, status: "Published" },
+                                        optimisticResponse: {
+                                            __typename: "Mutation",
+                                            updateProduct: { __typename: "Product", id: id as string, status: "Published" },
+                                        },
+                                    });
+                                }
+                            },
+                        },
+                        {
+                            label: "Unpublish",
+                            icon: <Disabled />,
+                            onClick: () => {
+                                for (const id of selectionModel) {
+                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                        mutation: updateProductStatusMutation,
+                                        variables: { id: id as string, status: "Unpublished" },
+                                        optimisticResponse: {
+                                            __typename: "Mutation",
+                                            updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
+                                        },
+                                    });
+                                }
+                            },
+                        },
+                    ]}
+                    selectionSize={selectionModel.length}
                 />
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
@@ -87,6 +126,7 @@ export function ProductsGrid() {
     const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
+    const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -347,7 +387,12 @@ export function ProductsGrid() {
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { exportApi },
+                toolbar: { exportApi, selectionModel },
+            }}
+            checkboxSelection
+            selectionModel={selectionModel}
+            onSelectionModelChange={(selectionModel) => {
+                setSelectionModel(selectionModel);
             }}
         />
     );
