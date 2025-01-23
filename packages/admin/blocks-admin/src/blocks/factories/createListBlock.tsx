@@ -98,7 +98,6 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         additionalItemFields,
         AdditionalItemContextMenuItems,
         AdditionalItemContent,
-        category,
     }: CreateListBlockOptions<T, AdditionalItemFields>,
     override?: (
         block: BlockInterface<
