@@ -25,7 +25,6 @@ export const generateImageBlock = (
     };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAreaInput => {
     const focalPoint = faker.random.arrayElement([
         FocalPoint.SMART,

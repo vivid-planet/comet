@@ -1,9 +1,9 @@
 import helmet from "helmet";
 
 if (process.env.TRACING == "production") {
-    require("./tracing.production");
+    import("./tracing.production");
 } else if (process.env.TRACING == "dev") {
-    require("./tracing.dev");
+    import("./tracing.dev");
 }
 
 import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";

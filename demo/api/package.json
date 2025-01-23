@@ -1,29 +1,4 @@
 {
-    "name": "comet-demo-api",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
-        "prebuild": "rimraf dist",
-        "build": "nest build",
-        "console": "NODE_OPTIONS='--max-old-space-size=256' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
-        "console:prod": "node dist/console.js",
-        "db:migrate": "$npm_execpath console migrate --",
-        "db:migrate:prod": "$npm_execpath console:prod migrate --",
-        "fixtures": "$npm_execpath console fixtures --",
-        "fixtures:prod": "$npm_execpath console:prod fixtures --",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc && $npm_execpath lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
-        "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --project ./tsconfig.lint.json",
-        "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
-        "mikro-orm:drop": "mikro-orm schema:drop -r",
-        "mikro-orm:migration:generate": "mikro-orm migration:create",
-        "start": "$npm_execpath prebuild && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
-        "start:dev": "$npm_execpath prebuild && $npm_execpath db:migrate && $npm_execpath console createBlockIndexViews && NODE_OPTIONS='--max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
-        "start:prod": "node dist/main"
-    },
     "dependencies": {
         "@apollo/server": "^4.11.3",
         "@comet/cms-api": "workspace:*",
@@ -80,10 +55,35 @@
         "typescript": "^4.0.0"
     },
     "mikro-orm": {
-        "useTsNode": true,
         "configPaths": [
             "./src/db/ormconfig.cli.ts",
             "./dist/db/ormconfig.cli.js"
-        ]
-    }
+        ],
+        "useTsNode": true
+    },
+    "name": "comet-demo-api",
+    "private": true,
+    "scripts": {
+        "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+        "build": "nest build",
+        "console": "NODE_OPTIONS='--max-old-space-size=256' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
+        "console:prod": "node dist/console.js",
+        "db:migrate": "$npm_execpath console migrate --",
+        "db:migrate:prod": "$npm_execpath console:prod migrate --",
+        "fixtures": "$npm_execpath console fixtures --",
+        "fixtures:prod": "$npm_execpath console:prod fixtures --",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc && $npm_execpath lint:generated-files-not-modified",
+        "lint:eslint": "eslint --max-warnings 0  src/ package.json",
+        "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --project ./tsconfig.lint.json",
+        "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
+        "mikro-orm:drop": "mikro-orm schema:drop -r",
+        "mikro-orm:migration:generate": "mikro-orm migration:create",
+        "prebuild": "rimraf dist",
+        "start": "$npm_execpath prebuild && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
+        "start:dev": "$npm_execpath prebuild && $npm_execpath db:migrate && $npm_execpath console createBlockIndexViews && NODE_OPTIONS='--max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
+        "start:prod": "node dist/main"
+    },
+    "version": "1.0.0"
 }
