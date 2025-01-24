@@ -1,15 +1,14 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { AccordionContentBlockData, AccordionItemBlockData } from "@src/blocks.generated";
-import { useState } from "react";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
+import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
+import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
+import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
 import { Typography } from "../components/Typography";
-import { SvgUse } from "../helpers/SvgUse";
-import { RichTextBlock } from "./RichTextBlock";
-import { SpaceBlock } from "./SpaceBlock";
-import { StandaloneCallToActionListBlock } from "./StandaloneCallToActionListBlock";
-import { StandaloneHeadingBlock } from "./StandaloneHeadingBlock";
 
 const supportedBlocks: SupportedBlocks = {
     richtext: (props) => <RichTextBlock data={props} />,
@@ -25,12 +24,14 @@ const AccordionContentBlock = withPreview(
     { label: "Accordion Content" },
 );
 
-type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData>;
+type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData> & {
+    isExpanded: boolean;
+    onChange: () => void;
+};
 
 export const AccordionItemBlock = withPreview(
-    ({ data: { title, content, openByDefault } }: AccordionItemBlockProps) => {
+    ({ data: { title, content }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const intl = useIntl();
-        const [isExpanded, setIsExpanded] = useState<boolean>(openByDefault);
 
         const ariaLabelText = isExpanded
             ? intl.formatMessage({ id: "accordionBlock.ariaLabel.expanded", defaultMessage: "Collapse accordion item" })
@@ -38,7 +39,7 @@ export const AccordionItemBlock = withPreview(
 
         return (
             <>
-                <TitleWrapper onClick={() => setIsExpanded(!isExpanded)} aria-label={ariaLabelText}>
+                <TitleWrapper onClick={() => onChange()} aria-label={ariaLabelText}>
                     <Typography variant="h350">{title}</Typography>
                     <IconWrapper>
                         <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />

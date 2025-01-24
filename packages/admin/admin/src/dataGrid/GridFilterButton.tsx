@@ -1,10 +1,9 @@
 import { Filter } from "@comet/admin-icons";
-import { ButtonProps } from "@mui/material";
 import { useGridApiContext } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ToolbarActionButton } from "../common/toolbar/actions/ToolbarActionButton";
+import { Button, ButtonProps } from "../common/buttons/Button";
 import { messages } from "../messages";
 
 export function GridFilterButton(props: ButtonProps) {
@@ -15,8 +14,8 @@ export function GridFilterButton(props: ButtonProps) {
     }, [apiRef]);
 
     return (
-        <ToolbarActionButton startIcon={<Filter />} variant="outlined" onClick={handleFilterClick} {...props}>
+        <Button responsive startIcon={<Filter />} variant="outlined" onClick={handleFilterClick} {...props}>
             <FormattedMessage {...messages.filter} />
-        </ToolbarActionButton>
+        </Button>
     );
 }

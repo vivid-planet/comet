@@ -1,5 +1,43 @@
 # @comet/blocks-admin
 
+## 7.12.0
+
+### Minor Changes
+
+-   86479e770: Simplify setting field props when using `createCompositeBlockTextField` or `createCompositeBlockSelectField`
+
+    The props can now be set directly without nesting them inside the `fieldProps` object.
+
+    ```diff
+     block: createCompositeBlockTextField({
+    -    fieldProps: {
+             label: "Title",
+             fullWidth: true,
+    -    },
+     }),
+    ```
+
+-   af350d086: Add `createCompositeBlockSwitchField` helper function
+
+    To simplify the creation of a switch field block by hiding the verbose definition of `Form`, `Field` and items.
+
+-   86479e770: Support `disabled` in select options when using `createCompositeBlockSelectField`
+
+### Patch Changes
+
+-   5583c9cff: Allow passing a function as child to `BlocksFinalForm`
+-   Updated dependencies [af51bb408]
+-   Updated dependencies [92b3255d2]
+-   Updated dependencies [954635630]
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [4f6e6b011]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [7da81fa2e]
+-   Updated dependencies [3ddc2278b]
+-   Updated dependencies [0bb181a52]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Patch Changes

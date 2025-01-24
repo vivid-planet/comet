@@ -1,4 +1,5 @@
 import {
+    Button,
     CrudMoreActionsMenu,
     DataGridToolbar,
     FieldSet,
@@ -28,7 +29,7 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
@@ -226,9 +227,7 @@ export const SimpleFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" onClick={() => editDialogApi.openAddDialog(selectedId)}>
-                            Open dialog
-                        </Button>
+                        <Button onClick={() => editDialogApi.openAddDialog(selectedId)}>Open dialog</Button>
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
@@ -286,9 +285,7 @@ export const LargeFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" onClick={() => editDialogApi.openAddDialog(selectedId)}>
-                            Open dialog
-                        </Button>
+                        <Button onClick={() => editDialogApi.openAddDialog(selectedId)}>Open dialog</Button>
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
@@ -419,7 +416,7 @@ export const GridWithFormInADialog = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -496,7 +493,7 @@ export const GridWithFormOnAPage = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} component={StackLink} pageName="add" payload="add">
+                        <Button startIcon={<Add />} component={StackLink} pageName="add" payload="add">
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -608,7 +605,7 @@ export const NestedGridsAndFormsWithTabs = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -729,7 +726,7 @@ export const NestedFormInGridInTabsInGrid = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -932,7 +929,7 @@ export const GridWithSelectionInDialog = {
                     <ToolbarAutomaticTitleItem />
                     <FillSpace />
                     <ToolbarActions>
-                        <Button color="primary" variant="contained" startIcon={<SelectIcon />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button startIcon={<SelectIcon />} onClick={() => editDialogApi.openAddDialog()}>
                             Select items
                         </Button>
                     </ToolbarActions>
