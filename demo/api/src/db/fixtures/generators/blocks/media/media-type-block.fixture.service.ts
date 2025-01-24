@@ -5,6 +5,7 @@ import { MediaTypeBlock } from "@src/common/blocks/media.block";
 
 import { DamImageBlockFixtureService } from "./dam-image-block-fixture.service";
 import { DamVideoBlockFixtureService } from "./dam-video-block-fixture.service";
+import { VimeoVideoBlockFixtureService } from "./vimeo-video-block-fixture.service";
 import { YouTubeVideoBlockFixtureService } from "./youtube-video-block-fixture.service";
 
 @Injectable()
@@ -13,6 +14,7 @@ export class MediaTypeBlockFixtureService {
         private readonly damImageBlockFixtureService: DamImageBlockFixtureService,
         private readonly damVideoBlockFixtureService: DamVideoBlockFixtureService,
         private readonly youtubeVideoBlockFixtureService: YouTubeVideoBlockFixtureService,
+        private readonly vimeoVideoBlockFixtureService: VimeoVideoBlockFixtureService,
     ) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof MediaTypeBlock>> {
@@ -32,6 +34,10 @@ export class MediaTypeBlockFixtureService {
                 {
                     type: "youTubeVideo",
                     props: await this.youtubeVideoBlockFixtureService.generateBlockInput(),
+                },
+                {
+                    type: "vimeoVideo",
+                    props: await this.vimeoVideoBlockFixtureService.generateBlockInput(),
                 },
             ],
             activeType: type,

@@ -1564,7 +1564,8 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo"
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -1593,7 +1594,8 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo"
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -1770,7 +1772,8 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo"
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -1799,7 +1802,8 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo"
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }

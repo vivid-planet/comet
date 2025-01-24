@@ -31,6 +31,7 @@ import { MediaTypeBlockFixtureService } from "./generators/blocks/media/media-ty
 import { PixelImageBlockFixtureService } from "./generators/blocks/media/pixel-image-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "./generators/blocks/media/standalone-media-block-fixture.service";
 import { SvgImageBlockFixtureService } from "./generators/blocks/media/svg-image-block-fixture.service";
+import { VimeoVideoBlockFixtureService } from "./generators/blocks/media/vimeo-video-block-fixture.service";
 import { YouTubeVideoBlockFixtureService } from "./generators/blocks/media/youtube-video-block-fixture.service";
 import { AnchorBlockFixtureService } from "./generators/blocks/navigation/anchor-block-fixture.service";
 import { CallToActionBlockFixtureService } from "./generators/blocks/navigation/call-to-action-block-fixture.service";
@@ -122,6 +123,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         TextImageBlockFixtureService,
         TextLinkBlockFixtureService,
         VideoFixtureService,
+        VimeoVideoBlockFixtureService,
         YouTubeVideoBlockFixtureService,
     ],
 })
