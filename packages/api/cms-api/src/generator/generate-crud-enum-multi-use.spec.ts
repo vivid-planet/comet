@@ -1,5 +1,4 @@
-import { BaseEntity, Entity, Enum, PrimaryKey } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, Enum, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -16,7 +15,7 @@ registerEnumType(TestEnum, {
 });
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -34,11 +33,13 @@ const isArrayUnique = (arr: unknown[]) => Array.isArray(arr) && new Set(arr).siz
 describe("GenerateCrudEnumMultiUse", () => {
     it("should import a enum reference only once if used multiple times", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntity],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
         const lintedOut = await lintGeneratedFiles(out);

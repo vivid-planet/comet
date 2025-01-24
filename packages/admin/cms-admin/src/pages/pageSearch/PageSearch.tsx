@@ -1,5 +1,3 @@
-import { styled } from "@mui/material/styles";
-
 import { SearchInput } from "../../common/SearchInput";
 import { PageSearchApi } from "./usePageSearch";
 
@@ -11,24 +9,13 @@ interface PageSearchProps {
 
 export function PageSearch({ query, onQueryChange, pageSearchApi }: PageSearchProps) {
     return (
-        <Root>
-            <SearchInput
-                query={query}
-                onQueryChange={onQueryChange}
-                currentMatch={pageSearchApi.currentMatch}
-                totalMatches={pageSearchApi.totalMatches}
-                jumpToPreviousMatch={pageSearchApi.jumpToPreviousMatch}
-                jumpToNextMatch={pageSearchApi.jumpToNextMatch}
-            />
-        </Root>
+        <SearchInput
+            query={query}
+            onQueryChange={onQueryChange}
+            currentMatch={pageSearchApi.currentMatch}
+            totalMatches={pageSearchApi.totalMatches}
+            jumpToPreviousMatch={pageSearchApi.jumpToPreviousMatch}
+            jumpToNextMatch={pageSearchApi.jumpToNextMatch}
+        />
     );
 }
-
-const Root = styled("div")`
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    margin-left: 10px;
-    margin-right: 10px;
-`;

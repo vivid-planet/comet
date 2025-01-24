@@ -1,0 +1,72 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as EditDialogStories from "./EditDialog.stories";
+
+<Meta of={EditDialogStories} />
+
+# Edit Dialog
+
+An EditDialog typically includes a form that allows users to add or edit a resource.
+It's commonly used in combination with a table to add new rows or edit existing rows.
+
+## EditDialog
+
+There are two ways to integrate an EditDialog.
+
+### 1) useEditDialog Hook (Recommended)
+
+The recommended way is to use the `useEditDialog` hook.
+It returns an instance of `EditDialog` and the corresponding `editDialogApi`.
+
+<Canvas of={EditDialogStories.Hook} />
+
+### 2) EditDialog Component
+
+Alternatively, you can import the `EditDialog` component from `@comet/admin` and use it directly.
+To gain access to the `editDialogApi`, you need to attach a ref to the component.
+
+<Canvas of={EditDialogStories.Component} />
+
+## useEditDialogApi and EditDialogApiContext
+
+You can access the `editDialogApi` using the `useEditDialogApi` hook.
+As a prerequisite, you need to pass the `editDialogApi` to the `EditDialogApiContext.Provider` somewhere higher up
+in the component tree.
+
+<Canvas of={EditDialogStories.UseEditDialogApi} />
+
+## Form in EditDialog
+
+The `EditDialog` typically contains a form for editing a resource.
+When submitting the changes to an API via GraphQL mutation, the loading and error states are displayed automatically by the `SaveButton`.
+
+<Canvas of={EditDialogStories.WithForm} />
+
+## EditDialog and Table
+
+The most common use case for an EditDialog is for editing single rows in a table.
+
+<Canvas of={EditDialogStories.WithTable} />
+
+## EditDialog and Selection API
+
+Internally, the EditDialog uses the [selection](?path=/docs/docs-components-selection--docs) API to handle its current state.
+The selection has two properties: `id` and `mode`.
+
+### Modes
+
+The EditDialog supports two modes: `add` and `edit`.
+
+If a new resource is added, `mode` is set to `add` and `id` is set to `undefined`.
+The mode is also appended to the URL (`/add`).
+
+If an existing resource is changed, `mode` is set to `edit`.
+The `id` then specifies which resource is edited and is appended to the URL (e.g. `/8a31ea9d-d00a-4e37-807b-a69624964ba0`).
+
+### Example with useEditDialog (Recommended)
+
+<Canvas of={EditDialogStories.SelectionWithHook} />
+
+### Example with EditDialog Component
+
+<Canvas of={EditDialogStories.SelectionWithComponent} />

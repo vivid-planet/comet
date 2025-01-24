@@ -17,7 +17,7 @@ export interface GQLPageQueryVariables {
     id: string;
 }
 
-export interface GQLUpdatePageMutation {
+interface GQLUpdatePageMutation {
     id: string;
 }
 

@@ -8,7 +8,7 @@ import { SelectPreviewComponent } from "../../../iframebridge/SelectPreviewCompo
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
 import { BlockCategory, BlockInterface } from "../../types";
 
-export interface SpaceBlockFactoryOptions<T> {
+interface SpaceBlockFactoryOptions<T> {
     name?: string;
     defaultValue: T;
     options: { value: T; label: ReactNode }[];
@@ -34,7 +34,7 @@ export const createSpaceBlock = <T extends string | number>({
             return (
                 <SelectPreviewComponent>
                     <BlocksFinalForm<{ spacing: T }> onSubmit={updateState} initialValues={state}>
-                        <SelectField name="spacing" fullWidth>
+                        <SelectField name="spacing" fullWidth required>
                             {options.map(({ value, label }) => (
                                 <MenuItem key={value} value={value}>
                                     {label}

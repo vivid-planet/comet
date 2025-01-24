@@ -58,11 +58,11 @@ interface DraftJsInput<LinkBlockInput extends BlockInputInterface> {
     };
 }
 
-export interface RichTextBlockDataInterface extends BlockDataInterface {
+interface RichTextBlockDataInterface extends BlockDataInterface {
     draftContent: RawDraftContentState;
 }
 
-export interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputInterface>
+interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputInterface>
     extends BlockInputInterface<BlockDataInterface, { draftContent: DraftJsFactoryProps<LinkBlockInput> }> {
     draftContent: DraftJsInput<LinkBlockInput>;
 }
@@ -71,6 +71,10 @@ export function createRichTextBlock<LinkBlock extends Block>(
     { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
     nameOrOptions: BlockFactoryNameOrOptions = "RichText",
 ): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
+    if (!LinkBlock) {
+        throw new Error("Provided 'link' is undefined. This is most likely due to a circular import");
+    }
+
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 

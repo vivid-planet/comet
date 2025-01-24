@@ -146,11 +146,11 @@ export async function writeCrudGrid(
                     gridType = "boolean" as const;
                 } else if (type.name == "DateTime") {
                     gridType = "dateTime" as const;
-                    valueGetter = `({ value }) => value && new Date(value)`;
+                    valueGetter = `(value) => value && new Date(value)`;
                 } else if (type.name == "Date") {
                     // ISO date
                     gridType = "date" as const;
-                    valueGetter = `({ value }) => value && new Date(value)`;
+                    valueGetter = `(value) => value && new Date(value)`;
                 } else {
                     if (rootBlocks[field.name]) {
                         renderCell = `(params) => {
@@ -235,7 +235,6 @@ export async function writeCrudGrid(
         GQLDelete${entityName}Mutation,
         GQLDelete${entityName}MutationVariables 
     } from "./${classNamePlural}Grid.generated";
-    import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
@@ -250,11 +249,11 @@ export async function writeCrudGrid(
     
     const ${instanceNamePlural}Query = gql\`
         query ${classNamePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${entityName}Sort!]` : ""}${
-        hasSearch ? `, $search: String` : ""
-    }${hasFilter ? `, $filter: ${entityName}Filter` : ""}${hasScope ? `, $scope: ${entityName}ContentScopeInput!` : ""}) {
+            hasSearch ? `, $search: String` : ""
+        }${hasFilter ? `, $filter: ${entityName}Filter` : ""}${hasScope ? `, $scope: ${entityName}ContentScopeInput!` : ""}) {
             ${gridQuery}(offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
-        hasFilter ? `, filter: $filter` : ""
-    }${hasScope ? `, scope: $scope` : ""}) {
+                hasFilter ? `, filter: $filter` : ""
+            }${hasScope ? `, scope: $scope` : ""}) {
                 nodes {
                     ...${classNamePlural}List
                 }
@@ -317,7 +316,7 @@ export async function writeCrudGrid(
         );
     }
     
-    export function ${classNamePlural}Grid(): React.ReactElement {
+    export function ${classNamePlural}Grid() {
         const client = useApolloClient();
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${classNamePlural}Grid") };
@@ -414,26 +413,25 @@ export async function writeCrudGrid(
                 ${hasScope ? `scope,` : ""}
                 ${hasFilter ? `filter: gqlFilter,` : ""}
                 ${hasSearch ? `search: gqlSearch,` : ""}
-                offset: dataGridProps.page * dataGridProps.pageSize,
-                limit: dataGridProps.pageSize,
+                offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+                limit: dataGridProps.paginationModel.pageSize,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
             },
         });
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
         const rows = data?.${gridQuery}.nodes ?? [];
-    
+
         return (
             <MainContent fullHeight>
                 <DataGridPro
                     {...dataGridProps}
-                    disableSelectionOnClick
                     rows={rows}
                     rowCount={rowCount}
                     columns={columns}
                     loading={loading}
-                    components={{
-                        Toolbar: ${classNamePlural}GridToolbar,
+                    slots={{
+                        toolbar: ${classNamePlural}GridToolbar,
                     }}
                 />
             </MainContent>

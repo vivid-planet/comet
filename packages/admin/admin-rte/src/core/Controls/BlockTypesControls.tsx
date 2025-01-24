@@ -53,20 +53,19 @@ const Select = createComponentSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
     componentName: "RteBlockTypeControls",
     slotName: "select",
 })(
-    ({ theme }) =>
-        css`
-            .${selectClasses.select}.${inputBaseClasses.input} {
-                min-height: 0;
-                color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.buttonIcon};
-                min-width: 180px;
-                line-height: 24px;
-                font-size: 14px;
-                padding: 0;
-            }
-        `,
+    ({ theme }) => css`
+        .${selectClasses.select}.${inputBaseClasses.input} {
+            min-height: 0;
+            color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.buttonIcon};
+            min-width: 180px;
+            line-height: 24px;
+            font-size: 14px;
+            padding: 0;
+        }
+    `,
 );
 
-export function StyledBlockTypesControls(inProps: Props) {
+function StyledBlockTypesControls(inProps: Props) {
     const { disabled, blockTypes, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminRteBlockTypeControls" });
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
 

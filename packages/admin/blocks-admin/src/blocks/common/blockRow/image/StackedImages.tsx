@@ -1,7 +1,7 @@
 import { PreviewContentImage } from "../../../types";
 import * as sc from "./StackedImages.sc";
 
-export interface StackedImagesProps {
+interface StackedImagesProps {
     images: PreviewContentImage[];
 }
 

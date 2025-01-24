@@ -1,4 +1,4 @@
-import { BaseEntity, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { Min } from "class-validator";
@@ -10,7 +10,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityWithPositionField extends BaseEntity<TestEntityWithPositionField, "id"> {
+class TestEntityWithPositionField extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -26,7 +26,7 @@ export class TestEntityScope {
     language: string;
 }
 @Entity()
-class TestEntityWithPositionFieldAndScope extends BaseEntity<TestEntityWithPositionFieldAndScope, "id"> {
+class TestEntityWithPositionFieldAndScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -41,7 +41,7 @@ class TestEntityWithPositionFieldAndScope extends BaseEntity<TestEntityWithPosit
 
 @Entity()
 @CrudGenerator({ targetDirectory: __dirname, position: { groupByFields: ["country"] } })
-class TestEntityWithPositionGroup extends BaseEntity<TestEntityWithPositionGroup, "id"> {
+class TestEntityWithPositionGroup extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -57,11 +57,13 @@ class TestEntityWithPositionGroup extends BaseEntity<TestEntityWithPositionGroup
 describe("GenerateCrudPosition", () => {
     it("input should contain optional position with Int and Min(1)", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithPositionField],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithPositionField],
+            }),
+        );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionField"));
         const lintedOutput = await lintSource(out[0].content);
@@ -94,11 +96,13 @@ describe("GenerateCrudPosition", () => {
     });
     it("service should implement position-functions", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithPositionField],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithPositionField],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionField"));
         const file = out.find((file) => file.name == "test-entity-with-position-fields.service.ts");
@@ -128,11 +132,13 @@ describe("GenerateCrudPosition", () => {
     });
     it("service should implement getPositionGroupCondition-function if scope existent", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithPositionFieldAndScope, TestEntityWithPositionGroup],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithPositionFieldAndScope, TestEntityWithPositionGroup],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionFieldAndScope"));
         const file = out.find((file) => file.name == "test-entity-with-position-field-and-scopes.service.ts");
@@ -156,11 +162,13 @@ describe("GenerateCrudPosition", () => {
     });
     it("service should implement getPositionGroupCondition-function if configured", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithPositionGroup],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithPositionGroup],
+            }),
+        );
 
         const out = await generateCrud(
             { targetDirectory: __dirname, position: { groupByFields: ["country"] } },

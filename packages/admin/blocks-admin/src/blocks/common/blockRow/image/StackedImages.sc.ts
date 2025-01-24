@@ -18,7 +18,7 @@ export const StackedImage = styled("div")`
     border: 1px solid white;
 `;
 
-export const TwoImagesStackedImage = styled(StackedImage)`
+const TwoImagesStackedImage = styled(StackedImage)`
     width: 80%;
     height: 80%;
 `;
@@ -32,7 +32,7 @@ export const TwoImagesStackedImageRight = styled(TwoImagesStackedImage)`
     right: 0;
 `;
 
-export const ThreeImagesStackedImage = styled(StackedImage)`
+const ThreeImagesStackedImage = styled(StackedImage)`
     width: 70%;
     height: 70%;
 `;

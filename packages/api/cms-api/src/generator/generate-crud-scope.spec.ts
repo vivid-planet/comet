@@ -1,5 +1,4 @@
-import { BaseEntity, Embeddable, Embedded, Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -11,7 +10,7 @@ import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
     return { language: entity.langauge };
 })
-export class TestEntityWithScopedEntity extends BaseEntity<TestEntityWithScopedEntity, "id"> {
+export class TestEntityWithScopedEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -23,11 +22,13 @@ export class TestEntityWithScopedEntity extends BaseEntity<TestEntityWithScopedE
 describe("GenerateCrud with ScopedEntity", () => {
     it("resolver must not have skipScopeCheck", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithScopedEntity],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithScopedEntity],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScopedEntity"));
         const lintedOut = await lintGeneratedFiles(out);
@@ -55,7 +56,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntityWithScope extends BaseEntity<TestEntityWithScope, "id"> {
+export class TestEntityWithScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -66,11 +67,13 @@ export class TestEntityWithScope extends BaseEntity<TestEntityWithScope, "id"> {
 describe("GenerateCrud with Scope", () => {
     it("resolver must not have skipScopeCheck", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithScope],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithScope],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScope"));
         const lintedOut = await lintGeneratedFiles(out);

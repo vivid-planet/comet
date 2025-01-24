@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridColDef,
@@ -20,8 +21,7 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -98,19 +98,22 @@ type Props = {
     product: string;
 };
 
-export function ProductVariantsGrid({ product }: Props): React.ReactElement {
+export function ProductVariantsGrid({ product }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "product-variants",
+        }),
+        ...usePersistentColumnState("ProductVariantsGrid"),
+    };
 
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
+            ...dataGridDateColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-            type: "date",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             flex: 1,
             minWidth: 150,
         },
@@ -165,8 +168,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             product,
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -177,13 +180,12 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductVariantsGridToolbar,
+            slots={{
+                toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

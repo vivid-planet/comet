@@ -1,5 +1,4 @@
-import { NotFoundError } from "@mikro-orm/core";
-import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityRepository, NotFoundError, QueryBuilder } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 import { compareAsc, compareDesc, isEqual } from "date-fns";
 
@@ -67,10 +66,10 @@ export function createReadApi(
         visibility === "all"
             ? [Visibility.Published, Visibility.Unpublished, Visibility.Archived]
             : typeof visibility === "string"
-            ? [visibility]
-            : visibility.length === 0 // empty array is not allowed, as someone might unintendedly query all visibilites (empty array means no filter)
-            ? [Visibility.Published]
-            : [...visibility];
+              ? [visibility]
+              : visibility.length === 0 // empty array is not allowed, as someone might unintendedly query all visibilites (empty array means no filter)
+                ? [Visibility.Published]
+                : [...visibility];
 
     const preloadedNodes = new Map<string, PageTreeNodeInterface[]>();
     const nodesById = new Map<string, PageTreeNodeInterface>();

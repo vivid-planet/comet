@@ -123,17 +123,15 @@ type WithoutBlockInputMethods<T extends Record<string, any>> = Omit<T, "transfor
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
 type Unpacked<T> = T extends (infer U)[] ? U : T extends (...args: any[]) => infer U ? U : T extends Promise<infer U> ? U : T;
 
-export type NestedToPlainReturn<T extends Record<string, any>> = WithoutBlockInputMethods<{
+type NestedToPlainReturn<T extends Record<string, any>> = WithoutBlockInputMethods<{
     [Key in keyof T]: T[Key] extends BlockInputInterface | undefined // value is a BlockInputInterface
         ? ReturnType<NonNullable<T[Key]>["toPlain"]>
         : T[Key] extends BlockInputInterface[] | undefined // value is an array of BlockInputInterfaces
-        ? ReturnType<NonNullable<Unpacked<T[Key]>>["toPlain"]>[]
-        : T[Key];
+          ? ReturnType<NonNullable<Unpacked<T[Key]>>["toPlain"]>[]
+          : T[Key];
 }>;
 
-export type CreateToPlainReturn<Input extends BlockInputInterface, FactoryProps extends BaseFactoryProps = undefined> = [FactoryProps] extends [
-    undefined,
-]
+type CreateToPlainReturn<Input extends BlockInputInterface, FactoryProps extends BaseFactoryProps = undefined> = [FactoryProps] extends [undefined]
     ? NestedToPlainReturn<Input>
     : FactoryProps;
 
@@ -198,6 +196,7 @@ export type BlockMetaField =
           name: string;
           kind: BlockMetaLiteralFieldKind;
           nullable: boolean;
+          array?: boolean;
       }
     | { name: string; kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }

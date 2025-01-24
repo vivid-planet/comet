@@ -5,6 +5,7 @@ import { News, NewsContentScope } from "@src/news/entities/news.entity";
 
 import { NewsLinkBlockTransformerService } from "./blocks/news-link-block-transformer.service";
 import { NewsComment } from "./entities/news-comment.entity";
+import { ExtendedNewsResolver } from "./extended-news.resolver";
 import { NewsResolver } from "./generated/news.resolver";
 import { NewsCommentResolver } from "./news-comment.resolver";
 import { NewsFieldResolver } from "./news-field.resolver";
@@ -18,6 +19,7 @@ import { NewsFieldResolver } from "./news-field.resolver";
         DependenciesResolverFactory.create(News),
         DependentsResolverFactory.create(News),
         NewsLinkBlockTransformerService,
+        ExtendedNewsResolver,
     ],
     exports: [],
 })

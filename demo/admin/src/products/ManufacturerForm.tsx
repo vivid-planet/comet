@@ -8,7 +8,6 @@ import {
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
-    MainContent,
     messages,
     TextField,
     useFormApiRef,
@@ -46,19 +45,20 @@ type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressA
                   | null;
           })
         | null;
-    addressAsEmbeddable:
-        | Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
-              streetNumber: string | null;
-              zip: string;
-              alternativeAddress:
-                  | Omit<
-                        NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
-                        "streetNumber" | "zip"
-                    > & {
-                        streetNumber: string | null;
-                        zip: string;
-                    };
-          };
+    addressAsEmbeddable: Omit<
+        NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>,
+        "streetNumber" | "zip" | "alternativeAddress"
+    > & {
+        streetNumber: string | null;
+        zip: string;
+        alternativeAddress: Omit<
+            NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
+            "streetNumber" | "zip"
+        > & {
+            streetNumber: string | null;
+            zip: string;
+        };
+    };
 };
 
 interface FormProps {
@@ -198,8 +198,10 @@ export function ManufacturerForm({ id }: FormProps) {
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
+                    <>
+                        <FieldSet>
+                            <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
+                        </FieldSet>
                         <FieldSet
                             title={<FormattedMessage id="manufacturer.address" defaultMessage="Address" />}
                             supportText={<FormattedMessage id="manufacturer.address.supportText" defaultMessage="The main address" />}
@@ -367,7 +369,7 @@ export function ManufacturerForm({ id }: FormProps) {
                                 label={<FormattedMessage id="manufacturer.address.alternativeAddress.country" defaultMessage="Alt-Address Country" />}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

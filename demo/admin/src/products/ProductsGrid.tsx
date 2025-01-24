@@ -2,18 +2,18 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridColumnsButton,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -26,6 +26,7 @@ import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToo
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
+import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -50,7 +51,7 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
@@ -85,8 +86,8 @@ export function ProductsGrid() {
                     row.type,
                     row.category?.title,
                     row.inStock
-                        ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In Stock" })
-                        : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of Stock" }),
+                        ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In stock" })
+                        : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of stock" }),
                 ];
                 return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
@@ -190,11 +191,10 @@ export function ProductsGrid() {
             minWidth: 80,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: "Available Since",
             width: 130,
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
         },
         {
             field: "status",
@@ -202,7 +202,7 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 130,
             type: "boolean",
-            valueGetter: (params) => params.row.status == "Published",
+            valueGetter: (params, row) => row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
@@ -222,18 +222,25 @@ export function ProductsGrid() {
             },
         },
         {
-            field: "action",
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: (params, row) => row.manufacturer?.name,
+            filterOperators: [ManufacturerFilterOperator],
+        },
+        {
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
-            width: 106,
+            width: 116,
             pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
                         <ProductsGridPreviewAction {...params} />
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
@@ -278,29 +285,28 @@ export function ProductsGrid() {
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            sort: muiGridSortToGql(sortModel, columns),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            slots={{
+                toolbar: ProductsGridToolbar,
+            }}
+        />
     );
 }
 
@@ -330,6 +336,9 @@ const productsFragment = gql`
         }
         variants {
             id
+        }
+        manufacturer {
+            name
         }
         articleNumbers
         discounts {

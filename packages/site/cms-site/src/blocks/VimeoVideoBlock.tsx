@@ -44,7 +44,7 @@ export const VimeoVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
-        if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
+        if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
 
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 

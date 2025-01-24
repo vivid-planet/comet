@@ -1,5 +1,4 @@
-import { BaseEntity, Embeddable, Embedded, Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -13,7 +12,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntity extends BaseEntity<TestEntity, "id"> {
+export class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -24,11 +23,13 @@ export class TestEntity extends BaseEntity<TestEntity, "id"> {
 describe("GenerateCrud without find condition", () => {
     it("where should be typed as ObjectQuery as it is when findCondition is used", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity, TestEntityScope],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntity, TestEntityScope],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
         const lintedOut = await lintGeneratedFiles(out);
@@ -38,7 +39,7 @@ describe("GenerateCrud without find condition", () => {
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
-            expect(source.getImportDeclarationOrThrow("@mikro-orm/core").getText()).toContain("ObjectQuery");
+            expect(source.getImportDeclarationOrThrow("@mikro-orm/postgresql").getText()).toContain("ObjectQuery");
 
             const cls = source.getClassOrThrow("TestEntityResolver");
             const testEntitiesQuery = cls.getInstanceMethodOrThrow("testEntities");

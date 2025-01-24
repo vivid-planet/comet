@@ -1,5 +1,5 @@
-import { BaseEntity, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { Field, InputType } from "@nestjs/graphql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -7,7 +7,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithJsonLiteralArray extends BaseEntity<TestEntityWithJsonLiteralArray, "id"> {
+export class TestEntityWithJsonLiteralArray extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -24,7 +24,7 @@ export class NestedObject {
 }
 
 @Entity()
-export class TestEntityWithJsonObject extends BaseEntity<TestEntityWithJsonObject, "id"> {
+export class TestEntityWithJsonObject extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -35,25 +35,8 @@ export class TestEntityWithJsonObject extends BaseEntity<TestEntityWithJsonObjec
     bar: NestedObject[];
 }
 
-@Embeddable()
-@InputType("TestEmbeddedInput")
-export class TestEmbedded {
-    @Property()
-    @Field()
-    test: string;
-}
-
 @Entity()
-export class TestEntityWithEmbedded extends BaseEntity<TestEntityWithEmbedded, "id"> {
-    @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
-
-    @Embedded(() => TestEmbedded)
-    foo: TestEmbedded;
-}
-
-@Entity()
-export class TestEntityWithRecord extends BaseEntity<TestEntityWithRecord, "id"> {
+export class TestEntityWithRecord extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -64,11 +47,13 @@ describe("GenerateCrudInputJson", () => {
     describe("input class literal array", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithJsonLiteralArray],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithJsonLiteralArray],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"));
             const lintedOutput = await lintSource(out[0].content);
@@ -103,11 +88,13 @@ describe("GenerateCrudInputJson", () => {
     describe("input class json object", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithJsonObject],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithJsonObject],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonObject"));
             const lintedOutput = await lintSource(out[0].content);
@@ -137,50 +124,17 @@ describe("GenerateCrudInputJson", () => {
             orm.close();
         });
     });
-    describe("input class embedded object", () => {
-        it("should be a valid generated ts file", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithEmbedded, TestEmbedded],
-            });
-
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmbedded"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
-
-            const classes = source.getClasses();
-            expect(classes.length).toBe(2);
-
-            {
-                const cls = classes[0];
-                const structure = cls.getStructure();
-
-                expect(structure.properties?.length).toBe(1);
-                expect(structure.properties?.[0].name).toBe("foo");
-                expect(structure.properties?.[0].type).toBe("TestEmbedded");
-            }
-            {
-                const cls = classes[1]; //update dto
-                const structure = cls.getStructure();
-
-                expect(structure.properties?.length).toBe(0);
-            }
-
-            orm.close();
-        });
-    });
 
     describe("input class record", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithRecord],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithRecord],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRecord"));
             const lintedOutput = await lintSource(out[0].content);

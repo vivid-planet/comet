@@ -27,16 +27,20 @@ function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirects
         const intl = useIntl();
 
         const { scope: completeScope } = useContentScope();
-        const scope = scopeParts.reduce((acc, scopePart) => {
-            acc[scopePart] = completeScope[scopePart];
-            return acc;
-        }, {} as { [key: string]: unknown });
+        const scope = scopeParts.reduce(
+            (acc, scopePart) => {
+                acc[scopePart] = completeScope[scopePart];
+                return acc;
+            },
+            {} as { [key: string]: unknown },
+        );
+        const isGlobalScoped = Object.keys(scope).length === 0;
 
         return (
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.redirects", defaultMessage: "Redirects" })}>
                 <StackSwitch initialPage="grid">
                     <StackPage name="grid">
-                        <StackToolbar scopeIndicator={<ContentScopeIndicator scope={scope} />} />
+                        <StackToolbar scopeIndicator={<ContentScopeIndicator global={isGlobalScoped} scope={isGlobalScoped ? undefined : scope} />} />
                         <RedirectsGrid linkBlock={linkBlock} scope={scope} />
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.redirects.edit", defaultMessage: "edit" })}>

@@ -5,11 +5,12 @@ import {
     StackPageTitle,
     StackSwitch,
     StackSwitchApiContext,
+    Tooltip,
     UndoSnackbar,
     useSnackbarApi,
 } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -233,7 +234,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                             visible: child.visible,
                             type: child.type,
                             adminRoute: blockAdminRoute,
-                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrlSubRoute: undefined, parentUrl: blockAdminRoute }),
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                             ...(Object.keys(additionalItemFields ?? {}).reduce(
                                 (fields, field) => ({ ...fields, [field]: child[field] }),

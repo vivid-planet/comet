@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -6,7 +6,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id"> {
+export class TestEntityWithString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -15,7 +15,7 @@ export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id">
 }
 
 @Entity()
-export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id"> {
+export class TestEntityWithNumber extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -24,7 +24,7 @@ export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id">
 }
 
 @Entity()
-export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+export class TestEntityWithTextRuntimeType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -36,11 +36,13 @@ describe("GenerateCrud", () => {
     describe("resolver class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithString],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithString],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -67,11 +69,13 @@ describe("GenerateCrud", () => {
     describe("string filter", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithString],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithString],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -101,11 +105,13 @@ describe("GenerateCrud", () => {
     describe("number filter", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithNumber],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithNumber],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithNumber"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -135,11 +141,13 @@ describe("GenerateCrud", () => {
     describe("text type filter", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithTextRuntimeType],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithTextRuntimeType],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
             const lintedOut = await lintGeneratedFiles(out);

@@ -1,5 +1,4 @@
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Ref } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -7,7 +6,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntitiyProduct extends BaseEntity<TestEntitiyProduct, "id"> {
+class TestEntitiyProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -19,7 +18,7 @@ class TestEntitiyProduct extends BaseEntity<TestEntitiyProduct, "id"> {
 }
 
 @Entity()
-class TestEntityCategory extends BaseEntity<TestEntityCategory, "id"> {
+class TestEntityCategory extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -35,11 +34,13 @@ const isArrayUnique = (arr: unknown[]) => Array.isArray(arr) && new Set(arr).siz
 describe("GenerateCrudRelationsMultiUse", () => {
     it("should import a relation reference only once if used multiple times", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityCategory, TestEntitiyProduct],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityCategory, TestEntitiyProduct],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntitiyProduct"));
         const lintedOut = await lintGeneratedFiles(out);

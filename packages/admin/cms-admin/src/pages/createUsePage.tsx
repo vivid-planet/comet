@@ -44,7 +44,10 @@ type BlockGQLData<T extends RootBlocksInterface> = {
 // all static configuration options needed to create a usePage hook
 
 interface CreateUsePage {
-    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: { rootBlocks: RootBlocks; pageType: PageType }): <
+    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: {
+        rootBlocks: RootBlocks;
+        pageType: PageType;
+    }): <
         GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null, // the page state is infered from this
         GQLEditPageQueryVariables extends { id: string } = { id: string }, // for type-safety, query must match this shape
         GQLUpdatePageMutation extends { id: string } & BlockGQLData<RootBlocks> = {
@@ -75,7 +78,7 @@ type ReplaceBlockInputDataWithBlockState<Doc extends Record<string, unknown> | n
           [K in keyof Doc]: K extends "id" ? string : K extends keyof RootBlocks ? BlockState<RootBlocks[K]> : Doc[K]; // key id is always a string and never a block
       };
 
-export type PageState<
+type PageState<
     GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null,
     RootBlocks extends RootBlocksInterface,
     PageType extends string,

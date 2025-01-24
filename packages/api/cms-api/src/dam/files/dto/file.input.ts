@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
     IsDate,
     IsEnum,
@@ -22,13 +22,11 @@ import { DamScopeInterface } from "../../types";
 import { LicenseType } from "../entities/license.embeddable";
 
 export class ImageFileInput {
-    @IsOptional()
     @IsInt()
-    width?: number;
+    width: number;
 
-    @IsOptional()
     @IsInt()
-    height?: number;
+    height: number;
 
     @IsOptional()
     @IsObject()
@@ -37,7 +35,7 @@ export class ImageFileInput {
     @Type(() => ImageCropAreaInput)
     @IsOptional()
     @ValidateNested()
-    cropArea?: ImageCropAreaInput;
+    cropArea: ImageCropAreaInput;
 }
 
 @InputType()
@@ -58,11 +56,13 @@ export class LicenseInput {
     author?: string;
 
     @Field(() => Date, { nullable: true })
+    @Transform(({ value }) => (value ? new Date(value) : undefined))
     @IsOptional()
     @IsDate()
     durationFrom?: Date;
 
     @Field(() => Date, { nullable: true })
+    @Transform(({ value }) => (value ? new Date(value) : undefined))
     @IsOptional()
     @IsDate()
     durationTo?: Date;

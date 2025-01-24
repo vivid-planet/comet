@@ -1,7 +1,7 @@
 const core = require("./core");
 
 module.exports = {
-    extends: [require.resolve("./core.js"), "plugin:react/recommended", "plugin:react-hooks/recommended"],
+    extends: [require.resolve("./core.js"), "plugin:react/recommended", "plugin:react-hooks/recommended", "plugin:react/jsx-runtime"],
     env: {
         browser: true,
         es6: true,
@@ -31,6 +31,10 @@ module.exports = {
             {
                 paths: [
                     {
+                        name: "react",
+                        importNames: ["default"],
+                    },
+                    {
                         name: "@mui/material",
                         importNames: ["styled"],
                         message: "Please use styled from @mui/material/styles instead.",
@@ -43,6 +47,11 @@ module.exports = {
                         name: "@mui/material",
                         importNames: ["Alert"],
                         message: "Please use Alert from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Dialog"],
+                        message: "Please use Dialog from @comet/admin instead",
                     },
                     {
                         name: "@mui/x-data-grid",
@@ -58,6 +67,11 @@ module.exports = {
                         name: "@mui/x-data-grid-premium",
                         importNames: ["GridColDef"],
                         message: "Please use GridColDef from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Tooltip"],
+                        message: "Please use Tooltip from @comet/admin instead",
                     },
                 ],
             },

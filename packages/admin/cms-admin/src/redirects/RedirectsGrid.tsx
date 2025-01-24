@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     LocalErrorScopeApolloContext,
@@ -11,7 +12,6 @@ import {
     StackLink,
     TableDeleteButton,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -42,7 +42,7 @@ function RedirectsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
@@ -136,8 +136,8 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>
-                    <IconButton component={StackLink} pageName="edit" payload={params.id.toString()}>
-                        <Edit color="primary" />
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.id.toString()}>
+                        <Edit />
                     </IconButton>
                     <TableDeleteButton
                         icon={<DeleteIcon />}
@@ -161,13 +161,16 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         variables: {
             scope,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            ...muiGridPagingToGql({ page: dataGridProps.paginationModel.page, pageSize: dataGridProps.paginationModel.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
         context: LocalErrorScopeApolloContext,
         fetchPolicy: "cache-and-network",
     });
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.paginatedRedirects.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
@@ -179,9 +182,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
-                disableSelectionOnClick
-                components={{ Toolbar: RedirectsGridToolbar }}
+                slots={{ toolbar: RedirectsGridToolbar }}
             />
         </MainContent>
     );

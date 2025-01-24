@@ -3,11 +3,11 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRangeInput,
     FinalFormSubmitEvent,
@@ -21,12 +21,13 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
+import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
+import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
+    GQLFinalFormFileUploadDownloadableFragment,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -35,7 +36,7 @@ import {
 import { FormControlLabel, InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -62,7 +63,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
@@ -80,7 +81,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -91,7 +92,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
@@ -107,6 +108,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
+                      lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
                   }
                 : {
                       inStock: false,
@@ -381,14 +383,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     }
                                 }}
                             </OnChangeField>
-                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                        control={<FinalFormCheckbox {...props} />}
-                                    />
-                                )}
-                            </Field>
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"
@@ -396,6 +396,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
                             <Field
                                 name="image"
@@ -418,6 +423,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 variant="horizontal"
                                 multiple
                                 maxFileSize={4194304}
+                            />
+                            <DateTimeField
+                                variant="horizontal"
+                                fullWidth
+                                name="lastCheckedAt"
+                                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
                             />
                         </FieldSet>
                     </>

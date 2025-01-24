@@ -17,10 +17,18 @@ export enum IFrameMessageType {
     SitePreviewLocation = "SitePreviewLocation",
 }
 
+/**
+ * The `IReadyIFrameMessage` message is sent from the site to the admin when the iFrame is ready to receive messages.
+ */
 export interface IReadyIFrameMessage {
     cometType: IFrameMessageType.Ready;
 }
 
+/**
+ * The `IFrameSelectComponentMessage` is sent from the site to the admin when a component is selected in the iFrame.
+ *
+ * The admin interface will then try to navigate to the corresponding block's admin interface.
+ */
 export interface IFrameSelectComponentMessage {
     cometType: IFrameMessageType.SelectComponent;
     data: {
@@ -31,7 +39,7 @@ export interface IFrameSelectComponentMessage {
 /**
  * @deprecated Use SitePreviewIFrameOpenLinkMessage instead
  */
-export interface IFrameOpenLinkMessage {
+interface IFrameOpenLinkMessage {
     cometType: IFrameMessageType.OpenLink;
     data: {
         link: ExternalLinkBlockData;
@@ -46,7 +54,10 @@ export interface IFrameLocationMessage {
     data: Pick<Location, "search" | "pathname">;
 }
 
-export interface IFrameHoverComponentMessage {
+/**
+ * The `IFrameHoverComponentMessage` is sent from the site to the admin, when a component is hovered in the iFrame and should be highlighted in the admin interface.
+ */
+interface IFrameHoverComponentMessage {
     cometType: IFrameMessageType.HoverComponent;
     data: {
         route: string | null;
@@ -67,15 +78,22 @@ export enum AdminMessageType {
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
     ContentScope = "ContentScope",
+    GraphQLApiUrl = "GraphQLApiUrl",
 }
+
+/**
+ * The `IAdminBlockMessage` is sent from the admin to the site, whih block should be displayed in the iFrame.
+ */
 export interface IAdminBlockMessage {
     cometType: AdminMessageType.Block;
     data: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        block: any;
+        block: unknown;
     };
 }
 
+/**
+ * The `IAdminShowOnlyVisibleMessage` is sent from the admin to the site, when the "Show only visible" checkbox is toggled.
+ */
 export interface IAdminShowOnlyVisibleMessage {
     cometType: AdminMessageType.ShowOnlyVisible;
     data: {
@@ -83,6 +101,9 @@ export interface IAdminShowOnlyVisibleMessage {
     };
 }
 
+/**
+ * The `IAdminSelectComponentMessage` is sent from the admin to the site, when a component is selected in the admin interface.
+ */
 export interface IAdminSelectComponentMessage {
     cometType: AdminMessageType.SelectComponent;
     data: {
@@ -90,6 +111,9 @@ export interface IAdminSelectComponentMessage {
     };
 }
 
+/**
+ * The `IAdminHoverComponentMessage` is sent from the admin to the site, when a component is hovered in the admin interface.
+ */
 export interface IAdminHoverComponentMessage {
     cometType: AdminMessageType.HoverComponent;
     data: {
@@ -97,11 +121,23 @@ export interface IAdminHoverComponentMessage {
     };
 }
 
+/**
+ * The `IAdminContentScopeMessage` is sent from the admin to the site, when the content scope is changed in the admin interface.
+ */
 export interface IAdminContentScopeMessage {
     cometType: AdminMessageType.ContentScope;
     data: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        contentScope: any;
+        contentScope: unknown;
+    };
+}
+
+/**
+ * The `IAdminGraphQLApiUrlMessage` is sent from the admin to the site.
+ */
+export interface IAdminGraphQLApiUrlMessage {
+    cometType: AdminMessageType.GraphQLApiUrl;
+    data: {
+        graphQLApiUrl: string;
     };
 }
 
@@ -110,4 +146,5 @@ export type AdminMessage =
     | IAdminSelectComponentMessage
     | IAdminHoverComponentMessage
     | IAdminContentScopeMessage
-    | IAdminShowOnlyVisibleMessage;
+    | IAdminShowOnlyVisibleMessage
+    | IAdminGraphQLApiUrlMessage;

@@ -7,7 +7,7 @@ import { RequiredPermission } from "../user-permissions/decorators/required-perm
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 
-export type SitePreviewConfig = {
+type SitePreviewConfig = {
     secret: string;
 };
 
@@ -30,7 +30,7 @@ export class SitePreviewResolver {
             },
         })
             .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime("1 day")
+            .setExpirationTime("10 seconds")
             .sign(new TextEncoder().encode(this.config.secret));
     }
 }

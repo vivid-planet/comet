@@ -23,6 +23,7 @@ interface BlockConfiguration {
     hiddenInSubroute?: boolean;
     divider?: boolean;
     paper?: boolean;
+    hiddenForState?: (state: unknown) => boolean;
 }
 
 interface GroupConfiguration {
@@ -44,6 +45,13 @@ interface CreateCompositeBlockOptionsBase {
     category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
+
+    /**
+     * Function to determine the order of the blocks in the admin component. If a block is not included in the array, it will not be rendered.
+     * @param state The current state of the composite block
+     * @returns An array of block keys in the order they should be rendered in the admin component, if undefined all blocks will be rendered in the order they are defined in the blocks object
+     */
+    visibleOrderedBlocksForState?: (state: unknown) => string[] | undefined;
 }
 
 type CreateCompositeBlockOptionsWithGroups = Omit<CreateCompositeBlockOptionsBase, "blocks"> & { groups: Record<string, GroupConfiguration> };
@@ -69,8 +77,8 @@ type ExtractBlockConfig<T extends Record<string, BlockConfiguration>, K extends 
 type ExtractCompositeBlocksConfig<Options extends CreateCompositeBlockOptions> = Options extends CreateCompositeBlockOptionsWithGroups
     ? ExtractCompositeBlocksConfigBase<MergeBlockConfigs<ExtractGroupConfigs<Options["groups"]>["blocks"]>>
     : Options extends CreateCompositeBlockOptionsBase
-    ? ExtractCompositeBlocksConfigBase<Options["blocks"]>
-    : never;
+      ? ExtractCompositeBlocksConfigBase<Options["blocks"]>
+      : never;
 
 export const createCompositeBlock = <Options extends CreateCompositeBlockOptions>(
     options: Options,
@@ -78,7 +86,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         block: CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
     ) => CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
 ): CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>> => {
-    const { name, displayName, category = BlockCategory.Other } = options;
+    const { name, displayName, category = BlockCategory.Other, visibleOrderedBlocksForState } = options;
 
     let groups: Record<string, GroupConfiguration>;
 
@@ -106,9 +114,12 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
     );
 
     // for easier usage, make sure each blockConfig has the same shape (BlockInterfaceWithOptions)
-    const blockConfigNormalized = Object.entries(blockConfigs).reduce((acc, [key, value]) => {
-        return { ...acc, [key]: { ...value, block: normalizedBlockConfig(value.block) } };
-    }, {} as Record<string, NormalizedBlockConfiguration>);
+    const blockConfigNormalized = Object.entries(blockConfigs).reduce(
+        (acc, [key, value]) => {
+            return { ...acc, [key]: { ...value, block: normalizedBlockConfig(value.block) } };
+        },
+        {} as Record<string, NormalizedBlockConfiguration>,
+    );
 
     const CompositeBlock: BlockInterface<BlockInputApi<typeof block>, BlockState<typeof block>, BlockOutputApi<typeof block>> = {
         ...createBlockSkeleton(),
@@ -168,7 +179,10 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     hiddenInSubroute,
                     divider,
                     paper,
+                    hiddenForState,
                 } = blockConfigNormalized[blockKey];
+
+                if (hiddenForState?.(state)) return null;
 
                 const sectionVariant = group.paper ? "dense" : "normal";
                 const showDivider = divider && (isInPaper || group.paper);
@@ -241,9 +255,8 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                         <StackPage name="initial" key="initial">
                             {Object.entries(groups).map(([groupKey, group]) => {
                                 const { title, paper, blocks } = group;
-                                const children = Object.keys(blocks).map((blockKey) => (
-                                    <Fragment key={blockKey}>{renderBlock(blockKey, group)}</Fragment>
-                                ));
+                                const blockKeys = visibleOrderedBlocksForState?.(state) ?? Object.keys(blocks);
+                                const children = blockKeys.map((blockKey) => <Fragment key={blockKey}>{renderBlock(blockKey, group)}</Fragment>);
 
                                 const hiddenInSubroute = Object.values(blocks).every(
                                     (blockConfig) => blockConfig.hiddenInSubroute || blockConfig.nested,

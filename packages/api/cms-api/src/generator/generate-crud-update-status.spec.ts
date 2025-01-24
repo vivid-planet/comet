@@ -1,5 +1,4 @@
-import { BaseEntity, Entity, Enum, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -17,7 +16,7 @@ export enum TestEntity1Status {
 registerEnumType(TestEntity1Status, { name: "TestEntity1Status" });
 
 @Entity()
-class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
+class TestEntity1 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -34,11 +33,13 @@ describe("GenerateCrud Status with active", () => {
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity1],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntity1],
+            }),
+        );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity1"));
         lintedOut = await lintGeneratedFiles(out);
     });
@@ -109,7 +110,7 @@ export enum TestEntity2Status {
 registerEnumType(TestEntity2Status, { name: "TestEntity2Status" });
 
 @Entity()
-class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
+class TestEntity2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -126,11 +127,13 @@ describe("GenerateCrud Status with published/unpublished", () => {
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity2],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntity2],
+            }),
+        );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity2"));
         lintedOut = await lintGeneratedFiles(out);
     });
@@ -172,7 +175,7 @@ export enum TestEntity3Status {
 registerEnumType(TestEntity3Status, { name: "TestEntity3Status" });
 
 @Entity()
-class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
+class TestEntity3 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -189,11 +192,13 @@ describe("GenerateCrud Status with published/unpublished", () => {
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity3],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntity3],
+            }),
+        );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity3"));
         lintedOut = await lintGeneratedFiles(out);
     });

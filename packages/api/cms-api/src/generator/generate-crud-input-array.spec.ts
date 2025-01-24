@@ -1,4 +1,4 @@
-import { ArrayType, BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { ArrayType, BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -7,7 +7,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityArrayString extends BaseEntity<TestEntityArrayString, "id"> {
+export class TestEntityArrayString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -35,11 +35,13 @@ export class TestEntityArrayString extends BaseEntity<TestEntityArrayString, "id
 describe("GenerateCrudInputArray", () => {
     it("should support all string array variants", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityArrayString],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityArrayString],
+            }),
+        );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityArrayString"));
         const lintedOutput = await lintSource(out[0].content);
