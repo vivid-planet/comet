@@ -12,7 +12,7 @@ import {
 } from "@comet/blocks-api";
 import { AnchorBlock } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
-import { MediaGalleryListBlock } from "@src/common/blocks/media-gallery.block";
+import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
@@ -31,7 +31,7 @@ export const supportedBlocks = {
     heading: StandaloneHeadingBlock,
     keyFacts: KeyFactsBlock,
     media: StandaloneMediaBlock,
-    mediaGallery: MediaGalleryListBlock,
+    mediaGallery: MediaGalleryBlock,
     richtext: RichTextBlock,
     space: SpaceBlock,
     teaser: TeaserBlock,

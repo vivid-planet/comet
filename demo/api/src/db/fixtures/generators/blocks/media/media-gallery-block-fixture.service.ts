@@ -1,28 +1,19 @@
 import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { MediaGalleryListBlock } from "@src/common/blocks/media-gallery.block";
+import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
+import { MediaAspectRatios } from "@src/util/mediaAspectRatios";
 
-import { MediaGalleryItemBlockFixtureService } from "./media-gallery-item-block-fixture.service";
+import { MediaGalleryListBlockFixtureService } from "./media-gallery-list-block-fixture.service";
 
 @Injectable()
 export class MediaGalleryBlockFixtureService {
-    constructor(private readonly mediaGalleryItemBlockFixtureService: MediaGalleryItemBlockFixtureService) {}
+    constructor(private readonly mediaGalleryListBlockFixtureService: MediaGalleryListBlockFixtureService) {}
 
-    async generateBlockInput(min = 2, max = 6): Promise<ExtractBlockInputFactoryProps<typeof MediaGalleryListBlock>> {
-        const blockAmount = faker.number.int({ min, max });
-        const blocks = [];
-
-        for (let i = 0; i < blockAmount; i++) {
-            blocks.push({
-                key: faker.string.uuid(),
-                visible: true,
-                props: await this.mediaGalleryItemBlockFixtureService.generateBlockInput(),
-            });
-        }
-
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof MediaGalleryBlock>> {
         return {
-            blocks: blocks,
+            aspectRatio: faker.helpers.arrayElement(Object.values(MediaAspectRatios)),
+            items: await this.mediaGalleryListBlockFixtureService.generateBlockInput(),
         };
     }
 }
