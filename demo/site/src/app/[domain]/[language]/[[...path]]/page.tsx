@@ -4,6 +4,7 @@ import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables } from "./page.generated";
@@ -26,26 +27,39 @@ const documentTypeQuery = gql`
     }
 `;
 
-export default async function Page({ params }: { params: { path: string[]; domain: string; language: string } }) {
+async function fetchPageTreeNode(params: { path: string[]; domain: string; language: string }) {
     const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphqlFetch = createGraphQLFetch(previewData);
     const siteConfig = getSiteConfigForDomain(params.domain);
 
     // Redirects are scoped by domain only, not by language.
     // If the language param isn't a valid language, it may still be the first segment of a redirect source.
     // In that case we skip resolving page and only check if the path is a redirect source.
     const skipPage = !siteConfig.scope.languages.includes(params.language);
-    const path = `/${(params.path ?? []).join("/")}`;
-    const scope = { domain: params.domain, language: params.language };
 
-    //fetch documentType
-    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
-        skipPage,
-        path,
-        scope,
-        redirectSource: `/${params.language}${path !== "/" ? path : ""}`,
-        redirectScope: { domain: scope.domain },
-    });
+    const path = `/${(params.path ?? []).join("/")}`;
+    const { scope } = { scope: { domain: params.domain, language: params.language } };
+    const graphQLFetch = createGraphQLFetch(previewData);
+
+    return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
+        documentTypeQuery,
+        {
+            skipPage,
+            path,
+            scope,
+            redirectSource: `/${params.language}${path !== "/" ? path : ""}`,
+            redirectScope: { domain: scope.domain },
+        },
+        { method: "GET" }, //for request memoization
+    );
+}
+
+interface PageProps {
+    params: { path: string[]; domain: string; language: string };
+}
+
+export default async function Page({ params }: PageProps) {
+    const scope = { domain: params.domain, language: params.language };
+    const data = await fetchPageTreeNode(params);
 
     if (!data.pageTreeNodeByPath?.documentType) {
         if (data.redirectBySource?.target) {
@@ -82,6 +96,26 @@ export default async function Page({ params }: { params: { path: string[]; domai
     const { component: Component } = documentTypes[data.pageTreeNodeByPath.documentType];
 
     return <Component {...props} />;
+}
+
+export async function generateMetadata({ params }: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
+    const scope = { domain: params.domain, language: params.language };
+    const data = await fetchPageTreeNode(params);
+
+    if (!data.pageTreeNodeByPath?.documentType) {
+        return {};
+    }
+
+    const pageTreeNodeId = data.pageTreeNodeByPath.id;
+
+    const props = {
+        pageTreeNodeId,
+        scope,
+    };
+    const { generateMetadata } = documentTypes[data.pageTreeNodeByPath.documentType];
+    if (!generateMetadata) return {};
+
+    return generateMetadata(props, parent);
 }
 
 export async function generateStaticParams() {
