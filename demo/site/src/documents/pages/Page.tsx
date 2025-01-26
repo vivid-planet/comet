@@ -1,24 +1,20 @@
 import { generateImageUrl, gql, previewParams } from "@comet/cms-site";
-import Breadcrumbs from "@src/common/components/Breadcrumbs";
-import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
-import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
-import { StageBlock } from "@src/documents/pages/blocks/StageBlock";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
-import { Header } from "@src/layout/header/Header";
-import { headerFragment } from "@src/layout/header/Header.fragment";
-import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
-import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
-import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import type { Metadata, ResolvingMetadata } from "next";
+import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
+import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
+import { PageContentBlock } from "./blocks/PageContentBlock";
+import { StageBlock } from "./blocks/StageBlock";
 import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
 
-// @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
 const pageQuery = gql`
-    query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
+    query Page($pageTreeNodeId: ID!) {
         pageContent: pageTreeNode(id: $pageTreeNodeId) {
+            id
+            name
+            path
             document {
                 __typename
                 ... on Page {
@@ -27,20 +23,8 @@ const pageQuery = gql`
                     stage
                 }
             }
-            ...Breadcrumbs
-        }
-
-        header: mainMenu(scope: { domain: $domain, language: $language }) {
-            ...Header
-        }
-
-        topMenu(scope: { domain: $domain, language: $language }) {
-            ...TopMenuPageTreeNode
         }
     }
-    ${breadcrumbsFragment}
-    ${headerFragment}
-    ${topMenuPageTreeNodeFragment}
 `;
 
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
@@ -53,8 +37,6 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
         pageQuery,
         {
             pageTreeNodeId,
-            domain: scope.domain,
-            language: scope.language,
         },
         { method: "GET" }, //for request memoization
     );
@@ -107,7 +89,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
                     if (link.code && link.url) acc[link.code] = link.url;
                     return acc;
                 },
-                { [scope.language]: canonicalUrl },
+                { [scope.language]: canonicalUrl } as Record<string, string>,
             ),
         },
     };
@@ -123,22 +105,26 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
         // no document attached to page
         notFound(); //no return needed
     }
-    if (data.pageContent.document?.__typename != "Page") throw new Error(`invalid document type`);
+    if (document.__typename != "Page") throw new Error(`invalid document type`);
 
-    [data.pageContent.document.content, data.pageContent.document.seo] = await Promise.all([
+    [document.content, document.seo] = await Promise.all([
         recursivelyLoadBlockData({
             blockType: "PageContent",
-            blockData: data.pageContent.document.content,
+            blockData: document.content,
             graphQLFetch,
             fetch,
-            pageTreeNodeId,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
-            blockData: data.pageContent.document.seo,
+            blockData: document.seo,
             graphQLFetch,
             fetch,
-            pageTreeNodeId,
+        }),
+        recursivelyLoadBlockData({
+            blockType: "Stage",
+            blockData: document.stage,
+            graphQLFetch,
+            fetch,
         }),
     ]);
 
@@ -147,13 +133,10 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             {document.seo.structuredData && document.seo.structuredData.length > 0 && (
                 <script type="application/ld+json">{document.seo.structuredData}</script>
             )}
-            <TopNavigation data={data.topMenu} />
-            <Header header={data.header} />
-            <Breadcrumbs {...data.pageContent} />
-            <div>
+            <main>
                 <StageBlock data={document.stage} />
-                <PageContentBlock data={data.pageContent.document.content} />
-            </div>
+                <PageContentBlock data={document.content} />
+            </main>
         </>
     );
 }

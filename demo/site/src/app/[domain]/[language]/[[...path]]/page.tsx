@@ -1,10 +1,9 @@
 import { gql, previewParams } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
-import { GQLPageTreeNodeScope, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import type { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables } from "./page.generated";
@@ -27,55 +26,26 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode({ domain, language, path }: Props["params"]) {
-    const skipPage = !getSiteConfigForDomain(domain).scope.languages.includes(language);
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language }, previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
-    const pathname = `/${(path ?? []).join("/")}`;
-    return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
-        documentTypeQuery,
-        {
-            skipPage,
-            path: pathname,
-            scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
-            redirectSource: `/${language}${pathname !== "/" ? pathname : ""}`,
-            redirectScope: { domain: scope.domain },
-        },
-        { method: "GET" }, //for request memoization
-    );
-}
+export default async function Page({ params }: { params: { path: string[]; domain: string; language: string } }) {
+    const { previewData } = (await previewParams()) || { previewData: undefined };
+    const graphqlFetch = createGraphQLFetch(previewData);
+    const siteConfig = getSiteConfigForDomain(params.domain);
 
-type Props = {
-    params: { path: string[]; domain: string; language: string };
-};
+    // Redirects are scoped by domain only, not by language.
+    // If the language param isn't a valid language, it may still be the first segment of a redirect source.
+    // In that case we skip resolving page and only check if the path is a redirect source.
+    const skipPage = !siteConfig.scope.languages.includes(params.language);
+    const path = `/${(params.path ?? []).join("/")}`;
+    const scope = { domain: params.domain, language: params.language };
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-    // TODO support multiple domains, get domain by Host header
-    const { scope } = (await previewParams()) || { scope: { domain: params.domain, language: params.language } };
-
-    const data = await fetchPageTreeNode(params);
-
-    if (!data.pageTreeNodeByPath?.documentType) {
-        return {};
-    }
-
-    const pageTreeNodeId = data.pageTreeNodeByPath.id;
-
-    const props = {
-        pageTreeNodeId,
+    //fetch documentType
+    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
+        skipPage,
+        path,
         scope,
-    };
-    const { generateMetadata } = documentTypes[data.pageTreeNodeByPath.documentType];
-    if (!generateMetadata) return {};
-
-    return generateMetadata(props, parent);
-}
-
-export default async function Page({ params }: Props) {
-    // TODO support multiple domains, get domain by Host header
-    const { scope } = (await previewParams()) || { scope: { domain: params.domain, language: params.language } };
-
-    const data = await fetchPageTreeNode(params);
+        redirectSource: `/${params.language}${path !== "/" ? path : ""}`,
+        redirectScope: { domain: scope.domain },
+    });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         if (data.redirectBySource?.target) {
@@ -108,6 +78,7 @@ export default async function Page({ params }: Props) {
         pageTreeNodeId,
         scope,
     };
+
     const { component: Component } = documentTypes[data.pageTreeNodeByPath.documentType];
 
     return <Component {...props} />;
