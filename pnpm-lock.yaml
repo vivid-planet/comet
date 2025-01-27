@@ -9,11 +9,10 @@ packageExtensionsChecksum: 7fde99d9f1c0a4ffc787b4d909650f39
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@changesets/cli':
         specifier: ^2.27.12
         version: 2.27.12
-    devDependencies:
       '@comet/cli':
         specifier: workspace:*
         version: link:packages/cli
