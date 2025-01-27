@@ -14,7 +14,7 @@ const EyebrowRichTextBlock = createRichTextBlock({
     minHeight: 0,
 });
 
-const HeadlineRichTextBlock = createRichTextBlock({
+const HeadingRichTextBlock = createRichTextBlock({
     link: LinkBlock,
     rte: {
         maxBlocks: 1,
@@ -66,20 +66,20 @@ export const HeadingBlock = createCompositeBlock(
                 block: EyebrowRichTextBlock,
                 title: <FormattedMessage id="headingBlock.eyebrow" defaultMessage="Eyebrow" />,
             },
-            headline: {
-                block: HeadlineRichTextBlock,
-                title: <FormattedMessage id="headingBlock.title" defaultMessage="Headline" />,
+            heading: {
+                block: HeadingRichTextBlock,
+                title: <FormattedMessage id="headingBlock.title" defaultMessage="Heading" />,
             },
             htmlTag: {
                 block: createCompositeBlockSelectField<HeadingBlockData["htmlTag"]>({
                     defaultValue: "H2",
                     options: [
-                        { value: "H1", label: <FormattedMessage id="headingBlock.headline1" defaultMessage="Headline 1" /> },
-                        { value: "H2", label: <FormattedMessage id="headingBlock.headline2" defaultMessage="Headline 2" /> },
-                        { value: "H3", label: <FormattedMessage id="headingBlock.headline3" defaultMessage="Headline 3" /> },
-                        { value: "H4", label: <FormattedMessage id="headingBlock.headline4" defaultMessage="Headline 4" /> },
-                        { value: "H5", label: <FormattedMessage id="headingBlock.headline5" defaultMessage="Headline 5" /> },
-                        { value: "H6", label: <FormattedMessage id="headingBlock.headline6" defaultMessage="Headline 6" /> },
+                        { value: "H1", label: <FormattedMessage id="headingBlock.heading1" defaultMessage="Heading 1" /> },
+                        { value: "H2", label: <FormattedMessage id="headingBlock.heading2" defaultMessage="Heading 2" /> },
+                        { value: "H3", label: <FormattedMessage id="headingBlock.heading3" defaultMessage="Heading 3" /> },
+                        { value: "H4", label: <FormattedMessage id="headingBlock.heading4" defaultMessage="Heading 4" /> },
+                        { value: "H5", label: <FormattedMessage id="headingBlock.heading5" defaultMessage="Heading 5" /> },
+                        { value: "H6", label: <FormattedMessage id="headingBlock.heading6" defaultMessage="Heading 6" /> },
                     ],
                     label: <FormattedMessage id="headingBlock.htmlTag" defaultMessage="HTML tag" />,
                     fullWidth: true,
