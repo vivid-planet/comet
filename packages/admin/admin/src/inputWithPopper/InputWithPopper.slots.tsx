@@ -24,7 +24,7 @@ export const Popper = createComponentSlot(MuiPopper)<InputWithPopperClassKey>({
     `,
 );
 
-export const Paper = createComponentSlot(MuiPaper)<InputWithPopperClassKey>({
+export const Paper: typeof MuiPaper = createComponentSlot(MuiPaper)<InputWithPopperClassKey>({
     componentName: "InputWithPopper",
     slotName: "paper",
 })(css`
