@@ -390,6 +390,7 @@ export function ProductsGrid() {
                 toolbar: { exportApi, selectionModel },
             }}
             checkboxSelection
+            keepNonExistentRowsSelected
             selectionModel={selectionModel}
             onSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
