@@ -6,6 +6,7 @@ import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
     Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent as MuiDialogContent,

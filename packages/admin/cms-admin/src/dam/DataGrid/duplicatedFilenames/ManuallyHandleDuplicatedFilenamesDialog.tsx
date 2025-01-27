@@ -1,6 +1,19 @@
 import { Alert } from "@comet/admin";
 import { Duplicate, Forward, Save } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
