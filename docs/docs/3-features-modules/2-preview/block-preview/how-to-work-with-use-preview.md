@@ -3,7 +3,7 @@ title: How to work with usePreview
 ---
 
 Sometimes the block preview needs to adapt to a user's interactions.
-For instance, an accordion item in should open in the preview when the user hovers over the respective item in the block's admin component.
+For instance, an accordion item should open in the preview when the user hovers over the respective item in the block's admin component.
 This behavior can be achieved by using the `usePreview` hook:
 
 ```tsx
