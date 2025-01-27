@@ -1,4 +1,4 @@
-import { generateImageUrl, gql, previewParams } from "@comet/cms-site";
+import { generateImageUrl, gql } from "@comet/cms-site";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
@@ -10,6 +10,7 @@ import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { getPreviewDataContext } from "@src/util/ServerContext";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -46,8 +47,7 @@ const pageQuery = gql`
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
 
 async function fetchData({ pageTreeNodeId, scope }: Props) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch(getPreviewDataContext());
 
     const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(
         pageQuery,
@@ -114,8 +114,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
 }
 
 export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch(getPreviewDataContext());
 
     const data = await fetchData({ pageTreeNodeId, scope });
     const document = data?.pageContent?.document;

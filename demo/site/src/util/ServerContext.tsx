@@ -1,3 +1,4 @@
+import { SitePreviewData } from "@comet/cms-site";
 import type { ContentScope } from "@src/site-configs";
 import { cache } from "react";
 
@@ -10,7 +11,7 @@ import { cache } from "react";
  *
  * @warning This is a temporary workaround.
  */
-function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
+export function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
     const getRef = cache(() => ({ current: defaultValue }));
 
     const getValue = (): T => getRef().current;
@@ -21,5 +22,5 @@ function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
 
     return [getValue, setValue];
 }
-
 export const [getNotFoundContext, setNotFoundContext] = createServerContext<ContentScope | null>(null);
+export const [getPreviewDataContext, setPreviewDataContext] = createServerContext<SitePreviewData | undefined>(undefined);

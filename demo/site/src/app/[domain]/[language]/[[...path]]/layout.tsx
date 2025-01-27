@@ -1,8 +1,9 @@
-import { gql, previewParams } from "@comet/cms-site";
+import { gql } from "@comet/cms-site";
 import { GQLLayoutQuery, GQLLayoutQueryVariables } from "@src/app/[domain]/[language]/[[...path]]/layout.generated";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { decodePageProps } from "@src/util/siteConfig";
 import type { Metadata } from "next";
 import { PropsWithChildren } from "react";
 
@@ -10,11 +11,12 @@ export const metadata: Metadata = {
     title: "Comet Starter",
 };
 
-export default async function Layout({
-    children,
-    params: { domain, language },
-}: PropsWithChildren<{ params: { domain: string; language: string } }>) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
+export default async function Layout(props: PropsWithChildren<{ params: { domain: string; language: string } }>) {
+    const {
+        scope: { domain, language },
+        previewData,
+        children,
+    } = decodePageProps(props);
     const graphqlFetch = createGraphQLFetch(previewData);
 
     const { footer } = await graphqlFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(

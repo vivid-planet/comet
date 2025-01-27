@@ -1,4 +1,4 @@
-import { getNotFoundContext } from "@src/util/NotFoundContext";
+import { getNotFoundContext } from "@src/util/ServerContext";
 import Link from "next/link";
 
 export default async function NotFound404(): Promise<JSX.Element> {
