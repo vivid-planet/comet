@@ -12,6 +12,7 @@ import {
 import { createCometTheme } from "@comet/admin-theme";
 import {
     Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
