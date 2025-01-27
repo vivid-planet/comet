@@ -3,6 +3,7 @@ import next from "next";
 import { parse } from "url";
 
 import { withMetrics } from "./opentelemetry-metrics";
+import { getStatusCodeClass } from "./src/util/getStatusCodeClass";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -52,6 +53,16 @@ app.prepare().then(() => {
                     return origSetHeader.call(this, name, value);
                 };
             }
+
+            const originalWriteHead = res.writeHead;
+            res.writeHead = function (statusCode: number, ...args: unknown[]) {
+                const statusCodeClass = getStatusCodeClass(statusCode);
+                if (statusCodeClass === "client_error" || statusCodeClass === "server_error") {
+                    // set no-store, max-age=0 to prevent caching of error responses
+                    res.setHeader("Cache-Control", "no-store, max-age=0");
+                }
+                return originalWriteHead.apply(this, [statusCode, ...args]);
+            };
 
             await handle(req, res, parsedUrl);
         } catch (err) {
