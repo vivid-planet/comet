@@ -98,6 +98,10 @@ const preview: Preview = {
     parameters: {
         layout: "padded",
         options: {
+            /**
+             * Note: according to: https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy#sorting-stories
+             * the `storySort` function gets injected as javascript. Adding types is not possible
+             */
             storySort: (
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-expect-error
