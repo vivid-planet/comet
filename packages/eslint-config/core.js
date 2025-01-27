@@ -15,7 +15,10 @@ const config = [
     js.configs.recommended,
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
-    prettierConfig,
+    {
+        ...prettierConfig,
+        files: ["*.ts", "*.tsx", "*.json"],
+    },
     prettierPlugin,
     {
         plugins: {

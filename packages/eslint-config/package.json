@@ -57,7 +57,7 @@
     },
     "scripts": {
         "lint": "run-p lint:prettier lint:eslint",
-        "lint:eslint": "eslint --max-warnings 0 package.json",
+        "lint:eslint": "eslint --max-warnings 0 *.json ",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'"
     },
     "type": "module",

@@ -48,7 +48,7 @@
         "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "$npm_execpath run generate-icons && run-p start:babel start:types",

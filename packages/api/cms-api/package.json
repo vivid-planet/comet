@@ -56,7 +56,6 @@
     "devDependencies": {
         "@aws-sdk/types": "3.723.0",
         "@comet/eslint-config": "workspace:*",
-        "@comet/eslint-plugin": "workspace:*",
         "@golevelup/ts-jest": "^0.6.1",
         "@kubernetes/client-node": "^0.22.3",
         "@mikro-orm/cli": "^6.4.4",
@@ -152,7 +151,7 @@
         "generate-schema": "ts-node generate-schema.ts",
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",

@@ -112,7 +112,7 @@
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",

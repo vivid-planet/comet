@@ -1921,9 +1921,6 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../eslint-config
-      '@comet/eslint-plugin':
-        specifier: workspace:*
-        version: link:../../eslint-plugin
       '@golevelup/ts-jest':
         specifier: ^0.6.1
         version: 0.6.1

@@ -73,7 +73,7 @@
         "fixtures": "$npm_execpath console fixtures --",
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
         "lint": "run-p lint:prettier lint:eslint lint:tsc && $npm_execpath lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0  src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
