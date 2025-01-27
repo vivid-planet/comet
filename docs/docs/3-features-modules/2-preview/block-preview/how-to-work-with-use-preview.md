@@ -97,7 +97,7 @@ The `isWithPreviewPropsData` function is a [type guard](https://www.typescriptla
 
 :::tip
 
-Use the `exactMatch` option to keep the accordion item open even when the user navigates further into the item's admin component.
+Set the `exactMatch` option to `false` to keep the accordion item open even when the user navigates further into the item's admin component.
 
 :::
 
