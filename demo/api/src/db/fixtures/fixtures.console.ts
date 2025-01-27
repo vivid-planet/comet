@@ -44,7 +44,7 @@ const getDefaultPageInput = (): PageInput => {
 @Console()
 export class FixturesConsole {
     constructor(
-        @Inject(CONFIG) private readonly config: Config,
+        @((Inject as any)(CONFIG)) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly pageTreeService: PageTreeService,
         private readonly orm: MikroORM,
