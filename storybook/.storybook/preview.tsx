@@ -98,7 +98,14 @@ const preview: Preview = {
     parameters: {
         layout: "padded",
         options: {
-            storySort: (a: { id: string }, b: { id: string }) => {
+            storySort: (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                a,
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                b,
+            ) => {
                 const orderGettingStarted = [
                     "docs-getting-started-installation",
                     "docs-getting-started-structure",
