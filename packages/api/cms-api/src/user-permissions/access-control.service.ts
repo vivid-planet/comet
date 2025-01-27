@@ -22,6 +22,16 @@ export abstract class AbstractAccessControlService implements AccessControlServi
     }
     isAllowed(user: CurrentUser, permission: string, contentScope?: ContentScope): boolean {
         if (!user.permissions) return false;
-        return user.permissions.some((p) => p.permission === permission && (!contentScope || this.checkContentScope(p.contentScopes, contentScope)));
+        const [requiredMainPermission, requiredSubPermission] = permission.split(".");
+
+        return user.permissions.some((p) => {
+            const [mainPermission, subPermission] = p.permission.split(".");
+            if (mainPermission !== requiredMainPermission) return false;
+            if (subPermission && subPermission !== requiredSubPermission) return false;
+
+            if (!contentScope) return true;
+
+            return this.checkContentScope(p.contentScopes, contentScope);
+        });
     }
 }
