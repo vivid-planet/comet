@@ -37,6 +37,7 @@
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.27.12",
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.5.1",
@@ -55,9 +56,6 @@
     "engines": {
         "node": "22",
         "pnpm": "9.15.4"
-    },
-    "dependencies": {
-        "@changesets/cli": "^2.27.11"
     },
     "pnpm": {
         "packageExtensions": {
