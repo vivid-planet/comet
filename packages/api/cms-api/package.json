@@ -55,7 +55,8 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "3.723.0",
-        "@comet/eslint-config": "workspace:^7.11.0",
+        "@comet/eslint-config": "workspace:*",
+        "@comet/eslint-plugin": "workspace:*",
         "@golevelup/ts-jest": "^0.6.1",
         "@kubernetes/client-node": "^0.22.3",
         "@mikro-orm/cli": "^6.4.4",
@@ -154,7 +155,7 @@
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
-        "test": "jest",
+        "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
         "test:watch": "jest --watch"
     },
     "types": "lib/index.d.ts",

@@ -1,9 +1,9 @@
-import { ESLint } from "eslint";
 import { Project, SourceFile } from "ts-morph";
 
 import { GeneratedFile } from "./write-generated-files";
 
 export async function lintSource(sourceCode: string): Promise<string> {
+    const { ESLint } = await import("eslint");
     const eslint = new ESLint({
         cwd: process.cwd(),
         fix: true,
@@ -14,7 +14,7 @@ export async function lintSource(sourceCode: string): Promise<string> {
         },
     });
     const lintResults = await eslint.lintText(sourceCode, {
-        filePath: "test.ts",
+        filePath: "src/index.ts", // Fake file that must exists in the project, eslint is using it to resolve the language
     });
     for (const lintResult of lintResults) {
         // must not have parse or lint errors

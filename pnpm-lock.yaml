@@ -1919,8 +1919,11 @@ importers:
         specifier: 3.723.0
         version: 3.723.0
       '@comet/eslint-config':
-        specifier: workspace:^7.11.0
+        specifier: workspace:*
         version: link:../../eslint-config
+      '@comet/eslint-plugin':
+        specifier: workspace:*
+        version: link:../../eslint-plugin
       '@golevelup/ts-jest':
         specifier: ^0.6.1
         version: 0.6.1
