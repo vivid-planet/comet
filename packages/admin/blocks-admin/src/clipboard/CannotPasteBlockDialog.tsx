@@ -1,5 +1,12 @@
 import { messages } from "@comet/admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 

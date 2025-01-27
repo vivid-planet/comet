@@ -1,5 +1,16 @@
 import { Close, Delete, Save, Warning } from "@comet/admin-icons";
-import { Button, ComponentsOverrides, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Theme, Typography } from "@mui/material";
+import {
+    Button,
+    ComponentsOverrides,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Theme,
+    Typography,
+} from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

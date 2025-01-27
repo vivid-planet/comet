@@ -1,4 +1,5 @@
 import {
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogActionsProps,
