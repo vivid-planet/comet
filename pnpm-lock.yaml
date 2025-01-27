@@ -559,6 +559,9 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@faker-js/faker':
+        specifier: ^7.6.0
+        version: 7.6.0
       '@nestjs/cli':
         specifier: ^9.0.0
         version: 9.1.9
