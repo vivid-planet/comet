@@ -105,9 +105,13 @@ const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuCla
     `,
 );
 
-const CrudMoreActionsMenuContext = createContext({
+type CrudMoreActionsMenuContext = {
+    closeMenu: () => void;
+};
+
+export const CrudMoreActionsMenuContext = createContext<CrudMoreActionsMenuContext>({
     closeMenu: () => {
-        // noop
+        throw new Error("`CrudMoreActionsMenuContext` cannot be used outside of `CrudMoreActionsMenu`");
     },
 });
 
