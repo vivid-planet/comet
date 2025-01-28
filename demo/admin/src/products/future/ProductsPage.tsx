@@ -47,7 +47,7 @@ export function ProductsPage() {
                     <StackMainContent fullHeight>
                         <ProductsGrid
                             toolbarAction={
-                                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                                 </Button>
                             }
