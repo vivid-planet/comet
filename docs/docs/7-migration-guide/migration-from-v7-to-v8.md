@@ -484,17 +484,18 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 Update ESLint to v9
 
 `package.json`
+
 ```diff
 - "eslint": "^8.0.0",
 + "eslint": "^9.0.0",
 ```
 
-An ESM compatible ESLint config is required. Delete the related `.eslintrc.json` and move the configured rules to the new ESLint flat configuration ```eslint.config.mjs```. 
+An ESM compatible ESLint config is required. Delete the related `.eslintrc.json` and move the configured rules to the new ESLint flat configuration `eslint.config.mjs`.
 
 Migration Guide of ESLint 9.0 can be found here: [Migration Guide](https://eslint.org/docs/latest/use/migrate-to-9.0.0)
 
+#### `admin/eslint.config.mjs`
 
-#### ```admin/eslint.config.mjs```
 ```
 import cometConfig from "@comet/eslint-config/react.js";
 
@@ -509,7 +510,8 @@ const config = [
 export default config;
 ```
 
-#### ```api/eslint.config.mjs```
+#### `api/eslint.config.mjs`
+
 ```
 import cometConfig from "@comet/eslint-config/react.js";
 
@@ -527,7 +529,8 @@ const config = [
 export default config;
 ```
 
-#### ```site/eslint.config.mjs```
+#### `site/eslint.config.mjs`
+
 ```
 import cometConfig from "@comet/eslint-config/react.js";
 
@@ -546,7 +549,6 @@ export default config;
 
 ```
 
-tba. new eslint configs
 ### Remove React barrel imports
 
 Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.

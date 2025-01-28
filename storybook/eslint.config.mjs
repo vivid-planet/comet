@@ -4,7 +4,7 @@ import storybook from "eslint-plugin-storybook";
 /** @type {import('eslint')} */
 const config = [
     {
-        ignores: ["src/*.generated.ts", "lib/**"],
+        ignores: ["src/*.generated.ts", "lib/**", "storybook-static/**"],
     },
     ...cometConfig,
     ...storybook.configs["flat/recommended"],

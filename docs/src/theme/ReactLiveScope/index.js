@@ -1,5 +1,4 @@
 import ExecutionEnvironment from "@docusaurus/ExecutionEnvironment";
-// eslint-disable-next-line no-restricted-imports
 import React from "react";
 
 // Add react-live imports you need here
