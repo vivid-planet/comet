@@ -205,6 +205,28 @@ npx @comet/upgrade v8/update-class-validator.ts
 
 :::
 
+#### Sentry
+
+1. Upgrade the "@sentry/node" dependency in your `package.json` file:
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@sentry/node": "^7.0.0",
++       "@sentry/node": "^8.0.0",
+    },
+}
+```
+
+2. Update your `main.ts` file to remove all `Sentry.Handlers` and add `Sentry.setupExpressErrorHandler(app)`:
+
+```diff
+-   app.use(Sentry.Handlers.requestHandler());
+-   app.use(Sentry.Handlers.tracingHandler());
+-   app.use(Sentry.Handlers.errorHandler());
++   Sentry.setupExpressErrorHandler(app);
+```
+
 ### NestJS peer dependencies
 
 Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
