@@ -382,14 +382,14 @@ Example:
 
 **Block structure**
 
--   `key`: A unique identifier for the block.
--   `visible`: A boolean indicating whether the block is visible.
--   `type`: The type of the block, in this case, "headline".
--   `props`: An object containing the block-specific data:
-    -   `eyebrow`: An optional string for additional text above the headline.
-    -   `headline`: An object containing the `draftContent`, which is a rich text structure:
-    -   `level`: The level of the headline, e.g., "header-one".
--   `userGroup`: Specifies the user group that can view the block, e.g., "All".
+- `key`: A unique identifier for the block.
+- `visible`: A boolean indicating whether the block is visible.
+- `type`: The type of the block, in this case, "headline".
+- `props`: An object containing the block-specific data:
+    - `eyebrow`: An optional string for additional text above the headline.
+    - `headline`: An object containing the `draftContent`, which is a rich text structure:
+    - `level`: The level of the headline, e.g., "header-one".
+- `userGroup`: Specifies the user group that can view the block, e.g., "All".
 
 There are some special Block Types (`BlocksBlock`, `ColumnsBlock`, `LinkBlock`, `ListBlock`, `OneOfBlock`, `OptionalBlock`, `RichTextBlock` and more). More details can be found in the [Block Factories](/docs/core-concepts/blocks/factories) section.
 
@@ -478,6 +478,6 @@ More Information how to integrate and work with Comet Admin's Preview can be fou
 
 # Further Reading / Information
 
--   [Comet Starter - Next Site - Blueprint for new Comet Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
--   [Comet Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
--   [Comet Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)
+- [Comet Starter - Next Site - Blueprint for new Comet Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
+- [Comet Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
+- [Comet Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)

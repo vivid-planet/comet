@@ -75,7 +75,7 @@ Add the `UserPermissionsPage` component. Currently, it's not possible to customi
 :::info
 Future version will support customization features like
 
--   Show additional information about the user
--   Allow injecting formatted names for permissions and scopes
+- Show additional information about the user
+- Allow injecting formatted names for permissions and scopes
 
 :::

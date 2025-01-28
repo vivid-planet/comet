@@ -24,10 +24,7 @@ export const FooterContentBlock = createCompositeBlock({
         },
         copyrightNotice: {
             block: createCompositeBlockTextField({
-                fieldProps: {
-                    label: <FormattedMessage id="footers.blocks.content.copyrightNotice" defaultMessage="Copyright notice" />,
-                    fullWidth: true,
-                },
+                label: <FormattedMessage id="footers.blocks.content.copyrightNotice" defaultMessage="Copyright notice" />,
             }),
             hiddenInSubroute: true,
         },

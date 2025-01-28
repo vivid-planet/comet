@@ -41,7 +41,7 @@ export const AccordionItemBlock = withPreview(
                 <TitleWrapper onClick={() => setIsExpanded(!isExpanded)} aria-label={ariaLabelText}>
                     <Typography variant="h350">{title}</Typography>
                     <IconWrapper>
-                        <AnimatedChevron href="/assets/icons/chevron-down.svg#chevron-down" $isExpanded={isExpanded} />
+                        <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
                     </IconWrapper>
                 </TitleWrapper>
                 <ContentWrapper aria-hidden={!isExpanded}>
@@ -91,13 +91,17 @@ const ContentWrapperInner = styled.div<{ $isExpanded: boolean }>`
     padding-bottom: ${({ theme }) => theme.spacing.S300};
     margin-top: -100%;
     opacity: 0;
-    transition: margin-top 0.8s ease-out 0.3s, opacity 0.3s linear;
+    transition:
+        margin-top 0.8s ease-out 0.3s,
+        opacity 0.3s linear;
 
     ${({ $isExpanded }) =>
         $isExpanded &&
         css`
             margin-top: 0;
             opacity: 1;
-            transition: margin-top 0.5s ease-out, opacity 0.3s linear 0.4s;
+            transition:
+                margin-top 0.5s ease-out,
+                opacity 0.3s linear 0.4s;
         `}
 `;

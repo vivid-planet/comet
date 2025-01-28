@@ -84,9 +84,9 @@ Uses Next.js Preview Mode to live render pages (SSR), optionally with invisible 
 
 Admin opens I-Frame with {previewSiteUrl}/api/preview to enter Next.js Preview Mode and passes the following parameters:
 
--   path: which pathname to be shown
--   includeInvisibleBlocks
--   timestamp & hash: is validated to activate Preview Mode -
+- path: which pathname to be shown
+- includeInvisibleBlocks
+- timestamp & hash: is validated to activate Preview Mode -
 
 ### iframe messages: site -> admin
 

@@ -45,19 +45,20 @@ type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressA
                   | null;
           })
         | null;
-    addressAsEmbeddable:
-        | Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
-              streetNumber: string | null;
-              zip: string;
-              alternativeAddress:
-                  | Omit<
-                        NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
-                        "streetNumber" | "zip"
-                    > & {
-                        streetNumber: string | null;
-                        zip: string;
-                    };
-          };
+    addressAsEmbeddable: Omit<
+        NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>,
+        "streetNumber" | "zip" | "alternativeAddress"
+    > & {
+        streetNumber: string | null;
+        zip: string;
+        alternativeAddress: Omit<
+            NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
+            "streetNumber" | "zip"
+        > & {
+            streetNumber: string | null;
+            zip: string;
+        };
+    };
 };
 
 interface FormProps {

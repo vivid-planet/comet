@@ -61,7 +61,7 @@ Once we have defined the block data, we also need to define the block input. The
 import { blockInputToData } from "@comet/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     @BlockField({ nullable: true })
     eyebrow?: string;
@@ -127,7 +127,8 @@ The complete code for our Headline API block (including all necessary imports) c
     blockInputToData,
 } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
-import { IsEnum, IsOptional, IsString } from "class-validator";\n
+import { IsUndefinable } from "@comet/cms-api";
+import { IsEnum, IsString } from "class-validator";\n
 export enum HeadlineLevel {
     HeaderOne = "header-one",
     HeaderTwo = "header-two",
@@ -145,7 +146,7 @@ export class HeadlineBlockData extends BlockData {
     level: HeadlineLevel;
 }\n
 export class HeadlineBlockInput extends BlockInput {
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     @BlockField()
     eyebrow?: string;\n

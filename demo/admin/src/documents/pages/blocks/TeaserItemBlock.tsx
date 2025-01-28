@@ -25,7 +25,7 @@ export const TeaserItemBlock = createCompositeBlock(
             },
             title: {
                 block: createCompositeBlockTextField({
-                    fieldProps: { fullWidth: true, label: <FormattedMessage id="teaserItemBlock.title" defaultMessage="Title" /> },
+                    label: <FormattedMessage id="teaserItemBlock.title" defaultMessage="Title" />,
                 }),
             },
             description: {

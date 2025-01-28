@@ -27,21 +27,21 @@ export async function writeCrudPage({ entityName, target: targetDirectory }: Cru
             const intl = useIntl();
             return (
                 <Stack topLevelTitle={intl.formatMessage({ id: "${instanceNamePlural}.${instanceNamePlural}", defaultMessage: "${camelCaseToHumanReadable(
-        classNamePlural,
-    )}" })}>
+                    classNamePlural,
+                )}" })}>
                     <StackSwitch>
                         <StackPage name="grid">
                             <StackToolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />} />
                             <${classNamePlural}Grid />
                         </StackPage>
                         <StackPage name="edit" title={intl.formatMessage({ id: "${instanceNamePlural}.edit${classNameSingular}", defaultMessage: "Edit ${camelCaseToHumanReadable(
-        classNameSingular,
-    )}" })}>
+                            classNameSingular,
+                        )}" })}>
                             {(selectedId) => <${entityName}Form id={selectedId} />}
                         </StackPage>
                         <StackPage name="add" title={intl.formatMessage({ id: "${instanceNamePlural}.add${classNameSingular}", defaultMessage: "Add ${camelCaseToHumanReadable(
-        classNameSingular,
-    )}" })}>
+                            classNameSingular,
+                        )}" })}>
                             <${entityName}Form />
                         </StackPage>
                     </StackSwitch>

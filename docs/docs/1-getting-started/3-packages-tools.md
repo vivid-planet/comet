@@ -7,9 +7,9 @@ sidebar_position: 3
 
 A COMET DXP application, at a minimum, consists of the following packages:
 
--   **Admin:** The user interface for managing the data and content of your application
--   **API:** Stores the data of your application and provides APIs for Admin, Site, and potentially others
--   **Site:** The frontend that renders the content of your application as a website
+- **Admin:** The user interface for managing the data and content of your application
+- **API:** Stores the data of your application and provides APIs for Admin, Site, and potentially others
+- **Site:** The frontend that renders the content of your application as a website
 
 ---
 

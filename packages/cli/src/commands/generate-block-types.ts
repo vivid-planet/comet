@@ -151,7 +151,7 @@ const generateBlockTypes = new Command("generate-block-types")
         }
 
         const prettierOptions = await resolveConfig(process.cwd());
-        content = format(content, { ...prettierOptions, parser: "typescript" });
+        content = await format(content, { ...prettierOptions, parser: "typescript" });
 
         await writeFile(options.outputFile, content);
     });

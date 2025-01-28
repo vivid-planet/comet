@@ -6,8 +6,8 @@ title: Access Control in the API
 
 The term **operation** stands for the locations in which COMET DXP invokes permission checks:
 
--   Queries/Mutations in GraphQL-resolvers
--   Routes in REST-controllers
+- Queries/Mutations in GraphQL-resolvers
+- Routes in REST-controllers
 
 Normally you want to decorate the methods of these classes, however, decorating the whole class is also possible.
 :::

@@ -127,8 +127,8 @@ type NestedToPlainReturn<T extends Record<string, any>> = WithoutBlockInputMetho
     [Key in keyof T]: T[Key] extends BlockInputInterface | undefined // value is a BlockInputInterface
         ? ReturnType<NonNullable<T[Key]>["toPlain"]>
         : T[Key] extends BlockInputInterface[] | undefined // value is an array of BlockInputInterfaces
-        ? ReturnType<NonNullable<Unpacked<T[Key]>>["toPlain"]>[]
-        : T[Key];
+          ? ReturnType<NonNullable<Unpacked<T[Key]>>["toPlain"]>[]
+          : T[Key];
 }>;
 
 type CreateToPlainReturn<Input extends BlockInputInterface, FactoryProps extends BaseFactoryProps = undefined> = [FactoryProps] extends [undefined]
