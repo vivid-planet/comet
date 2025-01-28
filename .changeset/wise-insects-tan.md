@@ -23,4 +23,4 @@ const CustomAction = () => (
 <CrudMoreActionsMenu overallActions={[<CustomAction key="custom-action" />]} />;
 ```
 
-**Note:** Use the `CrudMoreActionsMenuItem` component for the menu to close after clicking on an item.
+**Note:** Use the `CrudMoreActionsMenuItem` component or `CrudMoreActionsMenuContext` context to close the menu after clicking an item.
