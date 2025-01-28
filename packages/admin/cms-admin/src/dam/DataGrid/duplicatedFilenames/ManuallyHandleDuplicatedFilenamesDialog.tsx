@@ -57,7 +57,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.skipDescription"
                                 defaultMessage="<strong>Skip:</strong> Skip uploading duplicates. All other files will be uploaded as usual."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
 
@@ -65,7 +65,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.replaceDescription"
                                 defaultMessage="<strong>Replace:</strong> Replace existing files with duplicates. <strong>Attention:</strong> This will not affect image cropping settings."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
 
@@ -73,7 +73,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.saveAsCopyDescription"
                                 defaultMessage="<strong>Save as copy:</strong> Upload duplicates as new files with “copy” added to the end of the file names."
-                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                                values={{ strong: (chunks) => <strong>{chunks}</strong> }}
                             />
                         </Typography>
                     </Typography>

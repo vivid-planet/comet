@@ -56,34 +56,5 @@
     "engines": {
         "node": "22",
         "pnpm": "9.15.4"
-    },
-    "pnpm": {
-        "packageExtensions": {
-            "@docusaurus/theme-live-codeblock": {
-                "peerDependencies": {
-                    "react-live": "^2.4.1"
-                }
-            },
-            "next@14": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            },
-            "styled-components": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            },
-            "react-intl": {
-                "peerDependencies": {
-                    "@types/react": "*"
-                }
-            },
-            "swiper": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            }
-        }
     }
 }
