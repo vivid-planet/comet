@@ -1786,8 +1786,8 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
       '@golevelup/nestjs-discovery':
-        specifier: ^4.0.2
-        version: 4.0.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)
+        specifier: ^4.0.3
+        version: 4.0.3(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)
       '@hapi/accept':
         specifier: ^5.0.2
         version: 5.0.2
@@ -4824,11 +4824,11 @@ packages:
       ts-jest:
         optional: true
 
-  '@golevelup/nestjs-discovery@4.0.2':
-    resolution: {integrity: sha512-0JRJe4KpONdQ2U+ajteHrc71LgYzAR70KEzwI+9EDogK+ufn2VVn5qpDg+z85MhxaB3EEFLsAx0uDx98wqswuQ==}
+  '@golevelup/nestjs-discovery@4.0.3':
+    resolution: {integrity: sha512-8w3CsXHN7+7Sn2i419Eal1Iw/kOjAd6Kb55M/ZqKBBwACCMn4WiEuzssC71LpBMI1090CiDxuelfPRwwIrQK+A==}
     peerDependencies:
-      '@nestjs/common': ^10.x
-      '@nestjs/core': ^10.x
+      '@nestjs/common': ^10.x || ^11.0.0
+      '@nestjs/core': ^10.x || ^11.0.0
 
   '@golevelup/ts-jest@0.6.1':
     resolution: {integrity: sha512-ubs2xao8q2BsFWD6g2GnkWLLIeVHsPQKYMihzk3v0ptegKJhlNRZvk8wodDx2U2MI7cyKh43mueafZ9xpYdwHQ==}
@@ -20231,7 +20231,7 @@ snapshots:
     optionalDependencies:
       ts-jest: 29.2.5(@babel/core@7.26.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.7))(jest@29.7.0(@types/node@22.10.7)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.10.7)(typescript@4.9.4)))(typescript@4.9.4)
 
-  '@golevelup/nestjs-discovery@4.0.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)':
+  '@golevelup/nestjs-discovery@4.0.3(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)':
     dependencies:
       '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1)
