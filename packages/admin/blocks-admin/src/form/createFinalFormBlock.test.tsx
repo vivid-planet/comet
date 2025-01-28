@@ -1,6 +1,6 @@
 import { Field, FinalForm, RouterMemoryRouter } from "@comet/admin";
-import { screen } from "@testing-library/react";
-import { render } from "test-utils";
+import userEvent from "@testing-library/user-event";
+import { render, screen } from "test-utils";
 
 import { AdminComponentRoot } from "../blocks/common/AdminComponentRoot";
 import { createListBlock } from "../blocks/factories/createListBlock";
@@ -15,7 +15,7 @@ jest.mock("react-dnd", () => ({
 
 describe("createFinalFormBlock", () => {
     describe("blocks with nested routes", () => {
-        it("shouldn't show the dialog when the user navigates into the block", () => {
+        it("shouldn't show the dialog when the user navigates into the block", async () => {
             const Block: BlockInterface = {
                 ...createBlockSkeleton(),
                 name: "Test",
@@ -40,7 +40,7 @@ describe("createFinalFormBlock", () => {
                 </RouterMemoryRouter>,
             );
 
-            rendered.getByText("Add block").click();
+            userEvent.click(rendered.getByText("Add block"));
 
             expect(screen.queryByText("Do you want to save your changes?")).not.toBeInTheDocument();
         });

@@ -1,31 +1,20 @@
-/*
- * For a detailed explanation regarding each configuration property and type check, visit:
- * https://jestjs.io/docs/en/configuration.html
- */
+import type { JestConfigWithTsJest } from "ts-jest";
 
-export default {
-    // Indicates which provider should be used to instrument code for coverage
-    coverageProvider: "v8",
-
-    // A preset that is used as a base for Jest's configuration
+const jestConfig: JestConfigWithTsJest = {
     preset: "ts-jest",
-
-    // Use this configuration option to add custom reporters to Jest
-    reporters: ["default", "jest-junit"],
-
-    // The root directory that Jest should scan for tests and modules within
-    rootDir: "./",
-
-    // The test environment that will be used for testing
-    testEnvironment: "jest-environment-jsdom",
-
-    // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    testPathIgnorePatterns: ["/node_modules/"],
-
-    moduleNameMapper: {
-        "^react-dnd$": "<rootDir>/testing/stub-file.ts",
+    testEnvironment: "jsdom",
+    testPathIgnorePatterns: ["/node_modules/", "/lib/"],
+    setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
+    transform: {
+        "^.+\\.tsx?$": [
+            "ts-jest",
+            {
+                tsconfig: "tsconfig.test.json",
+            },
+        ],
     },
     // See https://testing-library.com/docs/react-testing-library/setup/#configuring-jest-with-test-utils
     moduleDirectories: ["node_modules", "utils", __dirname],
-    setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
 };
+
+module.exports = jestConfig;
