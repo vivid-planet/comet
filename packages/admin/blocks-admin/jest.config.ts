@@ -25,4 +25,7 @@ export default {
     moduleNameMapper: {
         "^react-dnd$": "<rootDir>/testing/stub-file.ts",
     },
+    // See https://testing-library.com/docs/react-testing-library/setup/#configuring-jest-with-test-utils
+    moduleDirectories: ["node_modules", "utils", __dirname],
+    setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
 };
