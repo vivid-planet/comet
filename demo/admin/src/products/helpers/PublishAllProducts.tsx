@@ -1,7 +1,7 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Button, CancelButton, CrudMoreActionsMenuContext } from "@comet/admin";
+import { Button, CancelButton, CrudMoreActionsMenuContext, Dialog } from "@comet/admin";
 import { Online } from "@comet/admin-icons";
-import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
+import { DialogActions, DialogContent, ListItemIcon, MenuItem } from "@mui/material";
 import { useContext, useState } from "react";
 
 import { GQLPublishAllProductsMutation, GQLPublishAllProductsMutationVariables } from "./PublishAllProducts.generated";
@@ -42,8 +42,7 @@ export function PublishAllProducts() {
                 </ListItemIcon>
                 Publish all...
             </MenuItem>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Publish all products?</DialogTitle>
+            <Dialog open={open} onClose={handleClose} title="Publish all products?">
                 <DialogContent>You are about to publish all products.</DialogContent>
                 <DialogActions>
                     <CancelButton onClick={handleClose}>Cancel</CancelButton>
