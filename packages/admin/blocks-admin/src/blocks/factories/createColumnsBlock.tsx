@@ -237,7 +237,7 @@ export function createColumnsBlock<T extends BlockInterface>({
 
             return (
                 <>
-                    <StackSwitch initialPage="list">
+                    <StackSwitch initialPage="list" disableForcePromptRoute>
                         <StackPage name="list">
                             <BlocksFinalForm<{ layout: ColumnsBlockLayout; columns: number }>
                                 onSubmit={({ layout, columns }) => {
