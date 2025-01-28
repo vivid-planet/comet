@@ -1,3 +1,4 @@
+import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory } from "../types";
 import { createOptionalBlock } from "./createOptionalBlock";
 
@@ -6,19 +7,11 @@ describe("createOptionalBlock", () => {
         const nameOverride = "override name";
         const block = createOptionalBlock(
             {
+                ...createBlockSkeleton(),
                 name: "testBlocksBlock",
                 displayName: "Test List Block",
                 category: BlockCategory.Layout,
-                AdminComponent: () => null,
                 defaultValues: () => ({}),
-                createPreviewState: () => ({}),
-                input2State: () => ({}),
-                isValid: () => true,
-                output2State: () => Promise.resolve({}),
-                previewContent: () => [],
-                state2Output: () => ({}),
-                replaceDependenciesInOutput: () => ({}),
-                resolveDependencyPath: () => "",
             },
             {},
             (block) => {

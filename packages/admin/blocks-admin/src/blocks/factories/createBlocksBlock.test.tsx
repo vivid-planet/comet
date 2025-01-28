@@ -1,21 +1,14 @@
+import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory } from "../types";
 import { createBlocksBlock } from "./createBlocksBlock";
 
 describe("createBlocksBlock", () => {
     const TestBlock = {
+        ...createBlockSkeleton(),
         category: BlockCategory.TextAndContent,
         name: "title",
         displayName: "Title",
-        AdminComponent: () => null,
         defaultValues: () => ({}),
-        createPreviewState: () => ({}),
-        input2State: () => ({}),
-        isValid: () => true,
-        output2State: () => Promise.resolve({}),
-        previewContent: () => [],
-        state2Output: () => ({}),
-        replaceDependenciesInOutput: () => ({}),
-        resolveDependencyPath: () => "",
     };
 
     const TestBlock2 = TestBlock;
