@@ -3,7 +3,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { formatSource, parseSource } from "./utils/test-helper";
 
 @Entity()
 export class ProductCategory extends BaseEntity {
@@ -35,8 +35,8 @@ describe("GenerateCrudInputRelations", () => {
         );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
-        const lintedOutput = await lintSource(out[0].content);
-        const source = parseSource(lintedOutput);
+        const formattedOut = await formatSource(out[0].content);
+        const source = parseSource(formattedOut);
 
         const classes = source.getClasses();
         expect(classes.length).toBe(2);
@@ -69,9 +69,9 @@ describe("GenerateCrudInputRelations", () => {
         );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("ProductCategory"));
-        const lintedOutput = await lintSource(out[0].content);
-        //console.log(lintedOutput);
-        const source = parseSource(lintedOutput);
+        const formattedOut = await formatSource(out[0].content);
+        //console.log(formattedOut);
+        const source = parseSource(formattedOut);
 
         const classes = source.getClasses();
         expect(classes.length).toBe(2);

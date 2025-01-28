@@ -15,7 +15,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 class ProductVariant extends BaseEntity {
@@ -65,10 +65,10 @@ describe("generate-crud relations two levels", () => {
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "product.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "product.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -93,7 +93,7 @@ describe("generate-crud relations two levels", () => {
         }
 
         {
-            const file = lintedOut.find((file) => file.name === "dto/product.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/product.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -118,7 +118,7 @@ describe("generate-crud relations two levels", () => {
         }
 
         {
-            const file = lintedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -133,7 +133,7 @@ describe("generate-crud relations two levels", () => {
         }
 
         {
-            const file = lintedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
