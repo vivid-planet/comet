@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { useErrorDialog } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
+import { Button, useErrorDialog } from "@comet/admin";
+import { Typography } from "@mui/material";
 import { useState } from "react";
 
 import { apolloSwapiStoryDecorator } from "../../../../apollo-story.decorator";
@@ -18,8 +18,6 @@ export const ManualErrorDialog = {
             return (
                 <div>
                     <Button
-                        variant="contained"
-                        color="primary"
                         onClick={() => {
                             errorDialog?.showError({
                                 title: "Error",
@@ -52,8 +50,6 @@ export const AutomaticErrorOnGraphqlError = {
                     </div>
                     <Typography>Query: {query}</Typography>
                     <Button
-                        variant="contained"
-                        color="primary"
                         onClick={() => {
                             setBrokenQuery(!brokenQuery);
                         }}

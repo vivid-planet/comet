@@ -1,6 +1,8 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
     IEditDialogApi,
     MainContent,
@@ -9,10 +11,9 @@ import {
     RouterTabs,
     TextField,
     ToolbarActions,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { ReactNode, RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -67,7 +68,7 @@ const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
 function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
     return (
         <DataGridToolbar>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
@@ -98,12 +99,7 @@ export const EditDialogInRouterTabs = {
                             componentsProps={{
                                 toolbar: {
                                     toolbarAction: (
-                                        <Button
-                                            startIcon={<Add />}
-                                            onClick={() => editDialogApi.current?.openAddDialog()}
-                                            variant="contained"
-                                            color="primary"
-                                        >
+                                        <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                             <FormattedMessage {...messages.add} />
                                         </Button>
                                     ),

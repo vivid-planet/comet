@@ -17,7 +17,7 @@ import { FormattedMessage } from "react-intl";
 const AccordionContentBlock = createBlocksBlock({
     name: "AccordionContent",
     supportedBlocks: {
-        richText: RichTextBlock,
+        richtext: RichTextBlock,
         space: SpaceBlock,
         heading: StandaloneHeadingBlock,
         callToActionList: StandaloneCallToActionListBlock,
@@ -31,7 +31,8 @@ export const AccordionItemBlock = createCompositeBlock(
         blocks: {
             title: {
                 block: createCompositeBlockTextField({
-                    fieldProps: { fullWidth: true, label: <FormattedMessage id="accordionBlock.accordionItem.title" defaultMessage="Title" /> },
+                    fullWidth: true,
+                    label: <FormattedMessage id="accordionBlock.accordionItem.title" defaultMessage="Title" />,
                 }),
                 hiddenInSubroute: true,
             },

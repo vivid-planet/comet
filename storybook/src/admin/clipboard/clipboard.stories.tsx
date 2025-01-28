@@ -1,5 +1,5 @@
-import { Alert, readClipboardText, writeClipboardText } from "@comet/admin";
-import { Button, Grid } from "@mui/material";
+import { Alert, Button, readClipboardText, writeClipboardText } from "@comet/admin";
+import { Grid } from "@mui/material";
 import { useState } from "react";
 
 export default {
@@ -17,7 +17,6 @@ export const ClipboardFallbackSizeLimit = function () {
             </Grid>
             <Grid item>
                 <Button
-                    variant="outlined"
                     onClick={() => {
                         writeClipboardText(writtenClipboardContent);
                     }}
@@ -27,7 +26,6 @@ export const ClipboardFallbackSizeLimit = function () {
             </Grid>
             <Grid item>
                 <Button
-                    variant="outlined"
                     onClick={async () => {
                         setReadClipboardContent(await readClipboardText());
                     }}

@@ -1,5 +1,37 @@
 # @comet/admin-theme
 
+## 7.12.0
+
+### Minor Changes
+
+-   ee597535a: Add styling of `Card` and `CardHeader` to align with Comet DXP design
+
+### Patch Changes
+
+-   47be4ebd3: Adapt styling of `DialogActions`, `DialogContent`, and `DialogTitle` to match the Comet DXP design
+-   af51bb408: Prevent the input value of `GridToolbarQuickFilter` from being truncated too early
+    -   @comet/admin-icons@7.12.0
+
+## 7.11.0
+
+### Minor Changes
+
+-   a4fcdeb51: Enable vertical resizing for `TextAreaField` and other multiline inputs
+-   5ba64aab6: Add support and styling for full screen dialogs using the `fullScreen` prop
+
+    ```tsx
+    <Dialog open fullScreen>
+        <DialogTitle>Dialog Title</DialogTitle>
+        <DialogContent>Dialog content</DialogContent>
+    </Dialog>
+    ```
+
+### Patch Changes
+
+-   9f2a1272b: Fix an issue where setting `defaultProps` of `MuiDataGrid` would override the `defaultProps` defined by `createCometTheme()`
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+    -   @comet/admin-icons@7.11.0
+
 ## 7.10.0
 
 ### Minor Changes

@@ -1,5 +1,64 @@
 # @comet/cms-api
 
+## 7.12.0
+
+### Minor Changes
+
+-   604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+-   575f1a77f: Add `ExceptionFilter` to replace `ExceptionInterceptor`
+
+    The main motivation for this change was that the `ExceptionInterceptor` didn't capture exceptions thrown in guards. This could lead to information leaks, e.g., details about the database schema or the underlying code. This is considered a security risk.
+
+    The `ExceptionFilter` also catches error within guards. The error format remains unchanged.
+
+    Switching from the `ExceptionInterceptor` to the `ExceptionFilter` must be done in the project:
+
+    ```diff
+    // main.ts
+
+    - app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
+    + app.useGlobalFilters(new ExceptionFilter(config.debug));
+    ```
+
+### Patch Changes
+
+-   64173b513: Fix page tree node slug validation to prevent URL encoded characters
+-   c66a403d2: Migrate from deprecated `@azure/openai` package to `openai`
+
+    See https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/migration-javascript for more information.
+
+-   6b4866a12: Pass `x-preview-dam-urls` and `x-relative-dam-urls` headers to `url` field resolver in `FileImagesResolver`
+-   cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    -   `video/avi` doesn't actually exist
+    -   `image/psd` doesn't exist / is non-standard
+    -   `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+        instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+-   cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+-   ff0a037a4: Prevent image uploads from failing if exif data cannot be parsed
+    -   @comet/blocks-api@7.12.0
+
+## 7.11.0
+
+### Patch Changes
+
+-   fb2297b2d: Fix `notEqual` operation for enum filter
+-   6778c4e97: Prevent the creation of a second home page
+-   Updated dependencies [58a99bbdd]
+    -   @comet/blocks-api@7.11.0
+
 ## 7.10.0
 
 ### Patch Changes
@@ -464,7 +523,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
@@ -980,7 +1039,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 

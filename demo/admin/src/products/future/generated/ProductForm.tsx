@@ -3,11 +3,11 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRangeInput,
     FinalFormSubmitEvent,
@@ -22,7 +22,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
-import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
+import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -40,6 +40,7 @@ import React from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { validateTitle } from "../validateTitle";
 import {
     GQLManufacturersSelectQuery,
@@ -357,6 +358,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <LocationIcon />
+                                    </InputAdornment>
+                                }
                                 loadOptions={async () => {
                                     const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
                                         query: gql`
@@ -383,14 +389,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     }
                                 }}
                             </OnChangeField>
-                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                        control={<FinalFormCheckbox {...props} />}
-                                    />
-                                )}
-                            </Field>
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"
@@ -404,6 +408,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     </InputAdornment>
                                 }
                             />
+                            <FutureProductNotice />
                             <Field
                                 name="image"
                                 isEqual={isEqual}

@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 
 import { FileUploadInput } from "./dto/file-upload.input";
-import { getValidExtensionsForMimetype, svgContainsJavaScript } from "./files.utils";
+import { getValidExtensionsForMimetype, isValidSvg } from "./files.utils";
 
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
@@ -17,6 +17,11 @@ export class FileValidationService {
     }
 
     validateFileMetadata(file: Pick<FileUploadInput, "fieldname" | "originalname" | "encoding" | "mimetype">): undefined | string {
+        //maximum filename length
+        if (file.originalname.length > 255) {
+            return "Filename is too long";
+        }
+
         //mime type in an accepted mime type
         if (!this.config.acceptedMimeTypes.includes(file.mimetype)) {
             return "Unsupported mime type";
@@ -40,8 +45,8 @@ export class FileValidationService {
         if (file.mimetype === "image/svg+xml") {
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
 
-            if (svgContainsJavaScript(fileContent)) {
-                return "SVG must not contain JavaScript";
+            if (!isValidSvg(fileContent)) {
+                return "SVG contains forbidden content (e.g., JavaScript, security-relevant tags or attributes)";
             }
         }
 

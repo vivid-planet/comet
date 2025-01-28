@@ -16,7 +16,8 @@ export const StandaloneMediaBlock = createCompositeBlock(
                 block: createCompositeBlockSelectField<StandaloneMediaBlockData["aspectRatio"]>({
                     defaultValue: "16x9",
                     options: mediaAspectRatioOptions,
-                    fieldProps: { label: <FormattedMessage id="standaloneMedia.aspectRatio" defaultMessage="Aspect Ratio" />, fullWidth: true },
+                    label: <FormattedMessage id="standaloneMedia.aspectRatio" defaultMessage="Aspect Ratio" />,
+                    fullWidth: true,
                 }),
             },
         },

@@ -228,7 +228,6 @@ type Page implements DocumentInterface {
   stage: StageBlockData!
   createdAt: DateTime!
   pageTreeNode: PageTreeNode
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """PageContent root block data"""
@@ -240,11 +239,161 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 """Stage root block data"""
 scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-input DependencyFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
+type AlternativeAddress {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
 }
+
+type Address {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddress
+}
+
+type AlternativeAddressAsEmbeddable {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+type AddressAsEmbeddable {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressAsEmbeddable!
+}
+
+type Manufacturer {
+  id: ID!
+  name: String!
+  address: Address
+  addressAsEmbeddable: AddressAsEmbeddable!
+  updatedAt: DateTime!
+}
+
+type ProductCategory {
+  id: ID!
+  title: String!
+  slug: String!
+  position: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  products: [Product!]!
+}
+
+type ProductColor implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  name: String!
+  hexCode: String!
+  createdAt: DateTime!
+}
+
+type ProductStatistics {
+  id: ID!
+  views: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ProductToTag {
+  id: String!
+  exampleStatus: Boolean!
+  product: Product!
+  tag: ProductTag!
+}
+
+type ProductTag {
+  id: ID!
+  title: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  productsWithStatus: [ProductToTag!]!
+  products: [Product!]!
+}
+
+type ProductVariant {
+  id: ID!
+  name: String!
+  position: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  image: DamImageBlockData!
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type ProductDiscounts {
+  quantity: Float!
+  price: Float!
+}
+
+type ProductDimensions {
+  width: Float!
+  height: Float!
+  depth: Float!
+}
+
+type ProductPriceRange {
+  min: Float!
+  max: Float!
+}
+
+type Product {
+  id: ID!
+  title: String!
+  status: ProductStatus!
+  slug: String!
+  description: String!
+  type: ProductType!
+  additionalTypes: [ProductType!]!
+  price: Float
+  priceRange: ProductPriceRange
+  inStock: Boolean!
+  soldCount: Int
+  availableSince: Date
+  lastCheckedAt: DateTime
+  discounts: [ProductDiscounts!]!
+  articleNumbers: [String!]!
+  dimensions: ProductDimensions
+  statistics: ProductStatistics
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  priceList: FileUpload
+  datasheets: [FileUpload!]!
+  category: ProductCategory
+  manufacturer: Manufacturer
+  colors: [ProductColor!]!
+  variants: [ProductVariant!]!
+  tagsWithStatus: [ProductToTag!]!
+  tags: [ProductTag!]!
+  image: DamImageBlockData!
+}
+
+enum ProductStatus {
+  Published
+  Unpublished
+  Deleted
+}
+
+enum ProductType {
+  Cap
+  Shirt
+  Tie
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
 
 type PageTreeNodeScope {
   domain: String!
@@ -368,6 +517,12 @@ type Footer {
 """FooterContent root block data"""
 scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+input DependencyFilter {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
+}
+
 type MainMenuItem {
   id: ID!
   node: PageTreeNode!
@@ -424,168 +579,12 @@ enum NewsCategory {
   Awards
 }
 
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 """NewsContent root block data"""
 scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type PaginatedNews {
   nodes: [News!]!
   totalCount: Int!
-}
-
-type AlternativeAddress {
-  street: String!
-  streetNumber: Float
-  zip: Float!
-  country: String!
-}
-
-type Address {
-  street: String!
-  streetNumber: Float
-  zip: Float!
-  country: String!
-  alternativeAddress: AlternativeAddress
-}
-
-type AlternativeAddressAsEmbeddable {
-  street: String!
-  streetNumber: Float
-  zip: Float!
-  country: String!
-}
-
-type AddressAsEmbeddable {
-  street: String!
-  streetNumber: Float
-  zip: Float!
-  country: String!
-  alternativeAddress: AlternativeAddressAsEmbeddable!
-}
-
-type Manufacturer {
-  id: ID!
-  name: String!
-  address: Address
-  addressAsEmbeddable: AddressAsEmbeddable!
-  updatedAt: DateTime!
-}
-
-type ProductCategory {
-  id: ID!
-  title: String!
-  slug: String!
-  position: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  products: [Product!]!
-}
-
-type ProductColor implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  name: String!
-  hexCode: String!
-  createdAt: DateTime!
-}
-
-type ProductStatistics {
-  id: ID!
-  views: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type ProductToTag {
-  id: String!
-  exampleStatus: Boolean!
-  product: Product!
-  tag: ProductTag!
-}
-
-type ProductTag {
-  id: ID!
-  title: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  productsWithStatus: [ProductToTag!]!
-  products: [Product!]!
-}
-
-type ProductDiscounts {
-  quantity: Float!
-  price: Float!
-}
-
-type ProductDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
-type ProductPriceRange {
-  min: Float!
-  max: Float!
-}
-
-type Product {
-  id: ID!
-  title: String!
-  status: ProductStatus!
-  slug: String!
-  description: String!
-  type: ProductType!
-  additionalTypes: [ProductType!]!
-  price: Float
-  priceRange: ProductPriceRange
-  inStock: Boolean!
-  soldCount: Int
-  availableSince: Date
-  lastCheckedAt: DateTime
-  discounts: [ProductDiscounts!]!
-  articleNumbers: [String!]!
-  dimensions: ProductDimensions
-  statistics: ProductStatistics
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  priceList: FileUpload
-  datasheets: [FileUpload!]!
-  category: ProductCategory
-  manufacturer: Manufacturer
-  colors: [ProductColor!]!
-  variants: [ProductVariant!]!
-  tagsWithStatus: [ProductToTag!]!
-  tags: [ProductTag!]!
-  image: DamImageBlockData!
-}
-
-enum ProductStatus {
-  Published
-  Unpublished
-  Deleted
-}
-
-enum ProductType {
-  Cap
-  Shirt
-  Tie
-}
-
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
-
-type ProductVariant {
-  id: ID!
-  name: String!
-  position: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  product: Product!
-  image: DamImageBlockData!
 }
 
 type ManufacturerCountry {
@@ -686,25 +685,6 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-input PageTreeNodeScopeInput {
-  domain: String!
-  language: String!
-}
-
-input DamScopeInput {
-  domain: String!
-}
-
-input FooterScopeInput {
-  domain: String!
-  language: String!
-}
-
-input NewsContentScopeInput {
-  domain: String!
-  language: String!
-}
-
 input AlternativeAddressInput {
   street: String!
   streetNumber: Float
@@ -751,6 +731,25 @@ input ProductPriceRangeInput {
   max: Float!
 }
 
+input PageTreeNodeScopeInput {
+  domain: String!
+  language: String!
+}
+
+input DamScopeInput {
+  domain: String!
+}
+
+input FooterScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
 input RedirectScopeInput {
   domain: String!
 }
@@ -767,7 +766,7 @@ type Query {
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
-  link(linkId: ID!): Link
+  link(id: ID!): Link
   page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
@@ -1188,8 +1187,8 @@ type Mutation {
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
   createBuilds(input: CreateBuildsInput!): Boolean!
-  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
-  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
+  saveLink(id: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
+  savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
