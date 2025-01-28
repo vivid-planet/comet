@@ -1,7 +1,16 @@
 import { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@comet/cms-site";
+import { loader as newsDetailLoader } from "@src/news/blocks/NewsDetailBlock.loader";
+import { loader as newsListLoader } from "@src/news/blocks/NewsListBlock.loader";
+
+declare module "@comet/cms-site" {
+    export interface BlockLoaderDependencies {
+        pageTreeNodeId?: string;
+    }
+}
 
 const blockLoaders: Record<string, BlockLoader> = {
-    // Add your block loaders here
+    NewsDetail: newsDetailLoader,
+    NewsList: newsListLoader,
 };
 
 //small wrapper for @comet/cms-site recursivelyLoadBlockData that injects blockMeta from block-meta.json
