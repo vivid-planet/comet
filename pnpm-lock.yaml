@@ -33,8 +33,8 @@ importers:
         specifier: ^7.0.4
         version: 7.0.4
       knip:
-        specifier: ^5.43.5
-        version: 5.43.5(@types/node@22.10.7)(typescript@5.7.2)
+        specifier: ^5.43.6
+        version: 5.43.6(@types/node@22.10.7)(typescript@5.7.2)
       lint-staged:
         specifier: ^12.5.0
         version: 12.5.0(enquirer@2.4.1)
@@ -11849,10 +11849,6 @@ packages:
       node-notifier:
         optional: true
 
-  jiti@1.19.1:
-    resolution: {integrity: sha512-oVhqoRDaBXf7sjkll95LHVS6Myyyb1zaunVwk4Z0+WPSW4gjS0pl01zYKHScTuyEhQsFxV5L4DR5r+YqSyqyyg==}
-    hasBin: true
-
   jiti@1.21.7:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
     hasBin: true
@@ -12080,8 +12076,8 @@ packages:
       tedious:
         optional: true
 
-  knip@5.43.5:
-    resolution: {integrity: sha512-B5cexyDF+me8EjmihxF3XASybB+T8HUzZBSZLNr9CGS8WrceMOR5Qa2qdBXwU0MxphAgH2nzLQcKsCuqXYOJUg==}
+  knip@5.43.6:
+    resolution: {integrity: sha512-bUCFlg44imdV5vayYxu0pIAB373S8Ufjda0qaI9oRZDH6ltJFwUoAO2j7nafxDmo5G0ZeP4IiLAHqlc3wYIONQ==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -29441,8 +29437,6 @@ snapshots:
       - supports-color
       - ts-node
 
-  jiti@1.19.1: {}
-
   jiti@1.21.7: {}
 
   jiti@2.4.2: {}
@@ -29689,7 +29683,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  knip@5.43.5(@types/node@22.10.7)(typescript@5.7.2):
+  knip@5.43.6(@types/node@22.10.7)(typescript@5.7.2):
     dependencies:
       '@nodelib/fs.walk': 3.0.1
       '@snyk/github-codeowners': 1.1.0
@@ -31569,7 +31563,7 @@ snapshots:
   postcss-loader@7.3.3(postcss@8.4.49)(webpack@5.97.1):
     dependencies:
       cosmiconfig: 8.2.0
-      jiti: 1.19.1
+      jiti: 1.21.7
       postcss: 8.4.49
       semver: 7.6.3
       webpack: 5.97.1
