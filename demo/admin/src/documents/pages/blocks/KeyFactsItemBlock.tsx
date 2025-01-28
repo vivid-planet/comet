@@ -23,13 +23,11 @@ export const KeyFactsItemBlock = createCompositeBlock(
             },
             fact: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="keyFactsItemBlock.fact" defaultMessage="Fact" />,
                 }),
             },
             label: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="keyFactsItemBlock.label" defaultMessage="Label" />,
                 }),
             },

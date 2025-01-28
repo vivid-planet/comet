@@ -37,11 +37,12 @@
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.27.12",
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
-        "@formatjs/cli": "^6.5.0",
+        "@formatjs/cli": "^6.5.1",
         "@types/node": "^22.10.7",
-        "knip": "^5.42.2",
+        "knip": "^5.43.5",
         "cspell": "^8.17.2",
         "dotenv-cli": "^7.4.4",
         "husky": "^7.0.4",
@@ -55,8 +56,5 @@
     "engines": {
         "node": "22",
         "pnpm": "9.15.4"
-    },
-    "dependencies": {
-        "@changesets/cli": "^2.27.11"
     }
 }

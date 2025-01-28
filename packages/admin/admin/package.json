@@ -46,7 +46,7 @@
     "devDependencies": {
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.26.4",
-        "@babel/core": "^7.26.0",
+        "@babel/core": "^7.26.7",
         "@comet/admin-babel-preset": "workspace:^7.11.0",
         "@comet/eslint-config": "workspace:^7.11.0",
         "@emotion/react": "^11.14.0",
@@ -58,7 +58,7 @@
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^16.2.0",
-        "@testing-library/user-event": "^14.6.0",
+        "@testing-library/user-event": "^14.6.1",
         "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-data": "^1.0.3",
         "@types/history": "^4.7.11",

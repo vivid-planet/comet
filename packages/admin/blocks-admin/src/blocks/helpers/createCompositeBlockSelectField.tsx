@@ -15,6 +15,7 @@ interface Options<T extends string | number> extends Partial<SelectFieldProps<T>
 export function createCompositeBlockSelectField<T extends string | number>({
     defaultValue,
     options,
+    fullWidth = true,
     fieldProps: legacyFieldProps,
     ...fieldProps
 }: Options<T>) {
@@ -22,7 +23,7 @@ export function createCompositeBlockSelectField<T extends string | number>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }> onSubmit={({ value }) => updateState(value)} initialValues={{ value: state }}>
-                <SelectField name="value" {...legacyFieldProps} {...fieldProps} options={options} />
+                <SelectField name="value" fullWidth={fullWidth} {...legacyFieldProps} {...fieldProps} options={options} />
             </BlocksFinalForm>
         ),
     });
