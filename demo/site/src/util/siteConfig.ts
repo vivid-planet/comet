@@ -1,6 +1,7 @@
 import { previewParams } from "@comet/cms-site";
 import type { PublicSiteConfig } from "@src/site-configs";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
 export function getHostByHeaders(headers: Headers) {
     const host = headers.get("x-forwarded-host") ?? headers.get("host");
@@ -10,7 +11,7 @@ export function getHostByHeaders(headers: Headers) {
 
 export function getSiteConfigForDomain(domain: string) {
     const siteConfig = getSiteConfigs().find((siteConfig) => siteConfig.scope.domain === domain);
-    if (!siteConfig) throw new Error(`SiteConfig not found for domain ${domain}`);
+    if (!siteConfig) notFound();
     return siteConfig;
 }
 
