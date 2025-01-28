@@ -479,6 +479,74 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 
 ## ESLint
 
+### ESLint upgrade from v8 to v9 with ESM
+
+Update ESLint to v9
+
+`package.json`
+```diff
+- "eslint": "^8.0.0",
++ "eslint": "^9.0.0",
+```
+
+An ESM compatible ESLint config is required. Delete the related `.eslintrc.json` and move the configured rules to the new ESLint flat configuration ```eslint.config.mjs```. 
+
+Migration Guide of ESLint 9.0 can be found here: [Migration Guide](https://eslint.org/docs/latest/use/migrate-to-9.0.0)
+
+
+#### ```admin/eslint.config.mjs```
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts"],
+    },
+    ...cometConfig
+];
+
+export default config;
+```
+
+#### ```api/eslint.config.mjs```
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+import cometConfig from "@comet/eslint-config/nestjs.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
+    },
+    ...cometConfig,
+];
+
+export default config;
+```
+
+#### ```site/eslint.config.mjs```
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+import cometConfig from "@comet/eslint-config/nextjs.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**", ".next/**", "public/**"],
+    },
+    ...cometConfig,
+];
+
+export default config;
+
+```
+
+tba. new eslint configs
 ### Remove React barrel imports
 
 Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
