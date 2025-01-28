@@ -36,7 +36,7 @@
         "@azure-rest/ai-translation-text": "^1.0.0",
         "@azure/storage-blob": "^12.26.0",
         "@fast-csv/parse": "^4.3.6",
-        "@golevelup/nestjs-discovery": "^4.0.2",
+        "@golevelup/nestjs-discovery": "^4.0.3",
         "@hapi/accept": "^5.0.2",
         "@nestjs/mapped-types": "^2.0.6",
         "@nestjs/passport": "^10.0.3",
