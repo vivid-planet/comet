@@ -9,7 +9,6 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { ComponentProps } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
@@ -184,7 +183,7 @@ export const Tooltip = (inProps: TooltipProps) => {
         isRtl: theme.direction === "rtl",
     };
 
-    const commonTooltipProps: Omit<ComponentProps<typeof TooltipRoot>, "children"> = {
+    const commonTooltipProps = {
         ...props,
         disableInteractive,
         arrow,
@@ -195,6 +194,7 @@ export const Tooltip = (inProps: TooltipProps) => {
         },
         slotProps: {
             popper: {
+                ownerState,
                 ...props.slotProps?.popper,
             },
             ...props.slotProps,
