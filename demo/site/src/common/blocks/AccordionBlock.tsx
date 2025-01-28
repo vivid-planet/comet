@@ -19,10 +19,10 @@ export const AccordionBlock = withPreview(
             return new Set(openByDefaultBlockKeys);
         });
 
-        const { showPreviewSkeletons, isSelected, isHovered } = usePreview();
+        const { previewType, isSelected, isHovered } = usePreview();
 
         useEffect(() => {
-            if (showPreviewSkeletons) {
+            if (previewType === "BlockPreview") {
                 const getFocusedBlockKey = () => {
                     const focusedBlock = data.blocks.find((block) => {
                         if (!isWithPreviewPropsData(block)) {
@@ -46,7 +46,7 @@ export const AccordionBlock = withPreview(
 
                 setExpandedItems(expandedItemsInPreview);
             }
-        }, [showPreviewSkeletons, data.blocks, isSelected, isHovered, openByDefaultBlockKeys]);
+        }, [previewType, data.blocks, isSelected, isHovered, openByDefaultBlockKeys]);
 
         const handleChange = (itemKey: string) => {
             const newExpandedItems = new Set(expandedItems);
