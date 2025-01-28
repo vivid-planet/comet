@@ -232,6 +232,48 @@ npx @comet/upgrade v8/nest-peer-dependencies.ts
 
 ## Admin
 
+### Upgrade peer dependencies
+
+#### Recommended: React 18
+
+Support for React 18 has been added.
+While optional, it is recommended to upgrade to React 18 in the project.
+
+1. Upgrade all your dependencies:
+
+    ```diff title=admin/package.json
+    {
+        "dependencies": {
+    -       "react": "^17.0.2",
+    -       "react-dom": "^17.0.2",
+    +       "react": "^18.3.1",
+    +       "react-dom": "^18.3.1"
+        },
+        "devDependencies": {
+    -       "@types/react": "^17.0.83",
+    -       "@types/react-dom": "^17.0.26",
+    +       "@types/react": "^18.3.18",
+    +       "@types/react-dom": "^18.3.5"
+        }
+    }
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/update-react-dependencies.ts
+    ```
+
+    :::
+
+2. Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
+
+    :::tip
+
+    Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
+
+    :::
+
 ### Stay on same page after changing scope
 
 The Admin now stays on the same page per default when changing scopes.
