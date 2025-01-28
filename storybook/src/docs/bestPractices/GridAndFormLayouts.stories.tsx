@@ -416,7 +416,7 @@ export const GridWithFormInADialog = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -493,7 +493,7 @@ export const GridWithFormOnAPage = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button startIcon={<Add />} component={StackLink} pageName="add" payload="add">
+                        <Button responsive startIcon={<Add />} component={StackLink} pageName="add" payload="add">
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -605,7 +605,7 @@ export const NestedGridsAndFormsWithTabs = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -726,7 +726,7 @@ export const NestedFormInGridInTabsInGrid = {
                     </ToolbarItem>
                     <FillSpace />
                     <ToolbarActions>
-                        <Button startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
                         </Button>
                     </ToolbarActions>
@@ -841,6 +841,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                     <FillSpace />
                     <ToolbarActions>
                         <CrudMoreActionsMenu
+                            slotProps={{ button: { responsive: true } }}
                             selectionSize={selectionModel.length}
                             overallActions={[
                                 {
