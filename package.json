@@ -43,7 +43,7 @@
         "@formatjs/cli": "^6.5.1",
         "@types/node": "^22.10.7",
         "knip": "^5.43.5",
-        "cspell": "^8.17.2",
+        "cspell": "^8.17.3",
         "dotenv-cli": "^7.4.4",
         "husky": "^7.0.4",
         "lint-staged": "^12.5.0",
