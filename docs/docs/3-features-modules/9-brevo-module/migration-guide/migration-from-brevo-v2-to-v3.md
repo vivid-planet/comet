@@ -3,14 +3,14 @@ title: Migrating from v2 to v3
 ---
 
 :::caution
-Make sure, that your project uses COMET v7.10.0 or later.
+Make sure that your project uses COMET v7.10.0 or later.
 :::
 
 ## API
 
-### Create `email-campaign` and `target-group` entities
+### Create `EmailCampaign` and `TargetGroup` entities
 
-Use `createEmailCampaignEntity` for creating `email-campaign` entity. Pass `EmailCampaignContentBlock`, `Scope` and `TargetGroup`.
+Use `createEmailCampaignEntity` for creating the `EmailCampaign` entity. Pass `EmailCampaignContentBlock`, `Scope` and `TargetGroup`:
 
 ```ts
 export const EmailCampaign = createEmailCampaignEntity({
@@ -20,7 +20,7 @@ export const EmailCampaign = createEmailCampaignEntity({
 });
 ```
 
-Use `createTargetGroupEntity` for creating `target-group` entity. Pass `Scope` and optional `BrevoFilterAttributes`
+Use `createTargetGroupEntity` for creating the `TargetGroup` entity. Pass `Scope` and optionally `BrevoFilterAttributes`:
 
 ```ts
 export const TargetGroup = createTargetGroupEntity({
@@ -32,41 +32,41 @@ export const TargetGroup = createTargetGroupEntity({
 Pass both to the `AppModule`:
 
 ```diff
-      BrevoModule.register({
+    BrevoModule.register({
         brevo: {
-              //...
-  +        EmailCampaign
-  +        TargetGroup
-           }
+            //...
++           EmailCampaign
++           TargetGroup
+        }
         //...
-      });
+    });
 ```
 
 ### Import `FileUploadsModule` in the project's `AppModule`
 
-It is now necessary to import the `FileUploadsModule` in the project's `AppModule` and configure it to accept csv files.
+It is now required to import the `FileUploadsModule` in the project's `AppModule` and configure it to accept CSV files.
 
 ```ts
-        FileUploadsModule.register({
-                acceptedMimeTypes: ["text/csv"],
-                maxFileSize: config.fileUploads.maxFileSize,
-                directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
-                }),
+FileUploadsModule.register({
+    acceptedMimeTypes: ["text/csv"],
+    maxFileSize: config.fileUploads.maxFileSize,
+    directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
+}),
 ```
 
-The files for the brevo contact import now get temporarily stored in the public uploads until the import is concluded.
-This change prepares for future imports to be handled in a separate job, allowing more than 100 contacts to be imported without exhausting api resources or blocking the event loop.
+The files for the Brevo contact import now get temporarily stored in the file uploads until the import is concluded.
+This change prepares for future imports to be handled in a separate job, allowing more than 100 contacts to be imported without exhausting API resources or blocking the event loop.
 
-### Remove brevo configuration variables from environment variables
+### Remove Brevo configuration variables from environment variables
 
-Env vars containing brevo configuration information can be removed and are set on the `BrevoConfigurationPage` in the admin interface from now on.
+Environment variables containing Brevo configuration information can be removed and are set on the `BrevoConfigurationPage` in the admin interface from now on.
 
 -   BREVO_SENDER_NAME
 -   BREVO_SENDER_EMAIL
 -   BREVO_DOUBLE_OPT_IN_TEMPLATE_ID
 -   BREVO_ALLOWED_REDIRECT_URL
 
-### Remove `allowedRedirectionUrl` from the brevo module configuration
+### Remove `allowedRedirectionUrl` from the Brevo module configuration
 
 ```diff
 BrevoModule.register({
@@ -78,20 +78,15 @@ BrevoModule.register({
 })
 ```
 
-## ADMIN
+## Admin
 
-### Add brevo configuration page to admin interface
+### Add Brevo configuration page to admin interface
 
-Import `BrevoConfigPage` from `@comet/brevo-admin` and add it to your project's MasterMenu. All necessary brevo configuration (for each scope) must be configured within this page for email campaigns to be sent.
+Import `BrevoConfigPage` from `@comet/brevo-admin` and add it to your project's `MasterMenu`. All necessary Brevo configuration (for each scope) must be configured within this page for email campaigns to be sent.
 
 ### Define `scopeParts` in `BrevoConfig`
 
-Previously the `scopeParts` were passed to the functions:
-
--   createBrevoContactsPage
--   createTargetGroupsPage
--   createEmailCampaignsPage
-
+Previously, the `scopeParts` were passed to `createBrevoContactsPage`, `createTargetGroupsPage`, and `createEmailCampaignsPage`.
 Remove `scopeParts` from those functions.
 Instead define them in the `BrevoConfigProvider` once:
 
@@ -106,10 +101,10 @@ Instead define them in the `BrevoConfigProvider` once:
 </BrevoConfigProvider>
 ```
 
-## SITE
+## Site
 
-### Install new `mail-rendering` package
+### Optional: use new `@comet/brevo-mail-rendering` package
 
-Install `@comet/brevo-mail-rendering` in your project's site. This package offers reuseable frontend components for rendering emails.
-
-Optional: You can use the `NewsletterImageBlock` for rendering Images in your Newsletter campaigns.
+Install `@comet/brevo-mail-rendering` in your project's site.
+This package offers reuseable components for rendering emails.
+You can use the `NewsletterImageBlock` for rendering images in your newsletter campaigns.
