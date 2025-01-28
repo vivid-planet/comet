@@ -35,8 +35,8 @@ importers:
         specifier: ^7.0.4
         version: 7.0.4
       knip:
-        specifier: ^5.43.3
-        version: 5.43.3(@types/node@22.10.7)(typescript@5.7.2)
+        specifier: ^5.43.5
+        version: 5.43.5(@types/node@22.10.7)(typescript@5.7.2)
       lint-staged:
         specifier: ^12.5.0
         version: 12.5.0(enquirer@2.4.1)
@@ -2798,6 +2798,7 @@ packages:
   '@aws-sdk/middleware-flexible-checksums@3.730.0':
     resolution: {integrity: sha512-D0YfQWJ32xo3DvFKcTuM5Aq0IxVr8N++ChVeK3ENYcdelUpxWA9xplZH3QTSbbM1iH3qs2maeAAnLyAns26aGg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Please upgrade to >=3.735.0, which contains fixes for checksum validation in S3 getObject calls. Details https://github.com/aws/aws-sdk-js-v3/issues/6827
 
   '@aws-sdk/middleware-host-header@3.723.0':
     resolution: {integrity: sha512-LLVzLvk299pd7v4jN9yOSaWDZDfH0SnBPb6q+FDPaOCMGBY8kuwQso7e/ozIKSmZHRMGO3IZrflasHM+rI+2YQ==}
@@ -12016,8 +12017,8 @@ packages:
       tedious:
         optional: true
 
-  knip@5.43.3:
-    resolution: {integrity: sha512-rCSc7X1jQs+ZIc08lQF3c3nS/nKzsg9UPIbY+qQUMh+FVF5ojdiT3bJNypRlSm2pMLQVeE7XWxXrtT4sdg6nfA==}
+  knip@5.43.5:
+    resolution: {integrity: sha512-B5cexyDF+me8EjmihxF3XASybB+T8HUzZBSZLNr9CGS8WrceMOR5Qa2qdBXwU0MxphAgH2nzLQcKsCuqXYOJUg==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -29330,7 +29331,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  knip@5.43.3(@types/node@22.10.7)(typescript@5.7.2):
+  knip@5.43.5(@types/node@22.10.7)(typescript@5.7.2):
     dependencies:
       '@nodelib/fs.walk': 3.0.1
       '@snyk/github-codeowners': 1.1.0
