@@ -43,7 +43,7 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
             padding-top: 0;
 
             ${theme.breakpoints.up("md")} {
-                padding: 0;
+                padding-top: 0;
             }
         `}
 
@@ -52,7 +52,7 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
             padding-bottom: 0;
 
             ${theme.breakpoints.up("md")} {
-                padding: 0;
+                padding-bottom: 0;
             }
         `}
 
