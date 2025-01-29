@@ -3,6 +3,9 @@ import path from "path";
 
 function parentDirCount(dir: string) {
     const match = dir.match(/^(\.\.\/)*/);
+    if (!match) {
+        return 0;
+    }
     return match[0].length / 3;
 }
 
@@ -30,37 +33,41 @@ export default {
             ImportDeclaration: function (node) {
                 const options = context.options[0] ?? { sourceRoot: "./src", sourceRootAlias: "@src" };
 
-                const importParentDirCount = parentDirCount(node.source.value.toString());
-                if (!importParentDirCount) {
-                    // import is not relative
-                    return;
-                }
+                if (node.source.value != null) {
+                    const value = node.source.value;
 
-                const filePath = context.getPhysicalFilename ? context.getPhysicalFilename() : context.getFilename();
-                if (filePath == "<text>") return; // If the input is from stdin, this test can't fail
-                const sourceDir = `${context.getCwd()}/${options.sourceRoot}`;
+                    const importParentDirCount = parentDirCount(value.toString());
+                    if (!importParentDirCount) {
+                        // import is not relative
+                        return;
+                    }
 
-                const fileDir = path.dirname(filePath);
+                    const filePath = context.getPhysicalFilename ? context.getPhysicalFilename() : context.getFilename();
+                    if (filePath == "<text>") return; // If the input is from stdin, this test can't fail
+                    const sourceDir = `${context.getCwd()}/${options.sourceRoot}`;
 
-                const relativeFileToSourceDir = path.relative(sourceDir, fileDir);
-                if (!relativeFileToSourceDir || relativeFileToSourceDir.startsWith("..")) {
-                    // file is not in source directory
-                    return;
-                }
+                    const fileDir = path.dirname(filePath);
 
-                const fileSubdirectoriesCount = relativeFileToSourceDir.split(path.sep).length;
+                    const relativeFileToSourceDir = path.relative(sourceDir, fileDir);
+                    if (!relativeFileToSourceDir || relativeFileToSourceDir.startsWith("..")) {
+                        // file is not in source directory
+                        return;
+                    }
 
-                // importParentDirCount is the number of ../ parts in the import path
-                // fileSubdirectoriesCount is the number of subdirectories in the file path relative to the source directory
-                if (importParentDirCount >= fileSubdirectoriesCount) {
-                    context.report({
-                        node,
-                        message: "Avoid relative import from other module",
-                        fix: (fixer) => {
-                            const importPathRelativeToSourceDir = path.relative(sourceDir, `${fileDir}/${node.source.value.toString()}`);
-                            return fixer.replaceText(node.source, `"${options.sourceRootAlias}/${importPathRelativeToSourceDir}"`);
-                        },
-                    });
+                    const fileSubdirectoriesCount = relativeFileToSourceDir.split(path.sep).length;
+
+                    // importParentDirCount is the number of ../ parts in the import path
+                    // fileSubdirectoriesCount is the number of subdirectories in the file path relative to the source directory
+                    if (importParentDirCount >= fileSubdirectoriesCount) {
+                        context.report({
+                            node,
+                            message: "Avoid relative import from other module",
+                            fix: (fixer) => {
+                                const importPathRelativeToSourceDir = path.relative(sourceDir, `${fileDir}/${value.toString()}`);
+                                return fixer.replaceText(node.source, `"${options.sourceRootAlias}/${importPathRelativeToSourceDir}"`);
+                            },
+                        });
+                    }
                 }
             },
         };

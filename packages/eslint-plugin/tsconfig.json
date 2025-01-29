@@ -2,7 +2,8 @@
     "extends": "../../tsconfig.core.json",
     "compilerOptions": {
         "outDir": "lib",
-        "rootDir": "src"
+        "rootDir": "src",
+        "strict": true
     },
     "include": ["./src"],
     "exclude": ["node_modules", "lib"]
