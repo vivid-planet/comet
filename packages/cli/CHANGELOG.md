@@ -1,5 +1,7 @@
 # @comet/cli
 
+## 7.13.0
+
 ## 7.12.0
 
 ### Minor Changes
