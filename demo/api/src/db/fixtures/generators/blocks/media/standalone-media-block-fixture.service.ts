@@ -4,15 +4,15 @@ import { Injectable } from "@nestjs/common";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
 import { MediaAspectRatios } from "@src/util/mediaAspectRatios";
 
-import { MediaTypeBlockFixtureService } from "./media-type-block.fixture.service";
+import { MediaBlockFixtureService } from "./media-block.fixture.service";
 
 @Injectable()
 export class StandaloneMediaBlockFixtureService {
-    constructor(private readonly mediaTypeBlockFixtureService: MediaTypeBlockFixtureService) {}
+    constructor(private readonly mediaBlockFixtureService: MediaBlockFixtureService) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof StandaloneMediaBlock>> {
         return {
-            media: await this.mediaTypeBlockFixtureService.generateBlockInput(),
+            media: await this.mediaBlockFixtureService.generateBlockInput(),
             aspectRatio: faker.helpers.arrayElement(Object.values(MediaAspectRatios)),
         };
     }

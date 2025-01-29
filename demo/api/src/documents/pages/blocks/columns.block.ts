@@ -8,18 +8,21 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-c
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
 
-export const supportedBlocks = {
-    accordion: AccordionBlock,
-    anchor: AnchorBlock,
-    richtext: RichTextBlock,
-    space: SpaceBlock,
-    heading: StandaloneHeadingBlock,
-    callToActionList: StandaloneCallToActionListBlock,
-    media: StandaloneMediaBlock,
-    mediaGallery: MediaGalleryBlock,
-};
-
-export const ColumnsContentBlock = createBlocksBlock({ supportedBlocks }, { name: "ColumnsContent" });
+export const ColumnsContentBlock = createBlocksBlock(
+    {
+        supportedBlocks: {
+            accordion: AccordionBlock,
+            anchor: AnchorBlock,
+            richtext: RichTextBlock,
+            space: SpaceBlock,
+            heading: StandaloneHeadingBlock,
+            callToActionList: StandaloneCallToActionListBlock,
+            media: StandaloneMediaBlock,
+            mediaGallery: MediaGalleryBlock,
+        },
+    },
+    { name: "ColumnsContent" },
+);
 
 export const ColumnsBlock = ColumnsBlockFactory.create(
     {

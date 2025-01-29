@@ -1,7 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import { MediaTypeBlock } from "@src/common/blocks/media.block";
+import { MediaBlock } from "@src/common/blocks/media.block";
 
 import { DamImageBlockFixtureService } from "./dam-image-block-fixture.service";
 import { DamVideoBlockFixtureService } from "./dam-video-block-fixture.service";
@@ -9,7 +9,7 @@ import { VimeoVideoBlockFixtureService } from "./vimeo-video-block-fixture.servi
 import { YouTubeVideoBlockFixtureService } from "./youtube-video-block-fixture.service";
 
 @Injectable()
-export class MediaTypeBlockFixtureService {
+export class MediaBlockFixtureService {
     constructor(
         private readonly damImageBlockFixtureService: DamImageBlockFixtureService,
         private readonly damVideoBlockFixtureService: DamVideoBlockFixtureService,
@@ -17,8 +17,8 @@ export class MediaTypeBlockFixtureService {
         private readonly vimeoVideoBlockFixtureService: VimeoVideoBlockFixtureService,
     ) {}
 
-    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof MediaTypeBlock>> {
-        const types = ["image", "damVideo", "youTubeVideo"] as const;
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof MediaBlock>> {
+        const types = ["image", "damVideo", "youTubeVideo", "vimeoVideo"] as const;
         const type = faker.helpers.arrayElement(types);
 
         return {

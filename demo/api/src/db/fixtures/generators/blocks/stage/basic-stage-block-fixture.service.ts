@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { Alignment as BasicStageBlockAlignment, BasicStageBlock } from "@src/documents/pages/blocks/basic-stage.block";
 
-import { MediaTypeBlockFixtureService } from "../media/media-type-block.fixture.service";
+import { MediaBlockFixtureService } from "../media/media-block.fixture.service";
 import { CallToActionListBlockFixtureService } from "../navigation/call-to-action-list-block.service";
 import { HeadingBlockFixtureService } from "../text-and-content/heading-block-fixture.service";
 import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
@@ -13,7 +13,7 @@ export class BasicStageBlockFixtureService {
     constructor(
         private readonly callToActionListBlockFixtureService: CallToActionListBlockFixtureService,
         private readonly headingBlockFixtureService: HeadingBlockFixtureService,
-        private readonly mediaBlockFixtureService: MediaTypeBlockFixtureService,
+        private readonly mediaBlockFixtureService: MediaBlockFixtureService,
         private readonly richTextBlockFixtureService: RichTextBlockFixtureService,
     ) {}
 

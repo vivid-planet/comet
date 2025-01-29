@@ -12,6 +12,7 @@ import { PageInput } from "@src/documents/pages/dto/page.input";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
+import { MultiBar, Options, Presets } from "cli-progress";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
@@ -63,6 +64,11 @@ export class FixturesConsole {
         private readonly videoFixtureService: VideoFixtureService,
     ) {}
 
+    barOptions: Options = {
+        format: `{bar} {percentage}% | {value}/{total} {title} | ETA: {eta_formatted} | Duration: {duration_formatted}`,
+        noTTYOutput: true,
+    };
+
     @Command({
         command: "fixtures",
         description: "Create fixtures with faker.js",
@@ -72,7 +78,7 @@ export class FixturesConsole {
         // ensure repeatable runs
         faker.seed(123456);
 
-        console.log("Drop tables...");
+        this.logger.log("Drop tables...");
         const connection = this.orm.em.getConnection();
         const tables = await connection.execute(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename;`);
 
@@ -80,30 +86,28 @@ export class FixturesConsole {
             await connection.execute(`DROP TABLE IF EXISTS "${table.tablename}" CASCADE`);
         }
 
-        console.log("Clear storage...");
+        this.logger.log("Clear storage...");
         const damFilesDirectory = `${this.config.blob.storageDirectoryPrefix}-files`;
         if (await this.blobStorageBackendService.folderExists(damFilesDirectory)) {
             await this.blobStorageBackendService.removeFolder(damFilesDirectory);
         }
         await this.blobStorageBackendService.createFolder(damFilesDirectory);
 
-        console.log(`Drop and recreate schema...`);
-        const generator = this.orm.getSchemaGenerator();
-        await generator.dropSchema({ dropDb: false, dropMigrationsTable: true });
-
-        console.log("Run migrations...");
+        this.logger.log("Run migrations...");
         const migrator = this.orm.getMigrator();
         await migrator.up();
 
         const scope = { domain: "main", language: "en" };
 
-        console.log("Generate Images...");
+        const multiBar = new MultiBar(this.barOptions, Presets.shades_classic);
+
+        this.logger.log("Generate Images...");
         await this.imageFixtureService.generateImages(5, { domain: "main" });
 
-        console.log("Generate Videos...");
+        this.logger.log("Generate Videos...");
         await this.videoFixtureService.generateVideos({ domain: "main" });
 
-        console.log("Generate Pages...");
+        this.logger.log("Generate Pages...");
         await this.documentGeneratorService.generatePage({ name: "Home", scope });
         const blockCategoriesPage = await this.documentGeneratorService.generatePage({ name: "Fixtures: Blocks", scope });
 
@@ -123,11 +127,11 @@ export class FixturesConsole {
             parentId: blockCategoriesPage.id,
         });
 
-        console.log("Generate Many Images Test Page...");
+        this.logger.log("Generate Many Images Test Page...");
         await this.manyImagesTestPageFixtureService.execute();
-        console.log("Many Images Test Page created");
+        this.logger.log("Many Images Test Page created");
 
-        console.log("Generate Lorem Ispum Fixtures...");
+        this.logger.log("Generate Lorem Ispum Fixtures...");
         const NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT = 0; // Increase number to generate lorum ipsum fixtures
         for (let domainNum = 0; domainNum < NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT; domainNum++) {
             const domain = domainNum === 0 ? "secondary" : `${faker.random.word().toLowerCase()}.com`;
@@ -182,13 +186,16 @@ export class FixturesConsole {
 
                 pages.push(pagesForLevel);
             }
-            console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
+            this.logger.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
         }
-        console.log("Lorem Ispum Fixtures created");
 
+        this.logger.log("Generate File Uploads...");
         await this.fileUploadsFixtureService.generateFileUploads();
 
+        this.logger.log("Generate Redirects...");
         await this.redirectsFixtureService.generateRedirects();
+
+        multiBar.stop();
 
         await this.dependenciesService.createViews();
 

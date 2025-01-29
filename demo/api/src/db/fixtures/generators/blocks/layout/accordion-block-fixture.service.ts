@@ -2,12 +2,56 @@ import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
+import { AccordionContentBlock, AccordionItemBlock } from "@src/common/blocks/accordion-item.block";
 
-import { AccordionItemBlockFixtureService } from "./accordion-item-block-fixture.service";
+import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
+import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
+import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standalone-heading-block-fixture.service";
+import { SpaceBlockFixtureService } from "./space-block-fixture.service";
 
 @Injectable()
 export class AccordionBlockFixtureService {
-    constructor(private readonly accordionItemBlockFixtureService: AccordionItemBlockFixtureService) {}
+    constructor(
+        private readonly richTextBlockFixtureService: RichTextBlockFixtureService,
+        private readonly headingBlockFixtureService: StandaloneHeadingBlockFixtureService,
+        private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
+        private readonly callToActionListBlockFixtureService: StandaloneCallToActionListBlockFixtureService,
+    ) {}
+
+    async generateAccordionContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof AccordionContentBlock>> {
+        const blocks: ExtractBlockInputFactoryProps<typeof AccordionContentBlock>["blocks"] = [];
+        const blockCfg = {
+            richtext: this.richTextBlockFixtureService,
+            heading: this.headingBlockFixtureService,
+            space: this.spaceBlockFixtureService,
+            callToActionList: this.callToActionListBlockFixtureService,
+        };
+
+        for (const block of Object.entries(blockCfg)) {
+            const [type, generator] = block;
+            const props = await generator.generateBlockInput();
+
+            blocks.push({
+                key: faker.string.uuid(),
+                visible: true,
+                type: type as keyof typeof blockCfg,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                props: props as any,
+            });
+        }
+
+        return {
+            blocks,
+        };
+    }
+
+    async generateAccordionItemBlock(): Promise<ExtractBlockInputFactoryProps<typeof AccordionItemBlock>> {
+        return {
+            title: faker.lorem.words({ min: 3, max: 9 }),
+            content: await this.generateAccordionContentBlock(),
+            openByDefault: faker.datatype.boolean(),
+        };
+    }
 
     async generateBlockInput(min = 2, max = 6): Promise<ExtractBlockInputFactoryProps<typeof AccordionBlock>> {
         const blockAmount = faker.number.int({ min, max });
@@ -17,7 +61,7 @@ export class AccordionBlockFixtureService {
             blocks.push({
                 key: faker.string.uuid(),
                 visible: true,
-                props: await this.accordionItemBlockFixtureService.generateBlockInput(),
+                props: await this.generateAccordionItemBlock(),
             });
         }
 
