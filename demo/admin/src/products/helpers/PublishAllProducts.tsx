@@ -45,7 +45,7 @@ export function PublishAllProducts() {
             <Dialog open={open} onClose={handleClose} title="Publish all products?">
                 <DialogContent>You are about to publish all products.</DialogContent>
                 <DialogActions>
-                    <CancelButton onClick={handleClose}>Cancel</CancelButton>
+                    <CancelButton onClick={handleClose} />
                     <Button onClick={handlePublishAll} startIcon={<Online />} variant="success">
                         Publish
                     </Button>
