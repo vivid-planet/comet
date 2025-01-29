@@ -1,5 +1,16 @@
 # @comet/blocks-admin
 
+## 7.13.0
+
+### Patch Changes
+
+-   bd562d325: Prevent router prompt when using a block with subroutes in a form
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [5c06e4bee]
+-   Updated dependencies [b918c810b]
+    -   @comet/admin@7.13.0
+    -   @comet/admin-icons@7.13.0
+
 ## 7.12.0
 
 ### Minor Changes

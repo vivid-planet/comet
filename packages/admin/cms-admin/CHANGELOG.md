@@ -1,5 +1,39 @@
 # @comet/cms-admin
 
+## 7.13.0
+
+### Patch Changes
+
+-   f49370a9e: Improve SVG validation
+
+    Following tags are banned in SVGs:
+
+    -   script
+    -   \[new\] foreignObject
+    -   \[new\] use
+    -   \[new\] image
+    -   \[new\] animate
+    -   \[new\] animateMotion
+    -   \[new\] animateTransform
+    -   \[new\] set
+
+    Following attributes are banned:
+
+    -   Event handlers (`onload`, `onclick`, ...)
+    -   \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
+
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [5c06e4bee]
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [b918c810b]
+-   Updated dependencies [86c1d5996]
+    -   @comet/admin@7.13.0
+    -   @comet/blocks-admin@7.13.0
+    -   @comet/admin-rte@7.13.0
+    -   @comet/admin-date-time@7.13.0
+    -   @comet/admin-icons@7.13.0
+    -   @comet/admin-theme@7.13.0
+
 ## 7.12.0
 
 ### Minor Changes

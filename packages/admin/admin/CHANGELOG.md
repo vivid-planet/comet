@@ -1,5 +1,42 @@
 # @comet/admin
 
+## 7.13.0
+
+### Minor Changes
+
+-   bd562d325: Add `disableForcePromptRoute` option to `StackSwitch`
+
+    This can be useful when a navigation in a switch shouldn't trigger a prompt, e.g., when navigating inside a block.
+
+-   5c06e4bee: Reduce `MainContent` padding on mobile
+-   b918c810b: Add support for custom components to `CrudMoreActionsMenu`
+
+    **Example**
+
+    ```tsx
+    const CustomAction = () => (
+        <CrudMoreActionsMenuItem
+            onClick={() => {
+                // Perform action
+            }}
+        >
+            <ListItemIcon>
+                <Favorite />
+            </ListItemIcon>
+            Custom Action
+        </CrudMoreActionsMenuItem>
+    );
+
+    <CrudMoreActionsMenu overallActions={[<CustomAction key="custom-action" />]} />;
+    ```
+
+    **Note:** Use the `CrudMoreActionsMenuItem` component or `CrudMoreActionsMenuContext` to close the menu after clicking an item.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.13.0
+-   @comet/admin-theme@7.13.0
+
 ## 7.12.0
 
 ### Minor Changes
