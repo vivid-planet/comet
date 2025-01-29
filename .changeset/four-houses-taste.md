@@ -2,4 +2,4 @@
 "@comet/eslint-config": major
 ---
 
-Update ESLint v9 with ESM
+Bump ESLint peer dependency to v9
