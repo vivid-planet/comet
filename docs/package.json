@@ -78,7 +78,7 @@
         "cspell": "^8.17.3",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
-        "sucrase": "^3.32.0",
+        "sucrase": "^3.35.0",
         "typescript": "5.1.6",
         "webpack": "^5.97.1"
     },
