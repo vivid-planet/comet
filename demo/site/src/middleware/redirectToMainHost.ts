@@ -20,7 +20,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                 return NextResponse.redirect(redirectSiteConfig.url);
             }
 
-            throw new Error(`Cannot get siteConfig for host ${host}`);
+            return NextResponse.next({ status: 404 });
         }
         return middleware(request);
     };
