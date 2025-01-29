@@ -102,9 +102,11 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
         },
         alternates: {
             canonical: canonicalUrl,
-            languages: document.seo.alternativeLinks.reduce(
+            languages: document.seo.alternativeLinks.reduce<Record<string, string>>(
                 (acc, link) => {
-                    if (link.code && link.url) acc[link.code] = link.url;
+                    if (link.code && link.url) {
+                        acc[link.code] = link.url;
+                    }
                     return acc;
                 },
                 { [scope.language]: canonicalUrl },
