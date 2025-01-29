@@ -1,9 +1,11 @@
 import helmet from "helmet";
 
 if (process.env.TRACING == "production") {
-    import("./tracing.production");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require("./tracing.production");
 } else if (process.env.TRACING == "dev") {
-    import("./tracing.dev");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require("./tracing.dev");
 }
 
 import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
