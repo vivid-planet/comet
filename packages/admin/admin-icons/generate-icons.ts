@@ -40,15 +40,6 @@ const main = async () => {
     }
 
     mkdirSync("src/generated");
-
-    bar.increment(1, {
-        title: `Generate icons ${icons[0].name}`,
-    });
-    const svgData = getSVGData(icons[0]);
-
-    const builder = new XMLBuilder({ ignoreAttributes: false });
-    const svgString = builder.build(svgData);
-
     await Promise.all(
         icons.map((icon) => {
             bar.increment(1, {
