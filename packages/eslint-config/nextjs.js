@@ -19,7 +19,7 @@ const nextCoreWebVitals = compat
 /** @type {import('eslint')} */
 const config = [
     ...coreConfig,
-    // NextJJS does not support eslint v9 flat config yet - na opt-in to compatibility mode is required
+    // Next.js does not support ESLint v9 flat config yet - an opt-in to compatibility mode is required
     ...nextCoreWebVitals,
     {
         rules: {
