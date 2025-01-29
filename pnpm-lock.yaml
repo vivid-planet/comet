@@ -126,8 +126,8 @@ importers:
         specifier: ^16.0.1
         version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1)
       react-dnd-multi-backend:
-        specifier: ^8.0.3
-        version: 8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^8.1.2
+        version: 8.1.2(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
@@ -9594,6 +9594,11 @@ packages:
     peerDependencies:
       dnd-core: ^16.0.1
 
+  dnd-multi-backend@8.1.2:
+    resolution: {integrity: sha512-KPDVEsiM+6gNEegqZYTWJQgJxYV4vB91tUrvoKJjaS0wwWqT/jNU0P7xJAwCue/cbasJNvk2dFZH7tC+bjX1Rg==}
+    peerDependencies:
+      dnd-core: ^16.0.1
+
   dns-equal@1.0.0:
     resolution: {integrity: sha512-z+paD6YUQsk+AbGCEM4PrOXSss5gd66QfcVBFTKR/HpFL9jCqikS94HYwKww6fQyO7IxrIIyUu+g0Ka9tUS2Cg==}
 
@@ -14206,16 +14211,16 @@ packages:
   react-dnd-html5-backend@16.0.1:
     resolution: {integrity: sha512-Wu3dw5aDJmOGw8WjH1I1/yTH+vlXEL4vmjk5p+MHxP8HuHJS1lAGeIdG/hze1AvNeXWo/JgULV87LyQOr+r5jw==}
 
-  react-dnd-multi-backend@8.0.3:
-    resolution: {integrity: sha512-IwH7Mf6R05KIFohX0hHMTluoAvuUD8SO15KCD+9fY0nJ4nc1FGCMCSyMZw8R1XNStKp+JnNg3ZMtiaf5DebSUg==}
+  react-dnd-multi-backend@8.1.2:
+    resolution: {integrity: sha512-Ecj+gwr5B7zRiWqkDU5sUvUmufcu97WnsZFHnqHrWFJhTXAXQnhrperHLFktNP2CnQYtAgbucodr1if0MWpEaA==}
     peerDependencies:
       dnd-core: ^16.0.1
       react: ^16.14.0 || ^17.0.2 || ^18.0.0
       react-dnd: ^16.0.1
       react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0
 
-  react-dnd-preview@8.0.3:
-    resolution: {integrity: sha512-s69Ro47QYDthDhj73iQ0VioMCjtlZ1AytKBDkQaHKm5DTjA8D2bIaFKCBQd330QEW0SIzqLJrZGCSlIY2xraJg==}
+  react-dnd-preview@8.1.2:
+    resolution: {integrity: sha512-j5M1NcQBItOCYXONRbCNs6MzW7u4KygeOGZlztNNguTs1/f2d7q1fRnQjFLjCpgeg5Gy/JrTFrbRThZglJP5dg==}
     peerDependencies:
       react: ^16.14.0 || ^17.0.2 || ^18.0.0
       react-dnd: ^16.0.1
@@ -26445,6 +26450,10 @@ snapshots:
     dependencies:
       dnd-core: 16.0.1
 
+  dnd-multi-backend@8.1.2(dnd-core@16.0.1):
+    dependencies:
+      dnd-core: 16.0.1
+
   dns-equal@1.0.0: {}
 
   dns-packet@5.4.0:
@@ -32109,16 +32118,16 @@ snapshots:
     dependencies:
       dnd-core: 16.0.1
 
-  react-dnd-multi-backend@8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-dnd-multi-backend@8.1.2(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       dnd-core: 16.0.1
-      dnd-multi-backend: 8.0.3(dnd-core@16.0.1)
+      dnd-multi-backend: 8.1.2(dnd-core@16.0.1)
       react: 18.3.1
       react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1)
-      react-dnd-preview: 8.0.3(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
+      react-dnd-preview: 8.1.2(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
 
-  react-dnd-preview@8.0.3(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react@18.3.1):
+  react-dnd-preview@8.1.2(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.10.7)(@types/react@18.3.18)(react@18.3.1)
