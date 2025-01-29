@@ -1,4 +1,4 @@
-import cometConfig from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/react.js";
 import storybook from "eslint-plugin-storybook";
 
 /** @type {import('eslint')} */
@@ -6,7 +6,7 @@ const config = [
     {
         ignores: ["src/*.generated.ts", "lib/**", "storybook-static/**"],
     },
-    ...cometConfig,
+    ...eslintConfigReact,
     ...storybook.configs["flat/recommended"],
     {
         rules: {

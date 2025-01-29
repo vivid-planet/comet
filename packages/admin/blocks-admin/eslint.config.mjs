@@ -1,11 +1,11 @@
-import cometConfig from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/react.js";
 
 /** @type {import('eslint')} */
 const config = [
     {
         ignores: ["src/*.generated.ts", "lib/**", "block-meta.json"],
     },
-    ...cometConfig,
+    ...eslintConfigReact,
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",

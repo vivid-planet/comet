@@ -1,8 +1,8 @@
-import cometConfig from "@comet/eslint-config/core.js";
+import eslintConfigReact from "@comet/eslint-config/core.js";
 
 /** @type {import('eslint')} */
 const config = [
-    ...cometConfig,
+    ...eslintConfigReact,
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",

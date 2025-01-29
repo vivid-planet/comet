@@ -1,11 +1,11 @@
-import cometConfig from "@comet/eslint-config/react.js";
+import eslintConfigReact from "@comet/eslint-config/react.js";
 
 /** @type {import('eslint')} */
 const config = [
     {
         ignores: ["src/*.generated.ts", "lib/**"],
     },
-    ...cometConfig,
+    ...eslintConfigReact,
     {
         rules: {
             "@typescript-eslint/no-explicit-any": "off",

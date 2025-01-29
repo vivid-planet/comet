@@ -1,11 +1,11 @@
-import cometConfig from "@comet/eslint-config/nextjs.js";
+import eslintConfigNextJs from "@comet/eslint-config/nextjs.js";
 
 /** @type {import('eslint')} */
 const config = [
     {
         ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**", ".next/**", "public/**"],
     },
-    ...cometConfig,
+    ...eslintConfigNextJs,
     {
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
