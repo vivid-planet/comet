@@ -56,7 +56,7 @@ function common<InputApi, State, OutputApi>(): Omit<
             );
             // }
 
-            return [""];
+            return [];
         },
     };
 }
