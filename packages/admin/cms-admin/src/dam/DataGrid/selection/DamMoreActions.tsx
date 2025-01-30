@@ -123,8 +123,6 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                 }}
             />
 
-            {/* the directory property is needed for the folder upload to work but not known to eslint */}
-            {}
             <input type="file" hidden {...getInputProps()} webkitdirectory="webkitdirectory" directory="directory" ref={folderInputRef} />
             {fileUploadDialogs}
         </>
