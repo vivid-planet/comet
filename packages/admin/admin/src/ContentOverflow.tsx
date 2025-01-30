@@ -3,6 +3,7 @@ import {
     ButtonBase,
     ComponentsOverrides,
     css,
+    // eslint-disable-next-line no-restricted-imports
     Dialog as MuiDialog,
     DialogContent as MuiDialogContent,
     DialogTitle as MuiDialogTitle,

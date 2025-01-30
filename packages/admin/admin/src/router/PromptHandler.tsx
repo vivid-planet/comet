@@ -141,7 +141,6 @@ export const RouterPromptHandler = function ({ children, apiRef }: PropsWithChil
         registeredMessages.current[id] = { message, path, subRoutePath, saveAction, resetAction, promptRoutes };
         // If saveAction is passed it has to be passed for all registered components
         if (saveAction && Object.values(registeredMessages.current).some((registeredMessage) => !registeredMessage.saveAction)) {
-            // eslint-disable-next-line no-console
             console.error(
                 "A component (e.g. RouterPrompt) is missing a saveAction-prop. If you fail to do so, the Save-Button in the Dirty-Dialog won't save the changes",
             );

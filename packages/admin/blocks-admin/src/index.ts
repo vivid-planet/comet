@@ -41,7 +41,6 @@ export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBl
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export type {
     AdminComponentPart,
-    BindBlockAdminComponent,
     BlockAdminComponent,
     BlockDependency,
     BlockInputApi,

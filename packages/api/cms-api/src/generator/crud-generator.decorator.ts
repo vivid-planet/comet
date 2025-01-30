@@ -17,7 +17,7 @@ export function CrudGenerator({
     list = true,
     position,
 }: CrudGeneratorOptions): ClassDecorator {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(
             `data:crudGeneratorOptions`,
@@ -33,7 +33,7 @@ export interface CrudSingleGeneratorOptions {
 }
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return function (target: Function) {
         Reflect.defineMetadata(`data:crudSingleGeneratorOptions`, options, target);
     };

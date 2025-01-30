@@ -36,7 +36,7 @@ export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: 
                 if (data && data.data) {
                     createExcelExportDownload<any>(tableRef.props.columns, data.data, options);
                 }
-            } catch (e) {
+            } catch {
                 throw new Error("Error happend while exporting data");
             } finally {
                 await setLoading(false);

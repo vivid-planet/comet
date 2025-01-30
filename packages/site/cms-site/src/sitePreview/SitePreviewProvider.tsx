@@ -20,7 +20,7 @@ const SitePreview = ({ children }: PropsWithChildren) => {
         }
         sendUpstreamMessage();
         window.addEventListener("load", sendUpstreamMessage);
-        () => {
+        return () => {
             window.removeEventListener("load", sendUpstreamMessage);
         };
     }, [pathname, searchParams]);

@@ -5,7 +5,6 @@ import { QueryHookOptions, QueryResult } from "@apollo/client/react/types/types"
 
 interface UseQueryWithFragmentCacheOptions<TData = unknown, TVariables = OperationVariables> extends QueryHookOptions<TData, TVariables> {
     // Apollo uses ApolloCache<object> internally, therefore I must use object too
-    // eslint-disable-next-line @typescript-eslint/ban-types
     optimisticResponse: (cache: ApolloCache<object>) => TData | undefined;
 }
 

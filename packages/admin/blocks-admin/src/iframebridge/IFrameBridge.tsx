@@ -101,7 +101,7 @@ export const IFrameBridgeProvider = ({ children, onReceiveMessage }: PropsWithCh
                 if (message.hasOwnProperty("cometType")) {
                     _onReceiveMessage(message as IFrameMessage);
                 }
-            } catch (e) {
+            } catch {
                 // empty
             }
         };

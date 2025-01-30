@@ -18,7 +18,6 @@ const convertRedirectFormToApiInput = ({ sourceType, source, target, comment }: 
     return apiInput;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useSubmitMutation = (
     mode: "edit" | "add",
     id: string | undefined,

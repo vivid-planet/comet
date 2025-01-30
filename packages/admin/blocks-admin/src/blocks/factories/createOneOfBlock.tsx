@@ -156,7 +156,6 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                 const block = blockForType(item.type);
 
                 if (!block) {
-                    // eslint-disable-next-line no-console
                     console.warn(`Unknown block type "${item.type}"`);
                     continue;
                 }

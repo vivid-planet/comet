@@ -192,7 +192,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 if (message.hasOwnProperty("cometType")) {
                     onReceiveMessage(message as AdminMessage);
                 }
-            } catch (e) {
+            } catch {
                 // empty
             }
         };

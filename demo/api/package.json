@@ -13,7 +13,7 @@
         "fixtures": "$npm_execpath console fixtures --",
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
         "lint": "run-p lint:prettier lint:eslint lint:tsc && $npm_execpath lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
@@ -31,7 +31,7 @@
         "@mikro-orm/cli": "^6.4.4",
         "@mikro-orm/core": "^6.4.4",
         "@mikro-orm/migrations": "^6.4.4",
-        "@mikro-orm/nestjs": "^6.0.2",
+        "@mikro-orm/nestjs": "^6.1.0",
         "@mikro-orm/postgresql": "^6.4.4",
         "@nestjs/apollo": "^12.2.2",
         "@nestjs/common": "^10.4.15",
@@ -51,7 +51,7 @@
         "express": "^4.21.2",
         "faker": "^5.5.3",
         "graphql": "^16.6.0",
-        "graphql-scalars": "^1.23.0",
+        "graphql-scalars": "^1.24.0",
         "helmet": "^4.6.0",
         "nestjs-console": "^9.0.0",
         "reflect-metadata": "^0.2.2",
@@ -72,7 +72,7 @@
         "@types/node": "^22.10.7",
         "@types/response-time": "^2.3.8",
         "dotenv-cli": "^7.4.4",
-        "eslint": "^8.0.0",
+        "eslint": "^9.18.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
         "ts-node": "^10.9.2",
@@ -80,10 +80,10 @@
         "typescript": "^4.0.0"
     },
     "mikro-orm": {
-        "useTsNode": true,
         "configPaths": [
             "./src/db/ormconfig.cli.ts",
             "./dist/db/ormconfig.cli.js"
-        ]
+        ],
+        "useTsNode": true
     }
 }

@@ -1,5 +1,13 @@
 import { Accept, Copy } from "@comet/admin-icons";
-import { Dialog, Divider, List, ListItem, Stack, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    Divider,
+    List,
+    ListItem,
+    Stack,
+    Typography,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";

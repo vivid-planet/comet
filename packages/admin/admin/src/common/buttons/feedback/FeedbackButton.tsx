@@ -94,7 +94,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                       setDisplayState("loading");
                       await onClick();
                       setDisplayState("success");
-                  } catch (_) {
+                  } catch {
                       setDisplayState("error");
                   } finally {
                       setTimeout(() => {

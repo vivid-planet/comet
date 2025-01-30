@@ -3,7 +3,7 @@ export const isValidUrl = (value: string): boolean => {
 
     try {
         url = new URL(value);
-    } catch (_) {
+    } catch {
         return false;
     }
 

@@ -1,6 +1,15 @@
 import { messages, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    ListItemIcon,
+    MenuItem,
+} from "@mui/material";
 import { GQLUserGroup } from "@src/graphql.generated";
 import { useState } from "react";
 import { Form } from "react-final-form";

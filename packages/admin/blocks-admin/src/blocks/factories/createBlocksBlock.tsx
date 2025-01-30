@@ -32,7 +32,7 @@ import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, Pr
 import { resolveNewState } from "../utils";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type DefaultAdditionalItemFields = {};
 
 type BlocksBlockItem<
@@ -154,7 +154,6 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 const block = blockForType(child.type);
 
                 if (!block) {
-                    // eslint-disable-next-line no-console
                     console.warn(`Unknown block type "${child.type}"`);
                     continue;
                 }

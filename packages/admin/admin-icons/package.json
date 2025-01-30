@@ -2,20 +2,20 @@
     "name": "@comet/admin-icons",
     "version": "7.11.0",
     "repository": {
+        "directory": "packages/admin/admin-icons",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/admin/admin-icons"
+        "url": "https://github.com/vivid-planet/comet"
     },
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "build": "run-s clean generate-icons && run-p build:babel build:types",
+        "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "$npm_execpath run generate-icons && run-p start:babel start:types",
@@ -34,24 +34,24 @@
         "@mui/material": "^6.4.0",
         "@types/cli-progress": "^3.11.6",
         "@types/node": "^22.10.7",
-        "@types/react": "^17.0.83",
-        "@types/react-dom": "^17.0.26",
+        "@types/react": "^18.3.18",
+        "@types/react-dom": "^18.3.5",
         "change-case": "^4.1.2",
         "cli-progress": "^3.12.0",
-        "eslint": "^8.0.0",
-        "fast-xml-parser": "^4.2.5",
+        "eslint": "^9.18.0",
+        "fast-xml-parser": "^4.5.1",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
         "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "typescript": "^4.0.0"
     },
     "peerDependencies": {
         "@mui/material": "^6.0.0",
-        "react": "^17.0",
-        "react-dom": "^17.0"
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
     },
     "publishConfig": {
         "access": "public",

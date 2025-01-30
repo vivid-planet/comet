@@ -42,8 +42,8 @@
         "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.5.1",
         "@types/node": "^22.10.7",
-        "knip": "^5.43.5",
-        "cspell": "^8.17.2",
+        "knip": "^5.43.6",
+        "cspell": "^8.17.3",
         "dotenv-cli": "^7.4.4",
         "husky": "^7.0.4",
         "lint-staged": "^12.5.0",
@@ -56,34 +56,5 @@
     "engines": {
         "node": "22",
         "pnpm": "9.15.4"
-    },
-    "pnpm": {
-        "packageExtensions": {
-            "@docusaurus/theme-live-codeblock": {
-                "peerDependencies": {
-                    "react-live": "^2.4.1"
-                }
-            },
-            "next@14": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            },
-            "styled-components": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            },
-            "react-intl": {
-                "peerDependencies": {
-                    "@types/react": "*"
-                }
-            },
-            "swiper": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            }
-        }
     }
 }

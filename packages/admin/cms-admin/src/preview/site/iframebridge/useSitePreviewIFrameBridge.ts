@@ -8,7 +8,7 @@ export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePrevi
             let message;
             try {
                 message = JSON.parse(event.data);
-            } catch (e) {
+            } catch {
                 // empty
             }
             // Check if message is an iframe message from us -> there are more messaging from e.g webpack,etc.

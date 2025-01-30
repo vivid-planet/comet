@@ -1,4 +1,5 @@
 import {
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogActionsProps,
@@ -8,7 +9,7 @@ import {
     DialogTitle,
     DialogTitleProps,
 } from "@mui/material";
-import { ComponentType, forwardRef, PropsWithChildren, ReactNode, RefForwardingComponent, useCallback, useImperativeHandle, useMemo } from "react";
+import { ComponentType, forwardRef, ForwardRefRenderFunction, PropsWithChildren, ReactNode, useCallback, useImperativeHandle, useMemo } from "react";
 import { useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
@@ -31,12 +32,12 @@ interface EditDialogComponentsProps {
     dialogTitle?: Partial<DialogTitleProps>;
 }
 
-interface EditDialogProps {
+type EditDialogProps = PropsWithChildren<{
     title?: ITitle | string;
     disableCloseAfterSave?: boolean;
     onAfterSave?: () => void;
     componentsProps?: EditDialogComponentsProps;
-}
+}>;
 
 export function useEditDialog(): [ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
@@ -155,11 +156,11 @@ const EditDialogInner = ({
     );
 };
 
-interface IEditDialogHooklessProps extends EditDialogProps {
+interface IEditDialogHooklessProps extends Omit<EditDialogProps, "children"> {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => ReactNode;
 }
 
-const EditDialogHooklessInner: RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+const EditDialogHooklessInner: ForwardRefRenderFunction<IEditDialogApi, IEditDialogHooklessProps> = (
     { children, title, onAfterSave, componentsProps },
     ref,
 ) => {

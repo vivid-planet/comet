@@ -1,6 +1,13 @@
 import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
-import { Dialog, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import { styled } from "@mui/material/styles";
@@ -38,7 +45,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps) {
                 <Typography>
                     <FormattedMessage
                         id="comet.preview.openExternalLink.description"
-                        defaultMessage={'Do you want to open "{url}" in a new Browser tab?'}
+                        defaultMessage='Do you want to open "{url}" in a new Browser tab?'
                         values={{
                             url: link?.targetUrl,
                         }}
