@@ -10,9 +10,7 @@ const rteOptions: IRteOptions = {
     customInlineStyles: {
         HIGHLIGHT: {
             label: "Highlight!",
-            icon: () => {
-                return <Favorite />;
-            },
+            icon: Favorite,
             style: {
                 backgroundColor: "yellow",
             },
