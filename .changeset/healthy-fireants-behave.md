@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Exchange Content Scope FormField Checkbox List with Datagrid view and selection
+User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
