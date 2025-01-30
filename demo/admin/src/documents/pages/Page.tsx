@@ -57,15 +57,6 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
         }
         return null;
     },
-    extractTextContents: (state) => {
-        return [
-            // TODO fix type problem
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ...(PageContentBlock.extractTextContents?.(state.content as any) ?? []),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ...(SeoBlock.extractTextContents?.(state.seo as any) ?? []),
-        ];
-    },
     ...createDocumentRootBlocksMethods({
         content: PageContentBlock,
         seo: SeoBlock,

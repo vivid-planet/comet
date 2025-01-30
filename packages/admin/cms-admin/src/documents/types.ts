@@ -48,5 +48,4 @@ export interface DocumentInterface<
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
     hasNoSitePreview?: true;
-    extractTextContents?: (state: Record<string, unknown>) => string[];
 }
