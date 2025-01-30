@@ -100,17 +100,24 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: Rea
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <CrudMoreActionsMenu
-                overallActions={[
-                    {
-                        label: <FormattedMessage {...messages.downloadAsExcel} />,
-                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                        onClick: () => exportApi.exportGrid(),
-                        disabled: exportApi.loading,
-                    },
-                ]}
-            />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <ToolbarActions>
+                <CrudMoreActionsMenu
+                    slotProps={{
+                        button: {
+                            responsive: true,
+                        },
+                    }}
+                    overallActions={[
+                        {
+                            label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                            onClick: () => exportApi.exportGrid(),
+                            disabled: exportApi.loading,
+                        },
+                    ]}
+                />
+                {toolbarAction}
+            </ToolbarActions>
         </DataGridToolbar>
     );
 }

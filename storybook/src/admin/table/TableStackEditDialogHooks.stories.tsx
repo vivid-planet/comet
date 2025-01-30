@@ -1,4 +1,5 @@
 import {
+    Button,
     Field,
     FillSpace,
     FinalForm,
@@ -15,7 +16,7 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -69,8 +70,6 @@ export const StackEditDialogHooks = {
                                 <FillSpace />
                                 <ToolbarActions>
                                     <Button
-                                        color="primary"
-                                        variant="contained"
                                         startIcon={<AddIcon />}
                                         onClick={(ev) => {
                                             api.openAddDialog();

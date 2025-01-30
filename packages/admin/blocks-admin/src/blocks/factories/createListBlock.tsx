@@ -277,7 +277,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
             return (
                 <SelectPreviewComponent>
-                    <StackSwitch>
+                    <StackSwitch disableForcePromptRoute>
                         <StackPage name="table">
                             <StackSwitchApiContext.Consumer>
                                 {(stackApi) => {

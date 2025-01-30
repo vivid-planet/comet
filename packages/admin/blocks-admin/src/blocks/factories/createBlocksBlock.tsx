@@ -560,7 +560,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             return (
                 <>
-                    <StackSwitch>
+                    <StackSwitch disableForcePromptRoute>
                         <StackPage name="main">
                             <StackSwitchApiContext.Consumer>
                                 {(stackApi) => {
