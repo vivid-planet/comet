@@ -100,6 +100,7 @@ export interface AnonymousBlockInterface<
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
     definesOwnTitle?: boolean;
+    extractTextContent?: BlockMethods["extractTextContents"];
 }
 
 export interface BlockInterface<
