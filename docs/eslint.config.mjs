@@ -9,7 +9,6 @@ const config = [
     {
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
-            "no-restricted-imports": "off",
         },
     },
 ];
