@@ -1,4 +1,19 @@
 {
+    "name": "comet-storybook",
+    "version": "1.0.0",
+    "private": true,
+    "license": "BSD-2-Clause",
+    "files": [
+        "src"
+    ],
+    "scripts": {
+        "build-storybook": "storybook build",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json .storybook/ --no-warn-ignored",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "storybook": "storybook dev -p 26638 --no-version-updates"
+    },
     "dependencies": {
         "@apollo/client": "^3.7.0",
         "@comet/admin": "workspace:*",
@@ -73,22 +88,7 @@
         "storybook": "^8.5.2",
         "typescript": "^5.7.3"
     },
-    "files": [
-        "src"
-    ],
-    "license": "BSD-2-Clause",
     "msw": {
         "workerDirectory": "public"
-    },
-    "name": "comet-storybook",
-    "private": true,
-    "scripts": {
-        "build-storybook": "storybook build",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json .storybook/ --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit",
-        "storybook": "storybook dev -p 26638 --no-version-updates"
-    },
-    "version": "1.0.0"
+    }
 }

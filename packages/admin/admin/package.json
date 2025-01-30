@@ -1,4 +1,32 @@
 {
+    "name": "@comet/admin",
+    "version": "7.11.0",
+    "repository": {
+        "directory": "packages/admin/admin",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "license": "BSD-2-Clause",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "scripts": {
+        "build": "$npm_execpath run clean && run-p build:babel build:types",
+        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
+        "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
+        "clean": "rimraf lib",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "start": "run-p start:babel start:types",
+        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
+        "test": "jest",
+        "test:watch": "jest --watch"
+    },
     "dependencies": {
         "@comet/admin-icons": "workspace:^7.11.0",
         "@comet/admin-theme": "workspace:^7.11.0",
@@ -64,12 +92,6 @@
         "ts-jest": "^29.2.5",
         "typescript": "^4.0.0"
     },
-    "files": [
-        "lib"
-    ],
-    "license": "BSD-2-Clause",
-    "main": "lib/index.js",
-    "name": "@comet/admin",
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
         "@emotion/react": "^11.5.0",
@@ -100,27 +122,5 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
-    },
-    "repository": {
-        "directory": "packages/admin/admin",
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
-    },
-    "scripts": {
-        "build": "$npm_execpath run clean && run-p build:babel build:types",
-        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
-        "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit",
-        "start": "run-p start:babel start:types",
-        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
-        "test": "jest",
-        "test:watch": "jest --watch"
-    },
-    "types": "lib/index.d.ts",
-    "version": "7.11.0"
+    }
 }

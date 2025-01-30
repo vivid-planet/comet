@@ -1,6 +1,29 @@
 {
+    "name": "@comet/cli",
+    "version": "7.11.0",
+    "repository": {
+        "directory": "packages/cli",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "license": "BSD-2-Clause",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
     "bin": {
         "comet": "bin/comet.js"
+    },
+    "files": [
+        "bin/**/*.js",
+        "lib/*"
+    ],
+    "scripts": {
+        "build": "$npm_execpath run clean && tsc",
+        "clean": "rimraf lib",
+        "dev": "tsc --watch",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc"
     },
     "dependencies": {
         "commander": "^9.5.0",
@@ -15,34 +38,11 @@
         "ts-node": "^10.9.2",
         "typescript": "^4.0.0"
     },
-    "files": [
-        "bin/**/*.js",
-        "lib/*"
-    ],
-    "license": "BSD-2-Clause",
-    "main": "lib/index.js",
-    "name": "@comet/cli",
     "peerDependencies": {
         "ts-node": "^10.9.1"
     },
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
-    },
-    "repository": {
-        "directory": "packages/cli",
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
-    },
-    "scripts": {
-        "build": "$npm_execpath run clean && tsc",
-        "clean": "rimraf lib",
-        "dev": "tsc --watch",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc"
-    },
-    "typings": "lib/index.d.ts",
-    "version": "7.11.0"
+    }
 }

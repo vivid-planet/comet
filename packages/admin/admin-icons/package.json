@@ -1,4 +1,27 @@
 {
+    "name": "@comet/admin-icons",
+    "version": "7.11.0",
+    "repository": {
+        "directory": "packages/admin/admin-icons",
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet"
+    },
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
+        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
+        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
+        "clean": "rimraf lib",
+        "generate-icons": "ts-node generate-icons.ts",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:tsc": "tsc --noEmit",
+        "start": "$npm_execpath run generate-icons && run-p start:babel start:types",
+        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
+    },
     "dependencies": {
         "use-constant": "^1.1.1",
         "uuid": "^11.0.5"
@@ -25,8 +48,6 @@
         "ts-node": "^10.9.2",
         "typescript": "^4.0.0"
     },
-    "main": "lib/index.js",
-    "name": "@comet/admin-icons",
     "peerDependencies": {
         "@mui/material": "^6.0.0",
         "react": "^17.0.0 || ^18.0.0",
@@ -35,26 +56,5 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
-    },
-    "repository": {
-        "directory": "packages/admin/admin-icons",
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
-    },
-    "scripts": {
-        "build": "run-s clean generate-icons && run-p build:babel build:types && eslint --fix src/generated/",
-        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
-        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib",
-        "generate-icons": "ts-node generate-icons.ts",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc --noEmit",
-        "start": "$npm_execpath run generate-icons && run-p start:babel start:types",
-        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
-    },
-    "types": "lib/index.d.ts",
-    "version": "7.11.0"
+    }
 }

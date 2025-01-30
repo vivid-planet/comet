@@ -6,6 +6,7 @@ import prettierPlugin from "eslint-plugin-prettier/recommended";
 import unusedImports from "eslint-plugin-unused-imports";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { configs as eslintPluginJsonc } from "eslint-plugin-jsonc";
+import packageJson from "eslint-plugin-package-json/configs/recommended";
 
 /** @type {import('eslint')} */
 const config = [
@@ -53,10 +54,12 @@ const config = [
     /* order matters -> json rules must be after typescript rules*/
     ...eslintPluginJsonc["flat/recommended-with-json"],
     {
+        ignores: ["package.json"],
         rules: {
             "jsonc/sort-keys": "error",
         },
     },
+    packageJson,
 ];
 
 export default config;
