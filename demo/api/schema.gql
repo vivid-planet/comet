@@ -1239,6 +1239,7 @@ type Mutation {
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
+  publishAllProducts: Boolean!
 }
 
 input UserPermissionInput {
