@@ -1,5 +1,6 @@
 import { camelCase } from "change-case";
 
+import { ImportReference } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { getFormattedMessageNode } from "../utils/intl";
 
@@ -14,6 +15,7 @@ type Options = {
     gqlType: string;
     newEntryText: string | undefined;
     fragmentName: string;
+    moreActions?: MoreActions;
 };
 
 export const generateGridToolbar = ({
@@ -27,6 +29,7 @@ export const generateGridToolbar = ({
     gqlType,
     newEntryText,
     fragmentName,
+    moreActions,
 }: Options) => {
     return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
         return (
@@ -42,6 +45,7 @@ export const generateGridToolbar = ({
                     ),
                     excelExport,
                     allowAdding,
+                    moreActions,
                 })}
             </DataGridToolbar>
         );
@@ -87,15 +91,21 @@ const filterItem = `<ToolbarItem>
     <GridFilterButton />
 </ToolbarItem>`;
 
+export type MoreActions = {
+    overallActions?: [{ name: string; component: ImportReference }];
+};
+
 type RenderToolbarActionsOptions = {
     forwardToolbarAction: boolean | undefined;
     addItemText: string;
     excelExport: boolean | undefined;
     allowAdding: boolean | undefined;
+    moreActions?: MoreActions;
 };
 
-const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, allowAdding }: RenderToolbarActionsOptions) => {
-    const showMoreActionsMenu = excelExport;
+const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, allowAdding, moreActions }: RenderToolbarActionsOptions) => {
+    const hasCustomMoreActions = moreActions?.overallActions && moreActions.overallActions.length > 0;
+    const showMoreActionsMenu = excelExport || hasCustomMoreActions;
 
     if (!showMoreActionsMenu && !allowAdding) {
         return "";
@@ -115,9 +125,10 @@ const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, 
                         icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
                         onClick: () => exportApi.exportGrid(),
                         disabled: exportApi.loading,
-                    }`
+                    },`
                     : ""
             }
+            ${moreActions?.overallActions?.map(({ name, component }) => `<${component.name} key="${name}" />,`) ?? ""}
         ]}
     />`;
 
