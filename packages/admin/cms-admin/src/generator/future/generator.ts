@@ -13,6 +13,7 @@ import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
 import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
+import { MoreActions } from "./generateGrid/generateGridToolbar";
 import { UsableFields } from "./generateGrid/usableFields";
 import { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
@@ -169,6 +170,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     toolbarActionProp?: boolean;
     newEntryText?: string;
     rowActionProp?: boolean;
+    moreActions?: MoreActions;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

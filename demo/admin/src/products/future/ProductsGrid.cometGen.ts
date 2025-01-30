@@ -11,6 +11,14 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     toolbarActionProp: true,
     rowActionProp: true,
     excelExport: true,
+    moreActions: {
+        overallActions: [
+            {
+                name: "publish",
+                component: { name: "PublishAllProducts", import: "../../helpers/PublishAllProducts" },
+            },
+        ],
+    },
     queryParamsPrefix: "products",
     initialSort: [
         { field: "inStock", sort: "desc" },
