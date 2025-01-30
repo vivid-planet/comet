@@ -18,3 +18,4 @@ subcomponent
 subpage
 typesafe
 exif
+brevo
