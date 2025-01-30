@@ -81,7 +81,12 @@ const config = [
     /* order matters -> json rules must be after typescript rules */
     ...eslintPluginJsonc["flat/recommended-with-json"],
     {
-        ignores: ["package.json"],
+        ignores: [
+            /**
+             * disable package.json and nested package.json files (e.g.in admin -> /server/package.json)
+             */
+            "**/package.json",
+        ],
         rules: {
             "jsonc/sort-keys": "error",
         },
