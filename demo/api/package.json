@@ -29,6 +29,7 @@
     "dependencies": {
         "@comet/blocks-api": "workspace:*",
         "@comet/cms-api": "workspace:*",
+        "@faker-js/faker": "8.4.1",
         "@hapi/accept": "^5.0.0",
         "@kubernetes/client-node": "^0.18.0",
         "@mikro-orm/cli": "^5.9.8",
@@ -86,7 +87,6 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
-        "@faker-js/faker": "8.4.1",
         "@nestjs/cli": "^9.0.0",
         "@nestjs/schematics": "^9.0.0",
         "@nestjs/testing": "^9.0.0",
