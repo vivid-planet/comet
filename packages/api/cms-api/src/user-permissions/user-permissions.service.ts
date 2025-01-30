@@ -160,7 +160,7 @@ export class UserPermissionsService {
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
                     return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
-                } catch (e) {
+                } catch {
                     return undefined;
                 }
             }

@@ -108,7 +108,7 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
                     {...inputBaseProps}
                     inputRef={inputRef}
                     onFocus={(e) => {
-                        inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
+                        inputBaseProps.onFocus?.(e);
                         openPopper();
                     }}
                     components={inputBaseComponents}

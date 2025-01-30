@@ -16,7 +16,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     async folderExists(folderName: string): Promise<boolean> {
         try {
             await fs.promises.access(`${this.path}/${folderName}`);
-        } catch (e) {
+        } catch {
             return false;
         }
 
@@ -38,7 +38,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
 
         try {
             await fs.promises.access(`${this.path}/${folderName}/${fileName}`);
-        } catch (e) {
+        } catch {
             return false;
         }
 

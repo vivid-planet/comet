@@ -29,7 +29,16 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Typography,
+} from "@mui/material";
 import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 

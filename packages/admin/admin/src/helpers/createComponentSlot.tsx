@@ -1,5 +1,11 @@
 import { StyledComponent } from "@emotion/styled";
-import { css, generateUtilityClass, styled, Theme } from "@mui/material";
+import {
+    css,
+    generateUtilityClass,
+    // eslint-disable-next-line no-restricted-imports
+    styled,
+    Theme,
+} from "@mui/material";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import { ComponentProps, ElementType, forwardRef } from "react";
 

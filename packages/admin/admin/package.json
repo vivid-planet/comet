@@ -2,9 +2,9 @@
     "name": "@comet/admin",
     "version": "7.11.0",
     "repository": {
+        "directory": "packages/admin/admin",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/admin/admin"
+        "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
     "main": "lib/index.js",
@@ -18,7 +18,7 @@
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
@@ -49,6 +49,7 @@
         "@babel/core": "^7.26.7",
         "@comet/admin-babel-preset": "workspace:^7.11.0",
         "@comet/eslint-config": "workspace:^7.11.0",
+        "@comet/eslint-plugin": "workspace:^7.11.0",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@mui/material": "^6.3.0",
@@ -71,7 +72,7 @@
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.1.7",
         "@types/testing-library__jest-dom": "^5.14.9",
-        "eslint": "^8.0.0",
+        "eslint": "^9.18.0",
         "final-form": "^4.20.10",
         "graphql": "^15.10.1",
         "history": "^4.10.1",

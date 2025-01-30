@@ -182,8 +182,12 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                 <IconButton
                                     disabled={isCurrentUser && !isImpersonated}
                                     onClick={() => {
-                                        !isCurrentUser && startImpersonation(params.row.id.toString());
-                                        isCurrentUser && isImpersonated && stopImpersonation();
+                                        if (!isCurrentUser) {
+                                            startImpersonation(params.row.id.toString());
+                                        }
+                                        if (isCurrentUser && isImpersonated) {
+                                            stopImpersonation();
+                                        }
                                     }}
                                 >
                                     <ImpersonateUser />

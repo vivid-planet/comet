@@ -93,6 +93,7 @@ describe("composeBlocks", () => {
 
         const {
             block: { defaultValues, state2Output, input2State },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             block,
         } = composedBlock;
 
@@ -229,6 +230,7 @@ describe("composeBlocks", () => {
 
         const {
             block: { defaultValues, state2Output, input2State },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             block,
         } = composedBlock;
 

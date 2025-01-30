@@ -1,7 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
 import { FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Select,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";

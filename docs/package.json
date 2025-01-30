@@ -8,7 +8,7 @@
         "deploy": "docusaurus deploy",
         "docusaurus": "docusaurus",
         "lint": "run-p lint:prettier lint:eslint lint:spelling",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:spelling": "$npm_execpath cspell docs/**",
         "serve": "docusaurus serve",
@@ -18,15 +18,15 @@
         "write-translations": "docusaurus write-translations"
     },
     "browserslist": {
-        "production": [
-            ">0.5%",
-            "not dead",
-            "not op_mini all"
-        ],
         "development": [
             "last 1 chrome version",
             "last 1 firefox version",
             "last 1 safari version"
+        ],
+        "production": [
+            ">0.5%",
+            "not dead",
+            "not op_mini all"
         ]
     },
     "dependencies": {
@@ -76,6 +76,7 @@
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "cspell": "^8.17.3",
+        "eslint": "^9.18.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
         "sucrase": "^3.35.0",

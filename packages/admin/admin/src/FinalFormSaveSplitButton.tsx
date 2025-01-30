@@ -25,7 +25,6 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
     const setSubmitEvent = form.mutators.setSubmitEvent
         ? form.mutators.setSubmitEvent
         : () => {
-              // eslint-disable-next-line no-console
               console.warn(`Can't set submitEvent, as the setSubmitEvent mutator is missing. Did you forget to add the mutator to the form?`);
           };
 

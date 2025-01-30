@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 
 import { CrudField } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 class TestEntityCategory extends BaseEntity {
@@ -44,8 +44,8 @@ describe("GenerateCrudResolveField", () => {
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "test-entity-product.resolver.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);

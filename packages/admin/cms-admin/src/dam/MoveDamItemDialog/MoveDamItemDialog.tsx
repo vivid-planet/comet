@@ -2,7 +2,14 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import { FetchResult } from "@apollo/client/link/core";
 import { SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";

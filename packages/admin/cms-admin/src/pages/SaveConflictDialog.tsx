@@ -1,6 +1,16 @@
 import { Alert, messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Stack,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 

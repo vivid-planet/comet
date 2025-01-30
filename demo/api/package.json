@@ -13,7 +13,7 @@
         "fixtures": "$npm_execpath console fixtures --",
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
         "lint": "run-p lint:prettier lint:eslint lint:tsc && $npm_execpath lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
@@ -72,7 +72,7 @@
         "@types/node": "^22.10.7",
         "@types/response-time": "^2.3.8",
         "dotenv-cli": "^7.4.4",
-        "eslint": "^8.0.0",
+        "eslint": "^9.18.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.4.2",
         "ts-node": "^10.9.2",
@@ -80,10 +80,10 @@
         "typescript": "^4.0.0"
     },
     "mikro-orm": {
-        "useTsNode": true,
         "configPaths": [
             "./src/db/ormconfig.cli.ts",
             "./dist/db/ormconfig.cli.js"
-        ]
+        ],
+        "useTsNode": true
     }
 }

@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 import { CrudGenerator } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { formatSource, parseSource } from "./utils/test-helper";
 
 @Entity()
 class TestEntityWithPositionField extends BaseEntity {
@@ -66,8 +66,8 @@ describe("GenerateCrudPosition", () => {
         );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionField"));
-        const lintedOutput = await lintSource(out[0].content);
-        const source = parseSource(lintedOutput);
+        const formattedOut = await formatSource(out[0].content);
+        const source = parseSource(formattedOut);
 
         const classes = source.getClasses();
         expect(classes.length).toBe(2);
@@ -108,8 +108,8 @@ describe("GenerateCrudPosition", () => {
         const file = out.find((file) => file.name == "test-entity-with-position-fields.service.ts");
         if (!file) throw new Error("File not found");
 
-        const lintedOutput = await lintSource(file.content);
-        const source = parseSource(lintedOutput);
+        const formattedOut = await formatSource(file.content);
+        const source = parseSource(formattedOut);
 
         const classes = source.getClasses();
         expect(classes.length).toBe(1);
@@ -144,8 +144,8 @@ describe("GenerateCrudPosition", () => {
         const file = out.find((file) => file.name == "test-entity-with-position-field-and-scopes.service.ts");
         if (!file) throw new Error("File not found");
 
-        const lintedOutput = await lintSource(file.content);
-        const source = parseSource(lintedOutput);
+        const formattedOut = await formatSource(file.content);
+        const source = parseSource(formattedOut);
 
         const classes = source.getClasses();
         expect(classes.length).toBe(1);
@@ -177,8 +177,8 @@ describe("GenerateCrudPosition", () => {
         const file = out.find((file) => file.name == "test-entity-with-position-groups.service.ts");
         if (!file) throw new Error("File not found");
 
-        const lintedOutput = await lintSource(file.content);
-        const source = parseSource(lintedOutput);
+        const formattedOut = await formatSource(file.content);
+        const source = parseSource(formattedOut);
 
         const classes = source.getClasses();
         expect(classes.length).toBe(1);

@@ -1,5 +1,16 @@
 import { messages } from "@comet/admin";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    LinearProgress,
+    LinearProgressProps,
+    Typography,
+} from "@mui/material";
 import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 

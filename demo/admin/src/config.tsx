@@ -13,7 +13,6 @@ export function createConfig() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             environmentVariables[variableName] = (window as any)[externalVariableName];
         } else {
-            // eslint-disable-next-line no-console
             console.warn(`External variable ${externalVariableName} not set"`);
         }
     }

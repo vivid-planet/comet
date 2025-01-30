@@ -5,7 +5,6 @@ import { resolve } from "path";
 
 import { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "../site-configs.types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .description("Inject site-configs into a file")
     .requiredOption("-i, --in-file <file>", "The filename of a template file to inject.")

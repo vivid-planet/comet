@@ -1,4 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 

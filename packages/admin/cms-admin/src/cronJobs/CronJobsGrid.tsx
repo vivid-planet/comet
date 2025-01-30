@@ -1,7 +1,15 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, FillSpace, MainContent, StackLink, Toolbar, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { useState } from "react";

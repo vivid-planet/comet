@@ -104,7 +104,6 @@ export function composeBlocks<BlockMap extends BaseBlockMap>(
 
         return block;
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blockInputFactory: BlockInputFactory<CompositeBlockInput> = (o) => {
         const blockMap: [string, BlockInputInterface | null][] = Object.entries(blocks).map(([blockType, block]) => [
             blockType,

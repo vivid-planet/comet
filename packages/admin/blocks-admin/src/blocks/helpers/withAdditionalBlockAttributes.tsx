@@ -14,7 +14,6 @@ export function withAdditionalBlockAttributes<Add extends Record<string, Default
         overrides: Partial<BlockInterface<BlockInputApi<Block> & Add, BlockState<Block> & Add, BlockOutputApi<Block> & Add>> = {},
     ): Decorated<Block, Add> & typeof overrides & Omit<Block, keyof Decorate> {
         // returns the decoreted methods & the added stuff in the overrides, and all the non decorated methods from the decorate
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return {
             ...block,
             defaultValues: () => ({

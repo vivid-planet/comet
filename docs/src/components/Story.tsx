@@ -27,7 +27,8 @@ export const Story = ({ path, ...props }: StoryProps) => {
         <BrowserOnly>
             {() => {
                 // https://docusaurus.io/docs/docusaurus-core/#browseronly
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
                 const { MuiThemeProvider } = require("@comet/admin");
 
                 return (

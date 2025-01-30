@@ -7,7 +7,6 @@ import { BlockContext, BlockDataInterface, BlockTransformerServiceInterface, isB
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function transformToPlain(
     block: BlockDataInterface,
     blockContext: BlockContext,
