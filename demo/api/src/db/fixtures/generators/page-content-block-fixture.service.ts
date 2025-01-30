@@ -1,16 +1,8 @@
 import { ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
-import {
-    layoutBlocks,
-    mediaBlocks,
-    navigationBlocks,
-    PageContentBlock,
-    teaserBlocks,
-    textAndContentBlocks,
-} from "@src/documents/pages/blocks/page-content.block";
+import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 
-import { BlockFixture } from "./blocks/block-fixture";
 import { AccordionBlockFixtureService } from "./blocks/layout/accordion-block-fixture.service";
 import { ColumnsBlockFixtureService } from "./blocks/layout/columns-block-fixture.service";
 import { ContentGroupBlockFixtureService } from "./blocks/layout/content-group-block-fixture.service";
@@ -58,7 +50,7 @@ export class PageContentBlockFixtureService {
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInput<typeof PageContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
 
-        const fixturesLayout: Record<keyof typeof layoutBlocks, BlockFixture> = {
+        const fixturesLayout = {
             accordion: this.accordionBlockFixtureService,
             columns: this.columnsBlockFixtureService,
             contentGroup: this.contentGroupBlockFixtureService,
@@ -66,25 +58,25 @@ export class PageContentBlockFixtureService {
             space: this.spaceBlockFixtureService,
         };
 
-        const fixturesMedia: Record<keyof typeof mediaBlocks, BlockFixture> = {
+        const fixturesMedia = {
             fullWidthImage: this.fullWidthImageBlockFixtureService,
             image: this.imageBlockFixtureService,
             media: this.mediaBlockFixtureService,
             mediaGallery: this.mediaGalleryBlockFixtureService,
         };
 
-        const fixturesNavigation: Record<keyof typeof navigationBlocks, BlockFixture> = {
+        const fixturesNavigation = {
             anchor: this.anchorBlockFixtureService,
             callToActionList: this.callToActionListBlockFixtureService,
             linkList: this.linkListBlockFixtureService,
         };
 
-        const fixturesTeaser: Record<keyof typeof teaserBlocks, BlockFixture> = {
+        const fixturesTeaser = {
             billboardTeaserBlock: this.billboardTeaserBlockFixtureService,
             teaser: this.teaserBlockFixtureService,
         };
 
-        const fixturesTextAndContent: Record<keyof typeof textAndContentBlocks, BlockFixture> = {
+        const fixturesTextAndContent = {
             heading: this.headingBlockFixtureService,
             keyFacts: this.keyFactsBlockFixtureService,
             richtext: this.richtextBlockFixtureService,
