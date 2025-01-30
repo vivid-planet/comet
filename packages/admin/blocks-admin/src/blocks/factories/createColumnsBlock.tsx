@@ -59,13 +59,12 @@ interface CreateColumnsBlockOptions<T extends BlockInterface> {
     layouts: ColumnsBlockLayout[];
 }
 
-export function createColumnsBlock<T extends BlockInterface>({
-    name,
-    displayName,
-    category = BlockCategory.Layout,
-    contentBlock,
-    layouts,
-}: CreateColumnsBlockOptions<T>): BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>> {
+export function createColumnsBlock<T extends BlockInterface>(
+    { name, displayName, category = BlockCategory.Layout, contentBlock, layouts }: CreateColumnsBlockOptions<T>,
+    override?: (
+        block: BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>>,
+    ) => BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>>,
+): BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>> {
     if (layouts.length === 0) {
         throw new Error(`Number of layouts must be greater than 0!`);
     }
@@ -466,6 +465,10 @@ export function createColumnsBlock<T extends BlockInterface>({
             return `${blockItem.key}/edit/${childPath}`;
         },
     };
+
+    if (override) {
+        return override(ColumnsBlock);
+    }
 
     return ColumnsBlock;
 }
