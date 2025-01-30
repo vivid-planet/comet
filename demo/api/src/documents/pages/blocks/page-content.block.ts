@@ -21,7 +21,7 @@ import { IsEnum } from "class-validator";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
 
-export const supportedBlocks = {
+const supportedBlocks = {
     accordion: AccordionBlock,
     anchor: AnchorBlock,
     billboardTeaser: BillboardTeaserBlock,

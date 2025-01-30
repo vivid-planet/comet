@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 
+import { BlockFixture } from "./blocks/block-fixture";
 import { AccordionBlockFixtureService } from "./blocks/layout/accordion-block-fixture.service";
 import { ColumnsBlockFixtureService } from "./blocks/layout/columns-block-fixture.service";
 import { ContentGroupBlockFixtureService } from "./blocks/layout/content-group-block-fixture.service";
@@ -50,50 +51,34 @@ export class PageContentBlockFixtureService {
     async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInput<typeof PageContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
 
-        const fixturesLayout = {
-            accordion: this.accordionBlockFixtureService,
-            columns: this.columnsBlockFixtureService,
-            contentGroup: this.contentGroupBlockFixtureService,
-            layout: this.layoutBlockFixtureService,
-            space: this.spaceBlockFixtureService,
+        type SupportedBlocks = (typeof blocks)[number]["type"];
+
+        // TODO add fixtures for newsDetail and newsList
+        const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList">, [BlockCategory, BlockFixture]> = {
+            accordion: ["layout", this.accordionBlockFixtureService],
+            columns: ["layout", this.columnsBlockFixtureService],
+            contentGroup: ["layout", this.contentGroupBlockFixtureService],
+            layout: ["layout", this.layoutBlockFixtureService],
+            space: ["layout", this.spaceBlockFixtureService],
+            fullWidthImage: ["media", this.fullWidthImageBlockFixtureService],
+            image: ["media", this.imageBlockFixtureService],
+            media: ["media", this.mediaBlockFixtureService],
+            mediaGallery: ["media", this.mediaGalleryBlockFixtureService],
+            anchor: ["navigation", this.anchorBlockFixtureService],
+            callToActionList: ["navigation", this.callToActionListBlockFixtureService],
+            billboardTeaser: ["teaser", this.billboardTeaserBlockFixtureService],
+            teaser: ["teaser", this.teaserBlockFixtureService],
+            heading: ["textAndContent", this.headingBlockFixtureService],
+            keyFacts: ["textAndContent", this.keyFactsBlockFixtureService],
+            richtext: ["textAndContent", this.richtextBlockFixtureService],
+            textImage: ["textAndContent", this.textImageBlockFixtureService],
         };
 
-        const fixturesMedia = {
-            fullWidthImage: this.fullWidthImageBlockFixtureService,
-            image: this.imageBlockFixtureService,
-            media: this.mediaBlockFixtureService,
-            mediaGallery: this.mediaGalleryBlockFixtureService,
-        };
+        const supportedBlocksFixtureGenerators = Object.entries(fixtures)
+            .filter(([, [category]]) => (blockCategory ? category === blockCategory : true))
+            .map<[string, BlockFixture]>(([type, [, generator]]) => [type, generator]);
 
-        const fixturesNavigation = {
-            anchor: this.anchorBlockFixtureService,
-            callToActionList: this.callToActionListBlockFixtureService,
-            linkList: this.linkListBlockFixtureService,
-        };
-
-        const fixturesTeaser = {
-            billboardTeaserBlock: this.billboardTeaserBlockFixtureService,
-            teaser: this.teaserBlockFixtureService,
-        };
-
-        const fixturesTextAndContent = {
-            heading: this.headingBlockFixtureService,
-            keyFacts: this.keyFactsBlockFixtureService,
-            richtext: this.richtextBlockFixtureService,
-            textImage: this.textImageBlockFixtureService,
-        };
-
-        const supportedBlocksFixtureGenerators = {
-            ...(!blockCategory || blockCategory === "layout" ? fixturesLayout : {}),
-            ...(!blockCategory || blockCategory === "media" ? fixturesMedia : {}),
-            ...(!blockCategory || blockCategory === "navigation" ? fixturesNavigation : {}),
-            ...(!blockCategory || blockCategory === "teaser" ? fixturesTeaser : {}),
-            ...(!blockCategory || blockCategory === "textAndContent" ? fixturesTextAndContent : {}),
-        };
-
-        for (const block of Object.entries(supportedBlocksFixtureGenerators)) {
-            const [type, generator] = block;
-
+        for (const [type, generator] of supportedBlocksFixtureGenerators) {
             if (generator) {
                 const props = await generator.generateBlockInput();
 
