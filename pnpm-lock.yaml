@@ -2088,7 +2088,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@eslint/js':
-        specifier: ^9.14.0
+        specifier: ^9.19.0
         version: 9.19.0
       '@next/eslint-plugin-next':
         specifier: ^15.1.5
@@ -2146,7 +2146,7 @@ importers:
   packages/eslint-plugin:
     devDependencies:
       '@eslint/js':
-        specifier: ^9.14.0
+        specifier: ^9.19.0
         version: 9.19.0
       '@types/jest':
         specifier: ^27.5.2

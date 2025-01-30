@@ -14,7 +14,7 @@
         "test:watch": "jest --watch"
     },
     "devDependencies": {
-        "@eslint/js": "^9.14.0",
+        "@eslint/js": "^9.19.0",
         "@types/jest": "^27.5.2",
         "eslint": "^9.18.0",
         "eslint-config-prettier": "^9.1.0",
