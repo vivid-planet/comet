@@ -53,6 +53,13 @@ app.prepare().then(() => {
                 };
             }
 
+            if (req.headers["rsc"] !== undefined || req.headers["next-router-prefetch"] !== undefined) {
+                if (req.url && new URL(req.url, `http://${req.headers.host}`).searchParams.get("_rsc") === null) {
+                    res.statusCode = 404;
+                    res.end();
+                }
+            }
+
             await handle(req, res, parsedUrl);
         } catch (err) {
             console.error("Error occurred handling", req.url, err);
