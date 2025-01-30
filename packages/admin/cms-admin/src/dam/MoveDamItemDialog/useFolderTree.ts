@@ -89,8 +89,6 @@ export const useFolderTree = ({ damFoldersFlat }: UseFolderTreeProps): UseFolder
         });
 
         setFoldersToRender(newFoldersToRender);
-
-        // This should only be executed if the searchQuery changes
     }, [expandedIds, tree]);
 
     return { tree, foldersToRender, expandedIds, setExpandedIds, toggleExpand, selectedId, setSelectedId };
