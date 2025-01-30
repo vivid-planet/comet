@@ -2,4 +2,4 @@
 "@comet/cms-api": major
 ---
 
-Upgrade `@sentry/node` to version 8
+Bump `@sentry/node` peer dependency to v8
