@@ -9,7 +9,6 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { ComponentProps } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
@@ -184,20 +183,18 @@ export const Tooltip = (inProps: TooltipProps) => {
         isRtl: theme.direction === "rtl",
     };
 
-    const commonTooltipProps: ComponentProps<typeof TooltipRoot> = {
+    const commonTooltipProps = {
         ...props,
-        variant,
         disableInteractive,
         arrow,
-        isRtl: ownerState.isRtl,
         ownerState,
         slots: {
-            // @ts-expect-error The `ownerState` prop required by `TooltipPopper` does not exist in the type of MUIs `popper` slot in the `Tooltip` component but it is passed to the `TooltipPopper` component correctly.
             popper: TooltipPopper,
             ...props.slots,
         },
         slotProps: {
             popper: {
+                ownerState,
                 ...props.slotProps?.popper,
             },
             ...props.slotProps,

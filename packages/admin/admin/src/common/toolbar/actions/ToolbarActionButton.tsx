@@ -8,7 +8,7 @@ import { Tooltip } from "../../Tooltip";
 
 export type ToolbarActionButtonClassKey = "root" | "tooltip" | "button" | "iconButton" | "text" | "outlined" | "contained";
 
-type ToolbarActionButtonProps = ButtonProps &
+type ToolbarActionButtonProps = Omit<ButtonProps, "loading"> &
     ThemedComponentBaseProps<{
         tooltip: typeof Tooltip;
         iconButton: typeof IconButton;
