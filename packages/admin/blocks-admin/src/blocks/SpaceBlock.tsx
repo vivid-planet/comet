@@ -66,5 +66,5 @@ export const SpaceBlock: BlockInterface<SpaceBlockData, State, SpaceBlockInput> 
         return [{ type: "text", content: `${height}px` }];
     },
 
-    extractTextContents: () => [""],
+    extractTextContents: () => [],
 };

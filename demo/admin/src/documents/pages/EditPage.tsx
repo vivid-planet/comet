@@ -104,7 +104,6 @@ export const EditPage = ({ id }: Props) => {
         });
     } else {
         previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
-
         previewState = PageContentBlock.createPreviewState(pageState.document.content, {
             ...blockContext,
             parentUrl: match.url,

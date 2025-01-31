@@ -22,6 +22,7 @@ export function createCompositeSetting<State>({
             definesOwnPadding,
             extractTextContents,
         }),
+
         { flatten: false },
     ];
 }
