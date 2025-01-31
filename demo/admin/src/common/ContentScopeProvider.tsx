@@ -1,14 +1,14 @@
 import {
-    ContentScopeConfigProps,
+    type ContentScopeConfigProps,
     ContentScopeProvider as ContentScopeProviderLibrary,
-    ContentScopeProviderProps,
-    ContentScopeValues,
+    type ContentScopeProviderProps,
+    type ContentScopeValues,
     useContentScope as useContentScopeLibrary,
-    UseContentScopeApi,
+    type UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
 } from "@comet/cms-admin";
-import { ContentScope } from "@src/site-configs";
+import { type ContentScope } from "@src/site-configs";
 
 // convenience wrapper for app (Bind Generic)
 export function useContentScope(): UseContentScopeApi<ContentScope> {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { PublicSiteConfig } from "@src/site-configs.d";
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, type PropsWithChildren, useContext } from "react";
 
 const SiteConfigContext = createContext<PublicSiteConfig | undefined>(undefined);
 

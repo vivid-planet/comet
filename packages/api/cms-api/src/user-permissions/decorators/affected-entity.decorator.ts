@@ -1,4 +1,4 @@
-import { EntityClass, EntityName } from "@mikro-orm/postgresql";
+import { type EntityClass, type EntityName } from "@mikro-orm/postgresql";
 
 export interface AffectedEntityOptions {
     idArg?: string;

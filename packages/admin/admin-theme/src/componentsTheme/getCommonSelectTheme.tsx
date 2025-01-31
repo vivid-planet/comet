@@ -1,5 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { inputAdornmentClasses, inputBaseClasses, Palette } from "@mui/material";
+import { inputAdornmentClasses, inputBaseClasses, type Palette } from "@mui/material";
 
 export const commonSelectDefaultProps = {
     IconComponent: ChevronDown,

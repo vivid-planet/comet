@@ -1,30 +1,30 @@
-import { ApolloClient, gql } from "@apollo/client";
+import { type ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { BlockDependency, ReplaceDependencyObject } from "@comet/blocks-admin";
+import { type BlockDependency, type ReplaceDependencyObject } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
-import { ContentScopeInterface } from "../../../contentScope/Provider";
-import { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
-import { GQLDamFile } from "../../../graphql.generated";
-import { PageTreeContext } from "../PageTreeContext";
+import { type CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
+import { type ContentScopeInterface } from "../../../contentScope/Provider";
+import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
+import { type GQLDamFile } from "../../../graphql.generated";
+import { type PageTreeContext } from "../PageTreeContext";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
-import { PageClipboard, PagesClipboard } from "../useCopyPastePages";
+import { type PageClipboard, type PagesClipboard } from "../useCopyPastePages";
 import { createInboxFolder } from "./createInboxFolder";
 import {
-    GQLCopyFilesToScopeMutation,
-    GQLCopyFilesToScopeMutationVariables,
-    GQLCreatePageNodeMutation,
-    GQLCreatePageNodeMutationVariables,
-    GQLDownloadDamFileMutation,
-    GQLDownloadDamFileMutationVariables,
-    GQLFindCopiesOfFileInScopeQuery,
-    GQLFindCopiesOfFileInScopeQueryVariables,
-    GQLSlugAvailableQuery,
-    GQLSlugAvailableQueryVariables,
+    type GQLCopyFilesToScopeMutation,
+    type GQLCopyFilesToScopeMutationVariables,
+    type GQLCreatePageNodeMutation,
+    type GQLCreatePageNodeMutationVariables,
+    type GQLDownloadDamFileMutation,
+    type GQLDownloadDamFileMutationVariables,
+    type GQLFindCopiesOfFileInScopeQuery,
+    type GQLFindCopiesOfFileInScopeQueryVariables,
+    type GQLSlugAvailableQuery,
+    type GQLSlugAvailableQueryVariables,
 } from "./sendPages.generated";
 
 const slugAvailableQuery = gql`

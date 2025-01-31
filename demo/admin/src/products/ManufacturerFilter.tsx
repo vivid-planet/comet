@@ -1,12 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
 import { InputBase } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
-import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
+import { type GridFilterInputValueProps, type GridFilterOperator } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
-import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
+import { type GQLManufacturersFilterQuery, type GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
 
 const manufacturersQuery = gql`
     query ManufacturersFilter($offset: Int!, $limit: Int!, $search: String) {

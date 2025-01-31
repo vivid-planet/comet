@@ -1,6 +1,6 @@
-import { GridSortModel } from "@mui/x-data-grid";
+import { type GridSortModel } from "@mui/x-data-grid";
 
-import { GridColDef } from "./GridColDef";
+import { type GridColDef } from "./GridColDef";
 
 type SortEntry = {
     field: any; // any to be compatible with enum

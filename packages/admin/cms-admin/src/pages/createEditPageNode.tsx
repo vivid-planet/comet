@@ -2,31 +2,31 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CheckboxField, ErrorScope, Field, FieldContainer, FinalForm, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Box, Divider, IconButton, MenuItem, Typography } from "@mui/material";
-import { Mutator } from "final-form";
+import { type Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
-import { DocumentNode } from "graphql";
+import { type DocumentNode } from "graphql";
 import debounce from "p-debounce";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
 
 import { useContentScope } from "../contentScope/Provider";
-import { DocumentInterface, DocumentType } from "../documents/types";
+import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
-import { GQLSlugAvailability } from "../graphql.generated";
+import { type GQLSlugAvailability } from "../graphql.generated";
 import { useLocale } from "../locale/useLocale";
 import {
-    GQLCreatePageNodeMutation,
-    GQLCreatePageNodeMutationVariables,
-    GQLEditPageNodeQuery,
-    GQLEditPageNodeQueryVariables,
-    GQLEditPageParentNodeQuery,
-    GQLEditPageParentNodeQueryVariables,
-    GQLIsPathAvailableQuery,
-    GQLIsPathAvailableQueryVariables,
-    GQLUpdatePageNodeMutation,
-    GQLUpdatePageNodeMutationVariables,
+    type GQLCreatePageNodeMutation,
+    type GQLCreatePageNodeMutationVariables,
+    type GQLEditPageNodeQuery,
+    type GQLEditPageNodeQueryVariables,
+    type GQLEditPageParentNodeQuery,
+    type GQLEditPageParentNodeQueryVariables,
+    type GQLIsPathAvailableQuery,
+    type GQLIsPathAvailableQueryVariables,
+    type GQLUpdatePageNodeMutation,
+    type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
 
 type SerializedInitialValues = string;

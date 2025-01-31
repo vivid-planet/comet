@@ -1,5 +1,5 @@
-import { AnyEntity } from "@mikro-orm/postgresql";
-import { Type } from "@nestjs/common";
+import { type AnyEntity } from "@mikro-orm/postgresql";
+import { type Type } from "@nestjs/common";
 
 interface EntityInfoInterface {
     name: string;

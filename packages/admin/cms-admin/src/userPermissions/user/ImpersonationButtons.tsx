@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@mui/material";
+import { Button, type ButtonProps } from "@mui/material";
 import Cookies from "js-cookie";
 
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";

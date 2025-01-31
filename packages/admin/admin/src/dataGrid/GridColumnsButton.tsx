@@ -1,5 +1,5 @@
 import { Columns4 } from "@comet/admin-icons";
-import { ButtonProps } from "@mui/material";
+import { type ButtonProps } from "@mui/material";
 import { GridPreferencePanelsValue, useGridApiContext } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";

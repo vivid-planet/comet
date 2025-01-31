@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
-import { GraphQLFieldResolver } from "graphql";
+import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
-import { ResponseResolver, rest } from "msw";
-import { RestContext } from "msw/lib/types/handlers/RestHandler";
+import { type ResponseResolver, rest } from "msw";
+import { type RestContext } from "msw/lib/types/handlers/RestHandler";
 
 type StringFilter = {
     contains: string;

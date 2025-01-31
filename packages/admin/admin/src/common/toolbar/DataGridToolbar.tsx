@@ -1,9 +1,9 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { Toolbar, ToolbarProps } from "./Toolbar";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { Toolbar, type ToolbarProps } from "./Toolbar";
 
 export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
 

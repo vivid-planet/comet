@@ -1,11 +1,11 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useEffect, useState } from "react";
+import { Button, type ButtonClassKey, type ButtonProps, type ComponentsOverrides } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { Tooltip as CometTooltip } from "../../Tooltip";
 
 export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | "tooltip" | ButtonClassKey;

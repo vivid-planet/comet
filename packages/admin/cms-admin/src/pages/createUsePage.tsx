@@ -1,13 +1,13 @@
-import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import { BlockInterface, BlockState, DispatchSetStateAction, parallelAsyncEvery, resolveNewState } from "@comet/blocks-admin";
+import { type ApolloError, gql, type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
+import { messages, SaveButton, type SaveButtonProps } from "@comet/admin";
+import { type BlockInterface, type BlockState, type DispatchSetStateAction, parallelAsyncEvery, resolveNewState } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
-import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { createElement, type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { GQLDocumentInterface } from "../graphql.generated";
-import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
+import { type GQLDocumentInterface } from "../graphql.generated";
+import { type GQLCheckForChangesQuery, type GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";

@@ -7,7 +7,7 @@ import {
     FinalForm,
     FormSection,
     FullHeightContent,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     Loading,
     OkayButton,
@@ -39,7 +39,7 @@ import {
     IconButton,
     Typography,
 } from "@mui/material";
-import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";

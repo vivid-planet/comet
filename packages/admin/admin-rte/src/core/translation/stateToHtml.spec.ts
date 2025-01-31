@@ -1,6 +1,6 @@
-import { convertFromRaw, EditorState, RawDraftContentState } from "draft-js";
+import { convertFromRaw, EditorState, type RawDraftContentState } from "draft-js";
 
-import { IRteOptions } from "../Rte";
+import { type IRteOptions } from "../Rte";
 import { stateToHtml } from "./stateToHtml";
 
 // Remove all newlines and spaces to compare the html strings

@@ -4,18 +4,18 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import { Field, filterByFragment, FinalForm, FinalFormInput, Loading, useFormApiRef } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { productFormFragment, productQuery, updateProductMutation } from "./ProductPriceForm.gql";
 import {
-    GQLProductPriceFormDetailsFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLProductPriceFormDetailsFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductPriceForm.gql.generated";
 
 type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {

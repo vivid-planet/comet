@@ -1,5 +1,5 @@
 import { Field, FieldContainer } from "@comet/admin";
-import { FinalFormTimeRangePicker, TimeRange, TimeRangePicker } from "@comet/admin-date-time";
+import { FinalFormTimeRangePicker, type TimeRange, TimeRangePicker } from "@comet/admin-date-time";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";

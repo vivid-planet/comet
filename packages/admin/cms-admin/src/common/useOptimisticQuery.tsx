@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { ApolloCache } from "@apollo/client/cache";
-import { DocumentNode, OperationVariables, TypedDocumentNode } from "@apollo/client/core";
-import { QueryHookOptions, QueryResult } from "@apollo/client/react/types/types";
+import { type ApolloCache } from "@apollo/client/cache";
+import { type DocumentNode, type OperationVariables, type TypedDocumentNode } from "@apollo/client/core";
+import { type QueryHookOptions, type QueryResult } from "@apollo/client/react/types/types";
 
 interface UseQueryWithFragmentCacheOptions<TData = unknown, TVariables = OperationVariables> extends QueryHookOptions<TData, TVariables> {
     // Apollo uses ApolloCache<object> internally, therefore I must use object too

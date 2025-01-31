@@ -1,5 +1,5 @@
 import { FillSpace, Toolbar, ToolbarActions } from "@comet/admin";
-import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import { useReducer, useRef } from "react";
 

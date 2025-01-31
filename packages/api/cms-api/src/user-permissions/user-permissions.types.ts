@@ -1,12 +1,12 @@
-import { ModuleMetadata, Type } from "@nestjs/common";
-import { Request } from "express";
-import { JwtPayload } from "jsonwebtoken";
+import { type ModuleMetadata, type Type } from "@nestjs/common";
+import { type Request } from "express";
+import { type JwtPayload } from "jsonwebtoken";
 
-import { CurrentUser } from "./dto/current-user";
-import { FindUsersArgs } from "./dto/paginated-user-list";
-import { UserPermission } from "./entities/user-permission.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
-import { User } from "./interfaces/user";
+import { type CurrentUser } from "./dto/current-user";
+import { type FindUsersArgs } from "./dto/paginated-user-list";
+import { type UserPermission } from "./entities/user-permission.entity";
+import { type ContentScope } from "./interfaces/content-scope.interface";
+import { type User } from "./interfaces/user";
 
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",

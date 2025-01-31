@@ -1,6 +1,6 @@
-import { ComponentType, FC } from "react";
+import { type ComponentType, type FC } from "react";
 
-import { ITableQueryContext, TableQueryContext } from "./TableQueryContext";
+import { type ITableQueryContext, TableQueryContext } from "./TableQueryContext";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

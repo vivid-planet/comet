@@ -4,7 +4,7 @@ import {
     DataGridToolbar,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridPagingToGql,
@@ -22,13 +22,13 @@ import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductCategoryMutation,
-    GQLCreateProductCategoryMutationVariables,
-    GQLDeleteProductCategoryMutation,
-    GQLDeleteProductCategoryMutationVariables,
-    GQLProductCategoriesListQuery,
-    GQLProductCategoriesListQueryVariables,
-    GQLProductsCategoriesListFragment,
+    type GQLCreateProductCategoryMutation,
+    type GQLCreateProductCategoryMutationVariables,
+    type GQLDeleteProductCategoryMutation,
+    type GQLDeleteProductCategoryMutationVariables,
+    type GQLProductCategoriesListQuery,
+    type GQLProductCategoriesListQueryVariables,
+    type GQLProductsCategoriesListFragment,
 } from "./ProductCategoriesTable.generated";
 
 function ProductCategoriesTableToolbar() {

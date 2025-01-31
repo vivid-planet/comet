@@ -3,7 +3,7 @@ import {
     CrudContextMenu,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -22,13 +22,13 @@ import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductTagMutation,
-    GQLCreateProductTagMutationVariables,
-    GQLDeleteProductTagMutation,
-    GQLDeleteProductTagMutationVariables,
-    GQLProductsTagsListFragment,
-    GQLProductTagsListQuery,
-    GQLProductTagsListQueryVariables,
+    type GQLCreateProductTagMutation,
+    type GQLCreateProductTagMutationVariables,
+    type GQLDeleteProductTagMutation,
+    type GQLDeleteProductTagMutationVariables,
+    type GQLProductsTagsListFragment,
+    type GQLProductTagsListQuery,
+    type GQLProductTagsListQueryVariables,
 } from "./ProductTagTable.generated";
 
 function ProductTagsTableToolbar() {

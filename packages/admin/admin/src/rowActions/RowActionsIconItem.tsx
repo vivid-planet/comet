@@ -1,8 +1,8 @@
-import { IconButton, IconButtonProps, TooltipProps } from "@mui/material";
-import { forwardRef, ReactNode } from "react";
+import { IconButton, type IconButtonProps, type TooltipProps } from "@mui/material";
+import { forwardRef, type ReactNode } from "react";
 
 import { Tooltip } from "../common/Tooltip";
-import { CommonRowActionItemProps } from "./RowActionsItem";
+import { type CommonRowActionItemProps } from "./RowActionsItem";
 
 export interface RowActionsIconItemComponentsProps {
     tooltip?: Partial<TooltipProps>;

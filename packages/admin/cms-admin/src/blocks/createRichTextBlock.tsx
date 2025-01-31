@@ -1,19 +1,19 @@
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
-import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
+import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { BlockCategory, type BlockInterface, createBlockSkeleton, type LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
     convertFromHTML,
     convertFromRaw,
     convertToRaw,
     EditorState,
-    EntityInstance,
+    type EntityInstance,
     Modifier,
-    RawDraftContentState,
+    type RawDraftContentState,
 } from "draft-js";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
-import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
+import { type RichTextBlockData, type RichTextBlockInput } from "../blocks.generated";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 

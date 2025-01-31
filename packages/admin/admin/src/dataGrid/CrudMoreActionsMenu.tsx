@@ -2,7 +2,7 @@ import { MoreVertical } from "@comet/admin-icons";
 import {
     Button,
     Chip,
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     Divider,
     ListItemIcon,
@@ -10,17 +10,17 @@ import {
     Menu,
     MenuItem,
     MenuList,
-    MenuListProps,
-    Theme,
+    type MenuListProps,
+    type Theme,
     Typography,
     useTheme,
 } from "@mui/material";
-import { Maybe } from "graphql/jsutils/Maybe";
-import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
+import { type Maybe } from "graphql/jsutils/Maybe";
+import { type ComponentProps, type MouseEvent, type PropsWithChildren, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
 

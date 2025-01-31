@@ -1,7 +1,7 @@
 "use client";
-import { RawDraftContentState } from "draft-js";
+import { type RawDraftContentState } from "draft-js";
 
-import { RichTextBlockData } from "../blocks.generated";
+import { type RichTextBlockData } from "../blocks.generated";
 
 function hasRichTextBlockContent(data: RichTextBlockData) {
     const draftContent = data.draftContent as RawDraftContentState;

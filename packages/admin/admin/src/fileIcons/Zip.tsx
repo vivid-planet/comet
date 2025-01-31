@@ -1,4 +1,4 @@
-import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
+import SvgIcon, { type SvgIconProps } from "@mui/material/SvgIcon";
 
 export const Zip = (props: SvgIconProps) => (
     <SvgIcon htmlColor="#777b81" {...props} viewBox="0 0 100 100">

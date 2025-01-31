@@ -1,7 +1,7 @@
-import { ISortInformation, SortDirection } from "@comet/admin";
+import { type ISortInformation, SortDirection } from "@comet/admin";
 import { Check, ChevronDown } from "@comet/admin-icons";
 import { List, ListItemButton, Typography } from "@mui/material";
-import { PropsWithChildren, ReactNode, useState } from "react";
+import { type PropsWithChildren, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import * as sc from "./DamSortPopover.sc";

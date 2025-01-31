@@ -1,7 +1,7 @@
 import { Home, Link as LinkIcon } from "@comet/admin-icons";
-import { SvgIconProps } from "@mui/material";
+import { type SvgIconProps } from "@mui/material";
 
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface PageTypeIconProps {

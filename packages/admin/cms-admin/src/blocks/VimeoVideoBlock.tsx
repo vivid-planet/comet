@@ -2,9 +2,9 @@ import { Field, FinalFormInput } from "@comet/admin";
 import {
     AdminComponentSection,
     BlockCategory,
-    BlockInterface,
+    type BlockInterface,
     BlocksFinalForm,
-    BlockState,
+    type BlockState,
     createBlockSkeleton,
     resolveNewState,
     SelectPreviewComponent,
@@ -13,7 +13,7 @@ import {
 import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { VimeoVideoBlockData, VimeoVideoBlockInput } from "../blocks.generated";
+import { type VimeoVideoBlockData, type VimeoVideoBlockInput } from "../blocks.generated";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
 

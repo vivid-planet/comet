@@ -1,11 +1,11 @@
-import { EntityMetadata } from "@mikro-orm/postgresql";
+import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildOptions } from "./generate-crud";
 import { buildNameVariants } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
-import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { generateImportsCode, type Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
     findBlockName,
@@ -15,7 +15,7 @@ import {
     findValidatorImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
-import { GeneratedFile } from "./utils/write-generated-files";
+import { type GeneratedFile } from "./utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);

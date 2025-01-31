@@ -5,28 +5,28 @@ import {
     AdminComponentButton,
     AdminComponentPaper,
     BlockCategory,
-    BlockInterface,
+    type BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
-    IPreviewContext,
+    type IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
+import { type BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
+import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
-import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
+import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;

@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
+import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
 
-import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
+import { type CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
-import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { generateImportsCode, type Imports } from "./utils/generate-imports-code";
 import { getCrudSearchFieldsFromMetadata } from "./utils/search-fields-from-metadata";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
-import { GeneratedFile } from "./utils/write-generated-files";
+import { type GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
 export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {

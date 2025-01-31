@@ -1,4 +1,4 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { Test, type TestingModule } from "@nestjs/testing";
 
 import { KubernetesModule } from "../kubernetes/kubernetes.module";
 import { JobsService } from "./jobs.service";

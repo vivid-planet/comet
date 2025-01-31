@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { type RefObject } from "react";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

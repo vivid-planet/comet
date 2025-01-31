@@ -1,11 +1,11 @@
-import { EntityRepository, NotFoundError, QueryBuilder } from "@mikro-orm/postgresql";
+import { type EntityRepository, NotFoundError, type QueryBuilder } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 import { compareAsc, compareDesc, isEqual } from "date-fns";
 
 import { SortDirection } from "../common/sorting/sort-direction.enum";
-import { PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
-import { AttachedDocument } from "./entities/attached-document.entity";
-import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
+import { type PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
+import { type AttachedDocument } from "./entities/attached-document.entity";
+import { type PageTreeNodeCategory, type PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, type ScopeInterface } from "./types";
 import pathBuilder from "./utils/path-builder";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");

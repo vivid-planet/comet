@@ -1,5 +1,5 @@
 import { ImageCrop } from "../../../common/image/ImageCrop";
-import { DamFileDetails } from "../EditFile";
+import { type DamFileDetails } from "../EditFile";
 
 const imageStyle = { maxWidth: "100%", maxHeight: "75vh" };
 

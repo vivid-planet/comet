@@ -1,7 +1,7 @@
 import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {

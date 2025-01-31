@@ -1,4 +1,4 @@
-import { DispatchSetStateAction, SetStateAction } from "../types";
+import { type DispatchSetStateAction, type SetStateAction } from "../types";
 import { resolveNewState } from "../utils";
 
 type InferedState<T> = T extends DispatchSetStateAction<infer S> ? S : never;

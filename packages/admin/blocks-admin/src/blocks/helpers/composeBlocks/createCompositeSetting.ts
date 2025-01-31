@@ -1,4 +1,4 @@
-import { AnonymousBlockInterface, BlockAdminComponent } from "../../types";
+import { type AnonymousBlockInterface, type BlockAdminComponent } from "../../types";
 import { createSettingsAnonymousBlock } from "./createSettingsBlock";
 
 interface Options<State> {

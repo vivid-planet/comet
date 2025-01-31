@@ -1,4 +1,4 @@
-import { EditorState, EntityInstance, SelectionState } from "draft-js";
+import { type EditorState, type EntityInstance, SelectionState } from "draft-js";
 
 import rangesIntersect from "./rangesIntersect";
 import selectionIsInOneBlock from "./selectionIsInOneBlock";

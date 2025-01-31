@@ -9,16 +9,16 @@ import {
     inputClasses,
     inputLabelClasses,
     svgIconClasses,
-    SvgIconProps,
+    type SvgIconProps,
     TextField,
-    TextFieldProps,
+    type TextFieldProps,
 } from "@mui/material";
-import { Spacing } from "@mui/system";
+import { type Spacing } from "@mui/system";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 const getDensityHeightValue = (density: string | unknown, spacing: Spacing) => {
     switch (density) {

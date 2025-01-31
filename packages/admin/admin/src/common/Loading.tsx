@@ -1,7 +1,7 @@
 import { BallTriangle } from "@comet/admin-icons";
-import { SvgIconProps } from "@mui/material";
+import { type SvgIconProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import { CSSProperties, useRef } from "react";
+import { type CSSProperties, useRef } from "react";
 
 export interface LoadingProps extends SvgIconProps {
     behavior?: "auto" | "fillParent" | "fillParentAbsolute" | "fillPageHeight";

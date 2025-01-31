@@ -1,6 +1,6 @@
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 
-import { TimeRange, TimeRangePicker, TimeRangePickerProps } from "./TimeRangePicker";
+import { type TimeRange, TimeRangePicker, type TimeRangePickerProps } from "./TimeRangePicker";
 
 export type FinalFormTimeRangePickerProps = TimeRangePickerProps & FieldRenderProps<TimeRange, HTMLInputElement | HTMLTextAreaElement>;
 

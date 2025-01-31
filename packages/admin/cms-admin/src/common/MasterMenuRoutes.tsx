@@ -1,9 +1,9 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
-import { ReactNode } from "react";
-import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
+import { type ReactNode } from "react";
+import { Redirect, type RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
-import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { type MasterMenuData, type MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();

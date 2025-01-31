@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { ContentScopeSelect } from "./ContentScopeSelect";
-import { ContentScopeInterface, useContentScope } from "./Provider";
+import { type ContentScopeInterface, useContentScope } from "./Provider";
 
 interface ContentScopeControlsProps<Value extends ContentScopeInterface> {
     searchable?: boolean;

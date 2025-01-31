@@ -16,10 +16,10 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ChangeEventHandler, isValidElement, KeyboardEventHandler, ReactElement, ReactNode, useMemo, useState } from "react";
-import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
+import { type ChangeEventHandler, isValidElement, type KeyboardEventHandler, type ReactElement, type ReactNode, useMemo, useState } from "react";
+import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
-import { BlockCategory, blockCategoryLabels, BlockInterface, CustomBlockCategory } from "../types";
+import { BlockCategory, blockCategoryLabels, type BlockInterface, type CustomBlockCategory } from "../types";
 
 type BlockType = string;
 

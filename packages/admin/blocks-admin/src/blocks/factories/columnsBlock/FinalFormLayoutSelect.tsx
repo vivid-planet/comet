@@ -4,14 +4,14 @@ import {
     ListSubheader as MuiListSubheader,
     MenuItem as MuiMenuItem,
     Select,
-    SelectChangeEvent,
+    type SelectChangeEvent,
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode, useMemo } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type ReactNode, useMemo } from "react";
+import { type FieldRenderProps } from "react-final-form";
 
-import { ColumnsBlockLayout } from "../createColumnsBlock";
+import { type ColumnsBlockLayout } from "../createColumnsBlock";
 
 interface Section {
     name?: string;

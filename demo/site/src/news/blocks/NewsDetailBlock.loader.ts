@@ -1,7 +1,7 @@
-import { BlockLoader, gql } from "@comet/cms-site";
-import { NewsLinkBlockData } from "@src/blocks.generated";
+import { type BlockLoader, gql } from "@comet/cms-site";
+import { type NewsLinkBlockData } from "@src/blocks.generated";
 
-import { GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables } from "./NewsDetailBlock.loader.generated";
+import { type GQLNewsBlockDetailQuery, type GQLNewsBlockDetailQueryVariables } from "./NewsDetailBlock.loader.generated";
 
 export interface LoadedData {
     title: string;

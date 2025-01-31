@@ -1,20 +1,20 @@
-import { GridColDef } from "@comet/admin";
-import { IconName } from "@comet/admin-icons";
+import { type GridColDef } from "@comet/admin";
+import { type IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
-import { IconProps } from "@mui/material";
-import { GridFilterItem, GridSortDirection } from "@mui/x-data-grid";
+import { type IconProps } from "@mui/material";
+import { type GridFilterItem, type GridSortDirection } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 
-import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
+import { type FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
-import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
-import { UsableFields } from "./generateGrid/usableFields";
-import { ColumnVisibleOption } from "./utils/columnVisibility";
+import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
+import { type UsableFields } from "./generateGrid/usableFields";
+import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 export type ImportReference = {

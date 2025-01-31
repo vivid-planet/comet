@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
     FillSpace,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -23,9 +23,9 @@ import {
     //GQLCreateProductMutationVariables,
     //GQLDeleteProductMutation,
     //GQLDeleteProductMutationVariables,
-    GQLProductVariantsListFragment,
-    GQLProductVariantsListQuery,
-    GQLProductVariantsListQueryVariables,
+    type GQLProductVariantsListFragment,
+    type GQLProductVariantsListQuery,
+    type GQLProductVariantsListQueryVariables,
     //GQLUpdateProductVisibilityMutation,
     //GQLUpdateProductVisibilityMutationVariables,
 } from "./ProductVariantsGrid.generated";

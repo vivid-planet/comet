@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 export function withAdminRedirectMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {

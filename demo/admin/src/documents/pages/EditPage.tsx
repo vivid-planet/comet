@@ -21,7 +21,12 @@ import { useRouteMatch } from "react-router";
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { SeoBlock } from "./blocks/SeoBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
+import {
+    type GQLEditPageQuery,
+    type GQLEditPageQueryVariables,
+    type GQLUpdatePageMutation,
+    type GQLUpdatePageMutationVariables,
+} from "./EditPage.generated";
 
 interface Props {
     id: string;

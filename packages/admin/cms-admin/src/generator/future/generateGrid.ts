@@ -1,34 +1,34 @@
-import { GridColDef } from "@comet/admin";
+import { type GridColDef } from "@comet/admin";
 import {
-    IntrospectionEnumType,
-    IntrospectionInputObjectType,
-    IntrospectionInputValue,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionInputObjectType,
+    type IntrospectionInputValue,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 import { plural } from "pluralize";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
+import { getCombinationColumnRenderCell, type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import {
-    ActionsGridColumnConfig,
-    GeneratorReturn,
-    GQLDocumentConfigMap,
-    GridColumnConfig,
-    GridConfig,
-    StaticSelectLabelCellContent,
+    type ActionsGridColumnConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    type GridColumnConfig,
+    type GridConfig,
+    type StaticSelectLabelCellContent,
 } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 

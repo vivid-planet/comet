@@ -1,6 +1,6 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { DependencyInterface } from "./types";
+import { type DependencyInterface } from "./types";
 
 interface EntityDependencyMap {
     [graphqlObjectType: string]: DependencyInterface;

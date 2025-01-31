@@ -8,9 +8,9 @@ import {
     IconButton,
     Typography,
 } from "@mui/material";
-import { GridCellParams, GridValidRowModel } from "@mui/x-data-grid-pro";
-import { GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
-import { GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
+import { type GridCellParams, type GridValidRowModel } from "@mui/x-data-grid-pro";
+import { type GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
+import { type GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 

@@ -1,8 +1,8 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/material";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { type ComponentsOverrides, FormControl, type Theme, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { type FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
 import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
 

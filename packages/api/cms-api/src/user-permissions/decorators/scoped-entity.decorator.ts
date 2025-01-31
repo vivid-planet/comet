@@ -1,7 +1,7 @@
-import { AnyEntity } from "@mikro-orm/postgresql";
-import { CustomDecorator, SetMetadata, Type } from "@nestjs/common";
+import { type AnyEntity } from "@mikro-orm/postgresql";
+import { type CustomDecorator, SetMetadata, type Type } from "@nestjs/common";
 
-import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
+import { type ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 
 type EntityScopeFunction<Entity extends AnyEntity = AnyEntity> = (
     item: Entity,

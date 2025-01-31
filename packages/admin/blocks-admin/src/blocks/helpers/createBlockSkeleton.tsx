@@ -1,6 +1,6 @@
 import { FormattedMessage } from "react-intl";
 
-import { BlockCategory, BlockInterface, RootBlockInterface } from "../types";
+import { BlockCategory, type BlockInterface, type RootBlockInterface } from "../types";
 
 type DefaultBlockSkeleton<InputApi, State, OutputApi> = Omit<BlockInterface<InputApi, State, OutputApi>, "name" | "defaultValues">;
 type RootBlockSkeleton<InputApi, State, OutputApi> = Omit<RootBlockInterface<InputApi, State, OutputApi>, "name" | "defaultValues">;

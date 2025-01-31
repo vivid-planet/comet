@@ -6,7 +6,7 @@ import { IconButton } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage } from "react-intl";
 
-import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
+import { type GQLMainMenuQuery, type GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
 
 const mainMenuQuery = gql`
     query MainMenu($contentScope: PageTreeNodeScopeInput!) {

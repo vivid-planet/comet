@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useLayoutEffect, useRef } from "react";
+import { type MutableRefObject, useCallback, useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router";
 
 interface UseScrollRestorationProps<Element> {

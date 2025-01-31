@@ -1,8 +1,8 @@
 import type { ClassConstructor } from "class-transformer";
 
-import { BlockDataFactory, BlockDataInterface } from "../block";
+import { type BlockDataFactory, type BlockDataInterface } from "../block";
 import { applyMigrations } from "./applyMigrations";
-import { BlockMigrationInterface } from "./types";
+import { type BlockMigrationInterface } from "./types";
 
 // Decorates a BlockDataFactory to apply migrations
 export function createAppliedMigrationsBlockDataFactoryDecorator(migrations?: ClassConstructor<BlockMigrationInterface>[], blockName?: string) {

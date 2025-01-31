@@ -1,5 +1,5 @@
-import { ContentState } from "draft-js";
-import { PropsWithChildren } from "react";
+import { type ContentState } from "draft-js";
+import { type PropsWithChildren } from "react";
 
 interface IProps {
     contentState: ContentState;

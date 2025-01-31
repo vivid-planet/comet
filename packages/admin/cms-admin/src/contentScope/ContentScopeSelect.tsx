@@ -15,11 +15,11 @@ import {
     useTheme,
 } from "@mui/material";
 import { capitalCase } from "change-case";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { ContentScopeInterface } from "./Provider";
+import { type ContentScopeInterface } from "./Provider";
 
 type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
     [Key in keyof Value]: { label?: string; value: Value[Key] };

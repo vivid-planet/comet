@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { OverlayElementData } from "./IFrameBridge";
+import { type OverlayElementData } from "./IFrameBridge";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 type Props = {

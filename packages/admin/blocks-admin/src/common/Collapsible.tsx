@@ -1,5 +1,5 @@
 import { Button, Collapse } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 interface CollapsibleProps {
     open: boolean;

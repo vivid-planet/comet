@@ -1,18 +1,18 @@
 import {
     Menu,
     MenuCollapsibleItem,
-    MenuCollapsibleItemProps,
+    type MenuCollapsibleItemProps,
     MenuContext,
     MenuItemAnchorLink,
-    MenuItemAnchorLinkProps,
+    type MenuItemAnchorLinkProps,
     MenuItemGroup,
-    MenuItemGroupProps,
+    type MenuItemGroupProps,
     MenuItemRouterLink,
-    MenuItemRouterLinkProps,
+    type MenuItemRouterLinkProps,
     useWindowSize,
 } from "@comet/admin";
-import { ReactNode, useContext, useEffect } from "react";
-import { RouteProps, useRouteMatch } from "react-router-dom";
+import { type ReactNode, useContext, useEffect } from "react";
+import { type RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 

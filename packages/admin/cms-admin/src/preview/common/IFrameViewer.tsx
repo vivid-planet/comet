@@ -1,7 +1,7 @@
 import { Loading } from "@comet/admin";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { forwardRef, ReactNode, useState } from "react";
+import { forwardRef, type ReactNode, useState } from "react";
 import useDimensions from "react-cool-dimensions";
 
 import { Device } from "./Device";

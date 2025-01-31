@@ -2,15 +2,15 @@ import { useApolloClient } from "@apollo/client";
 import { useErrorDialog } from "@comet/admin";
 import { ThreeDotSaving, Upload } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import axios, { CancelTokenSource } from "axios";
+import axios, { type CancelTokenSource } from "axios";
 import { useRef, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { replaceById } from "../../form/file/upload";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
-import { DamFileDetails } from "./EditFile";
+import { type DamFileDetails } from "./EditFile";
 
 interface ReplaceFileButtonProps {
     file: DamFileDetails;
