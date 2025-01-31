@@ -2,6 +2,7 @@
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { fetcher } from "@src/util/Fetcher";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
 import useSWR from "swr";
@@ -38,7 +39,7 @@ export function NewsPage({ initialData, limit }: { initialData: News; limit: num
 }
 
 function NewsListPaged({ offset, limit }: { offset: number; limit: number }) {
-    const { data, isLoading, error } = useSWR<News>({ url: "news/api", params: { offset, limit } }, { fetcher });
+    const { data, isLoading, error } = useSWR<News>({ url: `${usePathname()}/api`, params: { offset, limit } }, { fetcher });
 
     if (error) return <div>{error.toString()}</div>;
     if (isLoading) return <div>Loading...</div>;
