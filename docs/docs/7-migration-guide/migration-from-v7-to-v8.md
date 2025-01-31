@@ -640,7 +640,6 @@ Some bundlers can more effectively remove unused type imports, reducing bundle s
 - **Reduced Circular Dependency Issues**
 Circular dependencies can cause hard-to-debug issues in TypeScript projects.
 Using import type ensures that types do not introduce unintended runtime dependencies.
-Example fix: Demo API: Fix circular import
 
 #### Migration Steps
 Run ESLint with the --fix option to automatically update imports:
