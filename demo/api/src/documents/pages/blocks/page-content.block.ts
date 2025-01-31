@@ -1,7 +1,6 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
 import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
-import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
@@ -22,50 +21,27 @@ import { IsEnum } from "class-validator";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
 
-export const layoutBlocks = {
+const supportedBlocks = {
     accordion: AccordionBlock,
-    columns: ColumnsBlock,
-    contentGroup: ContentGroupBlock,
-    layout: LayoutBlock,
+    anchor: AnchorBlock,
+    billboardTeaser: BillboardTeaserBlock,
     space: SpaceBlock,
-};
-
-export const mediaBlocks = {
-    image: DamImageBlock,
-    fullWidthImage: FullWidthImageBlock,
+    teaser: TeaserBlock,
+    richtext: RichTextBlock,
+    heading: StandaloneHeadingBlock,
+    columns: ColumnsBlock,
+    callToActionList: StandaloneCallToActionListBlock,
+    keyFacts: KeyFactsBlock,
     media: StandaloneMediaBlock,
+    contentGroup: ContentGroupBlock,
     mediaGallery: MediaGalleryBlock,
-};
 
-export const newsBlocks = {
+    image: DamImageBlock,
     newsDetail: NewsDetailBlock,
     newsList: NewsListBlock,
-};
-
-export const navigationBlocks = {
-    anchor: AnchorBlock,
-    callToActionList: StandaloneCallToActionListBlock,
-    linkList: LinkListBlock,
-};
-
-export const teaserBlocks = {
-    billboardTeaserBlock: BillboardTeaserBlock,
-    teaser: TeaserBlock,
-};
-
-export const textAndContentBlocks = {
-    heading: StandaloneHeadingBlock,
-    keyFacts: KeyFactsBlock,
-    richtext: RichTextBlock,
+    layout: LayoutBlock,
     textImage: TextImageBlock,
-};
-
-const supportedBlocks = {
-    ...layoutBlocks,
-    ...mediaBlocks,
-    ...navigationBlocks,
-    ...teaserBlocks,
-    ...textAndContentBlocks,
+    fullWidthImage: FullWidthImageBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
