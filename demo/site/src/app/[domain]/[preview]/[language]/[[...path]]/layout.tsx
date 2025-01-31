@@ -1,5 +1,5 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { GQLLayoutQuery, GQLLayoutQueryVariables } from "@src/app/[domain]/[language]/[[...path]]/layout.generated";
+import { GQLLayoutQuery, GQLLayoutQueryVariables } from "@src/app/[domain]/[preview]/[language]/[[...path]]/layout.generated";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
