@@ -30,7 +30,7 @@
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
         "@eslint/js": "^9.19.0",
-        "@next/eslint-plugin-next": "^15.1.5",
+        "@next/eslint-plugin-next": "^15.1.6",
         "eslint-config-next": "^15.1.5",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-formatjs": "^5.2.13",
