@@ -629,19 +629,21 @@ To improve code consistency and readability, we now enforce the ESLint rule [@ty
 ```
 
 #### Why this change?
+
 This rule ensures that TypeScript type-only imports are explicitly marked with import type, leading to multiple benefits:
 
 - **Improved Code Clarity**
-It is immediately clear that the imported symbol is used only for TypeScript type checking and not at runtime.
-Avoids confusion between runtime imports and purely static type definitions.
+  It is immediately clear that the imported symbol is used only for TypeScript type checking and not at runtime.
+  Avoids confusion between runtime imports and purely static type definitions.
 - **Performance & Tree-Shaking**
-TypeScript can optimize build performance since it knows which imports are needed only at compile time.
-Some bundlers can more effectively remove unused type imports, reducing bundle size.
+  TypeScript can optimize build performance since it knows which imports are needed only at compile time.
+  Some bundlers can more effectively remove unused type imports, reducing bundle size.
 - **Reduced Circular Dependency Issues**
-Circular dependencies can cause hard-to-debug issues in TypeScript projects.
-Using import type ensures that types do not introduce unintended runtime dependencies.
+  Circular dependencies can cause hard-to-debug issues in TypeScript projects.
+  Using import type ensures that types do not introduce unintended runtime dependencies.
 
 #### Migration Steps
+
 Run ESLint with the --fix option to automatically update imports:
 
 ```bash
