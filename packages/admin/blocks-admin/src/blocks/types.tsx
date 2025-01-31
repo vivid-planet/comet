@@ -1,5 +1,5 @@
-import { ComponentType, ReactElement, ReactNode } from "react";
-import { FormattedMessage, MessageDescriptor } from "react-intl";
+import { type ComponentType, type ReactElement, type ReactNode } from "react";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 export type SetStateFn<S> = (prevState: S) => S;
 export type SetStateAction<S> = S | SetStateFn<S>;

@@ -1,9 +1,9 @@
 import * as process from "node:process";
 
 import { format, type Options, resolveConfig } from "prettier";
-import { Project, SourceFile } from "ts-morph";
+import { Project, type SourceFile } from "ts-morph";
 
-import { GeneratedFile } from "./write-generated-files";
+import { type GeneratedFile } from "./write-generated-files";
 
 let options: Options | null;
 export async function formatSource(sourceCode: string): Promise<string> {

@@ -2,7 +2,7 @@ import { StackPage, StackSwitch, StackSwitchApiContext, Tooltip } from "@comet/a
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FunctionComponent, ReactNode } from "react";
+import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -17,7 +17,7 @@ import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
-import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
+import { type BlockDependency, type BlockInterface, type BlockState, type PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.

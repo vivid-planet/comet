@@ -1,12 +1,12 @@
 import {
-    ComponentsOverrides,
+    type ComponentsOverrides,
     Popper as MuiPopper,
-    Theme,
+    type Theme,
     // eslint-disable-next-line no-restricted-imports
     Tooltip as MuiTooltip,
     tooltipClasses,
-    TooltipClassKey as MuiTooltipClassKey,
-    TooltipProps as MuiTooltipProps,
+    type TooltipClassKey as MuiTooltipClassKey,
+    type TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
 

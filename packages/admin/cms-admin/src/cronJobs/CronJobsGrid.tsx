@@ -17,10 +17,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import {
-    GQLKubernetesCronJobsQuery,
-    GQLKubernetesCronJobsQueryVariables,
-    GQLTriggerKubernetesCronJobMutation,
-    GQLTriggerKubernetesCronJobMutationVariables,
+    type GQLKubernetesCronJobsQuery,
+    type GQLKubernetesCronJobsQueryVariables,
+    type GQLTriggerKubernetesCronJobMutation,
+    type GQLTriggerKubernetesCronJobMutationVariables,
 } from "./CronJobsGrid.generated";
 import { JobRuntime } from "./JobRuntime";
 import { JobStatus } from "./JobStatus";

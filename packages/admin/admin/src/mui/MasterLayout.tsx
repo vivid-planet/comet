@@ -1,11 +1,11 @@
-import { ComponentsOverrides, CssBaseline } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ComponentType, CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import { type ComponentsOverrides, CssBaseline } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentType, type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 import { MenuContext } from "./menu/Context";
 

@@ -9,10 +9,10 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
-import { ComponentType } from "react";
+import { type ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PageAction } from "./PagesPageActionToolbar";
+import { type PageAction } from "./PagesPageActionToolbar";
 
 interface ContentProps {
     selectedPagesCount: number;

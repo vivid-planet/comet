@@ -9,7 +9,7 @@ import {
     ListItemIcon,
     MenuItem,
 } from "@mui/material";
-import { GQLUserGroup } from "@src/graphql.generated";
+import { type GQLUserGroup } from "@src/graphql.generated";
 import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";

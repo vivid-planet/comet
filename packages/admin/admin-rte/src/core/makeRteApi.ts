@@ -1,4 +1,12 @@
-import { CompositeDecorator, ContentState, convertFromRaw, convertToRaw, DraftDecorator, EditorState, RawDraftContentState } from "draft-js";
+import {
+    CompositeDecorator,
+    type ContentState,
+    convertFromRaw,
+    convertToRaw,
+    type DraftDecorator,
+    EditorState,
+    type RawDraftContentState,
+} from "draft-js";
 import { useEffect, useState } from "react";
 
 import useDebounce from "../useDebounce";

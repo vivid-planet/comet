@@ -8,10 +8,10 @@ import {
     DialogContent,
     DialogTitle,
     LinearProgress,
-    LinearProgressProps,
+    type LinearProgressProps,
     Typography,
 } from "@mui/material";
-import { ReactNode, useCallback, useState } from "react";
+import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { value: number; message?: ReactNode }) {

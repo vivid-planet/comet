@@ -1,8 +1,8 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
+import { BlockCategory, type BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
 import { FormattedMessage } from "react-intl";
 
-import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
+import { type PhoneLinkBlockData, type PhoneLinkBlockInput } from "../blocks.generated";
 import { isPhoneNumber } from "../validation/isPhoneNumber";
 import { validatePhoneNumber } from "../validation/validatePhoneNumber";
 

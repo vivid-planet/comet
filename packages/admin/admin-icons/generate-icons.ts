@@ -76,7 +76,7 @@ const getSVGData = (icon: Icon) => {
 
 const writeComponent = async (icon: Icon, svgString: string) => {
     const component = `
-        import { SvgIcon, SvgIconProps } from "@mui/material";
+        import { SvgIcon, type SvgIconProps } from "@mui/material";
         import { forwardRef } from "react";
 
         ${

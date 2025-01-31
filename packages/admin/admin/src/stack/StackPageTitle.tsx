@@ -1,4 +1,4 @@
-import { Component, ContextType, PropsWithChildren, ReactNode } from "react";
+import { Component, type ContextType, type PropsWithChildren, type ReactNode } from "react";
 
 import { StackSwitchApiContext } from "./Switch";
 

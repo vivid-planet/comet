@@ -1,5 +1,5 @@
-import { DropTarget, DropTargetBeforeAfter } from "./PageTreeRow";
-import { PageTreePage } from "./usePageTree";
+import { type DropTarget, type DropTargetBeforeAfter } from "./PageTreeRow";
+import { type PageTreePage } from "./usePageTree";
 
 interface PageTreeUpdateInfo {
     parentId: string | null;

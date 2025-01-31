@@ -1,10 +1,10 @@
-import * as History from "history";
-import { MutableRefObject, PropsWithChildren, useRef, useState } from "react";
+import type * as History from "history";
+import { type MutableRefObject, type PropsWithChildren, useRef, useState } from "react";
 import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
-import { PromptRoutes } from "./Prompt";
+import { type PromptRoutes } from "./Prompt";
 
 interface PromptHandlerState {
     showConfirmationDialog: boolean;

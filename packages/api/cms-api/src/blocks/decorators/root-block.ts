@@ -1,4 +1,4 @@
-import { Block } from "../block";
+import { type Block } from "../block";
 
 export function RootBlock(block: Block): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

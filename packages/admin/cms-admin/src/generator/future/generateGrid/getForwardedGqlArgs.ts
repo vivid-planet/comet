@@ -1,7 +1,7 @@
-import { IntrospectionField, IntrospectionInputValue } from "graphql";
+import { type IntrospectionField, type IntrospectionInputValue } from "graphql";
 
-import { Prop } from "../generateGrid";
-import { Imports } from "../utils/generateImportsCode";
+import { type Prop } from "../generateGrid";
+import { type Imports } from "../utils/generateImportsCode";
 
 type GqlArg = { type: string; name: string; queryOrMutationName: string };
 

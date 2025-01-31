@@ -1,9 +1,9 @@
-import { SelectChangeEvent } from "@mui/material";
-import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
-import { MouseEvent, RefObject, useCallback, useMemo } from "react";
+import { type SelectChangeEvent } from "@mui/material";
+import { type DraftBlockType, type Editor, type EditorState, RichUtils } from "draft-js";
+import { type MouseEvent, type RefObject, useCallback, useMemo } from "react";
 
-import { SupportedThings } from "../Rte";
-import { IBlocktypeMap, IFeatureConfig } from "../types";
+import { type SupportedThings } from "../Rte";
+import { type IBlocktypeMap, type IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 
 interface IProps {

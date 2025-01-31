@@ -3,7 +3,7 @@ import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import Link from "next/link";
 import styled from "styled-components";
 
-import { GQLNewsListFragment } from "./NewsList.fragment.generated";
+import { type GQLNewsListFragment } from "./NewsList.fragment.generated";
 
 export function NewsList({ newsList }: { newsList: GQLNewsListFragment }) {
     return (

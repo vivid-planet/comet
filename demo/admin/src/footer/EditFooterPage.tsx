@@ -1,7 +1,7 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { AdminComponentRoot, BlockState } from "@comet/blocks-admin";
+import { AdminComponentRoot, type BlockState } from "@comet/blocks-admin";
 import {
     BlockPreviewWithTabs,
     ContentScopeIndicator,
@@ -12,7 +12,7 @@ import {
     useSaveConflictQuery,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { FooterContentBlockInput } from "@src/blocks.generated";
+import { type FooterContentBlockInput } from "@src/blocks.generated";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
 import { useEffect, useState } from "react";
@@ -21,12 +21,12 @@ import { useRouteMatch } from "react-router";
 
 import { FooterContentBlock } from "./blocks/FooterContentBlock";
 import {
-    GQLCheckForChangesFooterQuery,
-    GQLCheckForChangesFooterQueryVariables,
-    GQLFooterQuery,
-    GQLFooterQueryVariables,
-    GQLSaveFooterMutation,
-    GQLSaveFooterMutationVariables,
+    type GQLCheckForChangesFooterQuery,
+    type GQLCheckForChangesFooterQueryVariables,
+    type GQLFooterQuery,
+    type GQLFooterQueryVariables,
+    type GQLSaveFooterMutation,
+    type GQLSaveFooterMutationVariables,
     namedOperations,
 } from "./EditFooterPage.generated";
 

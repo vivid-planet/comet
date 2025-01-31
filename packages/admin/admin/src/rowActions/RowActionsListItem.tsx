@@ -1,8 +1,8 @@
-import { ListItemIcon, ListItemIconProps, ListItemText, ListItemTextProps, MenuItem, MenuItemProps } from "@mui/material";
+import { ListItemIcon, type ListItemIconProps, ListItemText, type ListItemTextProps, MenuItem, type MenuItemProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ElementType, ForwardedRef, forwardRef, PropsWithChildren, ReactElement, ReactNode } from "react";
+import { type ElementType, type ForwardedRef, forwardRef, type PropsWithChildren, type ReactElement, type ReactNode } from "react";
 
-import { CommonRowActionItemProps } from "./RowActionsItem";
+import { type CommonRowActionItemProps } from "./RowActionsItem";
 
 export type RowActionsListItemComponentsProps<MenuItemComponent extends ElementType = "li"> = PropsWithChildren<{
     listItemIcon?: Partial<ListItemIconProps>;

@@ -6,10 +6,10 @@ import {
     AdminComponentPaper,
     AdminComponentSection,
     BlockCategory,
-    BlockDependency,
-    BlockInterface,
+    type BlockDependency,
+    type BlockInterface,
     BlocksFinalForm,
-    BlockState,
+    type BlockState,
     createBlockSkeleton,
     resolveNewState,
     useAdminComponentPaper,
@@ -19,13 +19,13 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
+import { type GQLVideoBlockDamFileQuery, type GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
 

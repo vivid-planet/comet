@@ -1,6 +1,6 @@
-import { ComponentType, createContext, FC, ReactNode, useContext } from "react";
+import { type ComponentType, createContext, type FC, type ReactNode, useContext } from "react";
 
-import { BreadcrumbItem, SwitchItem } from "./Stack";
+import { type BreadcrumbItem, type SwitchItem } from "./Stack";
 
 export interface IStackApi {
     addBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode) => void;

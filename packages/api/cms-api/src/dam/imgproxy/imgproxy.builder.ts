@@ -1,6 +1,6 @@
 import base64url from "base64url";
 
-import { Extension, Gravity, ResizingType } from "./imgproxy.enum";
+import { type Extension, Gravity, ResizingType } from "./imgproxy.enum";
 
 export class ImgproxyBuilder {
     private defaultQuality: number;

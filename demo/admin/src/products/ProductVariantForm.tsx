@@ -1,8 +1,17 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, Loading, useFormApiRef, useStackSwitchApi } from "@comet/admin";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import {
+    Field,
+    filterByFragment,
+    FinalForm,
+    FinalFormInput,
+    type FinalFormSubmitEvent,
+    Loading,
+    useFormApiRef,
+    useStackSwitchApi,
+} from "@comet/admin";
+import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
@@ -13,13 +22,13 @@ import {
     updateProductVariantFormMutation,
 } from "./ProductVariantForm.gql";
 import {
-    GQLCreateProductVariantMutation,
-    GQLCreateProductVariantMutationVariables,
-    GQLProductVariantFormFragment,
-    GQLProductVariantFormQuery,
-    GQLProductVariantFormQueryVariables,
-    GQLUpdateProductVariantMutation,
-    GQLUpdateProductVariantMutationVariables,
+    type GQLCreateProductVariantMutation,
+    type GQLCreateProductVariantMutationVariables,
+    type GQLProductVariantFormFragment,
+    type GQLProductVariantFormQuery,
+    type GQLProductVariantFormQueryVariables,
+    type GQLUpdateProductVariantMutation,
+    type GQLUpdateProductVariantMutationVariables,
 } from "./ProductVariantForm.gql.generated";
 
 interface FormProps {

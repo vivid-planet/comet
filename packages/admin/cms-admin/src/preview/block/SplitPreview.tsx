@@ -1,10 +1,10 @@
 import { useWindowSize } from "@comet/admin";
 import { Box } from "@mui/material";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { BlockPreview } from "./BlockPreview";
 import { Column, FirstColumnContainer, MaximizeButton, MaximizeIcon, PreviewContainer, Root, Split } from "./SplitPreview.sc";
-import { BlockPreviewApi } from "./useBlockPreview";
+import { type BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     url: string;

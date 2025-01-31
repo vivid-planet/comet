@@ -1,22 +1,22 @@
 import { Delete, Download, Error, File as FileIcon, FileNotMenu, ThreeDotSaving } from "@comet/admin-icons";
 import {
     Chip,
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     IconButton as MuiIconButton,
     Skeleton as MuiSkeleton,
-    Theme,
+    type Theme,
     Typography,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode, useRef } from "react";
+import { type ReactNode, useRef } from "react";
 
 import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { PrettyBytes } from "../../helpers/PrettyBytes";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useElementIsOverflowing } from "../../hooks/useElementIsOverflowing";
-import { ErrorFileSelectItem, FileSelectItem } from "./fileSelectItemTypes";
+import { type ErrorFileSelectItem, type FileSelectItem } from "./fileSelectItemTypes";
 
 type OwnerState = {
     hasFilePreview: boolean;

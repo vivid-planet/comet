@@ -1,8 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
+import { type ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { DamScopeProvider } from "./config/DamScopeProvider";
 import { useDamConfig } from "./config/useDamConfig";
 import { useDamScope } from "./config/useDamScope";

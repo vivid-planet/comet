@@ -1,13 +1,13 @@
 import { Box, Divider } from "@mui/material";
 import isEqual from "lodash.isequal";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Route, useRouteMatch } from "react-router";
 
 import { Collapsible } from "../../common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "../../common/CollapsibleSwitchButtonHeader";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../types";
+import { type BlockInputApi, type BlockInterface, type BlockOutputApi, type BlockState, type DispatchSetStateAction } from "../types";
 import { resolveNewState } from "../utils";
 
 // @TODO: move to general types

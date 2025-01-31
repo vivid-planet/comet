@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Readable, Stream } from "stream";
+import { type Readable, Stream } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageFileConfig } from "./blob-storage-file.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageFileConfig } from "./blob-storage-file.config";
 
 export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     private readonly headersFile = "headers.json";

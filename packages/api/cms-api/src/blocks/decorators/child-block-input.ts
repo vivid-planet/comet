@@ -1,7 +1,7 @@
 import { Expose, Transform } from "class-transformer";
 import { ValidateNested } from "class-validator";
 
-import { Block, isBlockInputInterface } from "../block";
+import { type Block, isBlockInputInterface } from "../block";
 import { BlockField } from "./field";
 
 interface ChildBlockInputOptions {

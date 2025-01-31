@@ -7,7 +7,7 @@ import {
     DataGridToolbar,
     FileIcon,
     FillSpace,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
@@ -23,7 +23,7 @@ import {
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
 import { Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { useRef, useState } from "react";
 

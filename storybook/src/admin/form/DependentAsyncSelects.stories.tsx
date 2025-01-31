@@ -2,7 +2,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import { AsyncSelectField, FinalForm, OnChangeField } from "@comet/admin";
 import { Box } from "@mui/material";
 
-import { Manufacturer, Product } from "../../../.storybook/mocks/handlers";
+import { type Manufacturer, type Product } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
 interface FormValues {
