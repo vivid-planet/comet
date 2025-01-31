@@ -53,7 +53,8 @@ app.prepare().then(() => {
                 };
             }
 
-            if (req.headers["rsc"] !== undefined || req.headers["next-router-prefetch"] !== undefined) {
+            if (req.headers["rsc"] !== undefined) {
+                // for Rsc requests make sure a _rsc query param exists, to avoid CDN (that ignores Vary header) caching rsc response for a non-rsc request
                 if (req.url && new URL(req.url, `http://${req.headers.host}`).searchParams.get("_rsc") === null) {
                     res.statusCode = 404;
                     res.end();
