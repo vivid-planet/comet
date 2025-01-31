@@ -1,7 +1,22 @@
+import { previewParams, SitePreviewData } from "@comet/cms-site";
 import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
 import { NextRequest, NextResponse } from "next/server";
 
 import { CustomMiddleware } from "./chain";
+
+function mapPreviewDataToPreviewParam(previewData: SitePreviewData | undefined) {
+    if (previewData) {
+        if (previewData.includeInvisible) return "blocks";
+        return "pages";
+    }
+    return "nopreview";
+}
+
+export function mapPreviewParamToPreviewData(previewParam): SitePreviewData | undefined {
+    if (previewParam === "blocks") return { includeInvisible: true };
+    if (previewParam === "pages") return { includeInvisible: false };
+    return undefined;
+}
 
 export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
@@ -11,9 +26,13 @@ export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
         if (!siteConfig) {
             throw new Error(`Cannot get siteConfig for host ${host}`);
         }
+
+        const preview = await previewParams({ skipDraftModeCheck: true });
+        const previewParam = mapPreviewDataToPreviewParam(preview?.previewData);
+
         return NextResponse.rewrite(
             new URL(
-                `/${siteConfig.scope.domain}${request.nextUrl.pathname}${
+                `/${siteConfig.scope.domain}/${previewParam}${request.nextUrl.pathname}${
                     request.nextUrl.searchParams.toString().length > 0 ? `?${request.nextUrl.searchParams.toString()}` : ""
                 }`,
                 request.url,
