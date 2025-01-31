@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { BackgroundColor as ContentGroupBackgroundColor, ContentBlock, ContentGroupBlock } from "@src/documents/pages/blocks/content-group.block";
 
+import { BlockFixture } from "../block-fixture";
 import { MediaGalleryBlockFixtureService } from "../media/media-gallery-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "../media/standalone-media-block-fixture.service";
 import { AnchorBlockFixtureService } from "../navigation/anchor-block-fixture.service";
@@ -34,7 +35,7 @@ export class ContentGroupBlockFixtureService {
     async generateContentGroupContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof ContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof ContentBlock>["blocks"] = [];
 
-        const blockCfg = {
+        const blockCfg: Record<(typeof blocks)[number]["type"], BlockFixture> = {
             accordion: this.accordionBlockFixtureService,
             anchor: this.anchorBlockFixtureService,
             callToActionList: this.standaloneCallToActionListBlockFixtureService,

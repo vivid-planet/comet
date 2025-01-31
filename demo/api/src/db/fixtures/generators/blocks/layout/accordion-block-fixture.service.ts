@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { AccordionContentBlock, AccordionItemBlock } from "@src/common/blocks/accordion-item.block";
 
+import { BlockFixture } from "../block-fixture";
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
 import { RichTextBlockFixtureService } from "../text-and-content/rich-text-block-fixture.service";
 import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standalone-heading-block-fixture.service";
@@ -20,7 +21,7 @@ export class AccordionBlockFixtureService {
 
     async generateAccordionContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof AccordionContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof AccordionContentBlock>["blocks"] = [];
-        const blockCfg = {
+        const blockCfg: Record<(typeof blocks)[number]["type"], BlockFixture> = {
             richtext: this.richTextBlockFixtureService,
             heading: this.headingBlockFixtureService,
             space: this.spaceBlockFixtureService,

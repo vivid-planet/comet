@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { ColumnsBlock, ColumnsContentBlock } from "@src/documents/pages/blocks/columns.block";
 
+import { BlockFixture } from "../block-fixture";
 import { MediaGalleryBlockFixtureService } from "../media/media-gallery-block-fixture.service";
 import { StandaloneMediaBlockFixtureService } from "../media/standalone-media-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "../navigation/standalone-call-to-action-list-block-fixture.service";
@@ -30,7 +31,7 @@ export class ColumnsBlockFixtureService {
     async generateColumnsContentBlock(): Promise<ExtractBlockInputFactoryProps<typeof ColumnsContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof ColumnsContentBlock>["blocks"] = [];
 
-        const blockCfg = {
+        const blockCfg: Record<(typeof blocks)[number]["type"], BlockFixture> = {
             accordion: this.accordionBlockFixtureService,
             anchor: this.headingBlockFixtureService,
             callToActionList: this.callToActionListBlockFixtureService,
