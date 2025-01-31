@@ -48,13 +48,12 @@ function common<InputApi, State, OutputApi>(): Omit<
                 return [state];
             }
 
-            // if (process.env.NODE_ENV === "development") {
-            // sadly, we can't access the block's name here
-            console.warn(
-                "extractTextContents not implemented for block. The SEO text generation will not consider this block. This might be a mistake since the state is not plain text: ",
-                state,
-            );
-            // }
+            if (process.env.NODE_ENV === "development") {
+                console.warn(
+                    "extractTextContents not implemented for block. The SEO text generation will not consider this block. This might be a mistake since the state is not plain text: ",
+                    state,
+                );
+            }
 
             return [];
         },

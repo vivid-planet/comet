@@ -1,5 +1,5 @@
-import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
 import { AnonymousBlockInterface, BlockAdminComponent, BlockMethods } from "../../types";
+import { createBlockSkeleton } from "../createBlockSkeleton";
 
 interface Options<State> {
     defaultValues: State;
@@ -32,11 +32,13 @@ export function createSettingsAnonymousBlock<State>({
         definesOwnPadding,
 
         AdminComponent,
-
-        extractTextContents,
     };
     if (isValid) {
         AnonymousSettingsBlock.isValid = isValid;
+    }
+
+    if (extractTextContents) {
+        AnonymousSettingsBlock.extractTextContents = extractTextContents;
     }
     return AnonymousSettingsBlock;
 }
