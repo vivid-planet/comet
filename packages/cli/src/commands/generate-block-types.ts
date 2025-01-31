@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
 import { format, resolveConfig } from "prettier";
 
-export type BlockMetaField =
+type BlockMetaField =
     | {
           name: string;
           kind: "String" | "Number" | "Boolean" | "Json";
