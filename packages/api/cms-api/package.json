@@ -53,7 +53,7 @@
         "get-image-colors": "^4.0.1",
         "got": "^11.8.6",
         "graphql-parse-resolve-info": "^4.13.0",
-        "graphql-scalars": "^1.24.0",
+        "graphql-scalars": "^1.24.1",
         "hasha": "^5.2.2",
         "jose": "^5.9.6",
         "jsonwebtoken": "^9.0.0",
