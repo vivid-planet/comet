@@ -39,7 +39,7 @@
         "redraft": "^0.10.2",
         "sitemap": "^8.0.0",
         "styled-components": "^6.1.14",
-        "swiper": "^11.2.1",
+        "swiper": "^11.2.2",
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
