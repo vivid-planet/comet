@@ -34,7 +34,7 @@
         "draft-js-export-html": "^1.4.1",
         "draft-js-import-html": "^1.4.1",
         "draftjs-conductor": "^3.0.0",
-        "immutable": "~3.7.4"
+        "immutable": "~3.8.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.26.4",
