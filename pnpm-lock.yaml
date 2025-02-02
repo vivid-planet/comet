@@ -688,8 +688,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1)
       '@fontsource/roboto':
-        specifier: ^4.5.8
-        version: 4.5.8
+        specifier: ^5.1.1
+        version: 5.1.1
       '@mdx-js/react':
         specifier: ^3.1.0
         version: 3.1.0(@types/react@18.3.18)(react@18.3.1)
@@ -4728,8 +4728,8 @@ packages:
   '@fontsource-variable/roboto-flex@5.1.1':
     resolution: {integrity: sha512-cMtqtR+EhqTcox5+Sz+/+N7C8hHheQm1EtxJ9qrr356N2lwbpEU0y5OA4as+V7cdiaEFxXw6jzO9KoqLMZ6tNg==}
 
-  '@fontsource/roboto@4.5.8':
-    resolution: {integrity: sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==}
+  '@fontsource/roboto@5.1.1':
+    resolution: {integrity: sha512-XwVVXtERDQIM7HPUIbyDe0FP4SRovpjF7zMI8M7pbqFp3ahLJsJTd18h+E6pkar6UbV3btbwkKjYARr5M+SQow==}
 
   '@formatjs/cli@6.5.1':
     resolution: {integrity: sha512-JptxQysoKiVZkGfd1u9GTlt88IQ1NUCUpxWI7Obkr7cZAupIBT5QbyL1NPq3UAyTgXODQ+09IUwZhJwVExW41g==}
@@ -19751,7 +19751,7 @@ snapshots:
 
   '@fontsource-variable/roboto-flex@5.1.1': {}
 
-  '@fontsource/roboto@4.5.8': {}
+  '@fontsource/roboto@5.1.1': {}
 
   '@formatjs/cli@6.5.1': {}
 
