@@ -2325,7 +2325,7 @@ importers:
         version: 22.10.7
       apollo-link-rest:
         specifier: ^0.8.0-beta.0
-        version: 0.8.0(@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql-anywhere@4.2.8(graphql@15.10.1))(graphql@15.10.1)(qs@6.13.0)
+        version: 0.8.0(@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql-anywhere@4.2.8(graphql@15.10.1))(graphql@15.10.1)(qs@6.14.0)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -2345,8 +2345,8 @@ importers:
         specifier: ^4.10.1
         version: 4.10.1
       qs:
-        specifier: ^6.9.1
-        version: 6.13.0
+        specifier: ^6.14.0
+        version: 6.14.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2421,8 +2421,8 @@ importers:
         specifier: ^4.7.11
         version: 4.7.11
       '@types/qs':
-        specifier: ^6.9.0
-        version: 6.9.7
+        specifier: ^6.9.18
+        version: 6.9.18
       '@types/react':
         specifier: ^18.3.18
         version: 18.3.18
@@ -7423,6 +7423,9 @@ packages:
 
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
+
+  '@types/qs@6.9.18':
+    resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
 
   '@types/qs@6.9.7':
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -13824,6 +13827,10 @@ packages:
 
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+    engines: {node: '>=0.6'}
+
+  qs@6.14.0:
+    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
     engines: {node: '>=0.6'}
 
   qs@6.5.3:
@@ -23247,7 +23254,7 @@ snapshots:
   '@types/express-serve-static-core@4.17.33':
     dependencies:
       '@types/node': 22.10.7
-      '@types/qs': 6.9.7
+      '@types/qs': 6.9.18
       '@types/range-parser': 1.2.4
 
   '@types/express@4.17.21':
@@ -23488,6 +23495,8 @@ snapshots:
       '@types/node': 22.10.7
 
   '@types/prop-types@15.7.14': {}
+
+  '@types/qs@6.9.18': {}
 
   '@types/qs@6.9.7': {}
 
@@ -24098,12 +24107,12 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  apollo-link-rest@0.8.0(@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql-anywhere@4.2.8(graphql@15.10.1))(graphql@15.10.1)(qs@6.13.0):
+  apollo-link-rest@0.8.0(@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql-anywhere@4.2.8(graphql@15.10.1))(graphql@15.10.1)(qs@6.14.0):
     dependencies:
       '@apollo/client': 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       graphql: 15.10.1
       graphql-anywhere: 4.2.8(graphql@15.10.1)
-      qs: 6.13.0
+      qs: 6.14.0
 
   apollo-utilities@1.3.4(graphql@15.10.1):
     dependencies:
@@ -31402,6 +31411,10 @@ snapshots:
   qs@6.13.0:
     dependencies:
       side-channel: 1.0.6
+
+  qs@6.14.0:
+    dependencies:
+      side-channel: 1.1.0
 
   qs@6.5.3: {}
 
