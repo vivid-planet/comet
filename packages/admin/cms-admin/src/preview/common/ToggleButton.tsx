@@ -1,7 +1,8 @@
 import { ToggleButton as MuiToggleButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-const ToggleButton = styled(MuiToggleButton)`
+// Issue with button html type anchor
+const ToggleButton: typeof MuiToggleButton = styled(MuiToggleButton)`
     width: 50px;
     height: 50px;
     border: none;

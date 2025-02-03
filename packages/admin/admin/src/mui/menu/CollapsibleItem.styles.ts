@@ -74,7 +74,7 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
     `,
 );
 
-export const ItemTitle = createComponentSlot(Typography)<MenuCollapsibleItemClassKey>({
+export const ItemTitle: typeof Typography = createComponentSlot(Typography)<MenuCollapsibleItemClassKey>({
     componentName: "MenuCollapsibleItem",
     slotName: "itemTitle",
 })(
