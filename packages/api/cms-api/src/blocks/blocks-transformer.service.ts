@@ -10,11 +10,8 @@ import { transformToPlain } from "./blocks-transformer";
 export class BlocksTransformerService {
     private blockContext: BlockContext;
 
-    constructor(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        @Inject(CONTEXT) private readonly context: any,
-        private readonly moduleRef: ModuleRef,
-    ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(@Inject(CONTEXT) private readonly context: any, private readonly moduleRef: ModuleRef) {
         let includeInvisibleBlocks: boolean | undefined = false;
         let previewDamUrls = false;
         let relativeDamUrls = false;

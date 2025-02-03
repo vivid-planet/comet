@@ -13,7 +13,7 @@ export const Toolbar = styled("div")`
     padding: 10px;
 `;
 
-export const StyledChip = styled(Chip)`
+export const StyledChip: typeof Chip = styled(Chip)`
     display: flex;
     padding: 4px 7px;
     align-items: center;
@@ -39,7 +39,7 @@ export const NameInfoWrapper = styled("div")`
     flex-direction: column;
 `;
 
-export const NameInfoTypography = styled(Typography)`
+export const NameInfoTypography: typeof Typography = styled(Typography)`
     font-size: 12px;
     font-weight: 400;
     line-height: 16px;
