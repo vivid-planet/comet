@@ -111,17 +111,24 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarTo
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <CrudMoreActionsMenu
-                overallActions={[
-                    {
-                        label: <FormattedMessage {...messages.downloadAsExcel} />,
-                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                        onClick: () => exportApi.exportGrid(),
-                        disabled: exportApi.loading,
-                    },
-                ]}
-            />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <ToolbarActions>
+                <CrudMoreActionsMenu
+                    slotProps={{
+                        button: {
+                            responsive: true,
+                        },
+                    }}
+                    overallActions={[
+                        {
+                            label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                            onClick: () => exportApi.exportGrid(),
+                            disabled: exportApi.loading,
+                        },
+                    ]}
+                />
+                {toolbarAction}
+            </ToolbarActions>
         </DataGridToolbar>
     );
 }
@@ -193,12 +200,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                         row.type == null ? (
                                             <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
                                         ) : (
-                                            typeLabels[`${row.type}`] ?? row.type
+                                            (typeLabels[`${row.type}`] ?? row.type)
                                         ),
                                     category: row.category?.title ?? (
                                         <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
                                     ),
-                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                                    inStock: row.inStock == null ? "-" : (inStockLabels[`${row.inStock}`] ?? row.inStock),
                                 }}
                             />
                         }
@@ -230,7 +237,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             renderHeader: () => (
                 <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
-                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                    <Tooltip title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
                         <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>

@@ -61,7 +61,7 @@ Once we have defined the block data, we also need to define the block input. The
 import { blockInputToData } from "@comet/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     @BlockField({ nullable: true })
     eyebrow?: string;
@@ -127,7 +127,8 @@ The complete code for our Headline API block (including all necessary imports) c
     blockInputToData,
 } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
-import { IsEnum, IsOptional, IsString } from "class-validator";\n
+import { IsUndefinable } from "@comet/cms-api";
+import { IsEnum, IsString } from "class-validator";\n
 export enum HeadlineLevel {
     HeaderOne = "header-one",
     HeaderTwo = "header-two",
@@ -145,7 +146,7 @@ export class HeadlineBlockData extends BlockData {
     level: HeadlineLevel;
 }\n
 export class HeadlineBlockInput extends BlockInput {
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     @BlockField()
     eyebrow?: string;\n
@@ -315,8 +316,7 @@ The complete code for our Headline admin block (including all necessary imports)
 import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeBlockField, createRichTextBlock } from "@comet/cms-admin";
 import { MenuItem } from "@material-ui/core";
 import { HeadlineBlockData } from "@src/blocks.generated";
-import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import * as React from "react";\n
+import { LinkBlock } from "@src/common/blocks/LinkBlock";\n
 const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
     rte: {
@@ -440,7 +440,6 @@ The complete code for our Headline site block (including all necessary imports) 
         <CodeBlock language="tsx">
             {`import { PropsWithData, withPreview } from "@comet/cms-site";
 import { HeadlineBlockData } from "@src/blocks.generated";
-import * as React from "react";
 import { Renderers } from "redraft";\n
 import { RichTextBlock } from "./RichTextBlock";\n
 const headlineTags: { [key: string]: React.ElementType } = {
@@ -490,6 +489,6 @@ Now you should be ready to create additional blocks! Maybe even a Dog Ear block?
 
 :::info
 
-We've only covered the basic concepts of COMET DXP blocks in this guide. To get a full picture, please review the [blocks](../Blocks/) section in our documentation.
+We've only covered the basic concepts of COMET DXP blocks in this guide. To get a full picture, please review the [blocks](/docs/core-concepts/blocks/) section in our documentation.
 
 :::

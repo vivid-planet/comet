@@ -1,14 +1,14 @@
 import {
+    Button,
+    FillSpace,
     Stack,
     StackLink,
     StackPage,
     StackSwitch,
     Toolbar,
-    ToolbarActionButton,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
 import { ArrowRight, Save } from "@comet/admin-icons";
@@ -43,12 +43,14 @@ function Story() {
             <ToolbarItem>
                 <Chip label="Chip text" />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <ToolbarActionButton startIcon={<ArrowRight />}>Secondary button</ToolbarActionButton>
-                <ToolbarActionButton startIcon={<Save />} variant="contained">
+                <Button responsive startIcon={<ArrowRight />} variant="outlined">
+                    Secondary button
+                </Button>
+                <Button responsive startIcon={<Save />}>
                     Primary button
-                </ToolbarActionButton>
+                </Button>
             </ToolbarActions>
         </Toolbar>
     );

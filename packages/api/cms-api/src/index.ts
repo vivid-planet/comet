@@ -114,6 +114,7 @@ export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInte
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
+export { ExceptionFilter } from "./common/errors/exception.filter";
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
@@ -161,7 +162,7 @@ export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
-export { FileUploadInterface } from "./dam/files/dto/file-upload.input";
+export { FileUploadInput, FileUploadInterface } from "./dam/files/dto/file-upload.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { DamFileImage } from "./dam/files/entities/file-image.entity";

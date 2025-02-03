@@ -1,28 +1,34 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
+    CrudMoreActionsMenu,
     CrudVisibility,
     dataGridDateColumn,
     DataGridToolbar,
+    ExportApi,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridColumnsButton,
     GridFilterButton,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarFillSpace,
+    ToolbarActions,
     ToolbarItem,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, StateFilled as StateFilledIcon } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, Excel, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { CircularProgress, IconButton, useTheme } from "@mui/material";
+import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
@@ -42,7 +48,11 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar() {
+type ProductsGridToolbarProps = {
+    exportApi: ExportApi;
+};
+
+function ProductsGridToolbar({ exportApi }: ProductsGridToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -51,15 +61,25 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
-            <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+            <FillSpace />
+            <ToolbarActions>
+                <CrudMoreActionsMenu
+                    overallActions={[
+                        {
+                            label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                            onClick: () => exportApi.exportGrid(),
+                            disabled: exportApi.loading,
+                        },
+                    ]}
+                />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
-            </ToolbarItem>
+            </ToolbarActions>
         </DataGridToolbar>
     );
 }
@@ -91,6 +111,7 @@ export function ProductsGrid() {
                 ];
                 return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
+            disableExport: true,
         },
         {
             field: "title",
@@ -132,6 +153,7 @@ export function ProductsGrid() {
                 },
             ],
             valueOptions: ["Cap", "Shirt", "Tie"],
+            disableExport: true,
         },
         {
             field: "category",
@@ -142,6 +164,7 @@ export function ProductsGrid() {
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
             valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+            disableExport: true,
         },
         {
             field: "tags",
@@ -159,6 +182,7 @@ export function ProductsGrid() {
                     InputComponent: GridFilterInputValue,
                 },
             ],
+            disableExport: true,
         },
         {
             field: "inStock",
@@ -189,6 +213,7 @@ export function ProductsGrid() {
             renderCell: renderStaticSelectCell,
             flex: 1,
             minWidth: 80,
+            disableExport: true,
         },
         {
             ...dataGridDateColumn,
@@ -220,6 +245,7 @@ export function ProductsGrid() {
                     />
                 );
             },
+            disableExport: true,
         },
         {
             field: "manufacturer",
@@ -227,6 +253,7 @@ export function ProductsGrid() {
             sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: [ManufacturerFilterOperator],
+            disableExport: true,
         },
         {
             field: "actions",
@@ -279,6 +306,7 @@ export function ProductsGrid() {
                     </>
                 );
             },
+            disableExport: true,
         },
     ];
 
@@ -296,6 +324,23 @@ export function ProductsGrid() {
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
+    const exportApi = useDataGridExcelExport<
+        GQLProductsListQuery["products"]["nodes"][0],
+        GQLProductsListQuery,
+        Omit<GQLProductsListQueryVariables, "offset" | "limit">
+    >({
+        columns,
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+        },
+        query: productsQuery,
+        resolveQueryNodes: (data) => data.products.nodes,
+        totalCount: data?.products.totalCount ?? 0,
+        exportOptions: {
+            fileName: "Products",
+        },
+    });
+
     return (
         <DataGridPro
             {...dataGridProps}
@@ -304,7 +349,10 @@ export function ProductsGrid() {
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductsGridToolbar,
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
+            }}
+            slotProps={{
+                toolbar: { exportApi } as ProductsGridToolbarProps,
             }}
         />
     );

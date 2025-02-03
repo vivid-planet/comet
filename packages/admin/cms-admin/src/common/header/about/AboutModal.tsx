@@ -1,5 +1,14 @@
 import { Close } from "@comet/admin-icons";
-import { Dialog, DialogContent as MuiDialogContent, DialogTitle, IconButton, Link, Modal as MuiModal, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent as MuiDialogContent,
+    DialogTitle,
+    IconButton,
+    Link,
+    Modal as MuiModal,
+    Typography,
+} from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import { styled } from "@mui/material/styles";
 import { ReactElement } from "react";

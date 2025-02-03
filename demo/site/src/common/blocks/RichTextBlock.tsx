@@ -113,16 +113,15 @@ export const PageContentRichTextBlock = (props: RichTextBlockProps) => (
 );
 
 const DisableLastBottomSpacing = styled.div`
-    ${({ theme }) =>
-        css`
-            > *:last-child {
-                margin-bottom: 0;
+    ${({ theme }) => css`
+        > *:last-child {
+            margin-bottom: 0;
 
-                ${theme.breakpoints.xs.mediaQuery} {
-                    margin-bottom: 0;
-                }
+            ${theme.breakpoints.xs.mediaQuery} {
+                margin-bottom: 0;
             }
-        `};
+        }
+    `};
 `;
 
 const Text = styled(Typography)`

@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     LocalErrorScopeApolloContext,
@@ -11,7 +12,6 @@ import {
     StackLink,
     TableDeleteButton,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -43,7 +43,7 @@ function RedirectsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />

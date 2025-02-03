@@ -74,7 +74,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
             if (column.formatForExcel != null) {
                 currentColumn.numFmt = column.formatForExcel;
             }
-        } catch (e) {
+        } catch {
             // not present column e.g. hidden
         }
     });

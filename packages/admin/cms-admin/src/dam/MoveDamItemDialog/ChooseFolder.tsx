@@ -1,9 +1,9 @@
 import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
 import { ListItem, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ComponentType, CSSProperties, ReactNode, useEffect, useRef } from "react";
+import { CSSProperties, ForwardRefExoticComponent, ReactNode, RefAttributes, useEffect, useRef } from "react";
 import { FormattedMessage } from "react-intl";
-import AutoSizer from "react-virtualized-auto-sizer";
+import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
 import { MarkedMatches } from "../../common/MarkedMatches";
@@ -49,7 +49,7 @@ export const ChooseFolder = ({
 
     return (
         <AutoSizer>
-            {({ height, width }) => {
+            {({ height, width }: Size) => {
                 return (
                     <List
                         ref={refList}
@@ -150,7 +150,7 @@ const StyledListItem = styled(ListItem)<{ offset: number; isChosen?: boolean }>`
 `;
 
 interface ChooseFolderItemProps {
-    Icon?: ComponentType<SvgIconProps>;
+    Icon?: ForwardRefExoticComponent<Omit<SvgIconProps, "ref"> & RefAttributes<SVGSVGElement>>;
     onIconClick?: () => void;
     onClick?: () => void;
     message: ReactNode;

@@ -614,7 +614,7 @@ export class FilesService {
                     height: image.width,
                 };
             }
-        } catch (e) {
+        } catch {
             // empty
         }
 

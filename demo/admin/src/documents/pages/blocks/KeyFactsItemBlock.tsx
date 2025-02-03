@@ -22,12 +22,12 @@ export const KeyFactsItemBlock = createCompositeBlock(
             },
             fact: {
                 block: createCompositeBlockTextField({
-                    fieldProps: { fullWidth: true, label: <FormattedMessage id="keyFactsItemBlock.fact" defaultMessage="Fact" /> },
+                    label: <FormattedMessage id="keyFactsItemBlock.fact" defaultMessage="Fact" />,
                 }),
             },
             label: {
                 block: createCompositeBlockTextField({
-                    fieldProps: { fullWidth: true, label: <FormattedMessage id="keyFactsItemBlock.label" defaultMessage="Label" /> },
+                    label: <FormattedMessage id="keyFactsItemBlock.label" defaultMessage="Label" />,
                 }),
             },
             description: {

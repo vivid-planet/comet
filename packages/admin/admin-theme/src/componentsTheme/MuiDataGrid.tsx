@@ -13,11 +13,23 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
+import { Spacing } from "@mui/system";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+const getDensityHeightValue = (density: string | unknown, spacing: Spacing) => {
+    switch (density) {
+        case "compact":
+            return spacing(8);
+        case "comfortable":
+            return spacing(16);
+        default:
+            return spacing(12);
+    }
+};
 
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
@@ -45,22 +57,43 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
             backgroundColor: "white",
+
+            "& [class*='MuiDataGrid-toolbarQuickFilter']": {
+                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
+                    paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
+                    textOverflow: "ellipsis",
+                },
+
+                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
+                    display: "none", // Prevents the disabled clear-button from overlaying the input value
+                },
+            },
         },
-        columnHeader: {
+        columnHeader: ({ ownerState }) => ({
+            /* !important is required to override inline styles */
+            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             "&:focus": {
                 outline: "none",
             },
             "&:focus-within": {
                 outline: "none",
             },
-        },
+        }),
+        columnHeaderTitleContainer: ({ ownerState }) => ({
+            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
+        }),
         pinnedColumns: {
             backgroundColor: "white",
             boxShadow: shadows[2],
         },
-        cell: {
+        row: ({ ownerState }) => ({
+            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
+            /* !important is required to override inline styles */
+            minHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
+            maxHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
+        }),
+        cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
-
             "&:focus": {
                 outline: "none",
             },
@@ -70,10 +103,21 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${getDataGridUtilityClass("booleanCell")}`]: {
                 color: palette.grey[900],
             },
-        },
-        footerContainer: {
+            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
+            alignContent: "center",
+        }),
+        footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
-        },
+            boxSizing: "border-box",
+            minHeight: getDensityHeightValue(ownerState?.density, spacing),
+            maxHeight: getDensityHeightValue(ownerState?.density, spacing),
+
+            "& .MuiTablePagination-root > .MuiToolbar-root": {
+                height: getDensityHeightValue(ownerState?.density, spacing),
+                minHeight: getDensityHeightValue(ownerState?.density, spacing),
+            },
+        }),
+
         iconSeparator: {
             backgroundColor: palette.grey[100],
             width: "2px",

@@ -5,7 +5,7 @@ import { createElement, Dispatch, ReactNode, SetStateAction, useCallback, useEff
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { BindBlockAdminComponent, BlockInterface, BlockState } from "../blocks/types";
+import { BlockInterface, BlockState } from "../blocks/types";
 import { resolveNewState } from "../blocks/utils";
 import { parallelAsyncEvery } from "../blocks/utils/parallelAsyncEvery";
 import { GQLDocumentInterface } from "../graphql.generated";
@@ -39,7 +39,10 @@ type BlockGQLData<T extends RootBlocksInterface> = {
 // all static configuration options needed to create a usePage hook
 
 interface CreateUsePage {
-    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: { rootBlocks: RootBlocks; pageType: PageType }): <
+    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: {
+        rootBlocks: RootBlocks;
+        pageType: PageType;
+    }): <
         GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null, // the page state is infered from this
         GQLEditPageQueryVariables extends { id: string } = { id: string }, // for type-safety, query must match this shape
         GQLUpdatePageMutation extends { id: string } & BlockGQLData<RootBlocks> = {
@@ -86,7 +89,7 @@ type PageState<
 // hook exposes a block-api
 type BlockNodeApi<RootBlocks extends RootBlocksInterface> = {
     [K in keyof RootBlocks]: {
-        adminUI: BindBlockAdminComponent<RootBlocks[K]["AdminComponent"]>; // state and updateState props are bound to the state handler of usePageHook
+        adminUI: ReactNode;
         isValid: () => Promise<boolean>;
     };
 };
@@ -265,7 +268,7 @@ export const createUsePage: CreateUsePage =
                     });
 
                     if (!isValid) {
-                        onValidationFailed && onValidationFailed();
+                        onValidationFailed?.();
                         setSaving(false);
                         setSaveError("invalid");
                         return;

@@ -223,7 +223,7 @@ const FolderDataGrid = ({
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                apiRef.current.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
+                apiRef.current?.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
             }
 
             setRedirectedToId(id);
@@ -257,7 +257,7 @@ const FolderDataGrid = ({
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage={"Empty folders can't be uploaded"} />}
+            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage="Empty folders can't be uploaded" />}
         />
     );
 

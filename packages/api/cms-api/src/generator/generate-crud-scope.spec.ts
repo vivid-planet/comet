@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 
 import { ScopedEntity } from "../user-permissions/decorators/scoped-entity.decorator";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
@@ -17,7 +17,6 @@ export class TestEntityWithScopedEntity extends BaseEntity {
     @Property({ columnType: "text" })
     langauge: string;
 }
-1;
 
 describe("GenerateCrud with ScopedEntity", () => {
     it("resolver must not have skipScopeCheck", async () => {
@@ -31,10 +30,10 @@ describe("GenerateCrud with ScopedEntity", () => {
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScopedEntity"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "test-entity-with-scoped-entity.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "test-entity-with-scoped-entity.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -76,10 +75,10 @@ describe("GenerateCrud with Scope", () => {
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScope"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "test-entity-with-scope.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "test-entity-with-scope.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 

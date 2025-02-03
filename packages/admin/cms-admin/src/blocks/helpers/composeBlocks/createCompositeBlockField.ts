@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnonymousBlockInterface, BlockAdminComponent } from "../../types";
 import { createSettingsAnonymousBlock } from "./createSettingsBlock";
 

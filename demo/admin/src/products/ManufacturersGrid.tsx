@@ -1,14 +1,15 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -16,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
@@ -38,9 +39,9 @@ function ManufacturersGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>
@@ -63,10 +64,7 @@ export function ManufacturersGrid() {
             renderHeader: () => (
                 <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })} columnWidth={150} />
-                    <Tooltip
-                        trigger="hover"
-                        title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}
-                    >
+                    <Tooltip title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}>
                         <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>

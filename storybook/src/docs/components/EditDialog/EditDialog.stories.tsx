@@ -1,7 +1,9 @@
 import {
+    Button,
     EditDialog,
     EditDialogApiContext,
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
@@ -9,12 +11,12 @@ import {
     ISelectionApi,
     Table,
     Toolbar,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
     useEditDialogApi,
 } from "@comet/admin";
-import { Button, MenuItem, Typography } from "@mui/material";
+import { Edit } from "@comet/admin-icons";
+import { IconButton, MenuItem, Typography } from "@mui/material";
 import { useRef, useState, VoidFunctionComponent } from "react";
 import { useLocation } from "react-router";
 import { v4 as uuid } from "uuid";
@@ -33,9 +35,7 @@ export const Hook = {
         return (
             <>
                 <h2>useEditDialog Variant:</h2>
-                <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
-                    Open Edit Dialog
-                </Button>
+                <Button onClick={() => editDialogApi.openAddDialog()}>Open Edit Dialog</Button>
                 <EditDialog>
                     <FinalForm
                         mode="add"
@@ -59,9 +59,7 @@ export const Component = {
         return (
             <>
                 <h2>EditDialog Component Variant:</h2>
-                <Button onClick={() => editDialogApi.current?.openAddDialog()} variant="contained" color="primary">
-                    Open Edit Dialog
-                </Button>
+                <Button onClick={() => editDialogApi.current?.openAddDialog()}>Open Edit Dialog</Button>
                 <EditDialog ref={editDialogApi}>
                     {() => {
                         return (
@@ -87,11 +85,7 @@ export const UseEditDialogApi = {
         const ChildComponentWithOpenButton: VoidFunctionComponent = () => {
             const editDialogApi = useEditDialogApi();
 
-            return (
-                <Button onClick={() => editDialogApi?.openAddDialog()} variant="contained" color="primary">
-                    Open Edit Dialog with useEditDialogApi()
-                </Button>
-            );
+            return <Button onClick={() => editDialogApi?.openAddDialog()}>Open Edit Dialog with useEditDialogApi()</Button>;
         };
 
         const [EditDialog, , editDialogApi] = useEditDialog();
@@ -122,9 +116,7 @@ export const WithForm = {
         return (
             <>
                 <h2>Loading and Error State of EditDialog:</h2>
-                <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
-                    Open Edit Dialog
-                </Button>
+                <Button onClick={() => editDialogApi.openAddDialog()}>Open Edit Dialog</Button>
                 <EditDialog>
                     <FinalForm
                         mode="add"
@@ -233,11 +225,9 @@ export const WithTable = {
         return (
             <>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
-                        <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
-                            Add User
-                        </Button>
+                        <Button onClick={() => editDialogApi.openAddDialog()}>Add User</Button>
                     </ToolbarItem>
                 </Toolbar>
                 <Table
@@ -252,13 +242,14 @@ export const WithTable = {
                             },
                             render: (row) => {
                                 return (
-                                    <Button
+                                    <IconButton
+                                        color="primary"
                                         onClick={() => {
                                             editDialogApi.openEditDialog(row.id);
                                         }}
                                     >
-                                        Change Name
-                                    </Button>
+                                        <Edit />
+                                    </IconButton>
                                 );
                             },
                         },
@@ -293,11 +284,9 @@ export const SelectionWithHook = {
             <>
                 <h2>Click on a button to see the current selection values:</h2>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
-                        <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
-                            Add User
-                        </Button>
+                        <Button onClick={() => editDialogApi.openAddDialog()}>Add User</Button>
                     </ToolbarItem>
                 </Toolbar>
                 <Table
@@ -312,13 +301,14 @@ export const SelectionWithHook = {
                             },
                             render: (row) => {
                                 return (
-                                    <Button
+                                    <IconButton
+                                        color="primary"
                                         onClick={() => {
                                             editDialogApi.openEditDialog(row.id);
                                         }}
                                     >
-                                        Change Name
-                                    </Button>
+                                        <Edit />
+                                    </IconButton>
                                 );
                             },
                         },
@@ -363,11 +353,9 @@ export const SelectionWithComponent = {
             <>
                 <h2>Click on a button to see the current selection values:</h2>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
-                        <Button onClick={() => editDialogApi.current?.openAddDialog()} variant="contained" color="primary">
-                            Add User
-                        </Button>
+                        <Button onClick={() => editDialogApi.current?.openAddDialog()}>Add User</Button>
                     </ToolbarItem>
                 </Toolbar>
                 <Table
@@ -382,13 +370,14 @@ export const SelectionWithComponent = {
                             },
                             render: (row) => {
                                 return (
-                                    <Button
+                                    <IconButton
+                                        color="primary"
                                         onClick={() => {
                                             editDialogApi.current?.openEditDialog(row.id);
                                         }}
                                     >
-                                        Change Name
-                                    </Button>
+                                        <Edit />
+                                    </IconButton>
                                 );
                             },
                         },

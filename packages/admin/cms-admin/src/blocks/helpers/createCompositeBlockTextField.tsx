@@ -3,12 +3,15 @@ import { TextField, TextFieldProps } from "@comet/admin";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
-interface Options {
+interface Options extends Partial<TextFieldProps> {
     defaultValue?: string;
+    /**
+     * @deprecated Set the props directly instead of nesting inside fieldProps
+     */
     fieldProps?: Partial<TextFieldProps>;
 }
 
-export function createCompositeBlockTextField({ defaultValue = "", fieldProps }: Options) {
+export function createCompositeBlockTextField({ defaultValue = "", fullWidth = true, fieldProps: legacyFieldProps, ...fieldProps }: Options) {
     return createCompositeBlockField<string>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
@@ -16,7 +19,7 @@ export function createCompositeBlockTextField({ defaultValue = "", fieldProps }:
                 onSubmit={({ value }) => updateState(value ?? "")}
                 initialValues={{ value: state || undefined }}
             >
-                <TextField name="value" {...fieldProps} />
+                <TextField name="value" fullWidth={fullWidth} {...legacyFieldProps} {...fieldProps} />
             </BlocksFinalForm>
         ),
     });

@@ -2,7 +2,7 @@ import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import { MouseEvent, PropsWithChildren } from "react";
+import { ForwardRefExoticComponent, MouseEvent, PropsWithChildren, RefAttributes } from "react";
 
 import getRteTheme from "../utils/getRteTheme";
 
@@ -27,7 +27,10 @@ const Root = createComponentSlot("button")<RteControlButtonClassKey, OwnerState>
         background-color: transparent;
         border: 1px solid transparent;
         box-sizing: border-box;
-        transition: background-color 200ms, border-color 200ms, color 200ms;
+        transition:
+            background-color 200ms,
+            border-color 200ms,
+            color 200ms;
         font-size: 20px;
         color: ${rteTheme.colors?.buttonIcon};
 
@@ -70,10 +73,10 @@ export interface IProps
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: MouseEvent) => void;
-    icon?: (props: SvgIconProps) => JSX.Element | null;
+    icon?: ForwardRefExoticComponent<Omit<SvgIconProps, "ref"> & RefAttributes<SVGSVGElement>>;
 
     /** @deprecated use icon instead */
-    Icon?: (props: SvgIconProps) => JSX.Element | null;
+    Icon?: ForwardRefExoticComponent<Omit<SvgIconProps, "ref"> & RefAttributes<SVGSVGElement>>;
 }
 
 export function ControlButton(inProps: PropsWithChildren<IProps>) {

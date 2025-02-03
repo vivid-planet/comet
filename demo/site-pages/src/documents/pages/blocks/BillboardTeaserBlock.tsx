@@ -66,18 +66,17 @@ const Content = styled.div`
     align-items: center;
     color: ${({ theme }) => theme.palette.text.inverted};
 
-    ${({ theme }) =>
-        css`
-            grid-column: 3 / -3;
+    ${({ theme }) => css`
+        grid-column: 3 / -3;
 
-            ${theme.breakpoints.xs.mediaQuery} {
-                grid-column: 5 / -5;
-            }
+        ${theme.breakpoints.xs.mediaQuery} {
+            grid-column: 5 / -5;
+        }
 
-            ${theme.breakpoints.lg.mediaQuery} {
-                grid-column: 7 / -7;
-            }
-        `};
+        ${theme.breakpoints.lg.mediaQuery} {
+            grid-column: 7 / -7;
+        }
+    `};
 `;
 
 const ImageMobile = styled.div`

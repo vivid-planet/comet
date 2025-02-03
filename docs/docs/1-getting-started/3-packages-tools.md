@@ -7,11 +7,17 @@ sidebar_position: 3
 
 A COMET DXP application, at a minimum, consists of the following packages:
 
--   **Admin:** The user interface for managing the data and content of your application
--   **API:** Stores the data of your application and provides APIs for Admin, Site, and potentially others
--   **Site:** The frontend that renders the content of your application as a website
+- **Admin:** The user interface for managing the data and content of your application
+- **API:** Stores the data of your application and provides APIs for Admin, Site, and potentially others
+- **Site:** The frontend that renders the content of your application as a website
 
 ---
+
+## API {#apiPackage}
+
+### @comet/cms-api
+
+Used to integrate Comet DPX into a NestJS application.
 
 ## Admin {#adminPackage}
 
@@ -53,3 +59,9 @@ Provides components for selecting date and time or a range or combination of dat
 #### @comet/admin-color-picker
 
 Provides a component for selecting colors in forms, built with react-final-form.
+
+## Site {#sitePackage}
+
+### @comet/cms-site
+
+Used to integrate Comet DPX into a Next.js application.

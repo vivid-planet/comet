@@ -12,10 +12,11 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 <summary>Changes handled by @comet/upgrade</summary>
 
--   Upgrade MUI packages to v6
--   Run MUI codemods
--   Upgrade MUI X packages to v6
--   Upgrade NestJS packages to v10
+- Upgrade MUI packages to v6
+- Run MUI codemods
+- Upgrade MUI X packages to v6
+- Upgrade NestJS packages to v10
+- Upgrade Prettier to v3
 
 </details>
 
@@ -204,7 +205,74 @@ npx @comet/upgrade v8/update-class-validator.ts
 
 :::
 
+### NestJS peer dependencies
+
+Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
+To upgrade, install the dependencies in your project:
+
+```diff title=api/package.json
+{
+    "dependencies": {
++       "class-transformer": "^0.5.1",
+-       "reflect-metadata": "^0.1.13",
++       "reflect-metadata": "^0.2.2",
+-       "rxjs": "^7.0.0",
++       "rxjs": "^7.8.1",
+    }
+}
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/nest-peer-dependencies.ts
+```
+
+:::
+
 ## Admin
+
+### Upgrade peer dependencies
+
+#### Recommended: React 18
+
+Support for React 18 has been added.
+While optional, it is recommended to upgrade to React 18 in the project.
+
+1. Upgrade all your dependencies:
+
+    ```diff title=admin/package.json
+    {
+        "dependencies": {
+    -       "react": "^17.0.2",
+    -       "react-dom": "^17.0.2",
+    +       "react": "^18.3.1",
+    +       "react-dom": "^18.3.1"
+        },
+        "devDependencies": {
+    -       "@types/react": "^17.0.83",
+    -       "@types/react-dom": "^17.0.26",
+    +       "@types/react": "^18.3.18",
+    +       "@types/react-dom": "^18.3.5"
+        }
+    }
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/update-react-dependencies.ts
+    ```
+
+    :::
+
+2. Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
+
+    :::tip
+
+    Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
+
+    :::
 
 ### Stay on same page after changing scope
 
@@ -253,6 +321,25 @@ Perform the following changes:
 ```diff
 - import { Tooltip } from "@mui/material";
 + import { Tooltip } from "@comet/admin";
+```
+
+### Remove `trigger` prop from `Tooltip`
+
+The `trigger` prop has been removed. The combined `hover`/`focus` trigger is now the only supported behavior.
+
+Example:
+
+```diff
+<Tooltip
+- trigger="hover"
+></Tooltip>
+```
+
+### Import `Dialog` from `@comet/admin` package
+
+```diff
+- import { Dialog } from "@mui/material";
++ import { Dialog } from "@comet/admin";
 ```
 
 ### Update MUI - X Packages
@@ -391,6 +478,76 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 ```
 
 ## ESLint
+
+### ESLint upgrade from v8 to v9 with ESM
+
+Update ESLint to v9
+
+`package.json`
+
+```diff
+- "eslint": "^8.0.0",
++ "eslint": "^9.0.0",
+```
+
+An ESM compatible ESLint config is required. Delete the related `.eslintrc.json` and move the configured rules to the new ESLint flat configuration `eslint.config.mjs`.
+
+Migration Guide of ESLint 9.0 can be found here: [Migration Guide](https://eslint.org/docs/latest/use/migrate-to-9.0.0)
+
+#### `admin/eslint.config.mjs`
+
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts"],
+    },
+    ...cometConfig
+];
+
+export default config;
+```
+
+#### `api/eslint.config.mjs`
+
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+import cometConfig from "@comet/eslint-config/nestjs.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
+    },
+    ...cometConfig,
+];
+
+export default config;
+```
+
+#### `site/eslint.config.mjs`
+
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+import cometConfig from "@comet/eslint-config/nextjs.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**", ".next/**", "public/**"],
+    },
+    ...cometConfig,
+];
+
+export default config;
+
+```
 
 ### Remove React barrel imports
 

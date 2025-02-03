@@ -1,5 +1,7 @@
 import {
+    Button,
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveCancelButtonsLegacy,
@@ -9,9 +11,8 @@ import {
     StackSwitchApiContext,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
 } from "@comet/admin";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
 import { useContext } from "react";
 
@@ -49,11 +50,9 @@ function Page1() {
         <>
             <Box marginBottom={4}>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button
-                            color="primary"
-                            variant="contained"
                             onClick={() => {
                                 switchApi?.activatePage("page2", "test");
                             }}

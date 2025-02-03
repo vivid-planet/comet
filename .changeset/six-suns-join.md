@@ -10,22 +10,22 @@ Therefore, the `@comet/blocks-admin` is merged into this package.
 
 **Breaking changes**
 
--   The `@comet/blocks-admin` package doesn't exist anymore
--   Multiple exports that shouldn't be used have been removed from the public API
-    -   `CannotPasteBlockDialog`
-    -   `ClipboardContent`
-    -   `useBlockClipboard`
-    -   `Collapsible`
-    -   `CollapsibleSwitchButtonHeader`
-    -   `usePromise`
-    -   `DispatchSetStateAction` (use `Dispatch<SetStateAction<T>>` from `react` instead)
-    -   `SetStateAction`
-    -   `SetStateFn`
--   Multiple exports that were too generic have been renamed
-    -   `createCompositeSetting` -> `createCompositeBlockField`
-    -   `createCompositeSettings` -> `createCompositeBlockFields`
-    -   `IPreviewContext` -> `BlockPreviewContext`
-    -   `PreviewStateInterface` -> `BlockPreviewStateInterface`
+- The `@comet/blocks-admin` package doesn't exist anymore
+- Multiple exports that shouldn't be used have been removed from the public API
+    - `CannotPasteBlockDialog`
+    - `ClipboardContent`
+    - `useBlockClipboard`
+    - `Collapsible`
+    - `CollapsibleSwitchButtonHeader`
+    - `usePromise`
+    - `DispatchSetStateAction` (use `Dispatch<SetStateAction<T>>` from `react` instead)
+    - `SetStateAction`
+    - `SetStateFn`
+- Multiple exports that were too generic have been renamed
+    - `createCompositeSetting` -> `createCompositeBlockField`
+    - `createCompositeSettings` -> `createCompositeBlockFields`
+    - `IPreviewContext` -> `BlockPreviewContext`
+    - `PreviewStateInterface` -> `BlockPreviewStateInterface`
 
 **How to upgrade**
 

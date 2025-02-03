@@ -10,7 +10,10 @@ export class DocumentSubscriberFactory {
     static create({ Documents }: { Documents: Type<DocumentInterface>[] }): Type<EventSubscriber> {
         @Injectable()
         class DocumentSubscriber implements EventSubscriber<DocumentInterface> {
-            constructor(readonly em: EntityManager, private readonly pageTreeService: PageTreeService) {
+            constructor(
+                readonly em: EntityManager,
+                private readonly pageTreeService: PageTreeService,
+            ) {
                 em.getEventManager().registerSubscriber(this);
             }
 

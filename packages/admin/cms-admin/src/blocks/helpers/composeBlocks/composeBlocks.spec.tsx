@@ -6,10 +6,6 @@ import { createCompositeBlockField } from "./createCompositeBlockField";
 import { createCompositeBlockFields } from "./createCompositeBlockFields";
 import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
 
-jest.mock("react-dnd", () => {
-    return;
-});
-
 // TODO: youtube block moved, space block deprecated, update tests
 
 describe("composeBlocks", () => {
@@ -93,6 +89,7 @@ describe("composeBlocks", () => {
 
         const {
             block: { defaultValues, state2Output, input2State },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             block,
         } = composedBlock;
 
@@ -229,6 +226,7 @@ describe("composeBlocks", () => {
 
         const {
             block: { defaultValues, state2Output, input2State },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             block,
         } = composedBlock;
 

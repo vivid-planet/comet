@@ -4,7 +4,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { formatSource, parseSource } from "./utils/test-helper";
 
 @Entity()
 export class TestEntityWithJsonLiteralArray extends BaseEntity {
@@ -56,9 +56,9 @@ describe("GenerateCrudInputJson", () => {
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -97,9 +97,9 @@ describe("GenerateCrudInputJson", () => {
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonObject"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -137,8 +137,8 @@ describe("GenerateCrudInputJson", () => {
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRecord"));
-            const lintedOutput = await lintSource(out[0].content);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);

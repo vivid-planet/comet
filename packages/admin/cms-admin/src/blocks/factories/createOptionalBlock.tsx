@@ -31,6 +31,9 @@ export interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
 export function createOptionalBlock<T extends BlockInterface>(
     decoratedBlock: T,
     options?: { title?: ReactNode; name?: string },
+    override?: (
+        block: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>>,
+    ) => BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>>,
 ): BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> {
     const OptionalBlock: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> = {
         ...createBlockSkeleton(),
@@ -170,5 +173,10 @@ export function createOptionalBlock<T extends BlockInterface>(
             return block && visible ? decoratedBlock.previewContent(block, ctx) : [];
         },
     };
+
+    if (override) {
+        return override(OptionalBlock);
+    }
+
     return OptionalBlock;
 }

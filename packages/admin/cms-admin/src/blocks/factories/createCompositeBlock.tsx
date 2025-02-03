@@ -77,8 +77,8 @@ type ExtractBlockConfig<T extends Record<string, BlockConfiguration>, K extends 
 type ExtractCompositeBlocksConfig<Options extends CreateCompositeBlockOptions> = Options extends CreateCompositeBlockOptionsWithGroups
     ? ExtractCompositeBlocksConfigBase<MergeBlockConfigs<ExtractGroupConfigs<Options["groups"]>["blocks"]>>
     : Options extends CreateCompositeBlockOptionsBase
-    ? ExtractCompositeBlocksConfigBase<Options["blocks"]>
-    : never;
+      ? ExtractCompositeBlocksConfigBase<Options["blocks"]>
+      : never;
 
 export const createCompositeBlock = <Options extends CreateCompositeBlockOptions>(
     options: Options,
@@ -113,9 +113,12 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
     );
 
     // for easier usage, make sure each blockConfig has the same shape (BlockInterfaceWithOptions)
-    const blockConfigNormalized = Object.entries(blockConfigs).reduce((acc, [key, value]) => {
-        return { ...acc, [key]: { ...value, block: normalizedBlockConfig(value.block) } };
-    }, {} as Record<string, NormalizedBlockConfiguration>);
+    const blockConfigNormalized = Object.entries(blockConfigs).reduce(
+        (acc, [key, value]) => {
+            return { ...acc, [key]: { ...value, block: normalizedBlockConfig(value.block) } };
+        },
+        {} as Record<string, NormalizedBlockConfiguration>,
+    );
 
     const CompositeBlock: BlockInterface<BlockInputApi<typeof block>, BlockState<typeof block>, BlockOutputApi<typeof block>> = {
         ...createBlockSkeleton(),
@@ -246,7 +249,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             };
 
             return (
-                <StackSwitch>
+                <StackSwitch disableForcePromptRoute>
                     {[
                         <StackPage name="initial" key="initial">
                             {Object.entries(groups).map(([groupKey, group]) => {

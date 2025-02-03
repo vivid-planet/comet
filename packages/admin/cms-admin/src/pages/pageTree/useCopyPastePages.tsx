@@ -100,7 +100,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                             const clipboardPage: PageClipboard = { ...page, document: data?.page?.document };
                             pagesWithDocuments.push(clipboardPage);
                         }
-                    } catch (e) {
+                    } catch {
                         throw new Error(`Error while fetching page`);
                     }
                 }),
@@ -155,7 +155,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     ),
                 };
             }
-        } catch (e) {
+        } catch {
             return {
                 canPaste: false,
                 error: (

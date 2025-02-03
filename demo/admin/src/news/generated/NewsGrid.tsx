@@ -2,6 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
@@ -21,7 +22,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -85,8 +86,8 @@ function NewsGridToolbar() {
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="news.newNews" defaultMessage="New News" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>

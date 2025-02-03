@@ -3,9 +3,9 @@
 import { gql, useApolloClient } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormSubmitEvent,
     TextAreaField,
     TextField,
@@ -15,7 +15,7 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock, DamImageBlock } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment } from "@mui/material";
+import { InputAdornment } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -131,14 +131,12 @@ export function CreateCapProductForm({ type }: FormProps) {
                         }}
                         getOptionLabel={(option) => option.title}
                     />
-                    <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                        {(props) => (
-                            <FormControlLabel
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                control={<FinalFormCheckbox {...props} />}
-                            />
-                        )}
-                    </Field>
+                    <CheckboxField
+                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                        name="inStock"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
                     <Field
                         variant="horizontal"

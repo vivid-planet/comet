@@ -1,5 +1,4 @@
-import { Field, FinalFormCheckbox, FinalFormInput } from "@comet/admin";
-import { FormControlLabel } from "@mui/material";
+import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
@@ -73,14 +72,10 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         validate={(url) => validateLinkTarget(url)}
                         disableContentTranslation
                     />
-                    <Field name="openInNewWindow" type="checkbox">
-                        {(props) => (
-                            <FormControlLabel
-                                label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
-                                control={<FinalFormCheckbox {...props} />}
-                            />
-                        )}
-                    </Field>
+                    <CheckboxField
+                        label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
+                        name="openInNewWindow"
+                    />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );

@@ -334,8 +334,8 @@ export async function generateCrudInput(
                     prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined)
                         ? "null"
                         : initializer == "[]"
-                        ? "[]"
-                        : undefined;
+                          ? "[]"
+                          : undefined;
                 const fieldOptions = tsCodeRecordToString({
                     nullable: prop.nullable ? "true" : undefined,
                     defaultValue: defaultValue,

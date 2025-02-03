@@ -13,7 +13,6 @@ export function createConfig() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             environmentVariables[variableName] = (window as any)[externalVariableName];
         } else {
-            // eslint-disable-next-line no-console
             console.warn(`External variable ${externalVariableName} not set"`);
         }
     }
@@ -21,7 +20,7 @@ export function createConfig() {
         ...cometConfig,
         apiUrl: environmentVariables.API_URL,
         adminUrl: environmentVariables.ADMIN_URL,
-        sitesConfig: JSON.parse(environmentVariables.PUBLIC_SITE_CONFIGS) as PublicSiteConfig[],
+        sitesConfig: JSON.parse(atob(environmentVariables.PUBLIC_SITE_CONFIGS)) as PublicSiteConfig[],
         buildDate: environmentVariables.BUILD_DATE,
         buildNumber: environmentVariables.BUILD_NUMBER,
         commitSha: environmentVariables.COMMIT_SHA,

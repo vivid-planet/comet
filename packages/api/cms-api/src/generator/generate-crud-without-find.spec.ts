@@ -3,7 +3,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Embeddable()
 export class TestEntityScope {
@@ -32,14 +32,20 @@ describe("GenerateCrud without find condition", () => {
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "test-entity.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "test-entity.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
-            expect(source.getImportDeclarationOrThrow("@mikro-orm/postgresql").getText()).toContain("ObjectQuery");
+            expect(
+                source
+                    .getImportDeclarations()
+                    .filter((imp) => imp.getModuleSpecifierValue() === "@mikro-orm/postgresql")
+                    .map((imp) => imp.getNamedImports().map((namedImp) => namedImp.getText()))
+                    .flat(),
+            ).toContain("ObjectQuery");
 
             const cls = source.getClassOrThrow("TestEntityResolver");
             const testEntitiesQuery = cls.getInstanceMethodOrThrow("testEntities");

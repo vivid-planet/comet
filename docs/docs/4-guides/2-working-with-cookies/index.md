@@ -21,9 +21,9 @@ const { consentedCookies, openCookieSettings } = useCookieApi();
 
 Hooks for some cookie platforms are already implemented:
 
--   `useOneTrustCookieApi` for [OneTrust](https://www.onetrust.com/)
--   `useCookieBotCookieApi` for [CookieBot](https://www.cookiebot.com/)
--   `useLocalStorageCookieApi` This should never be used in production, only for local development and other environments that cannot embed the real cookie platform.
+- `useOneTrustCookieApi` for [OneTrust](https://www.onetrust.com/)
+- `useCookieBotCookieApi` for [CookieBot](https://www.cookiebot.com/)
+- `useLocalStorageCookieApi` This should never be used in production, only for local development and other environments that cannot embed the real cookie platform.
 
 For other platforms, a custom hook can be created. It must have the type of `CookieApiHook`.
 

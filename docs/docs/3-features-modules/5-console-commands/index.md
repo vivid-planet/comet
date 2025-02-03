@@ -61,7 +61,8 @@ npm run console:prod demo-command
 
 ## Best practices
 
--   Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
+- Use kebab case for command names and arguments.
+- Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
 
 ```ts
 async execute(): Promise<void> {

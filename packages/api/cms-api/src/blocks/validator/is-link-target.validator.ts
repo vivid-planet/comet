@@ -4,7 +4,7 @@ import { isEmail, isString, isURL, registerDecorator, ValidatorConstraint, Valid
 import { isPhoneNumber } from "./is-phone-number.validator";
 
 export const IsLinkTarget = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return (object: Object, propertyName: string): void => {
         registerDecorator({
             target: object.constructor,

@@ -1,6 +1,6 @@
-import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderMenuButton, Button, CometLogo, FillSpace } from "@comet/admin";
 import { Account, Language, Logout, Preview, Snips, SwitchUser, Wrench } from "@comet/admin-icons";
-import { Avatar, Box, Button, Divider, MenuItem, MenuList, Typography } from "@mui/material";
+import { Avatar, Box, Divider, MenuItem, MenuList, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default {
@@ -25,7 +25,7 @@ export const Basic = {
                 <AppHeaderMenuButton />
                 <CometLogo />
 
-                <AppHeaderFillSpace />
+                <FillSpace />
 
                 <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
 
@@ -56,7 +56,7 @@ export const Basic = {
                     <Divider />
 
                     <Box padding={4}>
-                        <Button variant="contained" color="primary" startIcon={<Logout />} fullWidth>
+                        <Button startIcon={<Logout />} fullWidth>
                             Logout
                         </Button>
                     </Box>
@@ -89,13 +89,13 @@ export const MenuButton = {
     name: "AppHeader MenuButton",
 };
 
-export const FillSpace = {
+export const FillSpaceStory = {
     render: () => {
         return (
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Left Content</Typography>
 
-                <AppHeaderFillSpace />
+                <FillSpace />
 
                 <Typography style={{ padding: 20 }}>Right Content</Typography>
             </AppHeader>
@@ -109,7 +109,7 @@ export const ButtonText = {
         return (
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Header button</Typography>
-                <AppHeaderFillSpace />
+                <FillSpace />
 
                 <AppHeaderButton>My Button</AppHeaderButton>
             </AppHeader>
@@ -123,7 +123,7 @@ export const ButtonTextAndIcon = {
         return (
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Header buttons with icon</Typography>
-                <AppHeaderFillSpace />
+                <FillSpace />
 
                 <AppHeaderButton startIcon={<Wrench />}>My Button</AppHeaderButton>
 
@@ -139,7 +139,7 @@ export const ButtonIcon = {
         return (
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Header buttons with icon only</Typography>
-                <AppHeaderFillSpace />
+                <FillSpace />
 
                 <AppHeaderButton>
                     <SwitchUser />
@@ -159,7 +159,7 @@ export const CustomButton = {
         return (
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Header button custom content</Typography>
-                <AppHeaderFillSpace />
+                <FillSpace />
 
                 <AppHeaderButton>
                     <Box display="flex" alignItems="center">
@@ -184,7 +184,7 @@ export const Dropdown = {
                 <div style={{ marginBottom: "30px" }}>Dropdown Menu state: {open ? "open" : "closed"}</div>
                 <AppHeader position="relative" headerHeight={60}>
                     <Typography style={{ padding: 20 }}>Header dropdown</Typography>
-                    <AppHeaderFillSpace />
+                    <FillSpace />
 
                     <AppHeaderDropdown buttonChildren={<Snips />} dropdownArrow={null}>
                         <Box padding={4} width={200}>

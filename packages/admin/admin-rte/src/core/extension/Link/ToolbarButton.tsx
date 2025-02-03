@@ -1,5 +1,16 @@
 import { Check, Close, Delete, RteLink } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormLabel,
+    Grid,
+    InputBase,
+} from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
 import { MouseEvent, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";

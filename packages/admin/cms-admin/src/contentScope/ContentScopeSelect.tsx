@@ -1,5 +1,5 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
-import { Domain, Search } from "@comet/admin-icons";
+import { Domain, Language, Search } from "@comet/admin-icons";
 import {
     Box,
     Divider,
@@ -42,7 +42,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     options,
     searchable,
     groupBy,
-    icon = <Domain />,
+    icon = <Language />,
     renderOption,
     renderSelectedOption,
 }: Props<Value>) {
@@ -127,6 +127,64 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
             buttonChildren={renderSelectedOption(selectedOption)}
             startIcon={icon}
             slotProps={{
+                root: {
+                    sx: (theme) => ({
+                        overflow: "hidden",
+                        width: "100%",
+
+                        [theme.breakpoints.up("md")]: {
+                            width: "auto",
+                        },
+                    }),
+                },
+                button: {
+                    slotProps: {
+                        root: {
+                            sx: (theme) => ({
+                                width: "100%",
+                                justifyContent: "start",
+
+                                [theme.breakpoints.up("md")]: {
+                                    justifyContent: "center",
+                                },
+                            }),
+                        },
+                        content: {
+                            sx: (theme) => ({
+                                width: "100%",
+                                justifyContent: "start",
+
+                                [theme.breakpoints.up("md")]: {
+                                    justifyContent: "center",
+                                },
+                            }),
+                        },
+
+                        endIcon: {
+                            sx: (theme) => ({
+                                [theme.breakpoints.up("xs")]: {
+                                    "&:not(:first-of-type)": {
+                                        marginLeft: "auto",
+                                    },
+                                },
+
+                                [theme.breakpoints.up("md")]: {
+                                    "&:not(:first-of-type)": {
+                                        marginLeft: theme.spacing(2),
+                                    },
+                                },
+                            }),
+                        },
+                        typography: {
+                            sx: {
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                            },
+                        },
+                    },
+                },
+
                 popover: {
                     anchorOrigin: { vertical: "bottom", horizontal: "left" },
                     transformOrigin: { vertical: "top", horizontal: "left" },

@@ -1,5 +1,4 @@
 import {
-    ClickAwayListener,
     ComponentsOverrides,
     Popper as MuiPopper,
     Theme,
@@ -10,15 +9,10 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { cloneElement, ComponentProps, ReactElement, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export interface TooltipProps extends MuiTooltipProps {
-    /**
-     * @deprecated Triggers other than the default "hover" will be removed in the future.
-     */
-    trigger?: "hover" | "focus" | "click";
     variant?: Variant;
 }
 
@@ -30,7 +24,6 @@ type OwnerState = {
     variant: Variant;
     disableInteractive: boolean | undefined;
     arrow: boolean | undefined;
-    open: boolean | undefined;
     isRtl: boolean;
 };
 
@@ -48,7 +41,6 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L48
             !ownerState.disableInteractive && "popperInteractive",
             ownerState.arrow && "popperArrow",
-            !ownerState.open && "popperClose",
         ];
     },
 })(
@@ -128,10 +120,6 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
         css`
             pointer-events: auto;
         `};
-        ${!ownerState.open &&
-        css`
-            pointer-events: none;
-        `};
         ${ownerState.arrow &&
         css`
             &[data-popper-placement*="bottom"] .${tooltipClasses.arrow} {
@@ -185,70 +173,36 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
 );
 
 export const Tooltip = (inProps: TooltipProps) => {
-    const {
-        trigger = "hover",
-        variant = "dark",
-        disableInteractive,
-        arrow,
-        children,
-        ...props
-    } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const { variant = "dark", disableInteractive, arrow, children, ...props } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
-
-    const [open, setOpen] = useState(false);
-
-    const handleTooltipClose = () => {
-        setOpen(false);
-    };
-
-    const toggleTooltip = (event: MouseEvent) => {
-        event.stopPropagation();
-        setOpen(!open);
-    };
 
     const ownerState: OwnerState = {
         variant,
         disableInteractive,
         arrow,
-        open,
         isRtl: theme.direction === "rtl",
     };
 
-    const commonTooltipProps: ComponentProps<typeof TooltipRoot> = {
+    const commonTooltipProps = {
         ...props,
-        variant,
         disableInteractive,
         arrow,
-        isRtl: ownerState.isRtl,
         ownerState,
         slots: {
-            // @ts-expect-error The `ownerState` prop required by `TooltipPopper` does not exist in the type of MUIs `popper` slot in the `Tooltip` component but it is passed to the `TooltipPopper` component correctly.
             popper: TooltipPopper,
             ...props.slots,
         },
         slotProps: {
             popper: {
+                ownerState,
                 ...props.slotProps?.popper,
             },
             ...props.slotProps,
         },
     };
 
-    return trigger === "click" ? (
-        <ClickAwayListener onClickAway={handleTooltipClose}>
-            <TooltipRoot
-                onClose={handleTooltipClose}
-                open={open}
-                disableFocusListener
-                disableHoverListener
-                disableTouchListener
-                {...commonTooltipProps}
-            >
-                {cloneElement(children as ReactElement<any, any>, { onClick: toggleTooltip })}
-            </TooltipRoot>
-        </ClickAwayListener>
-    ) : (
-        <TooltipRoot disableHoverListener={trigger === "focus"} enterTouchDelay={0} {...commonTooltipProps}>
+    return (
+        <TooltipRoot enterTouchDelay={0} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
     );

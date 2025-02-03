@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useDataGridRemote,
@@ -39,7 +39,7 @@ function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGr
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
@@ -182,8 +182,12 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                 <IconButton
                                     disabled={isCurrentUser && !isImpersonated}
                                     onClick={() => {
-                                        !isCurrentUser && startImpersonation(params.row.id.toString());
-                                        isCurrentUser && isImpersonated && stopImpersonation();
+                                        if (!isCurrentUser) {
+                                            startImpersonation(params.row.id.toString());
+                                        }
+                                        if (isCurrentUser && isImpersonated) {
+                                            stopImpersonation();
+                                        }
                                     }}
                                 >
                                     <ImpersonateUser />

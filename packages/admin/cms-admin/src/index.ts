@@ -54,6 +54,7 @@ export { createCompositeBlockField } from "./blocks/helpers/composeBlocks/create
 export { createCompositeBlockFields } from "./blocks/helpers/composeBlocks/createCompositeBlockFields";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
 export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
+export { createCompositeBlockSwitchField } from "./blocks/helpers/createCompositeBlockSwitchField";
 export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
 export { decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
@@ -81,7 +82,6 @@ export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type {
     AdminComponentPart,
-    BindBlockAdminComponent,
     BlockAdminComponent,
     BlockDependency,
     BlockInputApi,
@@ -138,6 +138,7 @@ export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
+export { useDamScope } from "./dam/config/useDamScope";
 export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
 export type { FileWithDamUploadMetadata } from "./dam/DataGrid/fileUpload/useDamFileUpload";
@@ -219,7 +220,7 @@ import styled from "@mui/system";
 import csstype from "csstype";
 
 // import can not be used here as this file is outside of rootDir
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const version: string = require("../package.json").version;
 
 export { version };

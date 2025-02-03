@@ -61,10 +61,10 @@ export function useDataGridRemote({
         (!parsedSearch[sortParamName]
             ? undefined
             : !Array.isArray(parsedSearch[sortParamName])
-            ? parsedSearch[sortParamName] === "none"
-                ? []
-                : [parsedSearch[sortParamName] as string]
-            : (parsedSearch[sortParamName] as string[])
+              ? parsedSearch[sortParamName] === "none"
+                  ? []
+                  : [parsedSearch[sortParamName] as string]
+              : (parsedSearch[sortParamName] as string[])
         )?.map((i) => {
             const parts = i.split(":");
             return {
@@ -83,7 +83,7 @@ export function useDataGridRemote({
         [history, location, parsedSearch, sortParamName],
     );
 
-    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : initialFilter ?? { items: [] };
+    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : (initialFilter ?? { items: [] });
     const handleFilterChange = useCallback(
         (filterModel: GridFilterModel) => {
             history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) });

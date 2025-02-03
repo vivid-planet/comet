@@ -3,10 +3,10 @@
 
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    CheckboxField,
     Field,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveButton,
     FinalFormSelect,
@@ -34,7 +34,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -222,14 +222,12 @@ export function ProductForm({ id }: FormProps) {
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
-                        <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                        <CheckboxField
+                            label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                            name="inStock"
+                            fullWidth
+                            variant="horizontal"
+                        />
 
                         <DateField
                             variant="horizontal"

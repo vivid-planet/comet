@@ -6,7 +6,6 @@ export interface AffectedEntityOptions {
     nullable?: boolean;
 }
 export type AffectedEntityMeta = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entity: EntityClass<object>;
     options: AffectedEntityOptions;
 };

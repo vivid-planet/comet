@@ -1,6 +1,15 @@
 import { DeleteButton, messages } from "@comet/admin";
 import { ArrowRight, Clear, Delete } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography,
+} from "@mui/material";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 

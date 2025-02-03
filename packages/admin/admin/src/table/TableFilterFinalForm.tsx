@@ -2,10 +2,10 @@ import { Clear } from "@comet/admin-icons";
 import { Button, Grid, Typography } from "@mui/material";
 import { AnyObject } from "final-form";
 import { Component, ReactNode } from "react";
-import { Form, FormProps, FormRenderProps } from "react-final-form";
+import { Form, FormProps, FormRenderProps, RenderableProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { renderComponent } from "../finalFormRenderComponent";
+import { renderFinalFormChildren } from "../renderFinalFormChildren";
 import { IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
@@ -66,7 +66,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
                         </Grid>
                     )}
                     <Grid item xs={12}>
-                        {renderComponent(this.props, formRenderProps)}
+                        {renderFinalFormChildren(this.props as RenderableProps<FormRenderProps<FilterValues>>, formRenderProps)}
                     </Grid>
                 </Grid>
             </form>

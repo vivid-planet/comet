@@ -27,23 +27,22 @@ const DEFAULT_GROUP = "dropdown";
 
 const createFeaturesFromBlocktypeMap =
     (group: "dropdown" | "button") =>
-    ({ blocktypeMap, supports, blockTypeActive, handleBlockTypeButtonClick, standardBlockType }: IFeaturesFromBlocktypeMapArg): IFeatureConfig[] =>
-        [
-            ...Object.entries(blocktypeMap)
-                .filter(
-                    ([key, config]) =>
-                        ((!config.group && group === DEFAULT_GROUP) || (config.group && config.group === group)) && // empty groups are ok for the default group OR group must match
-                        (!config.supportedBy || supports(config.supportedBy)) && // either no supportedBy given or the specific "supportedBy"-value is in the supports array
-                        (key !== "unstyled" || standardBlockType === "unstyled"), // unstyled passes only when it is the standardBlock
-                )
-                .map(([blocktype, config]) => ({
-                    name: blocktype,
-                    label: config.label ?? blocktype,
-                    selected: blockTypeActive(blocktype),
-                    onButtonClick: handleBlockTypeButtonClick.bind(null, blocktype),
-                    icon: config.icon,
-                })),
-        ];
+    ({ blocktypeMap, supports, blockTypeActive, handleBlockTypeButtonClick, standardBlockType }: IFeaturesFromBlocktypeMapArg): IFeatureConfig[] => [
+        ...Object.entries(blocktypeMap)
+            .filter(
+                ([key, config]) =>
+                    ((!config.group && group === DEFAULT_GROUP) || (config.group && config.group === group)) && // empty groups are ok for the default group OR group must match
+                    (!config.supportedBy || supports(config.supportedBy)) && // either no supportedBy given or the specific "supportedBy"-value is in the supports array
+                    (key !== "unstyled" || standardBlockType === "unstyled"), // unstyled passes only when it is the standardBlock
+            )
+            .map(([blocktype, config]) => ({
+                name: blocktype,
+                label: config.label ?? blocktype,
+                selected: blockTypeActive(blocktype),
+                onButtonClick: handleBlockTypeButtonClick.bind(null, blocktype),
+                icon: config.icon,
+            })),
+    ];
 
 type BlockChangeEvent = SelectChangeEvent<DraftBlockType>;
 

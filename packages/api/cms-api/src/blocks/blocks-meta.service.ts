@@ -12,7 +12,7 @@ export class BlocksMetaService implements OnModuleInit {
         try {
             await fs.access("block-meta.json", fs.constants.W_OK);
             canWrite = true;
-        } catch (error) {
+        } catch {
             this.logger.warn("Cannot write block-meta.json file");
             canWrite = false;
         }
