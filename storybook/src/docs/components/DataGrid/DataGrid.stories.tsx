@@ -422,7 +422,7 @@ export const UseDataGridExcelExport = {
             }
         `;
 
-        const { data, loading, error } = useQuery<GQLQuery, QueryVariables | undefined>(query, {
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables>(query, {
             variables,
         });
 
