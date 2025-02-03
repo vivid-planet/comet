@@ -16,8 +16,9 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
+    BlockState,
+    createFinalFormBlock,
     DamImageBlock,
     FileUploadField,
     GQLFinalFormFileUploadFragment,

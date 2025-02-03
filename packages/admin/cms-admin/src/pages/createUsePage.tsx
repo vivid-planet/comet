@@ -1,11 +1,13 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import { BlockInterface, BlockState, DispatchSetStateAction, parallelAsyncEvery, resolveNewState } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
-import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { createElement, Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { BlockInterface, BlockState } from "../blocks/types";
+import { resolveNewState } from "../blocks/utils";
+import { parallelAsyncEvery } from "../blocks/utils/parallelAsyncEvery";
 import { GQLDocumentInterface } from "../graphql.generated";
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
@@ -337,7 +339,7 @@ export const createUsePage: CreateUsePage =
 
             // allow to create an updateHandler for each block-node
             const createHandleUpdate = useCallback((key: string) => {
-                const handleUpdateState: DispatchSetStateAction<BlockInterface> = (setStateAction) => {
+                const handleUpdateState: Dispatch<SetStateAction<BlockInterface>> = (setStateAction) => {
                     setPageState((s) => {
                         if (!s || !s.document) {
                             return;

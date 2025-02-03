@@ -1,12 +1,12 @@
 import { ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { BlockDependency, ReplaceDependencyObject } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
+import { BlockDependency, ReplaceDependencyObject } from "../../../blocks/types";
 import { ContentScopeInterface } from "../../../contentScope/Provider";
 import { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { GQLDamFile } from "../../../graphql.generated";

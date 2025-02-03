@@ -1,7 +1,6 @@
 ---
 "@comet/admin-color-picker": major
 "@comet/admin-date-time": major
-"@comet/blocks-admin": major
 "@comet/admin-icons": major
 "@comet/admin-theme": major
 "@comet/admin-rte": major

@@ -1,4 +1,4 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { StandaloneHeadingBlockData } from "@src/blocks.generated";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { FormattedMessage } from "react-intl";

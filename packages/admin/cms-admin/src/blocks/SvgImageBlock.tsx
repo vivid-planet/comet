@@ -1,17 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    IPreviewContext,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useState } from "react";
@@ -24,7 +13,13 @@ import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { AdminComponentButton } from "./common/AdminComponentButton";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { BlockCategory, BlockDependency, BlockInterface, BlockPreviewContext } from "./types";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
@@ -49,7 +44,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: IPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
         ...state,
         urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
         adminMeta: { route: previewCtx.parentUrl },

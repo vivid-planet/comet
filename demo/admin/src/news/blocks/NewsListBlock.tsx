@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
-import { BlockInterface, createBlockSkeleton } from "@comet/blocks-admin";
+import { BlockInterface, createBlockSkeleton } from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { NewsListBlockData, NewsListBlockInput } from "@src/blocks.generated";

@@ -8,7 +8,6 @@ fragmentTypes.json
 lang
 lang-extracted
 lang-compiled
-/blocks-admin-lang
 graphql.generated.ts
 block-meta.json
 src/blocks.generated.ts

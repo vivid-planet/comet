@@ -1,21 +1,17 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import {
-    AdminComponentSection,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    createBlockSkeleton,
-    resolveNewState,
-    SelectPreviewComponent,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { VimeoVideoBlockData, VimeoVideoBlockInput } from "../blocks.generated";
+import { useAdminComponentPaper } from "./common/AdminComponentPaper";
+import { AdminComponentSection } from "./common/AdminComponentSection";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, BlockInterface, BlockState } from "./types";
+import { resolveNewState } from "./utils";
 
 type State = Omit<VimeoVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 

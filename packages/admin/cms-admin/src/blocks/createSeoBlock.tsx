@@ -1,20 +1,5 @@
 import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
 import { Add, Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSectionGroup,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    Collapsible,
-    CollapsibleSwitchButtonHeader,
-    composeBlocks,
-    createBlockSkeleton,
-    createOptionalBlock,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
@@ -24,9 +9,21 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { validateUrl } from "../validation/validateUrl";
+import { AdminComponentButton } from "./common/AdminComponentButton";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { AdminComponentSectionGroup } from "./common/AdminComponentSectionGroup";
+import { Collapsible } from "./common/Collapsible";
+import { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonHeader";
+import { createOptionalBlock } from "./factories/createOptionalBlock";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
+import { BlockInterface, BlockState } from "./types";
 
 interface CreateSeoBlockOptions {
     image?: BlockInterface;

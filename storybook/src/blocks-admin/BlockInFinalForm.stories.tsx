@@ -1,6 +1,5 @@
 import { Field, FinalForm, SaveBoundary } from "@comet/admin";
-import { AdminComponentRoot, createFinalFormBlock, createListBlock } from "@comet/blocks-admin";
-import { ExternalLinkBlock } from "@comet/cms-admin";
+import { AdminComponentRoot, createFinalFormBlock, createListBlock, ExternalLinkBlock } from "@comet/cms-admin";
 
 import { dndProviderDecorator } from "../dnd.decorator";
 import { snackbarDecorator } from "../docs/components/Snackbar/snackbar.decorator";
