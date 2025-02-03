@@ -1,7 +1,6 @@
-import { messages, SelectField } from "@comet/admin";
+import { CancelButton, OkayButton, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -80,18 +79,13 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                                 </SelectField>
                             </DialogContent>
                             <DialogActions>
-                                <Button
-                                    type="button"
+                                <CancelButton
                                     onClick={() => {
                                         setDialogOpen(false);
                                         onMenuClose();
                                     }}
-                                >
-                                    <FormattedMessage {...messages.cancel} />
-                                </Button>
-                                <Button type="submit" variant="contained">
-                                    <FormattedMessage {...messages.ok} />
-                                </Button>
+                                />
+                                <OkayButton type="submit" />
                             </DialogActions>
                         </form>
                     )}

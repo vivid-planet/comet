@@ -34,7 +34,12 @@
         "test": "pnpm --recursive run test",
         "prepare": "husky",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
-        "publish": "pnpm run build:packages && $npm_execpath changeset publish"
+        "publish": "pnpm run build:packages && $npm_execpath changeset publish",
+        "browser:demo": "run-p browser:demo:api browser:demo:admin browser:demo:site browser:demo:jaeger",
+        "browser:demo:api": "dotenv -- sh -c 'open-cli $API_URL/graphql'",
+        "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
+        "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
+        "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
     },
     "devDependencies": {
         "@changesets/cli": "^2.27.12",
@@ -47,6 +52,8 @@
         "dotenv-cli": "^7.4.4",
         "husky": "^9.1.7",
         "lint-staged": "^12.5.0",
+        "npm-run-all2": "^7.0.2",
+        "open-cli": "^8.0.0",
         "prettier": "^3.4.2",
         "rimraf": "^6.0.1",
         "typescript": "^5.7.3",

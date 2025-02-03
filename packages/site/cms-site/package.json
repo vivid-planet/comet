@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "7.11.0",
+    "version": "7.13.0",
     "repository": {
         "directory": "packages/site/cms-site",
         "type": "git",
@@ -27,16 +27,18 @@
     },
     "dependencies": {
         "jose": "^5.9.6",
+        "lodash.isequal": "^4.5.0",
         "rimraf": "^6.0.1",
         "scroll-into-view-if-needed": "^3.1.0",
         "server-only": "^0.0.1",
         "usehooks-ts": "^3.1.0"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:^7.11.0",
-        "@comet/eslint-config": "workspace:^7.11.0",
+        "@comet/cli": "workspace:^7.13.0",
+        "@comet/eslint-config": "workspace:^7.13.0",
         "@types/draft-js": "^0.11.18",
         "@types/jest": "^29.5.14",
+        "@types/lodash.isequal": "^4.5.8",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "chokidar-cli": "^3.0.0",

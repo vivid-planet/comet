@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-theme",
-    "version": "7.11.0",
+    "version": "7.13.0",
     "repository": {
         "directory": "packages/admin/admin-theme",
         "type": "git",
@@ -26,14 +26,14 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin-icons": "workspace:^7.11.0",
+        "@comet/admin-icons": "workspace:^7.13.0",
         "@mui/utils": "^6.4.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.26.4",
         "@babel/core": "^7.26.7",
-        "@comet/admin-babel-preset": "workspace:^7.11.0",
-        "@comet/eslint-config": "workspace:^7.11.0",
+        "@comet/admin-babel-preset": "workspace:^7.13.0",
+        "@comet/eslint-config": "workspace:^7.13.0",
         "@mui/material": "^6.4.2",
         "@mui/system": "^6.4.2",
         "@mui/x-data-grid": "^7.23.6",

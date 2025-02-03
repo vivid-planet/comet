@@ -84,7 +84,7 @@ function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps)
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
 }

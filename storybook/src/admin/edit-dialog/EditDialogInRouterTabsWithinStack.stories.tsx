@@ -1,4 +1,5 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
     FillSpace,
@@ -22,7 +23,7 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
 import { ReactNode, RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -210,12 +211,7 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                 slotProps={{
                                     toolbar: {
                                         toolbarAction: (
-                                            <Button
-                                                startIcon={<Add />}
-                                                onClick={() => editDialogApi.current?.openAddDialog()}
-                                                variant="contained"
-                                                color="primary"
-                                            >
+                                            <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                 <FormattedMessage {...messages.add} />
                                             </Button>
                                         ),
@@ -294,12 +290,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                     slotProps={{
                                         toolbar: {
                                             toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
+                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     <FormattedMessage {...messages.add} />
                                                 </Button>
                                             ),

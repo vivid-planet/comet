@@ -67,14 +67,19 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     allowEmpty?: T;
 }
 
-export const createOneOfBlock = <T extends boolean = boolean>({
-    supportedBlocks,
-    name,
-    displayName = "Switch",
-    category = BlockCategory.Other,
-    variant = "select",
-    allowEmpty: passedAllowEmpty,
-}: CreateOneOfBlockOptions<T>): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
+export const createOneOfBlock = <T extends boolean = boolean>(
+    {
+        supportedBlocks,
+        name,
+        displayName = "Switch",
+        category = BlockCategory.Other,
+        variant = "select",
+        allowEmpty: passedAllowEmpty,
+    }: CreateOneOfBlockOptions<T>,
+    override?: (
+        block: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
+    ) => BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
+): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
     // allowEmpty can't have a default type because it's typed by a generic
     const allowEmpty = (passedAllowEmpty ?? true) satisfies boolean;
 
@@ -440,6 +445,9 @@ export const createOneOfBlock = <T extends boolean = boolean>({
             }
         },
     };
+    if (override) {
+        return override(OneOfBlock);
+    }
     return OneOfBlock;
 };
 

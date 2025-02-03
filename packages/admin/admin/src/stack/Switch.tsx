@@ -13,7 +13,7 @@ import {
     useRef,
     useState,
 } from "react";
-import { matchPath, RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
+import { matchPath, Route, RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
@@ -26,6 +26,7 @@ interface IProps {
     initialPage?: string;
     title?: ReactNode;
     children: Array<ReactElement<IStackPageProps>>;
+    disableForcePromptRoute?: boolean;
 }
 
 export const StackSwitchApiContext = createContext<IStackSwitchApi>({
@@ -195,13 +196,14 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
                 if (matchPath(location.pathname, { path })) {
                     routeMatched = true;
                 }
+                const RouteComponent = props.disableForcePromptRoute ? Route : ForcePromptRoute;
                 return (
-                    <ForcePromptRoute path={path}>
+                    <RouteComponent path={path}>
                         {(routeProps: RouteChildrenProps<IRouteParams>) => {
                             if (!routeProps.match) return null;
                             return renderRoute(page, routeProps);
                         }}
-                    </ForcePromptRoute>
+                    </RouteComponent>
                 );
             })}
             {!routeMatched && (
