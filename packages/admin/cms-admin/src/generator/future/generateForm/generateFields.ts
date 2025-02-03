@@ -31,10 +31,10 @@ export function findFieldByName(name: string, fields: FormConfig<any>["fields"])
         return acc
             ? acc
             : "name" in field && field.name === name
-            ? field
-            : isFormLayoutConfig(field)
-            ? findFieldByName(name, field.fields)
-            : undefined;
+              ? field
+              : isFormLayoutConfig(field)
+                ? findFieldByName(name, field.fields)
+                : undefined;
     }, undefined);
 }
 

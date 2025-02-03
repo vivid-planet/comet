@@ -4,7 +4,7 @@
         ".": {
             "entry": ["dev-pm.config.js", "waitForPackages.js", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell"]
+            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell", "open-cli"]
         },
         "packages/cli": {
             "entry": ["./src/index.ts"],

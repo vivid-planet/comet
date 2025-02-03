@@ -1,8 +1,6 @@
 import { CancelButton, OkayButton, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
-<<<<<<< HEAD
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -11,9 +9,6 @@ import {
     ListItemIcon,
     MenuItem,
 } from "@mui/material";
-=======
-import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
->>>>>>> main
 import { GQLUserGroup } from "@src/graphql.generated";
 import { useState } from "react";
 import { Form } from "react-final-form";

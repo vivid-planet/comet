@@ -166,21 +166,8 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
                             return (
                                 <div key={index}>
-<<<<<<< HEAD
-                                    <MoreActionsMenuItem
-                                        key={index}
-                                        disabled={!!selectionSize}
-                                        {...rest}
-                                        onClick={(e) => {
-                                            onClick?.(e);
-                                            handleClose();
-                                        }}
-                                    >
-                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
-=======
                                     <CrudMoreActionsMenuItem key={index} disabled={!!selectionSize} {...rest}>
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
->>>>>>> main
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </CrudMoreActionsMenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
@@ -212,21 +199,8 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
                             return (
                                 <div key={index}>
-<<<<<<< HEAD
-                                    <MoreActionsMenuItem
-                                        key={index}
-                                        disabled={!selectionSize}
-                                        {...rest}
-                                        onClick={(e) => {
-                                            onClick?.(e);
-                                            handleClose();
-                                        }}
-                                    >
-                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
-=======
                                     <CrudMoreActionsMenuItem key={index} disabled={!selectionSize} {...rest}>
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
->>>>>>> main
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                         {!!selectionSize && (
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />

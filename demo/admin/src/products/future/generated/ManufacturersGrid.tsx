@@ -20,14 +20,8 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-=======
 import { IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
->>>>>>> main
+import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {

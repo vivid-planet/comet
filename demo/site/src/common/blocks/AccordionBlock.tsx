@@ -51,7 +51,11 @@ export const AccordionBlock = withPreview(
         const handleChange = (itemKey: string) => {
             const newExpandedItems = new Set(expandedItems);
 
-            newExpandedItems.has(itemKey) ? newExpandedItems.delete(itemKey) : newExpandedItems.add(itemKey);
+            if (newExpandedItems.has(itemKey)) {
+                newExpandedItems.delete(itemKey);
+            } else {
+                newExpandedItems.add(itemKey);
+            }
 
             setExpandedItems(newExpandedItems);
         };

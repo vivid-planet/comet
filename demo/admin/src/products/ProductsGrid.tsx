@@ -28,7 +28,7 @@ import {
 import { Add as AddIcon, Edit, Excel, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
@@ -48,7 +48,11 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
+type ProductsGridToolbarProps = {
+    exportApi: ExportApi;
+};
+
+function ProductsGridToolbar({ exportApi }: ProductsGridToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -345,10 +349,10 @@ export function ProductsGrid() {
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductsGridToolbar,
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { exportApi },
+            slotProps={{
+                toolbar: { exportApi } as ProductsGridToolbarProps,
             }}
         />
     );

@@ -1,6 +1,5 @@
-import { ExternalLinkBlock } from "@comet/blocks-api";
-
-import { InternalLinkBlock } from "../page-tree/blocks/internal-link.block";
+import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block";
+import { ExternalLinkBlock } from "../ExternalLinkBlock";
 import { createLinkBlock } from "./createLinkBlock";
 
 describe("createLinkBlock", () => {

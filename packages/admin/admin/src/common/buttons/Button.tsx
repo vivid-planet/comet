@@ -5,13 +5,13 @@ import {
     ComponentsOverrides,
     css,
     Theme,
-    Tooltip,
     useTheme,
     useThemeProps,
 } from "@mui/material";
 import { OverridableComponent, OverridableTypeMap } from "@mui/material/OverridableComponent";
 import { ElementType, ForwardedRef, forwardRef, ReactNode } from "react";
 
+import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";

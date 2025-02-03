@@ -4,12 +4,12 @@
 
 ### Minor Changes
 
--   bd562d325: Add `disableForcePromptRoute` option to `StackSwitch`
+- bd562d325: Add `disableForcePromptRoute` option to `StackSwitch`
 
     This can be useful when a navigation in a switch shouldn't trigger a prompt, e.g., when navigating inside a block.
 
--   5c06e4bee: Reduce `MainContent` padding on mobile
--   b918c810b: Add support for custom components to `CrudMoreActionsMenu`
+- 5c06e4bee: Reduce `MainContent` padding on mobile
+- b918c810b: Add support for custom components to `CrudMoreActionsMenu`
 
     **Example**
 
@@ -34,22 +34,22 @@
 
 ### Patch Changes
 
--   @comet/admin-icons@7.13.0
--   @comet/admin-theme@7.13.0
+- @comet/admin-icons@7.13.0
+- @comet/admin-theme@7.13.0
 
 ## 7.12.0
 
 ### Minor Changes
 
--   af51bb408: Make the width of `GridToolbarQuickFilter` responsive when used inside `DataGridToolbar`
--   92b3255d2: Hide group title in `CrudMoreActionsMenu` when only one group is present
--   e8003f9c7: Add a new `FillSpace` component to replace `ToolbarFillSpace` and `AppHeaderFillSpace`
+- af51bb408: Make the width of `GridToolbarQuickFilter` responsive when used inside `DataGridToolbar`
+- 92b3255d2: Hide group title in `CrudMoreActionsMenu` when only one group is present
+- e8003f9c7: Add a new `FillSpace` component to replace `ToolbarFillSpace` and `AppHeaderFillSpace`
 
     `ToolbarFillSpace` and `AppHeaderFillSpace` are now deprecated.
 
--   4f6e6b011: Deprecate `FinalFormRadio` and `FinalFormCheckbox`
--   5583c9cff: Export `renderFinalFormChildren` helper
--   7da81fa2e: Add a new `Button` component to replace `ToolbarActionButton` and MUI's `Button`
+- 4f6e6b011: Deprecate `FinalFormRadio` and `FinalFormCheckbox`
+- 5583c9cff: Export `renderFinalFormChildren` helper
+- 7da81fa2e: Add a new `Button` component to replace `ToolbarActionButton` and MUI's `Button`
 
     Compared to MUI's `Button` component, the `color` prop has been removed, and the `variant` prop now defines those variants, defined by the Comet design guidelines, `primary` is the default variant.
 
@@ -96,14 +96,14 @@
 
 ### Patch Changes
 
--   954635630: Fix mobile styling of `AppHeaderMenuButton`
--   3ddc2278b: Adjust the spacings inside `Toolbar` and `DataGridToolbar` to match the Comet design
--   0bb181a52: `usePersistentColumnState`: Prevent Data Grids with the same name to overwrite each others pinned and column-visibility states
--   Updated dependencies [47be4ebd3]
--   Updated dependencies [ee597535a]
--   Updated dependencies [af51bb408]
-    -   @comet/admin-theme@7.12.0
-    -   @comet/admin-icons@7.12.0
+- 954635630: Fix mobile styling of `AppHeaderMenuButton`
+- 3ddc2278b: Adjust the spacings inside `Toolbar` and `DataGridToolbar` to match the Comet design
+- 0bb181a52: `usePersistentColumnState`: Prevent Data Grids with the same name to overwrite each others pinned and column-visibility states
+- Updated dependencies [47be4ebd3]
+- Updated dependencies [ee597535a]
+- Updated dependencies [af51bb408]
+    - @comet/admin-theme@7.12.0
+    - @comet/admin-icons@7.12.0
 
 ## 7.11.0
 

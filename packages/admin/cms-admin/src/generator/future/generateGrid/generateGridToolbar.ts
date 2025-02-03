@@ -28,14 +28,8 @@ export const generateGridToolbar = ({
     newEntryText,
     fragmentName,
 }: Options) => {
-<<<<<<< HEAD
-    const showMoreActionsMenu = excelExport;
-
     return `${renderToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}
-function ${componentName}(${getGridToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}) {
-=======
-    return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
->>>>>>> main
+    function ${componentName}(${getGridToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}

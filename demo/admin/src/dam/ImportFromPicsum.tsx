@@ -1,18 +1,13 @@
 import { Button, CancelButton, messages, SaveButton } from "@comet/admin";
 import { Reload } from "@comet/admin-icons";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
-<<<<<<< HEAD
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-=======
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
->>>>>>> main
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";

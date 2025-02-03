@@ -23,13 +23,8 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Button, IconButton, Typography } from "@mui/material";
-import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
-=======
 import { IconButton, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
->>>>>>> main
+import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
 import { ReactNode, RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 

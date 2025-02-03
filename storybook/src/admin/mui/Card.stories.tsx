@@ -1,10 +1,6 @@
 import { Button } from "@comet/admin";
 import { ArrowRight, Reload } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Button, Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
-=======
 import { Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
->>>>>>> main
 
 export default {
     title: "@comet/admin/mui",

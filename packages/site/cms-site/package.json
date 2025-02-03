@@ -26,33 +26,19 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-<<<<<<< HEAD
         "jose": "^5.9.6",
+        "lodash.isequal": "^4.5.0",
         "rimraf": "^6.0.1",
         "scroll-into-view-if-needed": "^3.1.0",
-=======
-        "jose": "^5.2.4",
-        "lodash.isequal": "^4.5.0",
-        "rimraf": "^3.0.0",
-        "scroll-into-view-if-needed": "^2.0.0",
->>>>>>> main
         "server-only": "^0.0.1",
         "usehooks-ts": "^3.1.0"
     },
     "devDependencies": {
-<<<<<<< HEAD
-        "@comet/cli": "workspace:^7.11.0",
-        "@comet/eslint-config": "workspace:^7.11.0",
-        "@types/draft-js": "^0.11.18",
-        "@types/jest": "^29.5.14",
-=======
         "@comet/cli": "workspace:^7.13.0",
         "@comet/eslint-config": "workspace:^7.13.0",
-        "@gitbeaker/node": "^34.0.0",
-        "@types/draft-js": "^0.11.10",
-        "@types/jest": "^29.5.0",
+        "@types/draft-js": "^0.11.18",
+        "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
->>>>>>> main
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "chokidar-cli": "^3.0.0",

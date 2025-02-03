@@ -6,7 +6,6 @@ import {
     StackPage,
     StackSwitch,
     Toolbar,
-    ToolbarActionButton,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,

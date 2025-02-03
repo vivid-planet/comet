@@ -13,11 +13,7 @@ import {
     useRef,
     useState,
 } from "react";
-<<<<<<< HEAD
-import { matchPath, RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
-=======
-import { matchPath, Route, RouteComponentProps, useHistory, useLocation, useRouteMatch } from "react-router";
->>>>>>> main
+import { matchPath, Route, RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
@@ -202,13 +198,8 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
                 }
                 const RouteComponent = props.disableForcePromptRoute ? Route : ForcePromptRoute;
                 return (
-<<<<<<< HEAD
-                    <ForcePromptRoute path={path}>
-                        {(routeProps: RouteChildrenProps<IRouteParams>) => {
-=======
                     <RouteComponent path={path}>
-                        {(routeProps: RouteComponentProps<IRouteParams>) => {
->>>>>>> main
+                        {(routeProps: RouteChildrenProps<IRouteParams>) => {
                             if (!routeProps.match) return null;
                             return renderRoute(page, routeProps);
                         }}

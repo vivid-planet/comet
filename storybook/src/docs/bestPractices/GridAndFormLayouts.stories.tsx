@@ -29,22 +29,8 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-<<<<<<< HEAD
-import {
-    Button,
-    // eslint-disable-next-line no-restricted-imports
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Typography,
-} from "@mui/material";
-import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-=======
 import { IconButton, Typography } from "@mui/material";
-import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
->>>>>>> main
+import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
@@ -908,12 +894,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
 
 export const GridWithSelectionInDialog = {
     render: () => {
-<<<<<<< HEAD
-        const [showDialog, setShowDialog] = useState(true); // In a real application, this would generally be `false` by default
-        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]); // TODO: Check why this is reset every time the dialog is opened. Is this only in storybook?
-=======
-        const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
->>>>>>> main
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
         const { rows, loading } = useData();
 
         const [EditDialog, , editDialogApi] = useEditDialog();
