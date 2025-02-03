@@ -6,7 +6,7 @@ import { Inject, Injectable } from "@nestjs/common";
 @Injectable()
 export class RedirectsFixtureService {
     constructor(
-        @((Inject as any)(REDIRECTS_LINK_BLOCK)) private readonly redirectsLinkBlock: RedirectsLinkBlock,
+        @Inject(REDIRECTS_LINK_BLOCK) private readonly redirectsLinkBlock: RedirectsLinkBlock,
         @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
     ) {}
 

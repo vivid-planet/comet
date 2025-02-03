@@ -12,7 +12,8 @@ export const Wrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$a
     border: 1px solid ${({ theme, $active }) => ($active ? theme.palette.grey[400] : theme.palette.grey[100])};
 `;
 
-export const SortByButton = styled(Button)`
+// Issue with button html type anchor
+export const SortByButton: typeof Button = styled(Button)`
     position: relative;
     align-items: center;
     padding: 11px 14px;
