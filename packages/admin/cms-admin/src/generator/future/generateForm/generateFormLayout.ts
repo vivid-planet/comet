@@ -173,7 +173,7 @@ export function generateFormLayout({
                         />
                     )}
                 </Field>
-                 <Field name="${String(config.name)}Enabled" subscription={{ value: true }}>
+                 <Field name="${String(config.name)}Enabled" fullWidth subscription={{ value: true }}>
                     {({ input: { value } }) =>
                         value ? (
                             <>
