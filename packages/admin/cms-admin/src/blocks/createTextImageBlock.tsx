@@ -29,10 +29,12 @@ export interface TextImageBlockFactoryOptions {
     image?: BlockInterface;
 }
 
-const createTextImageBlock = ({
-    text,
-    image = PixelImageBlock,
-}: TextImageBlockFactoryOptions): BlockInterface<TextImageBlockData, State, TextImageBlockInput> => {
+const createTextImageBlock = (
+    { text, image = PixelImageBlock }: TextImageBlockFactoryOptions,
+    override?: (
+        block: BlockInterface<TextImageBlockData, State, TextImageBlockInput>,
+    ) => BlockInterface<TextImageBlockData, State, TextImageBlockInput>,
+): BlockInterface<TextImageBlockData, State, TextImageBlockInput> => {
     const composed = composeBlocks({ text, image });
 
     const { api: composedApi, block: composedBlock } = composed;
@@ -106,6 +108,11 @@ const createTextImageBlock = ({
             );
         },
     };
+
+    if (override) {
+        return override(TextImageBlock);
+    }
+
     return TextImageBlock;
 };
 
