@@ -1260,9 +1260,6 @@ importers:
       '@types/draft-js':
         specifier: ^0.11.18
         version: 0.11.18
-      '@types/immutable':
-        specifier: ^3.8.7
-        version: 3.8.7
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -7263,10 +7260,6 @@ packages:
 
   '@types/http-proxy@1.17.9':
     resolution: {integrity: sha512-QsbSjA/fSk7xB+UXlCT3wHBy5ai9wOcNDWwZAtud+jXhwOM3l+EYZh8Lng4+/6n8uar0J7xILzqftJdJ/Wdfkw==}
-
-  '@types/immutable@3.8.7':
-    resolution: {integrity: sha512-nsHFDX48Tl3RaP4BF47HHe5njx40Pcp+0a8CIqzJata80Fp7JzkcuGB7UhZBGjH9aA1fMEahIqvPQQNmro5YLg==}
-    deprecated: This is a stub types definition for Facebook's Immutable (https://github.com/facebook/immutable-js). Facebook's Immutable provides its own type definitions, so you don't need @types/immutable installed!
 
   '@types/inquirer@7.3.3':
     resolution: {integrity: sha512-HhxyLejTHMfohAuhRun4csWigAMjXTmRyiJTU1Y/I1xmggikFMkOUoMQRlFm+zQcPEGHSs3io/0FAmNZf8EymQ==}
@@ -23313,10 +23306,6 @@ snapshots:
   '@types/http-proxy@1.17.9':
     dependencies:
       '@types/node': 22.10.7
-
-  '@types/immutable@3.8.7':
-    dependencies:
-      immutable: 3.8.2
 
   '@types/inquirer@7.3.3':
     dependencies:

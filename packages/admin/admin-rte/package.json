@@ -43,7 +43,6 @@
         "@comet/eslint-config": "workspace:^7.11.0",
         "@mui/material": "^6.4.2",
         "@types/draft-js": "^0.11.18",
-        "@types/immutable": "^3.8.7",
         "@types/jest": "^29.5.14",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
