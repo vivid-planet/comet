@@ -459,6 +459,9 @@ importers:
       '@sentry/node':
         specifier: ^7.118.0
         version: 7.118.0
+      '@smithy/types':
+        specifier: ^4.1.0
+        version: 4.1.0
       apollo-server-core:
         specifier: ^3.0.0
         version: 3.11.1(graphql@15.8.0)
@@ -14528,6 +14531,12 @@ packages:
   /@smithy/types@3.7.1:
     resolution: {integrity: sha512-XKLcLXZY7sUQgvvWyeaL/qwNPp6V3dWcUjqrQKjSb+tzYiCy340R/c64LV5j+Tnb2GhmunEX0eou+L+m2hJNYA==}
     engines: {node: '>=16.0.0'}
+    dependencies:
+      tslib: 2.8.1
+
+  /@smithy/types@4.1.0:
+    resolution: {integrity: sha512-enhjdwp4D7CXmwLtD6zbcDMbo6/T6WtuuKCY49Xxc6OMOmUWlBEBDREsxxgV2LIdeQPW756+f97GzcgAwp3iLw==}
+    engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.8.1
 
