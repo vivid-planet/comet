@@ -1,4 +1,4 @@
-import { AnonymousBlockInterface, BlockInterface } from "../types";
+import { type AnonymousBlockInterface, type BlockInterface } from "../types";
 
 export function isBlockInterface(block: BlockInterface | AnonymousBlockInterface): block is BlockInterface {
     const blockAsBlockInterface = block as BlockInterface;

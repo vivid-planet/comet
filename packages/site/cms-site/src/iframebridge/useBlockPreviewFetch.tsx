@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
-import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch, GraphQLFetch } from "../graphQLFetch/graphQLFetch";
+import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch, type GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);

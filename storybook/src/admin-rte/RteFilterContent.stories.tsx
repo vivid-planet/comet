@@ -1,13 +1,13 @@
 import {
-    FilterEditorStateBeforeUpdateFn,
+    type FilterEditorStateBeforeUpdateFn,
     filterEditorStateDefault,
     filterEditorUtilsManipulateEntityData,
-    IRteRef,
+    type IRteRef,
     makeRteApi,
     Rte,
 } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { EditorState, EntityInstance } from "draft-js";
+import { type EditorState, type EntityInstance } from "draft-js";
 import { useRef } from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";

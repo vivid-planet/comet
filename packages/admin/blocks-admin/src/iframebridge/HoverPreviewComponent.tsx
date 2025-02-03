@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { type PropsWithChildren, useEffect, useRef } from "react";
 import { useRouteMatch } from "react-router";
 import scrollIntoView from "scroll-into-view-if-needed";
 

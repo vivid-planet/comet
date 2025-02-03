@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 export function withDamRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {

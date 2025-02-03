@@ -4,14 +4,14 @@ import {
     FilterBarPopoverFilter,
     FinalFormSearchTextField,
     FinalFormSwitch,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
     TableFilterFinalForm,
 } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DamFilter } from "../../DamTable";
+import { type DamFilter } from "../../DamTable";
 import { DamSortPopover } from "./DamSortPopover";
 
 interface DamTableFilterProps {

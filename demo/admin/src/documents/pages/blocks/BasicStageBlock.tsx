@@ -1,5 +1,5 @@
 import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { BasicStageBlockData } from "@src/blocks.generated";
+import { type BasicStageBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";

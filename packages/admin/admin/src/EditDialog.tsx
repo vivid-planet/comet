@@ -2,22 +2,31 @@ import {
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
-    DialogActionsProps,
+    type DialogActionsProps,
     DialogContent,
-    DialogContentProps,
-    DialogProps,
+    type DialogContentProps,
+    type DialogProps,
     DialogTitle,
-    DialogTitleProps,
+    type DialogTitleProps,
 } from "@mui/material";
-import { ComponentType, forwardRef, ForwardRefRenderFunction, PropsWithChildren, ReactNode, useCallback, useImperativeHandle, useMemo } from "react";
+import {
+    type ComponentType,
+    forwardRef,
+    type ForwardRefRenderFunction,
+    type PropsWithChildren,
+    type ReactNode,
+    useCallback,
+    useImperativeHandle,
+    useMemo,
+} from "react";
 import { useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
-import { CloseDialogOptions, IEditDialogApi } from "./EditDialogApiContext";
+import { type CloseDialogOptions, type IEditDialogApi } from "./EditDialogApiContext";
 import { messages } from "./messages";
 import { SaveBoundary } from "./saveBoundary/SaveBoundary";
 import { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
-import { ISelectionApi } from "./SelectionApi";
+import { type ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {

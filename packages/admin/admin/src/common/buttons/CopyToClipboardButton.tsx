@@ -1,9 +1,9 @@
 import { Accept, Copy } from "@comet/admin-icons";
-import { ComponentsOverrides, css, Grow, IconButton, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { type ComponentsOverrides, css, Grow, IconButton, type Theme, useThemeProps } from "@mui/material";
+import { type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export interface CopyToClipboardButtonProps
     extends ThemedComponentBaseProps<{

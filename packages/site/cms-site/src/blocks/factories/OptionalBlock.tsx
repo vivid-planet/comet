@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 interface Props extends PropsWithChildren {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

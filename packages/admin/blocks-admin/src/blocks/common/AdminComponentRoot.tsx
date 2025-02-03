@@ -1,6 +1,6 @@
 import { Stack, StackBreadcrumbs } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface Props {

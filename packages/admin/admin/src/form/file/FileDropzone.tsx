@@ -1,11 +1,11 @@
 import { Error, Select } from "@comet/admin-icons";
-import { Box, Button, ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import { ReactNode, useState } from "react";
-import { DropzoneOptions, useDropzone } from "react-dropzone";
+import { Box, Button, type ComponentsOverrides, css, type Theme, Typography, useThemeProps } from "@mui/material";
+import { type ReactNode, useState } from "react";
+import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type FileDropzoneProps = ThemedComponentBaseProps<{
     root: "div";

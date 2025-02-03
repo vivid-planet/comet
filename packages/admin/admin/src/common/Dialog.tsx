@@ -1,19 +1,19 @@
 import { Close } from "@comet/admin-icons";
 import {
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     // eslint-disable-next-line no-restricted-imports
     Dialog as MuiDialog,
-    DialogProps as MuiDialogProps,
+    type DialogProps as MuiDialogProps,
     DialogTitle as MuiDialogTitle,
     IconButton,
-    Theme,
+    type Theme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type DialogClassKey = "root" | "closeButton" | "dialogTitle";
 

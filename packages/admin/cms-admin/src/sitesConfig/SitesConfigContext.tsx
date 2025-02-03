@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { ContentScopeInterface } from "../contentScope/Provider";
+import { type ContentScopeInterface } from "../contentScope/Provider";
 
 export interface SiteConfig {
     url: string;

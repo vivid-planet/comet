@@ -3,7 +3,7 @@ import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
-import { IPagingInfo } from "./paging/IPagingInfo";
+import { type IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {
     totalCount: number;

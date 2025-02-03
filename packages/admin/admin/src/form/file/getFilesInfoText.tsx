@@ -1,7 +1,7 @@
 import { FormattedMessage } from "react-intl";
 
 import { PrettyBytes } from "../../helpers/PrettyBytes";
-import { FileSelectProps } from "./FileSelect";
+import { type FileSelectProps } from "./FileSelect";
 
 export const getFilesInfoText = (maxFiles: FileSelectProps["maxFiles"], maxFileSize: FileSelectProps["maxFileSize"]) => {
     if (typeof maxFiles === "number" && typeof maxFileSize === "number") {

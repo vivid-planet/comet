@@ -1,4 +1,4 @@
-import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
+import { type Dispatch, type MouseEvent, type SetStateAction, useState } from "react";
 
 interface InsertInBetweenButtonHoverStatesApi {
     top: boolean;

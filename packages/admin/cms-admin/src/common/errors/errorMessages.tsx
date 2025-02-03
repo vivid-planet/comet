@@ -1,5 +1,5 @@
 import { messages } from "@comet/admin";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 export const formatStrong = (chunks: ReactNode[]) => <strong>{chunks}</strong>;

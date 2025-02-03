@@ -5,8 +5,8 @@ import {
     AdminComponentButton,
     AdminComponentPaper,
     BlockCategory,
-    BlockDependency,
-    BlockInterface,
+    type BlockDependency,
+    type BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
 } from "@comet/blocks-admin";
@@ -14,11 +14,11 @@ import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
+import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import { type CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
 import { DamPathLazy } from "../../form/file/DamPathLazy";
 import { FileField } from "../../form/file/FileField";
-import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
+import { type GQLDamFileDownloadLinkFileQuery, type GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
 export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput> = {
     ...createBlockSkeleton(),

@@ -1,13 +1,13 @@
-import { StyledComponent } from "@emotion/styled";
+import { type StyledComponent } from "@emotion/styled";
 import {
     css,
     generateUtilityClass,
     // eslint-disable-next-line no-restricted-imports
     styled,
-    Theme,
+    type Theme,
 } from "@mui/material";
-import { CSSProperties } from "@mui/material/styles/createMixins";
-import { ComponentProps, ElementType, forwardRef } from "react";
+import { type CSSProperties } from "@mui/material/styles/createMixins";
+import { type ComponentProps, type ElementType, forwardRef } from "react";
 
 const classNamePrefix = "CometAdmin";
 

@@ -11,7 +11,14 @@ import {
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
-import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/blocks-admin";
+import {
+    AdminComponentRoot,
+    type BlockOutputApi,
+    type BlockState,
+    HiddenInSubroute,
+    IFrameBridgeProvider,
+    resolveNewState,
+} from "@comet/blocks-admin";
 import { ContentScopeIndicator, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
 import { Button } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
@@ -21,7 +28,11 @@ import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
-import { GQLEditMainMenuItemFragment, GQLUpdateMainMenuItemMutation, GQLUpdateMainMenuItemMutationVariables } from "./EditMainMenuItem.generated";
+import {
+    type GQLEditMainMenuItemFragment,
+    type GQLUpdateMainMenuItemMutation,
+    type GQLUpdateMainMenuItemMutationVariables,
+} from "./EditMainMenuItem.generated";
 
 export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
 

@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from "react";
+import { createContext, type ReactNode } from "react";
 
 export interface DamConfig {
     acceptedMimeTypes?: string[];

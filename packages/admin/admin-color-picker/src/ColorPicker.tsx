@@ -1,8 +1,8 @@
-import { ClearInputAdornment, InputWithPopperComponents, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, type InputWithPopperComponents, type InputWithPopperProps } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { ComponentsOverrides, InputBaseProps, Typography } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { ChangeEvent, ComponentType, FocusEvent, HTMLAttributes, ReactNode, useEffect, useState } from "react";
+import { type ComponentsOverrides, type InputBaseProps, Typography } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type ChangeEvent, type ComponentType, type FocusEvent, type HTMLAttributes, type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import tinycolor from "tinycolor2";
 import { useDebouncedCallback } from "use-debounce";
@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 import {
     ColorPalette,
     ColorPaletteItem,
-    ColorPickerClassKey,
+    type ColorPickerClassKey,
     ColorPickerWrapper,
     Footer,
     FooterClearButton,
@@ -22,11 +22,11 @@ import {
     PopperRoot,
     Preview,
     PreviewIndicator,
-    PreviewIndicatorColorProps,
-    PreviewIndicatorEmptyOrInvalidProps,
+    type PreviewIndicatorColorProps,
+    type PreviewIndicatorEmptyOrInvalidProps,
     RgbaStringColorPicker,
     Root,
-    SlotProps,
+    type SlotProps,
 } from "./ColorPicker.slots";
 
 export interface ColorPickerColorPreviewProps extends Omit<HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}

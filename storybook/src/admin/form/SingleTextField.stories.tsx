@@ -1,7 +1,7 @@
 import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 
 export default {
     title: "@comet/admin/form",

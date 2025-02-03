@@ -10,7 +10,7 @@ import {
     FinalFormInput,
     FinalFormSaveButton,
     FinalFormSelect,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     Loading,
     MainContent,
     TextField,
@@ -25,23 +25,23 @@ import {
 } from "@comet/admin";
 import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createProductMutation, productFormFragment, productFormQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLProductFormFragment,
-    GQLProductFormQuery,
-    GQLProductFormQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLProductFormFragment,
+    type GQLProductFormQuery,
+    type GQLProductFormQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 const rootBlocks = {

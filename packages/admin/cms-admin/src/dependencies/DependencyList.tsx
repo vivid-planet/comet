@@ -1,17 +1,17 @@
-import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { Alert, GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
+import { type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
+import { Alert, type GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { IconButton, tablePaginationClasses } from "@mui/material";
-import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
+import { type LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
 import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
-import { GQLDependency } from "../graphql.generated";
+import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./DependenciesConfig";
 import * as sc from "./DependencyList.sc";
-import { DependencyInterface } from "./types";
+import { type DependencyInterface } from "./types";
 
 type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
     id: string;

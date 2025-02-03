@@ -1,7 +1,7 @@
 "use client";
 
 import { useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
-import { PageContentBlockData } from "@src/blocks.generated";
+import { type PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { withBlockPreview } from "@src/util/blockPreview";

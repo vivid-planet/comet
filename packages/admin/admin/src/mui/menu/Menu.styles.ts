@@ -1,4 +1,4 @@
-import { css, Drawer as MuiDrawer, drawerClasses, DrawerProps, Theme } from "@mui/material";
+import { css, Drawer as MuiDrawer, drawerClasses, type DrawerProps, type Theme } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED } from "./Menu";

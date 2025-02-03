@@ -1,7 +1,7 @@
 import { switchClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiSwitch: GetMuiComponentTheme<"MuiSwitch"> = (component, { palette }) => ({
     ...component,

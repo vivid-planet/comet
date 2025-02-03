@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { ContentScopeInterface } from "../contentScope/Provider";
+import { type ContentScopeInterface } from "../contentScope/Provider";
 import { LocaleContext } from "./LocaleContext";
 
 interface UseLocaleOptions {

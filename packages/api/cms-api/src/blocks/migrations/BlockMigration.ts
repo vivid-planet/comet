@@ -1,4 +1,4 @@
-import { BlockMigrationTransformFn, From, To, VersionDataInterface } from "./types";
+import { type BlockMigrationTransformFn, type From, type To, type VersionDataInterface } from "./types";
 
 // Standard implementation with common boilerplate
 // BlockMigrationInterface is not fully implemented in abstract class

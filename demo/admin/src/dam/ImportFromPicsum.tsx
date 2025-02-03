@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { getRandomPicsumImage, PicsumImage } from "./getRandomPicsumImage";
+import { getRandomPicsumImage, type PicsumImage } from "./getRandomPicsumImage";
 import PicsumIcon from "./PicsumIcon";
 
 export const ImportFromPicsum = () => {

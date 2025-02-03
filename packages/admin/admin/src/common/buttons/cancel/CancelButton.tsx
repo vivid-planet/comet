@@ -1,8 +1,8 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { ComponentsOverrides } from "@mui/material/styles/overrides";
+import { Button, type ButtonClassKey } from "@mui/material";
+import { type ButtonProps } from "@mui/material/Button";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentsOverrides } from "@mui/material/styles/overrides";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";

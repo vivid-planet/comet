@@ -1,4 +1,4 @@
-import { SetStateAction, SetStateFn } from "./types";
+import { type SetStateAction, type SetStateFn } from "./types";
 
 interface ResolveNewStateOptions<S> {
     prevState: S;

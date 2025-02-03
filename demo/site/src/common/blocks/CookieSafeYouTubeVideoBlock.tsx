@@ -1,7 +1,7 @@
 "use client";
 import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
 import { cookieIds } from "@src/util/cookieIds";
-import { ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import styled from "styled-components";
 
 import { FallbackCookiePlaceholder, LoadingCookiePlaceholder } from "../helpers/CookiePlaceholders";

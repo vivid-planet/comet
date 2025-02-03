@@ -1,4 +1,4 @@
-import { BreadcrumbItem } from "@comet/admin";
+import { type BreadcrumbItem } from "@comet/admin";
 import { ChevronRight, LevelUp } from "@comet/admin-icons";
 import { Breadcrumbs, IconButton, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -7,7 +7,11 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
-import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "./FolderBreadcrumbs.gql.generated";
+import {
+    type GQLDamFolderBreadcrumbFragment,
+    type GQLDamFolderBreadcrumbQuery,
+    type GQLDamFolderBreadcrumbQueryVariables,
+} from "./FolderBreadcrumbs.gql.generated";
 
 interface DamBreadcrumbItem {
     id: string | null;

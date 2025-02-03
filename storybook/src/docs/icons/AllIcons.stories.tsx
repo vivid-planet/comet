@@ -1,8 +1,8 @@
 import { ClearInputAdornment } from "@comet/admin";
 import * as icons from "@comet/admin-icons";
-import { Grid, InputAdornment, InputBase, SvgIconProps, Typography } from "@mui/material";
+import { Grid, InputAdornment, InputBase, type SvgIconProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ComponentType, useState } from "react";
+import { type ComponentType, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 const matchesSearchQuery = (str: string, query: string): boolean => {

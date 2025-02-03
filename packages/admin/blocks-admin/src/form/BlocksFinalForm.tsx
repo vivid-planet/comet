@@ -1,5 +1,5 @@
-import { FinalFormContextProvider, FinalFormContextProviderProps, renderFinalFormChildren } from "@comet/admin";
-import { AnyObject, Form, FormProps, FormRenderProps, FormSpy } from "react-final-form";
+import { FinalFormContextProvider, type FinalFormContextProviderProps, renderFinalFormChildren } from "@comet/admin";
+import { type AnyObject, Form, type FormProps, type FormRenderProps, FormSpy } from "react-final-form";
 
 interface AutoSaveSpyProps<FormValues> {
     onSubmit: FormProps<FormValues>["onSubmit"];

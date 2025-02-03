@@ -12,16 +12,16 @@ import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
-import { DamFileDetails, EditFileFormValues } from "./EditFile";
-import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
+import { type DamFileDetails, type EditFileFormValues } from "./EditFile";
+import { type GQLDamIsFilenameOccupiedQuery, type GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
 import {
-    GQLGenerateAltTextMutation,
-    GQLGenerateAltTextMutationVariables,
-    GQLGenerateImageTitleMutation,
-    GQLGenerateImageTitleMutationVariables,
+    type GQLGenerateAltTextMutation,
+    type GQLGenerateAltTextMutationVariables,
+    type GQLGenerateImageTitleMutation,
+    type GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
-import { LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
+import { type LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 
 interface SettingsFormProps {
     file: DamFileDetails;

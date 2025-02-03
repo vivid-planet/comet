@@ -1,9 +1,9 @@
-import { FieldValidator } from "final-form";
-import { ComponentType, createElement, ReactNode, useRef } from "react";
-import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
+import { type FieldValidator } from "final-form";
+import { type ComponentType, createElement, type ReactNode, useRef } from "react";
+import { Field as FinalFormField, type FieldMetaState, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { FieldContainer, FieldContainerProps } from "./FieldContainer";
+import { FieldContainer, type FieldContainerProps } from "./FieldContainer";
 import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => {

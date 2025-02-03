@@ -3,7 +3,7 @@ import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { StageBlock } from "@src/documents/pages/blocks/StageBlock";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
@@ -13,7 +13,7 @@ import { createGraphQLFetch } from "@src/util/graphQLClient";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
-import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
+import { type GQLPageQuery, type GQLPageQueryVariables } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
 const pageQuery = gql`

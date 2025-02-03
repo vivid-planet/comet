@@ -7,7 +7,7 @@ import { commonImpersonationMessages } from "../../common/impersonation/commonIm
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
-import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
+import { type GQLUserPageQuery, type GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();

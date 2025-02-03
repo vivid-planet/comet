@@ -1,4 +1,4 @@
-import { Logger, OnModuleInit } from "@nestjs/common";
+import { Logger, type OnModuleInit } from "@nestjs/common";
 import { promises as fs } from "fs";
 
 import { getBlocksMeta } from "./blocks-meta";

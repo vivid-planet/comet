@@ -3,9 +3,9 @@ import { IconButton as MuiIconButton, Link as MuiLink, Typography } from "@mui/m
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { BreadcrumbItem } from "../Stack";
+import { type BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { BackButtonSeparator, StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
+import { BackButtonSeparator, type StackBreadcrumbsClassKey, type StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 const Link = createComponentSlot(MuiLink)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",

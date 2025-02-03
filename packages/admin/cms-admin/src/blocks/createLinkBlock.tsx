@@ -1,17 +1,17 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import {
     AdminComponentSection,
-    BlockInterface,
+    type BlockInterface,
     BlocksFinalForm,
     createOneOfBlock,
-    CreateOneOfBlockOptions,
-    LinkBlockInterface,
+    type CreateOneOfBlockOptions,
+    type LinkBlockInterface,
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
 import { Box } from "@mui/system";
 import { FormattedMessage } from "react-intl";
 
-import { LinkBlockData } from "../blocks.generated";
+import { type LinkBlockData } from "../blocks.generated";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
 import { InternalLinkBlock } from "./InternalLinkBlock";
 

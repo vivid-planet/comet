@@ -1,4 +1,4 @@
-import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
+import { type IMakeRteApiProps, makeRteApi, type OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";

@@ -1,6 +1,6 @@
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 
-import { BlockInterface } from "../blocks/types";
+import { type BlockInterface } from "../blocks/types";
 import { resolveNewState } from "../blocks/utils";
 
 const createFinalFormBlock = (block: BlockInterface) => {

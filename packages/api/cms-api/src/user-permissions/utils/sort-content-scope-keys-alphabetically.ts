@@ -1,4 +1,4 @@
-import { ContentScope } from "../interfaces/content-scope.interface";
+import { type ContentScope } from "../interfaces/content-scope.interface";
 
 export function sortContentScopeKeysAlphabetically(obj: ContentScope): ContentScope {
     return Object.keys(obj)

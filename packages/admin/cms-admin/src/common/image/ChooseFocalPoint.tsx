@@ -3,7 +3,7 @@ import { AdminComponentSection } from "@comet/blocks-admin";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { GQLFocalPoint } from "../../graphql.generated";
+import { type GQLFocalPoint } from "../../graphql.generated";
 
 interface ChooseFocalPointProps {
     focalPoint: GQLFocalPoint;

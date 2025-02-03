@@ -1,10 +1,10 @@
 import { Badge } from "@mui/material";
-import { ListItemProps } from "@mui/material/ListItem";
-import { ReactNode } from "react";
-import { Link, LinkProps, Route } from "react-router-dom";
+import { type ListItemProps } from "@mui/material/ListItem";
+import { type ReactNode } from "react";
+import { Link, type LinkProps, Route } from "react-router-dom";
 
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MenuItem, MenuItemProps } from "./Item";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { MenuItem, type MenuItemProps } from "./Item";
 
 interface MenuItemRouterLinkStandardProps
     extends ThemedComponentBaseProps<{

@@ -3,7 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    IFilterApi,
+    type IFilterApi,
     Loading,
     MainContent,
     Stack,

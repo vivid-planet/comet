@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
+import { type SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
 
 interface Props<Config> {
     value: SiteConfigApi<Config>;

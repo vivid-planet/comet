@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
+import { type SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
 
 export function useSitesConfig<Configs = unknown>(): SiteConfigApi<Configs> {
     const context = useContext(SiteConfigContext);

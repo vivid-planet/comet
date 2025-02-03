@@ -3,7 +3,7 @@ import {
     AdminComponentPaper,
     AdminComponentSection,
     BlockCategory,
-    BlockInterface,
+    type BlockInterface,
     composeBlocks,
     createBlockSkeleton,
     decomposeUpdateStateAction,
@@ -12,9 +12,9 @@ import {
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
-import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
-import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
+import { type TextImageBlockData, type TextImageBlockInput } from "../blocks.generated";
+import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlock";
+import { type ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 interface State {

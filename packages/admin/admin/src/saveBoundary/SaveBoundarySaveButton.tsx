@@ -1,4 +1,4 @@
-import { SaveButton, SaveButtonProps } from "../common/buttons/save/SaveButton";
+import { SaveButton, type SaveButtonProps } from "../common/buttons/save/SaveButton";
 import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
 
 export function SaveBoundarySaveButton(props: SaveButtonProps) {

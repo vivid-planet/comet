@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { GridColDef } from "@comet/admin";
+import { type GridColDef } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { JobRuntime } from "../../cronJobs/JobRuntime";
 import { JobStatus } from "../../cronJobs/JobStatus";
 import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
-import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
+import { type GQLLatestBuildsQuery, type GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
 
 export const LatestBuildsDashboardWidget = () => {
     const { data, loading, error } = useQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>(LATEST_BUILDS);

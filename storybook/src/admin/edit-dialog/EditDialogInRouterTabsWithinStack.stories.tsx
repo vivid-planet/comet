@@ -3,7 +3,7 @@ import {
     EditDialog,
     FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
@@ -23,8 +23,8 @@ import {
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
-import { ReactNode, RefObject, useRef } from "react";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

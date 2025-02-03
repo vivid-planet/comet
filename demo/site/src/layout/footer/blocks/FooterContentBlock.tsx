@@ -1,5 +1,5 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { FooterContentBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type FooterContentBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";

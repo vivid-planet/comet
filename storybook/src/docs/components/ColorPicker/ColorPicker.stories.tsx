@@ -1,5 +1,5 @@
 import { Field, FieldContainer } from "@comet/admin";
-import { ColorPicker, ColorPickerColorPreviewProps, FinalFormColorPicker } from "@comet/admin-color-picker";
+import { ColorPicker, type ColorPickerColorPreviewProps, FinalFormColorPicker } from "@comet/admin-color-picker";
 import { StateFilled, StateRing, Warning } from "@comet/admin-icons";
 import { Grid } from "@mui/material";
 import { useState } from "react";

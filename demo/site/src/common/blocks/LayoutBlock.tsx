@@ -1,6 +1,6 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { LayoutBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type LayoutBlockData } from "@src/blocks.generated";
 import styled, { css } from "styled-components";
 
 import { MediaBlock } from "./MediaBlock";

@@ -3,11 +3,11 @@
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
 import { saveAs } from "file-saver";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
-import { IRow, ITableColumn, VisibleType } from "../Table";
+import { type IRow, type ITableColumn, VisibleType } from "../Table";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
 /**

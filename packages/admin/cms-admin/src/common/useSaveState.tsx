@@ -1,5 +1,5 @@
-import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import { ReactNode, useCallback, useState } from "react";
+import { messages, SaveButton, type SaveButtonProps } from "@comet/admin";
+import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SaveStateOptions<TData> {

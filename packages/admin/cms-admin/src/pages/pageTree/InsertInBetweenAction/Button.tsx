@@ -1,11 +1,11 @@
-import { IEditDialogApi } from "@comet/admin";
+import { type IEditDialogApi } from "@comet/admin";
 import { AddNoCircle } from "@comet/admin-icons";
 import { ButtonBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { MouseEvent } from "react";
+import { type MouseEvent } from "react";
 
 import { serializeInitialValues } from "../../../form/serializeInitialValues";
-import { PageTreeNodePosition } from "../PageTreeService";
+import { type PageTreeNodePosition } from "../PageTreeService";
 
 const IconWrapper = styled("div")`
     padding: 4px;

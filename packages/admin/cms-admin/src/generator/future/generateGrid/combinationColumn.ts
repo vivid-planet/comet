@@ -1,7 +1,7 @@
-import { GridColDef } from "@comet/admin";
-import { FormattedNumber } from "react-intl";
+import { type GridColDef } from "@comet/admin";
+import { type FormattedNumber } from "react-intl";
 
-import { BaseColumnConfig, ImportReference } from "../generator";
+import { type BaseColumnConfig, type ImportReference } from "../generator";
 import { getFormattedMessageNode } from "../utils/intl";
 
 type AbstractField<FieldName extends string> = {

@@ -7,7 +7,7 @@ import {
     FillSpace,
     filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridColumnsButton,
     GridFilterButton,
     muiGridFilterToGql,
@@ -28,17 +28,17 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductGridRelationsQuery,
-    GQLProductGridRelationsQueryVariables,
-    GQLProductsListManualFragment,
-    GQLProductsListQuery,
-    GQLProductsListQueryVariables,
-    GQLUpdateProductStatusMutation,
-    GQLUpdateProductStatusMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductGridRelationsQuery,
+    type GQLProductGridRelationsQueryVariables,
+    type GQLProductsListManualFragment,
+    type GQLProductsListQuery,
+    type GQLProductsListQueryVariables,
+    type GQLUpdateProductStatusMutation,
+    type GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 

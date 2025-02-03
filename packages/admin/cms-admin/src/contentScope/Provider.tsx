@@ -1,5 +1,5 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
-import { match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
+import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

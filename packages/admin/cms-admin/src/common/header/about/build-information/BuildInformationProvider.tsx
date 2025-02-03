@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { BuildInformation, BuildInformationContext } from "./BuildInformationContext";
+import { type BuildInformation, BuildInformationContext } from "./BuildInformationContext";
 
 interface Props {
     value: BuildInformation;

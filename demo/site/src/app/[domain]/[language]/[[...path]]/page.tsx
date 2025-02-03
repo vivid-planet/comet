@@ -1,13 +1,13 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
-import { GQLPageTreeNodeScope, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { type GQLPageTreeNodeScope, type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
-import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables } from "./page.generated";
+import { type GQLDocumentTypeQuery, type GQLDocumentTypeQueryVariables } from "./page.generated";
 
 const documentTypeQuery = gql`
     query DocumentType(

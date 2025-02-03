@@ -1,5 +1,5 @@
-import { DamVideoBlock, OneOfBlock, PreviewSkeleton, PropsWithData, SupportedBlocks, VimeoVideoBlock, withPreview } from "@comet/cms-site";
-import { MediaBlockData } from "@src/blocks.generated";
+import { DamVideoBlock, OneOfBlock, PreviewSkeleton, type PropsWithData, type SupportedBlocks, VimeoVideoBlock, withPreview } from "@comet/cms-site";
+import { type MediaBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 
 import { CookieSafeYouTubeVideoBlock } from "./CookieSafeYouTubeVideoBlock";

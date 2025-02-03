@@ -12,7 +12,7 @@ import {
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useState } from "react";
+import { type ChangeEvent, type FunctionComponent, type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -28,7 +28,7 @@ import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
-import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
+import { type BlockDependency, type BlockInterface, type BlockState, type DispatchSetStateAction, type PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.

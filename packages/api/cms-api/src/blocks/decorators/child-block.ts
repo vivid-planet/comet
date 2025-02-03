@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 
-import { Block, isBlockDataInterface } from "../block";
+import { type Block, isBlockDataInterface } from "../block";
 import { BlockField } from "./field";
 
 interface ChildBlockOptions {

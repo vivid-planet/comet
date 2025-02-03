@@ -4,7 +4,7 @@ import type { ThemeConfig } from "@docusaurus/theme-live-codeblock";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useIsBrowser from "@docusaurus/useIsBrowser";
 import type { Props } from "@theme/Playground";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 import { Button } from "./Button";

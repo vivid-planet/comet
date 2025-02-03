@@ -4,9 +4,9 @@ import {
     AdminComponentButton,
     AdminComponentPaper,
     AdminComponentSectionGroup,
-    BlockInterface,
+    type BlockInterface,
     BlocksFinalForm,
-    BlockState,
+    type BlockState,
     Collapsible,
     CollapsibleSwitchButtonHeader,
     composeBlocks,
@@ -22,7 +22,7 @@ import { Field as ReactFinalFormField } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
+import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
 import { validateUrl } from "../validation/validateUrl";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";

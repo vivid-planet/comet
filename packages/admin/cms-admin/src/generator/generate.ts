@@ -1,13 +1,13 @@
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { Command } from "commander";
-import { introspectionFromSchema, IntrospectionQuery } from "graphql";
+import { introspectionFromSchema, type IntrospectionQuery } from "graphql";
 
 import { runFutureGenerate } from "./future/generator";
 import { writeCrudForm } from "./generateForm";
 import { writeCrudGrid } from "./generateGrid";
 import { writeCrudPage } from "./generatePage";
-import { CrudGeneratorConfig } from "./types";
+import { type CrudGeneratorConfig } from "./types";
 
 async function writeCrud(options: CrudGeneratorConfig, schema: IntrospectionQuery): Promise<void> {
     await writeCrudForm(options, schema);

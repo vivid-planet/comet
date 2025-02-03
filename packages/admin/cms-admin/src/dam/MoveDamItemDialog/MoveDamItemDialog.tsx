@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { FetchResult } from "@apollo/client/link/core";
+import { type FetchResult } from "@apollo/client/link/core";
 import { SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
 import {
@@ -14,19 +14,19 @@ import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { TextMatch } from "../../common/MarkedMatches";
+import { type TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
 import { useDamScope } from "../config/useDamScope";
 import {
-    GQLMoveDamFilesMutation,
-    GQLMoveDamFilesMutationVariables,
-    GQLMoveDamFoldersMutation,
-    GQLMoveDamFoldersMutationVariables,
+    type GQLMoveDamFilesMutation,
+    type GQLMoveDamFilesMutationVariables,
+    type GQLMoveDamFoldersMutation,
+    type GQLMoveDamFoldersMutationVariables,
     moveDamFilesMutation,
     moveDamFoldersMutation,
 } from "../DataGrid/FolderDataGrid";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { allFoldersQuery, ChooseFolder, GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
+import { allFoldersQuery, ChooseFolder, type GQLAllFoldersWithoutFiltersQuery, type GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
 import { useFolderTree } from "./useFolderTree";
 import { useFolderTreeSearch } from "./useFolderTreeSearch";
 

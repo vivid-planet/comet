@@ -1,7 +1,7 @@
 import { Check, Error, Info, Warning } from "@comet/admin-icons";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiAlert: GetMuiComponentTheme<"MuiAlert"> = (component, { palette, spacing, shadows }) => ({
     ...component,

@@ -12,7 +12,7 @@ import {
     ToolbarActions,
 } from "@comet/admin";
 import { Box, Button, Card, CardContent } from "@mui/material";
-import { SubmissionErrors } from "final-form";
+import { type SubmissionErrors } from "final-form";
 import { useContext } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

@@ -1,14 +1,14 @@
-import { ComponentsOverrides, Drawer as MuiDrawer, Theme, useThemeProps } from "@mui/material";
-import { Children, cloneElement, ReactNode, useContext, useEffect, useMemo, useRef } from "react";
+import { type ComponentsOverrides, type Drawer as MuiDrawer, type Theme, useThemeProps } from "@mui/material";
+import { Children, cloneElement, type ReactNode, useContext, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router";
 
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
-import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
+import { type MenuChild, type MenuCollapsibleItemProps } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
-import { MenuItemProps } from "./Item";
-import { MenuItemRouterLinkProps } from "./ItemRouterLink";
-import { MenuClassKey, OwnerState, PermanentDrawer, TemporaryDrawer } from "./Menu.styles";
+import { type MenuItemProps } from "./Item";
+import { type MenuItemRouterLinkProps } from "./ItemRouterLink";
+import { type MenuClassKey, type OwnerState, PermanentDrawer, TemporaryDrawer } from "./Menu.styles";
 
 export const DEFAULT_DRAWER_WIDTH = 300;
 export const DEFAULT_DRAWER_WIDTH_COLLAPSED = 60;

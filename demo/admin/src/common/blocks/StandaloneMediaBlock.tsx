@@ -1,5 +1,5 @@
 import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { StandaloneMediaBlockData } from "@src/blocks.generated";
+import { type StandaloneMediaBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { mediaAspectRatioOptions } from "@src/util/mediaAspectRatios";
 import { FormattedMessage } from "react-intl";

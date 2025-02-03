@@ -1,5 +1,5 @@
 import { BaseTranslationDialog } from "@comet/admin";
-import { EditorState } from "draft-js";
+import { type EditorState } from "draft-js";
 
 import { Rte } from "../Rte";
 import RteReadOnly from "../RteReadOnly";
