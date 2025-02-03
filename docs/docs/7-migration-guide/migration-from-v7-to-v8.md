@@ -290,7 +290,6 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 - `IMenuContent` → `MainNavigationContextValue`
 - `IWithMenu` → `WithMainNavigation`
 - `withMenu` → `withMainNavigation`
-- `MenuContext` → `MainNavigationContext`
 - `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
 - `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
 - `MenuItemGroup` → `MainNavigationItemGroup`
@@ -298,6 +297,8 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 - `MenuItemGroupProps` → `MainNavigationItemGroupProps`
 - `MenuItemRouterLink` → `MainNavigationItemRouterLink`
 - `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
+
+Instead of `MenuContext`, please use the new `useMainNavigation` hook instead.
 
 ### Import `Tooltip` from `@comet/admin` package
 
