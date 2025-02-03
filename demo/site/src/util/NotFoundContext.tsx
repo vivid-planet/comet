@@ -23,3 +23,4 @@ function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
 }
 
 export const [getNotFoundContext, setNotFoundContext] = createServerContext<ContentScope | null>(null);
+export const [getPreviewParam, setPreviewParam] = createServerContext<string>("nopreview");
