@@ -24,7 +24,6 @@
         "dev:demo:api": "dev-pm start @demo-api",
         "dev:demo:site": "dev-pm start @demo-site",
         "dev:docs": "dev-pm start docs",
-        "postinstall": "husky install",
         "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
         "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
@@ -33,6 +32,7 @@
         "lint:knip": "knip --exports --files --dependencies --tags=-knipignore",
         "storybook": "dev-pm start storybook",
         "test": "pnpm --recursive run test",
+        "prepare": "husky",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
     },
