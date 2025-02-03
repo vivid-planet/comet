@@ -326,6 +326,18 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                 </div>
             );
         },
+
+        extractTextContents: ({ htmlTitle, metaDescription, openGraphDescription, openGraphTitle, structuredData }) => {
+            const contents = [];
+
+            if (htmlTitle) contents.push(htmlTitle);
+            if (metaDescription) contents.push(metaDescription);
+            if (openGraphDescription) contents.push(openGraphDescription);
+            if (openGraphTitle) contents.push(openGraphTitle);
+            if (structuredData) contents.push(structuredData);
+
+            return contents;
+        },
     };
 
     return SeoBlock;
