@@ -1231,16 +1231,16 @@ importers:
         version: 5.3.0
       draft-js-export-html:
         specifier: ^1.4.1
-        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
+        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
       draft-js-import-html:
         specifier: ^1.4.1
-        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
+        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
       draftjs-conductor:
         specifier: ^3.0.0
         version: 3.0.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       immutable:
-        specifier: ~3.7.4
-        version: 3.7.6
+        specifier: ~3.8.2
+        version: 3.8.2
     devDependencies:
       '@babel/cli':
         specifier: ^7.26.4
@@ -1260,9 +1260,6 @@ importers:
       '@types/draft-js':
         specifier: ^0.11.18
         version: 0.11.18
-      '@types/immutable':
-        specifier: ^3.8.7
-        version: 3.8.7
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -2440,13 +2437,13 @@ importers:
         version: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       draft-js-export-html:
         specifier: ^1.4.1
-        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
+        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
       draft-js-export-markdown:
         specifier: ^1.4.0
-        version: 1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
+        version: 1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
       draft-js-import-markdown:
         specifier: ^1.4.1
-        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
+        version: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
       eslint:
         specifier: ^9.18.0
         version: 9.19.0(jiti@2.4.2)
@@ -7264,10 +7261,6 @@ packages:
   '@types/http-proxy@1.17.9':
     resolution: {integrity: sha512-QsbSjA/fSk7xB+UXlCT3wHBy5ai9wOcNDWwZAtud+jXhwOM3l+EYZh8Lng4+/6n8uar0J7xILzqftJdJ/Wdfkw==}
 
-  '@types/immutable@3.8.7':
-    resolution: {integrity: sha512-nsHFDX48Tl3RaP4BF47HHe5njx40Pcp+0a8CIqzJata80Fp7JzkcuGB7UhZBGjH9aA1fMEahIqvPQQNmro5YLg==}
-    deprecated: This is a stub types definition for Facebook's Immutable (https://github.com/facebook/immutable-js). Facebook's Immutable provides its own type definitions, so you don't need @types/immutable installed!
-
   '@types/inquirer@7.3.3':
     resolution: {integrity: sha512-HhxyLejTHMfohAuhRun4csWigAMjXTmRyiJTU1Y/I1xmggikFMkOUoMQRlFm+zQcPEGHSs3io/0FAmNZf8EymQ==}
 
@@ -11037,6 +11030,10 @@ packages:
   immutable@3.7.6:
     resolution: {integrity: sha512-AizQPcaofEtO11RZhPPHBOJRdo/20MKQF9mBLnVkBoyHi1/zXK8fzVdnEpSV9gxqtnh6Qomfp3F0xT5qP/vThw==}
     engines: {node: '>=0.8.0'}
+
+  immutable@3.8.2:
+    resolution: {integrity: sha512-15gZoQ38eYjEjxkorfbcgBKBL6R7T459OuK+CpcWt7O3KF4uPCx2tD0uFETlUDIyo+1789crbMhTvQBSR5yBMg==}
+    engines: {node: '>=0.10.0'}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -23317,10 +23314,6 @@ snapshots:
     dependencies:
       '@types/node': 22.10.7
 
-  '@types/immutable@3.8.7':
-    dependencies:
-      immutable: 3.7.6
-
   '@types/inquirer@7.3.3':
     dependencies:
       '@types/through': 0.0.30
@@ -26069,42 +26062,42 @@ snapshots:
 
   dotenv@16.4.7: {}
 
-  draft-js-export-html@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6):
+  draft-js-export-html@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
+      immutable: 3.8.2
 
-  draft-js-export-markdown@1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6):
+  draft-js-export-markdown@1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
+      immutable: 3.8.2
 
-  draft-js-import-element@1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6):
+  draft-js-import-element@1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
+      immutable: 3.8.2
       synthetic-dom: 1.4.0
 
-  draft-js-import-html@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6):
+  draft-js-import-html@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
+      immutable: 3.8.2
 
-  draft-js-import-markdown@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6):
+  draft-js-import-markdown@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2)
+      immutable: 3.8.2
       synthetic-dom: 1.4.0
 
-  draft-js-utils@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.7.6):
+  draft-js-utils@1.4.1(draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(immutable@3.8.2):
     dependencies:
       draft-js: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      immutable: 3.7.6
+      immutable: 3.8.2
 
   draft-js@0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -28022,6 +28015,8 @@ snapshots:
   immer@9.0.21: {}
 
   immutable@3.7.6: {}
+
+  immutable@3.8.2: {}
 
   import-fresh@3.3.0:
     dependencies:
