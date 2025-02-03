@@ -12,7 +12,7 @@ import {
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, Dispatch, FunctionComponent, ReactNode, SetStateAction, useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -29,7 +29,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
+import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 
@@ -444,7 +444,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             const createUpdateSubBlocksFn = useCallback(
                 (blockKey: string) => {
-                    const updateSubBlocksFn: DispatchSetStateAction<unknown> = (setStateAction) => {
+                    const updateSubBlocksFn: Dispatch<SetStateAction<unknown>> = (setStateAction) => {
                         updateState((prevState) => ({
                             ...prevState,
                             blocks: prevState.blocks.map((c) =>

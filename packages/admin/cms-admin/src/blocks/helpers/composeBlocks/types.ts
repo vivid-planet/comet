@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
-import { AnonymousBlockInterface, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../../types";
+import { AnonymousBlockInterface, BlockInputApi, BlockInterface, BlockOutputApi, BlockState } from "../../types";
 import { Flatten, KeysMatching } from "./utility-types";
 
 export interface CompositeOptions {
@@ -64,7 +64,7 @@ export type AdminComponentPropsMap<C extends CompositeBlocksConfig> = AdminCompo
 type AdminComponentPropsMapByCompositeBlocks<C extends CompositeBlocks> = {
     [K in keyof C]: {
         state: BlockState<C[K]>;
-        updateState: DispatchSetStateAction<BlockState<C[K]>>;
+        updateState: Dispatch<SetStateAction<BlockState<C[K]>>>;
     };
 };
 

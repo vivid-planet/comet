@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { Dispatch, SetStateAction } from "react";
+
 import { BlockPreviewContent } from "../../common/blockRow/BlockPreviewContent";
-import { BlockContext, BlockDependency, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";
+import { BlockContext, BlockDependency, BlockInterface, BlockMethods, PreviewContent } from "../../types";
 import { resolveNewState } from "../../utils";
 import { deduplicateBlockDependencies } from "../deduplicateBlockDependencies";
 import { isBlockInterface } from "../isBlockInterface";
@@ -34,8 +36,8 @@ export type ComposeBlocksApi<C extends CompositeBlocksConfig> = {
     block: BlockMethods<DataMapInputApi<C>, DataMapState<C>, DataMapOutputApi<C>>;
 
     api: {
-        adminComponentProps: (props: { state: DataMapState<C>; updateState: DispatchSetStateAction<DataMapState<C>> }) => AdminComponentPropsMap<C>;
-        adminComponents: (props: { state: DataMapState<C>; updateState: DispatchSetStateAction<DataMapState<C>> }) => AdminComponentsMap<C>;
+        adminComponentProps: (props: { state: DataMapState<C>; updateState: Dispatch<SetStateAction<DataMapState<C>>> }) => AdminComponentPropsMap<C>;
+        adminComponents: (props: { state: DataMapState<C>; updateState: Dispatch<SetStateAction<DataMapState<C>>> }) => AdminComponentsMap<C>;
         previews: (state: DataMapState<C>, ctx?: BlockContext) => PreviewMap<C>;
         childBlockCounts: (state: DataMapState<C>) => ChildBlockCountMap<C>;
         isValids: (state: DataMapState<C>) => IsValidMap<C>;

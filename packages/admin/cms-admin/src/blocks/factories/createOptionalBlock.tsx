@@ -1,13 +1,13 @@
 import { Box, Divider } from "@mui/material";
 import isEqual from "lodash.isequal";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Route, useRouteMatch } from "react-router";
 
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { Collapsible } from "../common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "../common/CollapsibleSwitchButtonHeader";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../types";
+import { BlockInputApi, BlockInterface, BlockOutputApi, BlockState } from "../types";
 import { resolveNewState } from "../utils";
 
 // @TODO: move to general types
@@ -97,7 +97,7 @@ export function createOptionalBlock<T extends BlockInterface>(
             const match = useRouteMatch();
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const updateSubBlocksFn: DispatchSetStateAction<any> = (setStateAction) => {
+            const updateSubBlocksFn: Dispatch<SetStateAction<any>> = (setStateAction) => {
                 updateState((prevState) => ({
                     ...prevState,
                     block: resolveNewState({ prevState: prevState.block ? prevState.block : decoratedBlock.defaultValues(), setStateAction }),

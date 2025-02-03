@@ -91,12 +91,9 @@ export type {
     BlockPreviewContext,
     BlockPreviewStateInterface,
     BlockState,
-    DispatchSetStateAction,
     LinkBlockInterface,
     ReplaceDependencyObject,
     RootBlockInterface,
-    SetStateAction,
-    SetStateFn,
 } from "./blocks/types";
 export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";

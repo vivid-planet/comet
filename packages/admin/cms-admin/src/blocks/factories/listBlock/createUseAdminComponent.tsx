@@ -1,11 +1,11 @@
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { ClipboardContent, useBlockClipboard } from "../../clipboard/useBlockClipboard";
-import { BlockAdminComponentProps, BlockInterface, BlockState, DispatchSetStateAction } from "../../types";
+import { BlockAdminComponentProps, BlockInterface, BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
 import { ListBlockAdditionalItemField, ListBlockState } from "../createListBlock";
 
@@ -23,7 +23,7 @@ interface ListBlockUseAdminComponentApi<T extends BlockInterface> {
     deleteBlocks: (blockKeys: string[]) => void;
     deleteAllSelectedBlocks: () => void;
     addNewBlock: (beforeIndex?: number | undefined) => string;
-    createUpdateSubBlocksFn: (blockKey: string) => DispatchSetStateAction<BlockState<T>>;
+    createUpdateSubBlocksFn: (blockKey: string) => Dispatch<SetStateAction<BlockState<T>>>;
     totalVisibleBlocks: number;
     updateClipboardContent: (content: ClipboardContent) => Promise<void>;
     pasteBlock: (insertAt: number) => Promise<void>;
@@ -161,7 +161,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
 
         const createUpdateSubBlocksFn = useCallback(
             (blockKey: string) => {
-                const updateSubBlocksFn: DispatchSetStateAction<BlockState<T>> = (setStateAction) => {
+                const updateSubBlocksFn: Dispatch<SetStateAction<BlockState<T>>> = (setStateAction) => {
                     updateState((prevState) => ({
                         ...prevState,
                         blocks: prevState.blocks.map((c) =>

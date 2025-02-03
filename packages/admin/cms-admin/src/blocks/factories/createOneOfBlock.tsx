@@ -2,7 +2,7 @@ import { Field, FieldContainer, FinalFormRadio, SelectField } from "@comet/admin
 import { Box, Divider, FormControlLabel, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { ReactNode, useCallback } from "react";
+import { Dispatch, ReactNode, SetStateAction, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useAdminComponentPaper } from "../common/AdminComponentPaper";
@@ -11,7 +11,7 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockInterface, BlockPreviewStateInterface, BlockState, CustomBlockCategory, DispatchSetStateAction } from "../types";
+import { BlockCategory, BlockInterface, BlockPreviewStateInterface, BlockState, CustomBlockCategory } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 
@@ -335,7 +335,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
             const createUpdateSubBlocksFn = useCallback(
                 (blockType: string) => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const updateSubBlocksFn: DispatchSetStateAction<any> = (setStateAction) => {
+                    const updateSubBlocksFn: Dispatch<SetStateAction<any>> = (setStateAction) => {
                         updateState((prevState) => ({
                             ...prevState,
                             attachedBlocks: prevState.attachedBlocks.map((c) =>

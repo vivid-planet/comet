@@ -1,9 +1,6 @@
-import { ComponentType, ReactElement, ReactNode } from "react";
+import { ComponentType, Dispatch, ReactElement, ReactNode, SetStateAction } from "react";
 import { FormattedMessage, MessageDescriptor } from "react-intl";
 
-export type SetStateFn<S> = (prevState: S) => S;
-export type SetStateAction<S> = S | SetStateFn<S>;
-export type DispatchSetStateAction<S> = (setStateAction: SetStateAction<S>) => void;
 export interface BlockPreviewContext {
     showVisibleOnly?: boolean;
     parentUrl: string;
@@ -21,7 +18,7 @@ export interface BlockPreviewStateInterface {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface BlockAdminComponentProps<S = any> {
     state: S;
-    updateState: DispatchSetStateAction<S>;
+    updateState: Dispatch<SetStateAction<S>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

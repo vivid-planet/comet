@@ -18,6 +18,9 @@ Therefore, the `@comet/blocks-admin` is merged into this package.
     -   `Collapsible`
     -   `CollapsibleSwitchButtonHeader`
     -   `usePromise`
+    -   `DispatchSetStateAction` (use `Dispatch<SetStateAction<T>>` from `react` instead)
+    -   `SetStateAction`
+    -   `SetStateFn`
 -   Multiple exports that were too generic have been renamed
     -   `createCompositeSetting` -> `createCompositeBlockField`
     -   `createCompositeSettings` -> `createCompositeBlockFields`

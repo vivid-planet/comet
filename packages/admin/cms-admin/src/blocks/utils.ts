@@ -1,4 +1,4 @@
-import { SetStateAction, SetStateFn } from "./types";
+import { SetStateAction } from "react";
 
 interface ResolveNewStateOptions<S> {
     prevState: S;
@@ -6,8 +6,8 @@ interface ResolveNewStateOptions<S> {
 }
 export function resolveNewState<S>({ prevState, setStateAction }: ResolveNewStateOptions<S>): S {
     // type guard
-    function actionIsFunction(action: SetStateAction<S>): action is SetStateFn<S> {
-        return typeof (action as SetStateFn<S>) === "function";
+    function actionIsFunction(action: SetStateAction<S>): action is (prevState: S) => S {
+        return typeof action === "function";
     }
 
     if (actionIsFunction(setStateAction)) {

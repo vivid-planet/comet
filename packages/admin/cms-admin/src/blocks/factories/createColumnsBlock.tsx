@@ -2,7 +2,7 @@ import { Field, StackPage, StackPageTitle, StackSwitch, StackSwitchApiContext } 
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Checkbox, Divider, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -17,7 +17,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, CustomBlockCategory, DispatchSetStateAction, PreviewContent } from "../types";
+import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, CustomBlockCategory, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
@@ -209,7 +209,7 @@ export function createColumnsBlock<T extends BlockInterface>({
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const groupLayoutsByColumnsApi = createGroupLayoutsByColumnsApi(layouts);
-            const handleListBlockAdminChange: DispatchSetStateAction<ListBlockState<T>> = (listBlockSetStateAction) => {
+            const handleListBlockAdminChange: Dispatch<SetStateAction<ListBlockState<T>>> = (listBlockSetStateAction) => {
                 updateState((prevState) => {
                     const listBlockState = resolveNewState({
                         prevState: { blocks: prevState.columns },
