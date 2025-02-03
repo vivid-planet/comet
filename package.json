@@ -45,7 +45,7 @@
         "knip": "^5.43.6",
         "cspell": "^8.17.3",
         "dotenv-cli": "^7.4.4",
-        "husky": "^7.0.4",
+        "husky": "^9.1.7",
         "lint-staged": "^12.5.0",
         "prettier": "^3.4.2",
         "rimraf": "^6.0.1",
