@@ -28,7 +28,7 @@ function createLinkBlock(
         allowEmpty = false,
         ...oneOfBlockOptions
     }: CreateLinkBlockOptions,
-    override?: (block: BlockInterface) => BlockInterface,
+    override?: (block: BlockInterface) => BlockInterface & LinkBlockInterface,
 ): BlockInterface & LinkBlockInterface {
     const OneOfBlock = createOneOfBlock(
         {
