@@ -27,6 +27,7 @@
     "dependencies": {
         "@comet/blocks-api": "workspace:*",
         "@comet/cms-api": "workspace:*",
+        "@fast-csv/parse": "^4.3.6",
         "@hapi/accept": "^5.0.0",
         "@kubernetes/client-node": "^0.18.0",
         "@mikro-orm/cli": "^5.9.8",
@@ -48,6 +49,7 @@
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
         "@opentelemetry/sdk-node": "^0.53.0",
         "@sentry/node": "^7.118.0",
+        "@smithy/types": "^4.1.0",
         "apollo-server-core": "^3.0.0",
         "apollo-server-express": "^3.0.0",
         "async": "^3.0.0",
@@ -57,6 +59,7 @@
         "commander": "^8.0.0",
         "compression": "^1.0.0",
         "cookie-parser": "^1.0.0",
+        "date-fns": "^4.1.0",
         "elastic-apm-node": "^3.0.0",
         "exifr": "^6.0.0",
         "express": "^4.17.1",
