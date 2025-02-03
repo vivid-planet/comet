@@ -64,13 +64,13 @@ export class RawProduct extends BaseTargetEntity {
     soldCount?: number;
 
     @Property({ type: types.date, nullable: true })
-    @CsvColumn("availableSince", { dateFormatString: "dd.MM.yyyy" })
+    @CsvColumn("availableSince", { dateFormatString: "dd-MM-yyyy" })
     @IsOptional()
     @IsDate()
     availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
 
     @Property({ nullable: true })
-    @CsvColumn("lastCheckedAt")
+    @CsvColumn("lastCheckedAt", { dateFormatString: "dd-MM-yyyy-HH:mm:ss" })
     @IsOptional()
     @IsDate()
     lastCheckedAt?: Date = undefined;
