@@ -230,6 +230,47 @@ npx @comet/upgrade v8/nest-peer-dependencies.ts
 
 :::
 
+### Remove `@comet/blocks-api`
+
+The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
+To upgrade, perform the following steps:
+
+1.  Remove the package:
+
+    ```diff title="api/package.json"
+    - "@comet/blocks-api": "^7.x.x",
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/remove-blocks-packages.ts
+    ```
+
+    :::
+
+2.  Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+    ```
+
+    :::
+
+3.  Update imports that have been renamed
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+    ```
+
+    :::
+
+4.  Remove usages of removed export `getFieldKeys` (probably none)
+
 ## Admin
 
 ### Upgrade peer dependencies
