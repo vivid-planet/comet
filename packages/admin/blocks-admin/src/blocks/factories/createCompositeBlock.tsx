@@ -250,7 +250,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             };
 
             return (
-                <StackSwitch>
+                <StackSwitch disableForcePromptRoute>
                     {[
                         <StackPage name="initial" key="initial">
                             {Object.entries(groups).map(([groupKey, group]) => {

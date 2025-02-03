@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudMoreActionsMenu,
     dataGridDateTimeColumn,
@@ -20,7 +21,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
-import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
+import { Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
@@ -442,7 +443,7 @@ export const UseDataGridExcelExport = {
                     <FillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
+                            <Button variant="textDark" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />}>
                                 More Actions
                             </Button>
                             <Menu

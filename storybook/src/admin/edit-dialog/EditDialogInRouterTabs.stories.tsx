@@ -1,4 +1,5 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
     FillSpace,
@@ -12,8 +13,13 @@ import {
     ToolbarActions,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
+<<<<<<< HEAD
 import { Button, Typography } from "@mui/material";
 import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
+=======
+import { Typography } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+>>>>>>> main
 import { ReactNode, RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -102,12 +108,7 @@ export const EditDialogInRouterTabs = {
                             slotProps={{
                                 toolbar: {
                                     toolbarAction: (
-                                        <Button
-                                            startIcon={<Add />}
-                                            onClick={() => editDialogApi.current?.openAddDialog()}
-                                            variant="contained"
-                                            color="primary"
-                                        >
+                                        <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                             <FormattedMessage {...messages.add} />
                                         </Button>
                                     ),

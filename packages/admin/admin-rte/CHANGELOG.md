@@ -1,5 +1,32 @@
 # @comet/admin-rte
 
+## 7.13.0
+
+### Patch Changes
+
+-   86c1d5996: Set correct editor height when using the `minHeight` option
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [5c06e4bee]
+-   Updated dependencies [b918c810b]
+    -   @comet/admin@7.13.0
+    -   @comet/admin-icons@7.13.0
+
+## 7.12.0
+
+### Patch Changes
+
+-   Updated dependencies [af51bb408]
+-   Updated dependencies [92b3255d2]
+-   Updated dependencies [954635630]
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [4f6e6b011]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [7da81fa2e]
+-   Updated dependencies [3ddc2278b]
+-   Updated dependencies [0bb181a52]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Patch Changes

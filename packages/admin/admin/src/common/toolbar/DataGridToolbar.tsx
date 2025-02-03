@@ -24,6 +24,18 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     },
 })(
     ({ ownerState, theme }) => css`
+        [class*="MuiDataGrid-toolbarQuickFilter"] {
+            width: 120px;
+
+            ${theme.breakpoints.up("sm")} {
+                width: 150px;
+            }
+
+            ${theme.breakpoints.up("md")} {
+                width: "auto";
+            }
+        }
+
         ${ownerState.density === "comfortable" &&
         css`
             min-height: 80px;

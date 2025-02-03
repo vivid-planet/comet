@@ -1,5 +1,7 @@
-import { CancelButton, messages, SaveButton } from "@comet/admin";
+import { Button, CancelButton, messages, SaveButton } from "@comet/admin";
+import { Reload } from "@comet/admin-icons";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
+<<<<<<< HEAD
 import {
     Button,
     // eslint-disable-next-line no-restricted-imports
@@ -8,6 +10,9 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
+=======
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+>>>>>>> main
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -53,7 +58,7 @@ export const ImportFromPicsum = () => {
 
     return (
         <>
-            <Button variant="text" color="inherit" startIcon={<PicsumIcon />} onClick={handleOpenDialog}>
+            <Button variant="textDark" startIcon={<PicsumIcon />} onClick={handleOpenDialog}>
                 <FormattedMessage id="pages.dam.importFromPicsum" defaultMessage="Import from Picsum" />
             </Button>
             <Dialog open={isOpen} onClose={handleCloseDialog}>
@@ -64,7 +69,7 @@ export const ImportFromPicsum = () => {
                     </DialogContent>
                     <DialogActions>
                         <CancelButton onClick={handleCloseDialog} />
-                        <Button onClick={handleShuffle}>
+                        <Button variant="textDark" startIcon={<Reload />} onClick={handleShuffle}>
                             <FormattedMessage id="pages.dam.importFromPicsum.dialog.shuffle" defaultMessage="Shuffle" />
                         </Button>
                         <SaveButton onClick={handleSave}>

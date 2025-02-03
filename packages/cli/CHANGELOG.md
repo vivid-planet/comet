@@ -1,5 +1,13 @@
 # @comet/cli
 
+## 7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   753cd6f04: Add option for base64 encoding in `inject-site-configs` command
+
 ## 7.11.0
 
 ## 7.10.0

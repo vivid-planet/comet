@@ -38,6 +38,7 @@ import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "./helpers/FutureProductNotice";
 import {
     GQLProductCategoriesSelectQuery,
     GQLProductCategoriesSelectQueryVariables,
@@ -208,6 +209,7 @@ export function ProductForm({ id, width }: FormProps) {
                         name="availableSince"
                         label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                     />
+                    <FutureProductNotice />
                     <AsyncSelectField
                         name="manufacturerCountry"
                         loadOptions={async () => {

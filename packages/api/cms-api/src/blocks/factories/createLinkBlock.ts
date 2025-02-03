@@ -10,13 +10,18 @@ import {
     BaseOneOfBlockItemInput,
     createOneOfBlock,
     CreateOneOfBlockOptions,
+<<<<<<< HEAD:packages/api/cms-api/src/blocks/factories/createLinkBlock.ts
     OneOfBlock,
 } from "./createOneOfBlock";
+=======
+} from "@comet/blocks-api";
+import { IsOptional, IsString } from "class-validator";
+>>>>>>> main:packages/api/cms-api/src/blocks/createLinkBlock.ts
 
 function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterface, BlockInputInterface>>>(
     { supportedBlocks, allowEmpty = false }: CreateOneOfBlockOptions<BlockMap>,
     nameOrOptions: BlockFactoryNameOrOptions = "Link",
-): OneOfBlock<BlockMap> {
+) {
     class LinkBlockItemData extends BaseOneOfBlockItemData({ supportedBlocks }) {}
 
     class LinkBlockItemInput extends BaseOneOfBlockItemInput({ supportedBlocks, OneOfBlockItemData: LinkBlockItemData }) {}

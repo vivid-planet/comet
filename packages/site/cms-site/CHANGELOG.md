@@ -1,5 +1,20 @@
 # @comet/cms-site
 
+## 7.13.0
+
+### Minor Changes
+
+-   f60b6360c: Extend the `usePreview`-helpers `isSelected` and `isHovered` with optional partial match support
+
+    -   When `exactMatch` is set to `true` (default), the function checks for exact URL matches.
+    -   When `exactMatch` is set to `false`, the function checks if the selected route starts with the given URL.
+
+## 7.12.0
+
+### Patch Changes
+
+-   e92e6df03: Prevent the block-preview from becoming unresponsive when rendering an `input`
+
 ## 7.11.0
 
 ## 7.10.0

@@ -6,10 +6,6 @@ import { createCompositeSetting } from "./createCompositeSetting";
 import { createCompositeSettings } from "./createCompositeSettings";
 import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
 
-jest.mock("react-dnd", () => {
-    return;
-});
-
 // TODO: youtube block moved, space block deprecated, update tests
 
 describe("composeBlocks", () => {

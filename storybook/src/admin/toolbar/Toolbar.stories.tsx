@@ -1,4 +1,5 @@
 import {
+    Button,
     FillSpace,
     Stack,
     StackLink,
@@ -45,10 +46,12 @@ function Story() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarActions>
-                <ToolbarActionButton startIcon={<ArrowRight />}>Secondary button</ToolbarActionButton>
-                <ToolbarActionButton startIcon={<Save />} variant="contained">
+                <Button responsive startIcon={<ArrowRight />} variant="outlined">
+                    Secondary button
+                </Button>
+                <Button responsive startIcon={<Save />}>
                     Primary button
-                </ToolbarActionButton>
+                </Button>
             </ToolbarActions>
         </Toolbar>
     );

@@ -57,6 +57,17 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
             backgroundColor: "white",
+
+            "& [class*='MuiDataGrid-toolbarQuickFilter']": {
+                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
+                    paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
+                    textOverflow: "ellipsis",
+                },
+
+                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
+                    display: "none", // Prevents the disabled clear-button from overlaying the input value
+                },
+            },
         },
         columnHeader: ({ ownerState }) => ({
             /* !important is required to override inline styles */
