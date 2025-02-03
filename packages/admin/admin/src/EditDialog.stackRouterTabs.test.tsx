@@ -1,7 +1,7 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGrid, GridSlotsComponent } from "@mui/x-data-grid";
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { ReactNode, RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
@@ -76,7 +76,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         return (
             <Stack topLevelTitle="Nested Stack">
                 <StackSwitch>
-                    <StackPage name="products" title="Products">
+                    <StackPage name="products">
                         <RouterTabs>
                             <RouterTab label="Customers" path="">
                                 Customers Page
@@ -161,7 +161,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
-    it.skip("should not open edit dialog when navigating back to products page", async () => {
+    it("should not open edit dialog when navigating back to products page", async () => {
         const history = createMemoryHistory();
 
         const rendered = render(
@@ -171,14 +171,20 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
 
         rendered.getByText("Products").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
 
-        expect(rendered.queryAllByTestId("edit.row")).toHaveLength(6);
+        await waitFor(() => {
+            expect(rendered.queryAllByTestId("edit.row")).toHaveLength(6);
+        });
         rendered.queryAllByTestId("edit.row")[5].click();
 
         expect(history.location.pathname).toBe("/5/productEdit");
+        await waitFor(() => {
+            expect(rendered.getByTestId("editPage.backButton")).toBeInTheDocument();
+        });
         within(rendered.getByTestId("editPage.backButton")).getByRole("button").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Products")).toBeInTheDocument();
+        });
         expect(history.location.pathname).toBe("/index/products");
 
         // Check that the Edit Dialog is not open, there was a bug that was fixed

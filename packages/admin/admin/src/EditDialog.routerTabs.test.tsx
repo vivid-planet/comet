@@ -151,7 +151,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
     });
 
-    it.skip("should open product add dialog when clicking on Add product button in grid toolbar", async () => {
+    it("should open product add dialog when clicking on Add product button in grid toolbar", async () => {
         const history = createMemoryHistory({
             initialEntries: ["/", "/products"],
             initialIndex: 0,
@@ -164,14 +164,18 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
 
         rendered.getByText("Products").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Products")).toBeInTheDocument();
+        });
 
         expect(rendered.getByText("Add product")).toBeInTheDocument();
         rendered.getByText("Add product").click();
-        expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        });
     });
 
-    it.skip("should stay on the products page when closing the edit dialog", async () => {
+    it("should stay on the products page when closing the edit dialog", async () => {
         const history = createMemoryHistory({
             initialEntries: ["/", "/products"],
             initialIndex: 0,
@@ -187,11 +191,15 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         expect(screen.getByText("Customers Page")).toBeInTheDocument();
 
         rendered.getByText("Products").click();
-        expect(rendered.getByText("Add product")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(rendered.getByText("Add product")).toBeInTheDocument();
+        });
         expect(history.location.pathname).toBe("/products");
 
         rendered.getByText("Add product").click();
-        expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        });
         expect(history.location.pathname).toBe("/products/add");
 
         rendered.getByText("Cancel").click();
