@@ -7,8 +7,9 @@ import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { getSitePreviewData } from "@src/util/NotFoundContext";
+import { getPreviewParam } from "@src/util/NotFoundContext";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
+import { mapPreviewParamToPreviewData } from "@src/util/siteConfig";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -47,7 +48,7 @@ const pageQuery = gql`
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
 
 async function fetchData({ pageTreeNodeId, scope }: Props) {
-    const graphQLFetch = createGraphQLFetch(getSitePreviewData());
+    const graphQLFetch = createGraphQLFetch(mapPreviewParamToPreviewData(getPreviewParam()));
 
     const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(
         pageQuery,
@@ -114,7 +115,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
 }
 
 export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    const graphQLFetch = createGraphQLFetch(getSitePreviewData());
+    const graphQLFetch = createGraphQLFetch(mapPreviewParamToPreviewData(getPreviewParam()));
 
     const data = await fetchData({ pageTreeNodeId, scope });
     const document = data?.pageContent?.document;

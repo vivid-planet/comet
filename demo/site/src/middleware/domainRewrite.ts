@@ -1,22 +1,8 @@
-import { previewParams, SitePreviewData } from "@comet/cms-site";
-import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
+import { previewParams } from "@comet/cms-site";
+import { getHostByHeaders, getSiteConfigForHost, mapPreviewDataToPreviewParam } from "@src/util/siteConfig";
 import { NextRequest, NextResponse } from "next/server";
 
 import { CustomMiddleware } from "./chain";
-
-function mapPreviewDataToPreviewParam(previewData: SitePreviewData | undefined) {
-    if (previewData) {
-        if (previewData.includeInvisible) return "blocks";
-        return "pages";
-    }
-    return "nopreview";
-}
-
-export function mapPreviewParamToPreviewData(previewParam): SitePreviewData | undefined {
-    if (previewParam === "blocks") return { includeInvisible: true };
-    if (previewParam === "pages") return { includeInvisible: false };
-    return undefined;
-}
 
 export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {

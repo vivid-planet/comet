@@ -1,4 +1,3 @@
-import { SitePreviewData } from "@comet/cms-site";
 import type { ContentScope } from "@src/site-configs";
 import { cache } from "react";
 
@@ -24,4 +23,4 @@ function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
 }
 
 export const [getNotFoundContext, setNotFoundContext] = createServerContext<ContentScope | null>(null);
-export const [getSitePreviewData, setSitePreviewData] = createServerContext<SitePreviewData | undefined>(undefined);
+export const [getPreviewParam, setPreviewParam] = createServerContext<string>("nopreview");

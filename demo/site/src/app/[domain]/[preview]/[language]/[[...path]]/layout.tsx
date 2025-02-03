@@ -2,10 +2,9 @@ import { gql } from "@comet/cms-site";
 import { GQLLayoutQuery, GQLLayoutQueryVariables } from "@src/app/[domain]/[preview]/[language]/[[...path]]/layout.generated";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
-import { mapPreviewParamToPreviewData } from "@src/middleware/domainRewrite";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { setSitePreviewData } from "@src/util/NotFoundContext";
-import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import { setPreviewParam } from "@src/util/NotFoundContext";
+import { getSiteConfigForDomain, mapPreviewParamToPreviewData } from "@src/util/siteConfig";
 import type { Metadata } from "next";
 import { PropsWithChildren } from "react";
 
@@ -14,9 +13,8 @@ interface LayoutProps {
 }
 
 export default async function Layout({ children, params: { domain, language, preview } }: PropsWithChildren<LayoutProps>) {
-    const previewData = mapPreviewParamToPreviewData(preview);
-    setSitePreviewData(previewData);
-    const graphqlFetch = createGraphQLFetch(previewData);
+    setPreviewParam(preview);
+    const graphqlFetch = createGraphQLFetch(mapPreviewParamToPreviewData(preview));
 
     const { footer } = await graphqlFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
         gql`

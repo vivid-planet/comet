@@ -4,9 +4,8 @@ import { gql } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
-import { mapPreviewParamToPreviewData } from "@src/middleware/domainRewrite";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import { getSiteConfigForDomain, mapPreviewParamToPreviewData } from "@src/util/siteConfig";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 

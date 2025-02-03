@@ -1,4 +1,4 @@
-import { previewParams } from "@comet/cms-site";
+import { previewParams, SitePreviewData } from "@comet/cms-site";
 import type { PublicSiteConfig } from "@src/site-configs";
 import { headers } from "next/headers";
 
@@ -39,4 +39,18 @@ export async function getSiteConfig() {
     const siteConfig = await getSiteConfigForHost(host);
     if (!siteConfig) throw new Error(`SiteConfig not found for host ${host}`);
     return siteConfig;
+}
+
+export function mapPreviewDataToPreviewParam(previewData: SitePreviewData | undefined) {
+    if (previewData) {
+        if (previewData.includeInvisible) return "blocks";
+        return "pages";
+    }
+    return "nopreview";
+}
+
+export function mapPreviewParamToPreviewData(previewParam): SitePreviewData | undefined {
+    if (previewParam === "blocks") return { includeInvisible: true };
+    if (previewParam === "pages") return { includeInvisible: false };
+    return undefined;
 }

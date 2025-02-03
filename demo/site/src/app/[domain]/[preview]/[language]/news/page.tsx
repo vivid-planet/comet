@@ -2,10 +2,10 @@ export const dynamic = "error";
 
 import { gql } from "@comet/cms-site";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
-import { mapPreviewParamToPreviewData } from "@src/middleware/domainRewrite";
 import { NewsList } from "@src/news/NewsList";
 import { newsListFragment } from "@src/news/NewsList.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { mapPreviewParamToPreviewData } from "@src/util/siteConfig";
 
 import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./page.generated";
 
