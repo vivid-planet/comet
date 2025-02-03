@@ -23,7 +23,7 @@
         "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs  -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
     },
     "dependencies": {
-        "@apollo/client": "^3.7.0",
+        "@apollo/client": "^3.12.8",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
@@ -41,7 +41,7 @@
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
         "graphql": "^15.10.1",
-        "graphql-tag": "^2.0.0",
+        "graphql-tag": "^2.12.6",
         "lodash.isequal": "^4.5.0",
         "rdndmb-html5-to-touch": "^8.0.3",
         "react": "^18.3.1",

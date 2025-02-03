@@ -32,7 +32,7 @@ const DataGridContainer = styled("div")`
 export function PublisherPage() {
     const intl = useIntl();
 
-    const { data, loading, error } = useQuery<GQLBuildsQuery, undefined>(buildsQuery);
+    const { data, loading, error } = useQuery<GQLBuildsQuery>(buildsQuery);
 
     if (error) {
         throw error;

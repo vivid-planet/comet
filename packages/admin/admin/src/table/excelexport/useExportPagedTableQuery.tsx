@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { OperationVariables, useApolloClient } from "@apollo/client";
 import { useState } from "react";
 
 import { Table } from "../Table";
@@ -15,7 +15,7 @@ interface IOptions<IVariables> {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function useExportPagedTableQuery<IVariables>(
+export function useExportPagedTableQuery<IVariables extends OperationVariables>(
     api: ITableQueryApi,
     options: IOptions<IVariables>,
     excelOptions?: IExcelExportOptions,
