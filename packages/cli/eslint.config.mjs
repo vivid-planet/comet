@@ -1,6 +1,4 @@
-import eslintConfigCore from "@comet/eslint-config/core.js";
-import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
+import eslintConfigCore from "@comet/eslint-config/core.js";´
 
 /** @type {import('eslint')} */
 const config = [
