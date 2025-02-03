@@ -79,31 +79,29 @@ export class PageContentBlockFixtureService {
             .map<[string, BlockFixture]>(([type, [, generator]]) => [type, generator]);
 
         for (const [type, generator] of supportedBlocksFixtureGenerators) {
-            if (generator) {
-                const props = await generator.generateBlockInput();
+            const props = await generator.generateBlockInput();
 
-                if (type === "columns") {
-                    const columnBlocks = await this.columnsBlockFixtureService.generateBlockInput();
-                    // in case of columns one random block with 2 columns and one random block with 3 columns is created
-                    blocks.push(
-                        ...columnBlocks.map((props) => ({
-                            key: faker.string.uuid(),
-                            visible: true,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            type: "columns" as any,
-                            props,
-                        })),
-                    );
-                } else {
-                    blocks.push({
+            if (type === "columns") {
+                const columnBlocks = await this.columnsBlockFixtureService.generateBlockInput();
+                // in case of columns one random block with 2 columns and one random block with 3 columns is created
+                blocks.push(
+                    ...columnBlocks.map((props) => ({
                         key: faker.string.uuid(),
                         visible: true,
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        type: type as any,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        props: props as any,
-                    });
-                }
+                        type: "columns" as any,
+                        props,
+                    })),
+                );
+            } else {
+                blocks.push({
+                    key: faker.string.uuid(),
+                    visible: true,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    type: type as any,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    props: props as any,
+                });
             }
         }
 
