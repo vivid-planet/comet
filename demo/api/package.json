@@ -48,6 +48,7 @@
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
         "@opentelemetry/sdk-node": "^0.53.0",
         "@sentry/node": "^7.118.0",
+        "@smithy/types": "^4.1.0",
         "apollo-server-core": "^3.0.0",
         "apollo-server-express": "^3.0.0",
         "async": "^3.0.0",
