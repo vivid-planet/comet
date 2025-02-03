@@ -1,5 +1,14 @@
 # @comet/cms-api
 
+## 7.14.0
+
+### Patch Changes
+
+-   0233d486b: Export `FileUploadInput`
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+-   Updated dependencies [7e7a4aae1]
+    -   @comet/blocks-api@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes

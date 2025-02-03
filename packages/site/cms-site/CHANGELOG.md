@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.14.0
+
+### Patch Changes
+
+-   6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
+
 ## 7.13.0
 
 ### Minor Changes
