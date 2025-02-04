@@ -298,7 +298,7 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 - `MenuItemRouterLink` → `MainNavigationItemRouterLink`
 - `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
 
-Instead of `MenuContext`, please use the new `useMainNavigation` hook instead.
+The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
 
 ### Import `Tooltip` from `@comet/admin` package
 
