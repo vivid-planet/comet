@@ -56,7 +56,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         }
 
         await Promise.all([
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
                 const stream = fs.createWriteStream(`${this.path}/${folderName}/${fileName}`);
                 stream.on("error", reject);
                 stream.on("finish", resolve);
