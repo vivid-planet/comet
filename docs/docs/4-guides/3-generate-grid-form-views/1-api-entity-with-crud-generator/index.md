@@ -38,7 +38,7 @@ export class Customer extends BaseEntity<Customer, "id"> {
 }
 ```
 
-Currently, there is no `api-generator` watch mode - so everytime you change the entity following command must be run. Information how to setup API Generato can be found [Setup API Generator](../../1-getting-started/1-setup-api-generator/index.md) Section.
+Currently, there is no `api-generator` watch mode - so everytime you change the entity following command must be run. Information how to setup API Generato can be found [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) Section.
 
 ```bash
 cd api
