@@ -4,7 +4,7 @@ import { Online } from "@comet/admin-icons";
 import { DialogActions, DialogContent, ListItemIcon, MenuItem } from "@mui/material";
 import { useContext, useState } from "react";
 
-import { GQLPublishAllProductsMutation, GQLPublishAllProductsMutationVariables } from "./PublishAllProducts.generated";
+import { type GQLPublishAllProductsMutation, type GQLPublishAllProductsMutationVariables } from "./PublishAllProducts.generated";
 
 export function PublishAllProducts() {
     const [open, setOpen] = useState(false);

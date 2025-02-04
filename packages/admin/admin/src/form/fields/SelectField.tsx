@@ -1,7 +1,7 @@
 import { MenuItem } from "@mui/material";
-import { ComponentProps, ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 
-import { Field, FieldProps } from "../Field";
+import { Field, type FieldProps } from "../Field";
 import { FinalFormSelect } from "../FinalFormSelect";
 
 export type SelectFieldOption<Value extends string | number = string | number> = {

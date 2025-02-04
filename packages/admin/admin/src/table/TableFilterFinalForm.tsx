@@ -1,12 +1,12 @@
 import { Clear } from "@comet/admin-icons";
 import { Button, Grid, Typography } from "@mui/material";
-import { AnyObject } from "final-form";
-import { Component, ReactNode } from "react";
-import { Form, FormProps, FormRenderProps, RenderableProps } from "react-final-form";
+import { type AnyObject } from "final-form";
+import { Component, type ReactNode } from "react";
+import { Form, type FormProps, type FormRenderProps, type RenderableProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { renderFinalFormChildren } from "../renderFinalFormChildren";
-import { IFilterApi } from "./useTableQueryFilter";
+import { type IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
     headline?: ReactNode;

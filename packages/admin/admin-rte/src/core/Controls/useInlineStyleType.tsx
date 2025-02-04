@@ -1,11 +1,11 @@
 import { RteBold, RteItalic, RteStrikethrough, RteSub, RteSup, RteUnderlined } from "@comet/admin-icons";
 import * as detectBrowser from "detect-browser";
-import { Editor, EditorState, RichUtils } from "draft-js";
-import { RefObject, useCallback, useMemo } from "react";
+import { type Editor, type EditorState, RichUtils } from "draft-js";
+import { type RefObject, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { SupportedThings } from "../Rte";
-import { CustomInlineStyles, IFeatureConfig, InlineStyleType } from "../types";
+import { type SupportedThings } from "../Rte";
+import { type CustomInlineStyles, type IFeatureConfig, type InlineStyleType } from "../types";
 
 const browser = detectBrowser.detect();
 

@@ -1,13 +1,13 @@
 import type { ClassConstructor } from "class-transformer";
 
 import {
-    Block,
-    BlockDataInterface,
-    BlockInputInterface,
-    BlockMetaField,
+    type Block,
+    type BlockDataInterface,
+    type BlockInputInterface,
+    type BlockMetaField,
     BlockMetaFieldKind,
-    BlockMetaInterface,
-    BlockMetaLiteralFieldKind,
+    type BlockMetaInterface,
+    type BlockMetaLiteralFieldKind,
     isBlockDataInterface,
     isBlockInputInterface,
 } from "../block";

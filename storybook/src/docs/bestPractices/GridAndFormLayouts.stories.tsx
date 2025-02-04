@@ -7,7 +7,7 @@ import {
     FinalForm,
     FormSection,
     FullHeightContent,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     Loading,
     RouterTab,
@@ -30,7 +30,7 @@ import {
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
-import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";

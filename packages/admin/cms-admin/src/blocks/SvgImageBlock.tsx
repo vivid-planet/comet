@@ -5,26 +5,26 @@ import {
     AdminComponentButton,
     AdminComponentPaper,
     BlockCategory,
-    BlockInterface,
+    type BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
-    IPreviewContext,
+    type IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
+import { type BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
+import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
+import { type GQLSvgImageBlockDamFileQuery, type GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;

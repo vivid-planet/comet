@@ -1,16 +1,16 @@
 import { gql, useMutation } from "@apollo/client";
-import { AppHeaderDropdown, AppHeaderDropdownProps } from "@comet/admin";
+import { AppHeaderDropdown, type AppHeaderDropdownProps } from "@comet/admin";
 import { Account, ImpersonateUser, Logout, ThreeDotSaving } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, AvatarProps, Box, Button, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, AvatarGroup, type AvatarProps, Box, Button, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import { PropsWithChildren, ReactElement, useState } from "react";
+import { type PropsWithChildren, type ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { version } from "../..";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { AboutModal } from "./about/AboutModal";
 import { ImpersonationInlay } from "./ImpersonationInlay";
-import { GQLSignOutMutation } from "./UserHeaderItem.generated";
+import { type GQLSignOutMutation } from "./UserHeaderItem.generated";
 
 const signOutMutation = gql`
     mutation SignOut {

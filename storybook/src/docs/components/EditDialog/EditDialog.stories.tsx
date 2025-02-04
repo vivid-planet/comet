@@ -7,8 +7,8 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
-    IEditDialogApi,
-    ISelectionApi,
+    type IEditDialogApi,
+    type ISelectionApi,
     Table,
     Toolbar,
     ToolbarItem,
@@ -17,7 +17,7 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { IconButton, MenuItem, Typography } from "@mui/material";
-import { useRef, useState, VoidFunctionComponent } from "react";
+import { useRef, useState, type VoidFunctionComponent } from "react";
 import { useLocation } from "react-router";
 import { v4 as uuid } from "uuid";
 

@@ -6,11 +6,11 @@ import {
     CrudVisibility,
     dataGridDateColumn,
     DataGridToolbar,
-    ExportApi,
+    type ExportApi,
     FillSpace,
     filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridColumnsButton,
     GridFilterButton,
     messages,
@@ -32,8 +32,8 @@ import {
     DataGridPro,
     GridFilterInputSingleSelect,
     GridFilterInputValue,
-    GridRowSelectionModel,
-    GridSlotsComponent,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
@@ -43,17 +43,17 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductGridRelationsQuery,
-    GQLProductGridRelationsQueryVariables,
-    GQLProductsListManualFragment,
-    GQLProductsListQuery,
-    GQLProductsListQueryVariables,
-    GQLUpdateProductStatusMutation,
-    GQLUpdateProductStatusMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductGridRelationsQuery,
+    type GQLProductGridRelationsQueryVariables,
+    type GQLProductsListManualFragment,
+    type GQLProductsListQuery,
+    type GQLProductsListQueryVariables,
+    type GQLUpdateProductStatusMutation,
+    type GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 

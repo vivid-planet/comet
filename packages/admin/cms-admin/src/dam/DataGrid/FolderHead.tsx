@@ -1,13 +1,13 @@
-import { BreadcrumbItem } from "@comet/admin";
+import { type BreadcrumbItem } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useOptimisticQuery } from "../../common/useOptimisticQuery";
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
 import { damFolderMPathFragment, damFolderMPathQuery } from "./FolderHead.gql";
-import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
+import { type GQLDamFolderMPathFragment, type GQLDamFolderMPathQuery, type GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
 
 export { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
 

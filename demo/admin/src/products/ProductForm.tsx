@@ -6,7 +6,7 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormRangeInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     Loading,
     OnChangeField,
     SelectField,
@@ -16,44 +16,44 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
-    GQLFinalFormFileUploadFragment,
+    type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
+import { type GQLProductType } from "@src/graphql.generated";
 import {
-    GQLManufacturerCountriesQuery,
-    GQLManufacturerCountriesQueryVariables,
-    GQLManufacturersQuery,
-    GQLManufacturersQueryVariables,
+    type GQLManufacturerCountriesQuery,
+    type GQLManufacturerCountriesQueryVariables,
+    type GQLManufacturersQuery,
+    type GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "./helpers/FutureProductNotice";
 import {
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
-    GQLProductTagsSelectQuery,
-    GQLProductTagsSelectQueryVariables,
+    type GQLProductCategoriesSelectQuery,
+    type GQLProductCategoriesSelectQueryVariables,
+    type GQLProductTagsSelectQuery,
+    type GQLProductTagsSelectQueryVariables,
 } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLProductFormManualFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLProductFormManualFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 interface FormProps {

@@ -1,12 +1,12 @@
 import {
-    Counter,
-    Histogram,
-    MetricOptions,
+    type Counter,
+    type Histogram,
+    type MetricOptions,
     metrics,
-    ObservableCounter,
-    ObservableGauge,
-    ObservableUpDownCounter,
-    UpDownCounter,
+    type ObservableCounter,
+    type ObservableGauge,
+    type ObservableUpDownCounter,
+    type UpDownCounter,
 } from "@opentelemetry/api";
 
 enum MetricType {

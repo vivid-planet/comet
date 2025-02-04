@@ -1,6 +1,6 @@
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
-import { BlockInterface, createOneOfBlock } from "@comet/blocks-admin";
-import { ComponentType } from "react";
+import { type BlockInterface, createOneOfBlock } from "@comet/blocks-admin";
+import { type ComponentType } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";

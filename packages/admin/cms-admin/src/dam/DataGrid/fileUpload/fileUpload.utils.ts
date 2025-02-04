@@ -1,5 +1,5 @@
 import * as mimedb from "mime-db";
-import { Accept } from "react-dropzone";
+import { type Accept } from "react-dropzone";
 
 export function convertMimetypesToDropzoneAccept(acceptedMimetypes: string[]): Accept {
     const acceptObj: Accept = {};

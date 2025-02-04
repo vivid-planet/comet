@@ -1,11 +1,18 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
+import {
+    commonFileErrorMessages,
+    type ErrorFileSelectItem,
+    FileSelect,
+    type FileSelectProps,
+    type LoadingFileSelectItem,
+    type ValidFileSelectItem,
+} from "@comet/admin";
 import { useMemo, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
     fragment FinalFormFileUpload on FileUpload {

@@ -1,11 +1,11 @@
-import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
-import { DocumentNode } from "graphql";
+import { type QueryHookOptions, type QueryResult, useQuery } from "@apollo/client";
+import { type DocumentNode } from "graphql";
 import { useEffect } from "react";
 
 import { LocalErrorScopeApolloContext } from "../error/errordialog/ErrorScope";
-import { ISelectionApi } from "../SelectionApi";
-import { IPagingInfo } from "./paging/IPagingInfo";
-import { ITableQueryApi } from "./TableQueryContext";
+import { type ISelectionApi } from "../SelectionApi";
+import { type IPagingInfo } from "./paging/IPagingInfo";
+import { type ITableQueryApi } from "./TableQueryContext";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

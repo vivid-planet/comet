@@ -1,4 +1,4 @@
-import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
+import SvgIcon, { type SvgIconProps } from "@mui/material/SvgIcon";
 
 export const Excel = (props: SvgIconProps) => (
     <SvgIcon htmlColor="#007f25" {...props} viewBox="0 0 100 100">

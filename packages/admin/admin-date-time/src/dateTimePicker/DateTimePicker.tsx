@@ -1,6 +1,6 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, FormControl } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { type ComponentsOverrides, FormControl } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { useRef } from "react";
 import { useIntl } from "react-intl";
 

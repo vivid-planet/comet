@@ -2,8 +2,8 @@ import { Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { IMenuContext } from "./Context";
-import { MenuItem as CometMenuItem, MenuItemLevel } from "./Item";
+import { type IMenuContext } from "./Context";
+import { MenuItem as CometMenuItem, type MenuItemLevel } from "./Item";
 
 export type MenuCollapsibleItemClassKey = "root" | "open" | "childSelected" | "menuItem" | "itemTitle" | "collapsibleIndicator";
 

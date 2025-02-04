@@ -3,7 +3,7 @@ import { Hamburger, Image } from "@comet/admin-icons";
 import {
     BlockCategory,
     BlocksFinalForm,
-    ColumnsBlockLayout,
+    type ColumnsBlockLayout,
     ColumnsLayoutPreview,
     ColumnsLayoutPreviewContent,
     ColumnsLayoutPreviewSpacing,
@@ -11,7 +11,7 @@ import {
     createCompositeSetting,
     FinalFormLayoutSelect,
 } from "@comet/blocks-admin";
-import { LayoutBlockData } from "@src/blocks.generated";
+import { type LayoutBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";
 

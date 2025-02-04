@@ -5,7 +5,7 @@ import {
     DataGridToolbar,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -20,12 +20,12 @@ import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLDeleteManufacturerMutation,
-    GQLDeleteManufacturerMutationVariables,
-    GQLManufacturersListQuery,
-    GQLManufacturersListQueryVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLDeleteManufacturerMutation,
+    type GQLDeleteManufacturerMutationVariables,
+    type GQLManufacturersListQuery,
+    type GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
 import gql from "graphql-tag";
 import { FormattedMessage, useIntl } from "react-intl";

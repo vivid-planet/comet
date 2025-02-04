@@ -11,7 +11,7 @@ import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { FileUploadInput } from "./dto/file-upload.input";
+import { type FileUploadInput } from "./dto/file-upload.input";
 import { FilesService } from "./files.service";
 
 const pipeline = promisify(stream.pipeline);

@@ -1,4 +1,4 @@
-import { CustomDecorator, SetMetadata } from "@nestjs/common";
+import { type CustomDecorator, SetMetadata } from "@nestjs/common";
 
 type RequiredPermissionOptions = {
     skipScopeCheck?: boolean;

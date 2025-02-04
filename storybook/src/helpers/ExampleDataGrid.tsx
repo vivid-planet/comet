@@ -1,5 +1,5 @@
-import { GridColDef, usePersistentColumnState } from "@comet/admin";
-import { DataGrid, DataGridProps } from "@mui/x-data-grid";
+import { type GridColDef, usePersistentColumnState } from "@comet/admin";
+import { DataGrid, type DataGridProps } from "@mui/x-data-grid";
 
 export const exampleRows = [
     { id: 1, lastName: "Snow", firstName: "Jon" },

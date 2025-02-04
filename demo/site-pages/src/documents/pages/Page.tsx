@@ -2,14 +2,14 @@ import { SeoBlock } from "@comet/cms-site";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/layout/header/Header";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
-import { gql, GraphQLClient } from "graphql-request";
+import { gql, type GraphQLClient } from "graphql-request";
 import Head from "next/head";
 
 import { StageBlock } from "./blocks/StageBlock";
-import { GQLPageQuery } from "./Page.generated";
+import { type GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
 const pageQuery = gql`

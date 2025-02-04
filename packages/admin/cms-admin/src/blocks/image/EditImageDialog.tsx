@@ -19,16 +19,16 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ImageCrop } from "../../common/image/ImageCrop";
 import { useContentScope } from "../../contentScope/Provider";
 import { CropSettingsFields } from "../../dam/FileForm/CropSettingsFields";
-import { EditImageFormValues } from "../../dam/FileForm/EditFile";
+import { type EditImageFormValues } from "../../dam/FileForm/EditFile";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
-import { GQLFocalPoint } from "../../graphql.generated";
+import { type GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
     focalPoint: GQLFocalPoint;

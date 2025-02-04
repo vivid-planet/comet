@@ -12,10 +12,10 @@ import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLOverrideContentScopesMutation,
-    GQLOverrideContentScopesMutationVariables,
-    GQLPermissionContentScopesQuery,
-    GQLPermissionContentScopesQueryVariables,
+    type GQLOverrideContentScopesMutation,
+    type GQLOverrideContentScopesMutationVariables,
+    type GQLPermissionContentScopesQuery,
+    type GQLPermissionContentScopesQueryVariables,
     namedOperations,
 } from "./OverrideContentScopesDialog.generated";
 

@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from "@comet/admin";
+import { TextField, type TextFieldProps } from "@comet/admin";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";

@@ -9,11 +9,11 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
+import { type GQLBuildTemplatesQuery, type GQLCreateBuildsMutation, type GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
 
 const buildTemplatesQuery = gql`
     query BuildTemplates {

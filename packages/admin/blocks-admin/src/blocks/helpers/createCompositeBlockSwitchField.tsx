@@ -1,4 +1,4 @@
-import { SwitchField, SwitchFieldProps } from "@comet/admin";
+import { SwitchField, type SwitchFieldProps } from "@comet/admin";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";

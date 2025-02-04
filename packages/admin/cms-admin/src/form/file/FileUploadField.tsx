@@ -1,7 +1,7 @@
-import { Field, FieldProps } from "@comet/admin";
+import { Field, type FieldProps } from "@comet/admin";
 
 import { FinalFormFileUpload } from "./FinalFormFileUpload";
-import { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment, HTMLInputElement> & {
     multiple?: false;
