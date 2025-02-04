@@ -3,6 +3,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { KubernetesModule } from "../kubernetes/kubernetes.module";
 import { JobsService } from "./jobs.service";
 
+jest.mock("@kubernetes/client-node", () => ({}));
+
 describe("KubernetesJobsService", () => {
     let service: JobsService;
 

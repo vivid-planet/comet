@@ -22,11 +22,10 @@ export class KubernetesService {
         const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
         this.localMode = !fs.existsSync(path);
 
-        const kc = new KubeConfig();
-
         if (!this.localMode) {
             this.namespace = fs.readFileSync(path, "utf8");
 
+            const kc = new KubeConfig();
             kc.loadFromCluster();
             this.batchApi = kc.makeApiClient(BatchV1Api);
             this.coreApi = kc.makeApiClient(CoreV1Api);
@@ -35,6 +34,7 @@ export class KubernetesService {
         /*else {
             this.namespace = "comet-demo";
 
+            const kc = new KubeConfig();
             kc.loadFromDefault();
             this.batchApi = kc.makeApiClient(BatchV1Api);
             this.coreApi = kc.makeApiClient(CoreV1Api);
