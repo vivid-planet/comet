@@ -2,7 +2,7 @@
 title: Admin Generator create Form
 ---
 
-The Admin Generator can also generate Form Views. 
+The Admin Generator can also generate Form Views.
 
 ## Generate Form
 
@@ -52,7 +52,6 @@ npm run --prefix admin admin-generator
 ```
 
 ![AdminGeneratorcli](./images/adminGeneratorCli.png)
-
 
 The component is ready to be used in the application. Simple use the generated component `<CustomerForm />` somewhere in your React Application. An optional prop `id` also gets generated.
 

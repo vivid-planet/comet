@@ -23,8 +23,8 @@ export const CustomerGrid: GridConfig<GQLCustomer> = {
 };
 ```
 
-The `@comet/cms-admin` has types available for all the different components that can be generated. The `GridConfig` type is used to define the configuration of the DataGrid. The `GQLCustomer` got created in the section before, with the crud generator. The `GQLCustomer` 
-type is the GraphQL type that will be used to guarantee type safety. The `columns` array defines the columns of the DataGrid. Each column has a `type`, `name` and other properties. 
+The `@comet/cms-admin` has types available for all the different components that can be generated. The `GridConfig` type is used to define the configuration of the DataGrid. The `GQLCustomer` got created in the section before, with the crud generator. The `GQLCustomer`
+type is the GraphQL type that will be used to guarantee type safety. The `columns` array defines the columns of the DataGrid. Each column has a `type`, `name` and other properties.
 
 This configuration is one of the most simplified once and can fore sure be extended with more options.
 
@@ -41,7 +41,6 @@ npm run --prefix admin admin-generator
 The `admin-generator` script is configured in `admin/package.json` and will execute the admin generator binary.
 
 ![AdminGeneratorcli](./images/adminGeneratorCli.png)
-
 
 Two files will be generated in the `admin/src/customers/generated` directory. The `CustomerGrid.tsx` and the `CustomerGrid.generated.ts`. The `CustomerGrid.tsx` is the React component that will render the DataGrid. The `CustomerGrid.generated.ts` has related types and interfaces from the GraphQL Api.
 
@@ -64,7 +63,6 @@ export const CustomerPage: FunctionComponent = () => {
     );
 };
 ```
-
 
 The generated CustomerGrid will look like this:
 

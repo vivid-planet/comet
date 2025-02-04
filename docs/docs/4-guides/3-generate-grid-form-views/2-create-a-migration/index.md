@@ -34,10 +34,6 @@ npm run db:migrate
 
 ![ExecuteMigration](./images/executeMigration.png)
 
-
 Now we are ready to execute the Query again in the GraphQL Playground, and one should see that the Query is executed successfully.
 
 ![CustomersQueryInPlaygroundWithError](./images/customerQueryInPlaygroundSuccessfull.png)
-
-
-
