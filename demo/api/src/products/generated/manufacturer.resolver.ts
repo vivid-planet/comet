@@ -12,7 +12,7 @@ import { ManufacturersArgs } from "./dto/manufacturers.args";
 import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 
 @Resolver(() => Manufacturer)
-@RequiredPermission(["manufacturers"], { skipScopeCheck: true })
+@RequiredPermission(["manufacturers.read"], { skipScopeCheck: true })
 export class ManufacturerResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -45,6 +45,7 @@ export class ManufacturerResolver {
     }
 
     @Mutation(() => Manufacturer)
+    @RequiredPermission(["manufacturers.create"], { skipScopeCheck: true })
     async createManufacturer(@Args("input", { type: () => ManufacturerInput }) input: ManufacturerInput): Promise<Manufacturer> {
         const manufacturer = this.repository.create({
             ...input,
@@ -57,6 +58,7 @@ export class ManufacturerResolver {
 
     @Mutation(() => Manufacturer)
     @AffectedEntity(Manufacturer)
+    @RequiredPermission(["manufacturers.update"], { skipScopeCheck: true })
     async updateManufacturer(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ManufacturerUpdateInput }) input: ManufacturerUpdateInput,
@@ -74,6 +76,7 @@ export class ManufacturerResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(Manufacturer)
+    @RequiredPermission(["manufacturers.delete"], { skipScopeCheck: true })
     async deleteManufacturer(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const manufacturer = await this.repository.findOneOrFail(id);
         this.entityManager.remove(manufacturer);

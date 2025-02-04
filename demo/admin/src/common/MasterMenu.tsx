@@ -123,7 +123,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
-        requiredPermission: "news",
+        requiredPermission: "news.read",
     },
     {
         type: "route",

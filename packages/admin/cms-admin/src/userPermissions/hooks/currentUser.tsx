@@ -62,11 +62,15 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
                 if (user.email === undefined) return false;
-                return user.permissions.some(
-                    (p) =>
-                        p.permission === permission &&
-                        (!contentScope || p.contentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value))),
-                );
+                const [requiredMainPermission, requiredSubPermission] = permission.split(".");
+                return user.permissions.some((p) => {
+                    const [mainPermission, subPermission] = p.permission.split(".");
+                    if (mainPermission !== requiredMainPermission) return false;
+                    if (subPermission && subPermission !== requiredSubPermission) return false;
+
+                    if (!contentScope) return true;
+                    return p.contentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value));
+                });
             }),
     };
 
