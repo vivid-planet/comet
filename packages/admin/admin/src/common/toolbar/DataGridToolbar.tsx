@@ -1,19 +1,23 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { useGridApiContext } from "@mui/x-data-grid";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Toolbar, ToolbarProps } from "./Toolbar";
 
-export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
+export type DataGridToolbarClassKey = "root" | "standard" | "comfortable" | "compact";
 
-export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
+export type DataGridToolbarProps = { density?: "standard" | "comfortable" | "compact" } & Omit<
+    ToolbarProps,
+    "slotProps" | "scopeIndicator" | "hideTopBar"
+> &
     ThemedComponentBaseProps<{
         root: typeof Toolbar;
     }>;
 
 type OwnerState = {
-    density: "standard" | "comfortable";
+    density: "standard" | "comfortable" | "compact";
 };
 
 const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
@@ -55,8 +59,11 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
 export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
     const { density = "standard", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
 
+    const apiRef = useGridApiContext();
+    const gridDensity = apiRef.current?.state?.density.value || "standard";
+
     const ownerState: OwnerState = {
-        density,
+        density: gridDensity || density,
     };
 
     return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} />;
