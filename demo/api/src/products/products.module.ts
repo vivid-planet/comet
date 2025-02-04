@@ -4,6 +4,7 @@ import { Module } from "@nestjs/common";
 import { ProductColorResolver } from "@src/products/generated/product-color.resolver";
 import { ProductVariantsService } from "@src/products/generated/product-variants.service";
 
+import { CustomProductResolver } from "./custom-product.resolver";
 import { Manufacturer } from "./entities/manufacturer.entity";
 import { ManufacturerCountry } from "./entities/manufacturer-country.entity";
 import { Product } from "./entities/product.entity";
@@ -47,7 +48,11 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
         ManufacturerResolver,
         ManufacturerCountryResolver,
         ProductToTagResolver,
+<<<<<<< HEAD
         ProductColorResolver,
+=======
+        CustomProductResolver,
+>>>>>>> main
     ],
     exports: [],
 })
