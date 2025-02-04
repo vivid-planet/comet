@@ -48,11 +48,8 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
         ManufacturerResolver,
         ManufacturerCountryResolver,
         ProductToTagResolver,
-<<<<<<< HEAD
         ProductColorResolver,
-=======
         CustomProductResolver,
->>>>>>> main
     ],
     exports: [],
 })

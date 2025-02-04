@@ -28,11 +28,14 @@ import {
 import { Add as AddIcon, Disabled, Edit, Excel, Online, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-<<<<<<< HEAD
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-=======
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
->>>>>>> main
+import {
+    DataGridPro,
+    GridFilterInputSingleSelect,
+    GridFilterInputValue,
+    GridRowSelectionModel,
+    GridSlotsComponent,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -54,18 +57,15 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-<<<<<<< HEAD
 type ProductsGridToolbarProps = {
     exportApi: ExportApi;
+    selectionModel: GridRowSelectionModel;
 };
 
-function ProductsGridToolbar({ exportApi }: ProductsGridToolbarProps) {
-=======
-function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportApi; selectionModel: GridSelectionModel }) {
+function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarProps) {
     const client = useApolloClient();
     const theme = useTheme();
 
->>>>>>> main
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -140,7 +140,7 @@ export function ProductsGrid() {
     const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
-    const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -401,19 +401,14 @@ export function ProductsGrid() {
             slots={{
                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-<<<<<<< HEAD
             slotProps={{
-                toolbar: { exportApi } as ProductsGridToolbarProps,
-=======
-            componentsProps={{
-                toolbar: { exportApi, selectionModel },
+                toolbar: { exportApi, selectionModel } as ProductsGridToolbarProps,
             }}
             checkboxSelection
             keepNonExistentRowsSelected
-            selectionModel={selectionModel}
-            onSelectionModelChange={(selectionModel) => {
+            rowSelectionModel={selectionModel}
+            onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
->>>>>>> main
             }}
         />
     );
