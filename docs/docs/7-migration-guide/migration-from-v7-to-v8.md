@@ -615,7 +615,7 @@ The codemod does not handle all cases, so manual adjustments may still be necess
 
 ### Consistent type imports
 
-To improve code consistency and readability, we now enforce the ESLint rule [@typescript-eslint/consistent-type-imports](https://typescript-eslint.io/rules/consistent-type-exports/) with the following configuration:
+To improve code consistency and readability, we now enforce the ESLint rule [@typescript-eslint/consistent-type-imports](https://typescript-eslint.io/rules/consistent-type-imports/) with the following configuration:
 
 ```typescript
 "@typescript-eslint/consistent-type-imports": [
