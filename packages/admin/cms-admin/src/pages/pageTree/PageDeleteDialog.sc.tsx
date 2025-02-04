@@ -2,7 +2,7 @@ import { Warning } from "@comet/admin-icons";
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const DeleteContentInformation: typeof Paper = styled(Paper)`
+export const DeleteContentInformation = styled(Paper)`
     border: 1px solid ${({ theme }) => theme.palette.error.main};
     border-radius: 3px;
     margin-bottom: 20px;

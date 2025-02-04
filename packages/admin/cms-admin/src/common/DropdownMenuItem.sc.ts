@@ -9,7 +9,7 @@ export const Root = styled("div")`
     height: 100%;
 `;
 
-export const ButtonText: typeof Typography = styled(Typography)`
+export const ButtonText = styled(Typography)`
     && {
         color: ${({ theme }) => theme.palette.primary.contrastText};
     }
@@ -56,7 +56,7 @@ export const Popper = styled(MuiPopper)`
     min-width: 100%;
 `;
 
-export const ScrollablePaper: typeof Paper = styled(Paper)`
+export const ScrollablePaper = styled(Paper)`
     max-height: 270px;
     overflow-y: auto;
 `;

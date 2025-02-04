@@ -81,7 +81,7 @@ export const Header = createComponentSlot("div")<ColorPickerClassKey>({
     `,
 );
 
-export const HeaderTitleText: typeof Typography = createComponentSlot(Typography)<ColorPickerClassKey>({
+export const HeaderTitleText = createComponentSlot(Typography)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "headerTitleText",
 })(
@@ -90,9 +90,7 @@ export const HeaderTitleText: typeof Typography = createComponentSlot(Typography
     `,
 );
 
-// TODO: understand why createComponentSlot(IconButton)<ColorPickerClassKey> returns a componennt with html tag "anchor" instead of "button"
-// Type 'HTMLAnchorElement' is missing the following properties from type 'HTMLButtonElement': disabled, form, formAction, formEnctype, and 13 more.ts(2322)
-export const HeaderCloseButton: any = createComponentSlot(IconButton)<ColorPickerClassKey>({
+export const HeaderCloseButton = createComponentSlot(IconButton)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "headerCloseButton",
 })(
