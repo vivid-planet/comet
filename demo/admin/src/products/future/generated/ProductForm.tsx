@@ -22,11 +22,8 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
-
 import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
-
 import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-
 import {
     DamImageBlock,
     FileUploadField,
