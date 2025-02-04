@@ -133,7 +133,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection
-                                                sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" }, width: "100%" }}
                                                 selectionModel={props.input.value}
                                                 onSelectionModelChange={(selectionModel) => {
                                                     props.input.onChange(selectionModel.map((id) => String(id)));

@@ -104,7 +104,6 @@ export const SelectScopesDialogContent: React.FunctionComponent<React.PropsWithC
                                 return !userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                             }}
                             checkboxSelection
-                            sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" }, width: "100%" }}
                             selectionModel={props.input.value}
                             onSelectionModelChange={(selectionModel) => {
                                 props.input.onChange(selectionModel.map((id) => String(id)));

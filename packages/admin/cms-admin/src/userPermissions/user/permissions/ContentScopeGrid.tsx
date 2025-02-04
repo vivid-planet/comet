@@ -72,7 +72,6 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                         loading={false}
                         getRowHeight={() => "auto"}
                         getRowId={(row) => JSON.stringify(row)}
-                        sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
                     />
                 </CardContent>
             </Card>
