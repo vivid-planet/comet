@@ -33,8 +33,8 @@ export const generateCustomers = async ({
     const generateRandomCustomer = async (): Promise<Customer> => {
         const customer = repository.create({
             id: faker.string.uuid(),
-            firstname: faker.person.firstName(),
-            lastname: faker.person.lastName(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
         });
 
         bar.increment(1, {

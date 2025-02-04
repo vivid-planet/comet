@@ -17,8 +17,8 @@ export const CustomerGrid: GridConfig<GQLCustomer> = {
     gqlType: "Customer",
     columns: [
         { type: "text", name: "id" },
-        { type: "text", name: "firstname" },
-        { type: "text", name: "lastname" },
+        { type: "text", name: "firstName" },
+        { type: "text", name: "lastName" },
     ],
 };
 ```
@@ -40,7 +40,7 @@ npm run --prefix admin admin-generator
 
 The `admin-generator` script is configured in `admin/package.json` and will execute the admin generator binary.
 
-![AdminGeneratorcli](./images/adminGeneratorCli.png)
+![AdminGeneratorCLI](./images/adminGeneratorCli.png)
 
 Two files will be generated in the `admin/src/customers/generated` directory. The `CustomerGrid.tsx` and the `CustomerGrid.generated.ts`. The `CustomerGrid.tsx` is the React component that will render the DataGrid. The `CustomerGrid.generated.ts` has related types and interfaces from the GraphQL Api.
 

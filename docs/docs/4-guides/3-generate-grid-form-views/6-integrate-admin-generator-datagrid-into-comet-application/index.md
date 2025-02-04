@@ -1,5 +1,5 @@
 ---
-title: Integrate Admin Generator Datagrid into Comet Application
+title: Integrate Admin Generator DataGrid into Comet Application
 ---
 
 At the end of this guide, we want to combine the generated `CustomerGrid` with the `CustomerForm` into a new page `CustomerPage`.
