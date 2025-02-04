@@ -52,7 +52,7 @@
         "@graphql-codegen/near-operation-file-preset": "^2.5.0",
         "@graphql-codegen/typescript": "^2.8.8",
         "@graphql-codegen/typescript-operations": "^2.5.13",
-        "@types/node": "^22.10.7",
+        "@types/node": "^22.13.1",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "chokidar-cli": "^3.0.0",
