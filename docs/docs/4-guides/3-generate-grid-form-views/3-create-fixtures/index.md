@@ -11,6 +11,7 @@ Create a new file in the `fixtures` directory with the following content:
 ```
 customer-fixtures.service.ts
 ```
+
 ```typescript
 import { faker } from "@faker-js/faker";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -24,7 +25,11 @@ interface GenerateCustomerOptions {
     total: number;
 }
 
-export const generateCustomers = async ({ repository, bar, total }: GenerateCustomerOptions): Promise<Customer[]> => {
+export const generateCustomers = async ({
+    repository,
+    bar,
+    total,
+}: GenerateCustomerOptions): Promise<Customer[]> => {
     const generateRandomCustomer = async (): Promise<Customer> => {
         const customer = repository.create({
             id: faker.string.uuid(),
@@ -46,6 +51,7 @@ export const generateCustomers = async ({ repository, bar, total }: GenerateCust
 The `generateCustomers` functions is a convenience function, that receives some options, like the repository, a progress bar and the total number of customers to generate. The function then generates the customers and increments the progress bar.
 
 ## Add Fixtures to the FixturesConsole
+
 Additionally, the created fixtures (`generateCustomer`) must be called and executed. Open `db/fixtures/generators/fixtures.console.ts` an add the fixtures functions calls so the function gets execute when fixtures get created:
 
 ```typescript
@@ -57,11 +63,13 @@ export class FixturesConsole {
         const multiBar = new MultiBar(this.barOptions, Presets.shades_classic);
 
         // Add your fixtures here
-        await Promise.all([generateCustomers({
-            repository: this.orm.em.getRepository(Customer),
-            bar: multiBar.create(total, 0),
-            total
-        })]);
+        await Promise.all([
+            generateCustomers({
+                repository: this.orm.em.getRepository(Customer),
+                bar: multiBar.create(total, 0),
+                total,
+            }),
+        ]);
 
         multiBar.stop();
         // ...
@@ -79,7 +87,7 @@ Everything should be set up now. To execute the fixtures, run the following comm
 npm run --prefix api fixtures
 ```
 
-## Verify Fixtures 
+## Verify Fixtures
 
 Now we are ready to execute the Query again in the GraphQL Playground, and one should see that the Query is executed successfully and will return the generated Data
 

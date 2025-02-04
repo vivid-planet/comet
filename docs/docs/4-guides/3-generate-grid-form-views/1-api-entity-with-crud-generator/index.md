@@ -42,7 +42,7 @@ Currently, there is no `api-generator` watch mode - so everytime you change the 
 
 ```bash
 cd api
-npm run api-generator 
+npm run api-generator
 ```
 
 The **API Generator** will generate multiple files inside the specified `../generated` output directory. It will contain a `customer.resolver.ts` and some dto related files (`customer.filter.ts`, `customer.input.ts`, `customer.sort.ts`, `customer.args.ts`, `paginagted-customer.ts`).
@@ -91,7 +91,6 @@ export class AppModule {
 
 As soon the new `CustomerModule` is registered in the app module, the schema will update, and provide the new generated Queries/Mutations, including the Object types and necessary inputs
 
-
 ```graphql
 type Customer {
     id: ID!
@@ -123,7 +122,13 @@ enum CustomerSortField {
 type Query {
     # ...
     customer(id: ID!): Customer!
-    customers(offset: Int! = 0, limit: Int! = 25, search: String, filter: CustomerFilter, sort: [CustomerSort!]): PaginatedCustomers!
+    customers(
+        offset: Int! = 0
+        limit: Int! = 25
+        search: String
+        filter: CustomerFilter
+        sort: [CustomerSort!]
+    ): PaginatedCustomers!
 }
 
 input CustomerInput {
@@ -136,14 +141,12 @@ input CustomerUpdateInput {
     lastname: String
 }
 
-
 type Mutation {
     # ...
     createCustomer(input: CustomerInput!): Customer!
     updateCustomer(id: ID!, input: CustomerUpdateInput!): Customer!
     deleteCustomer(id: ID!): Boolean!
 }
-
 ```
 
 Schema should already be available when you start the GraphQL Playground locally `http:4000/api/graphql`, and you should be able to play around with the queries.
@@ -152,7 +155,4 @@ Schema should already be available when you start the GraphQL Playground locally
 
 As soon as you start to execute the first Query, one will see that @mikro-orm will through an error, that the Customer Table does not exists in the Database.
 
-
-
-
-
+Dokumentation:
