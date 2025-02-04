@@ -394,7 +394,7 @@ export function generateFormField({
              ${required ? "required" : ""}
               variant="horizontal"
              fullWidth
-             name="${name}"
+             name="${nameWithPrefix}"
              label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
              options={[
                   ${values
