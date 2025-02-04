@@ -24,12 +24,12 @@ export class Customer extends BaseEntity<Customer, "id"> {
     @CrudField({ search: true, filter: false, sort: false, input: true })
     @Field()
     @Property({ columnType: "text" })
-    firstname: string;
+    firstName: string;
 
     @CrudField({ search: true, filter: false, sort: false, input: true })
     @Field()
     @Property({ columnType: "text" })
-    lastname: string;
+    lastName: string;
 
     @CrudField({ search: false, filter: false, sort: false, input: false })
     @Property({ onUpdate: () => new Date() })
@@ -38,14 +38,14 @@ export class Customer extends BaseEntity<Customer, "id"> {
 }
 ```
 
-Currently, there is no `api-generator` watch mode - so everytime you change the entity following command must be run. Information how to setup API Generato can be found [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) Section.
+Currently, there is no `api-generator` watch mode - so every time you change the entity following command must be run. Information how to setup API Generator can be found [Setup API Generator](../../../1-getting-started/4-crud-generator/1-api-generator.md) Section.
 
 ```bash
 cd api
 npm run api-generator
 ```
 
-The **API Generator** will generate multiple files inside the specified `../generated` output directory. It will contain a `customer.resolver.ts` and some dto related files (`customer.filter.ts`, `customer.input.ts`, `customer.sort.ts`, `customer.args.ts`, `paginagted-customer.ts`).
+The **API Generator** will generate multiple files inside the specified `../generated` output directory. It will contain a `customer.resolver.ts` and some dto related files (`customer.filter.ts`, `customer.input.ts`, `customer.sort.ts`, `customer.args.ts`, `paginated-customer.ts`).
 
 ![CustomerGeneratedDirectoryStructure](./images/customerDirectoryStructure.png)
 
@@ -65,7 +65,7 @@ import { CustomerResolver } from "./generated/customer.resolver";
 export class CustomerModule {}
 ```
 
-This generated module must be added to the `api/src/app.module.ts` and registered proprietly.
+This generated module must be added to the `api/src/app.module.ts` and registered.
 
 ```typescript
 import { DynamicModule, Module } from "@nestjs/common";
@@ -94,8 +94,8 @@ As soon the new `CustomerModule` is registered in the app module, the schema wil
 ```graphql
 type Customer {
     id: ID!
-    firstname: String!
-    lastname: String!
+    firstName: String!
+    lastName: String!
     updatedAt: DateTime!
 }
 
@@ -132,13 +132,13 @@ type Query {
 }
 
 input CustomerInput {
-    firstname: String!
-    lastname: String!
+    firstName: String!
+    lastName: String!
 }
 
 input CustomerUpdateInput {
-    firstname: String
-    lastname: String
+    firstName: String
+    lastName: String
 }
 
 type Mutation {

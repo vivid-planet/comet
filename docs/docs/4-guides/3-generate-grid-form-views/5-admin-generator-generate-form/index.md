@@ -29,11 +29,11 @@ export const CustomerForm: FormConfig<GQLCustomer> = {
                 },
                 {
                     type: "text",
-                    name: "firstname",
+                    name: "firstName",
                 },
                 {
                     type: "text",
-                    name: "lastname",
+                    name: "lastName",
                 },
             ],
         },
@@ -51,7 +51,7 @@ Same as with the DataGrid generation, to generate the Form, you have to run the 
 npm run --prefix admin admin-generator
 ```
 
-![AdminGeneratorcli](./images/adminGeneratorCli.png)
+![AdminGeneratorCLI](./images/adminGeneratorCli.png)
 
 The component is ready to be used in the application. Simple use the generated component `<CustomerForm />` somewhere in your React Application. An optional prop `id` also gets generated.
 
@@ -59,4 +59,4 @@ Sample Form will look like:
 
 ![CustomerForm](./images/customerForm.png)
 
-The CustomerForm can be configured for "add" or "edit" mode. In this case, the `add` mode will be the the default behaviour. As soon as the `id` is set on the Form, the Form will switch to `edit` mode.
+The CustomerForm can be configured for "add" or "edit" mode. In this case, the `add` mode will be the default behavior. As soon as the `id` is set on the Form, the Form will switch to `edit` mode.
