@@ -1,7 +1,7 @@
-import { IntrospectionQuery } from "graphql";
+import { type IntrospectionQuery } from "graphql";
 
-import { FormConfig, GeneratorReturn, GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generator";
-import { Imports } from "../utils/generateImportsCode";
+import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generator";
+import { type Imports } from "../utils/generateImportsCode";
 import { generateComponentFormField } from "./generateComponentFormField";
 import { generateFormField } from "./generateFormField";
 import { generateFormLayout } from "./generateFormLayout";

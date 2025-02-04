@@ -1,4 +1,4 @@
-import { Button, Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
+import { Button, Field, FinalForm, type FinalFormContext, FinalFormInput } from "@comet/admin";
 import { Stack, Typography } from "@mui/material";
 
 interface FormValues {

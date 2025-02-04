@@ -3,7 +3,7 @@ import { GridPreferencePanelsValue, useGridApiContext } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Button, ButtonProps } from "../common/buttons/Button";
+import { Button, type ButtonProps } from "../common/buttons/Button";
 import { messages } from "../messages";
 
 export function GridColumnsButton(props: ButtonProps) {

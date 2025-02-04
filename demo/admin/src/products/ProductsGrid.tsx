@@ -6,7 +6,7 @@ import {
     CrudVisibility,
     dataGridDateColumn,
     DataGridToolbar,
-    ExportApi,
+    type ExportApi,
     FillSpace,
     filterByFragment,
     GridCellContent,
@@ -32,8 +32,8 @@ import {
     DataGridPro,
     GridFilterInputSingleSelect,
     GridFilterInputValue,
-    GridRowSelectionModel,
-    GridSlotsComponent,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
