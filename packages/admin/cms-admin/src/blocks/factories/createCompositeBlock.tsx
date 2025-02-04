@@ -1,6 +1,6 @@
 import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { Divider } from "@mui/material";
-import { Fragment, ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentNestedButton } from "../common/BlockAdminComponentNestedButton";
@@ -8,13 +8,13 @@ import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "../common
 import { BlockAdminComponentSection } from "../common/BlockAdminComponentSection";
 import { BlockAdminComponentSectionGroup } from "../common/BlockAdminComponentSectionGroup";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
-import { composeBlocks, CompositeBlockInterface } from "../helpers/composeBlocks/composeBlocks";
-import { BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
+import { composeBlocks, type CompositeBlockInterface } from "../helpers/composeBlocks/composeBlocks";
+import { type BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
 import { normalizedBlockConfig } from "../helpers/composeBlocks/utils";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { isBlockInterface } from "../helpers/isBlockInterface";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
-import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, CustomBlockCategory } from "../types";
+import { BlockCategory, type BlockInputApi, type BlockInterface, type BlockOutputApi, type BlockState, type CustomBlockCategory } from "../types";
 
 interface BlockConfiguration {
     title?: ReactNode;

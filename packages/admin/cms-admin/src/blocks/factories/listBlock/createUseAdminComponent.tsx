@@ -1,13 +1,13 @@
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { ChangeEvent, Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
-import { ClipboardContent, useBlockClipboard } from "../../clipboard/useBlockClipboard";
-import { BlockAdminComponentProps, BlockInterface, BlockState } from "../../types";
+import { type ClipboardContent, useBlockClipboard } from "../../clipboard/useBlockClipboard";
+import { type BlockAdminComponentProps, type BlockInterface, type BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
-import { ListBlockAdditionalItemField, ListBlockState } from "../createListBlock";
+import { type ListBlockAdditionalItemField, type ListBlockState } from "../createListBlock";
 
 interface CreateListBlockUseAdminComponentOptions<T extends BlockInterface> {
     block: T;

@@ -2,10 +2,10 @@ import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, alertClasses, AlertTitle, IconButton, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { forwardRef, ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface AlertProps
     extends ThemedComponentBaseProps<{

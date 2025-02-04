@@ -1,7 +1,7 @@
 import { Edit, Warning } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { MouseEventHandler, ReactNode } from "react";
+import { type MouseEventHandler, type ReactNode } from "react";
 
 import { BlockAdminComponentPaper } from "./BlockAdminComponentPaper";
 import { usePromise } from "./usePromise";

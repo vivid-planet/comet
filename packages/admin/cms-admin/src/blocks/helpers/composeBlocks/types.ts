@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { type Dispatch, type ReactNode, type SetStateAction } from "react";
 
-import { AnonymousBlockInterface, BlockInputApi, BlockInterface, BlockOutputApi, BlockState } from "../../types";
-import { Flatten, KeysMatching } from "./utility-types";
+import { type AnonymousBlockInterface, type BlockInputApi, type BlockInterface, type BlockOutputApi, type BlockState } from "../../types";
+import { type Flatten, type KeysMatching } from "./utility-types";
 
 export interface CompositeOptions {
     flatten?: boolean;

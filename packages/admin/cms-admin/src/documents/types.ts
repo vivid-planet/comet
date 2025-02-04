@@ -1,9 +1,9 @@
-import { TypedDocumentNode } from "@apollo/client";
-import { SvgIconProps } from "@mui/material";
+import { type TypedDocumentNode } from "@apollo/client";
+import { type SvgIconProps } from "@mui/material";
 
-import { BlockDependency, ReplaceDependencyObject } from "../blocks/types";
-import { GQLDocumentInterface, Maybe } from "../graphql.generated";
-import { PageTreePage } from "../pages/pageTree/usePageTree";
+import { type BlockDependency, type ReplaceDependencyObject } from "../blocks/types";
+import { type GQLDocumentInterface, type Maybe } from "../graphql.generated";
+import { type PageTreePage } from "../pages/pageTree/usePageTree";
 
 export type DocumentType = string;
 

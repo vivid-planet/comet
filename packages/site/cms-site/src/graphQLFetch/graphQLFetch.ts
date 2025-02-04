@@ -1,4 +1,4 @@
-import { SitePreviewData } from "../sitePreview/SitePreviewUtils";
+import { type SitePreviewData } from "../sitePreview/SitePreviewUtils";
 
 type Fetch = typeof fetch;
 

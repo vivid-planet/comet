@@ -44,7 +44,7 @@ import {
     resolveNewState,
 } from "@comet/cms-admin";
 import { Box, Grid, MenuItem, Typography } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { RichTextBlock } from "./blocks/RichTextBlock";
 

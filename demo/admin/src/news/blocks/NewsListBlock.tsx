@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import { useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
-import { BlockInterface, createBlockSkeleton } from "@comet/cms-admin";
+import { type BlockInterface, createBlockSkeleton } from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { NewsListBlockData, NewsListBlockInput } from "@src/blocks.generated";
+import { type NewsListBlockData, type NewsListBlockInput } from "@src/blocks.generated";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
+import { type GQLNewsListBlockQuery, type GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
 
 type State = {
     ids: string[];

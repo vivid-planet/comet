@@ -1,10 +1,10 @@
 import { SpaceBlock } from "../../SpaceBlock";
-import { BlockInputApi, BlockState } from "../../types";
+import { type BlockInputApi, type BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
-import { composeBlocks, ComposeBlocksApi } from "./composeBlocks";
+import { composeBlocks, type ComposeBlocksApi } from "./composeBlocks";
 import { createCompositeBlockField } from "./createCompositeBlockField";
 import { createCompositeBlockFields } from "./createCompositeBlockFields";
-import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
+import { type AdminComponentPropsMap, type CompositeBlocksConfig, type DataMapState } from "./types";
 
 // TODO: youtube block moved, space block deprecated, update tests
 

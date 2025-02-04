@@ -10,7 +10,7 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormRangeInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     messages,
@@ -24,18 +24,18 @@ import {
 import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
 import {
-    BlockState,
+    type BlockState,
     createFinalFormBlock,
     DamImageBlock,
     FileUploadField,
-    GQLFinalFormFileUploadDownloadableFragment,
-    GQLFinalFormFileUploadFragment,
+    type GQLFinalFormFileUploadDownloadableFragment,
+    type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormSpy } from "react-final-form";
@@ -44,20 +44,20 @@ import { FormattedMessage } from "react-intl";
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { validateTitle } from "../validateTitle";
 import {
-    GQLManufacturersSelectQuery,
-    GQLManufacturersSelectQueryVariables,
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
+    type GQLManufacturersSelectQuery,
+    type GQLManufacturersSelectQueryVariables,
+    type GQLProductCategoriesSelectQuery,
+    type GQLProductCategoriesSelectQueryVariables,
 } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLProductFormDetailsFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLProductFormDetailsFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 const rootBlocks = {
@@ -314,7 +314,7 @@ export function ProductForm({ id }: FormProps) {
                                     />
                                 )}
                             </Field>
-                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
+                            <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>

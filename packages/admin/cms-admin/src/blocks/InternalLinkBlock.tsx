@@ -4,16 +4,16 @@ import { Box, Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
+import { type InternalLinkBlockData, type InternalLinkBlockInput } from "../blocks.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
-import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
-import { BlockCategory, BlockDependency, BlockInterface, LinkBlockInterface } from "./types";
+import { type GQLLinkBlockTargetPageQuery, type GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface, type LinkBlockInterface } from "./types";
 
 type State = InternalLinkBlockData;
 

@@ -12,7 +12,16 @@ import {
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ChangeEvent, Dispatch, FunctionComponent, ReactNode, SetStateAction, useCallback, useEffect, useState } from "react";
+import {
+    type ChangeEvent,
+    type Dispatch,
+    type FunctionComponent,
+    type ReactNode,
+    type SetStateAction,
+    useCallback,
+    useEffect,
+    useState,
+} from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -29,7 +38,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
+import { type BlockDependency, type BlockInterface, type BlockState, type PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 

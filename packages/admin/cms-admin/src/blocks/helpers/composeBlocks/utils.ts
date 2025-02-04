@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BlockInterface } from "../../types";
+import { type BlockInterface } from "../../types";
 import {
-    BlockInterfaceWithOptions,
-    CompositeBlocksConfig,
-    CompositeOptions,
-    DataMapInputApi,
-    DataMapOutputApi,
-    DataMapState,
-    InputApiMap,
-    OutputApiMap,
-    StateMap,
+    type BlockInterfaceWithOptions,
+    type CompositeBlocksConfig,
+    type CompositeOptions,
+    type DataMapInputApi,
+    type DataMapOutputApi,
+    type DataMapState,
+    type InputApiMap,
+    type OutputApiMap,
+    type StateMap,
 } from "./types";
 
 // reduce each block key to something

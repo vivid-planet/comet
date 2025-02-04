@@ -2,16 +2,16 @@ import { messages } from "@comet/admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
+import { type TextImageBlockData, type TextImageBlockInput } from "../blocks.generated";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
-import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
+import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlock";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
-import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
-import { BlockCategory, BlockInterface } from "./types";
+import { type ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, type BlockInterface } from "./types";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 interface State {

@@ -1,4 +1,4 @@
-import { SelectField, SelectFieldOption, SelectFieldProps } from "@comet/admin";
+import { SelectField, type SelectFieldOption, type SelectFieldProps } from "@comet/admin";
 
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";

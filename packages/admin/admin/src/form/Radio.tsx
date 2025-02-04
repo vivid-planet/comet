@@ -1,5 +1,5 @@
-import MuiRadio, { RadioProps } from "@mui/material/Radio";
-import { FieldRenderProps } from "react-final-form";
+import MuiRadio, { type RadioProps } from "@mui/material/Radio";
+import { type FieldRenderProps } from "react-final-form";
 
 export type FinalFormRadioProps = RadioProps & FieldRenderProps<string, HTMLInputElement>;
 /**

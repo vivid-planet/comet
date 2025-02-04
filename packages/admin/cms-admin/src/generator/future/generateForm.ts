@@ -1,10 +1,17 @@
-import { IntrospectionQuery } from "graphql";
+import { type IntrospectionQuery } from "graphql";
 
-import { generateFields, GenerateFieldsReturn } from "./generateForm/generateFields";
+import { generateFields, type GenerateFieldsReturn } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
-import { FormConfig, FormFieldConfig, GeneratorReturn, GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "./generator";
+import {
+    type FormConfig,
+    type FormFieldConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    isFormFieldConfig,
+    isFormLayoutConfig,
+} from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
-import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {

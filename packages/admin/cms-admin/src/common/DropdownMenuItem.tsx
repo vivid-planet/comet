@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { ClickAwayListener, Grow, Paper, useTheme } from "@mui/material";
-import { Dispatch, ReactElement, ReactNode, SetStateAction, useRef, useState } from "react";
+import { type Dispatch, type ReactElement, type ReactNode, type SetStateAction, useRef, useState } from "react";
 
 import * as sc from "./DropdownMenuItem.sc";
 

@@ -1,8 +1,8 @@
 import { BlockAdminTabs } from "../../blocks/common/BlockAdminTabs";
 import { IFrameBridgeProvider } from "../../blocks/iframebridge/IFrameBridge";
-import { BlockAdminComponentPart } from "../../blocks/types";
+import { type BlockAdminComponentPart } from "../../blocks/types";
 import { SplitPreview } from "./SplitPreview";
-import { BlockPreviewApi } from "./useBlockPreview";
+import { type BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;

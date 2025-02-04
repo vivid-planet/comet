@@ -2,7 +2,7 @@ import { Field, FinalFormInput } from "@comet/admin";
 import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
+import { type YouTubeVideoBlockData, type YouTubeVideoBlockInput } from "../blocks.generated";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -10,7 +10,7 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { PixelImageBlock } from "./PixelImageBlock";
-import { BlockCategory, BlockInterface, BlockState } from "./types";
+import { BlockCategory, type BlockInterface, type BlockState } from "./types";
 import { resolveNewState } from "./utils";
 
 type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };

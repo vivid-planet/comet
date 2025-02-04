@@ -1,12 +1,12 @@
 import { SelectField } from "@comet/admin";
 import { MenuItem } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockInterface } from "../../types";
+import { BlockCategory, type BlockInterface } from "../../types";
 
 interface SpaceBlockFactoryOptions<T> {
     name?: string;

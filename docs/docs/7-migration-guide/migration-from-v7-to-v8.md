@@ -230,6 +230,47 @@ npx @comet/upgrade v8/nest-peer-dependencies.ts
 
 :::
 
+### Remove `@comet/blocks-api`
+
+The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
+To upgrade, perform the following steps:
+
+1.  Remove the package:
+
+    ```diff title="api/package.json"
+    - "@comet/blocks-api": "^7.x.x",
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/remove-blocks-packages.ts
+    ```
+
+    :::
+
+2.  Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+    ```
+
+    :::
+
+3.  Update imports that have been renamed
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+    ```
+
+    :::
+
+4.  Remove usages of removed export `getFieldKeys` (probably none)
+
 ## Admin
 
 ### Upgrade peer dependencies
@@ -618,3 +659,40 @@ It is recommended to perform the following steps separately in the `admin/` and 
 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
 The codemod does not handle all cases, so manual adjustments may still be necessary.
+
+### Consistent type imports
+
+To improve code consistency and readability, we now enforce the ESLint rule [@typescript-eslint/consistent-type-imports](https://typescript-eslint.io/rules/consistent-type-imports/) with the following configuration:
+
+```typescript
+"@typescript-eslint/consistent-type-imports": [
+  "error",
+  {
+    "prefer": "type-imports",
+    "disallowTypeAnnotations": false,
+    "fixStyle": "inline-type-imports"
+  }
+]
+```
+
+#### Why this change?
+
+This rule ensures that TypeScript type-only imports are explicitly marked with import type, leading to multiple benefits:
+
+- **Improved Code Clarity**
+  It is immediately clear that the imported symbol is used only for TypeScript type checking and not at runtime.
+  Avoids confusion between runtime imports and purely static type definitions.
+- **Performance & Tree-Shaking**
+  TypeScript can optimize build performance since it knows which imports are needed only at compile time.
+  Some bundlers can more effectively remove unused type imports, reducing bundle size.
+- **Reduced Circular Dependency Issues**
+  Circular dependencies can cause hard-to-debug issues in TypeScript projects.
+  Using import type ensures that types do not introduce unintended runtime dependencies.
+
+#### Migration Steps
+
+Run ESLint with the --fix option to automatically update imports:
+
+```bash
+npm run lint:eslint --fix
+```

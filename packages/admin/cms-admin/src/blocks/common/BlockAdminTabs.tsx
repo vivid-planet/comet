@@ -1,10 +1,10 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
-import { Tab as MuiTab, TabProps, Tabs as MuiTabs } from "@mui/material";
+import { Tab as MuiTab, type TabProps, Tabs as MuiTabs } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Switch, useRouteMatch } from "react-router";
-import { Link, LinkProps } from "react-router-dom";
+import { Link, type LinkProps } from "react-router-dom";
 
-import { BlockAdminComponentPart } from "../types";
+import { type BlockAdminComponentPart } from "../types";
 import { TabContent } from "./AdminTabsTabContent";
 
 export interface BlockAdminTabsProps {

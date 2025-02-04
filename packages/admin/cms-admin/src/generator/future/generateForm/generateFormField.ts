@@ -1,11 +1,17 @@
-import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import {
+    type IntrospectionEnumType,
+    type IntrospectionInputValue,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
+} from "graphql";
 
-import { Adornment, FormConfig, FormFieldConfig, GQLDocumentConfigMap, isFormFieldConfig } from "../generator";
+import { type Adornment, type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
-import { Imports } from "../utils/generateImportsCode";
+import { type Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
-import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
+import { findFieldByName, type GenerateFieldsReturn } from "./generateFields";
 
 type AdornmentData = {
     adornmentString: string;
@@ -394,7 +400,7 @@ export function generateFormField({
              ${required ? "required" : ""}
               variant="horizontal"
              fullWidth
-             name="${name}"
+             name="${nameWithPrefix}"
              label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
              options={[
                   ${values

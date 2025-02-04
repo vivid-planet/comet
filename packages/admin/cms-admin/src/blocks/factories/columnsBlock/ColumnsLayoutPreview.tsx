@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Children, ReactElement, ReactNode } from "react";
+import { Children, type ReactElement, type ReactNode } from "react";
 
 interface ItemProps {
     width: number;

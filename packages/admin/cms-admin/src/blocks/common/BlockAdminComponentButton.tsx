@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
+import { type MouseEventHandler, type PropsWithChildren, type ReactNode } from "react";
 
 import { BlockAdminComponentPaper } from "./BlockAdminComponentPaper";
 

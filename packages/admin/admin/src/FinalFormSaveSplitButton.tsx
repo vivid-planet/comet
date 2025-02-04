@@ -1,10 +1,10 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
+import { SplitButton, type SplitButtonProps } from "./common/buttons/split/SplitButton";
 import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";

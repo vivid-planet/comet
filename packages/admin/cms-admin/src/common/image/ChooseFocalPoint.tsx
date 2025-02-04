@@ -3,7 +3,7 @@ import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentSection } from "../../blocks/common/BlockAdminComponentSection";
-import { GQLFocalPoint } from "../../graphql.generated";
+import { type GQLFocalPoint } from "../../graphql.generated";
 
 interface ChooseFocalPointProps {
     focalPoint: GQLFocalPoint;

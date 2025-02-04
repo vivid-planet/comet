@@ -1,5 +1,5 @@
-import { ComponentType, Dispatch, ReactElement, ReactNode, SetStateAction } from "react";
-import { FormattedMessage, MessageDescriptor } from "react-intl";
+import { type ComponentType, type Dispatch, type ReactElement, type ReactNode, type SetStateAction } from "react";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 export interface BlockPreviewContext {
     showVisibleOnly?: boolean;

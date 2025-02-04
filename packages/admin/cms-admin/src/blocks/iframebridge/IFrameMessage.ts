@@ -1,6 +1,6 @@
 // Same file in admin and site
 
-import { ExternalLinkBlockData } from "../../blocks.generated";
+import { type ExternalLinkBlockData } from "../../blocks.generated";
 
 // Messages sent from iFrame -> Admin
 

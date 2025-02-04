@@ -4,9 +4,9 @@ import { MovePage } from "@comet/admin-icons";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { DocumentInterface, DocumentType } from "../../documents/types";
-import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
-import { PageTreePage } from "./usePageTree";
+import { type DocumentInterface, type DocumentType } from "../../documents/types";
+import { type GQLUpdatePageTreeNodeCategoryMutation, type GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {

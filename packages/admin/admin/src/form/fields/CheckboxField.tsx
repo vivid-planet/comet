@@ -1,7 +1,7 @@
-import { FormControlLabel, FormControlLabelProps } from "@mui/material";
+import { FormControlLabel, type FormControlLabelProps } from "@mui/material";
 
-import { FinalFormCheckbox, FinalFormCheckboxProps } from "../Checkbox";
-import { Field, FieldProps } from "../Field";
+import { FinalFormCheckbox, type FinalFormCheckboxProps } from "../Checkbox";
+import { Field, type FieldProps } from "../Field";
 
 export interface CheckboxFieldProps extends FieldProps<string, HTMLInputElement> {
     fieldLabel?: string;

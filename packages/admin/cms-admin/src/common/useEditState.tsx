@@ -1,7 +1,7 @@
-import { ApolloError, ApolloQueryResult, OperationVariables, useQuery } from "@apollo/client";
-import { DocumentNode } from "graphql";
+import { type ApolloError, type ApolloQueryResult, type OperationVariables, useQuery } from "@apollo/client";
+import { type DocumentNode } from "graphql";
 import isEqual from "lodash.isequal";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from "react";
 
 interface EditStateOptions<TData, TVariables, TState, TOutput> {
     query: DocumentNode;

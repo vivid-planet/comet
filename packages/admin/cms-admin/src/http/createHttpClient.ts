@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 
 export function createHttpClient(apiUrl: string): AxiosInstance {
     const headers: AxiosRequestConfig["headers"] = {

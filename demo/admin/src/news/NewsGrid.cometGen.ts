@@ -1,5 +1,5 @@
-import { future_GridConfig as GridConfig } from "@comet/cms-admin";
-import { GQLNews } from "@src/graphql.generated";
+import { type future_GridConfig as GridConfig } from "@comet/cms-admin";
+import { type GQLNews } from "@src/graphql.generated";
 
 export const NewsGrid: GridConfig<GQLNews> = {
     type: "grid",

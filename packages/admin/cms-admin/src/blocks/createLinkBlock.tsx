@@ -2,14 +2,14 @@ import { Field, FinalFormInput } from "@comet/admin";
 import { Box } from "@mui/system";
 import { FormattedMessage } from "react-intl";
 
-import { LinkBlockData } from "../blocks.generated";
+import { type LinkBlockData } from "../blocks.generated";
 import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
-import { createOneOfBlock, CreateOneOfBlockOptions } from "./factories/createOneOfBlock";
+import { createOneOfBlock, type CreateOneOfBlockOptions } from "./factories/createOneOfBlock";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { InternalLinkBlock } from "./InternalLinkBlock";
-import { BlockInterface, LinkBlockInterface } from "./types";
+import { type BlockInterface, type LinkBlockInterface } from "./types";
 
 interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, "name" | "supportedBlocks"> {
     name?: string;

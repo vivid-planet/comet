@@ -4,7 +4,7 @@ import { Save } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
     BlockPreviewWithTabs,
-    BlockState,
+    type BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
     useBlockPreview,
@@ -13,7 +13,7 @@ import {
     useSaveConflictQuery,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { FooterContentBlockInput } from "@src/blocks.generated";
+import { type FooterContentBlockInput } from "@src/blocks.generated";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
 import { useEffect, useState } from "react";
@@ -22,12 +22,12 @@ import { useRouteMatch } from "react-router";
 
 import { FooterContentBlock } from "./blocks/FooterContentBlock";
 import {
-    GQLCheckForChangesFooterQuery,
-    GQLCheckForChangesFooterQueryVariables,
-    GQLFooterQuery,
-    GQLFooterQueryVariables,
-    GQLSaveFooterMutation,
-    GQLSaveFooterMutationVariables,
+    type GQLCheckForChangesFooterQuery,
+    type GQLCheckForChangesFooterQueryVariables,
+    type GQLFooterQuery,
+    type GQLFooterQueryVariables,
+    type GQLSaveFooterMutation,
+    type GQLSaveFooterMutationVariables,
     namedOperations,
 } from "./EditFooterPage.generated";
 

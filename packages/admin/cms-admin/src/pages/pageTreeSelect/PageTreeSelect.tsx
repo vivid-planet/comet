@@ -5,8 +5,8 @@ import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentNestedButton } from "../../blocks/common/BlockAdminComponentNestedButton";
-import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
-import PageTreeSelectDialog, { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
+import { type GQLPageTreeSelectDetailQuery, type GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
+import PageTreeSelectDialog, { type GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
 interface PageTreeSelectProps {
     value: GQLSelectedPageFragment | undefined | null;

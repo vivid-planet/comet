@@ -1,10 +1,10 @@
 import {
-    GridActionsColDef as MuiGridActionsColDef,
-    GridSingleSelectColDef as MuiGridSingleSelectColDef,
-    GridValidRowModel,
-    GridValueOptionsParams,
+    type GridActionsColDef as MuiGridActionsColDef,
+    type GridSingleSelectColDef as MuiGridSingleSelectColDef,
+    type GridValidRowModel,
+    type GridValueOptionsParams,
 } from "@mui/x-data-grid";
-import { GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
+import { type GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
 import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
 
 type ValueOption =

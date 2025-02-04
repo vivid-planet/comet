@@ -1,5 +1,5 @@
-import { future_GridConfig as GridConfig } from "@comet/cms-admin";
-import { GQLManufacturer } from "@src/graphql.generated";
+import { type future_GridConfig as GridConfig } from "@comet/cms-admin";
+import { type GQLManufacturer } from "@src/graphql.generated";
 
 export const ManufacturersGrid: GridConfig<GQLManufacturer> = {
     type: "grid",

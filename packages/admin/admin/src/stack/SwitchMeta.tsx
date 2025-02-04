@@ -1,4 +1,4 @@
-import { Component, ContextType, createContext, PropsWithChildren } from "react";
+import { Component, type ContextType, createContext, type PropsWithChildren } from "react";
 
 import { StackApiContext } from "./Api";
 

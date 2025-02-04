@@ -1,4 +1,4 @@
-import { Component, ContextType, createContext, PropsWithChildren, ReactNode } from "react";
+import { Component, type ContextType, createContext, type PropsWithChildren, type ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 
 import { StackApiContext } from "./Api";

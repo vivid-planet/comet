@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { DamConfig, DamConfigContext } from "./DamConfigContext";
+import { type DamConfig, DamConfigContext } from "./DamConfigContext";
 
 interface DamConfigProviderProps {
     value: DamConfig;

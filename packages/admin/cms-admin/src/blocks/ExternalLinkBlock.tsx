@@ -1,13 +1,13 @@
 import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
 import { FormattedMessage } from "react-intl";
 
-import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
+import { type ExternalLinkBlockData, type ExternalLinkBlockInput } from "../blocks.generated";
 import { isLinkTarget } from "../validation/isLinkTarget";
 import { validateLinkTarget } from "../validation/validateLinkTarget";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockInterface, LinkBlockInterface } from "./types";
+import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "./types";
 
 type State = ExternalLinkBlockData;
 

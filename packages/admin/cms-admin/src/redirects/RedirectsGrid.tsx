@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
     FillSpace,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -24,10 +24,10 @@ import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
-import { BlockInterface } from "../blocks/types";
+import { type BlockInterface } from "../blocks/types";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
+import { type GQLPaginatedRedirectsQuery, type GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;

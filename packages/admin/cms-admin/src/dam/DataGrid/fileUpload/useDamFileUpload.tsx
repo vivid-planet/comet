@@ -1,18 +1,22 @@
 import { useApolloClient } from "@apollo/client";
-import axios, { AxiosError, CancelTokenSource } from "axios";
-import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
-import { Accept, FileRejection } from "react-dropzone";
+import axios, { type AxiosError, type CancelTokenSource } from "axios";
+import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { type Accept, type FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
-import { GQLLicenseInput } from "../../../graphql.generated";
+import { type GQLLicenseInput } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { DuplicateAction, FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
+import {
+    type DuplicateAction,
+    type FilenameData,
+    useManualDuplicatedFilenamesHandler,
+} from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { convertMimetypesToDropzoneAccept } from "./fileUpload.utils";
-import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
+import { type NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -26,10 +30,10 @@ import {
 import { ProgressDialog } from "./ProgressDialog";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import {
-    GQLDamFolderByNameAndParentIdQuery,
-    GQLDamFolderByNameAndParentIdQueryVariables,
-    GQLDamFolderForFolderUploadMutation,
-    GQLDamFolderForFolderUploadMutationVariables,
+    type GQLDamFolderByNameAndParentIdQuery,
+    type GQLDamFolderByNameAndParentIdQueryVariables,
+    type GQLDamFolderForFolderUploadMutation,
+    type GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
 export interface FileWithDamUploadMetadata extends File {

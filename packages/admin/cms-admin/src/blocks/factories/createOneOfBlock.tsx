@@ -2,7 +2,7 @@ import { Field, RadioGroupField, SelectField } from "@comet/admin";
 import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { Dispatch, ReactNode, SetStateAction, useCallback } from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
@@ -11,7 +11,7 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockInterface, BlockPreviewStateInterface, BlockState, CustomBlockCategory } from "../types";
+import { BlockCategory, type BlockInterface, type BlockPreviewStateInterface, type BlockState, type CustomBlockCategory } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 

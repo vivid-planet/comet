@@ -14,8 +14,8 @@ import {
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
-    BlockOutputApi,
-    BlockState,
+    type BlockOutputApi,
+    type BlockState,
     ContentScopeIndicator,
     HiddenInSubroute,
     IFrameBridgeProvider,
@@ -34,7 +34,11 @@ import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
-import { GQLEditMainMenuItemFragment, GQLUpdateMainMenuItemMutation, GQLUpdateMainMenuItemMutationVariables } from "./EditMainMenuItem.generated";
+import {
+    type GQLEditMainMenuItemFragment,
+    type GQLUpdateMainMenuItemMutation,
+    type GQLUpdateMainMenuItemMutationVariables,
+} from "./EditMainMenuItem.generated";
 
 export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
 

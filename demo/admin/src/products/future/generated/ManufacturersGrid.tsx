@@ -6,7 +6,7 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -21,17 +21,17 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLDeleteManufacturerMutation,
-    GQLDeleteManufacturerMutationVariables,
-    GQLManufacturersGridFutureFragment,
-    GQLManufacturersGridQuery,
-    GQLManufacturersGridQueryVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLDeleteManufacturerMutation,
+    type GQLDeleteManufacturerMutationVariables,
+    type GQLManufacturersGridFutureFragment,
+    type GQLManufacturersGridQuery,
+    type GQLManufacturersGridQueryVariables,
 } from "./ManufacturersGrid.generated";
 
 const manufacturersFragment = gql`

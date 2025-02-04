@@ -2,7 +2,7 @@ import { StackPage, StackSwitch, StackSwitchApiContext, Tooltip } from "@comet/a
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FunctionComponent, ReactNode } from "react";
+import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -16,7 +16,7 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
+import { type BlockDependency, type BlockInterface, type BlockState, type PreviewContent } from "../types";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 

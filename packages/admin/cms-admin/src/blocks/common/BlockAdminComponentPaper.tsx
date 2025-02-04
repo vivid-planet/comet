@@ -1,5 +1,5 @@
 import { Box, Paper } from "@mui/material";
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, type PropsWithChildren, useContext } from "react";
 
 const BlockAdminComponentPaperContext = createContext<boolean>(false);
 

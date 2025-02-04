@@ -1,7 +1,7 @@
 import { grey as greyPalette } from "@mui/material/colors";
-import { CSSProperties } from "react";
+import { type CSSProperties } from "react";
 
-import { RteProps } from "../Rte";
+import { type RteProps } from "../Rte";
 
 interface RteTheme {
     colors: {

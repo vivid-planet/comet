@@ -2,8 +2,8 @@ import { Field, StackPage, StackPageTitle, StackSwitch, StackSwitchApiContext } 
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Checkbox, Divider, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Dispatch, ReactNode, SetStateAction } from "react";
-import { FormattedMessage, IntlShape, useIntl } from "react-intl";
+import { type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
@@ -17,12 +17,19 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, CustomBlockCategory, PreviewContent } from "../types";
+import {
+    BlockCategory,
+    type BlockDependency,
+    type BlockInputApi,
+    type BlockInterface,
+    type CustomBlockCategory,
+    type PreviewContent,
+} from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
 import { FinalFormLayoutSelect } from "./columnsBlock/FinalFormLayoutSelect";
-import { ListBlockItem, ListBlockState } from "./createListBlock";
+import { type ListBlockItem, type ListBlockState } from "./createListBlock";
 import { createUseAdminComponent as createUseListBlockAdminComponent } from "./listBlock/createUseAdminComponent";
 
 export interface ColumnsBlockLayout {
