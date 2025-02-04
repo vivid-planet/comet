@@ -3,7 +3,7 @@ import isEqual from "lodash.isequal";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Route, useRouteMatch } from "react-router";
 
-import { AdminComponentPaper } from "../common/AdminComponentPaper";
+import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { Collapsible } from "../common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "../common/CollapsibleSwitchButtonHeader";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
@@ -111,7 +111,7 @@ export function createOptionalBlock<T extends BlockInterface>(
                 <Route path={match.url}>
                     {({ match }) =>
                         match?.isExact ? (
-                            <AdminComponentPaper disablePadding>
+                            <BlockAdminComponentPaper disablePadding>
                                 <Collapsible
                                     open={state.visible}
                                     header={<CollapsibleSwitchButtonHeader checked={state.visible} title={options?.title} />}
@@ -158,7 +158,7 @@ export function createOptionalBlock<T extends BlockInterface>(
                                         />
                                     </Box>
                                 </Collapsible>
-                            </AdminComponentPaper>
+                            </BlockAdminComponentPaper>
                         ) : (
                             <decoratedBlock.AdminComponent
                                 updateState={updateSubBlocksFn}

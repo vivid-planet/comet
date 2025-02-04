@@ -5,7 +5,7 @@ import isEqual from "lodash.isequal";
 import { Dispatch, ReactNode, SetStateAction, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useAdminComponentPaper } from "../common/AdminComponentPaper";
+import { useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
@@ -277,7 +277,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
-            const isInPaper = useAdminComponentPaper();
+            const isInPaper = useBlockAdminComponentPaper();
 
             const handleBlockSelect = useCallback(
                 (blockType: string) => {

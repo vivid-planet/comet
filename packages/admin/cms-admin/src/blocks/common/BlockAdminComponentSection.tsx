@@ -10,7 +10,7 @@ interface Props {
     disableBottomMargin?: boolean;
 }
 
-export const AdminComponentSection = ({ children, title, disableBottomMargin }: PropsWithChildren<Props>) => {
+export const BlockAdminComponentSection = ({ children, title, disableBottomMargin }: PropsWithChildren<Props>) => {
     if (title) {
         return (
             <Root disableBottomMargin={disableBottomMargin}>

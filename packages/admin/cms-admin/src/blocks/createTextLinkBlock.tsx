@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
-import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
@@ -45,7 +45,7 @@ export function createTextLinkBlock({
             const { link } = composedApi.adminComponents({ state, updateState: decomposeUpdateStateAction(updateState, ["link"]) });
 
             return (
-                <AdminComponentPaper disablePadding>
+                <BlockAdminComponentPaper disablePadding>
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
                             onSubmit={({ text }) => {
@@ -57,7 +57,7 @@ export function createTextLinkBlock({
                         </BlocksFinalForm>
                     </Box>
                     {link}
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             );
         },
 

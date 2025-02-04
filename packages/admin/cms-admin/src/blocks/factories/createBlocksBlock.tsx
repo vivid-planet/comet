@@ -19,10 +19,10 @@ import { v4 as uuid } from "uuid";
 import { CannotPasteBlockDialog } from "../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../clipboard/useBlockClipboard";
 import { AddBlockDrawer } from "../common/AddBlockDrawer";
-import { AdminComponentButton } from "../common/AdminComponentButton";
-import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
+import { BlockAdminComponentButton } from "../common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
@@ -573,7 +573,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                 {(stackApi) => {
                                     return (
                                         <SelectPreviewComponent>
-                                            <AdminComponentPaper disablePadding>
+                                            <BlockAdminComponentPaper disablePadding>
                                                 <AdminComponentStickyHeader>
                                                     <BlockListHeader>
                                                         {state.blocks.length ? (
@@ -754,28 +754,32 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                         );
                                                     })}
                                                     {state.blocks.length === 0 ? (
-                                                        <AdminComponentButton onClick={() => handleAddBlockClick()} variant="primary" size="large">
+                                                        <BlockAdminComponentButton
+                                                            onClick={() => handleAddBlockClick()}
+                                                            variant="primary"
+                                                            size="large"
+                                                        >
                                                             <LargeAddButtonContent>
                                                                 <LargeAddButtonIcon />
                                                                 <Typography>
                                                                     <FormattedMessage id="comet.blocks.list.addNewBlock" defaultMessage="Add block" />
                                                                 </Typography>
                                                             </LargeAddButtonContent>
-                                                        </AdminComponentButton>
+                                                        </BlockAdminComponentButton>
                                                     ) : (
                                                         <AdminComponentStickyFooter>
-                                                            <AdminComponentButton
+                                                            <BlockAdminComponentButton
                                                                 onClick={() => handleAddBlockClick()}
                                                                 variant="primary"
                                                                 size="large"
                                                                 startIcon={<Add />}
                                                             >
                                                                 <FormattedMessage id="comet.blocks.list.addNewBlock" defaultMessage="Add block" />
-                                                            </AdminComponentButton>
+                                                            </BlockAdminComponentButton>
                                                         </AdminComponentStickyFooter>
                                                     )}
                                                 </div>
-                                            </AdminComponentPaper>
+                                            </BlockAdminComponentPaper>
                                             <AddBlockDrawer
                                                 open={showAddBlockDrawer}
                                                 onClose={handleCloseAddBlockDrawer}

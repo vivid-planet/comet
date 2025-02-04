@@ -6,10 +6,10 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton } from "../common/AdminComponentButton";
-import { AdminComponentPaper } from "../common/AdminComponentPaper";
-import { AdminComponentSection } from "../common/AdminComponentSection";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
+import { BlockAdminComponentButton } from "../common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "../common/BlockAdminComponentSection";
 import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
@@ -271,8 +271,8 @@ export function createColumnsBlock<T extends BlockInterface>(
                                     fullWidth
                                 />
                             </BlocksFinalForm>
-                            <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.items" defaultMessage="Items" />}>
-                                <AdminComponentPaper disablePadding>
+                            <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.columns.items" defaultMessage="Items" />}>
+                                <BlockAdminComponentPaper disablePadding>
                                     <StackSwitchApiContext.Consumer>
                                         {(stackApi) => {
                                             return (
@@ -374,7 +374,7 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                         })}
                                                     </div>
                                                     {state.columns.length === 0 ? (
-                                                        <AdminComponentButton
+                                                        <BlockAdminComponentButton
                                                             variant="primary"
                                                             onClick={() => {
                                                                 const key = addNewBlock();
@@ -391,10 +391,10 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                                     />
                                                                 </Typography>
                                                             </LargeAddButtonContent>
-                                                        </AdminComponentButton>
+                                                        </BlockAdminComponentButton>
                                                     ) : (
                                                         <AdminComponentStickyFooter>
-                                                            <AdminComponentButton
+                                                            <BlockAdminComponentButton
                                                                 variant="primary"
                                                                 onClick={() => {
                                                                     const key = addNewBlock();
@@ -404,15 +404,15 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                                 startIcon={<Add />}
                                                             >
                                                                 <FormattedMessage id="comet.blocks.columns.addColumn" defaultMessage="Add column" />
-                                                            </AdminComponentButton>
+                                                            </BlockAdminComponentButton>
                                                         </AdminComponentStickyFooter>
                                                     )}
                                                 </SelectPreviewComponent>
                                             );
                                         }}
                                     </StackSwitchApiContext.Consumer>
-                                </AdminComponentPaper>
-                            </AdminComponentSection>
+                                </BlockAdminComponentPaper>
+                            </BlockAdminComponentSection>
                         </StackPage>
                         <StackPage name="edit" title={intl.formatMessage({ id: "comet.blocks.columns.editColumn", defaultMessage: "Edit column" })}>
                             {(key) => {

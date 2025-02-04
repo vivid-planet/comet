@@ -3,8 +3,8 @@ import { Link } from "@comet/admin-icons";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentButton } from "../../blocks/common/AdminComponentButton";
-import { AdminComponentNestedButton } from "../../blocks/common/AdminComponentNestedButton";
+import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
+import { BlockAdminComponentNestedButton } from "../../blocks/common/BlockAdminComponentNestedButton";
 import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
 import PageTreeSelectDialog, { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
@@ -36,11 +36,11 @@ export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps)
     return (
         <>
             {value ? (
-                <AdminComponentNestedButton onClick={handleButtonClick} displayName={value.name} preview={value.path} />
+                <BlockAdminComponentNestedButton onClick={handleButtonClick} displayName={value.name} preview={value.path} />
             ) : (
-                <AdminComponentButton onClick={handleButtonClick} size="large" startIcon={<Link />} disabled={loading}>
+                <BlockAdminComponentButton onClick={handleButtonClick} size="large" startIcon={<Link />} disabled={loading}>
                     <FormattedMessage id="comet.pages.pageTreeSelect.label" defaultMessage="Select Page" />
-                </AdminComponentButton>
+                </BlockAdminComponentButton>
             )}
 
             {/* Render Dialog only when open is true to prevent render-cycles originating from setQuery in usePageQuery */}

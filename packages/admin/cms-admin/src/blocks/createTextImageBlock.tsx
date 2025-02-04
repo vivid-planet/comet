@@ -3,8 +3,8 @@ import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/mate
 import { FormattedMessage } from "react-intl";
 
 import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
-import { AdminComponentPaper } from "./common/AdminComponentPaper";
-import { AdminComponentSection } from "./common/AdminComponentSection";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
@@ -58,13 +58,15 @@ const createTextImageBlock = ({
 
             return (
                 <>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.text" defaultMessage="Text" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.text" defaultMessage="Text" />}>
                         {text}
-                    </AdminComponentSection>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.image" defaultMessage="Image" />}>
-                        <AdminComponentPaper disablePadding>{image}</AdminComponentPaper>
-                    </AdminComponentSection>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.imagePosition" defaultMessage="Image position" />}>
+                    </BlockAdminComponentSection>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.textImage.image" defaultMessage="Image" />}>
+                        <BlockAdminComponentPaper disablePadding>{image}</BlockAdminComponentPaper>
+                    </BlockAdminComponentSection>
+                    <BlockAdminComponentSection
+                        title={<FormattedMessage id="comet.blocks.textImage.imagePosition" defaultMessage="Image position" />}
+                    >
                         <RadioGroup
                             row
                             value={state.imagePosition}
@@ -78,8 +80,8 @@ const createTextImageBlock = ({
                             <FormControlLabel value="left" control={<Radio />} label={<FormattedMessage {...messages.left} />} />
                             <FormControlLabel value="right" control={<Radio />} label={<FormattedMessage {...messages.right} />} />
                         </RadioGroup>
-                    </AdminComponentSection>
-                    <AdminComponentSection
+                    </BlockAdminComponentSection>
+                    <BlockAdminComponentSection
                         title={<FormattedMessage id="comet.blocks.textImage.imageAspectRatio" defaultMessage="Image aspect ratio" />}
                     >
                         <Select
@@ -98,7 +100,7 @@ const createTextImageBlock = ({
                                 </MenuItem>
                             ))}
                         </Select>
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </>
             );
         },

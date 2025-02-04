@@ -9,9 +9,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { validateUrl } from "../validation/validateUrl";
-import { AdminComponentButton } from "./common/AdminComponentButton";
-import { AdminComponentPaper } from "./common/AdminComponentPaper";
-import { AdminComponentSectionGroup } from "./common/AdminComponentSectionGroup";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSectionGroup } from "./common/BlockAdminComponentSectionGroup";
 import { Collapsible } from "./common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonHeader";
 import { createOptionalBlock } from "./factories/createOptionalBlock";
@@ -265,10 +265,10 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
                         {/* Alternate Hreflang */}
                         <Box marginTop={8} marginBottom={8}>
-                            <AdminComponentSectionGroup
+                            <BlockAdminComponentSectionGroup
                                 title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />}
                             >
-                                <AdminComponentPaper>
+                                <BlockAdminComponentPaper>
                                     <FieldArray name="alternativeLinks">
                                         {({ fields }) => (
                                             <>
@@ -305,19 +305,19 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                                         </Grid>
                                                     </Grid>
                                                 ))}
-                                                <AdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
+                                                <BlockAdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
                                                     <AddButtonContent>
                                                         <AddButtonIcon />
                                                         <Typography>
                                                             <FormattedMessage {...messages.add} />
                                                         </Typography>
                                                     </AddButtonContent>
-                                                </AdminComponentButton>
+                                                </BlockAdminComponentButton>
                                             </>
                                         )}
                                     </FieldArray>
-                                </AdminComponentPaper>
-                            </AdminComponentSectionGroup>
+                                </BlockAdminComponentPaper>
+                            </BlockAdminComponentSectionGroup>
                         </Box>
                     </BlocksFinalForm>
                 </div>

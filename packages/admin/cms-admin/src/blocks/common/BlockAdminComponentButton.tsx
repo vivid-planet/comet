@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
 
-import { AdminComponentPaper } from "./AdminComponentPaper";
+import { BlockAdminComponentPaper } from "./BlockAdminComponentPaper";
 
 interface Props {
     variant?: "primary" | "default";
@@ -11,9 +11,9 @@ interface Props {
     disabled?: boolean;
 }
 
-export const AdminComponentButton = ({ variant, size, ...buttonProps }: PropsWithChildren<Props>) => {
+export const BlockAdminComponentButton = ({ variant, size, ...buttonProps }: PropsWithChildren<Props>) => {
     return (
-        <AdminComponentPaper disablePadding>
+        <BlockAdminComponentPaper disablePadding>
             <Button
                 fullWidth
                 color={variant === "primary" ? "primary" : "info"}
@@ -24,6 +24,6 @@ export const AdminComponentButton = ({ variant, size, ...buttonProps }: PropsWit
                 })}
                 {...buttonProps}
             />
-        </AdminComponentPaper>
+        </BlockAdminComponentPaper>
     );
 };

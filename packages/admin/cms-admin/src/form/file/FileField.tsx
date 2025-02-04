@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentButton } from "../../blocks/common/AdminComponentButton";
+import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { damFileFieldFileQuery } from "./FileField.gql";
 import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
@@ -22,9 +22,9 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
 
     return (
         <>
-            <AdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
+            <BlockAdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
                 {buttonText ?? <FormattedMessage id="comet.form.file.chooseFile" defaultMessage="Choose file" />}
-            </AdminComponentButton>
+            </BlockAdminComponentButton>
             <ChooseFileDialog
                 open={chooseFileDialogOpen}
                 allowedMimetypes={allowedMimetypes}

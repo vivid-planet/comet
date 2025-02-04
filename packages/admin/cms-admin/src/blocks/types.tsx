@@ -24,7 +24,7 @@ export interface BlockAdminComponentProps<S = any> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BlockAdminComponent<S = any> = ComponentType<BlockAdminComponentProps<S>>;
 
-export interface AdminComponentPart {
+export interface BlockAdminComponentPart {
     key: string;
     label: ReactNode;
     content: ReactNode;
@@ -118,7 +118,7 @@ export interface RootBlockInterface<
     OutputApi = any,
     PreviewState extends BlockPreviewStateInterface = InputApi & BlockPreviewStateInterface,
 > extends Omit<BlockInterface<InputApi, State, OutputApi, PreviewState>, "AdminComponent" | "Preview"> {
-    adminComponentParts: (p: BlockAdminComponentProps<State>) => AdminComponentPart[];
+    adminComponentParts: (p: BlockAdminComponentProps<State>) => BlockAdminComponentPart[];
 }
 
 // internal helper to extract one of the 3 generic-types from BlockInterface

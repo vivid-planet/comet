@@ -2,7 +2,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import {
-    AdminComponentRoot,
+    BlockAdminComponentRoot,
     BlockPreviewWithTabs,
     BlockState,
     ContentScopeIndicator,
@@ -115,9 +115,9 @@ export function EditFooterPage(): JSX.Element | null {
             key: "content",
             label: <FormattedMessage {...messages.content} />,
             content: (
-                <AdminComponentRoot>
+                <BlockAdminComponentRoot>
                     <FooterContentBlock.AdminComponent state={footerState} updateState={setFooterState} />
-                </AdminComponentRoot>
+                </BlockAdminComponentRoot>
             ),
         },
     ];

@@ -13,7 +13,7 @@ import {
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentPaper } from "../../blocks/common/AdminComponentPaper";
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
@@ -88,7 +88,7 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                 </DeleteContentInformation>
 
                 {dialogInformation && dialogInformation?.publishedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Published" />
@@ -104,10 +104,10 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
                 {dialogInformation && dialogInformation?.unpublishedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Unpublished" />
@@ -123,10 +123,10 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
                 {dialogInformation && dialogInformation?.archivedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Archived" />
@@ -142,7 +142,7 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
             </DialogContent>
             <DialogActions>

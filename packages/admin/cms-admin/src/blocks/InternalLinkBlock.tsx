@@ -8,7 +8,7 @@ import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generat
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
@@ -99,7 +99,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
 
         return (
             <SelectPreviewComponent>
-                <AdminComponentPaper disablePadding>
+                <BlockAdminComponentPaper disablePadding>
                     <BlocksFinalForm
                         onSubmit={(newState) => {
                             updateState((previousState) => {
@@ -153,7 +153,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                             </Field>
                         </Box>
                     </BlocksFinalForm>
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             </SelectPreviewComponent>
         );
     },

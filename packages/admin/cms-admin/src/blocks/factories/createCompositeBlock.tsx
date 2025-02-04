@@ -3,10 +3,10 @@ import { Divider } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentNestedButton } from "../common/AdminComponentNestedButton";
-import { AdminComponentPaper, useAdminComponentPaper } from "../common/AdminComponentPaper";
-import { AdminComponentSection } from "../common/AdminComponentSection";
-import { AdminComponentSectionGroup } from "../common/AdminComponentSectionGroup";
+import { BlockAdminComponentNestedButton } from "../common/BlockAdminComponentNestedButton";
+import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "../common/BlockAdminComponentSection";
+import { BlockAdminComponentSectionGroup } from "../common/BlockAdminComponentSectionGroup";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
 import { composeBlocks, CompositeBlockInterface } from "../helpers/composeBlocks/composeBlocks";
 import { BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
@@ -162,7 +162,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         },
         AdminComponent: ({ state, updateState }) => {
             const urlPrefix = useSubRoutePrefix();
-            const isInPaper = useAdminComponentPaper();
+            const isInPaper = useBlockAdminComponentPaper();
             const blockAdminComponents = adminComponents({ state, updateState });
             const blockPreviews = previews(state);
             const blockChildBlockCounts = childBlockCounts(state);
@@ -193,7 +193,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                         <StackSwitchApiContext.Consumer>
                             {(stackApi) => (
                                 <HoverPreviewComponent key={blockKey} componentSlug={`${blockKey}/${blockKey}`}>
-                                    <AdminComponentNestedButton
+                                    <BlockAdminComponentNestedButton
                                         displayName={
                                             isBlockInterface(block) ? (
                                                 block.displayName
@@ -223,26 +223,26 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                 if (paper) {
                     return (
                         <Container key={blockKey}>
-                            <AdminComponentSection
+                            <BlockAdminComponentSection
                                 title={block.definesOwnTitle ? null : title}
                                 variant={sectionVariant}
                                 disableBottomMargin={showDivider}
                             >
-                                <AdminComponentPaper disablePadding={block.definesOwnPadding}>{children}</AdminComponentPaper>
-                            </AdminComponentSection>
+                                <BlockAdminComponentPaper disablePadding={block.definesOwnPadding}>{children}</BlockAdminComponentPaper>
+                            </BlockAdminComponentSection>
                         </Container>
                     );
                 }
 
                 return (
                     <Container key={blockKey}>
-                        <AdminComponentSection
+                        <BlockAdminComponentSection
                             title={block.definesOwnTitle ? null : title}
                             variant={sectionVariant}
                             disableBottomMargin={showDivider}
                         >
                             {children}
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
                         {showDivider && <Divider />}
                     </Container>
                 );
@@ -271,16 +271,16 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
 
                                     return (
                                         <Container key={groupKey}>
-                                            <AdminComponentSectionGroup title={title}>
-                                                <AdminComponentPaper disablePadding={definesOwnPadding}>{children}</AdminComponentPaper>
-                                            </AdminComponentSectionGroup>
+                                            <BlockAdminComponentSectionGroup title={title}>
+                                                <BlockAdminComponentPaper disablePadding={definesOwnPadding}>{children}</BlockAdminComponentPaper>
+                                            </BlockAdminComponentSectionGroup>
                                         </Container>
                                     );
                                 }
 
                                 return (
                                     <Container key={groupKey}>
-                                        <AdminComponentSectionGroup title={title}>{children}</AdminComponentSectionGroup>
+                                        <BlockAdminComponentSectionGroup title={title}>{children}</BlockAdminComponentSectionGroup>
                                     </Container>
                                 );
                             })}

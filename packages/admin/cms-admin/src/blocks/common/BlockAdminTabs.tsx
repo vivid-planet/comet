@@ -4,14 +4,14 @@ import { styled } from "@mui/material/styles";
 import { Switch, useRouteMatch } from "react-router";
 import { Link, LinkProps } from "react-router-dom";
 
-import { AdminComponentPart } from "../types";
+import { BlockAdminComponentPart } from "../types";
 import { TabContent } from "./AdminTabsTabContent";
 
-export interface AdminTabsProps {
-    children: AdminComponentPart[];
+export interface BlockAdminTabsProps {
+    children: BlockAdminComponentPart[];
 }
 
-export function AdminTabs({ children }: AdminTabsProps): JSX.Element | null {
+export function BlockAdminTabs({ children }: BlockAdminTabsProps): JSX.Element | null {
     const match = useRouteMatch();
     const tabRouteMatch = useRouteMatch<{ tab: string }>(`${match.path}/:tab`);
     const selected = tabRouteMatch?.params.tab;

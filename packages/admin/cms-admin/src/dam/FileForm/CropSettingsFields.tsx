@@ -6,7 +6,7 @@ import { ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentSection } from "../../blocks/common/AdminComponentSection";
+import { BlockAdminComponentSection } from "../../blocks/common/BlockAdminComponentSection";
 import { ChooseFocalPoint } from "../../common/image/ChooseFocalPoint";
 import { EditImageFormValues } from "./EditFile";
 
@@ -53,7 +53,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         </>
                     }
                 >
-                    <AdminComponentSection
+                    <BlockAdminComponentSection
                         title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
                     >
                         <FormControlLabel
@@ -66,7 +66,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                 )
                             }
                         />
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
                     <Field

@@ -8,7 +8,7 @@ interface Props {
     title?: ReactNode;
 }
 
-export const AdminComponentSectionGroup = ({ children, title }: PropsWithChildren<Props>) => {
+export const BlockAdminComponentSectionGroup = ({ children, title }: PropsWithChildren<Props>) => {
     return (
         <Root>
             {title && (

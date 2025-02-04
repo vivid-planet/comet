@@ -13,8 +13,8 @@ import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { AdminComponentButton } from "./common/AdminComponentButton";
-import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
@@ -137,7 +137,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         return (
             <SelectPreviewComponent>
                 {state.damFile ? (
-                    <AdminComponentPaper disablePadding>
+                    <BlockAdminComponentPaper disablePadding>
                         <Box padding={3}>
                             <Grid container alignItems="center" spacing={3}>
                                 <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
@@ -164,9 +164,9 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                             </Grid>
                         </Box>
                         <Divider />
-                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
+                        <BlockAdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
                             <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                        </AdminComponentButton>
+                        </BlockAdminComponentButton>
                         {showMenu && (
                             <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                                 {dependencyMap["DamFile"] && state.damFile?.id && (
@@ -187,7 +187,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                                 )}
                             </Menu>
                         )}
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 ) : (
                     <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
                         onSubmit={(newValues) => {

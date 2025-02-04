@@ -3,8 +3,8 @@ import { Box } from "@mui/system";
 import { FormattedMessage } from "react-intl";
 
 import { LinkBlockData } from "../blocks.generated";
-import { useAdminComponentPaper } from "./common/AdminComponentPaper";
-import { AdminComponentSection } from "./common/AdminComponentSection";
+import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
 import { createOneOfBlock, CreateOneOfBlockOptions } from "./factories/createOneOfBlock";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -35,13 +35,13 @@ function createLinkBlock({
         ...OneOfBlock,
         defaultValues: () => ({ ...OneOfBlock.defaultValues(), title: undefined }),
         AdminComponent: ({ state, updateState }) => {
-            const isInPaper = useAdminComponentPaper();
+            const isInPaper = useBlockAdminComponentPaper();
 
             return (
                 <>
                     <OneOfBlock.AdminComponent state={state} updateState={updateState} />
                     <Box padding={isInPaper ? 3 : 0} paddingTop={0}>
-                        <AdminComponentSection>
+                        <BlockAdminComponentSection>
                             <BlocksFinalForm<Pick<LinkBlockData, "title">>
                                 onSubmit={({ title }) => {
                                     updateState({ ...state, title });
@@ -55,7 +55,7 @@ function createLinkBlock({
                                     fullWidth
                                 />
                             </BlocksFinalForm>
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
                     </Box>
                 </>
             );

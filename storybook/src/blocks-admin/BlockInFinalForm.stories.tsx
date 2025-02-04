@@ -1,5 +1,5 @@
 import { Field, FinalForm, SaveBoundary } from "@comet/admin";
-import { AdminComponentRoot, createFinalFormBlock, createListBlock, ExternalLinkBlock } from "@comet/cms-admin";
+import { BlockAdminComponentRoot, createFinalFormBlock, createListBlock, ExternalLinkBlock } from "@comet/cms-admin";
 
 import { dndProviderDecorator } from "../dnd.decorator";
 import { snackbarDecorator } from "../docs/components/Snackbar/snackbar.decorator";
@@ -16,9 +16,9 @@ export const BlockInFinalFormWithSaveBoundary = () => {
     return (
         <SaveBoundary>
             <FinalForm mode="edit" onSubmit={() => {}} initialValues={{ links: LinkListBlock.defaultValues() }}>
-                <AdminComponentRoot>
+                <BlockAdminComponentRoot>
                     <Field name="links" component={FinalFormLinkListBlock} fullWidth />
-                </AdminComponentRoot>
+                </BlockAdminComponentRoot>
             </FinalForm>
         </SaveBoundary>
     );
@@ -30,9 +30,9 @@ export const BlockInFinalFormWithoutSaveBoundary = () => {
 
     return (
         <FinalForm mode="edit" onSubmit={() => {}} initialValues={{ links: LinkListBlock.defaultValues() }}>
-            <AdminComponentRoot>
+            <BlockAdminComponentRoot>
                 <Field name="links" component={FinalFormLinkListBlock} fullWidth />
-            </AdminComponentRoot>
+            </BlockAdminComponentRoot>
         </FinalForm>
     );
 };

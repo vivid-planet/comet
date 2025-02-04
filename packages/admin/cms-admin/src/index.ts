@@ -1,14 +1,14 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
-export { AdminComponentButton } from "./blocks/common/AdminComponentButton";
-export { AdminComponentNestedButton } from "./blocks/common/AdminComponentNestedButton";
-export { AdminComponentPaper, useAdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-export { AdminComponentRoot } from "./blocks/common/AdminComponentRoot";
-export { AdminComponentSection } from "./blocks/common/AdminComponentSection";
-export { AdminComponentSectionGroup } from "./blocks/common/AdminComponentSectionGroup";
-export { AdminTabLabel } from "./blocks/common/AdminTabLabel";
-export type { AdminTabsProps } from "./blocks/common/AdminTabs";
-export { AdminTabs } from "./blocks/common/AdminTabs";
+export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
+export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
+export { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "./blocks/common/BlockAdminComponentPaper";
+export { BlockAdminComponentRoot } from "./blocks/common/BlockAdminComponentRoot";
+export { BlockAdminComponentSection } from "./blocks/common/BlockAdminComponentSection";
+export { BlockAdminComponentSectionGroup } from "./blocks/common/BlockAdminComponentSectionGroup";
+export { BlockAdminTabLabel } from "./blocks/common/BlockAdminTabLabel";
+export type { BlockAdminTabsProps } from "./blocks/common/BlockAdminTabs";
+export { BlockAdminTabs } from "./blocks/common/BlockAdminTabs";
 export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
@@ -79,8 +79,8 @@ export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export type {
-    AdminComponentPart,
     BlockAdminComponent,
+    BlockAdminComponentPart,
     BlockDependency,
     BlockInputApi,
     BlockInterface,

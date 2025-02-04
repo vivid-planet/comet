@@ -13,7 +13,7 @@ import {
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import {
-    AdminComponentRoot,
+    BlockAdminComponentRoot,
     BlockOutputApi,
     BlockState,
     ContentScopeIndicator,
@@ -173,7 +173,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                     <SplitPreview url={`${siteConfig.blockPreviewBaseUrl}/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
-                                <AdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
+                                <BlockAdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
                                     <RichTextBlock.AdminComponent
                                         state={content}
                                         updateState={(setStateAction) => {
@@ -186,7 +186,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                                             <FormattedMessage id="mainMenu.removeContent" defaultMessage="Remove content" />
                                         </Button>
                                     </HiddenInSubroute>
-                                </AdminComponentRoot>
+                                </BlockAdminComponentRoot>
                             ) : (
                                 <Button startIcon={<Add />} onClick={handleAddContentClick}>
                                     <FormattedMessage id="mainMenu.addContent" defaultMessage="Add content" />

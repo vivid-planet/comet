@@ -14,8 +14,8 @@ import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { AdminComponentButton } from "./common/AdminComponentButton";
-import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
@@ -181,7 +181,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             <SelectPreviewComponent>
                 {state.damFile?.image ? (
                     <>
-                        <AdminComponentPaper disablePadding>
+                        <BlockAdminComponentPaper disablePadding>
                             <ContentRoot component="div" onClick={() => setOpen(true)}>
                                 <Grid container alignItems="center" spacing={3}>
                                     <Grid item>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
@@ -206,10 +206,13 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 </Grid>
                             </ContentRoot>
                             <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined, cropArea: undefined })}>
+                            <BlockAdminComponentButton
+                                startIcon={<Delete />}
+                                onClick={() => updateState({ damFile: undefined, cropArea: undefined })}
+                            >
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                            </AdminComponentButton>
-                        </AdminComponentPaper>
+                            </BlockAdminComponentButton>
+                        </BlockAdminComponentPaper>
                         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                             <MenuItem onClick={handleCropClick}>
                                 <ListItemIcon>

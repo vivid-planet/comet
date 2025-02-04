@@ -7,7 +7,7 @@ interface Props {
     title?: ReactNode;
 }
 
-const AdminComponentRoot = (props: PropsWithChildren<Props>) => {
+const BlockAdminComponentRoot = (props: PropsWithChildren<Props>) => {
     const { children, title = <FormattedMessage id="comet.blocks" defaultMessage="Blocks" /> } = props;
 
     return (
@@ -28,7 +28,7 @@ const AdminComponentRoot = (props: PropsWithChildren<Props>) => {
     );
 };
 
-export { AdminComponentRoot };
+export { BlockAdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
     > .CometAdminRte-root > .CometAdminRteToolbar-root {

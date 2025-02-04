@@ -3,8 +3,8 @@ import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
-import { useAdminComponentPaper } from "./common/AdminComponentPaper";
-import { AdminComponentSection } from "./common/AdminComponentSection";
+import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
@@ -64,7 +64,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
     isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
-        const isInPaper = useAdminComponentPaper();
+        const isInPaper = useBlockAdminComponentPaper();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
@@ -82,14 +82,14 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                         />
                         <VideoOptionsFields />
                     </BlocksFinalForm>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
                                 updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
                             }}
                         />
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </SelectPreviewComponent>
             </Box>
         );

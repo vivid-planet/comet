@@ -3,7 +3,7 @@ import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { MouseEventHandler, ReactNode } from "react";
 
-import { AdminComponentPaper } from "./AdminComponentPaper";
+import { BlockAdminComponentPaper } from "./BlockAdminComponentPaper";
 import { usePromise } from "./usePromise";
 
 interface Props {
@@ -14,11 +14,11 @@ interface Props {
     isValid?: () => Promise<boolean> | boolean;
 }
 
-export const AdminComponentNestedButton = ({ displayName, preview, count, onClick, isValid: isValidFn }: Props) => {
+export const BlockAdminComponentNestedButton = ({ displayName, preview, count, onClick, isValid: isValidFn }: Props) => {
     const isValid = usePromise(isValidFn, { initialValue: true });
 
     return (
-        <AdminComponentPaper disablePadding>
+        <BlockAdminComponentPaper disablePadding>
             <Button onClick={onClick} fullWidth endIcon={<Edit />} color="info">
                 <TextContainer>
                     <Typography variant="body1" align="left" noWrap>
@@ -31,7 +31,7 @@ export const AdminComponentNestedButton = ({ displayName, preview, count, onClic
                     </Typography>
                 </TextContainer>
             </Button>
-        </AdminComponentPaper>
+        </BlockAdminComponentPaper>
     );
 };
 

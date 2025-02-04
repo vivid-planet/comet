@@ -26,6 +26,17 @@ Therefore, the `@comet/blocks-admin` is merged into this package.
     - `createCompositeSettings` -> `createCompositeBlockFields`
     - `IPreviewContext` -> `BlockPreviewContext`
     - `PreviewStateInterface` -> `BlockPreviewStateInterface`
+    - `AdminComponentPart` -> `BlockAdminComponentPart`
+    - `AdminComponentButton`-> `BlockAdminComponentButton`
+    - `AdminComponentNestedButton`-> `BlockAdminComponentNestedButton`
+    - `AdminComponentPaper`->`BlockAdminComponentPaper`
+    - `useAdminComponentPaper`-> `useBlockAdminComponentPaper`
+    - `AdminComponentRoot`-> `BlockAdminComponentRoot`
+    - `AdminComponentSection`-> `BlockAdminComponentSection`
+    - `AdminComponentSectionGroup`-> `BlockAdminComponentSectionGroup`
+    - `AdminTabLabel`-> `BlockAdminTabLabel`
+    - `AdminTabsProps`-> `BlockAdminTabsProps`
+    - `AdminTabs`-> `BlockAdminTabs`
 
 **How to upgrade**
 

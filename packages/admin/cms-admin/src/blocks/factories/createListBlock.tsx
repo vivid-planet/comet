@@ -6,10 +6,10 @@ import { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton } from "../common/AdminComponentButton";
-import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
+import { BlockAdminComponentButton } from "../common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
@@ -289,7 +289,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                 {(stackApi) => {
                                     return (
                                         <SelectPreviewComponent>
-                                            <AdminComponentPaper disablePadding>
+                                            <BlockAdminComponentPaper disablePadding>
                                                 <AdminComponentStickyHeader>
                                                     <BlockListHeader>
                                                         {state.blocks.length ? (
@@ -444,7 +444,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                     })}
                                                 </div>
                                                 {state.blocks.length === 0 ? (
-                                                    <AdminComponentButton
+                                                    <BlockAdminComponentButton
                                                         variant="primary"
                                                         onClick={() => {
                                                             const key = addNewBlock();
@@ -462,10 +462,10 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                 />
                                                             </Typography>
                                                         </LargeAddButtonContent>
-                                                    </AdminComponentButton>
+                                                    </BlockAdminComponentButton>
                                                 ) : (
                                                     <AdminComponentStickyFooter>
-                                                        <AdminComponentButton
+                                                        <BlockAdminComponentButton
                                                             variant="primary"
                                                             onClick={() => {
                                                                 const key = addNewBlock();
@@ -479,10 +479,10 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                 defaultMessage="Add {itemName}"
                                                                 values={{ itemName }}
                                                             />
-                                                        </AdminComponentButton>
+                                                        </BlockAdminComponentButton>
                                                     </AdminComponentStickyFooter>
                                                 )}
-                                            </AdminComponentPaper>
+                                            </BlockAdminComponentPaper>
                                         </SelectPreviewComponent>
                                     );
                                 }}

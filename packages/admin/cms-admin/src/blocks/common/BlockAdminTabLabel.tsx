@@ -4,11 +4,11 @@ import { PropsWithChildren } from "react";
 
 import { usePromise } from "./usePromise";
 
-interface AdminTabLabelProps {
+interface BlockAdminTabLabelProps {
     isValid?: () => Promise<boolean> | boolean;
 }
 
-export function AdminTabLabel({ children, isValid: isValidFn }: PropsWithChildren<AdminTabLabelProps>) {
+export function BlockAdminTabLabel({ children, isValid: isValidFn }: PropsWithChildren<BlockAdminTabLabelProps>) {
     const isValid = usePromise(isValidFn, { initialValue: true });
 
     return (

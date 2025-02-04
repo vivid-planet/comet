@@ -1,12 +1,12 @@
-import { AdminTabs } from "../../blocks/common/AdminTabs";
+import { BlockAdminTabs } from "../../blocks/common/BlockAdminTabs";
 import { IFrameBridgeProvider } from "../../blocks/iframebridge/IFrameBridge";
-import { AdminComponentPart } from "../../blocks/types";
+import { BlockAdminComponentPart } from "../../blocks/types";
 import { SplitPreview } from "./SplitPreview";
 import { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;
-    children: AdminComponentPart[];
+    children: BlockAdminComponentPart[];
     previewState: unknown;
     previewUrl: string;
 }
@@ -17,9 +17,9 @@ function BlockPreviewWithTabs({ children, previewApi, previewState, previewUrl }
     if (previewApi.minimized) {
         const [firstTab, ...otherTabs] = children;
 
-        pageContent = [firstTab.content, <AdminTabs key="1">{otherTabs}</AdminTabs>];
+        pageContent = [firstTab.content, <BlockAdminTabs key="1">{otherTabs}</BlockAdminTabs>];
     } else {
-        pageContent = <AdminTabs>{children}</AdminTabs>;
+        pageContent = <BlockAdminTabs>{children}</BlockAdminTabs>;
     }
 
     return (
