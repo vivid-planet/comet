@@ -613,7 +613,7 @@ It is recommended to perform the following steps separately in the `admin/` and 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
 The codemod does not handle all cases, so manual adjustments may still be necessary.
 
-### Enabling 'consistent-type-imports'
+### Consistent type imports
 
 To improve code consistency and readability, we now enforce the ESLint rule [@typescript-eslint/consistent-type-imports](https://typescript-eslint.io/rules/consistent-type-exports/) with the following configuration:
 
