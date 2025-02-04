@@ -1,6 +1,4 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
-export { readClipboard } from "./blocks/clipboard/readClipboard";
-export { writeClipboard } from "./blocks/clipboard/writeClipboard";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
 export { AdminComponentButton } from "./blocks/common/AdminComponentButton";
 export { AdminComponentNestedButton } from "./blocks/common/AdminComponentNestedButton";
