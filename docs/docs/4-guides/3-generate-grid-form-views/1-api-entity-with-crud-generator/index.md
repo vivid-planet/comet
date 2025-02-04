@@ -154,5 +154,3 @@ Schema should already be available when you start the GraphQL Playground locally
 ![CustomersQueryInPlaygroundWithError](./images/customersQueryInPlaygroundWithError.png)
 
 As soon as you start to execute the first Query, one will see that @mikro-orm will through an error, that the Customer Table does not exists in the Database.
-
-Dokumentation:
