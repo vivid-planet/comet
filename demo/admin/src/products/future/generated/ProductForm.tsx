@@ -313,7 +313,7 @@ export function ProductForm({ id }: FormProps) {
                                     />
                                 )}
                             </Field>
-                            <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
+                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>
