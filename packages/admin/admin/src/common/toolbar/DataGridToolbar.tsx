@@ -8,13 +8,11 @@ import { Toolbar, ToolbarProps } from "./Toolbar";
 
 export type DataGridToolbarClassKey = "root" | "standard" | "comfortable" | "compact";
 
-export type DataGridToolbarProps = { density?: "standard" | "comfortable" | "compact" } & Omit<
-    ToolbarProps,
-    "slotProps" | "scopeIndicator" | "hideTopBar"
-> &
-    ThemedComponentBaseProps<{
-        root: typeof Toolbar;
-    }>;
+export type DataGridToolbarProps = {
+    /** @deprecated The `density` prop is deprecated. The density is now used from the DataGrid. */
+    density?: "standard" | "comfortable" | "compact";
+} & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
+    ThemedComponentBaseProps<{ root: typeof Toolbar }>;
 
 type OwnerState = {
     density: "standard" | "comfortable" | "compact";
