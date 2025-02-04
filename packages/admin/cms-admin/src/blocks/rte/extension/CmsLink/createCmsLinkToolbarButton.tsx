@@ -1,8 +1,7 @@
-import { messages } from "@comet/admin";
+import { CancelButton, DeleteButton, messages, OkayButton } from "@comet/admin";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
 import { BlockInterface, BlockState } from "@comet/blocks-admin";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -133,16 +132,16 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                 </DialogContent>
                 <DialogActions>
                     {linkEntity && (
-                        <Button onClick={handleRemove} color="primary">
+                        <DeleteButton onClick={handleRemove} color="primary">
                             <FormattedMessage id="comet.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
-                        </Button>
+                        </DeleteButton>
                     )}
-                    <Button onClick={handleUpdate} color="primary">
+                    <OkayButton onClick={handleUpdate} color="primary">
                         <FormattedMessage {...messages.ok} />
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
+                    </OkayButton>
+                    <CancelButton onClick={handleClose} color="primary">
                         <FormattedMessage {...messages.cancel} />
-                    </Button>
+                    </CancelButton>
                 </DialogActions>
             </Dialog>
         );
