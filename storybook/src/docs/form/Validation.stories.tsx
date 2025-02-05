@@ -98,9 +98,9 @@ export const Warnings = () => {
         email: string;
     }
 
-    const validateWarning = (values: FormValues) => {
-        if (values.name === "Max Mustermann") {
-            return { name: "Example name " };
+    const validateWarningName = (name: string) => {
+        if (name === "Max Mustermann") {
+            return "Example name";
         }
     };
 
@@ -116,10 +116,17 @@ export const Warnings = () => {
             onSubmit={() => {
                 // noop
             }}
-            validateWarning={validateWarning}
             initialValues={{ name: "", email: "" }}
         >
-            <Field type="text" name="name" label="Name" placeholder="Should not be 'Max Mustermann'" component={FinalFormInput} fullWidth />
+            <Field
+                type="text"
+                name="name"
+                label="Name"
+                placeholder="Should not be 'Max Mustermann'"
+                component={FinalFormInput}
+                fullWidth
+                validateWarning={validateWarningName}
+            />
             <Field
                 type="email"
                 name="email"
