@@ -1,4 +1,4 @@
-import { ComponentType, createContext, Dispatch, FunctionComponent, SetStateAction, useContext } from "react";
+import { type ComponentType, createContext, type Dispatch, type FunctionComponent, type SetStateAction, useContext } from "react";
 
 export interface MainNavigationContext {
     open: boolean;

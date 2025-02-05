@@ -1,8 +1,8 @@
 import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { MainNavigationContext } from "./Context";
-import { MainNavigationItemLevel } from "./Item";
+import { type MainNavigationContext } from "./Context";
+import { type MainNavigationItemLevel } from "./Item";
 
 export type MainNavigationItemClassKey =
     | "root"

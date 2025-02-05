@@ -1,20 +1,20 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography, useThemeProps } from "@mui/material";
-import { Children, cloneElement, MouseEvent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { Collapse, type ComponentsOverrides, Fade, List, Menu, type Theme, type Typography, useThemeProps } from "@mui/material";
+import { Children, cloneElement, type MouseEvent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";
 
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import {
     CollapsibleIndicator,
     CollapsibleItemMainNavigationItem,
     ItemTitle,
-    MainNavigationCollapsibleItemClassKey,
-    OwnerState,
+    type MainNavigationCollapsibleItemClassKey,
+    type OwnerState,
     Root,
 } from "./CollapsibleItem.styles";
 import { useMainNavigation } from "./Context";
-import { MainNavigationItem as CometMainNavigationItem, MainNavigationItemLevel, MainNavigationItemProps } from "./Item";
-import { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import { type MainNavigationItem as CometMainNavigationItem, type MainNavigationItemLevel, type MainNavigationItemProps } from "./Item";
+import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MainNavigationChild = ReactElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>;
 
