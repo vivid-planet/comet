@@ -22,11 +22,10 @@ interface CreateTextLinkBlockOptions {
     link: BlockInterface;
 }
 
-export function createTextLinkBlock({
-    link: LinkBlock,
-    name = "TextLink",
-    displayName = <FormattedMessage {...messages.link} />,
-}: CreateTextLinkBlockOptions): BlockInterface {
+export function createTextLinkBlock(
+    { link: LinkBlock, name = "TextLink", displayName = <FormattedMessage {...messages.link} /> }: CreateTextLinkBlockOptions,
+    override?: (block: BlockInterface) => BlockInterface,
+): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
 
     const block = withAdditionalBlockAttributes<Pick<TextLinkBlockData, "text">>({
@@ -69,6 +68,10 @@ export function createTextLinkBlock({
 
         dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
     };
+
+    if (override) {
+        return override(TextLinkBlock);
+    }
 
     return TextLinkBlock;
 }
