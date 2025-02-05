@@ -7,10 +7,10 @@ import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLContentScopesQuery,
-    GQLContentScopesQueryVariables,
-    GQLUpdateContentScopesMutation,
-    GQLUpdateContentScopesMutationVariables,
+    type GQLContentScopesQuery,
+    type GQLContentScopesQueryVariables,
+    type GQLUpdateContentScopesMutation,
+    type GQLUpdateContentScopesMutationVariables,
 } from "./ContentScopeGrid.generated";
 
 type FormValues = {

@@ -1,5 +1,5 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
-import { NewsContentBlockData } from "@src/blocks.generated";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks } from "@comet/cms-site";
+import { type NewsContentBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";

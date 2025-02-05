@@ -1,15 +1,15 @@
 import { useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDialog, writeClipboardText } from "@comet/admin";
-import { ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
-import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
+import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
-import { sendPages, SendPagesOptions } from "./useCopyPastePages/sendPages";
-import { GQLPageTreePageFragment } from "./usePageTree";
+import { sendPages, type SendPagesOptions } from "./useCopyPastePages/sendPages";
+import { type GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 export type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument | null };
@@ -100,7 +100,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                             const clipboardPage: PageClipboard = { ...page, document: data?.page?.document };
                             pagesWithDocuments.push(clipboardPage);
                         }
-                    } catch (e) {
+                    } catch {
                         throw new Error(`Error while fetching page`);
                     }
                 }),
@@ -155,7 +155,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     ),
                 };
             }
-        } catch (e) {
+        } catch {
             return {
                 canPaste: false,
                 error: (

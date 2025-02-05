@@ -1,13 +1,13 @@
 import { Box, Divider } from "@mui/material";
 import isEqual from "lodash.isequal";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Route, useRouteMatch } from "react-router";
 
 import { Collapsible } from "../../common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "../../common/CollapsibleSwitchButtonHeader";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../types";
+import { type BlockInputApi, type BlockInterface, type BlockOutputApi, type BlockState, type DispatchSetStateAction } from "../types";
 import { resolveNewState } from "../utils";
 
 // @TODO: move to general types
@@ -31,6 +31,9 @@ export interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
 export function createOptionalBlock<T extends BlockInterface>(
     decoratedBlock: T,
     options?: { title?: ReactNode; name?: string },
+    override?: (
+        block: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>>,
+    ) => BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>>,
 ): BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> {
     const OptionalBlock: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> = {
         ...createBlockSkeleton(),
@@ -170,5 +173,10 @@ export function createOptionalBlock<T extends BlockInterface>(
             return block && visible ? decoratedBlock.previewContent(block, ctx) : [];
         },
     };
+
+    if (override) {
+        return override(OptionalBlock);
+    }
+
     return OptionalBlock;
 }

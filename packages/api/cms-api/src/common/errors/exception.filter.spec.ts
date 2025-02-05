@@ -1,4 +1,4 @@
-import { ArgumentsHost, BadRequestException, HttpException, InternalServerErrorException } from "@nestjs/common";
+import { type ArgumentsHost, BadRequestException, HttpException, InternalServerErrorException } from "@nestjs/common";
 
 import { CometEntityNotFoundException } from "./entity-not-found.exception";
 import { ExceptionFilter } from "./exception.filter";

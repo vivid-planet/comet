@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 import { usePreview } from "../preview/usePreview";
 import * as sc from "./PreviewSkeleton.sc";

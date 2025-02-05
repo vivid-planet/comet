@@ -8,7 +8,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
-import { GQLBuildsQuery } from "./PublisherPage.generated";
+import { type GQLBuildsQuery } from "./PublisherPage.generated";
 
 const buildsQuery = gql`
     query Builds {

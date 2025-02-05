@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { FillSpace, Loading, MainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarItem, useStackApi } from "@comet/admin";
+import { Button, FillSpace, Loading, MainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -13,7 +13,7 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { Button, IconButton, Stack } from "@mui/material";
+import { IconButton, Stack } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
@@ -21,7 +21,12 @@ import { useRouteMatch } from "react-router";
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { SeoBlock } from "./blocks/SeoBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
+import {
+    type GQLEditPageQuery,
+    type GQLEditPageQueryVariables,
+    type GQLUpdatePageMutation,
+    type GQLUpdatePageMutationVariables,
+} from "./EditPage.generated";
 
 interface Props {
     id: string;
@@ -144,11 +149,11 @@ export const EditPage = ({ id }: Props) => {
                     <Stack direction="row" spacing={1}>
                         <Button
                             startIcon={<Preview />}
+                            variant="textDark"
                             disabled={!pageState}
                             onClick={() => {
                                 openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                             }}
-                            color="info"
                         >
                             <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                         </Button>

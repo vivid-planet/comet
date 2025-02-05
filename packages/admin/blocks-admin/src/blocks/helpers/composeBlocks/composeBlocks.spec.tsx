@@ -1,14 +1,10 @@
 import { SpaceBlock } from "../../SpaceBlock";
-import { BlockInputApi, BlockState } from "../../types";
+import { type BlockInputApi, type BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
-import { composeBlocks, ComposeBlocksApi } from "./composeBlocks";
+import { composeBlocks, type ComposeBlocksApi } from "./composeBlocks";
 import { createCompositeSetting } from "./createCompositeSetting";
 import { createCompositeSettings } from "./createCompositeSettings";
-import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
-
-jest.mock("react-dnd", () => {
-    return;
-});
+import { type AdminComponentPropsMap, type CompositeBlocksConfig, type DataMapState } from "./types";
 
 // TODO: youtube block moved, space block deprecated, update tests
 
@@ -93,6 +89,7 @@ describe("composeBlocks", () => {
 
         const {
             block: { defaultValues, state2Output, input2State },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             block,
         } = composedBlock;
 
@@ -229,6 +226,7 @@ describe("composeBlocks", () => {
 
         const {
             block: { defaultValues, state2Output, input2State },
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             block,
         } = composedBlock;
 

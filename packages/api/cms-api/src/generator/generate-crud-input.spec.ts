@@ -4,7 +4,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { formatSource, parseSource } from "./utils/test-helper";
 
 @Entity()
 export class TestEntityWithString extends BaseEntity {
@@ -100,9 +100,9 @@ describe("GenerateCrudInput", () => {
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -135,8 +135,8 @@ describe("GenerateCrudInput", () => {
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithDate"));
             //console.log(out);
-            const lintedOutput = await lintSource(out[0].content);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -171,8 +171,8 @@ describe("GenerateCrudInput", () => {
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBoolean"));
             //console.log(out);
-            const lintedOutput = await lintSource(out[0].content);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -207,9 +207,9 @@ describe("GenerateCrudInput", () => {
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -244,9 +244,9 @@ describe("GenerateCrudInput", () => {
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithUuid"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -281,9 +281,9 @@ describe("GenerateCrudInput", () => {
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -321,9 +321,9 @@ describe("GenerateCrudInput", () => {
                 { targetDirectory: __dirname },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithInitializer"),
             );
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -368,9 +368,9 @@ describe("GenerateCrudInput", () => {
                 { targetDirectory: __dirname },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithoutInitializer"),
             );
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);

@@ -5,7 +5,7 @@ import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
-import { Locale as DateFnsLocale } from "date-fns";
+import { type Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
 
@@ -57,6 +57,9 @@ const messages = {
     },
 };
 
+function isLocaleKey(value: any): value is LocaleKey {
+    return value === "de" || value === "en";
+}
 const preview: Preview = {
     argTypes: {
         theme: {
@@ -74,8 +77,8 @@ const preview: Preview = {
 
             return (
                 <MuiThemeProvider theme={theme}>
-                    <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
-                        <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
+                    <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
+                        <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
                             <GlobalStyles styles={previewGlobalStyles} />
                             <>
                                 {context.parameters.layout === "padded" ? (
@@ -95,7 +98,18 @@ const preview: Preview = {
     parameters: {
         layout: "padded",
         options: {
-            storySort: (a, b) => {
+            /**
+             * Note: according to: https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy#sorting-stories
+             * the `storySort` function gets injected as javascript. Adding types is not possible
+             */
+            storySort: (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                a,
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                b,
+            ) => {
                 const orderGettingStarted = [
                     "docs-getting-started-installation",
                     "docs-getting-started-structure",

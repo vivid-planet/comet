@@ -4,10 +4,10 @@ import {
     createRedirectsPage,
     CronJobsPage,
     DamPage,
-    DocumentInterface,
-    DocumentType,
+    type DocumentInterface,
+    type DocumentType,
     MasterMenu,
-    MasterMenuData,
+    type MasterMenuData,
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
@@ -18,7 +18,7 @@ import { Link } from "@src/documents/links/Link";
 import { Page } from "@src/documents/pages/Page";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
@@ -32,9 +32,9 @@ import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
-import { ContentScope } from "@src/site-configs";
+import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
-import { Redirect, RouteComponentProps } from "react-router";
+import { Redirect, type RouteComponentProps } from "react-router";
 
 import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";

@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridPagingToGql,
@@ -16,19 +17,19 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductCategoryMutation,
-    GQLCreateProductCategoryMutationVariables,
-    GQLDeleteProductCategoryMutation,
-    GQLDeleteProductCategoryMutationVariables,
-    GQLProductCategoriesListQuery,
-    GQLProductCategoriesListQueryVariables,
-    GQLProductsCategoriesListFragment,
+    type GQLCreateProductCategoryMutation,
+    type GQLCreateProductCategoryMutationVariables,
+    type GQLDeleteProductCategoryMutation,
+    type GQLDeleteProductCategoryMutationVariables,
+    type GQLProductCategoriesListQuery,
+    type GQLProductCategoriesListQueryVariables,
+    type GQLProductsCategoriesListFragment,
 } from "./ProductCategoriesTable.generated";
 
 function ProductCategoriesTableToolbar() {
@@ -42,7 +43,7 @@ function ProductCategoriesTableToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
                 </Button>
             </ToolbarItem>

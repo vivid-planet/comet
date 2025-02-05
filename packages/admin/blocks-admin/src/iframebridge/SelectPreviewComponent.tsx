@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 import { useLocation } from "react-router";
 
 import { useIFrameBridge } from "./useIFrameBridge";

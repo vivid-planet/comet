@@ -1,4 +1,4 @@
-import { BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
+import { type BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

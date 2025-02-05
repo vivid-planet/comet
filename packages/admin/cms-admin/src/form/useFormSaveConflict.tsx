@@ -1,5 +1,5 @@
-import { FormApi } from "final-form";
-import { MutableRefObject } from "react";
+import { type FormApi } from "final-form";
+import { type MutableRefObject } from "react";
 
 import { useSaveConflict } from "../pages/useSaveConflict";
 

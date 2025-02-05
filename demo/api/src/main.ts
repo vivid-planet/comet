@@ -1,15 +1,17 @@
 import helmet from "helmet";
 
 if (process.env.TRACING == "production") {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("./tracing.production");
 } else if (process.env.TRACING == "dev") {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("./tracing.dev");
 }
 
 import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { NestExpressApplication } from "@nestjs/platform-express";
+import { type NestExpressApplication } from "@nestjs/platform-express";
 import * as Sentry from "@sentry/node";
 import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";

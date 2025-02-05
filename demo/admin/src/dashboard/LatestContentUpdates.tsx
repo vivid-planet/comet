@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import { LatestContentUpdatesDashboardWidget } from "@comet/cms-admin";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLLatestContentUpdatesQueryVariables } from "@src/dashboard/LatestContentUpdates.generated";
+import { type GQLLatestContentUpdatesQueryVariables } from "@src/dashboard/LatestContentUpdates.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 
-import { GQLLatestContentUpdatesQuery } from "./LatestContentUpdates.generated";
+import { type GQLLatestContentUpdatesQuery } from "./LatestContentUpdates.generated";
 
 export const LatestContentUpdates = () => {
     const contentScope = useContentScope();

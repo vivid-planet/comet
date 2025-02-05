@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
+import { MarkedMatches, type TextMatch } from "../../../common/MarkedMatches";
 import { isFile } from "../../helpers/isFile";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
+import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { ArchivedTag } from "../tags/ArchivedTag";
 import { DamThumbnail } from "../thumbnail/DamThumbnail";
 

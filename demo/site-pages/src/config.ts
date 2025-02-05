@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 export let domain = "";
 
 if (!process.env.NEXT_PUBLIC_SITE_PAGES_DOMAIN) {

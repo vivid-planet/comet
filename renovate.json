@@ -36,7 +36,7 @@
         },
         {
             "groupName": "Mui",
-            "matchPackageNames": ["/@mui/material/", "/@mui/system/", "/@mui/utils/", "/@mui/lab/"]
+            "matchPackageNames": ["/@mui/material/", "/@mui/system/", "/@mui/utils/"]
         },
         {
             "groupName": "emotion",

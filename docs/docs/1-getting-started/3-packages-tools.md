@@ -13,6 +13,12 @@ A COMET DXP application, at a minimum, consists of the following packages:
 
 ---
 
+## API {#apiPackage}
+
+### @comet/cms-api
+
+Used to integrate Comet DPX into a NestJS application.
+
 ## Admin {#adminPackage}
 
 The Admin's user interface is built using [MUI](https://mui.com/), [react-final-form](https://final-form.org/react), [react-router](https://reactrouter.com/), and the `@comet/admin` library, which provides commonly used components and tools for creating forms, UI, and data visualization.
@@ -53,3 +59,9 @@ Provides components for selecting date and time or a range or combination of dat
 #### @comet/admin-color-picker
 
 Provides a component for selecting colors in forms, built with react-final-form.
+
+## Site {#sitePackage}
+
+### @comet/cms-site
+
+Used to integrate Comet DPX into a Next.js application.

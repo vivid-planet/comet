@@ -1,8 +1,8 @@
-import { IntrospectionField, IntrospectionInputValue, IntrospectionQuery } from "graphql";
+import { type IntrospectionField, type IntrospectionInputValue, type IntrospectionQuery } from "graphql";
 
-import { Prop } from "../generateForm";
-import { FormFieldConfig } from "../generator";
-import { Imports } from "../utils/generateImportsCode";
+import { type Prop } from "../generateForm";
+import { type FormFieldConfig } from "../generator";
+import { type Imports } from "../utils/generateImportsCode";
 
 type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
 

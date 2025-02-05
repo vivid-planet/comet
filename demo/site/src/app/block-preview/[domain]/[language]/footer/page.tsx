@@ -1,10 +1,10 @@
 "use client";
 
 import { useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
-import { FooterContentBlockData } from "@src/blocks.generated";
+import { type FooterContentBlockData } from "@src/blocks.generated";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
-import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { withBlockPreview } from "@src/util/blockPreview";
+import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { useEffect, useState } from "react";
 
 export default withBlockPreview(() => {

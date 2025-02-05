@@ -1,25 +1,35 @@
 import { gql, useQuery } from "@apollo/client";
 import { FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Select,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { Maybe } from "../../graphql.generated";
+import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
+import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
 import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
-import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
+import { type PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 

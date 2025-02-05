@@ -4,13 +4,13 @@ import type { ThemeConfig } from "@docusaurus/theme-live-codeblock";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useIsBrowser from "@docusaurus/useIsBrowser";
 import type { Props } from "@theme/Playground";
-import React from "react";
+import { type ReactNode, useState } from "react";
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 import { Button } from "./Button";
 import styles from "./styles.module.css";
 
-function Header({ children }: { children: React.ReactNode }) {
+function Header({ children }: { children: ReactNode }) {
     return <div className={styles.playgroundHeader}>{children}</div>;
 }
 
@@ -50,7 +50,7 @@ function ThemedLiveEditor({ isOpen = false }) {
 }
 
 function EditorWithHeader() {
-    const [isEditorOpen, setIsEditorOpen] = React.useState(false);
+    const [isEditorOpen, setIsEditorOpen] = useState(false);
 
     return (
         <>
@@ -83,7 +83,6 @@ export default function Playground({ children, transformCode, ...props }: Props)
 
     return (
         <div className={styles.playgroundContainer}>
-            {/* @ts-expect-error: type incompatibility with refs */}
             <LiveProvider
                 code={children.replace(/\n$/, "")}
                 noInline={noInline}

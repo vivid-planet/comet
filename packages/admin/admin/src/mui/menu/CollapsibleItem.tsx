@@ -1,13 +1,13 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography, useThemeProps } from "@mui/material";
-import { Children, cloneElement, MouseEvent, ReactElement, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Collapse, type ComponentsOverrides, Fade, List, Menu, type Theme, type Typography, useThemeProps } from "@mui/material";
+import { Children, cloneElement, type MouseEvent, type ReactElement, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";
 
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { CollapsibleIndicator, ItemTitle, MenuCollapsibleItemClassKey, MenuItem, OwnerState, Root } from "./CollapsibleItem.styles";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { CollapsibleIndicator, ItemTitle, type MenuCollapsibleItemClassKey, MenuItem, type OwnerState, Root } from "./CollapsibleItem.styles";
 import { MenuContext } from "./Context";
-import { MenuItem as CometMenuItem, MenuItemLevel, MenuItemProps } from "./Item";
-import { MenuItemRouterLinkProps } from "./ItemRouterLink";
+import { type MenuItem as CometMenuItem, type MenuItemLevel, type MenuItemProps } from "./Item";
+import { type MenuItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MenuChild = ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>;
 

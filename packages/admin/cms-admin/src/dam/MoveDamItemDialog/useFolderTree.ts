@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
 import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
-import { GQLAllFoldersWithoutFiltersQuery } from "./ChooseFolder";
+import { type GQLAllFoldersWithoutFiltersQuery } from "./ChooseFolder";
 
 interface FolderTreeFolder {
     id: string;
@@ -89,9 +89,6 @@ export const useFolderTree = ({ damFoldersFlat }: UseFolderTreeProps): UseFolder
         });
 
         setFoldersToRender(newFoldersToRender);
-
-        // This should only be executed if the searchQuery changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expandedIds, tree]);
 
     return { tree, foldersToRender, expandedIds, setExpandedIds, toggleExpand, selectedId, setSelectedId };

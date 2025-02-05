@@ -1,16 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Type } from "@nestjs/common";
-import { ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
+import { type Type } from "@nestjs/common";
+import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
 
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
-import { BlockMigrationInterface } from "./migrations/types";
-import { SearchText } from "./search/get-search-text";
+import { type BlockMigrationInterface } from "./migrations/types";
+import { type SearchText } from "./search/get-search-text";
 
-export interface BlockTransformerServiceInterface<Block extends BlockDataInterface = BlockDataInterface, T = any> {
+export interface BlockTransformerServiceInterface<
+    Block extends BlockDataInterface = BlockDataInterface,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    T = any,
+> {
     transformToPlain(block: Block, context: BlockContext): T | Promise<T>;
 }
 
@@ -46,6 +49,7 @@ export interface BlockIndexData {
     }>;
 }
 export declare type BlockIndexItem = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any; // For compatibility with TraversableTransformResponse
     blockname: string;
     jsonPath: string;
@@ -59,15 +63,18 @@ export interface BlockDataInterface {
     indexData(): BlockIndexData;
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined>;
 }
 
 export abstract class BlockData implements BlockDataInterface {
     async transformToPlain(context: BlockContext) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return { ...(this as any) };
     }
 
     transformToSave(): TraversableTransformBlockResponse {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return this as any; // MUST NOT transform it's child blocks (these handle transforming themselves)
     }
 
@@ -78,10 +85,12 @@ export abstract class BlockData implements BlockDataInterface {
         const ret: ChildBlockInfo[] = [];
         for (const key of getFieldKeys({ prototype: Object.getPrototypeOf(this) })) {
             const data = getBlockFieldData({ prototype: Object.getPrototypeOf(this) }, key);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (data.kind == BlockMetaFieldKind.Block && (this as any)[key]) {
                 ret.push({
                     visible: true,
                     relJsonPath: [key],
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     block: (this as any)[key],
                     name: data.block.name,
                 });
@@ -92,7 +101,8 @@ export abstract class BlockData implements BlockDataInterface {
     searchText(): SearchText[] {
         return [];
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined> {
         return undefined;
     }
@@ -110,19 +120,25 @@ export function isBlockDataInterface(test: unknown | BlockDataInterface): test i
     return false;
 }
 export type ExtractBlockData<B extends Block> = B extends Block<infer BlockData> ? BlockData : never;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ExtractBlockInput<B extends Block> = B extends Block<any, infer BlockInput> ? BlockInput : never;
 // export type ExtractBlockInputFactoryProps<B extends Block> = B extends Block<any, BlockInputInterface<any, infer FactoryProps>>
 //     ? FactoryProps
 //     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ExtractBlockInputFactoryProps<B extends Block> = B extends Block<any, infer Input> ? ReturnType<Input["toPlain"]> : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BaseFactoryProps = undefined | Record<string, any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type WithoutBlockInputMethods<T extends Record<string, any>> = Omit<T, "transformToBlockData" | "toPlain">;
 
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Unpacked<T> = T extends (infer U)[] ? U : T extends (...args: any[]) => infer U ? U : T extends Promise<infer U> ? U : T;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type NestedToPlainReturn<T extends Record<string, any>> = WithoutBlockInputMethods<{
     [Key in keyof T]: T[Key] extends BlockInputInterface | undefined // value is a BlockInputInterface
         ? ReturnType<NonNullable<T[Key]>["toPlain"]>

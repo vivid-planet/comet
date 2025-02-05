@@ -1,11 +1,11 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
-import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
-import { ChangeEvent, Children, ComponentType, isValidElement, ReactElement, ReactNode, useState } from "react";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import MuiTab, { type TabProps as MuiTabProps } from "@mui/material/Tab";
+import MuiTabs, { type TabsProps as MuiTabsProps } from "@mui/material/Tabs";
+import { type ChangeEvent, Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { TabScrollButton } from "./TabScrollButton";
 
 export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";

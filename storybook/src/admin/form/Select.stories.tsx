@@ -1,4 +1,4 @@
-import { FieldSet, SelectField, SelectFieldOption } from "@comet/admin";
+import { FieldSet, SelectField, type SelectFieldOption } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Box, Checkbox, InputAdornment, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
 import { Form } from "react-final-form";

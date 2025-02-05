@@ -6,9 +6,9 @@ import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
 import { setNotFoundContext } from "@src/util/NotFoundContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { GQLLayoutQuery, GQLLayoutQueryVariables } from "./layout.generated";
+import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "./layout.generated";
 
 export default async function Page({ children, params: { domain, language } }: PropsWithChildren<{ params: { domain: string; language: string } }>) {
     const siteConfig = getSiteConfigForDomain(domain);

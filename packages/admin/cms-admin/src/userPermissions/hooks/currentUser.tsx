@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { GQLCurrentUserPermission } from "../../graphql.generated";
-import { GQLCurrentUserQuery } from "./currentUser.generated";
+import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type GQLCurrentUserPermission } from "../../graphql.generated";
+import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
 type CurrentUserContext = {
     currentUser: CurrentUserInterface;

@@ -19,7 +19,7 @@ declare module "redraft" {
         entities?: EntityMap;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const redraft = (raw: any, renderers: Renderers): React.ReactElement<any, any> | null => {};
 
     export default redraft;

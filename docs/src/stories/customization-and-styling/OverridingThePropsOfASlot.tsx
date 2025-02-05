@@ -1,7 +1,5 @@
 import { ContentOverflow } from "@comet/admin";
 import { Typography } from "@mui/material";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
-import * as React from "react";
 
 function Story() {
     return (

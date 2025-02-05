@@ -8,10 +8,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "./JobRuntime";
 import {
-    GQLKubernetesCronJobQuery,
-    GQLKubernetesCronJobQueryVariables,
-    GQLKubernetesJobsQuery,
-    GQLKubernetesJobsQueryVariables,
+    type GQLKubernetesCronJobQuery,
+    type GQLKubernetesCronJobQueryVariables,
+    type GQLKubernetesJobsQuery,
+    type GQLKubernetesJobsQueryVariables,
 } from "./JobsGrid.generated";
 import { JobStatus } from "./JobStatus";
 

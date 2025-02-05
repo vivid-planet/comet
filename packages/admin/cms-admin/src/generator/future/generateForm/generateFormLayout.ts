@@ -1,9 +1,9 @@
-import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormLayoutConfig, GQLDocumentConfigMap } from "../generator";
+import { type FormConfig, type FormLayoutConfig, type GQLDocumentConfigMap } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
-import { Imports } from "../utils/generateImportsCode";
-import { generateFields, GenerateFieldsReturn } from "./generateFields";
+import { type Imports } from "../utils/generateImportsCode";
+import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 
 export function generateFormLayout({
     gqlIntrospection,
@@ -173,7 +173,7 @@ export function generateFormLayout({
                         />
                     )}
                 </Field>
-                 <Field name="${String(config.name)}Enabled" subscription={{ value: true }}>
+                 <Field name="${String(config.name)}Enabled" fullWidth subscription={{ value: true }}>
                     {({ input: { value } }) =>
                         value ? (
                             <>

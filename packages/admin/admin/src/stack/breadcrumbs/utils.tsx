@@ -1,9 +1,9 @@
-import { ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
-import { BreadcrumbItem } from "../Stack";
+import { type BreadcrumbItem } from "../Stack";
 import { BreadcrumbsEntry } from "./BreadcrumbsEntry";
 import { BreadcrumbsOverflow } from "./BreadcrumbsOverflow";
-import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
+import { type StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 export const getElementOuterWidth = (element: Element): number =>
     element.clientWidth + parseFloat(getComputedStyle(element).marginLeft) + parseFloat(getComputedStyle(element).marginRight);

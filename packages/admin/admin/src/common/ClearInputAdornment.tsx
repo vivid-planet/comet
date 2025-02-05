@@ -1,20 +1,20 @@
 import { Clear } from "@comet/admin-icons";
 import {
     ButtonBase,
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     Grow,
     InputAdornment,
-    InputAdornmentClassKey,
-    InputAdornmentProps,
+    type InputAdornmentClassKey,
+    type InputAdornmentProps,
     selectClasses,
-    Theme,
+    type Theme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface ClearInputAdornmentProps
     extends InputAdornmentProps,

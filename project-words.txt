@@ -20,3 +20,4 @@ typesafe
 exceljs
 ormconfig
 exif
+brevo

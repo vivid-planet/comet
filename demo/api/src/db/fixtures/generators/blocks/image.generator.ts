@@ -1,4 +1,4 @@
-import { DamImageBlock, ExtractBlockInputFactoryProps, FileInterface, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
+import { type DamImageBlock, type ExtractBlockInputFactoryProps, type FileInterface, FocalPoint, type ImageCropAreaInput } from "@comet/cms-api";
 import faker from "faker";
 
 export const generateImageBlock = (
@@ -25,7 +25,6 @@ export const generateImageBlock = (
     };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAreaInput => {
     const focalPoint = faker.random.arrayElement([
         FocalPoint.SMART,
