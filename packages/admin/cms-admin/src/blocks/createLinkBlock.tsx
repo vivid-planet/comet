@@ -20,20 +20,26 @@ interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, 
     supportedBlocks?: Record<string, BlockInterface & LinkBlockInterface>;
 }
 
-function createLinkBlock({
-    name = "Link",
-    displayName = <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
-    supportedBlocks = { internal: InternalLinkBlock, external: ExternalLinkBlock },
-    allowEmpty = false,
-    ...oneOfBlockOptions
-}: CreateLinkBlockOptions): BlockInterface & LinkBlockInterface {
-    const OneOfBlock = createOneOfBlock({
-        name,
-        displayName,
-        supportedBlocks,
-        allowEmpty,
-        ...oneOfBlockOptions,
-    });
+function createLinkBlock(
+    {
+        name = "Link",
+        displayName = <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
+        supportedBlocks = { internal: InternalLinkBlock, external: ExternalLinkBlock },
+        allowEmpty = false,
+        ...oneOfBlockOptions
+    }: CreateLinkBlockOptions,
+    override?: (block: BlockInterface & LinkBlockInterface) => BlockInterface & LinkBlockInterface,
+): BlockInterface & LinkBlockInterface {
+    const OneOfBlock = createOneOfBlock(
+        {
+            name,
+            displayName,
+            supportedBlocks,
+            allowEmpty,
+            ...oneOfBlockOptions,
+        },
+        override,
+    );
 
     return {
         ...OneOfBlock,
