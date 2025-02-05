@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Adapt styling of `LinkDialog` in RTE, and `LinkBlock` to match the Comet DXP design
+Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
