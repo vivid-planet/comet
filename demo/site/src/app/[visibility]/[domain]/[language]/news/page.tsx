@@ -5,16 +5,11 @@ import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { NewsList } from "@src/news/NewsList";
 import { newsListFragment } from "@src/news/NewsList.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { mapPreviewParamToPreviewData } from "@src/util/siteConfig";
 
 import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./page.generated";
 
-export default async function NewsIndexPage({
-    params: { domain, language, preview },
-}: {
-    params: { domain: string; language: string; preview: string };
-}) {
-    const graphqlFetch = createGraphQLFetch(mapPreviewParamToPreviewData(preview));
+export default async function NewsIndexPage({ params: { domain, language } }: { params: { domain: string; language: string } }) {
+    const graphqlFetch = createGraphQLFetch();
 
     const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
         gql`

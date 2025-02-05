@@ -5,7 +5,7 @@ import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } 
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { getSiteConfigForDomain, mapPreviewParamToPreviewData } from "@src/util/siteConfig";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
@@ -39,7 +39,7 @@ async function fetchPageTreeNode(params: PageProps["params"]) {
 
     const path = `/${(params.path ?? []).join("/")}`;
     const { scope } = { scope: { domain: params.domain, language: params.language } };
-    const graphQLFetch = createGraphQLFetch(mapPreviewParamToPreviewData(params.preview));
+    const graphQLFetch = createGraphQLFetch();
 
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
@@ -55,7 +55,7 @@ async function fetchPageTreeNode(params: PageProps["params"]) {
 }
 
 interface PageProps {
-    params: { path: string[]; domain: string; language: string; preview: string };
+    params: { path: string[]; domain: string; language: string };
 }
 
 export default async function Page({ params }: PageProps) {

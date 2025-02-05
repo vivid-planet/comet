@@ -1,8 +1,14 @@
 import { previewParams } from "@comet/cms-site";
-import { getHostByHeaders, getSiteConfigForHost, mapPreviewDataToPreviewParam } from "@src/util/siteConfig";
+import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
 import { NextRequest, NextResponse } from "next/server";
 
 import { CustomMiddleware } from "./chain";
+
+export enum VisibilityParam {
+    "default" = "default",
+    "invisiblePages" = "invisiblePages",
+    "invisibleBlocks" = "invisibleBlocks",
+}
 
 export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
@@ -14,11 +20,14 @@ export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
         }
 
         const preview = await previewParams({ skipDraftModeCheck: true });
-        const previewParam = mapPreviewDataToPreviewParam(preview?.previewData);
+        let visibilityParam: VisibilityParam = VisibilityParam.default;
+        if (preview?.previewData) {
+            visibilityParam = preview.previewData.includeInvisible ? VisibilityParam.invisibleBlocks : VisibilityParam.invisiblePages;
+        }
 
         return NextResponse.rewrite(
             new URL(
-                `/${siteConfig.scope.domain}/${previewParam}${request.nextUrl.pathname}${
+                `/${visibilityParam}/${siteConfig.scope.domain}${request.nextUrl.pathname}${
                     request.nextUrl.searchParams.toString().length > 0 ? `?${request.nextUrl.searchParams.toString()}` : ""
                 }`,
                 request.url,
