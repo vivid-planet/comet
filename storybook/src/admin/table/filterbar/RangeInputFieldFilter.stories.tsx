@@ -1,6 +1,6 @@
 import { Field, FilterBar, FilterBarPopoverFilter, FinalFormRangeInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
+import { faker } from "@faker-js/faker";
 import { Typography } from "@mui/material";
-import faker from "faker";
 
 interface IFilterValues {
     horsepower: {
@@ -66,7 +66,7 @@ export const FilterbarWithRangeInputFieldFilter = {
         const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
             return {
                 id: i,
-                horsepower: faker.datatype.number({ min: 50, max: 200 }),
+                horsepower: faker.number.int({ min: 50, max: 200 }),
             };
         });
         return <Story tableData={randomTableData} />;

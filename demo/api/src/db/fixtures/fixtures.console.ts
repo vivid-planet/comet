@@ -1,6 +1,8 @@
 import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { faker } from "@faker-js/faker";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
@@ -13,14 +15,12 @@ import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
-import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
 
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
-import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 
 export interface PageTreeNodesFixtures {
@@ -55,7 +55,6 @@ export class FixturesConsole {
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly dependenciesService: DependenciesService,
         private readonly entityManager: EntityManager,
-        private readonly productsFixtureService: ProductsFixtureService,
     ) {}
 
     @Command({
@@ -230,19 +229,19 @@ export class FixturesConsole {
         const NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT = 0; // Increase number to generate lorum ipsum fixtures
 
         for (let domainNum = 0; domainNum < NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT; domainNum++) {
-            const domain = domainNum === 0 ? "secondary" : `${faker.random.word().toLowerCase()}.com`;
+            const domain = domainNum === 0 ? "secondary" : `${faker.lorem.word().toLowerCase()}.com`;
             let pagesCount = 0;
             const pages = [];
             for (let level = 0; level < 10; level++) {
                 const pagesForLevel: PageTreeNodeInterface[] = [];
 
-                for (let i = 0; i < faker.datatype.number({ min: 100, max: 200 }); i++) {
+                for (let i = 0; i < faker.number.int({ min: 100, max: 200 }); i++) {
                     const name = faker.lorem.sentence();
                     const page = await this.pageTreeService.createNode(
                         {
                             name: name,
                             slug: slugify(name),
-                            parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
+                            parentId: level > 0 ? faker.helpers.arrayElement(pages[level - 1]).id : undefined,
                             attachedDocument: { type: "Page" },
                             // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                             userGroup: UserGroup.All,
@@ -258,7 +257,7 @@ export class FixturesConsole {
 
                     const pageInput = getDefaultPageInput();
 
-                    const pageId = faker.datatype.uuid();
+                    const pageId = faker.string.uuid();
 
                     await this.entityManager.persistAndFlush(
                         this.pagesRepository.create({
@@ -272,7 +271,7 @@ export class FixturesConsole {
 
                     await this.pageTreeService.updateNodeVisibility(
                         page.id,
-                        faker.random.arrayElement([
+                        faker.helpers.arrayElement([
                             PageTreeNodeVisibility.Published,
                             PageTreeNodeVisibility.Unpublished,
                             PageTreeNodeVisibility.Archived,
@@ -290,8 +289,6 @@ export class FixturesConsole {
         await this.redirectsFixtureService.generateRedirects();
 
         await this.dependenciesService.createViews();
-
-        await this.productsFixtureService.generate();
 
         await this.orm.em.flush();
     }

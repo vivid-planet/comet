@@ -24,7 +24,7 @@ export class ProductsFixtureService {
 
         for (let i = 0; i < 10; i++) {
             const manufacturer = this.manufacturersRepository.create({
-                id: faker.datatype.uuid(),
+                id: faker.string.uuid(),
                 name: faker.company.name(),
                 address: {
                     street: faker.address.street(),
@@ -61,16 +61,16 @@ export class ProductsFixtureService {
             const title = faker.commerce.productName();
 
             const product = this.productsRepository.create({
-                id: faker.datatype.uuid(),
+                id: faker.string.uuid(),
                 title: faker.commerce.productName(),
                 status: faker.helpers.arrayElement([ProductStatus.Published, ProductStatus.Unpublished]),
                 slug: faker.helpers.slugify(title),
                 description: faker.commerce.productDescription(),
                 type: faker.helpers.arrayElement([ProductType.Cap, ProductType.Shirt, ProductType.Tie]),
                 additionalTypes: [],
-                price: faker.datatype.number(),
+                price: faker.number.int(),
                 inStock: faker.datatype.boolean(),
-                soldCount: faker.datatype.number(),
+                soldCount: faker.number.int(),
                 availableSince: faker.date.past(),
                 image: DamImageBlock.blockInputFactory({ attachedBlocks: [] }).transformToBlockData(),
                 manufacturer: faker.helpers.arrayElement(manufacturers),
