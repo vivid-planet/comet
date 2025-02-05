@@ -33,6 +33,7 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
+import { PublishAllProducts } from "../../helpers/PublishAllProducts";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
@@ -114,6 +115,7 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: Rea
                             onClick: () => exportApi.exportGrid(),
                             disabled: exportApi.loading,
                         },
+                        <PublishAllProducts key="publish" />,
                     ]}
                 />
                 {toolbarAction}
