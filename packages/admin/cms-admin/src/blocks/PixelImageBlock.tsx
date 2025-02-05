@@ -1,17 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Crop, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    type BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    type IPreviewContext,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
-import { type BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
@@ -25,8 +14,14 @@ import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { type CmsBlockContext } from "./CmsBlockContextProvider";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface, type BlockPreviewContext } from "./types";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
@@ -67,7 +62,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: IPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
         ...state,
         urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
         adminMeta: { route: previewCtx.parentUrl },
@@ -186,7 +181,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             <SelectPreviewComponent>
                 {state.damFile?.image ? (
                     <>
-                        <AdminComponentPaper disablePadding>
+                        <BlockAdminComponentPaper disablePadding>
                             <ContentRoot component="div" onClick={() => setOpen(true)}>
                                 <Grid container alignItems="center" spacing={3}>
                                     <Grid item>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
@@ -211,10 +206,13 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 </Grid>
                             </ContentRoot>
                             <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined, cropArea: undefined })}>
+                            <BlockAdminComponentButton
+                                startIcon={<Delete />}
+                                onClick={() => updateState({ damFile: undefined, cropArea: undefined })}
+                            >
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                            </AdminComponentButton>
-                        </AdminComponentPaper>
+                            </BlockAdminComponentButton>
+                        </BlockAdminComponentPaper>
                         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                             <MenuItem onClick={handleCropClick}>
                                 <ListItemIcon>

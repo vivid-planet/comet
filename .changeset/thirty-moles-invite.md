@@ -6,7 +6,6 @@
 "@comet/admin-rte": minor
 "@comet/admin-theme": minor
 "@comet/admin": minor
-"@comet/blocks-admin": minor
 "@comet/cms-admin": minor
 ---
 

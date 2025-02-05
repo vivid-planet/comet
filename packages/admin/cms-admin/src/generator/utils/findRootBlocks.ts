@@ -10,7 +10,7 @@ const fallbackLibraryBlocks: { [key: string]: string } = {
     ExternalLinkBlock: "@comet/cms-admin",
     InternalLinkBlock: "@comet/cms-admin",
     PixelImageBlock: "@comet/cms-admin",
-    SpaceBlock: "@comet/blocks-admin",
+    SpaceBlock: "@comet/cms-admin",
     SvgImageBlock: "@comet/cms-admin",
     YouTubeVideoBlock: "@comet/cms-admin",
 };

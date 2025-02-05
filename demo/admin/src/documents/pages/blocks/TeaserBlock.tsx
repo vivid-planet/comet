@@ -1,4 +1,4 @@
-import { createListBlock } from "@comet/blocks-admin";
+import { createListBlock } from "@comet/cms-admin";
 import { TeaserItemBlock } from "@src/documents/pages/blocks/TeaserItemBlock";
 import { FormattedMessage } from "react-intl";
 

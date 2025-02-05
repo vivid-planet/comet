@@ -540,6 +540,53 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
 ```
 
+### Remove `@comet/blocks-admin`
+
+The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
+To upgrade, perform the following steps:
+
+1.  Remove the package:
+
+    ```diff title="admin/package.json"
+    - "@comet/blocks-admin": "^7.x.x",
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/remove-blocks-packages.ts
+    ```
+
+    :::
+
+2.  Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+3.  Update imports that have been renamed
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+4.  Remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
+
+    :::tip
+
+    Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateAction`.
+
+    :::
+
 ## ESLint
 
 ### ESLint upgrade from v8 to v9 with ESM

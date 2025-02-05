@@ -13,14 +13,19 @@ import {
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import {
-    AdminComponentRoot,
+    BlockAdminComponentRoot,
     type BlockOutputApi,
     type BlockState,
+    ContentScopeIndicator,
     HiddenInSubroute,
     IFrameBridgeProvider,
+    openSitePreviewWindow,
     resolveNewState,
-} from "@comet/blocks-admin";
-import { ContentScopeIndicator, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
+    SplitPreview,
+    useBlockPreview,
+    useCmsBlockContext,
+    useSiteConfig,
+} from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
@@ -172,7 +177,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                     <SplitPreview url={`${siteConfig.blockPreviewBaseUrl}/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
-                                <AdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
+                                <BlockAdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
                                     <RichTextBlock.AdminComponent
                                         state={content}
                                         updateState={(setStateAction) => {
@@ -185,7 +190,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                                             <FormattedMessage id="mainMenu.removeContent" defaultMessage="Remove content" />
                                         </Button>
                                     </HiddenInSubroute>
-                                </AdminComponentRoot>
+                                </BlockAdminComponentRoot>
                             ) : (
                                 <Button startIcon={<Add />} onClick={handleAddContentClick}>
                                     <FormattedMessage id="mainMenu.addContent" defaultMessage="Add content" />
