@@ -5,10 +5,10 @@ import { IncomingMessage } from "http";
 
 import { DataStream } from "./data-stream";
 
-export type FileStreamTypes = SdkStream<IncomingMessage> | ReadStream;
+export type FileStream = SdkStream<IncomingMessage> | ReadStream;
 
 export interface FileStreamAndSize {
-    fileStream: FileStreamTypes;
+    fileStream: FileStream;
     fileName?: string;
     fileSize?: number;
 }
