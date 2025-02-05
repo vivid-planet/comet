@@ -12,7 +12,6 @@ import { PageInput } from "@src/documents/pages/dto/page.input";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
@@ -104,8 +103,6 @@ export class FixturesConsole {
                     id: attachedDocumentIds[0],
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -121,8 +118,6 @@ export class FixturesConsole {
                 slug: "sub",
                 parentId: node.id,
                 attachedDocument: { id: attachedDocumentIds[1], type: "Page" },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -139,8 +134,6 @@ export class FixturesConsole {
                     id: attachedDocumentIds[2],
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -156,8 +149,6 @@ export class FixturesConsole {
                 attachedDocument: {
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -174,8 +165,6 @@ export class FixturesConsole {
                     id: attachedDocumentIds[3],
                     type: "Link",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -192,8 +181,6 @@ export class FixturesConsole {
                     id: attachedDocumentIds[4],
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -244,8 +231,6 @@ export class FixturesConsole {
                             slug: slugify(name),
                             parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
                             attachedDocument: { type: "Page" },
-                            // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                            userGroup: UserGroup.All,
                         },
                         PageTreeNodeCategory.MainNavigation,
                         {

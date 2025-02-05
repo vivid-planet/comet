@@ -1,6 +1,7 @@
 import { type TypedDocumentNode } from "@apollo/client";
 import { type BlockDependency, type ReplaceDependencyObject } from "@comet/blocks-admin";
 import { type SvgIconProps } from "@mui/material";
+import { ReactNode } from "react";
 
 import { type GQLDocumentInterface, type Maybe } from "../graphql.generated";
 import { type PageTreePage } from "../pages/pageTree/usePageTree";
@@ -41,8 +42,8 @@ export interface DocumentInterface<
     editComponent?: React.ComponentType<{ id: string; category: string }>;
     updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentOutput>>;
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
-    menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
-    hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
+    menuIcon: (props: SvgIconProps<"svg">) => ReactNode;
+    hideInMenuIcon?: (props: SvgIconProps<"svg">) => ReactNode;
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];

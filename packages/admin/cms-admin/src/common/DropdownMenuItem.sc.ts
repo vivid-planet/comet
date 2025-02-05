@@ -27,6 +27,10 @@ interface ButtonProps {
     open: boolean;
 }
 
+/**
+ * Property 'component' is missing in type '{ action?: Ref<ButtonBaseActions> | undefined; centerRipple?: boolean | undefined; children?: ReactNode; classes?: Partial<ButtonBaseClasses> | undefined; ... 10 more ...; touchRippleRef?: Ref<...> | undefined; } & ... 5 more ... & { ...; }'
+ * but required in type '{ component: any; }'.ts(2769)
+ */
 export const Button = styled(ButtonBase)<ButtonProps>`
     display: flex;
     align-items: center;

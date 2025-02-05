@@ -48,7 +48,6 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         hasError,
         hideDroppableArea,
         hideButton,
-        // @ts-expect-error The type should be used from `DropzoneOptions`, however it's missing during lint/build.
         multiple,
         dropzoneText = multiple ? (
             <FormattedMessage id="comet.fileDropzone.dropfiles" defaultMessage="Drop files here to upload" />
