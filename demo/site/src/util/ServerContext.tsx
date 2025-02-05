@@ -24,4 +24,4 @@ function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
 }
 
 export const [getNotFoundContext, setNotFoundContext] = createServerContext<ContentScope | null>(null);
-export const [getVisibilityParam, setVisibilityParam] = createServerContext<string>(VisibilityParam.default);
+export const [getVisibilityParam, setVisibilityParam] = createServerContext<VisibilityParam>(VisibilityParam.default);
