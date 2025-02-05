@@ -45,7 +45,7 @@
         "@changesets/cli": "^2.27.12",
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
-        "@formatjs/cli": "^6.5.1",
+        "@formatjs/cli": "^6.6.0",
         "@types/node": "^22.13.1",
         "knip": "^5.43.6",
         "cspell": "^8.17.3",
