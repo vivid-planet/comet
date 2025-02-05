@@ -37,7 +37,7 @@ export class ProductImporter {
                         if (err) {
                             reject(err);
                         } else {
-                            console.log("DataStream piped successfully");
+                            this.logger.log("DataStream piped successfully");
                             resolve(true);
                         }
                     });
