@@ -1,25 +1,32 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, type ComponentsOverrides, Fade, List, Menu, type Theme, type Typography, useThemeProps } from "@mui/material";
-import { Children, cloneElement, type MouseEvent, type ReactElement, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Children, cloneElement, type MouseEvent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { CollapsibleIndicator, ItemTitle, type MenuCollapsibleItemClassKey, MenuItem, type OwnerState, Root } from "./CollapsibleItem.styles";
-import { MenuContext } from "./Context";
-import { type MenuItem as CometMenuItem, type MenuItemLevel, type MenuItemProps } from "./Item";
-import { type MenuItemRouterLinkProps } from "./ItemRouterLink";
+import {
+    CollapsibleIndicator,
+    CollapsibleItemMainNavigationItem,
+    ItemTitle,
+    type MainNavigationCollapsibleItemClassKey,
+    type OwnerState,
+    Root,
+} from "./CollapsibleItem.styles";
+import { useMainNavigation } from "./Context";
+import { type MainNavigationItem as CometMainNavigationItem, type MainNavigationItemLevel, type MainNavigationItemProps } from "./Item";
+import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuChild = ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>;
+export type MainNavigationChild = ReactElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>;
 
-export interface MenuCollapsibleItemProps
-    extends Omit<MenuItemProps, "slotProps">,
+export interface MainNavigationCollapsibleItemProps
+    extends Omit<MainNavigationItemProps, "slotProps">,
         ThemedComponentBaseProps<{
             root: "div";
-            menuItem: typeof CometMenuItem;
+            mainNavigationItem: typeof CometMainNavigationItem;
             itemTitle: typeof Typography;
             collapsibleIndicator: "div";
         }> {
-    children: MenuChild | MenuChild[];
+    children: MainNavigationChild | MainNavigationChild[];
     openByDefault?: boolean;
     isMenuOpen?: boolean;
     iconMapping?: {
@@ -30,7 +37,7 @@ export interface MenuCollapsibleItemProps
     };
 }
 
-export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
+export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsibleItemProps) => {
     const {
         classes,
         level = 1,
@@ -45,7 +52,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminMenuCollapsibleItem",
+        name: "CometAdminMainNavigationCollapsibleItem",
     });
 
     const {
@@ -55,8 +62,8 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         secondLevelHoverIndicator: secondLevelHoverIndicatorIcon = <ChevronRight color="inherit" fontSize="inherit" />,
     } = iconMapping ?? {};
 
-    const { drawerVariant } = useContext(MenuContext);
-    const itemLevel: MenuItemLevel = level ?? 1;
+    const { drawerVariant } = useMainNavigation();
+    const itemLevel: MainNavigationItemLevel = level ?? 1;
     const hasSelectedChild = useRef(false);
     const location = useLocation();
 
@@ -69,12 +76,14 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
     }, [isMenuOpen]);
 
     const childElements = useMemo(() => {
-        function checkIfPathInLocation(child: ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>) {
+        function checkIfPathInLocation(
+            child: ReactElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>,
+        ) {
             return "to" in child.props && matchPath(location.pathname, { path: child.props.to, strict: true });
         }
         hasSelectedChild.current = false;
 
-        return Children.map(children, (child: MenuChild) => {
+        return Children.map(children, (child: MainNavigationChild) => {
             // child is selected
             if (checkIfPathInLocation(child)) {
                 hasSelectedChild.current = true;
@@ -83,15 +92,17 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
 
             // sub child is selected
             const subChildElements =
-                "children" in child.props ? Children.map(child?.props?.children, (child: MenuChild) => child) : ([] as MenuChild[]);
-            if (subChildElements?.some((child: MenuChild) => child.props && checkIfPathInLocation(child))) {
+                "children" in child.props
+                    ? Children.map(child?.props?.children, (child: MainNavigationChild) => child)
+                    : ([] as MainNavigationChild[]);
+            if (subChildElements?.some((child: MainNavigationChild) => child.props && checkIfPathInLocation(child))) {
                 hasSelectedChild.current = true;
                 setIsSubmenuOpen(true);
             }
 
             const newItemLevel = itemLevel + 1;
 
-            return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            return cloneElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>(child, {
                 level: newItemLevel === 1 || newItemLevel === 2 || newItemLevel === 3 ? newItemLevel : undefined,
                 isMenuOpen,
                 isCollapsibleOpen: isSubmenuOpen,
@@ -157,7 +168,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
 
     return (
         <Root {...slotProps?.root} {...restProps} ownerState={ownerState}>
-            <MenuItem
+            <CollapsibleItemMainNavigationItem
                 id={itemId}
                 aria-haspopup="true"
                 aria-controls={isSubmenuOpen ? mouseOverMenuId : undefined}
@@ -174,7 +185,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
                 onClick={() => setIsSubmenuOpen(!isSubmenuOpen)}
                 secondaryAction={<CollapsibleIndicator ownerState={ownerState}>{collapsibleIndicatorIcon}</CollapsibleIndicator>}
                 ownerState={ownerState}
-                {...slotProps?.menuItem}
+                {...slotProps?.mainNavigationItem}
             />
             {!isMenuOpen && drawerVariant === "permanent" ? (
                 <Menu
@@ -215,17 +226,17 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminMenuCollapsibleItem: MenuCollapsibleItemClassKey;
+        CometAdminMainNavigationCollapsibleItem: MainNavigationCollapsibleItemClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminMenuCollapsibleItem: MenuCollapsibleItemProps;
+        CometAdminMainNavigationCollapsibleItem: MainNavigationCollapsibleItemProps;
     }
 
     interface Components {
-        CometAdminMenuCollapsibleItem?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuCollapsibleItem"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuCollapsibleItem"];
+        CometAdminMainNavigationCollapsibleItem?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMainNavigationCollapsibleItem"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainNavigationCollapsibleItem"];
         };
     }
 }
