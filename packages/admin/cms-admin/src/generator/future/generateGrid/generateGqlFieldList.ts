@@ -1,7 +1,7 @@
 import objectPath from "object-path";
 
-import { ActionsGridColumnConfig, GridColumnConfig } from "../generator";
-import { getAllColumnFieldNames, GridCombinationColumnConfig } from "./combinationColumn";
+import { type ActionsGridColumnConfig, type GridColumnConfig } from "../generator";
+import { getAllColumnFieldNames, type GridCombinationColumnConfig } from "./combinationColumn";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {

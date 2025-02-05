@@ -1,4 +1,4 @@
-import { traverse, TreeMapNode } from "../TreeMapUtils";
+import { traverse, type TreeMapNode } from "../TreeMapUtils";
 import { sampleTree } from "./treemap.test";
 
 describe("TreeMap traverse", () => {

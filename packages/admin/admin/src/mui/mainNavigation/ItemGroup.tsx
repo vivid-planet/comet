@@ -1,13 +1,13 @@
-import { ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import { Children, cloneElement, isValidElement, ReactElement, ReactNode, useMemo } from "react";
-import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
+import { type ComponentsOverrides, css, type Theme, Typography, useThemeProps } from "@mui/material";
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode, useMemo } from "react";
+import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
 import { Tooltip as CommonTooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MainNavigationChild, MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
-import { MainNavigationItemProps } from "./Item";
-import { MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type MainNavigationChild, type MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
+import { type MainNavigationItemProps } from "./Item";
+import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MainNavigationItemGroupClassKey = "root" | "open" | "tooltip" | "titleContainer" | "title" | "shortTitle";
 

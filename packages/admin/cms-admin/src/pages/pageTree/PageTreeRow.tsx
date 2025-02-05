@@ -1,9 +1,9 @@
-import { IEditDialogApi, useStackSwitchApi } from "@comet/admin";
+import { type IEditDialogApi, useStackSwitchApi } from "@comet/admin";
 import { Checkbox } from "@mui/material";
-import { CSSProperties, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { type CSSProperties, type Dispatch, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { DebouncedState } from "use-debounce";
+import { type DebouncedState } from "use-debounce";
 
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
 import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
@@ -13,9 +13,9 @@ import PageInfo from "./PageInfo";
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeRow.sc";
 import { PageTreeRowDivider } from "./PageTreeRowDivider";
-import PageTreeService, { DropInfo } from "./PageTreeService";
+import { type DropInfo, type PageTreeService } from "./PageTreeService";
 import PageVisibility from "./PageVisibility";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 export type DropTarget = "ADD_BEFORE" | "ADD_AFTER" | "ADD_AS_CHILD";

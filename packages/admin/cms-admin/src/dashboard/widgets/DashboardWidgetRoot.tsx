@@ -1,6 +1,6 @@
 import { Grid, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 export type DashboardWidgetRootProps = PropsWithChildren<{
     header: ReactNode;

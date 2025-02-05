@@ -1,7 +1,13 @@
-import { StyledComponent } from "@emotion/styled";
-import { css, generateUtilityClass, styled, Theme } from "@mui/material";
-import { CSSProperties } from "@mui/material/styles/createMixins";
-import { ComponentProps, ElementType, forwardRef, PropsWithChildren } from "react";
+import { type StyledComponent } from "@emotion/styled";
+import {
+    css,
+    generateUtilityClass,
+    // eslint-disable-next-line no-restricted-imports
+    styled,
+    type Theme,
+} from "@mui/material";
+import { type CSSProperties } from "@mui/material/styles/createMixins";
+import { type ComponentProps, type ElementType, forwardRef } from "react";
 
 const classNamePrefix = "CometAdmin";
 
@@ -49,11 +55,11 @@ function withClassNameOwnerStateAndRef<Props extends object>(
     Component: StyledComponent<Props & { className?: string; ownerState?: object }>,
     options: Options<string, object | undefined>,
 ) {
-    return forwardRef<unknown, PropsWithChildren<ComponentProps<typeof Component>>>((props, ref) => {
+    return forwardRef<unknown, ComponentProps<typeof Component>>((props, ref) => {
         const { className, ownerState } = props;
         const resolvedClassNames = getResolvedClassNames(options, ownerState);
         const customClassName = [className, ...resolvedClassNames].filter(Boolean).join(" ");
-        return <Component {...props} className={customClassName} ownerState={ownerState} ref={ref} />;
+        return <Component {...(props as Props)} className={customClassName} ownerState={ownerState} ref={ref} />;
     });
 }
 

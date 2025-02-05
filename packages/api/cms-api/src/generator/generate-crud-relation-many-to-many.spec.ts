@@ -15,7 +15,7 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 @Entity()
@@ -68,8 +68,8 @@ describe("GenerateCrud Relation n:m with additional column", () => {
             { targetDirectory: __dirname, create: false, update: true, delete: false },
             orm.em.getMetadata().get("Product"),
         );
-        const lintedOut = await lintGeneratedFiles(out);
-        const foundFile = lintedOut.find((file) => file.name === "product.resolver.ts");
+        const formattedOut = await formatGeneratedFiles(out);
+        const foundFile = formattedOut.find((file) => file.name === "product.resolver.ts");
         if (!foundFile) throw new Error("File not found");
 
         file = foundFile;

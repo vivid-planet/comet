@@ -1,7 +1,7 @@
-import { AdminComponentPart, AdminTabs, IFrameBridgeProvider } from "@comet/blocks-admin";
+import { type AdminComponentPart, AdminTabs, IFrameBridgeProvider } from "@comet/blocks-admin";
 
 import { SplitPreview } from "./SplitPreview";
-import { BlockPreviewApi } from "./useBlockPreview";
+import { type BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;

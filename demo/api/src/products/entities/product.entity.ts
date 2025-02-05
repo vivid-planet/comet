@@ -124,7 +124,6 @@ export class Product extends BaseEntity {
     @Field(() => ProductPriceRange, { nullable: true })
     priceRange?: ProductPriceRange = undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     @Property({ type: types.boolean })
     @Field()
     inStock: boolean = true;

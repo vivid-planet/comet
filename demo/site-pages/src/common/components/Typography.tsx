@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import styled, { css } from "styled-components";
 
 type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "p300" | "p200";

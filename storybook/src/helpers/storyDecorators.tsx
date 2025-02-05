@@ -1,7 +1,7 @@
 import { AppHeader, AppHeaderMenuButton, MainNavigation, MainNavigationItemRouterLink, MasterLayout, Stack, useWindowSize } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
 import { useTheme } from "@mui/material";
-import { ComponentType } from "react";
+import { type ComponentType } from "react";
 import { Route } from "react-router";
 
 export function masterLayoutDecorator() {

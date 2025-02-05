@@ -2,7 +2,7 @@ import { StackPage, StackSwitch, StackSwitchApiContext, Tooltip } from "@comet/a
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FunctionComponent, ReactNode } from "react";
+import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -17,11 +17,11 @@ import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
-import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
+import { type BlockDependency, type BlockInterface, type BlockState, type PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type DefaultAdditionalItemFields = {};
 
 export type ListBlockItem<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> = {
@@ -85,23 +85,28 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
-export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
-    name,
-    block,
-    displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
-    itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
-    itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
-    minVisibleBlocks,
-    maxVisibleBlocks,
-    createDefaultListEntry,
-    additionalItemFields,
-    AdditionalItemContextMenuItems,
-    AdditionalItemContent,
-}: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
-    ListBlockFragment<AdditionalItemFields>,
-    ListBlockState<T, AdditionalItemFields>,
-    ListBlockOutput<AdditionalItemFields>
-> {
+export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
+    {
+        name,
+        block,
+        displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
+        itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
+        itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
+        minVisibleBlocks,
+        maxVisibleBlocks,
+        createDefaultListEntry,
+        additionalItemFields,
+        AdditionalItemContextMenuItems,
+        AdditionalItemContent,
+    }: CreateListBlockOptions<T, AdditionalItemFields>,
+    override?: (
+        block: BlockInterface<
+            ListBlockFragment<AdditionalItemFields>,
+            ListBlockState<T, AdditionalItemFields>,
+            ListBlockOutput<AdditionalItemFields>
+        >,
+    ) => BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>>,
+): BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
     if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
         throw new Error(
@@ -277,7 +282,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
             return (
                 <SelectPreviewComponent>
-                    <StackSwitch>
+                    <StackSwitch disableForcePromptRoute>
                         <StackPage name="table">
                             <StackSwitchApiContext.Consumer>
                                 {(stackApi) => {
@@ -530,6 +535,9 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             return `${blockItem.key}/edit/${childPath}`;
         },
     };
+    if (override) {
+        return override(BlockListBlock);
+    }
     return BlockListBlock;
 }
 

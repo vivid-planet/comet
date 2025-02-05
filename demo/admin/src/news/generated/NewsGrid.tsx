@@ -2,11 +2,12 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -22,20 +23,20 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { IconButton } from "@mui/material";
+import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import {
-    GQLCreateNewsMutation,
-    GQLCreateNewsMutationVariables,
-    GQLDeleteNewsMutation,
-    GQLDeleteNewsMutationVariables,
-    GQLNewsGridFragment,
-    GQLNewsGridQuery,
-    GQLNewsGridQueryVariables,
+    type GQLCreateNewsMutation,
+    type GQLCreateNewsMutationVariables,
+    type GQLDeleteNewsMutation,
+    type GQLDeleteNewsMutationVariables,
+    type GQLNewsGridFragment,
+    type GQLNewsGridQuery,
+    type GQLNewsGridQueryVariables,
 } from "./NewsGrid.generated";
 
 const newsFragment = gql`
@@ -86,8 +87,8 @@ function NewsGridToolbar() {
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="news.newNews" defaultMessage="New News" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>

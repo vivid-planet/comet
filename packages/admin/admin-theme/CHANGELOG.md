@@ -1,5 +1,23 @@
 # @comet/admin-theme
 
+## 7.13.0
+
+### Patch Changes
+
+- @comet/admin-icons@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+- ee597535a: Add styling of `Card` and `CardHeader` to align with Comet DXP design
+
+### Patch Changes
+
+- 47be4ebd3: Adapt styling of `DialogActions`, `DialogContent`, and `DialogTitle` to match the Comet DXP design
+- af51bb408: Prevent the input value of `GridToolbarQuickFilter` from being truncated too early
+    - @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes

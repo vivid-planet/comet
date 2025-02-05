@@ -1,6 +1,6 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
+import { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type CancelToken } from "axios";
 
-import { GQLUpdateDamFileInput } from "../../graphql.generated";
+import { type GQLUpdateDamFileInput } from "../../graphql.generated";
 
 interface UploadFileData {
     file: File &

@@ -1,6 +1,6 @@
-import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
 
-import { CrudGeneratorConfig } from "./types";
+import { type CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { writeGenerated } from "./utils/writeGenerated";

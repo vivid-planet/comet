@@ -7,10 +7,10 @@ import {
     dataGridDateColumn,
     dataGridDateTimeColumn,
     DataGridToolbar,
-    ExportApi,
+    type ExportApi,
     filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     messages,
     muiGridFilterToGql,
@@ -31,25 +31,25 @@ import { CircularProgress, useTheme } from "@mui/material";
 import {
     DataGridPro,
     GridColumnHeaderTitle,
-    GridRenderCellParams,
-    GridSlotsComponent,
-    GridToolbarProps,
+    type GridRenderCellParams,
+    type GridSlotsComponent,
+    type GridToolbarProps,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
-import { GQLProductFilter } from "@src/graphql.generated";
-import { ReactNode } from "react";
+import { type GQLProductFilter } from "@src/graphql.generated";
+import { type ReactNode } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductsGridFutureFragment,
-    GQLProductsGridQuery,
-    GQLProductsGridQueryVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductsGridFutureFragment,
+    type GQLProductsGridQuery,
+    type GQLProductsGridQueryVariables,
 } from "./ProductsGrid.generated";
 
 const productsFragment = gql`
@@ -111,17 +111,24 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarTo
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <CrudMoreActionsMenu
-                overallActions={[
-                    {
-                        label: <FormattedMessage {...messages.downloadAsExcel} />,
-                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                        onClick: () => exportApi.exportGrid(),
-                        disabled: exportApi.loading,
-                    },
-                ]}
-            />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <ToolbarActions>
+                <CrudMoreActionsMenu
+                    slotProps={{
+                        button: {
+                            responsive: true,
+                        },
+                    }}
+                    overallActions={[
+                        {
+                            label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                            onClick: () => exportApi.exportGrid(),
+                            disabled: exportApi.loading,
+                        },
+                    ]}
+                />
+                {toolbarAction}
+            </ToolbarActions>
         </DataGridToolbar>
     );
 }

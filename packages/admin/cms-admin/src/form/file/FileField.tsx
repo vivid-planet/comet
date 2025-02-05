@@ -2,12 +2,12 @@ import { useApolloClient } from "@apollo/client";
 import { Assets } from "@comet/admin-icons";
 import { AdminComponentButton } from "@comet/blocks-admin";
 import { useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { damFileFieldFileQuery } from "./FileField.gql";
-import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+import { type GQLDamFileFieldFileFragment, type GQLDamFileFieldFileQuery, type GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
 
 export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 

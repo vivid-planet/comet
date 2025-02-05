@@ -2,10 +2,11 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -19,18 +20,18 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { IconButton } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLDeleteManufacturerMutation,
-    GQLDeleteManufacturerMutationVariables,
-    GQLManufacturersGridFutureFragment,
-    GQLManufacturersGridQuery,
-    GQLManufacturersGridQueryVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLDeleteManufacturerMutation,
+    type GQLDeleteManufacturerMutationVariables,
+    type GQLManufacturersGridFutureFragment,
+    type GQLManufacturersGridQuery,
+    type GQLManufacturersGridQueryVariables,
 } from "./ManufacturersGrid.generated";
 
 const manufacturersFragment = gql`
@@ -93,8 +94,8 @@ function ManufacturersGridToolbar() {
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>

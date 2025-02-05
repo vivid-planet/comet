@@ -1,12 +1,12 @@
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
-import { GQLPredefinedPage } from "@src/graphql.generated";
+import { type GQLPredefinedPage } from "@src/graphql.generated";
 import { gql } from "graphql-request";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { GQLPageLinkFragment } from "./PageLink.generated";
+import { type GQLPageLinkFragment } from "./PageLink.generated";
 
 const pageLinkFragment = gql`
     fragment PageLink on PageTreeNode {

@@ -4,7 +4,6 @@ import { validateSync } from "class-validator";
 
 import { EnvironmentVariables } from "./environment-variables";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createConfig(processEnv: NodeJS.ProcessEnv) {
     const envVars = plainToClass(EnvironmentVariables, { ...processEnv });
     const errors = validateSync(envVars, { skipMissingProperties: false });

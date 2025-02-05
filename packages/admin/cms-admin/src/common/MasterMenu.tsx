@@ -1,18 +1,18 @@
 import {
     MainNavigation,
     MainNavigationCollapsibleItem,
-    MainNavigationCollapsibleItemProps,
+    type MainNavigationCollapsibleItemProps,
     MainNavigationItemAnchorLink,
-    MainNavigationItemAnchorLinkProps,
+    type MainNavigationItemAnchorLinkProps,
     MainNavigationItemGroup,
-    MainNavigationItemGroupProps,
+    type MainNavigationItemGroupProps,
     MainNavigationItemRouterLink,
-    MainNavigationItemRouterLinkProps,
+    type MainNavigationItemRouterLinkProps,
     useMainNavigation,
     useWindowSize,
 } from "@comet/admin";
 import { ReactNode, useEffect } from "react";
-import { RouteProps, useRouteMatch } from "react-router-dom";
+import { type RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 

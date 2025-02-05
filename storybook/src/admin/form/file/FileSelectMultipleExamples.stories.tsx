@@ -1,4 +1,4 @@
-import { FileSelect, FileSelectItem } from "@comet/admin";
+import { FileSelect, type FileSelectItem } from "@comet/admin";
 import { Box, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 

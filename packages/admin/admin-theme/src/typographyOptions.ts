@@ -1,5 +1,5 @@
-import { Breakpoints } from "@mui/material";
-import { TypographyOptions } from "@mui/material/styles/createTypography";
+import { type Breakpoints } from "@mui/material";
+import { type TypographyOptions } from "@mui/material/styles/createTypography";
 
 const fontFamily = "Roboto Flex Variable, Helvetica, Arial, sans-serif";
 

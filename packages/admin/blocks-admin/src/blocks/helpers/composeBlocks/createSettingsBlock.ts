@@ -1,5 +1,5 @@
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
-import { AnonymousBlockInterface, BlockAdminComponent } from "../../types";
+import { type AnonymousBlockInterface, type BlockAdminComponent } from "../../types";
 
 interface Options<State> {
     defaultValues: State;

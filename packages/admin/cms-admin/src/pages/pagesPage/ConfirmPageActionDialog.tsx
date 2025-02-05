@@ -1,10 +1,18 @@
 import { CancelButton } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { ComponentType } from "react";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from "@mui/material";
+import { type ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PageAction } from "./PagesPageActionToolbar";
+import { type PageAction } from "./PagesPageActionToolbar";
 
 interface ContentProps {
     selectedPagesCount: number;

@@ -1,6 +1,6 @@
-import { ExtractBlockInputFactoryProps, FileInterface, ImagePosition } from "@comet/cms-api";
-import { TextImageBlock } from "@src/common/blocks/text-image.block";
-import { Config } from "@src/config/config";
+import { type ExtractBlockInputFactoryProps, type FileInterface, ImagePosition } from "@comet/cms-api";
+import { type TextImageBlock } from "@src/common/blocks/text-image.block";
+import { type Config } from "@src/config/config";
 import faker from "faker";
 
 import { generateImageBlock } from "./image.generator";

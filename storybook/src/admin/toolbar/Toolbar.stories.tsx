@@ -1,11 +1,11 @@
 import {
+    Button,
     FillSpace,
     Stack,
     StackLink,
     StackPage,
     StackSwitch,
     Toolbar,
-    ToolbarActionButton,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
@@ -13,7 +13,7 @@ import {
 } from "@comet/admin";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -45,10 +45,12 @@ function Story() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarActions>
-                <ToolbarActionButton startIcon={<ArrowRight />}>Secondary button</ToolbarActionButton>
-                <ToolbarActionButton startIcon={<Save />} variant="contained">
+                <Button responsive startIcon={<ArrowRight />} variant="outlined">
+                    Secondary button
+                </Button>
+                <Button responsive startIcon={<Save />}>
                     Primary button
-                </ToolbarActionButton>
+                </Button>
             </ToolbarActions>
         </Toolbar>
     );

@@ -1,14 +1,21 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, CheckboxListField, Field, FinalForm, FinalFormSwitch, SaveButton } from "@comet/admin";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    CircularProgress,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLOverrideContentScopesMutation,
-    GQLOverrideContentScopesMutationVariables,
-    GQLPermissionContentScopesQuery,
-    GQLPermissionContentScopesQueryVariables,
+    type GQLOverrideContentScopesMutation,
+    type GQLOverrideContentScopesMutationVariables,
+    type GQLPermissionContentScopesQuery,
+    type GQLPermissionContentScopesQueryVariables,
     namedOperations,
 } from "./OverrideContentScopesDialog.generated";
 

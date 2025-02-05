@@ -1,6 +1,6 @@
 import { Warning } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 import { usePromise } from "../../common/usePromise";
 

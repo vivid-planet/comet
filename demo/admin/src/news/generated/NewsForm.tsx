@@ -5,7 +5,7 @@ import {
     Field,
     filterByFragment,
     FinalForm,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     Loading,
     RadioGroupField,
     TextField,
@@ -13,10 +13,10 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
-import { FormApi } from "final-form";
+import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
@@ -24,13 +24,13 @@ import { FormattedMessage } from "react-intl";
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
 import { createNewsMutation, newsFormFragment, newsQuery, updateNewsMutation } from "./NewsForm.gql";
 import {
-    GQLCreateNewsMutation,
-    GQLCreateNewsMutationVariables,
-    GQLNewsFormFragment,
-    GQLNewsQuery,
-    GQLNewsQueryVariables,
-    GQLUpdateNewsMutation,
-    GQLUpdateNewsMutationVariables,
+    type GQLCreateNewsMutation,
+    type GQLCreateNewsMutationVariables,
+    type GQLNewsFormFragment,
+    type GQLNewsQuery,
+    type GQLNewsQueryVariables,
+    type GQLUpdateNewsMutation,
+    type GQLUpdateNewsMutationVariables,
 } from "./NewsForm.gql.generated";
 
 const rootBlocks = {

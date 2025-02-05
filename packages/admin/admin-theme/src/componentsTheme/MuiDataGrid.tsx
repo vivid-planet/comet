@@ -9,16 +9,16 @@ import {
     inputClasses,
     inputLabelClasses,
     svgIconClasses,
-    SvgIconProps,
+    type SvgIconProps,
     TextField,
-    TextFieldProps,
+    type TextFieldProps,
 } from "@mui/material";
-import { Spacing } from "@mui/system";
+import { type Spacing } from "@mui/system";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 const getDensityHeightValue = (density: string | unknown, spacing: Spacing) => {
     switch (density) {
@@ -57,6 +57,17 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
             backgroundColor: "white",
+
+            "& [class*='MuiDataGrid-toolbarQuickFilter']": {
+                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
+                    paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
+                    textOverflow: "ellipsis",
+                },
+
+                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
+                    display: "none", // Prevents the disabled clear-button from overlaying the input value
+                },
+            },
         },
         columnHeader: ({ ownerState }) => ({
             /* !important is required to override inline styles */

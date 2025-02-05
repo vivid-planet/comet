@@ -2,7 +2,7 @@ import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-o
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource } from "./utils/test-helper";
+import { formatSource } from "./utils/test-helper";
 
 @Entity()
 class TestEntity extends BaseEntity {
@@ -27,9 +27,9 @@ describe("GenerateCrudInput", () => {
             generateUpdateInput: false,
         });
 
-        const lintedOutput = await lintSource(out[0].content);
+        const formattedOut = await formatSource(out[0].content);
 
-        expect(lintedOutput).not.toContain("TestEntityUpdateInput");
+        expect(formattedOut).not.toContain("TestEntityUpdateInput");
 
         orm.close();
     });

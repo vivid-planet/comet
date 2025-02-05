@@ -1,5 +1,5 @@
 import { SearchInput } from "../../common/SearchInput";
-import { PageSearchApi } from "./usePageSearch";
+import { type PageSearchApi } from "./usePageSearch";
 
 interface PageSearchProps {
     query: string;

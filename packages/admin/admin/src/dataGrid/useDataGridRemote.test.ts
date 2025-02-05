@@ -1,5 +1,4 @@
-import { GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
-import { renderHook } from "@testing-library/react-hooks";
+import { type GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
 import queryString from "query-string";
 
 const useHistory = jest.fn();
@@ -10,8 +9,9 @@ jest.mock("react-router", () => ({
     useLocation,
 }));
 
-import { GridSortDirection } from "@mui/x-data-grid";
-import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
+import { type GridSortDirection } from "@mui/x-data-grid";
+import { type GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
+import { renderHook } from "@testing-library/react";
 
 import { useDataGridRemote } from "./useDataGridRemote";
 

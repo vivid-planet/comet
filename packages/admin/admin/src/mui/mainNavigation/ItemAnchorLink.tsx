@@ -1,8 +1,8 @@
 import { LinkExternal } from "@comet/admin-icons";
-import { ListItemButtonProps } from "@mui/material";
-import { HTMLProps } from "react";
+import { type ListItemButtonProps } from "@mui/material";
+import { type HTMLProps } from "react";
 
-import { MainNavigationItem, MainNavigationItemProps } from "./Item";
+import { MainNavigationItem, type MainNavigationItemProps } from "./Item";
 
 export type MainNavigationItemAnchorLinkProps = MainNavigationItemProps & ListItemButtonProps & HTMLProps<HTMLAnchorElement>;
 
