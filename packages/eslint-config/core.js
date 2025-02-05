@@ -49,7 +49,7 @@ const config = [
     {
         ...importPlugin.flatConfigs.recommended,
         rules: {
-            "import/no-duplicates": "error",
+            "import/no-duplicates": ["error", { "prefer-inline": true }],
             "import/newline-after-import": "error",
             "import/no-extraneous-dependencies": "error",
         },

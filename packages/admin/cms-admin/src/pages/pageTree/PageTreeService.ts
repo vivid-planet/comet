@@ -30,7 +30,7 @@ export interface PageTreeNodePosition {
     parent: string | null;
     level: number;
 }
-class PageTreeService {
+export class PageTreeService {
     public readonly levelOffsetPx: number;
     private readonly pages: PageTreePage[];
 
@@ -386,5 +386,3 @@ class PageTreeService {
         };
     }
 }
-
-export default PageTreeService;
