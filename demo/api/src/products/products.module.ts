@@ -12,6 +12,7 @@ import { ProductStatistics } from "./entities/product-statistics.entity";
 import { ProductTag } from "./entities/product-tag.entity";
 import { ProductToTag } from "./entities/product-to-tag.entity";
 import { ProductVariant } from "./entities/product-variant.entity";
+import { RawProduct } from "./entities/raw-product.entity";
 import { ManufacturerResolver } from "./generated/manufacturer.resolver";
 import { ManufacturerCountryResolver } from "./generated/manufacturer-country.resolver";
 import { ProductResolver } from "./generated/product.resolver";
@@ -34,6 +35,7 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
             Manufacturer,
             FileUpload,
             ManufacturerCountry,
+            RawProduct,
         ]),
     ],
     providers: [

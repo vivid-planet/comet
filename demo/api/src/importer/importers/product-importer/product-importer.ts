@@ -1,18 +1,24 @@
 import { EntityManager } from "@mikro-orm/core";
 import { Injectable, Logger, LoggerService } from "@nestjs/common";
 import { DataStream, DataStreamAndMetaData } from "@src/importer/data-streams/data-stream";
+import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
+import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
+import { RawProduct } from "@src/products/entities/raw-product.entity";
 import { pipeline, Transform } from "stream";
 
 @Injectable()
 export class ProductImporter {
     dataStream: DataStreamAndMetaData | null = null;
     name = "rawProductImport";
+    targetEntity: ImporterEntityClass = RawProduct;
     transformPipes: Transform[] = [];
     logger: LoggerService;
 
     constructor(private readonly em: EntityManager) {
         this.logger = new Logger("product-importer");
+        const parsePipes = new CsvParseAndTransformPipes(this.targetEntity, em).getPipes(this.logger, {});
         this.transformPipes = [
+            ...parsePipes,
             new Transform({
                 objectMode: true,
                 transform: this.displayData.bind(this),
