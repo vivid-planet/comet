@@ -31,7 +31,7 @@ import {
 } from "./PageTree.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
 import PageTreeRow, { type DropTarget, type PageTreeDragObject } from "./PageTreeRow";
-import PageTreeService, { type DropInfo } from "./PageTreeService";
+import { type DropInfo, PageTreeService } from "./PageTreeService";
 import { useDndWindowScroll } from "./useDndWindowScroll/useDndWindowScroll";
 import { type PageTreePage } from "./usePageTree";
 
