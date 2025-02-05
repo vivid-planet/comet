@@ -3,13 +3,13 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { Injectable, LoggerService } from "@nestjs/common";
 import path from "path";
 
-import { DataSources } from "./data-source.enum";
+import { DataSource } from "./data-source.enum";
 import { DataStreamAndMetaData } from "./data-stream";
 import { FileDataStream } from "./file-data-stream";
 
 @Injectable()
 export class LocalFileDataStream extends FileDataStream {
-    dataSource: DataSources;
+    dataSource: DataSource;
     fileKey: string;
 
     constructor(fileKey: string) {

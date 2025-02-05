@@ -1,6 +1,6 @@
 import { LoggerService } from "@nestjs/common";
 
-import { DataSources } from "./data-source.enum";
+import { DataSource } from "./data-source.enum";
 
 export interface DataStreamAndMetaData {
     dataStream: NodeJS.ReadableStream;
@@ -11,6 +11,6 @@ export interface DataStreamAndMetaData {
 export type DataStreamClass = { new (): DataStream };
 
 export abstract class DataStream {
-    abstract dataSource: DataSources;
+    abstract dataSource: DataSource;
     abstract getDataStreamsAndMetaData({ logger }: { logger: LoggerService }): Promise<DataStreamAndMetaData | null>;
 }

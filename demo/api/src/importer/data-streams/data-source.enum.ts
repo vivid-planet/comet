@@ -1,4 +1,4 @@
-export enum DataSources {
+export enum DataSource {
     Api = "Api",
     Bucket = "Bucket",
     Local = "Local",
