@@ -1,12 +1,11 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
 
-import { Injectable, LoggerService } from "@nestjs/common";
+import { LoggerService } from "@nestjs/common";
 import path from "path";
 
 import { DataStreamAndMetaData } from "./data-stream";
 import { FileDataStream } from "./file-data-stream";
 
-@Injectable()
 export class LocalFileDataStream extends FileDataStream {
     fileKey: string;
 
