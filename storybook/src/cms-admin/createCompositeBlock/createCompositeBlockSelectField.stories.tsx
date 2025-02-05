@@ -1,7 +1,7 @@
 import { Stack } from "@comet/admin";
 import { DensityComfortable, DensityCompact, DensityStandard } from "@comet/admin-icons";
 import { createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { ListItemIcon } from "@mui/material";
+import { ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -57,7 +57,7 @@ export const WithIcon = () => {
                                     <ListItemIcon>
                                         <DensityCompact />
                                     </ListItemIcon>
-                                    Compact
+                                    <ListItemText>Compact</ListItemText>
                                 </>
                             ),
                         },
@@ -68,7 +68,7 @@ export const WithIcon = () => {
                                     <ListItemIcon>
                                         <DensityStandard />
                                     </ListItemIcon>
-                                    Standard
+                                    <ListItemText>Standard</ListItemText>
                                 </>
                             ),
                         },
@@ -79,7 +79,7 @@ export const WithIcon = () => {
                                     <ListItemIcon>
                                         <DensityComfortable />
                                     </ListItemIcon>
-                                    Comfortable
+                                    <ListItemText>Comfortable</ListItemText>
                                 </>
                             ),
                         },
