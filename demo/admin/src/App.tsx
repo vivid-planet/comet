@@ -39,7 +39,6 @@ const GlobalStyle = () => (
         styles={css`
             body {
                 margin: 0;
-                box-sizing: unset;
             }
         `}
     />
