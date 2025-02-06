@@ -171,7 +171,7 @@ export function createOptionalBlock<T extends BlockInterface>(
         },
 
         extractTextContents: (state) => {
-            if (state.block === undefined) {
+            if (state.block === undefined || !state.visible) {
                 return [];
             }
 
