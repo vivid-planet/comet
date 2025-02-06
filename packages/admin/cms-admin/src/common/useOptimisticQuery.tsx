@@ -3,12 +3,13 @@ import { type ApolloCache } from "@apollo/client/cache";
 import { type DocumentNode, type OperationVariables, type TypedDocumentNode } from "@apollo/client/core";
 import { type QueryHookOptions, type QueryResult } from "@apollo/client/react/types/types";
 
-interface UseQueryWithFragmentCacheOptions<TData = unknown, TVariables = OperationVariables> extends QueryHookOptions<TData, TVariables> {
+interface UseQueryWithFragmentCacheOptions<TData = unknown, TVariables extends OperationVariables = OperationVariables>
+    extends QueryHookOptions<TData, TVariables> {
     // Apollo uses ApolloCache<object> internally, therefore I must use object too
     optimisticResponse: (cache: ApolloCache<object>) => TData | undefined;
 }
 
-export const useOptimisticQuery = <TData, TVariables>(
+export const useOptimisticQuery = <TData, TVariables extends OperationVariables>(
     query: DocumentNode | TypedDocumentNode<TData, TVariables>,
     options?: UseQueryWithFragmentCacheOptions<TData, TVariables>,
 ): QueryResult<TData, TVariables> => {
