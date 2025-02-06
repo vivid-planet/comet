@@ -1,6 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { saveAs } from "file-saver";
-import { type GraphQLError } from "graphql";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useState } from "react";
 
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
@@ -125,7 +124,7 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
             return { id: item[0], type: item[1] };
         });
 
-        let errors: readonly GraphQLError[] | undefined;
+        let errors;
         for (const selectedItem of selectedItems) {
             if (selectedItem.type === "file") {
                 const result = await apolloClient.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
