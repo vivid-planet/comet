@@ -467,8 +467,8 @@ export function createColumnsBlock<T extends BlockInterface>({
         },
 
         extractTextContents: (state) => {
-            return state.columns.reduce<string[]>((contents, column) => {
-                return [...contents, ...(contentBlock.extractTextContents?.(column.props) ?? [])];
+            return state.columns.reduce<string[]>((content, column) => {
+                return [...content, ...(contentBlock.extractTextContents?.(column.props) ?? [])];
             }, []);
         },
     };
