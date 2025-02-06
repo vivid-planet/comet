@@ -154,9 +154,5 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
-    },
-    "dependenciesComments": {
-        "@aws-sdk/client-s3": "Fixed version necessary because of issue https://github.com/smithy-lang/smithy-typescript/issues/1443",
-        "@smithy/node-http-handler": "Fixed version necessary because of issue https://github.com/smithy-lang/smithy-typescript/issues/1443"
     }
 }
