@@ -51,8 +51,6 @@ The NestJS peer dependency has been bumped to v10.
     -       "apollo-server-express": "^3.0.0",
     -       "graphql": "^15.0.0",
     +       "graphql": "^16.6.0",
-    -       "nestjs-console": "^8.0.0",
-    +       "nestjs-console": "^9.0.0"
         },
         "devDependencies": {
     -       "@nestjs/cli": "^9.0.0",
@@ -292,6 +290,177 @@ To upgrade, perform the following steps:
     :::
 
 4.  Remove usages of removed export `getFieldKeys` (probably none)
+
+### Replace nestjs-console with nest-commander
+
+The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
+We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
+
+To upgrade, perform the following steps:
+
+1. Uninstall `nestjs-console`
+2. Install `nest-commander` and `@types/inquirer`
+3. Update `api/src/console.ts` to use `nest-commander`. Minimum example:
+
+    ```ts title="api/src/console.ts2
+    import { CommandFactory } from "nest-commander";
+
+    import { AppModule } from "./app.module";
+    import { createConfig } from "./config/config";
+
+    const config = createConfig(process.env);
+
+    async function bootstrap() {
+        const appModule = AppModule.forRoot(config);
+
+        // @ts-expect-error CommandFactory doesn't except DynamicModule, only Type<any>
+        await CommandFactory.run(appModule, {
+            logger: ["error", "warn", "log"],
+            serviceErrorHandler: async (error) => {
+                console.error(error);
+                process.exit(1);
+            },
+        });
+    }
+
+    bootstrap();
+    ```
+
+4. Update your commands to the new `nest-commander` syntax
+
+:::note Codemod available
+
+The first two steps can be achieved using a codemod:
+
+```sh
+npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
+```
+
+:::
+
+#### Migrating nestjs-console commands to nest-commander
+
+This section highlights the necessary changes to convert a nestjs-console command to nest-commander.
+
+1. Replace the `@Console()` decorator with `@Command()`:
+
+    ```diff
+    - import { Command, Console } from "nestjs-console";
+    + import { Command } from "nest-commander";
+
+    - @Injectable()
+    - @Console()
+    + @Command({
+    +     name: "fixtures",
+    +     description: "Create fixtures with faker.js",
+    + })
+    export class FixturesConsole {
+    -   @Command({
+    -       command: "fixtures",
+    -       description: "Create fixtures with faker.js",
+    -   })
+        @CreateRequestContext()
+        async execute(): Promise<void> {
+            /* ... */
+        }
+    }
+    ```
+
+2. Extend `CommandRunner`:
+
+    ```diff
+    + import { CommandRunner } from "nest-commander";
+
+    - export class FixturesConsole {
+    + export class FixturesConsole extends CommandRunner {
+        /* ... */
+    }
+    ```
+
+3. Add a `super()` call to the constructor:
+
+    ```diff
+    export class FixturesConsole extends CommandRunner {
+        constructor(@Inject(CONFIG) private readonly config: Config) {
+    +       super();
+        }
+    }
+    ```
+
+4. Rename the executing function to `run`:
+
+    ```diff
+    export class FixturesConsole extends CommandRunner {
+        @CreateRequestContext()
+    -   async execute(): Promise<void> {
+    +   async run(): Promise<void> {
+            /* ... */
+        }
+    }
+    ```
+
+5. If necessary, migrate arguments and options.
+
+    **Arguments:** Move from `command` field into `arguments` field:
+
+    ```diff title="import-redirects.command.ts"
+    @Command({
+        name: "import-redirects",
+    +   arguments: "<filepath> [comment]",
+        description: "Import redirects from a CSV file",
+    })
+    export class ImportRedirectsCommand extends CommandRunner {
+        @Command({
+    -       command: "import-redirects [filepath] [comment]",
+            description: "Import redirects from csv file",
+        })
+        @CreateRequestContext()
+    -   async execute(filepath: string, comment = "Imported"): Promise<void> {
+    +   async run([filepath, comment = "Imported"]: string[]): Promise<void> {
+            /* ... */
+        }
+    }
+    ```
+
+    **Options:** Use the `@Option()` decorator:
+
+    ```diff title="refresh-block-index-views.command.ts"
+    @Command({
+        name: "refreshBlockIndexViews",
+    })
+    export class RefreshBlockIndexViewsCommand extends CommandRunner {
+        @Command({
+            command: "refreshBlockIndexViews",
+    -       options: [
+    -           {
+    -               flags: "-f, --force [boolean]",
+    -               defaultValue: false,
+    -           },
+    -       ],
+        })
+        @CreateRequestContext()
+    -   async refreshBlockIndexViews(args: { force: boolean }): Promise<void> {
+    +   async run(arguments: string[], options: { force?: true }): Promise<void> {
+            /* ... */
+        }
+
+    +   @Option({
+    +       flags: "-f, --force",
+    +   })
+    +   parseForce() {}
+    }
+    ```
+
+    Review [the documentation](https://nest-commander.jaymcdoniel.dev/en/features/commander/) for more information.
+
+6. Optional: Rename console to command:
+
+    ```diff title="fixtures.command.ts
+    - export class FixturesConsole extends CommandRunner {
+    + export class FixturesCommand extends CommandRunner {
+        /* ... */
+    }
+    ```
 
 ## Admin
 

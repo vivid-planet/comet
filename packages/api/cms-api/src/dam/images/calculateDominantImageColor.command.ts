@@ -1,30 +1,28 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
-import { Command, Console } from "nestjs-console";
+import { CreateRequestContext, EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { Command, CommandRunner } from "nest-commander";
 
 import { FileInterface } from "../files/entities/file.entity";
-import { DamFileImage } from "../files/entities/file-image.entity";
 import { FilesService } from "../files/files.service";
 
-@Injectable()
-@Console()
-export class CalculateDominantImageColor {
+@Command({
+    name: "cms.dam.calculateDominantImageColor",
+    description: "Recalculate and save dominant color of image",
+})
+export class CalculateDominantImageColorCommand extends CommandRunner {
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
-        @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         private readonly fileService: FilesService,
-        private readonly entityManager: EntityManager,
-    ) {}
+        private readonly em: EntityManager,
+    ) {
+        super();
+    }
 
-    @Command({
-        command: "cms.dam.calculateDominantImageColor",
-        description: "Recalculate and save dominant color of image",
-    })
-    async calculate(): Promise<void> {
+    @CreateRequestContext()
+    async run(): Promise<void> {
         console.log("Calculate dominant color of images...");
 
-        const qb = this.filesRepository.createQueryBuilder("file").leftJoinAndSelect("file.image", "image").where("file.image IS NOT NULL");
+        const qb = this.filesRepository.createQueryBuilder("file").leftJoinAndSelect("file.image", "image").where("image IS NOT NULL");
         const files = await qb.getResult();
 
         console.log(`...for ${files.length} images ...`);
@@ -35,7 +33,7 @@ export class CalculateDominantImageColor {
                 if (dominantColor) {
                     console.log(`${dominantColor}, ${file.image.id}`);
 
-                    await this.entityManager.persistAndFlush(file.image.assign({ dominantColor }));
+                    await this.em.persistAndFlush(file.image.assign({ dominantColor }));
                 } else {
                     console.log(`No color was determined, ${file.image.id}`);
                 }

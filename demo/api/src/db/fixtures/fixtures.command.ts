@@ -2,7 +2,7 @@ import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, 
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
@@ -14,7 +14,7 @@ import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
-import { Command, Console } from "nestjs-console";
+import { Command, CommandRunner } from "nest-commander";
 import slugify from "slugify";
 
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
@@ -40,9 +40,11 @@ const getDefaultPageInput = (): PageInput => {
     return pageInput;
 };
 
-@Injectable()
-@Console()
-export class FixturesConsole {
+@Command({
+    name: "fixtures",
+    description: "Create fixtures with faker.js",
+})
+export class FixturesCommand extends CommandRunner {
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
@@ -56,14 +58,12 @@ export class FixturesConsole {
         private readonly dependenciesService: DependenciesService,
         private readonly entityManager: EntityManager,
         private readonly productsFixtureService: ProductsFixtureService,
-    ) {}
+    ) {
+        super();
+    }
 
-    @Command({
-        command: "fixtures",
-        description: "Create fixtures with faker.js",
-    })
     @CreateRequestContext()
-    async execute(): Promise<void> {
+    async run(): Promise<void> {
         const pageTreeNodes: PageTreeNodesFixtures = {};
         // ensure repeatable runs
         faker.seed(123456);
