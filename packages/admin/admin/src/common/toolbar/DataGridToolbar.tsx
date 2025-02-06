@@ -55,13 +55,13 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
 );
 
 export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
-    const { density = "standard", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+    const { density, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
 
     const apiRef = useGridApiContext();
     const gridDensity = apiRef.current?.state?.density.value;
 
     const ownerState: OwnerState = {
-        density: gridDensity || density,
+        density: density || gridDensity,
     };
 
     return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} />;
