@@ -65,7 +65,6 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
-        "@faker-js/faker": "^9.4.0",
         "@nestjs/cli": "^10.4.9",
         "@nestjs/schematics": "^10.2.3",
         "@types/compression": "^1.7.5",
