@@ -945,8 +945,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^16.0.0
+        version: 16.0.0
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -1291,8 +1291,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.1)(typescript@4.9.5))
       jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^16.0.0
+        version: 16.0.0
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -1464,8 +1464,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^16.0.0
+        version: 16.0.0
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -1738,8 +1738,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^16.0.0
+        version: 16.0.0
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -2030,8 +2030,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.1)(typescript@4.9.5))
       jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^16.0.0
+        version: 16.0.0
       nestjs-console:
         specifier: ^9.0.0
         version: 9.0.0(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)
@@ -2258,8 +2258,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^16.0.0
+        version: 16.0.0
       next:
         specifier: ^14.2.23
         version: 14.2.23(@babel/core@7.26.7)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -11810,8 +11810,8 @@ packages:
     resolution: {integrity: sha512-fP8u2pyfqx0K1rGn1R9pyE0/KTn+G7PxktWidOBTqFPLYX0b9ksaMFkhK5vrS3DVun09pckLdlx90QthlW7AmA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  jest-junit@15.0.0:
-    resolution: {integrity: sha512-Z5sVX0Ag3HZdMUnD5DFlG+1gciIFSy7yIVPhOdGUi8YJaI9iLvvBb530gtQL2CHmv0JJeiwRZenr0VrSR7frvg==}
+  jest-junit@16.0.0:
+    resolution: {integrity: sha512-A94mmw6NfJab4Fg/BlvVOUXzXgF0XIH6EmTgJ5NDPp4xoKq0Kr7sErb+4Xs9nZvu58pJojz5RFGpqnZYJTrRfQ==}
     engines: {node: '>=10.12.0'}
 
   jest-leak-detector@29.7.0:
@@ -15263,10 +15263,6 @@ packages:
   strip-ansi@6.0.1:
     resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}
     engines: {node: '>=8'}
-
-  strip-ansi@7.0.1:
-    resolution: {integrity: sha512-cXNxvT8dFNRVfhVME3JAe98mkXDYN2O1l7jmcwMnOslDeESg1rF/OZMtK0nRAhiari1unG5cD4jG3rapUAkLbw==}
-    engines: {node: '>=12'}
 
   strip-ansi@7.1.0:
     resolution: {integrity: sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==}
@@ -20831,7 +20827,7 @@ snapshots:
     dependencies:
       string-width: 5.1.2
       string-width-cjs: string-width@4.2.3
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
       strip-ansi-cjs: strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
@@ -29366,7 +29362,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  jest-junit@15.0.0:
+  jest-junit@16.0.0:
     dependencies:
       mkdirp: 1.0.4
       strip-ansi: 6.0.1
@@ -33500,7 +33496,7 @@ snapshots:
     dependencies:
       eastasianwidth: 0.2.0
       emoji-regex: 9.2.2
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
 
   string-width@7.2.0:
     dependencies:
@@ -33586,10 +33582,6 @@ snapshots:
   strip-ansi@6.0.1:
     dependencies:
       ansi-regex: 5.0.1
-
-  strip-ansi@7.0.1:
-    dependencies:
-      ansi-regex: 6.0.1
 
   strip-ansi@7.1.0:
     dependencies:
@@ -34825,7 +34817,7 @@ snapshots:
     dependencies:
       ansi-styles: 6.2.1
       string-width: 5.1.2
-      strip-ansi: 7.0.1
+      strip-ansi: 7.1.0
 
   wrap-ansi@9.0.0:
     dependencies:
