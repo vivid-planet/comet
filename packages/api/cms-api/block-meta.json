@@ -48,6 +48,16 @@
                             "name": "scope",
                             "kind": "Json",
                             "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": true
                         }
                     ]
                 },

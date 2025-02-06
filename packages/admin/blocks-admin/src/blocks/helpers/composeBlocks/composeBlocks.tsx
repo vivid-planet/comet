@@ -213,6 +213,16 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return dependencyPath;
             },
+
+            extractTextContents: (state) => {
+                const contentsPerBlock: Record<keyof C, string[]> = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedData = extractData([block, options], attr, state);
+
+                    return block.extractTextContents?.(extractedData) ?? [];
+                });
+
+                return Object.values(contentsPerBlock).reduce((contents, blockContents) => [...contents, ...blockContents], []);
+            },
         },
         api: {
             adminComponentProps,
