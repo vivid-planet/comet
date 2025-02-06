@@ -13,7 +13,7 @@ import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum } from "class-validator";
 
-enum LayoutBlockLayout {
+export enum LayoutBlockLayout {
     layout1 = "layout1",
     layout2 = "layout2",
     layout3 = "layout3",

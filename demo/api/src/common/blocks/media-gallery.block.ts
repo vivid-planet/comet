@@ -14,7 +14,7 @@ import { MediaGalleryItemBlock } from "@src/common/blocks/media-gallery-item.blo
 import { MediaAspectRatios } from "@src/util/mediaAspectRatios";
 import { IsEnum } from "class-validator";
 
-const MediaGalleryListBlock = createListBlock({ block: MediaGalleryItemBlock }, "MediaGalleryList");
+export const MediaGalleryListBlock = createListBlock({ block: MediaGalleryItemBlock }, "MediaGalleryList");
 
 class MediaGalleryBlockData extends BlockData {
     @ChildBlock(MediaGalleryListBlock)
