@@ -21,3 +21,4 @@ exceljs
 ormconfig
 exif
 brevo
+timestamptz
