@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 7.14.0
+
+### Minor Changes
+
+-   c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   Updated dependencies [84e063642]
+-   Updated dependencies [948e07bba]
+    -   @comet/admin-theme@7.14.0
+    -   @comet/blocks-admin@7.14.0
+    -   @comet/admin@7.14.0
+    -   @comet/admin-date-time@7.14.0
+    -   @comet/admin-icons@7.14.0
+    -   @comet/admin-rte@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
