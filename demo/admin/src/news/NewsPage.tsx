@@ -1,5 +1,4 @@
 import {
-    Dialog,
     FillSpace,
     MainContent,
     SaveBoundary,
@@ -13,7 +12,6 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { DialogContent, DialogContentText } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { useIntl } from "react-intl";
 
@@ -40,19 +38,6 @@ export function NewsPage() {
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator />} />
                     <MainContent fullHeight>
-                        <Dialog
-                            onClose={() => {
-                                /* noop */
-                            }}
-                            open
-                        >
-                            <DialogContent>
-                                <DialogContentText>
-                                    Lorem ipsum nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id
-                                    elit. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Curabitur blandit tempus porttitor.
-                                </DialogContentText>
-                            </DialogContent>
-                        </Dialog>
                         <NewsGrid />
                     </MainContent>
                 </StackPage>
