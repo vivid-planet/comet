@@ -65,7 +65,7 @@
         "multer": "^1.4.4",
         "node-fetch": "^2.7.0",
         "openai": "^4.82.0",
-        "passport": "^0.6.0",
+        "passport": "^0.7.0",
         "passport-custom": "^1.1.1",
         "passport-http": "^0.3.0",
         "passport-jwt": "^4.0.0",
