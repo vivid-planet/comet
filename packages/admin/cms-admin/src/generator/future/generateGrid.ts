@@ -545,7 +545,7 @@ export function generateGrid(
         muiGridSortToGql,
         StackLink,
         ToolbarActions,
-        ToolbarFillSpace,
+        FillSpace,
         ToolbarItem,
         Tooltip,
         useBufferedRowCount,

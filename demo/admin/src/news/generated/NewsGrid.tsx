@@ -6,6 +6,7 @@ import {
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
@@ -14,7 +15,6 @@ import {
     renderStaticSelectCell,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -86,7 +86,7 @@ function NewsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
