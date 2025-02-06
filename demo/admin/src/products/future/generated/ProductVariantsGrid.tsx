@@ -6,6 +6,7 @@ import {
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     type GridColDef,
     GridFilterButton,
@@ -13,7 +14,6 @@ import {
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -85,7 +85,7 @@ function ProductVariantsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />

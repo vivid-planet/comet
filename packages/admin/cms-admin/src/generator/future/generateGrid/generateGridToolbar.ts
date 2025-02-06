@@ -34,7 +34,7 @@ export const generateGridToolbar = ({
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
-                <ToolbarFillSpace />
+                <FillSpace />
                 ${renderToolbarActions({
                     forwardToolbarAction,
                     addItemText: getFormattedMessageNode(
