@@ -1,10 +1,10 @@
 import * as csv from "@fast-csv/parse";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, FilterQuery, MikroORM } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject } from "@nestjs/common";
 import * as console from "console";
 import * as fs from "fs";
-import { Command, Console } from "nestjs-console";
+import { Command, CommandRunner } from "nest-commander";
 
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
@@ -21,23 +21,24 @@ interface Row {
     scope?: RedirectScopeInterface;
 }
 
-@Injectable()
-@Console()
-export class ImportRedirectsConsole {
+@Command({
+    name: "import-redirects",
+    arguments: "<filepath> [comment]",
+    description: "Import redirects from a CSV file",
+})
+export class ImportRedirectsCommand extends CommandRunner {
     constructor(
         private readonly orm: MikroORM,
         private readonly entityManager: EntityManager,
         @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
         @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
         @Inject(REDIRECTS_LINK_BLOCK) private readonly linkBlock: RedirectsLinkBlock,
-    ) {}
+    ) {
+        super();
+    }
 
-    @Command({
-        command: "import-redirects [filepath] [comment]",
-        description: "Import redirects from csv file",
-    })
     @CreateRequestContext()
-    async execute(filepath: string, comment = "Imported"): Promise<void> {
+    async run([filepath, comment = "Imported"]: string[]): Promise<void> {
         const rows = await this.readRedirectsCsv(filepath);
         let successes = 0;
         let errors = 0;
