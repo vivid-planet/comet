@@ -132,7 +132,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 loading={false}
                                                 getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
-                                                checkboxSelection
+                                                checkboxSelection={!disabled}
                                                 selectionModel={props.input.value}
                                                 onSelectionModelChange={(selectionModel) => {
                                                     props.input.onChange(selectionModel.map((id) => String(id)));
