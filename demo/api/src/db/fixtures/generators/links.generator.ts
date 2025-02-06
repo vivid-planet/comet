@@ -1,7 +1,7 @@
 import { InternalLinkBlock } from "@comet/cms-api";
 import { type EntityRepository } from "@mikro-orm/postgresql";
 import { LinkBlock } from "@src/common/blocks/link.block";
-import { type PageTreeNodesFixtures } from "@src/db/fixtures/fixtures.console";
+import { type PageTreeNodesFixtures } from "@src/db/fixtures/fixtures.command";
 import { type Link } from "@src/documents/links/entities/link.entity";
 
 export const generateLinks = async (linksRepository: EntityRepository<Link>, pageTreeNodes: PageTreeNodesFixtures): Promise<void> => {
