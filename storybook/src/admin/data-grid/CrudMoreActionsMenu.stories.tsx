@@ -47,10 +47,7 @@ export const CustomComponent = () => {
                     window.alert("Hello from custom action");
                 }}
             >
-                <ListItemIcon
-                    // TODO Remove once https://github.com/vivid-planet/comet/pull/2919 has been merged into main
-                    sx={{ minWidth: "unset !important" }}
-                >
+                <ListItemIcon>
                     <Favorite />
                 </ListItemIcon>
                 Custom Action
