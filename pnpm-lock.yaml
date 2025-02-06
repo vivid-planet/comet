@@ -60,8 +60,8 @@ importers:
   demo/admin:
     dependencies:
       '@apollo/client':
-        specifier: ^3.12.9
-        version: 3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.10
+        version: 3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@comet/admin':
         specifier: workspace:*
         version: link:../../packages/admin/admin
@@ -664,8 +664,8 @@ importers:
         specifier: ^4.24.0
         version: 4.24.0
       '@apollo/client':
-        specifier: ^3.12.9
-        version: 3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.10
+        version: 3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@comet/admin':
         specifier: workspace:*
         version: link:../packages/admin/admin
@@ -855,8 +855,8 @@ importers:
         version: 11.0.5
     devDependencies:
       '@apollo/client':
-        specifier: ^3.12.9
-        version: 3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.10
+        version: 3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@babel/cli':
         specifier: ^7.26.4
         version: 7.26.4(@babel/core@7.26.7)
@@ -1624,8 +1624,8 @@ importers:
         version: 11.0.5
     devDependencies:
       '@apollo/client':
-        specifier: ^3.12.9
-        version: 3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.10
+        version: 3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@babel/cli':
         specifier: ^7.26.4
         version: 7.26.4(@babel/core@7.26.7)
@@ -2297,8 +2297,8 @@ importers:
   storybook:
     dependencies:
       '@apollo/client':
-        specifier: ^3.12.9
-        version: 3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.10
+        version: 3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@comet/admin':
         specifier: workspace:*
         version: link:../packages/admin/admin
@@ -2349,7 +2349,7 @@ importers:
         version: 22.13.1
       apollo-link-rest:
         specifier: ^0.9.0
-        version: 0.9.0(@apollo/client@3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql@15.10.1)(qs@6.14.0)
+        version: 0.9.0(@apollo/client@3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql@15.10.1)(qs@6.14.0)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -2636,11 +2636,11 @@ packages:
     peerDependencies:
       graphql: 14.x || 15.x || 16.x
 
-  '@apollo/client@3.12.9':
-    resolution: {integrity: sha512-rH2Vzfbp+IR0l/xAjUIbDH4/sqBzPATMbzXv/L36E33yhp40yM5LFJnC6cc4YDPUH2gom7Dk4BrYZVLbFpYTsA==}
+  '@apollo/client@3.12.10':
+    resolution: {integrity: sha512-XVNOBLkU3mC/tmDSJhZ2lv0sgq8ahHTLtjMeCclcsRinXfUfV8neZQ+OAkE0Mkd0uYsaRjijN51xu0ok39mqbA==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
-      graphql-ws: ^5.5.5
+      graphql-ws: ^5.5.5 || ^6.0.3
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
       subscriptions-transport-ws: ^0.9.0 || ^0.11.0
@@ -16729,9 +16729,9 @@ snapshots:
     dependencies:
       graphql: 16.9.0
 
-  '@apollo/client@3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))':
+  '@apollo/client@3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))':
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1(graphql@15.10.1)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@15.10.1)
       '@wry/caches': 1.0.1
       '@wry/equality': 0.5.7
       '@wry/trie': 0.5.0
@@ -20878,7 +20878,7 @@ snapshots:
 
   '@graphql-tools/utils@10.7.2(graphql@15.10.1)':
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1(graphql@15.10.1)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@15.10.1)
       cross-inspect: 1.0.1
       dset: 3.1.4
       graphql: 15.10.1
@@ -20896,13 +20896,13 @@ snapshots:
 
   '@graphql-tools/utils@9.2.1(graphql@15.10.1)':
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1(graphql@15.10.1)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@15.10.1)
       graphql: 15.10.1
       tslib: 2.8.1
 
   '@graphql-tools/utils@9.2.1(graphql@16.9.0)':
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1(graphql@16.9.0)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.8.1
 
@@ -20925,6 +20925,10 @@ snapshots:
   '@graphql-typed-document-node/core@3.2.0(graphql@15.10.1)':
     dependencies:
       graphql: 15.10.1
+
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.9.0)':
+    dependencies:
+      graphql: 16.9.0
 
   '@grpc/grpc-js@1.8.12':
     dependencies:
@@ -24915,9 +24919,9 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  apollo-link-rest@0.9.0(@apollo/client@3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql@15.10.1)(qs@6.14.0):
+  apollo-link-rest@0.9.0(@apollo/client@3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql@15.10.1)(qs@6.14.0):
     dependencies:
-      '@apollo/client': 3.12.9(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+      '@apollo/client': 3.12.10(@types/react@18.3.18)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       graphql: 15.10.1
       qs: 6.14.0
 
