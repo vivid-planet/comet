@@ -1792,7 +1792,7 @@ importers:
   packages/api/cms-api:
     dependencies:
       '@aws-sdk/client-s3':
-        specifier: 3.741.0
+        specifier: ^3.741.0
         version: 3.741.0
       '@azure-rest/ai-translation-text':
         specifier: ^1.0.0
@@ -1928,7 +1928,7 @@ importers:
         version: 4.0.0
     devDependencies:
       '@aws-sdk/types':
-        specifier: 3.734.0
+        specifier: ^3.734.0
         version: 3.734.0
       '@comet/eslint-config':
         specifier: workspace:^7.13.0
