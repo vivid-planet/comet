@@ -4,7 +4,6 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
-import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
@@ -63,14 +62,8 @@ export class UserPermissionsService {
         ];
     }
 
-    async createUser(request: Request, idToken: JwtPayload): Promise<User> {
-        if (this.userService?.createUserFromRequest) return this.userService.createUserFromRequest(request, idToken);
-        if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
-        return {
-            id: idToken.sub,
-            name: idToken.name,
-            email: idToken.email,
-        };
+    getUserService(): UserPermissionsUserServiceInterface | undefined {
+        return this.userService;
     }
 
     async getUser(id: string): Promise<User> {
