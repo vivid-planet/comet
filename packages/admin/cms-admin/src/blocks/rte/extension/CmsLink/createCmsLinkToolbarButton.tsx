@@ -1,4 +1,4 @@
-import { CancelButton, DeleteButton, messages, OkayButton } from "@comet/admin";
+import { CancelButton, DeleteButton, OkayButton } from "@comet/admin";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
 import { BlockInterface, BlockState } from "@comet/blocks-admin";
@@ -132,18 +132,10 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                     <LinkBlock.AdminComponent state={newLinkState} updateState={setNewLinkState} />
                 </DialogContent>
                 <StyledDialogActions>
-                    <CancelButton onClick={handleClose} color="primary">
-                        <FormattedMessage {...messages.cancel} />
-                    </CancelButton>
+                    <CancelButton onClick={handleClose} />
                     <ButtonContainer>
-                        {linkEntity && (
-                            <DeleteButton onClick={handleRemove} color="primary">
-                                <FormattedMessage id="comet.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
-                            </DeleteButton>
-                        )}
-                        <OkayButton onClick={handleUpdate} color="primary">
-                            <FormattedMessage {...messages.ok} />
-                        </OkayButton>
+                        {linkEntity && <DeleteButton onClick={handleRemove} />}
+                        <OkayButton onClick={handleUpdate} />
                     </ButtonContainer>
                 </StyledDialogActions>
             </Dialog>
