@@ -32,7 +32,10 @@ interface CreateSeoBlockOptions {
     image?: BlockInterface;
 }
 
-export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOptions = {}): BlockInterface {
+export function createSeoBlock(
+    { image = PixelImageBlock }: CreateSeoBlockOptions = {},
+    override?: (block: BlockInterface) => BlockInterface,
+): BlockInterface {
     const OptionalImageBlock = createOptionalBlock(image, {
         title: <FormattedMessage id="comet.sitemap.openGraphImage" defaultMessage="Open Graph Image" />,
     });
@@ -327,6 +330,10 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
             );
         },
     };
+
+    if (override) {
+        return override(SeoBlock);
+    }
 
     return SeoBlock;
 }
