@@ -1,4 +1,6 @@
-import { gql, previewParams } from "@comet/cms-site";
+export const dynamic = "error";
+
+import { gql } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
@@ -27,8 +29,7 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode(params: { path: string[]; domain: string; language: string }) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
+async function fetchPageTreeNode(params: PageProps["params"]) {
     const siteConfig = getSiteConfigForDomain(params.domain);
 
     // Redirects are scoped by domain only, not by language.
@@ -38,7 +39,7 @@ async function fetchPageTreeNode(params: { path: string[]; domain: string; langu
 
     const path = `/${(params.path ?? []).join("/")}`;
     const { scope } = { scope: { domain: params.domain, language: params.language } };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch();
 
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,

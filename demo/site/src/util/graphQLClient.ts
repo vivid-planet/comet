@@ -4,11 +4,20 @@ import {
     createGraphQLFetch as createGraphQLFetchLibrary,
     SitePreviewData,
 } from "@comet/cms-site";
+import { VisibilityParam } from "@src/middleware/domainRewrite";
 
-export function createGraphQLFetch(previewData?: SitePreviewData) {
+import { getVisibilityParam } from "./ServerContext";
+
+export function createGraphQLFetch() {
     if (typeof window !== "undefined") {
         throw new Error("createGraphQLFetch: cannot use on client side.");
     }
+
+    let previewData: SitePreviewData | undefined;
+
+    const previewParam = getVisibilityParam();
+    if (previewParam === VisibilityParam.invisibleBlocks) previewData = { includeInvisible: true };
+    if (previewParam === VisibilityParam.invisiblePages) previewData = { includeInvisible: false };
 
     const headers = {
         authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
