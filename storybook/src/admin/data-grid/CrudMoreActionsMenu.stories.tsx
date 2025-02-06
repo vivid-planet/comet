@@ -47,7 +47,7 @@ export const CustomComponent = () => {
                     window.alert("Hello from custom action");
                 }}
             >
-                <ListItemIcon sx={{ minWidth: "unset !important" }}>
+                <ListItemIcon>
                     <Favorite />
                 </ListItemIcon>
                 Custom Action
