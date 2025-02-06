@@ -53,27 +53,13 @@ export class ContentGroupBlockFixtureService {
             const [type, generator] = block;
             const props = await generator.generateBlockInput();
 
-            if (type === "columns") {
-                const columnBlocks = await this.columnsBlockFixtureService.generateBlockInput();
-                // in case of columns one random block with 2 columns and one random block with 3 columns is created
-                blocks.push(
-                    ...columnBlocks.map((props) => ({
-                        key: faker.string.uuid(),
-                        visible: true,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        type: "columns" as any,
-                        props,
-                    })),
-                );
-            } else {
-                blocks.push({
-                    key: faker.string.uuid(),
-                    visible: true,
-                    type: type as keyof typeof blockCfg,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    props: props as any,
-                });
-            }
+            blocks.push({
+                key: faker.string.uuid(),
+                visible: true,
+                type: type as keyof typeof blockCfg,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                props: props as any,
+            });
         }
 
         return {
