@@ -36,9 +36,7 @@ In your main file, add Sentry handlers to capture requests and errors:
       const appModule = AppModule.forRoot(config);
       const app = await NestFactory.create<NestExpressApplication>(appModule);
 
-+     app.use(Sentry.Handlers.requestHandler());
-+     app.use(Sentry.Handlers.tracingHandler());
-+     app.use(Sentry.Handlers.errorHandler());
++     Sentry.setupExpressErrorHandler(app);
 
       await app.listen(3000);
   }
