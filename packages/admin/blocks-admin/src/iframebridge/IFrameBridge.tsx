@@ -1,16 +1,16 @@
-import { createContext, createRef, PropsWithChildren, Ref, useCallback, useEffect, useRef, useState } from "react";
+import { createContext, createRef, type PropsWithChildren, type Ref, useCallback, useEffect, useRef, useState } from "react";
 import { Route, useHistory } from "react-router";
 
 import {
-    AdminMessage,
+    type AdminMessage,
     AdminMessageType,
-    IAdminBlockMessage,
-    IAdminContentScopeMessage,
-    IAdminGraphQLApiUrlMessage,
-    IAdminHoverComponentMessage,
-    IAdminSelectComponentMessage,
-    IAdminShowOnlyVisibleMessage,
-    IFrameMessage,
+    type IAdminBlockMessage,
+    type IAdminContentScopeMessage,
+    type IAdminGraphQLApiUrlMessage,
+    type IAdminHoverComponentMessage,
+    type IAdminSelectComponentMessage,
+    type IAdminShowOnlyVisibleMessage,
+    type IFrameMessage,
     IFrameMessageType,
 } from "./IFrameMessage";
 
@@ -101,7 +101,7 @@ export const IFrameBridgeProvider = ({ children, onReceiveMessage }: PropsWithCh
                 if (message.hasOwnProperty("cometType")) {
                     _onReceiveMessage(message as IFrameMessage);
                 }
-            } catch (e) {
+            } catch {
                 // empty
             }
         };

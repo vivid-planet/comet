@@ -9,9 +9,8 @@ import {
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
-import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 

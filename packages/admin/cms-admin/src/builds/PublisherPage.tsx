@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
@@ -8,7 +8,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
-import { GQLBuildsQuery } from "./PublisherPage.generated";
+import { type GQLBuildsQuery } from "./PublisherPage.generated";
 
 const buildsQuery = gql`
     query Builds {
@@ -45,7 +45,7 @@ export function PublisherPage() {
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
                 </ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <PublishButton />
                 </ToolbarActions>

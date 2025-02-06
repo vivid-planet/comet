@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
+import { SvgIcon, type SvgIconProps } from "@mui/material";
 
 interface ColumnsIconProps extends SvgIconProps {
     columns: number;

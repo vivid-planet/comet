@@ -1,4 +1,4 @@
-import { BlockMigrationTransformFn, From, To, VersionDataInterface } from "./types";
+import { type BlockMigrationTransformFn, type From, type To, type VersionDataInterface } from "./types";
 
 // Standard implementation with common boilerplate
 // BlockMigrationInterface is not fully implemented in abstract class
@@ -16,7 +16,6 @@ export abstract class BlockMigration<Fn extends BlockMigrationTransformFn = Bloc
 
         // toVersion with value 1 expects a previous version of undefined or 0
         if (this.toVersion === 1) {
-            // eslint-disable-next-line @typescript-eslint/ban-types
             if (!("$$version" in (raw as object))) {
                 return true;
             }
@@ -26,7 +25,6 @@ export abstract class BlockMigration<Fn extends BlockMigrationTransformFn = Bloc
         }
         // toVersion with value of > 1 expects a previous version one smaller
         if (this.toVersion > 1) {
-            // eslint-disable-next-line @typescript-eslint/ban-types
             if ("$$version" in (raw as object) && raw.$$version === this.toVersion - 1) {
                 return true;
             }

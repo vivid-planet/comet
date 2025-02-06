@@ -1,7 +1,7 @@
-import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
+import { type ApolloClient, type RefetchQueriesOptions, useApolloClient } from "@apollo/client";
 import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { ComponentsOverrides, Divider, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { type ComponentsOverrides, Divider, type Theme, useThemeProps } from "@mui/material";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { readClipboardText } from "../clipboard/readClipboardText";
@@ -9,7 +9,7 @@ import { writeClipboardText } from "../clipboard/writeClipboardText";
 import { DeleteDialog as CommonDeleteDialog } from "../common/DeleteDialog";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
@@ -22,7 +22,6 @@ export type CrudContextMenuClassKey =
     | "copyItem"
     | "pasteItem"
     | "itemsDivider"
-    | "deleteItem"
     | "deleteDialog";
 
 export interface CrudContextMenuProps<CopyData>
@@ -53,7 +52,7 @@ export interface CrudContextMenuProps<CopyData>
     url?: string;
     onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: () => Promise<CopyData> | CopyData;
     /**
@@ -111,7 +110,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
             });
             if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
             setDeleteDialogOpen(false);
-        } catch (_) {
+        } catch {
             throw new Error("Delete failed");
         }
     };

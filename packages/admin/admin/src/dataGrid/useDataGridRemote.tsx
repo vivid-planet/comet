@@ -1,6 +1,6 @@
-import { DataGridProps, GridFilterModel, GridSortDirection, GridSortModel } from "@mui/x-data-grid";
-import { GridCallbackDetails } from "@mui/x-data-grid/models/api";
-import { GridPaginationModel } from "@mui/x-data-grid/models/gridPaginationProps";
+import { type DataGridProps, type GridFilterModel, type GridSortDirection, type GridSortModel } from "@mui/x-data-grid";
+import { type GridCallbackDetails } from "@mui/x-data-grid/models/api";
+import { type GridPaginationModel } from "@mui/x-data-grid/models/gridPaginationProps";
 import queryString from "query-string";
 import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router";
@@ -61,10 +61,10 @@ export function useDataGridRemote({
         (!parsedSearch[sortParamName]
             ? undefined
             : !Array.isArray(parsedSearch[sortParamName])
-            ? parsedSearch[sortParamName] === "none"
-                ? []
-                : [parsedSearch[sortParamName] as string]
-            : (parsedSearch[sortParamName] as string[])
+              ? parsedSearch[sortParamName] === "none"
+                  ? []
+                  : [parsedSearch[sortParamName] as string]
+              : (parsedSearch[sortParamName] as string[])
         )?.map((i) => {
             const parts = i.split(":");
             return {
@@ -83,7 +83,7 @@ export function useDataGridRemote({
         [history, location, parsedSearch, sortParamName],
     );
 
-    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : initialFilter ?? { items: [] };
+    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : (initialFilter ?? { items: [] });
     const handleFilterChange = useCallback(
         (filterModel: GridFilterModel) => {
             history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) });

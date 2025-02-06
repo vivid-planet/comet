@@ -1,4 +1,4 @@
-import { BlockDataInterface } from "../block";
+import { type BlockDataInterface } from "../block";
 import { visitBlocksBreadthFirst } from "./visit-blocks-breadth-first";
 import { visitBlocksDepthFirst } from "./visit-blocks-depth-first";
 
@@ -46,7 +46,10 @@ interface RootBlockInfo {
 // FlatBlockNodes represent a block with additional information about its position it the block-tree
 // Probably not only for search and index but also for history and/or transformToSave/plain
 export class FlatBlocks {
-    constructor(private blockData: BlockDataInterface, private rootBlockInfo?: Partial<RootBlockInfo>) {}
+    constructor(
+        private blockData: BlockDataInterface,
+        private rootBlockInfo?: Partial<RootBlockInfo>,
+    ) {}
 
     nodes(): FlatBlockNode[] {
         return this.depthFirst();

@@ -1,20 +1,20 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
 import {
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     FormControl,
     inputBaseClasses,
     MenuItem,
     Select as MuiSelect,
     selectClasses,
-    Theme,
+    type Theme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { IControlProps } from "../types";
+import { type IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
-import useBlockTypes, { BlockTypesApi } from "./useBlockTypes";
+import useBlockTypes, { type BlockTypesApi } from "./useBlockTypes";
 
 interface Props
     extends ThemedComponentBaseProps<{
@@ -53,17 +53,16 @@ const Select = createComponentSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
     componentName: "RteBlockTypeControls",
     slotName: "select",
 })(
-    ({ theme }) =>
-        css`
-            .${selectClasses.select}.${inputBaseClasses.input} {
-                min-height: 0;
-                color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.buttonIcon};
-                min-width: 180px;
-                line-height: 24px;
-                font-size: 14px;
-                padding: 0;
-            }
-        `,
+    ({ theme }) => css`
+        .${selectClasses.select}.${inputBaseClasses.input} {
+            min-height: 0;
+            color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.buttonIcon};
+            min-width: 180px;
+            line-height: 24px;
+            font-size: 14px;
+            padding: 0;
+        }
+    `,
 );
 
 function StyledBlockTypesControls(inProps: Props) {

@@ -2,16 +2,17 @@ import {
     AppHeader,
     AppHeaderButton,
     AppHeaderDropdown,
-    AppHeaderFillSpace,
     AppHeaderMenuButton,
+    Button,
     CometLogo,
+    FillSpace,
     MainContent,
     MasterLayout,
     Menu as CometMenu,
     MenuItemRouterLink,
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
-import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
+import { Avatar, Box, Divider, MenuItem, MenuList } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -39,7 +40,7 @@ function MasterHeader() {
         <AppHeader>
             <AppHeaderMenuButton />
             <CometLogo />
-            <AppHeaderFillSpace />
+            <FillSpace />
             <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
             <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>
                 {(closeDropdown) => {
@@ -67,7 +68,7 @@ function MasterHeader() {
                 <Divider />
 
                 <Box padding={4}>
-                    <Button variant="contained" color="primary" startIcon={<Logout />} fullWidth>
+                    <Button startIcon={<Logout />} fullWidth>
                         Logout
                     </Button>
                 </Box>

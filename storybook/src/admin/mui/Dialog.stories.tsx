@@ -1,9 +1,9 @@
-import { CancelButton, Dialog, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
+import { Button, CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { Button, DialogActions, DialogContent, DialogContentText, DialogProps, FormControlLabel, MenuItem } from "@mui/material";
+import { DialogActions, DialogContent, DialogContentText, type DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
 
-type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth";
+type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";
 
 type DialogSizeOptions = {
     [label: string]: DialogSize;
@@ -16,6 +16,7 @@ const dialogSizeOptions: DialogSizeOptions = {
     "LG (1280px)": "lg",
     "XL (1920px)": "xl",
     FullWidth: "fullWidth",
+    FullScreen: "fullScreen",
 };
 
 const selectOptions = [
@@ -74,12 +75,12 @@ export const _Dialog = {
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
                             <Dialog
-                                scroll="body"
                                 title={selectedDialogTitle}
                                 onClose={selectedDialogOnClose === "callback" ? () => console.log("Dialog closed") : undefined}
                                 open={true}
                                 fullWidth={selectedDialogSize === "fullWidth"}
-                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
+                                fullScreen={selectedDialogSize === "fullScreen"}
+                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize !== "fullScreen" && selectedDialogSize}
                             >
                                 <>{selectedDialogSize === "xs" ? <ConfirmationDialogContent /> : <DefaultDialogContent />}</>
                             </Dialog>
@@ -108,27 +109,13 @@ function DefaultDialogContent() {
                     Lorem ipsum nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Vivamus
                     sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Curabitur blandit tempus porttitor.
                 </DialogContentText>
-                <Field name="text" label="Textfield" component={FinalFormInput} fullWidth />
-                <Field name="select" label="Select" fullWidth>
-                    {(props) => (
-                        <FinalFormSelect {...props} fullWidth>
-                            {selectOptions.map((option) => (
-                                <MenuItem value={option.value} key={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </FinalFormSelect>
-                    )}
-                </Field>
-                <Field name="checked" type="checkbox" fullWidth>
-                    {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                </Field>
+                <TextField name="text" label="Textfield" fullWidth />
+                <SelectField name="select" label="Select" fullWidth options={selectOptions} />
+                <CheckboxField name="checked" label="Checkbox" fullWidth />
             </DialogContent>
             <DialogActions>
                 <CancelButton />
-                <Button startIcon={<Save />} variant="contained" color="primary">
-                    Save
-                </Button>
+                <Button startIcon={<Save />}>Save</Button>
             </DialogActions>
         </>
     );

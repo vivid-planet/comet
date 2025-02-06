@@ -1,6 +1,6 @@
 import { Close, Hamburger, HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
-import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useContext } from "react";
+import { type ComponentsOverrides, css, IconButton, type IconButtonClassKey, type IconButtonProps, type Theme, useThemeProps } from "@mui/material";
+import { type ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuContext } from "../../mui/menu/Context";
@@ -38,11 +38,14 @@ const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
 })(
     ({ theme }) => css`
         color: #fff;
-        margin-left: ${theme.spacing(3)};
-        margin-right: ${theme.spacing(3)};
+        margin: 0 9px;
         padding: 8px;
         border-radius: 4px;
         border: 1px solid ${theme.palette.grey.A200};
+
+        ${theme.breakpoints.up("md")} {
+            margin: 0 14px;
+        }
     `,
 );
 

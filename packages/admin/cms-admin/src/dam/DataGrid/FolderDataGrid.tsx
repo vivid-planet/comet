@@ -1,29 +1,29 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
-    BreadcrumbItem,
+    type BreadcrumbItem,
     EditDialog,
     GridCellContent,
-    GridColDef,
-    IFilterApi,
-    ISelectionApi,
+    type GridColDef,
+    type IFilterApi,
+    type ISelectionApi,
     PrettyBytes,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { Slide, SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, GridRowClassNameParams, GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
+import { Slide, type SlideProps, Snackbar } from "@mui/material";
+import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { GQLDamItemType } from "../../graphql.generated";
+import { type GQLDamItemType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
-import { DamConfig, DamFilter } from "../DamTable";
+import { type DamConfig, type DamFilter } from "../DamTable";
 import { licenseTypeLabels } from "../FileForm/licenseType";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -34,14 +34,14 @@ import DamContextMenu from "./DamContextMenu";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
-    GQLDamItemListPositionQuery,
-    GQLDamItemListPositionQueryVariables,
-    GQLDamItemsListQuery,
-    GQLDamItemsListQueryVariables,
+    type GQLDamFileTableFragment,
+    type GQLDamFolderQuery,
+    type GQLDamFolderQueryVariables,
+    type GQLDamFolderTableFragment,
+    type GQLDamItemListPositionQuery,
+    type GQLDamItemListPositionQueryVariables,
+    type GQLDamItemsListQuery,
+    type GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
@@ -223,7 +223,7 @@ const FolderDataGrid = ({
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                apiRef.current.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
+                apiRef.current?.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
             }
 
             setRedirectedToId(id);
@@ -257,7 +257,7 @@ const FolderDataGrid = ({
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage={"Empty folders can't be uploaded"} />}
+            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage="Empty folders can't be uploaded" />}
         />
     );
 

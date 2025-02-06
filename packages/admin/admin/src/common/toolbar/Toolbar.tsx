@@ -1,9 +1,9 @@
-import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useContext } from "react";
+import { type ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
@@ -56,8 +56,18 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
-        padding-left: ${theme.spacing(4)};
-        padding-right: ${theme.spacing(4)};
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+
+        ${theme.breakpoints.up("sm")} {
+            padding-left: ${theme.spacing(2)};
+            padding-right: ${theme.spacing(2)};
+        }
+
+        ${theme.breakpoints.up("md")} {
+            padding-left: ${theme.spacing(4)};
+            padding-right: ${theme.spacing(4)};
+        }
     `,
 );
 
@@ -77,11 +87,18 @@ const BottomBar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
         border-top: solid 1px ${theme.palette.grey["50"]};
         box-sizing: border-box;
         min-height: 60px;
-        padding: 0 5px;
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
 
         ${theme.breakpoints.up("sm")} {
             min-height: 60px;
-            padding: 0 10px;
+            padding-left: ${theme.spacing(2)};
+            padding-right: ${theme.spacing(2)};
+        }
+
+        ${theme.breakpoints.up("md")} {
+            padding-left: ${theme.spacing(4)};
+            padding-right: ${theme.spacing(4)};
         }
 
         // necessary to override strange MUI default styling

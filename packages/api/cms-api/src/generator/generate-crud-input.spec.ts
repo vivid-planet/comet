@@ -1,14 +1,13 @@
-import { BaseEntity, DateType, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, DateType, defineConfig, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { formatSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id"> {
+export class TestEntityWithString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,7 +15,7 @@ export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id">
     title: string;
 }
 @Entity()
-export class TestEntityWithDate extends BaseEntity<TestEntityWithDate, "id"> {
+export class TestEntityWithDate extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -24,7 +23,7 @@ export class TestEntityWithDate extends BaseEntity<TestEntityWithDate, "id"> {
     foo: Date;
 }
 @Entity()
-export class TestEntityWithBoolean extends BaseEntity<TestEntityWithBoolean, "id"> {
+export class TestEntityWithBoolean extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -42,7 +41,7 @@ registerEnumType(TestEnumType, {
 });
 @Entity()
 @ObjectType()
-export class TestEntityWithEnum extends BaseEntity<TestEntityWithEnum, "id"> {
+export class TestEntityWithEnum extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -52,7 +51,7 @@ export class TestEntityWithEnum extends BaseEntity<TestEntityWithEnum, "id"> {
 }
 
 @Entity()
-export class TestEntityWithUuid extends BaseEntity<TestEntityWithUuid, "id"> {
+export class TestEntityWithUuid extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -61,7 +60,7 @@ export class TestEntityWithUuid extends BaseEntity<TestEntityWithUuid, "id"> {
 }
 
 @Entity()
-export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+export class TestEntityWithTextRuntimeType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -70,7 +69,7 @@ export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithText
 }
 
 @Entity()
-export class TestEntityWithNullablePropWithInitializer extends BaseEntity<TestEntityWithNullablePropWithInitializer, "id"> {
+export class TestEntityWithNullablePropWithInitializer extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -79,7 +78,7 @@ export class TestEntityWithNullablePropWithInitializer extends BaseEntity<TestEn
 }
 
 @Entity()
-export class TestEntityWithNullablePropWithoutInitializer extends BaseEntity<TestEntityWithNullablePropWithoutInitializer, "id"> {
+export class TestEntityWithNullablePropWithoutInitializer extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -94,15 +93,16 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithString],
                 }),
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -129,13 +129,14 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithDate],
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithDate"));
             //console.log(out);
-            const lintedOutput = await lintSource(out[0].content);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -164,13 +165,14 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithBoolean],
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBoolean"));
             //console.log(out);
-            const lintedOutput = await lintSource(out[0].content);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -200,13 +202,14 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEnum],
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -236,13 +239,14 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithUuid],
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithUuid"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -272,13 +276,14 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithTextRuntimeType],
                 }),
             );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -308,6 +313,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithNullablePropWithInitializer],
                 }),
             );
@@ -315,9 +321,9 @@ describe("GenerateCrudInput", () => {
                 { targetDirectory: __dirname },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithInitializer"),
             );
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -354,6 +360,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithNullablePropWithoutInitializer],
                 }),
             );
@@ -361,9 +368,9 @@ describe("GenerateCrudInput", () => {
                 { targetDirectory: __dirname },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithoutInitializer"),
             );
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);

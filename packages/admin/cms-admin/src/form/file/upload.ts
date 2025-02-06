@@ -1,12 +1,19 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
+import { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type CancelToken } from "axios";
 
-import { GQLUpdateDamFileInput } from "../../graphql.generated";
+import { type GQLUpdateDamFileInput } from "../../graphql.generated";
 
 interface UploadFileData {
-    file: File & Pick<GQLUpdateDamFileInput, "license" | "title" | "altText">;
+    file: File &
+        Pick<GQLUpdateDamFileInput, "license" | "title" | "altText"> & { importSource?: { importSourceType: string; importSourceId: string } };
     scope: Record<string, unknown>;
     folderId?: string;
+    /**
+     * @deprecated Set `file.importSource.importSourceId` instead
+     */
     importSourceId?: string;
+    /**
+     * @deprecated Set `file.importSource.importSourceType` instead
+     */
     importSourceType?: string;
 }
 
@@ -35,9 +42,14 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("scope", JSON.stringify(data.scope));
-    if (data.importSourceId && data.importSourceType) {
+
+    if (data.importSourceId && data.importSourceType && !data.file.importSource) {
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
+    }
+    if (data.file.importSource) {
+        formData.append("importSourceId", data.file.importSource.importSourceId);
+        formData.append("importSourceType", data.file.importSource.importSourceType);
     }
     if (data.file.license) {
         formData.append("license", JSON.stringify(data.file.license));
@@ -66,8 +78,6 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
 interface ReplaceFileByIdData {
     file: File & Pick<GQLUpdateDamFileInput, "license" | "title" | "altText">;
     fileId: string;
-    importSourceId?: string;
-    importSourceType?: string;
 }
 
 export function replaceById<ResponseData>({
@@ -79,10 +89,6 @@ export function replaceById<ResponseData>({
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("fileId", data.fileId);
-    if (data.importSourceId && data.importSourceType) {
-        formData.append("importSourceId", data.importSourceId);
-        formData.append("importSourceType", data.importSourceType);
-    }
     if (data.file.license) {
         formData.append("license", JSON.stringify(data.file.license));
     }

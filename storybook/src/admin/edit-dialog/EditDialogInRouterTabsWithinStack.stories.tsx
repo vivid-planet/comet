@@ -1,8 +1,10 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
@@ -18,13 +20,12 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
-import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
-import { ReactNode, RefObject, useRef } from "react";
+import { IconButton, Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -141,7 +142,7 @@ function Toolbar({ toolbarAction }: ToolbarProps) {
                     />
                 </Typography>
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
@@ -210,12 +211,7 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                 slotProps={{
                                     toolbar: {
                                         toolbarAction: (
-                                            <Button
-                                                startIcon={<Add />}
-                                                onClick={() => editDialogApi.current?.openAddDialog()}
-                                                variant="contained"
-                                                color="primary"
-                                            >
+                                            <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                 <FormattedMessage {...messages.add} />
                                             </Button>
                                         ),
@@ -231,7 +227,7 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                     <StackToolbar>
                                         <ToolbarBackButton />
                                         <ToolbarAutomaticTitleItem />
-                                        <ToolbarFillSpace />
+                                        <FillSpace />
                                         <ToolbarActions>
                                             <SaveBoundarySaveButton />
                                         </ToolbarActions>
@@ -294,12 +290,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                     slotProps={{
                                         toolbar: {
                                             toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
+                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     <FormattedMessage {...messages.add} />
                                                 </Button>
                                             ),
@@ -315,7 +306,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                         <StackToolbar>
                                             <ToolbarBackButton />
                                             <ToolbarAutomaticTitleItem />
-                                            <ToolbarFillSpace />
+                                            <FillSpace />
                                             <ToolbarActions>
                                                 <SaveBoundarySaveButton />
                                             </ToolbarActions>

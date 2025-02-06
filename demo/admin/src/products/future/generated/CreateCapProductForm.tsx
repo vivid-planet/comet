@@ -3,10 +3,10 @@
 import { gql, useApolloClient } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FinalForm,
-    FinalFormCheckbox,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -14,21 +14,21 @@ import {
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
-import { FormApi } from "final-form";
+import { InputAdornment } from "@mui/material";
+import { type GQLProductType } from "@src/graphql.generated";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
+import { type GQLProductCategoriesSelectQuery, type GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import {
-    GQLCreateCapProductFormDetailsFragment,
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
+    type GQLCreateCapProductFormDetailsFragment,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
 } from "./CreateCapProductForm.gql.generated";
 
 const rootBlocks = {
@@ -132,14 +132,12 @@ export function CreateCapProductForm({ type }: FormProps) {
                         }}
                         getOptionLabel={(option) => option.title}
                     />
-                    <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                        {(props) => (
-                            <FormControlLabel
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                control={<FinalFormCheckbox {...props} />}
-                            />
-                        )}
-                    </Field>
+                    <CheckboxField
+                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                        name="inStock"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
                     <Field
                         variant="horizontal"

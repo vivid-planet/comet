@@ -1,7 +1,7 @@
 import { Translate } from "@comet/admin-icons";
-import { IconButton, InputBase, InputBaseProps } from "@mui/material";
+import { IconButton, InputBase, type InputBaseProps } from "@mui/material";
 import { useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";

@@ -1,10 +1,17 @@
-import { IntrospectionQuery } from "graphql";
+import { type IntrospectionQuery } from "graphql";
 
-import { generateFields, GenerateFieldsReturn } from "./generateForm/generateFields";
+import { generateFields, type GenerateFieldsReturn } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
-import { FormConfig, FormFieldConfig, GeneratorReturn, GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "./generator";
+import {
+    type FormConfig,
+    type FormFieldConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    isFormFieldConfig,
+    isFormLayoutConfig,
+} from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
-import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
@@ -186,15 +193,15 @@ export function generateForm(
                     : ``
             }$input: ${gqlType}Input!) {
                 ${createMutationType.name}(${
-                gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
-                    ? `${gqlArgs
-                          .filter((gqlArg) => !gqlArg.isInputArgSubfield)
-                          .map((gqlArg) => {
-                              return `${gqlArg.name}: $${gqlArg.name}`;
-                          })
-                          .join(", ")}, `
-                    : ``
-            }input: $input) {
+                    gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
+                        ? `${gqlArgs
+                              .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                              .map((gqlArg) => {
+                                  return `${gqlArg.name}: $${gqlArg.name}`;
+                              })
+                              .join(", ")}, `
+                        : ``
+                }input: $input) {
                     id
                     updatedAt
                     ...${formFragmentName}
@@ -281,10 +288,10 @@ export function generateForm(
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
         AsyncSelectField,
+        CheckboxField,
         Field,
         filterByFragment,
         FinalForm,
-        FinalFormCheckbox,
         FinalFormInput,
         FinalFormRangeInput,
         FinalFormSelect,
@@ -297,10 +304,9 @@ export function generateForm(
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft, Lock } from "@comet/admin-icons";
-    import { FinalFormDatePicker } from "@comet/admin-date-time";
+    import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField } from "@comet/cms-admin";
-    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
@@ -436,13 +442,13 @@ export function generateForm(
                                   .join(",")} }`
                             : "output"
                     }${
-                              gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
-                                  ? `, ${gqlArgs
-                                        .filter((prop) => !prop.isInputArgSubfield)
-                                        .map((arg) => arg.name)
-                                        .join(",")}`
-                                  : ""
-                          } },
+                        gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
+                            ? `, ${gqlArgs
+                                  .filter((prop) => !prop.isInputArgSubfield)
+                                  .map((arg) => arg.name)
+                                  .join(",")}`
+                            : ""
+                    } },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.${createMutationType.name}.id;

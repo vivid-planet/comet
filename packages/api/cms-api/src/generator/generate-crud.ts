@@ -1,25 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityMetadata, ReferenceType } from "@mikro-orm/core";
+import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
 
-import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
+import { type CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
-import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { generateImportsCode, type Imports } from "./utils/generate-imports-code";
 import { getCrudSearchFieldsFromMetadata } from "./utils/search-fields-from-metadata";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
-import { GeneratedFile } from "./utils/write-generated-files";
+import { type GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const dedicatedResolverArgProps = metadata.props.filter((prop) => {
         if (hasFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
-            if (prop.reference == "m:1") {
+            if (prop.kind == "m:1") {
                 return true;
             } else {
                 console.warn(`${metadata.className} ${prop.name} can't use dedicatedResolverArg as it's not a m:1 relation`);
@@ -74,9 +73,9 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
-                prop.reference === "m:1" ||
-                prop.reference === "1:m" ||
-                prop.reference === "m:n" ||
+                prop.kind === "m:1" ||
+                prop.kind === "1:m" ||
+                prop.kind === "m:n" ||
                 prop.type === "EnumArrayType") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
@@ -95,7 +94,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
-                prop.reference === "m:1" ||
+                prop.kind === "m:1" ||
                 prop.type === "EnumArrayType"),
     );
     const hasSortArg = crudSortProps.length > 0;
@@ -108,9 +107,9 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
 
     const positionGroupPropNames: string[] = hasPositionProp
-        ? generatorOptions.position?.groupByFields ?? [
+        ? (generatorOptions.position?.groupByFields ?? [
               ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupByFields should be used
-          ]
+          ])
         : [];
     const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
 
@@ -244,21 +243,21 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => DateTimeFilter)
                     ${prop.name}?: DateTimeFilter;
                     `;
-                } else if (prop.reference === "m:1") {
+                } else if (prop.kind === "m:1") {
                     return `@Field(() => ManyToOneFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
                     @Type(() => ManyToOneFilter)
                     ${prop.name}?: ManyToOneFilter;
                     `;
-                } else if (prop.reference === "1:m") {
+                } else if (prop.kind === "1:m") {
                     return `@Field(() => OneToManyFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
                     @Type(() => OneToManyFilter)
                     ${prop.name}?: OneToManyFilter;
                     `;
-                } else if (prop.reference === "m:n") {
+                } else if (prop.kind === "m:n") {
                     return `@Field(() => ManyToManyFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -467,20 +466,20 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     const positionGroupType = positionGroupProps.length
         ? `{ ${positionGroupProps
               .map((prop) => {
-                  const notSupportedReferenceTypes = [ReferenceType.ONE_TO_MANY, ReferenceType.MANY_TO_MANY];
-                  if (notSupportedReferenceTypes.includes(prop.reference)) {
+                  const notSupportedReferenceKinds = [ReferenceKind.ONE_TO_MANY, ReferenceKind.MANY_TO_MANY];
+                  if (notSupportedReferenceKinds.includes(prop.kind)) {
                       throw new Error(`Not supported reference-type for position-group. ${prop.name}`);
                   }
                   return `${prop.name}${prop.nullable ? `?` : ``}: ${
-                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference) ? "string" : prop.type
+                      [ReferenceKind.MANY_TO_ONE, ReferenceKind.ONE_TO_ONE].includes(prop.kind) ? "string" : prop.type
                   }`;
               })
               .join(",")} }`
         : false;
 
-    const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
+    const serviceOut = `import { FilterQuery } from "@mikro-orm/postgresql";
     import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
+    import { EntityRepository, EntityManager, raw } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
 
     ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
@@ -523,7 +522,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                         },`
                             : `{ position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },`
                     }
-                        { position: this.entityManager.raw("position + 1") },
+                        { position: raw("position + 1") },
                     );
                 }
 
@@ -542,7 +541,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                         },`
                             : `{ position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },`
                     }
-                        { position: this.entityManager.raw("position - 1") },
+                        { position: raw("position - 1") },
                     );
                 }
 
@@ -586,10 +585,10 @@ function generateInputHandling(
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
-    const relationManyToOneProps = props.filter((prop) => prop.reference === "m:1");
-    const relationOneToManyProps = props.filter((prop) => prop.reference === "1:m");
-    const relationManyToManyProps = props.filter((prop) => prop.reference === "m:n");
-    const relationOneToOneProps = props.filter((prop) => prop.reference === "1:1");
+    const relationManyToOneProps = props.filter((prop) => prop.kind === "m:1");
+    const relationOneToManyProps = props.filter((prop) => prop.kind === "1:m");
+    const relationManyToManyProps = props.filter((prop) => prop.kind === "m:n");
+    const relationOneToOneProps = props.filter((prop) => prop.kind === "1:1");
 
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
@@ -699,7 +698,7 @@ ${inputRelationToManyProps
                     assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
 
                     excludeFields: prop.targetMeta.props
-                        .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                        .filter((prop) => prop.kind == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
                         .map((prop) => prop.name),
                 },
                 prop.targetMeta,
@@ -733,17 +732,17 @@ ${inputRelationOneToOneProps
         (prop) => `
             ${options.mode != "create" || prop.nullable ? `if (${prop.name}Input) {` : "{"}
                 const ${prop.singularName} = ${
-            (options.mode == "update" || options.mode == "updateNested") && prop.nullable
-                ? `${instanceNameSingular}.${prop.name} ? await ${instanceNameSingular}.${prop.name}.load() : new ${prop.type}();`
-                : `new ${prop.type}();`
-        }
+                    (options.mode == "update" || options.mode == "updateNested") && prop.nullable
+                        ? `${instanceNameSingular}.${prop.name} ? await ${instanceNameSingular}.${prop.name}.loadOrFail() : new ${prop.type}();`
+                        : `new ${prop.type}();`
+                }
                 ${innerGenerateInputHandling(
                     {
                         mode: "updateNested",
                         inputName: `${prop.name}Input`,
                         assignEntityCode: `this.${prop.repositoryName}.assign(${prop.singularName}, {`,
                         excludeFields: prop.targetMeta.props
-                            .filter((prop) => prop.reference == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                            .filter((prop) => prop.kind == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
                             .map((prop) => prop.name),
                     },
                     prop.targetMeta,
@@ -817,10 +816,10 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 function generateRelationsFieldResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { instanceNameSingular } = buildNameVariants(metadata);
 
-    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
-    const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
-    const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
-    const relationOneToOneProps = metadata.props.filter((prop) => prop.reference === "1:1");
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.kind === "m:1");
+    const relationOneToManyProps = metadata.props.filter((prop) => prop.kind === "1:m");
+    const relationManyToManyProps = metadata.props.filter((prop) => prop.kind === "m:n");
+    const relationOneToOneProps = metadata.props.filter((prop) => prop.kind === "1:1");
     const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
@@ -868,7 +867,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
             (prop) => `
         @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
-            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.loadOrFail();
         }    
     `,
         )
@@ -901,7 +900,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
             (prop) => `
         @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
-            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.loadOrFail();
         }
     `,
         )
@@ -947,10 +946,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         dedicatedResolverArgProps,
     } = buildOptions(metadata, generatorOptions);
 
-    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
-    const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
-    const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
-    const relationOneToOneProps = metadata.props.filter((prop) => prop.reference === "1:1");
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.kind === "m:1");
+    const relationOneToManyProps = metadata.props.filter((prop) => prop.kind === "1:m");
+    const relationManyToManyProps = metadata.props.filter((prop) => prop.kind === "m:n");
+    const relationOneToOneProps = metadata.props.filter((prop) => prop.kind === "1:1");
     const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
@@ -1025,7 +1024,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
+    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { GraphQLResolveInfo } from "graphql";
 
@@ -1083,10 +1082,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() {${Object.entries({
                 scope: !!scopeProp,
-                ...dedicatedResolverArgProps.reduce((acc, dedicatedResolverArgProp) => {
-                    acc[dedicatedResolverArgProp.name] = true;
-                    return acc;
-                }, {} as Record<string, boolean>),
+                ...dedicatedResolverArgProps.reduce(
+                    (acc, dedicatedResolverArgProp) => {
+                        acc[dedicatedResolverArgProp.name] = true;
+                        return acc;
+                    },
+                    {} as Record<string, boolean>,
+                ),
                 status: !!hasStatusFilter,
                 search: !!hasSearchArg,
                 filter: !!hasFilterArg,
@@ -1129,8 +1131,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
             const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-                      hasOutputRelations ? `, populate` : ""
-                  }};
+                hasOutputRelations ? `, populate` : ""
+            }};
 
             ${
                 hasSortArg
@@ -1163,47 +1165,45 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             .join("")}
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${dedicatedResolverArgProps
-                      .map((dedicatedResolverArgProp) => {
-                          return `${generateIdArg(dedicatedResolverArgProp.name, metadata)}, `;
-                      })
-                      .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
+                .map((dedicatedResolverArgProp) => {
+                    return `${generateIdArg(dedicatedResolverArgProp.name, metadata)}, `;
+                })
+                .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
             ${
                 // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
                     ? `
             const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
-                          positionGroupProps.length
-                              ? `{ ${positionGroupProps
-                                    .map((prop) =>
-                                        prop.name === "scope"
-                                            ? `scope`
-                                            : dedicatedResolverArgProps.find(
-                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
-                                              ) !== undefined
-                                            ? prop.name
-                                            : `${prop.name}: input.${prop.name}`,
-                                    )
-                                    .join(",")} }`
-                              : ``
-                      });
+                positionGroupProps.length
+                    ? `{ ${positionGroupProps
+                          .map((prop) =>
+                              prop.name === "scope"
+                                  ? `scope`
+                                  : dedicatedResolverArgProps.find((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name) !==
+                                      undefined
+                                    ? prop.name
+                                    : `${prop.name}: input.${prop.name}`,
+                          )
+                          .join(",")} }`
+                    : ``
+            });
             let position = input.position;
             if (position !== undefined && position < lastPosition + 1) {
                 await this.${instanceNamePlural}Service.incrementPositions(${
-                          positionGroupProps.length
-                              ? `{ ${positionGroupProps
-                                    .map((prop) =>
-                                        prop.name === "scope"
-                                            ? `scope`
-                                            : dedicatedResolverArgProps.find(
-                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
-                                              ) !== undefined
-                                            ? prop.name
-                                            : `${prop.name}: input.${prop.name}`,
-                                    )
-                                    .join(",")} }, `
-                              : ``
-                      }position);
+                    positionGroupProps.length
+                        ? `{ ${positionGroupProps
+                              .map((prop) =>
+                                  prop.name === "scope"
+                                      ? `scope`
+                                      : dedicatedResolverArgProps.find((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name) !==
+                                          undefined
+                                        ? prop.name
+                                        : `${prop.name}: input.${prop.name}`,
+                              )
+                              .join(",")} }, `
+                        : ``
+                }position);
             } else {
                 position = lastPosition + 1;
             }`
@@ -1236,52 +1236,52 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     ? `
             if (input.position !== undefined) {
                 const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
-                          positionGroupProps.length
-                              ? `{ ${positionGroupProps
-                                    .map(
-                                        (prop) =>
-                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
-                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
-                                                    ? `${prop.nullable ? `?` : ``}.id`
-                                                    : ``
-                                            }`,
-                                    )
-                                    .join(",")} }`
-                              : ``
-                      });
+                    positionGroupProps.length
+                        ? `{ ${positionGroupProps
+                              .map(
+                                  (prop) =>
+                                      `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                          [ReferenceKind.MANY_TO_ONE, ReferenceKind.ONE_TO_ONE].includes(prop.kind)
+                                              ? `${prop.nullable ? `?` : ``}.id`
+                                              : ``
+                                      }`,
+                              )
+                              .join(",")} }`
+                        : ``
+                });
                 if (input.position > lastPosition + 1) {
                     input.position = lastPosition + 1;
                 }
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${
-                          positionGroupProps.length
-                              ? `{ ${positionGroupProps
-                                    .map(
-                                        (prop) =>
-                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
-                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
-                                                    ? `${prop.nullable ? `?` : ``}.id`
-                                                    : ``
-                                            }`,
-                                    )
-                                    .join(",")} },`
-                              : ``
-                      }${instanceNameSingular}.position, input.position);
+                        positionGroupProps.length
+                            ? `{ ${positionGroupProps
+                                  .map(
+                                      (prop) =>
+                                          `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                              [ReferenceKind.MANY_TO_ONE, ReferenceKind.ONE_TO_ONE].includes(prop.kind)
+                                                  ? `${prop.nullable ? `?` : ``}.id`
+                                                  : ``
+                                          }`,
+                                  )
+                                  .join(",")} },`
+                            : ``
+                    }${instanceNameSingular}.position, input.position);
                 } else if (${instanceNameSingular}.position > input.position) {
                     await this.${instanceNamePlural}Service.incrementPositions(${
-                          positionGroupProps.length
-                              ? `{ ${positionGroupProps
-                                    .map(
-                                        (prop) =>
-                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
-                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
-                                                    ? `${prop.nullable ? `?` : ``}.id`
-                                                    : ``
-                                            }`,
-                                    )
-                                    .join(",")} },`
-                              : ``
-                      }input.position, ${instanceNameSingular}.position);
+                        positionGroupProps.length
+                            ? `{ ${positionGroupProps
+                                  .map(
+                                      (prop) =>
+                                          `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                              [ReferenceKind.MANY_TO_ONE, ReferenceKind.ONE_TO_ONE].includes(prop.kind)
+                                                  ? `${prop.nullable ? `?` : ``}.id`
+                                                  : ``
+                                          }`,
+                                  )
+                                  .join(",")} },`
+                            : ``
+                    }input.position, ${instanceNameSingular}.position);
                 }
             }`
                     : ""
@@ -1305,23 +1305,23 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             this.entityManager.remove(${instanceNameSingular});${
-                      hasPositionProp
-                          ? `await this.${instanceNamePlural}Service.decrementPositions(${
-                                positionGroupProps.length
-                                    ? `{ ${positionGroupProps
-                                          .map(
-                                              (prop) =>
-                                                  `${prop.name}: ${instanceNameSingular}.${prop.name}${
-                                                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
-                                                          ? `${prop.nullable ? `?` : ``}.id`
-                                                          : ``
-                                                  }`,
-                                          )
-                                          .join(",")} },`
-                                    : ``
-                            }${instanceNameSingular}.position);`
-                          : ""
-                  }
+                hasPositionProp
+                    ? `await this.${instanceNamePlural}Service.decrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceKind.MANY_TO_ONE, ReferenceKind.ONE_TO_ONE].includes(prop.kind)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
+                              : ``
+                      }${instanceNameSingular}.position);`
+                    : ""
+            }
             await this.entityManager.flush();
             return true;
         }
@@ -1335,7 +1335,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     return resolverOut;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
     const generatorOptions = {
         ...generatorOptionsParam,
@@ -1391,7 +1390,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
 
         metadata.props
             .filter((prop) => {
-                if (prop.reference === "1:m" && prop.orphanRemoval) {
+                if (prop.kind === "1:m" && prop.orphanRemoval) {
                     if (!prop.targetMeta) throw new Error(`Target metadata not set`);
                     const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
                     if (!hasOwnCrudGenerator) {

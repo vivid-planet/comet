@@ -1,7 +1,7 @@
 import { UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
-import { createJwtAuthService, JwtAuthServiceOptions } from "./jwt.auth-service";
+import { createJwtAuthService, type JwtAuthServiceOptions } from "./jwt.auth-service";
 
 describe("createJwtAuthService", () => {
     const instantianteService = (options: JwtAuthServiceOptions) => new (createJwtAuthService(options))(new JwtService());

@@ -1,9 +1,9 @@
-import { FieldValidator } from "final-form";
-import { ComponentType, createElement, ReactNode, useRef } from "react";
-import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
+import { type FieldValidator } from "final-form";
+import { type ComponentType, createElement, type ReactNode, useRef } from "react";
+import { Field as FinalFormField, type FieldMetaState, type FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { FieldContainer, FieldContainerProps } from "./FieldContainer";
+import { FieldContainer, type FieldContainerProps } from "./FieldContainer";
 import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => {
@@ -111,7 +111,6 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                     subscription={{ values: true }}
                     onChange={async ({ values }) => {
                         if (!setFieldData) {
-                            // eslint-disable-next-line no-console
                             console.warn(
                                 `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
                             );

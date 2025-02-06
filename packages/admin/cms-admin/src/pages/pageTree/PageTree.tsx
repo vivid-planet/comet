@@ -1,29 +1,39 @@
-import { ObservableQuery, useApolloClient } from "@apollo/client";
-import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { type ObservableQuery, useApolloClient } from "@apollo/client";
+import { type IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
-import { Dispatch, forwardRef, ForwardRefRenderFunction, SetStateAction, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import {
+    type Dispatch,
+    forwardRef,
+    type ForwardRefRenderFunction,
+    type SetStateAction,
+    useCallback,
+    useEffect,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+} from "react";
 import { FormattedMessage } from "react-intl";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { Align, FixedSizeList as List } from "react-window";
+import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
+import { type Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { GQLPagesQuery, GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
+import { type GQLPagesQuery, type GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
 import {
-    GQLMovePageTreeNodesByPosMutation,
-    GQLPagesCacheQuery,
-    GQLPagesCacheQueryVariables,
-    GQLPageSlugPathFragment,
-    GQLResetSlugMutation,
-    GQLResetSlugMutationVariables,
+    type GQLMovePageTreeNodesByPosMutation,
+    type GQLPagesCacheQuery,
+    type GQLPagesCacheQueryVariables,
+    type GQLPageSlugPathFragment,
+    type GQLResetSlugMutation,
+    type GQLResetSlugMutationVariables,
 } from "./PageTree.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
-import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
-import PageTreeService, { DropInfo } from "./PageTreeService";
+import PageTreeRow, { type DropTarget, type PageTreeDragObject } from "./PageTreeRow";
+import { type DropInfo, PageTreeService } from "./PageTreeService";
 import { useDndWindowScroll } from "./useDndWindowScroll/useDndWindowScroll";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 
 interface PageTreeProps {
     pages: PageTreePage[];
@@ -319,7 +329,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
             <Root>
                 <Table>
                     <AutoSizer>
-                        {({ height, width }) => {
+                        {({ height, width }: Size) => {
                             return (
                                 // @TODO: adjust itemSize for smaller screens
                                 <List

@@ -1,13 +1,13 @@
 import {
-    IntrospectionEnumType,
-    IntrospectionInputObjectType,
-    IntrospectionInputValue,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionInputObjectType,
+    type IntrospectionInputValue,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 
-import { CrudGeneratorConfig } from "./types";
+import { type CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -249,11 +249,11 @@ export async function writeCrudGrid(
     
     const ${instanceNamePlural}Query = gql\`
         query ${classNamePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${entityName}Sort!]` : ""}${
-        hasSearch ? `, $search: String` : ""
-    }${hasFilter ? `, $filter: ${entityName}Filter` : ""}${hasScope ? `, $scope: ${entityName}ContentScopeInput!` : ""}) {
+            hasSearch ? `, $search: String` : ""
+        }${hasFilter ? `, $filter: ${entityName}Filter` : ""}${hasScope ? `, $scope: ${entityName}ContentScopeInput!` : ""}) {
             ${gridQuery}(offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
-        hasFilter ? `, filter: $filter` : ""
-    }${hasScope ? `, scope: $scope` : ""}) {
+                hasFilter ? `, filter: $filter` : ""
+            }${hasScope ? `, scope: $scope` : ""}) {
                 nodes {
                     ...${classNamePlural}List
                 }

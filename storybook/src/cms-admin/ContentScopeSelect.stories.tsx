@@ -1,8 +1,8 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { Domain, Language } from "@comet/admin-icons";
 import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
-import { Meta } from "@storybook/react";
+import { type Meta } from "@storybook/react";
 import { useState } from "react";
 
 export default {
@@ -13,7 +13,7 @@ export default {
             <AppHeader position="relative" headerHeight={60}>
                 <AppHeaderMenuButton />
                 <CometLogo />
-                <AppHeaderFillSpace />
+                <FillSpace />
                 {story()}
             </AppHeader>
         ),

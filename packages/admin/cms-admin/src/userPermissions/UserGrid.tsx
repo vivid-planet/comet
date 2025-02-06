@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
-    GridColDef,
+    FillSpace,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useDataGridRemote,
@@ -16,15 +16,15 @@ import {
 import { Edit, ImpersonateUser } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
-import { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
+import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser } from "./hooks/currentUser";
-import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
+import { type GQLUserForGridFragment, type GQLUserGridQuery, type GQLUserGridQueryVariables } from "./UserGrid.generated";
 import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
@@ -39,7 +39,7 @@ function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGr
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
@@ -182,8 +182,12 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                 <IconButton
                                     disabled={isCurrentUser && !isImpersonated}
                                     onClick={() => {
-                                        !isCurrentUser && startImpersonation(params.row.id.toString());
-                                        isCurrentUser && isImpersonated && stopImpersonation();
+                                        if (!isCurrentUser) {
+                                            startImpersonation(params.row.id.toString());
+                                        }
+                                        if (isCurrentUser && isImpersonated) {
+                                            stopImpersonation();
+                                        }
                                     }}
                                 >
                                     <ImpersonateUser />

@@ -1,10 +1,10 @@
-import { Field, FormSection } from "@comet/admin";
+import { Button, Field, FormSection } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
-import { Button, Card, CardContent, Grid } from "@mui/material";
+import { Card, CardContent, Grid } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
 
-import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions.stories";
+import { type ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions.stories";
 
 const { RteField, RteReadOnly } = createFinalFormRte<ContentFormat>({
     rteApiOptions: makeApiOptions, // see ./RteAllOptions for details
@@ -34,9 +34,7 @@ export const FieldAllOptions = {
                                 render={({ handleSubmit }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Field name="rteContent" label="Rich Text" component={RteField} fullWidth />
-                                        <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
-                                            Submit
-                                        </Button>
+                                        <Button type="submit">Submit</Button>
                                     </form>
                                 )}
                             />

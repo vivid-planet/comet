@@ -25,7 +25,6 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
             if (jwksOptions) this.jwksClient = new JwksClient(jwksOptions);
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async authenticateUser<T extends JwtPayload>(request: Request) {
             const token = this.extractTokenFromRequest(request);
             if (!token) return;

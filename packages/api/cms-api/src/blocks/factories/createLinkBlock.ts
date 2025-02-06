@@ -10,13 +10,12 @@ import {
     BaseOneOfBlockItemInput,
     createOneOfBlock,
     CreateOneOfBlockOptions,
-    OneOfBlock,
 } from "./createOneOfBlock";
 
 function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterface, BlockInputInterface>>>(
     { supportedBlocks, allowEmpty = false }: CreateOneOfBlockOptions<BlockMap>,
     nameOrOptions: BlockFactoryNameOrOptions = "Link",
-): OneOfBlock<BlockMap> {
+) {
     class LinkBlockItemData extends BaseOneOfBlockItemData({ supportedBlocks }) {}
 
     class LinkBlockItemInput extends BaseOneOfBlockItemInput({ supportedBlocks, OneOfBlockItemData: LinkBlockItemData }) {}

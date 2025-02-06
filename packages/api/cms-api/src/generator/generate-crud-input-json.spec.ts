@@ -1,14 +1,13 @@
-import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { formatSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithJsonLiteralArray extends BaseEntity<TestEntityWithJsonLiteralArray, "id"> {
+export class TestEntityWithJsonLiteralArray extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -25,7 +24,7 @@ export class NestedObject {
 }
 
 @Entity()
-export class TestEntityWithJsonObject extends BaseEntity<TestEntityWithJsonObject, "id"> {
+export class TestEntityWithJsonObject extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -37,7 +36,7 @@ export class TestEntityWithJsonObject extends BaseEntity<TestEntityWithJsonObjec
 }
 
 @Entity()
-export class TestEntityWithRecord extends BaseEntity<TestEntityWithRecord, "id"> {
+export class TestEntityWithRecord extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -51,14 +50,15 @@ describe("GenerateCrudInputJson", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithJsonLiteralArray],
                 }),
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -91,14 +91,15 @@ describe("GenerateCrudInputJson", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithJsonObject],
                 }),
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonObject"));
-            const lintedOutput = await lintSource(out[0].content);
-            //console.log(lintedOutput);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            //console.log(formattedOut);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);
@@ -130,13 +131,14 @@ describe("GenerateCrudInputJson", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithRecord],
                 }),
             );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRecord"));
-            const lintedOutput = await lintSource(out[0].content);
-            const source = parseSource(lintedOutput);
+            const formattedOut = await formatSource(out[0].content);
+            const source = parseSource(formattedOut);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(2);

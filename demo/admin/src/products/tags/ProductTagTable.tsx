@@ -1,34 +1,35 @@
 import { useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
+    FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
     Toolbar,
     ToolbarAutomaticTitleItem,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductTagMutation,
-    GQLCreateProductTagMutationVariables,
-    GQLDeleteProductTagMutation,
-    GQLDeleteProductTagMutationVariables,
-    GQLProductsTagsListFragment,
-    GQLProductTagsListQuery,
-    GQLProductTagsListQueryVariables,
+    type GQLCreateProductTagMutation,
+    type GQLCreateProductTagMutationVariables,
+    type GQLDeleteProductTagMutation,
+    type GQLDeleteProductTagMutationVariables,
+    type GQLProductsTagsListFragment,
+    type GQLProductTagsListQuery,
+    type GQLProductTagsListQueryVariables,
 } from "./ProductTagTable.generated";
 
 function ProductTagsTableToolbar() {
@@ -38,12 +39,12 @@ function ProductTagsTableToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newTag" defaultMessage="New Tag" />
                 </Button>
             </ToolbarItem>

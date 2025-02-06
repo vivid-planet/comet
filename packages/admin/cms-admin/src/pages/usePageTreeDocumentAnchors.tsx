@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 
 import { useCmsBlockContext } from "../blocks/useCmsBlockContext";
-import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
+import { type GQLPageQuery, type GQLPageQueryVariables } from "../documents/types";
 import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
 
 // Noop query to prevent useQuery from crashing, will never be queries

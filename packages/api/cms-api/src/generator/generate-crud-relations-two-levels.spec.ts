@@ -1,13 +1,24 @@
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import {
+    BaseEntity,
+    Collection,
+    defineConfig,
+    Entity,
+    ManyToOne,
+    MikroORM,
+    OneToMany,
+    OneToOne,
+    PrimaryKey,
+    Property,
+    Ref,
+} from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class ProductVariant extends BaseEntity<ProductVariant, "id"> {
+class ProductVariant extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -19,7 +30,7 @@ class ProductVariant extends BaseEntity<ProductVariant, "id"> {
 }
 
 @Entity()
-class ProductData extends BaseEntity<ProductData, "id"> {
+class ProductData extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -31,7 +42,7 @@ class ProductData extends BaseEntity<ProductData, "id"> {
 }
 
 @Entity()
-class Product extends BaseEntity<Product, "id"> {
+class Product extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -48,15 +59,16 @@ describe("generate-crud relations two levels", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [Product, ProductData, ProductVariant],
             }),
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "product.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "product.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -81,7 +93,7 @@ describe("generate-crud relations two levels", () => {
         }
 
         {
-            const file = lintedOut.find((file) => file.name === "dto/product.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/product.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -106,7 +118,7 @@ describe("generate-crud relations two levels", () => {
         }
 
         {
-            const file = lintedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -121,7 +133,7 @@ describe("generate-crud relations two levels", () => {
         }
 
         {
-            const file = lintedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/product-data-nested-product-variant.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 

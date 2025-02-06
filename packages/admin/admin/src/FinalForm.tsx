@@ -1,13 +1,23 @@
 import { getApolloContext } from "@apollo/client";
-import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+import {
+    type Config,
+    type Decorator,
+    FORM_ERROR,
+    type FormApi,
+    type FormSubscription,
+    type MutableState,
+    type Mutator,
+    type SubmissionErrors,
+    type ValidationErrors,
+} from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
-import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
+import { type MutableRefObject, type PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
+import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { renderComponent } from "./finalFormRenderComponent";
-import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
+import { type FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
+import { renderFinalFormChildren } from "./renderFinalFormChildren";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
 import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
@@ -217,7 +227,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
                     <form onSubmit={submit}>
                         <div>
-                            {renderComponent<FormValues, InitialFormValues>(
+                            {renderFinalFormChildren<FormValues, InitialFormValues>(
                                 {
                                     children: props.children,
                                     component: props.component,

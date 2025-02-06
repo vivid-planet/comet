@@ -1,11 +1,11 @@
-import { EntityMetadata } from "@mikro-orm/core";
+import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildOptions } from "./generate-crud";
 import { buildNameVariants } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
-import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { generateImportsCode, type Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
     findBlockName,
@@ -15,7 +15,7 @@ import {
     findValidatorImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
-import { GeneratedFile } from "./utils/write-generated-files";
+import { type GeneratedFile } from "./utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
@@ -192,7 +192,7 @@ export async function generateCrudInput(
             );
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
-        } else if (prop.reference == "m:1") {
+        } else if (prop.kind == "m:1") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined);
             const fieldOptions = tsCodeRecordToString({
@@ -219,14 +219,14 @@ export async function generateCrudInput(
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
-        } else if (prop.reference == "1:m") {
+        } else if (prop.kind == "1:m") {
             if (prop.orphanRemoval) {
                 //if orphanRemoval is enabled, we need to generate a nested input type
                 decorators.length = 0;
                 if (!prop.targetMeta) throw new Error("No targetMeta");
                 const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
                 {
-                    const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
+                    const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "m:1" && p.targetMeta == metadata).map((p) => p.name);
 
                     const { fileNameSingular } = buildNameVariants(metadata);
                     const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
@@ -273,7 +273,7 @@ export async function generateCrudInput(
                     console.warn(`${prop.name}: Unsupported referenced type`);
                 }
             }
-        } else if (prop.reference == "m:n") {
+        } else if (prop.kind == "m:n") {
             decorators.length = 0;
             decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable" : "defaultValue: []"}})`);
             decorators.push(`@IsArray()`);
@@ -295,11 +295,11 @@ export async function generateCrudInput(
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
-        } else if (prop.reference == "1:1") {
+        } else if (prop.kind == "1:1") {
             if (!prop.targetMeta) throw new Error("No targetMeta");
             const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
             {
-                const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
+                const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "1:1" && p.targetMeta == metadata).map((p) => p.name);
                 const { fileNameSingular } = buildNameVariants(metadata);
                 const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
                 const fileName = `dto/${fileNameSingular}-nested-${targetFileNameSingular}.input.ts`;
@@ -334,8 +334,8 @@ export async function generateCrudInput(
                     prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined)
                         ? "null"
                         : initializer == "[]"
-                        ? "[]"
-                        : undefined;
+                          ? "[]"
+                          : undefined;
                 const fieldOptions = tsCodeRecordToString({
                     nullable: prop.nullable ? "true" : undefined,
                     defaultValue: defaultValue,

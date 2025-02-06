@@ -1,4 +1,4 @@
-import { GridColTypeDef } from "@mui/x-data-grid";
+import { type GridColTypeDef } from "@mui/x-data-grid";
 import { FormattedDate } from "react-intl";
 
 export const dataGridDateColumn: GridColTypeDef = {

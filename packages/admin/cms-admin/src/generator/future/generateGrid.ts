@@ -1,34 +1,34 @@
-import { GridColDef } from "@comet/admin";
+import { type GridColDef } from "@comet/admin";
 import {
-    IntrospectionEnumType,
-    IntrospectionInputObjectType,
-    IntrospectionInputValue,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionInputObjectType,
+    type IntrospectionInputValue,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 import { plural } from "pluralize";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
+import { getCombinationColumnRenderCell, type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import {
-    ActionsGridColumnConfig,
-    GeneratorReturn,
-    GQLDocumentConfigMap,
-    GridColumnConfig,
-    GridConfig,
-    StaticSelectLabelCellContent,
+    type ActionsGridColumnConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    type GridColumnConfig,
+    type GridConfig,
+    type StaticSelectLabelCellContent,
 } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -506,7 +506,7 @@ export function generateGrid(
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
-        config.initialSort || config.queryParamsPrefix
+        config.initialSort || config.queryParamsPrefix || config.initialFilter
             ? `{${
                   config.initialSort
                       ? ` initialSort: [${config.initialSort
@@ -516,12 +516,27 @@ export function generateGrid(
                             .join(",\n")} ], `
                       : ""
               }
+              ${
+                  config.initialFilter
+                      ? `initialFilter:{ ${
+                            config.initialFilter.linkOperator
+                                ? `linkOperator: GridLinkOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
+                                : ""
+                        }
+                      items: [${config.initialFilter.items
+                          .map((item) => {
+                              return `{ field: "${item.field}", operator: "${item.operator}", value: "${item.value}" }`;
+                          })
+                          .join(",\n")} ],},`
+                      : ""
+              }
               ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
               }`
             : "";
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
+        Button,
         CrudContextMenu,
         CrudMoreActionsMenu,
         DataGridToolbar,
@@ -548,8 +563,8 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -578,13 +593,13 @@ export function generateGrid(
 
     const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid(${[
-        ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-        ...[`$offset: Int!`, `$limit: Int!`],
-        ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
-        ...(hasSearch ? [`$search: String`] : []),
-        ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
-        ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-    ].join(", ")}) {
+            ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
+            ...[`$offset: Int!`, `$limit: Int!`],
+            ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
+            ...(hasSearch ? [`$search: String`] : []),
+            ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
+            ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
+        ].join(", ")}) {
     ${gridQuery}(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
         ...[`offset: $offset`, `limit: $limit`],
@@ -617,19 +632,15 @@ export function generateGrid(
         allowCopyPaste
             ? `const create${gqlType}Mutation = gql\`
         mutation Create${gqlType}(${[
-                  ...gqlArgs
-                      .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                      .map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-                  ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-                  ...[`$input: ${gqlType}Input!`],
-              ].join(", ")}) {
+            ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
+            ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
+            ...[`$input: ${gqlType}Input!`],
+        ].join(", ")}) {
             create${gqlType}(${[
-                  gqlArgs
-                      .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                      .map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-                  ...(hasScope ? [`scope: $scope`] : []),
-                  ...[`input: $input`],
-              ].join(", ")}) {
+                gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
+                ...(hasScope ? [`scope: $scope`] : []),
+                ...[`input: $input`],
+            ].join(", ")}) {
                 id
             }
         }
@@ -648,6 +659,8 @@ export function generateGrid(
                   instanceGqlType,
                   gqlType,
                   excelExport: config.excelExport,
+                  newEntryText: config.newEntryText,
+                  fragmentName,
               })
             : ""
     }
@@ -691,16 +704,15 @@ export function generateGrid(
                             ? `() => (
                                     <>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
-                                  column.name
-                              }",   defaultMessage: "${
-                                  column.headerName || camelCaseToHumanReadable(column.name)
-                              }"})} columnWidth= {${tooltipColumnWidth}}
+                                            column.name
+                                        }",   defaultMessage: "${
+                                            column.headerName || camelCaseToHumanReadable(column.name)
+                                        }"})} columnWidth= {${tooltipColumnWidth}}
                               />
                                         <Tooltip
-                                            trigger="hover"
                                             title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
-                                  column.headerInfoTooltip
-                              }" />}
+                                                column.headerInfoTooltip
+                                            }" />}
                                         >
                                             <Info sx={{ marginLeft: 1 }} />
                                         </Tooltip>
@@ -760,17 +772,17 @@ export function generateGrid(
                             return (
                                 <>
                                 ${actionsColumnComponent?.name ? `<${actionsColumnComponent.name} {...params} />` : ""}${
-                                  allowEditing
-                                      ? forwardRowAction
-                                          ? `{rowAction && rowAction(params)}`
-                                          : `
+                                    allowEditing
+                                        ? forwardRowAction
+                                            ? `{rowAction && rowAction(params)}`
+                                            : `
                                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                                             <EditIcon />
                                         </IconButton>`
-                                      : ""
-                              }${
-                                  showCrudContextMenuInActionsColumn
-                                      ? `
+                                        : ""
+                                }${
+                                    showCrudContextMenuInActionsColumn
+                                        ? `
                                         <CrudContextMenu
                                             ${
                                                 allowCopyPaste
@@ -826,8 +838,8 @@ export function generateGrid(
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
                                         />
                                     `
-                                      : ""
-                              }
+                                        : ""
+                                }
                                 </>
                             );
                                 }`,
@@ -853,10 +865,10 @@ export function generateGrid(
                         ? hasFilter && hasFilterProp
                             ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]
                             : hasFilter
-                            ? ["filter: gqlFilter"]
-                            : hasFilterProp
-                            ? ["filter"]
-                            : []
+                              ? ["filter: gqlFilter"]
+                              : hasFilterProp
+                                ? ["filter"]
+                                : []
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[

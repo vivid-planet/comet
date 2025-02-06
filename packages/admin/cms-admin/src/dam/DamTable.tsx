@@ -1,22 +1,22 @@
 import { useQuery } from "@apollo/client";
 import {
     EditDialogApiContext,
-    IFilterApi,
-    ISortInformation,
+    FillSpace,
+    type IFilterApi,
+    type ISortInformation,
     SortDirection,
     Stack,
     StackPage,
     StackSwitch,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
     useStackApi,
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
@@ -26,12 +26,12 @@ import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
 import FolderDataGrid, {
     damFolderQuery,
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
+    type GQLDamFileTableFragment,
+    type GQLDamFolderQuery,
+    type GQLDamFolderQueryVariables,
+    type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
@@ -78,7 +78,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <ToolbarItem>
                                 <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                             </ToolbarItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 {props.additionalToolbarItems}
                                 <DamMoreActions

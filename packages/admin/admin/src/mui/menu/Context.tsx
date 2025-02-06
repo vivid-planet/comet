@@ -1,4 +1,4 @@
-import { ComponentType, createContext, Dispatch, FunctionComponent, SetStateAction } from "react";
+import { type ComponentType, createContext, type Dispatch, type FunctionComponent, type SetStateAction } from "react";
 
 export interface IMenuContext {
     open: boolean;

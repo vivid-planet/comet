@@ -44,7 +44,7 @@ export class CometAuthGuard implements CanActivate {
             try {
                 user = await userService.getUser(userId); // TODO Cache this call
             } catch (e) {
-                throw new UnauthorizedException(`Could not get user from UserService: ${userId}`);
+                throw new UnauthorizedException(`Could not get user from UserService: ${userId} - ${(e as Error).message}`);
             }
         }
 

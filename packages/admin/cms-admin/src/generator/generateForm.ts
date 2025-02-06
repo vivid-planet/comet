@@ -1,13 +1,13 @@
 import {
-    IntrospectionEnumType,
-    IntrospectionField,
-    IntrospectionInputObjectType,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionField,
+    type IntrospectionInputObjectType,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 
-import { CrudGeneratorConfig } from "./types";
+import { type CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -106,6 +106,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     const out = `
     import { useApolloClient, useQuery } from "@apollo/client";
     import {
+        CheckboxField,
         DateTimeField,
         Field,
         filterByFragment,
@@ -125,7 +126,6 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         useFormApiRef,
         useStackApi,
         useStackSwitchApi,
-        FinalFormCheckbox,
     } from "@comet/admin";
     import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
@@ -280,8 +280,8 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarItem>
                             <ToolbarTitleItem>
                                 <FormattedMessage id="${instanceNamePlural}.${classNameSingular}" defaultMessage="${camelCaseToHumanReadable(
-        classNameSingular,
-    )}" />
+                                    classNameSingular,
+                                )}" />
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
@@ -337,14 +337,12 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             }
         </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "Boolean") {
-        return `<Field name="${field.name}" label="" type="checkbox" variant="horizontal" fullWidth>
-                {(props) => (
-                    <FormControlLabel
+        return `<CheckboxField
                         label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}
-                        control={<FinalFormCheckbox {...props} />}
-                    />
-                )}
-            </Field>`;
+                        name="${field.name}"
+                        fullWidth
+                        variant="horizontal"
+                    />`;
     } else if (type.kind === "SCALAR" && type.name === "String") {
         return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} variant="horizontal" fullWidth name="${
             field.name

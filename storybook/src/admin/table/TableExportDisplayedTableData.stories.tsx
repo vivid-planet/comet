@@ -1,11 +1,11 @@
 import {
     ExcelExportButton,
-    IRow,
+    FillSpace,
+    type IRow,
     MainContent,
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
 } from "@comet/admin";
@@ -45,7 +45,7 @@ export const ExportDisplayedTableData = () => {
                 <ToolbarItem>
                     <Typography variant="h3">Export Displayed Table Data</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <ExcelExportButton exportApi={exportApi} />
                 </ToolbarActions>

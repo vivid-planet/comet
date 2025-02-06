@@ -3,22 +3,22 @@ import { Field, FinalFormSelect } from "@comet/admin";
 import {
     AdminComponentPaper,
     BlockCategory,
-    BlockDependency,
-    BlockInterface,
+    type BlockDependency,
+    type BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
-    LinkBlockInterface,
+    type LinkBlockInterface,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
+import { type InternalLinkBlockData, type InternalLinkBlockInput } from "../blocks.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
+import { type GQLLinkBlockTargetPageQuery, type GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
 
 type State = InternalLinkBlockData;
 
@@ -131,7 +131,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                         }}
                         initialValues={{
                             targetPage: state.targetPage,
-                            targetPageAnchor: anchorsLoading ? "" : state.targetPageAnchor ?? "none",
+                            targetPageAnchor: anchorsLoading ? "" : (state.targetPageAnchor ?? "none"),
                         }}
                     >
                         <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth fieldContainerProps={{ fieldMargin: "never" }} />

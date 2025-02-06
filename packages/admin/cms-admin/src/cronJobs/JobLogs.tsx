@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
-import { Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { GQLKubernetesJobWithLogsQuery, GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
+import { type GQLKubernetesJobWithLogsQuery, type GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
 
 function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string | null } }) {
     const { kubernetesJob } = props;
@@ -24,7 +24,7 @@ function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string |
                     }}
                 />
             </ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
         </Toolbar>
     );
 }

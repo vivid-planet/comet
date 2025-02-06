@@ -1,21 +1,26 @@
 import { useApolloClient } from "@apollo/client";
-import axios, { AxiosError, CancelTokenSource } from "axios";
-import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
-import { Accept, FileRejection } from "react-dropzone";
+import axios, { type AxiosError, type CancelTokenSource } from "axios";
+import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { type Accept, type FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
-import { GQLLicenseInput } from "../../../graphql.generated";
+import { type GQLLicenseInput } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { DuplicateAction, FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
+import {
+    type DuplicateAction,
+    type FilenameData,
+    useManualDuplicatedFilenamesHandler,
+} from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { convertMimetypesToDropzoneAccept } from "./fileUpload.utils";
-import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
+import { type NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
+    FilenameTooLongError,
     FileSizeError,
     MaxResolutionError,
     MissingFileExtensionError,
@@ -25,20 +30,21 @@ import {
 import { ProgressDialog } from "./ProgressDialog";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import {
-    GQLDamFolderByNameAndParentIdQuery,
-    GQLDamFolderByNameAndParentIdQueryVariables,
-    GQLDamFolderForFolderUploadMutation,
-    GQLDamFolderForFolderUploadMutationVariables,
+    type GQLDamFolderByNameAndParentIdQuery,
+    type GQLDamFolderByNameAndParentIdQueryVariables,
+    type GQLDamFolderForFolderUploadMutation,
+    type GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-interface FileWithCustomMetaData extends File {
+export interface FileWithDamUploadMetadata extends File {
     path?: string;
     license?: GQLLicenseInput;
     title?: string;
     altText?: string;
+    importSource?: ImportSource;
 }
 
-export interface FileWithFolderPath extends FileWithCustomMetaData {
+export interface FileWithFolderPath extends FileWithDamUploadMetadata {
     folderPath?: string;
 }
 
@@ -47,7 +53,7 @@ interface UploadDamFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithCustomMetaData[];
+    acceptedFiles: FileWithDamUploadMetadata[];
     fileRejections: FileRejection[];
 }
 
@@ -55,6 +61,9 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 
 interface UploadFilesOptions {
     folderId?: string;
+    /**
+     * @deprecated Set `importSource` directly on the file
+     */
     importSource?: ImportSource;
 }
 
@@ -83,7 +92,7 @@ interface RejectedFile {
     file: File;
 }
 
-const addFolderPathToFiles = async (acceptedFiles: FileWithCustomMetaData[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
@@ -110,6 +119,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithCustomMetaData[]): Pr
         newFile.license = file.license;
         newFile.title = file.title;
         newFile.altText = file.altText;
+        newFile.importSource = file.importSource;
 
         const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
         newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
@@ -439,10 +449,12 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                             addValidationError(file, <MissingFileExtensionError />);
                         } else if (message.includes("File type and extension mismatch")) {
                             addValidationError(file, <FileExtensionTypeMismatchError extension={extension} mimetype={file.type} />);
+                        } else if (message.includes("Filename is too long")) {
+                            addValidationError(file, <FilenameTooLongError />);
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response?.data.message === "Rejected File Upload: SVG must not contain JavaScript") {
+                    } else if (typedErr.response?.data.message.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
                     } else if (typedErr.response === undefined && typedErr.request) {
                         addValidationError(file, <NetworkError />);

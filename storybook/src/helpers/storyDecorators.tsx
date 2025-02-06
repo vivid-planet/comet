@@ -1,6 +1,7 @@
-import { AppHeader, AppHeaderMenuButton, MasterLayout, Menu, MenuItemRouterLink, Stack } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, MasterLayout, Menu, MenuItemRouterLink, Stack, useWindowSize } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
-import { ComponentType } from "react";
+import { useTheme } from "@mui/material";
+import { type ComponentType } from "react";
 import { Route } from "react-router";
 
 export function masterLayoutDecorator() {
@@ -10,11 +11,17 @@ export function masterLayoutDecorator() {
         </AppHeader>
     );
 
-    const MasterMenu = () => (
-        <Menu>
-            <MenuItemRouterLink primary="Example Page" to="/" icon={<Dashboard />} />
-        </Menu>
-    );
+    const MasterMenu = () => {
+        const windowSize = useWindowSize();
+        const { breakpoints } = useTheme();
+        const useTemporaryMenu: boolean = windowSize.width < breakpoints.values.md;
+
+        return (
+            <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
+                <MenuItemRouterLink primary="Example Page" to="/" icon={<Dashboard />} />
+            </Menu>
+        );
+    };
 
     return (Story: ComponentType) => {
         return (

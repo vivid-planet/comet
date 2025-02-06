@@ -1,15 +1,14 @@
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { CrudField, CrudGenerator } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 @CrudGenerator({ targetDirectory: __dirname })
-class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"> {
+class TestEntityProductVariant extends BaseEntity {
     @PrimaryKey({ columnType: "text", type: "string" })
     id: string;
 
@@ -23,7 +22,7 @@ class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"
 
 @Entity()
 @CrudGenerator({ targetDirectory: __dirname })
-class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
+class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -41,13 +40,14 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityProductVariant],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProductVariant"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-product-variant.input.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-product-variant.input.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);
@@ -66,13 +66,14 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityProductVariant],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProductVariant"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-product-variants.args.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-product-variants.args.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);
@@ -92,13 +93,14 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityProductVariant],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProductVariant"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "test-entity-product-variant.resolver.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "test-entity-product-variant.resolver.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);

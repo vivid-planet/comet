@@ -1,5 +1,4 @@
-import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import {
     IsEmail,
@@ -15,7 +14,7 @@ import { v4 as uuid } from "uuid";
 
 import { IsValidRedirectSource } from "../redirects/validators/isValidRedirectSource";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 export const IsTrueAsString = (validationOptions?: ValidationOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +40,7 @@ class IsSlugConstraint implements ValidatorConstraintInterface {
 }
 
 @Entity()
-export class TestEntityWithEmail extends BaseEntity<TestEntityWithEmail, "id"> {
+export class TestEntityWithEmail extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -52,7 +51,7 @@ export class TestEntityWithEmail extends BaseEntity<TestEntityWithEmail, "id"> {
 }
 
 @Entity()
-export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity<TestEntityWithCaseSensitiveConstraintName, "id"> {
+export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -62,7 +61,7 @@ export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity<TestEn
 }
 
 @Entity()
-export class TestEntityWithShortenedDecoratorName extends BaseEntity<TestEntityWithShortenedDecoratorName, "id"> {
+export class TestEntityWithShortenedDecoratorName extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -72,7 +71,7 @@ export class TestEntityWithShortenedDecoratorName extends BaseEntity<TestEntityW
 }
 
 @Entity()
-export class TestEntityWithRelativeImportDecorator extends BaseEntity<TestEntityWithRelativeImportDecorator, "id"> {
+export class TestEntityWithRelativeImportDecorator extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -82,7 +81,7 @@ export class TestEntityWithRelativeImportDecorator extends BaseEntity<TestEntity
 }
 
 @Entity()
-export class TestEntityWithValidatorDefinedInFile extends BaseEntity<TestEntityWithValidatorDefinedInFile, "id"> {
+export class TestEntityWithValidatorDefinedInFile extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -98,13 +97,14 @@ describe("GenerateDefinedValidatorDecorators", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEmail],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmail"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-email.input.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-email.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
             const classes = source.getClasses();
@@ -134,13 +134,14 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithCaseSensitiveConstraintName],
                     }),
                 );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"));
-                const lintedOut = await lintGeneratedFiles(out);
-                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-case-sensitive-constraint-name.input.ts");
+                const formattedOut = await formatGeneratedFiles(out);
+                const file = formattedOut.find((file) => file.name === "dto/test-entity-with-case-sensitive-constraint-name.input.ts");
                 if (!file) throw new Error("File not found");
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
@@ -170,13 +171,14 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithShortenedDecoratorName],
                     }),
                 );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
-                const lintedOut = await lintGeneratedFiles(out);
-                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
+                const formattedOut = await formatGeneratedFiles(out);
+                const file = formattedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
                 if (!file) throw new Error("File not found");
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
@@ -206,13 +208,14 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithShortenedDecoratorName],
                     }),
                 );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
-                const lintedOut = await lintGeneratedFiles(out);
-                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
+                const formattedOut = await formatGeneratedFiles(out);
+                const file = formattedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
                 if (!file) throw new Error("File not found");
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
@@ -243,13 +246,14 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithRelativeImportDecorator],
                     }),
                 );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"));
-                const lintedOut = await lintGeneratedFiles(out);
-                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-relative-import-decorator.input.ts");
+                const formattedOut = await formatGeneratedFiles(out);
+                const file = formattedOut.find((file) => file.name === "dto/test-entity-with-relative-import-decorator.input.ts");
                 if (!file) throw new Error("File not found");
                 const source = parseSource(file.content);
                 const classes = source.getClasses();
@@ -280,13 +284,14 @@ describe("GenerateDefinedValidatorDecorators", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithValidatorDefinedInFile],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-validator-defined-in-file.input.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-validator-defined-in-file.input.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
             const classes = source.getClasses();

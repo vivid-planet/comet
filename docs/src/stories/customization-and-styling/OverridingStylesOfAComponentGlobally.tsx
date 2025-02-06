@@ -1,8 +1,6 @@
 import { ContentOverflow, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
 import { Typography } from "@mui/material";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
-import * as React from "react";
 
 function Story() {
     const theme = createCometTheme({

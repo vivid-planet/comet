@@ -1,4 +1,4 @@
-import { EntityMetadata } from "@mikro-orm/core";
+import { type EntityMetadata } from "@mikro-orm/postgresql";
 
 import { hasFieldFeature } from "../crud-generator.decorator";
 
@@ -10,7 +10,7 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
         .reduce((acc, prop) => {
             if (prop.type === "string" || prop.type === "text") {
                 acc.push(prop.name);
-            } else if (prop.reference == "m:1") {
+            } else if (prop.kind == "m:1") {
                 if (!prop.targetMeta) {
                     throw new Error(`reference ${prop.name} has no targetMeta`);
                 }

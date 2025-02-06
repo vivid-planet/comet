@@ -1,4 +1,4 @@
-import { GridColDef } from "./GridColDef";
+import { type GridColDef } from "./GridColDef";
 
 export const renderStaticSelectCell: GridColDef["renderCell"] = ({ value, colDef }) => {
     // TODO: find a better solution than as cast

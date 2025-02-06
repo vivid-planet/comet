@@ -1,6 +1,6 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 interface Props {
     logo?: ReactNode;
@@ -14,7 +14,7 @@ function Header({ children, logo }: PropsWithChildren<Props>) {
         <AppHeader>
             <AppHeaderMenuButton />
             {!isMobile && (logo || <CometLogo color="white" />)}
-            <AppHeaderFillSpace />
+            {!isMobile && <FillSpace />}
             {children}
         </AppHeader>
     );

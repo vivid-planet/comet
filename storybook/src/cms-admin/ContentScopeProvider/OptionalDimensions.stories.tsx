@@ -1,5 +1,5 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo, MainContent } from "@comet/admin";
-import { ContentScopeControls, ContentScopeIndicator, ContentScopeProvider, ContentScopeValues, useContentScope } from "@comet/cms-admin";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace, MainContent } from "@comet/admin";
+import { ContentScopeControls, ContentScopeIndicator, ContentScopeProvider, type ContentScopeValues, useContentScope } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -46,7 +46,7 @@ export const OptionalDimensions = function () {
                         <AppHeader position="relative" headerHeight={60}>
                             <AppHeaderMenuButton />
                             <CometLogo />
-                            <AppHeaderFillSpace />
+                            <FillSpace />
                             <ContentScopeControls />
                         </AppHeader>
                         <MainContent>

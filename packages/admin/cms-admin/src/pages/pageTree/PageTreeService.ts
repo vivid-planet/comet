@@ -1,5 +1,5 @@
-import { DropTarget, DropTargetBeforeAfter } from "./PageTreeRow";
-import { PageTreePage } from "./usePageTree";
+import { type DropTarget, type DropTargetBeforeAfter } from "./PageTreeRow";
+import { type PageTreePage } from "./usePageTree";
 
 interface PageTreeUpdateInfo {
     parentId: string | null;
@@ -30,7 +30,7 @@ export interface PageTreeNodePosition {
     parent: string | null;
     level: number;
 }
-class PageTreeService {
+export class PageTreeService {
     public readonly levelOffsetPx: number;
     private readonly pages: PageTreePage[];
 
@@ -386,5 +386,3 @@ class PageTreeService {
         };
     }
 }
-
-export default PageTreeService;

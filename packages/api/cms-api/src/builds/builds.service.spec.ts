@@ -1,7 +1,7 @@
-import { V1CronJob } from "@kubernetes/client-node";
+import { type V1CronJob } from "@kubernetes/client-node";
 import { getRepositoryToken } from "@mikro-orm/nestjs";
 import { EntityManager } from "@mikro-orm/postgresql";
-import { Test, TestingModule } from "@nestjs/testing";
+import { Test, type TestingModule } from "@nestjs/testing";
 
 import { KubernetesModule } from "../kubernetes/kubernetes.module";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";

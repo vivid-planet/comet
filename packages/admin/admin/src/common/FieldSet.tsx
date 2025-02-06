@@ -1,13 +1,13 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { type ComponentsOverrides, type Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import { css, useThemeProps } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode, SyntheticEvent, useState } from "react";
+import { type PropsWithChildren, type ReactNode, type SyntheticEvent, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface FieldSetProps
     extends ThemedComponentBaseProps<{
@@ -190,8 +190,6 @@ const Children = createComponentSlot(MuiAccordionDetails)<FieldSetClassKey, Owne
     },
 })(
     ({ theme, ownerState }) => css`
-        display: flex;
-        flex-direction: column;
         padding: 20px;
 
         ${!ownerState.hiddenSummary &&

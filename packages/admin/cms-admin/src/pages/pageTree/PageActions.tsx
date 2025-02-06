@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client";
-import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
+import { type IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
 import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
-import { PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
@@ -10,10 +10,10 @@ import { serializeInitialValues } from "../../form/serializeInitialValues";
 import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
 import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
-import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "./Page";
+import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
-import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
+import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {

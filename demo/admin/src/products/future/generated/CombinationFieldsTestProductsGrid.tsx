@@ -6,7 +6,7 @@ import {
     DataGridToolbar,
     filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -18,18 +18,18 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { ReactNode } from "react";
+import { DataGridPro, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { type ReactNode } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
-    GQLCombinationFieldsTestProductsGridFutureFragment,
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductsGridQuery,
-    GQLProductsGridQueryVariables,
+    type GQLCombinationFieldsTestProductsGridFutureFragment,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductsGridQuery,
+    type GQLProductsGridQueryVariables,
 } from "./CombinationFieldsTestProductsGrid.generated";
 
 const productsFragment = gql`
@@ -84,7 +84,7 @@ function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps)
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
 }
@@ -125,7 +125,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                     Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
                 };
                 return (
-                    <GridCellContent primaryText={row.type == null ? "-" : typeLabels[`${row.type}`] ?? row.type} secondaryText={row.type ?? "-"} />
+                    <GridCellContent primaryText={row.type == null ? "-" : (typeLabels[`${row.type}`] ?? row.type)} secondaryText={row.type ?? "-"} />
                 );
             },
             flex: 1,
@@ -147,7 +147,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                             row.inStock == null ? (
                                 <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />
                             ) : (
-                                inStockLabels[`${row.inStock}`] ?? row.inStock
+                                (inStockLabels[`${row.inStock}`] ?? row.inStock)
                             )
                         }
                     />

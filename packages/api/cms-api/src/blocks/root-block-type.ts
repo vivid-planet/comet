@@ -1,7 +1,7 @@
-import { Type } from "@mikro-orm/core";
+import { Type } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 
-import { Block, BlockDataInterface, isBlockInputInterface, transformToBlockSave, TraversableTransformBlockResponse } from "./block";
+import { type Block, type BlockDataInterface, isBlockInputInterface, transformToBlockSave, type TraversableTransformBlockResponse } from "./block";
 import { transformToBlockSaveIndex } from "./transformToBlockSaveIndex/transformToBlockSaveIndex";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");

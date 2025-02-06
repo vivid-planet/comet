@@ -1,11 +1,10 @@
-import { BaseEntity, Entity, Enum, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 export enum TestEntity1Status {
@@ -17,7 +16,7 @@ export enum TestEntity1Status {
 registerEnumType(TestEntity1Status, { name: "TestEntity1Status" });
 
 @Entity()
-class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
+class TestEntity1 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -30,25 +29,26 @@ class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
 }
 
 describe("GenerateCrud Status with active", () => {
-    let lintedOut: GeneratedFile[];
+    let formattedOut: GeneratedFile[];
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity1],
             }),
         );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity1"));
-        lintedOut = await lintGeneratedFiles(out);
+        formattedOut = await formatGeneratedFiles(out);
     });
     afterAll(async () => {
         orm.close();
     });
 
     it("input should contain status", async () => {
-        const file = lintedOut.find((file) => file.name === "dto/test-entity1.input.ts");
+        const file = formattedOut.find((file) => file.name === "dto/test-entity1.input.ts");
         if (!file) throw new Error("File not found");
         const source = parseSource(file.content);
 
@@ -65,7 +65,7 @@ describe("GenerateCrud Status with active", () => {
     });
 
     it("resolver should not include update status mutation", async () => {
-        const file = lintedOut.find((file) => file.name === "test-entity1.resolver.ts");
+        const file = formattedOut.find((file) => file.name === "test-entity1.resolver.ts");
         if (!file) throw new Error("File not found");
 
         const source = parseSource(file.content);
@@ -83,7 +83,7 @@ describe("GenerateCrud Status with active", () => {
     });
 
     it("args should use status enum as defined for enitity", async () => {
-        const file = lintedOut.find((file) => file.name === "dto/test-entity1s.args.ts");
+        const file = formattedOut.find((file) => file.name === "dto/test-entity1s.args.ts");
         if (!file) throw new Error("File not found");
         const source = parseSource(file.content);
 
@@ -110,7 +110,7 @@ export enum TestEntity2Status {
 registerEnumType(TestEntity2Status, { name: "TestEntity2Status" });
 
 @Entity()
-class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
+class TestEntity2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -123,25 +123,26 @@ class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
 }
 
 describe("GenerateCrud Status with published/unpublished", () => {
-    let lintedOut: GeneratedFile[];
+    let formattedOut: GeneratedFile[];
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity2],
             }),
         );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity2"));
-        lintedOut = await lintGeneratedFiles(out);
+        formattedOut = await formatGeneratedFiles(out);
     });
     afterAll(async () => {
         orm.close();
     });
 
     it("args should include default value", async () => {
-        const file = lintedOut.find((file) => file.name === "dto/test-entity2s.args.ts");
+        const file = formattedOut.find((file) => file.name === "dto/test-entity2s.args.ts");
         if (!file) throw new Error("File not found");
 
         const source = parseSource(file.content);
@@ -174,7 +175,7 @@ export enum TestEntity3Status {
 registerEnumType(TestEntity3Status, { name: "TestEntity3Status" });
 
 @Entity()
-class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
+class TestEntity3 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -187,25 +188,26 @@ class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
 }
 
 describe("GenerateCrud Status with published/unpublished", () => {
-    let lintedOut: GeneratedFile[];
+    let formattedOut: GeneratedFile[];
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity3],
             }),
         );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity3"));
-        lintedOut = await lintGeneratedFiles(out);
+        formattedOut = await formatGeneratedFiles(out);
     });
     afterAll(async () => {
         orm.close();
     });
 
     it("args should not include status filter as all are active ones", async () => {
-        const file = lintedOut.find((file) => file.name === "dto/test-entity3s.args.ts");
+        const file = formattedOut.find((file) => file.name === "dto/test-entity3s.args.ts");
         if (!file) throw new Error("File not found");
 
         const source = parseSource(file.content);

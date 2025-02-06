@@ -34,7 +34,10 @@ type TransformResponse = {
 
 @Injectable()
 export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformResponse> {
-    constructor(private readonly filesService: FilesService, private readonly imagesService: ImagesService) {}
+    constructor(
+        private readonly filesService: FilesService,
+        private readonly imagesService: ImagesService,
+    ) {}
 
     async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
         if (!block.damFileId) {

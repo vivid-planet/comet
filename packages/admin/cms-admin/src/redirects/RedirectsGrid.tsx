@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
-    GridColDef,
+    FillSpace,
+    type GridColDef,
     GridFilterButton,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -11,14 +12,13 @@ import {
     StackLink,
     TableDeleteButton,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
+import { type BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -26,7 +26,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
+import { type GQLPaginatedRedirectsQuery, type GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;
@@ -42,7 +42,7 @@ function RedirectsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />

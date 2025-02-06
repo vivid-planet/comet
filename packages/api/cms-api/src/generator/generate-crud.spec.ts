@@ -1,13 +1,12 @@
-import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id"> {
+export class TestEntityWithString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,7 +15,7 @@ export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id">
 }
 
 @Entity()
-export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id"> {
+export class TestEntityWithNumber extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -25,7 +24,7 @@ export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id">
 }
 
 @Entity()
-export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+export class TestEntityWithTextRuntimeType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -40,12 +39,13 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithString],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
-            const lintedOut = await lintGeneratedFiles(out);
+            const lintedOut = await formatGeneratedFiles(out);
 
             const file = lintedOut.find((file) => file.name === "test-entity-with-string.resolver.ts");
             if (!file) throw new Error("File not found");
@@ -72,14 +72,15 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithString],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
-            const lintedOut = await lintGeneratedFiles(out);
+            const formattedOut = await formatGeneratedFiles(out);
 
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-string.filter.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-string.filter.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);
@@ -107,14 +108,15 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithNumber],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithNumber"));
-            const lintedOut = await lintGeneratedFiles(out);
+            const formattedOut = await formatGeneratedFiles(out);
 
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-number.filter.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-number.filter.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);
@@ -142,13 +144,14 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithTextRuntimeType],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-text-runtime-type.filter.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-text-runtime-type.filter.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);

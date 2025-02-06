@@ -13,7 +13,7 @@ import {
     Property,
     Ref,
     types,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
@@ -79,7 +79,7 @@ export class ProductPriceRange {
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -124,7 +124,6 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field(() => ProductPriceRange, { nullable: true })
     priceRange?: ProductPriceRange = undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     @Property({ type: types.boolean })
     @Field()
     inStock: boolean = true;
@@ -144,7 +143,7 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field({ nullable: true })
     lastCheckedAt?: Date = undefined;
 
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 

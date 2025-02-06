@@ -1,12 +1,11 @@
-import { BaseEntity, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { CrudField } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 @Embeddable()
@@ -18,7 +17,7 @@ export class TestEmbedded {
 }
 
 @Entity()
-export class TestEntityWithEmbedded extends BaseEntity<TestEntityWithEmbedded, "id"> {
+export class TestEntityWithEmbedded extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -38,7 +37,7 @@ export class TestWithoutEmbedded {
 }
 
 @Entity()
-export class TestEntityWithoutEmbedded extends BaseEntity<TestEntityWithoutEmbedded, "id"> {
+export class TestEntityWithoutEmbedded extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -52,25 +51,26 @@ export class TestEntityWithoutEmbedded extends BaseEntity<TestEntityWithoutEmbed
 
 describe("GenerateCrudInputEmbedded", () => {
     describe("crud classes with sort, filter, input enabled for embedded object", () => {
-        let lintedOut: GeneratedFile[];
+        let formattedOut: GeneratedFile[];
         let orm: MikroORM;
         beforeEach(async () => {
             LazyMetadataStorage.load();
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEmbedded, TestEmbedded],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmbedded"));
-            lintedOut = await lintGeneratedFiles(out);
-            const foundFile = lintedOut.find((file) => file.name === "test-entity-with-embedded.resolver.ts");
+            formattedOut = await formatGeneratedFiles(out);
+            const foundFile = formattedOut.find((file) => file.name === "test-entity-with-embedded.resolver.ts");
             if (!foundFile) throw new Error("File not found");
         });
 
         it("filter for embedded field should exist", async () => {
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-embedded.filter.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-embedded.filter.ts");
             if (!file) throw new Error("File not found");
 
             // console.log(file.content);
@@ -98,7 +98,7 @@ describe("GenerateCrudInputEmbedded", () => {
         });
 
         it("input for embedded field should exist", async () => {
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-embedded.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-embedded.input.ts");
             if (!file) throw new Error("File not found");
 
             // console.log(file.content);
@@ -128,7 +128,7 @@ describe("GenerateCrudInputEmbedded", () => {
         });
 
         it("sort for embedded field should exist", async () => {
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-embedded.sort.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-with-embedded.sort.ts");
             if (!file) throw new Error("File not found");
 
             // console.log(file.content);
@@ -149,25 +149,26 @@ describe("GenerateCrudInputEmbedded", () => {
     });
 
     describe("crud classes with sort, filter, input disabled for embedded object", () => {
-        let lintedOut: GeneratedFile[];
+        let formattedOut: GeneratedFile[];
         let orm: MikroORM;
         beforeEach(async () => {
             LazyMetadataStorage.load();
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithoutEmbedded, TestWithoutEmbedded],
                 }),
             );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithoutEmbedded"));
-            lintedOut = await lintGeneratedFiles(out);
-            const foundFile = lintedOut.find((file) => file.name === "test-entity-without-embedded.resolver.ts");
+            formattedOut = await formatGeneratedFiles(out);
+            const foundFile = formattedOut.find((file) => file.name === "test-entity-without-embedded.resolver.ts");
             if (!foundFile) throw new Error("File not found");
         });
 
         it("filter for embedded field should not exist", async () => {
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-without-embedded.filter.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-without-embedded.filter.ts");
             if (!file) throw new Error("File not found");
 
             // console.log(file.content);
@@ -193,7 +194,7 @@ describe("GenerateCrudInputEmbedded", () => {
         });
 
         it("input for embedded field should not exist", async () => {
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-without-embedded.input.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-without-embedded.input.ts");
             if (!file) throw new Error("File not found");
 
             // console.log(file.content);
@@ -222,7 +223,7 @@ describe("GenerateCrudInputEmbedded", () => {
         });
 
         it("sort for embedded field should not exist", async () => {
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-without-embedded.sort.ts");
+            const file = formattedOut.find((file) => file.name === "dto/test-entity-without-embedded.sort.ts");
             if (!file) throw new Error("File not found");
 
             // console.log(file.content);

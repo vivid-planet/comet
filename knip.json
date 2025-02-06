@@ -4,7 +4,7 @@
         ".": {
             "entry": ["dev-pm.config.js", "waitForPackages.js", "site-configs.ts"],
             "project": ["*.{js,ts,tsx}"],
-            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell"]
+            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell", "open-cli"]
         },
         "packages/cli": {
             "entry": ["./src/index.ts"],
@@ -28,7 +28,7 @@
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
         },
-        "packages/eslint-plugin-react": {
+        "packages/eslint-plugin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
@@ -78,7 +78,7 @@
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/generated/**"],
-            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port"]
+            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port", "cosmiconfig-toml-loader"]
         },
         "demo/api": {
             "entry": [
@@ -102,8 +102,14 @@
             "ignoreDependencies": ["@babel/core"]
         },
         "demo/site-pages": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts"],
-            "project": ["./src/**/*.{ts,tsx}"],
+            "entry": [
+                "./src/pages/**",
+                "./preBuild/src/createRedirects.ts",
+                "./preBuild/src/createRewrites.ts",
+                "./preBuild/src/publicGenerator/extract.ts",
+                "./preBuild/src/publicGenerator/generate.ts"
+            ],
+            "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
             "ignoreDependencies": ["@babel/core"]
         },
         "storybook": {

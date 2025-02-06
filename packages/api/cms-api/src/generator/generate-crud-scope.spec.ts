@@ -1,24 +1,22 @@
-import { BaseEntity, Embeddable, Embedded, Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { ScopedEntity } from "../user-permissions/decorators/scoped-entity.decorator";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
     return { language: entity.langauge };
 })
-export class TestEntityWithScopedEntity extends BaseEntity<TestEntityWithScopedEntity, "id"> {
+export class TestEntityWithScopedEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
     @Property({ columnType: "text" })
     langauge: string;
 }
-1;
 
 describe("GenerateCrud with ScopedEntity", () => {
     it("resolver must not have skipScopeCheck", async () => {
@@ -26,15 +24,16 @@ describe("GenerateCrud with ScopedEntity", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithScopedEntity],
             }),
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScopedEntity"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "test-entity-with-scoped-entity.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "test-entity-with-scoped-entity.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
@@ -56,7 +55,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntityWithScope extends BaseEntity<TestEntityWithScope, "id"> {
+export class TestEntityWithScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -70,15 +69,16 @@ describe("GenerateCrud with Scope", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithScope],
             }),
         );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithScope"));
-        const lintedOut = await lintGeneratedFiles(out);
+        const formattedOut = await formatGeneratedFiles(out);
 
         {
-            const file = lintedOut.find((file) => file.name === "test-entity-with-scope.resolver.ts");
+            const file = formattedOut.find((file) => file.name === "test-entity-with-scope.resolver.ts");
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 

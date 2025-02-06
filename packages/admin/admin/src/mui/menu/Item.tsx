@@ -1,9 +1,17 @@
-import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
-import { ReactElement, ReactNode, useContext } from "react";
+import {
+    type ComponentsOverrides,
+    type ListItemButton,
+    type ListItemButtonProps,
+    type ListItemIcon,
+    type ListItemText,
+    type Theme,
+    useThemeProps,
+} from "@mui/material";
+import { type ReactElement, type ReactNode, useContext } from "react";
 
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuContext } from "./Context";
-import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
+import { Icon, type MenuItemClassKey, type OwnerState, Root, Text } from "./Item.styles";
 
 export type MenuItemLevel = 1 | 2 | 3;
 

@@ -1,6 +1,6 @@
 import { DiscoveryService } from "@golevelup/nestjs-discovery";
-import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
@@ -153,7 +153,7 @@ export class UserPermissionsService {
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
                     return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
-                } catch (e) {
+                } catch {
                     return undefined;
                 }
             }

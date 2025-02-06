@@ -62,7 +62,9 @@ export const BlockGrabber = styled("div")`
     flex-shrink: 0;
     border-right: 1px solid ${({ theme }) => theme.palette.divider};
     cursor: move;
-    transition: background-color 200ms, color 200ms;
+    transition:
+        background-color 200ms,
+        color 200ms;
     color: ${({ theme }) => theme.palette.grey[600]};
 
     :hover {

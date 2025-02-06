@@ -54,8 +54,10 @@ export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
+export { useDamScope } from "./dam/config/useDamScope";
 export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
+export type { FileWithDamUploadMetadata } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { useDamFileUpload } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { createDamFileDependency } from "./dam/dependencies/createDamFileDependency";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
@@ -135,7 +137,7 @@ import styled from "@mui/system";
 import csstype from "csstype";
 
 // import can not be used here as this file is outside of rootDir
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const version: string = require("../package.json").version;
 
 export { version };

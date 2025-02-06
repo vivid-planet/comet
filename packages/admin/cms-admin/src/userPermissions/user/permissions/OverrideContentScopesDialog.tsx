@@ -1,14 +1,21 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormCheckbox, FinalFormSwitch, SaveButton } from "@comet/admin";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { CancelButton, CheckboxListField, Field, FinalForm, FinalFormSwitch, SaveButton } from "@comet/admin";
+import {
+    CircularProgress,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLOverrideContentScopesMutation,
-    GQLOverrideContentScopesMutationVariables,
-    GQLPermissionContentScopesQuery,
-    GQLPermissionContentScopesQueryVariables,
+    type GQLOverrideContentScopesMutation,
+    type GQLOverrideContentScopesMutationVariables,
+    type GQLPermissionContentScopesQuery,
+    type GQLPermissionContentScopesQueryVariables,
     namedOperations,
 } from "./OverrideContentScopesDialog.generated";
 
@@ -100,25 +107,24 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 type="checkbox"
                                 disabled={disabled}
                             />
-                            {values.overrideContentScopes &&
-                                data.availableContentScopes.map((contentScope: ContentScope) => (
-                                    <Field
-                                        disabled={disabled}
-                                        key={JSON.stringify(contentScope)}
-                                        name="contentScopes"
-                                        fullWidth
-                                        variant="horizontal"
-                                        type="checkbox"
-                                        component={FinalFormCheckbox}
-                                        value={JSON.stringify(contentScope)}
-                                        label={Object.entries(contentScope).map(([scope, value]) => (
+                            {values.overrideContentScopes && (
+                                <CheckboxListField
+                                    fullWidth
+                                    name="contentScopes"
+                                    variant="horizontal"
+                                    layout="column"
+                                    options={data.availableContentScopes.map((contentScope: ContentScope) => ({
+                                        label: Object.entries(contentScope).map(([scope, value]) => (
                                             <>
                                                 {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
                                                 <br />
                                             </>
-                                        ))}
-                                    />
-                                ))}
+                                        )),
+                                        value: JSON.stringify(contentScope),
+                                        disabled: disabled,
+                                    }))}
+                                />
+                            )}
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => handleDialogClose()}>

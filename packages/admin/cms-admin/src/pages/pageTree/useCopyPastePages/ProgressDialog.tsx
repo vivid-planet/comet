@@ -1,6 +1,17 @@
 import { messages } from "@comet/admin";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
-import { ReactNode, useCallback, useState } from "react";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    LinearProgress,
+    type LinearProgressProps,
+    Typography,
+} from "@mui/material";
+import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { value: number; message?: ReactNode }) {

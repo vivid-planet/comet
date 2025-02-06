@@ -1,9 +1,9 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { Toolbar, ToolbarProps } from "./Toolbar";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { Toolbar, type ToolbarProps } from "./Toolbar";
 
 export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
 
@@ -24,6 +24,18 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     },
 })(
     ({ ownerState, theme }) => css`
+        [class*="MuiDataGrid-toolbarQuickFilter"] {
+            width: 120px;
+
+            ${theme.breakpoints.up("sm")} {
+                width: 150px;
+            }
+
+            ${theme.breakpoints.up("md")} {
+                width: "auto";
+            }
+        }
+
         ${ownerState.density === "comfortable" &&
         css`
             min-height: 80px;

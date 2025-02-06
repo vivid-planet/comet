@@ -1,20 +1,21 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
     RouterTabs,
     TextField,
     ToolbarActions,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
-import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
-import { ReactNode, RefObject, useRef } from "react";
+import { Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -71,7 +72,7 @@ interface ToolbarProps extends GridToolbarProps {
 function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
@@ -102,12 +103,7 @@ export const EditDialogInRouterTabs = {
                             slotProps={{
                                 toolbar: {
                                     toolbarAction: (
-                                        <Button
-                                            startIcon={<Add />}
-                                            onClick={() => editDialogApi.current?.openAddDialog()}
-                                            variant="contained"
-                                            color="primary"
-                                        >
+                                        <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                             <FormattedMessage {...messages.add} />
                                         </Button>
                                     ),
