@@ -8,6 +8,7 @@ import {
     dataGridDateTimeColumn,
     DataGridToolbar,
     ExportApi,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
@@ -17,7 +18,6 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -99,7 +99,7 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: Rea
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <CrudMoreActionsMenu
                     slotProps={{
