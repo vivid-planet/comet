@@ -43,7 +43,7 @@
         "uuid": "^11.0.5"
     },
     "devDependencies": {
-        "@apollo/client": "^3.12.10",
+        "@apollo/client": "^3.12.11",
         "@babel/cli": "^7.26.4",
         "@babel/core": "^7.26.7",
         "@comet/admin-babel-preset": "workspace:^7.13.0",
