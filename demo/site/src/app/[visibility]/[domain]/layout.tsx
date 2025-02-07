@@ -1,10 +1,16 @@
 import { SitePreviewProvider } from "@comet/cms-site";
+import { VisibilityParam } from "@src/middleware/domainRewrite";
+import { setVisibilityParam } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { SiteConfigProvider } from "@src/util/SiteConfigProvider";
 import { draftMode } from "next/headers";
 import { PropsWithChildren } from "react";
 
-export default async function SiteLayout({ children, params: { domain } }: Readonly<PropsWithChildren<{ params: { domain: string } }>>) {
+export default async function SiteLayout({
+    children,
+    params: { domain, visibility },
+}: Readonly<PropsWithChildren<{ params: { domain: string; visibility: VisibilityParam } }>>) {
+    setVisibilityParam(visibility);
     const siteConfig = await getSiteConfigForDomain(domain);
     const isDraftModeEnabled = draftMode().isEnabled;
 

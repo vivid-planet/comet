@@ -118,7 +118,3 @@ export async function generateMetadata({ params }: PageProps, parent: ResolvingM
 
     return generateMetadata(props, parent);
 }
-
-export async function generateStaticParams() {
-    return [];
-}
