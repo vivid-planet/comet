@@ -5,7 +5,9 @@ import { App } from "./App";
 
 const loadHtml = () => {
     const rootElement = document.querySelector<HTMLElement>("#root");
-    if (!rootElement) return false;
+    if (!rootElement) {
+        throw new Error("Comet: root element not found in html - can not render Application");
+    }
 
     const root = createRoot(rootElement);
     root.render(createElement(App));
