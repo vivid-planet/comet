@@ -1,5 +1,6 @@
-import { createFetchWithDefaults, createGraphQLFetch as createGraphQLFetchLibrary, gql } from "@comet/cms-site";
+import { gql } from "@comet/cms-site";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
+import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
 import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -48,15 +49,7 @@ const predefinedPagesQuery = gql`
     }
 `;
 
-const graphQLFetch = createGraphQLFetchLibrary(
-    createFetchWithDefaults(fetch, {
-        next: { revalidate: 7.5 * 60 },
-        headers: {
-            authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
-        },
-    }),
-    `${process.env.API_URL_INTERNAL}/graphql`,
-);
+const graphQLFetch = createGraphQLFetchMiddleware();
 
 async function fetchPredefinedPages(domain: string) {
     const key = `predefinedPages-${domain}`;
