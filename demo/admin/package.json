@@ -23,7 +23,7 @@
         "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs  -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
     },
     "dependencies": {
-        "@apollo/client": "^3.12.9",
+        "@apollo/client": "^3.12.10",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
