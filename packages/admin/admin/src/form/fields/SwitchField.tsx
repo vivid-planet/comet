@@ -1,10 +1,11 @@
 import { FormControlLabel, FormControlLabelProps } from "@mui/material";
+import { ReactNode } from "react";
 
 import { Field, FieldProps } from "../Field";
 import { FinalFormSwitch, FinalFormSwitchProps } from "../Switch";
 
 export interface SwitchFieldProps extends FieldProps<string, HTMLInputElement> {
-    fieldLabel?: string;
+    fieldLabel?: ReactNode;
     componentsProps?: {
         formControlLabel?: FormControlLabelProps;
         finalFormSwitch?: FinalFormSwitchProps;
