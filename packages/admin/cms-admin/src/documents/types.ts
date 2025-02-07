@@ -1,6 +1,7 @@
 import { type TypedDocumentNode } from "@apollo/client";
 import { type BlockDependency, type ReplaceDependencyObject } from "@comet/blocks-admin";
 import { type SvgIconProps } from "@mui/material";
+import { type ComponentType, type ReactNode } from "react";
 
 import { type GQLDocumentInterface, type Maybe } from "../graphql.generated";
 import { type PageTreePage } from "../pages/pageTree/usePageTree";
@@ -36,14 +37,14 @@ export interface DocumentInterface<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,
     DocumentOutput extends Record<string, unknown> = Record<string, unknown>,
 > {
-    displayName: React.ReactNode;
+    displayName: ReactNode;
     getQuery?: TypedDocumentNode<GQLPageQuery, GQLPageQueryVariables>; // TODO better typing (see createUsePage.tsx)
-    editComponent?: React.ComponentType<{ id: string; category: string }>;
+    editComponent?: ComponentType<{ id: string; category: string }>;
     updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentOutput>>;
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
-    InfoTag?: React.ComponentType<{ page: PageTreePage }>;
+    InfoTag?: ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
