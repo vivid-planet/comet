@@ -89,7 +89,7 @@
         "@graphql-codegen/typescript-operations": "^4.4.1",
         "@mui/material": "^6.4.3",
         "@mui/system": "^6.4.3",
-        "@mui/x-data-grid": "^7.25.0",
+        "@mui/x-data-grid": "^7.26.0",
         "@types/draft-js": "^0.11.18",
         "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-touched": "^1.0.3",
