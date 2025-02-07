@@ -961,6 +961,7 @@ export const GridWithSelectionInDialog = {
                 <EditDialog
                     onAfterSave={() => editDialogApi.closeDialog()}
                     title="Selected items"
+                    // TODO: Remove dialogContent styling once DialogContent is no longer rendered inside EditDialog (https://vivid-planet.atlassian.net/browse/COM-1606)
                     componentsProps={{ dialogContent: { sx: { display: "contents" } } }}
                 >
                     <DataGrid
