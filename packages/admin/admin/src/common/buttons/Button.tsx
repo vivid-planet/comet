@@ -42,6 +42,7 @@ type OwnerState = {
     usingResponsiveBehavior: boolean;
 };
 
+// TODO: Prevent `sx` from being overridden by component usages with custom `sx` props
 const variantToMuiProps: Record<Variant, Partial<MuiButtonProps>> = {
     primary: { variant: "contained", color: "primary" },
     secondary: { variant: "contained", color: "secondary" },
