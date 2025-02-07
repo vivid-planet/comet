@@ -958,7 +958,11 @@ export const GridWithSelectionInDialog = {
                         <Typography variant="h4">No items selected :(</Typography>
                     )}
                 </StackMainContent>
-                <EditDialog onAfterSave={() => editDialogApi.closeDialog()} title="Selected items">
+                <EditDialog
+                    onAfterSave={() => editDialogApi.closeDialog()}
+                    title="Selected items"
+                    componentsProps={{ dialogContent: { sx: { display: "contents" } } }}
+                >
                     <DataGrid
                         disableSelectionOnClick
                         rows={rows}
