@@ -6,15 +6,15 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSubmitEvent,
-    FinalFormSwitch,
     Loading,
     messages,
+    SwitchField,
     TextField,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { Divider, FormControlLabel } from "@mui/material";
+import { Divider } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -192,9 +192,9 @@ export function ManufacturerForm({ id }: FormProps) {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }}
         >
-            {() => (
+            {({ values }) => (
                 <>
                     {saveConflict.dialogs}
                     <>
@@ -235,19 +235,14 @@ export function ManufacturerForm({ id }: FormProps) {
                                 label={<FormattedMessage id="manufacturer.address.country" defaultMessage="Address Country" />}
                             />
                             <Divider sx={{ marginBottom: 5 }} />
-                            <Field
+                            <SwitchField
                                 fullWidth
                                 name="useAlternativeAddress"
-                                type="checkbox"
-                                label={<FormattedMessage id="manufacturer.address.useAlternativeAddress" defaultMessage="Use alternative address" />}
-                            >
-                                {(props) => (
-                                    <FormControlLabel
-                                        control={<FinalFormSwitch {...props} />}
-                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
-                                    />
-                                )}
-                            </Field>
+                                fieldLabel={
+                                    <FormattedMessage id="manufacturer.address.useAlternativeAddress" defaultMessage="Use alternative address" />
+                                }
+                                label={values.useAlternativeAddress ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                            />
                             <Field name="useAlternativeAddress" subscription={{ value: true }}>
                                 {({ input: { value } }) =>
                                     value ? (
