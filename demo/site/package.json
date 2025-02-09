@@ -59,7 +59,7 @@
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.18.0",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.4.2",
+        "prettier": "^3.5.0",
         "typescript": "^4.9.5"
     },
     "engines": {
