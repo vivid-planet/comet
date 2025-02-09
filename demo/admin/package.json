@@ -60,7 +60,7 @@
         "@babel/core": "^7.26.8",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@formatjs/cli": "^6.6.0",
+        "@formatjs/cli": "^6.6.1",
         "@graphql-codegen/add": "^5.0.3",
         "@graphql-codegen/cli": "^5.0.4",
         "@graphql-codegen/fragment-matcher": "^5.1.0",
