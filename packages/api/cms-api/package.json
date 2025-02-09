@@ -119,7 +119,7 @@
         "jest-junit": "^16.0.0",
         "nestjs-console": "^9.0.0",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.4.2",
+        "prettier": "^3.5.0",
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1",
         "ts-jest": "^29.2.5",
