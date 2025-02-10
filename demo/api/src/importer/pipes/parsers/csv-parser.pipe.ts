@@ -6,7 +6,7 @@ import { ImporterPipe } from "../importer-pipe.type";
 
 export type ParserOptions = ParserOptionsArgs;
 
-export class CSVParsePipe implements ImporterPipe {
+export class CsvParsePipe implements ImporterPipe {
     private readonly parserOptions: ParserOptions;
 
     constructor(parserOptions: ParserOptions, csvColumns: CsvColumnMetadata[]) {
