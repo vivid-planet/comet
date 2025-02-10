@@ -73,6 +73,11 @@ export { DependenciesConfigProvider, useDependenciesConfig } from "./dependencie
 export { DependencyList } from "./dependencies/DependencyList";
 export { DependencyInterface } from "./dependencies/types";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
+export {
+    DocumentContentGenerationApi,
+    DocumentContentGenerationProvider,
+    useDocumentContentGenerationApi,
+} from "./documents/DocumentContentGenerationContext";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";

@@ -16,12 +16,13 @@ export class SeoTags {
     metaDescription: string;
 
     @Field()
-    ogTitle: string;
+    openGraphTitle: string;
 
     @Field()
-    ogDescription: string;
+    openGraphDescription: string;
 }
 
+// TODO: use class transformer to validate the object
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function validateObjectAgainstSeoTags(obj: { [key: string]: any }): obj is SeoTags {
     const { fields } = getFieldsAndDecoratorForType(SeoTags);

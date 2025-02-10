@@ -24,7 +24,7 @@ function isAzureOpenAiContentGenerationConfig(config: AzureOpenAiContentGenerati
 }
 
 @Injectable()
-export class AzureOpenAiContentGenerationService {
+export class AzureOpenAiContentGenerationService implements ContentGenerationServiceInterface {
     constructor(
         private readonly filesService: FilesService,
         @Inject(AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG) private readonly config: AzureOpenAiContentGenerationServiceConfig,
@@ -120,8 +120,8 @@ export class AzureOpenAiContentGenerationService {
     async generateSeoTags(content: string): Promise<SeoTags> {
         const config = this.getConfigForMethod("generateSeoTags");
 
-        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
-        const prompt: ChatRequestMessage[] = [
+        const client = this.createClient(config);
+        const prompt: Array<ChatCompletionMessageParam> = [
             {
                 role: "system",
                 content: `You are a SEO expert. You will receive a JSON representing the content of a  website. Your task is to generate a SEO-optimized HTML title, meta description, OpenGraph title and OpenGraph description for the website.
@@ -130,8 +130,8 @@ export class AzureOpenAiContentGenerationService {
                     {
                         "htmlTitle": "",
                         "metaDescription": "",
-                        "ogTitle": "",
-                        "ogDescription": "",
+                        "openGraphTitle": "",
+                        "openGraphDescription": "",
                     }
                     
                     Only answer in valid JSON. Don't put the JSON in quotation marks or markdown. Don't include any placeholders.
@@ -151,7 +151,7 @@ export class AzureOpenAiContentGenerationService {
         let seoTags: SeoTags | undefined;
         let tries = 0;
         do {
-            const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
+            const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
             tries++;
 
             const response = result.choices[0].message?.content;

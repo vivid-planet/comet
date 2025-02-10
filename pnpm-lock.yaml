@@ -1965,6 +1965,9 @@ importers:
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
         version: 5.0.0-alpha.117(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/material@5.11.6)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@testing-library/react-hooks':
+        specifier: ^8.0.0
+        version: 8.0.1(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
       axios:
         specifier: ^0.21.0
         version: 0.21.4
@@ -15474,7 +15477,6 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       react-error-boundary: 3.1.4(react@17.0.2)
-    dev: true
 
   /@testing-library/react@12.1.5(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-OfTXCJUFgjd/digLUuPxa0+/3ZxsQmE7ub9kcbW/wi96Bh3o/p5vrETcBGfP17NWPGqeYYl5LTRpwyGoMC4ysg==}
@@ -30318,7 +30320,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       react: 17.0.2
-    dev: true
 
   /react-error-overlay@6.0.11:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
