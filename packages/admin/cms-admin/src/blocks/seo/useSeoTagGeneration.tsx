@@ -51,7 +51,7 @@ export function useSeoTagGeneration() {
 
     // During each generateSeoTag request, all tags are generated and cached. The cache makes responses quicker by avoiding unnecessary requests and saves LLM tokens.
     const generateSeoTag = useCallback(
-        async (tag: SeoFields, currentValue: string | undefined): Promise<string> => {
+        async (tag: SeoTags, currentValue: string | undefined): Promise<string> => {
             const content = documentContentGenerationApi?.seoBlock?.getDocumentContent().join(" ");
 
             if (!content || content.length === 0) {

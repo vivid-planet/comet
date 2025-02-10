@@ -562,10 +562,6 @@ type Mutation {
   generateAltText(fileId: String!): String!
   generateImageTitle(fileId: String!): String!
   generateSeoTags(content: String!): SeoTags!
-  generateHtmlTitle(content: String!): String!
-  generateMetaDescription(content: String!): String!
-  generateOpenGraphTitle(content: String!): String!
-  generateOpenGraphDescription(content: String!): String!
 }
 
 input CreateBuildsInput {
