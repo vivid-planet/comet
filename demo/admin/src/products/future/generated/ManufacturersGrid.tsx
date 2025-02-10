@@ -5,6 +5,7 @@ import {
     Button,
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     type GridColDef,
     GridFilterButton,
@@ -12,7 +13,6 @@ import {
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -92,7 +92,7 @@ function ManufacturersGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />

@@ -12,6 +12,7 @@ export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (compon
             color: "#ffffff",
             padding: spacing(2),
             fontSize: "14px",
+            boxSizing: "unset",
 
             [breakpoints.up("sm")]: {
                 minWidth: 0,

@@ -240,7 +240,7 @@ export function ProductsGrid() {
             type: "singleSelect",
             valueOptions: [
                 {
-                    value: "true",
+                    value: true,
                     label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
                     cellContent: (
                         <GridCellContent
@@ -250,7 +250,7 @@ export function ProductsGrid() {
                     ),
                 },
                 {
-                    value: "false",
+                    value: false,
                     label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
                     cellContent: (
                         <GridCellContent
