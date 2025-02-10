@@ -8,7 +8,7 @@ import { Transform } from "stream";
 
 import { CompositeImporterPipe } from "../importer-pipe.type";
 import { CsvDataTransformerPipe } from "./csv-data-transformer.pipe";
-import { CSVParsePipe, ParserOptions } from "./csv-parser.pipe";
+import { CsvParsePipe, ParserOptions } from "./csv-parser.pipe";
 
 export class CsvParseAndTransformPipes implements CompositeImporterPipe {
     private readonly targetEntityProperties: TargetEntityProperties;
@@ -23,7 +23,7 @@ export class CsvParseAndTransformPipes implements CompositeImporterPipe {
     }
 
     getPipes(logger: LoggerService, parserOptions: ParserOptions): Transform[] {
-        const parserPipe = new CSVParsePipe(parserOptions, this.csvColumns).getPipe();
+        const parserPipe = new CsvParsePipe(parserOptions, this.csvColumns).getPipe();
         const transformPipe = new CsvDataTransformerPipe(
             {
                 fields: this.csvColumns,
