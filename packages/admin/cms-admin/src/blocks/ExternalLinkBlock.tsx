@@ -80,4 +80,6 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
     previewContent: (state) => {
         return state.targetUrl ? [{ type: "text", content: state.targetUrl }] : [];
     },
+
+    extractTextContents: (state) => (state.targetUrl ? [state.targetUrl] : []),
 };

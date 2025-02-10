@@ -464,6 +464,12 @@ export function createColumnsBlock<T extends BlockInterface>(
             const childPath = contentBlock.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
+
+        extractTextContents: (state) => {
+            return state.columns.reduce<string[]>((content, column) => {
+                return [...content, ...(contentBlock.extractTextContents?.(column.props) ?? [])];
+            }, []);
+        },
     };
 
     if (override) {
