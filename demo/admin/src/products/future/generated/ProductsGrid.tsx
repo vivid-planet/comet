@@ -7,12 +7,8 @@ import {
     dataGridDateColumn,
     dataGridDateTimeColumn,
     DataGridToolbar,
-<<<<<<< HEAD
     type ExportApi,
-=======
-    ExportApi,
     FillSpace,
->>>>>>> main
     filterByFragment,
     GridCellContent,
     type GridColDef,
