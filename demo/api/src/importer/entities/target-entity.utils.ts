@@ -37,7 +37,6 @@ const getDataTypeTypeFromEntityPropertyMetadata = (property: TargetEntityPropert
             return DataType.Integer;
 
         case "number":
-            console.log("DEBUG property.columnTypes: ", property.columnTypes);
             if (property.columnTypes.includes("integer")) {
                 return DataType.Integer;
             }
