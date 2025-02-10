@@ -28,6 +28,7 @@ import { CombinationFieldsTestProductsPage } from "@src/products/future/Combinat
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
+import { ProductsPageInitialFilterWithIsAnyOf } from "@src/products/future/ProductsPageInitialFilterWithIsAnyOf";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
@@ -254,6 +255,19 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/combination-fields-test-products-future",
                             component: CombinationFieldsTestProductsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: (
+                            <FormattedMessage
+                                id="menu.productsPageInitialFilterWithIsAny"
+                                defaultMessage="Products Page Initial Filter With Is any Of"
+                            />
+                        ),
+                        route: {
+                            path: "/products-initial-filter-with-is-any-of",
+                            component: ProductsPageInitialFilterWithIsAnyOf,
                         },
                     },
                 ],
