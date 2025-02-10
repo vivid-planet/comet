@@ -158,8 +158,8 @@ enum KubernetesJobStatus {
 type SeoTags {
   htmlTitle: String!
   metaDescription: String!
-  ogTitle: String!
-  ogDescription: String!
+  openGraphTitle: String!
+  openGraphDescription: String!
 }
 
 type KubernetesCronJob {
@@ -1224,6 +1224,10 @@ type Mutation {
   generateImageTitle(fileId: String!): String!
   generateAltText(fileId: String!): String!
   generateSeoTags(content: String!): SeoTags!
+  generateHtmlTitle(content: String!): String!
+  generateMetaDescription(content: String!): String!
+  generateOpenGraphTitle(content: String!): String!
+  generateOpenGraphDescription(content: String!): String!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!): News!
   deleteNews(id: ID!): Boolean!

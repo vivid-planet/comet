@@ -151,6 +151,13 @@ enum KubernetesJobStatus {
   failed
 }
 
+type SeoTags {
+  htmlTitle: String!
+  metaDescription: String!
+  openGraphTitle: String!
+  openGraphDescription: String!
+}
+
 type KubernetesCronJob {
   id: ID!
   name: String!
@@ -554,6 +561,11 @@ type Mutation {
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
   generateAltText(fileId: String!): String!
   generateImageTitle(fileId: String!): String!
+  generateSeoTags(content: String!): SeoTags!
+  generateHtmlTitle(content: String!): String!
+  generateMetaDescription(content: String!): String!
+  generateOpenGraphTitle(content: String!): String!
+  generateOpenGraphDescription(content: String!): String!
 }
 
 input CreateBuildsInput {
