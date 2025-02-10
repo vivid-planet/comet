@@ -2,11 +2,6 @@ import { type future_GridConfig as GridConfig } from "@comet/cms-admin";
 import { type StaticSelectLabelCellContent } from "@comet/cms-admin/lib/generator/future/generator";
 import { type GQLProduct, type GQLProductStatus } from "@src/graphql.generated";
 
-/**
- * RequiredMap is a map, that forces all string literals of Generic K to be defined
- */
-export type RequiredMap<K extends string, T> = { [Keys in K]: T };
-
 //TODO: i want to consume this type from Admin Generator in the application
 type StaticSelectValueOption =
     | {
@@ -16,7 +11,7 @@ type StaticSelectValueOption =
     | string;
 type StaticSelectValuesOption = Array<StaticSelectValueOption>;
 
-const productStatusStaticValueOptionMap: RequiredMap<GQLProductStatus, StaticSelectValueOption> = {
+const productStatusStaticValueOptionMap: Record<GQLProductStatus, StaticSelectValueOption> = {
     Published: "Published",
     Deleted: "Deleted",
     Unpublished: "Unpublished",
