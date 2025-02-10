@@ -59,7 +59,7 @@ export class CsvDataTransformer extends Transform {
             const transformedDataAndMetadata = this.transformData(inputData);
             const { data, errors } = await this.convertToInstanceAndValidate(transformedDataAndMetadata);
             if (errors.length) {
-                console.log("DEBUG errors: ", errors);
+                this.logger.error(`Validation Errors: ${JSON.stringify(errors)}`);
             }
             this.push(data);
             // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -194,15 +194,7 @@ export class CsvDataTransformer extends Transform {
             }
             transformedValue = date;
         }
-        if (field.key === "soldCount") {
-            console.log("DEBUG columnIsBoolean(propertyMetadata): ", columnIsBoolean(propertyMetadata));
-            console.log("DEBUG value: ", value);
-            console.log("DEBUG typeof value: ", typeof value);
-            console.log("DEBUG propertyMetadata: ", propertyMetadata);
-            console.log("DEBUG field: ", field);
-            console.log("DEBUG transformedValue: ", transformedValue);
-            console.log("DEBUG typeof transformedValue: ", typeof transformedValue);
-        }
+
         return { data: transformedValue };
     }
 }
