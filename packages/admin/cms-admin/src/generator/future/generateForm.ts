@@ -485,11 +485,13 @@ export function generateForm(
 }
 
 /**
- * Checks if the provided form config is valid, throws an error otherwise.
- * For instance, an editable "id" field is invalid.
+ * Checks if the provided form config is valid.
  *
+ * Examples of invalid configs:
+ * - The "id" field is not read-only
  *
- * @param config the form config
+ * @param config The form config to check.
+ * @throws Will throw an error if the provided config is invalid.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function assertValidConfig(config: FormConfig<any>) {
