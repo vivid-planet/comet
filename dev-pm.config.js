@@ -101,6 +101,11 @@ module.exports = {
             script: "pnpm --filter @comet/cms-api run generate-block-meta:watch",
             group: ["cms-api", "cms"],
         },
+        {
+            name: "api-generator",
+            script: "pnpm --filter @comet/api-generator run dev",
+            group: ["cms-api", "cms"],
+        },
 
         //group cms-site
         {

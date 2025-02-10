@@ -1,8 +1,8 @@
+import { ScopedEntity } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { ScopedEntity } from "../user-permissions/decorators/scoped-entity.decorator";
 import { generateCrud } from "./generate-crud";
 import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 

@@ -1,3 +1,4 @@
+import { IsValidRedirectSource } from "@comet/cms-api";
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import {
@@ -12,7 +13,6 @@ import {
 } from "class-validator";
 import { v4 as uuid } from "uuid";
 
-import { IsValidRedirectSource } from "../redirects/validators/isValidRedirectSource";
 import { generateCrud } from "./generate-crud";
 import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
@@ -271,7 +271,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                     getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsValidRedirectSource"),
                 );
                 expect(isSlugImport).toBeDefined();
-                expect(isSlugImport?.getModuleSpecifierValue()).toBe("../redirects/validators/isValidRedirectSource");
+                expect(isSlugImport?.getModuleSpecifierValue()).toBe("@comet/cms-api");
 
                 orm.close();
             });

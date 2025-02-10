@@ -2,7 +2,7 @@ import { type EntityMetadata } from "@mikro-orm/postgresql";
 
 import { hasFieldFeature } from "../crud-generator.decorator";
 
-// TODO: duplicate, check if we really need this in @comet/cms-api
+// TODO: do we need this? In my opinion api-generator features should be only in api-generator package.
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {

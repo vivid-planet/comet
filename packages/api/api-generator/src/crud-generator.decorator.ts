@@ -1,4 +1,3 @@
-// TODO: duplicate, check if we really need this in @comet/cms-api
 export interface CrudGeneratorOptions {
     targetDirectory: string;
     requiredPermission?: string[] | string;
