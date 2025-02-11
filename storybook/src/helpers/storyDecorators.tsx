@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderMenuButton, MasterLayout, Menu, MenuItemRouterLink, Stack, useWindowSize } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, MainNavigation, MainNavigationItemRouterLink, MasterLayout, Stack, useWindowSize } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
 import { useTheme } from "@mui/material";
 import { type ComponentType } from "react";
@@ -17,9 +17,9 @@ export function masterLayoutDecorator() {
         const useTemporaryMenu: boolean = windowSize.width < breakpoints.values.md;
 
         return (
-            <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-                <MenuItemRouterLink primary="Example Page" to="/" icon={<Dashboard />} />
-            </Menu>
+            <MainNavigation variant={useTemporaryMenu ? "temporary" : "permanent"}>
+                <MainNavigationItemRouterLink primary="Example Page" to="/" icon={<Dashboard />} />
+            </MainNavigation>
         );
     };
 

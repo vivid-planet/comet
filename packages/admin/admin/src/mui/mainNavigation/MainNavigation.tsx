@@ -4,16 +4,16 @@ import { useHistory } from "react-router";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
-import { type MenuChild, type MenuCollapsibleItemProps } from "./CollapsibleItem";
-import { MenuContext } from "./Context";
-import { type MenuItemProps } from "./Item";
-import { type MenuItemRouterLinkProps } from "./ItemRouterLink";
-import { type MenuClassKey, type OwnerState, PermanentDrawer, TemporaryDrawer } from "./Menu.styles";
+import { type MainNavigationChild, type MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
+import { useMainNavigation } from "./Context";
+import { type MainNavigationItemProps } from "./Item";
+import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
+import { type MainNavigationClassKey, type OwnerState, PermanentDrawer, TemporaryDrawer } from "./MainNavigation.styles";
 
 export const DEFAULT_DRAWER_WIDTH = 300;
 export const DEFAULT_DRAWER_WIDTH_COLLAPSED = 60;
 
-export interface MenuProps
+export interface MainNavigationProps
     extends ThemedComponentBaseProps<{
         temporaryDrawer: typeof MuiDrawer;
         permanentDrawer: typeof MuiDrawer;
@@ -24,7 +24,7 @@ export interface MenuProps
     drawerWidthCollapsed?: number;
 }
 
-export const Menu = (inProps: MenuProps) => {
+export const MainNavigation = (inProps: MainNavigationProps) => {
     const {
         children,
         drawerWidth = DEFAULT_DRAWER_WIDTH,
@@ -32,9 +32,9 @@ export const Menu = (inProps: MenuProps) => {
         variant = "permanent",
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminMenu" });
+    } = useThemeProps({ props: inProps, name: "CometAdminMainNavigation" });
     const history = useHistory();
-    const { open, toggleOpen, setDrawerVariant, drawerVariant } = useContext(MenuContext);
+    const { open, toggleOpen, setDrawerVariant, drawerVariant } = useMainNavigation();
     const initialRender = useRef(true);
     const { headerHeight } = useContext(MasterLayoutContext);
 
@@ -78,8 +78,8 @@ export const Menu = (inProps: MenuProps) => {
 
     const childElements = useMemo(
         () =>
-            Children.map(children, (child: MenuChild) => {
-                return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            Children.map(children, (child: MainNavigationChild) => {
+                return cloneElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>(child, {
                     isMenuOpen: open,
                 });
             }),
@@ -120,17 +120,17 @@ export const Menu = (inProps: MenuProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminMenu: MenuClassKey;
+        CometAdminMainNavigation: MainNavigationClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminMenu: MenuProps;
+        CometAdminMainNavigation: MainNavigationProps;
     }
 
     interface Components {
-        CometAdminMenu?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenu"];
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenu"];
+        CometAdminMainNavigation?: {
+            defaultProps?: ComponentsPropsList["CometAdminMainNavigation"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainNavigation"];
         };
     }
 }
