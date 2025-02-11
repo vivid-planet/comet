@@ -6,6 +6,14 @@ id: api-generator
 
 The API Generator can be used to generate the usual CRUD operations in GraphQL for an entity.
 
+## Installation
+
+The API Generator can be installed via npm:
+
+```bash
+npm install --dev @comet/api-generator
+```
+
 ## Annotate entity
 
 The API Generator uses the entity and the fields defined within it to generate resolvers, services, inputs, and other
