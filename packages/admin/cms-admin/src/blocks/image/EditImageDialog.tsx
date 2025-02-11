@@ -1,11 +1,10 @@
 import "react-image-crop/dist/ReactCrop.css";
 
 import { useApolloClient } from "@apollo/client";
-import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
+import { Button, CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
 import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
-    Button,
     Dialog,
     DialogActions,
     DialogContent as MuiDialogContent,
@@ -184,7 +183,6 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                             <Box padding={7} paddingTop={0}>
                                                 <Button
                                                     variant="outlined"
-                                                    color="inherit"
                                                     onClick={async () => {
                                                         const path = await dependencyMap["DamFile"].resolvePath({
                                                             apolloClient,

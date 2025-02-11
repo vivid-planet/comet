@@ -1,7 +1,7 @@
-import { Button } from "@mui/material";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "test-utils";
 
+import { Button } from "./common/buttons/Button";
 import { useEditDialog } from "./EditDialog";
 import { FinalForm } from "./FinalForm";
 import { Field } from "./form/Field";
