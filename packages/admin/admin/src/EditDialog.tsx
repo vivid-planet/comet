@@ -3,8 +3,6 @@ import {
     Dialog,
     DialogActions,
     type DialogActionsProps,
-    DialogContent,
-    type DialogContentProps,
     type DialogProps,
     DialogTitle,
     type DialogTitleProps,
@@ -37,7 +35,6 @@ interface ITitle {
 interface EditDialogComponentsProps {
     dialog?: Omit<Partial<DialogProps>, "open" | "onClose">;
     dialogActions?: Partial<DialogActionsProps>;
-    dialogContent?: Partial<DialogContentProps>;
     dialogTitle?: Partial<DialogTitleProps>;
 }
 
@@ -155,7 +152,7 @@ const EditDialogInner = ({
                 <DialogTitle {...componentsProps?.dialogTitle}>
                     {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
                 </DialogTitle>
-                <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
+                {children}
                 <DialogActions {...componentsProps?.dialogActions}>
                     <CancelButton onClick={handleCancelClick} />
                     <SaveBoundarySaveButton disabled={false} />
