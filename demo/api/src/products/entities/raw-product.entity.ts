@@ -1,5 +1,6 @@
 import { Entity, Enum, ManyToOne, Property, Ref, types } from "@mikro-orm/core";
 import { CsvColumn } from "@src/importer/decorators/csv-column.decorator";
+import { FieldTransformer } from "@src/importer/decorators/field-transformer.decorator";
 import { TargetEntity } from "@src/importer/decorators/target-entity.decorator";
 import { BaseTargetEntity } from "@src/importer/entities/base-target.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
@@ -40,6 +41,7 @@ export class RawProduct extends BaseTargetEntity {
     @CsvColumn("additionalTypes")
     @IsArray()
     @IsEnum(ProductType, { each: true })
+    @FieldTransformer((value: string) => (value ? value.split(",").map((type) => ProductType[type.trim() as keyof typeof ProductType]) : []))
     additionalTypes: ProductType[] = [];
 
     @Property({ type: types.decimal, nullable: true })
@@ -88,6 +90,7 @@ export class RawProduct extends BaseTargetEntity {
     @CsvColumn("articleNumbers")
     @IsArray()
     @IsString({ each: true })
+    @FieldTransformer((value: string) => (value ? value.split(",").map((articleNumber) => articleNumber.trim()) : []))
     articleNumbers?: string[] = [];
 
     @Property()
