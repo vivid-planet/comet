@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
+import styled from "@emotion/styled";
 import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
@@ -92,22 +93,27 @@ export const SearchInput = ({
             }
             endAdornment={
                 internalQuery ? (
-                    <InputAdornment position="end">
-                        <Typography>
+                    <StyledInputAdornment position="end">
+                        <Typography variant="body2">
                             {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
                         </Typography>
-                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="large">
-                            <ChevronUp />
+                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="medium">
+                            <ChevronUp color="secondary" />
                         </IconButton>
-                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="large">
-                            <ChevronDown />
+                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="medium">
+                            <ChevronDown color="secondary" />
                         </IconButton>
-                        <IconButton onClick={handleClearClick} size="large">
+                        <IconButton onClick={handleClearClick} size="medium">
                             <Clear />
                         </IconButton>
-                    </InputAdornment>
+                    </StyledInputAdornment>
                 ) : null
             }
         />
     );
 };
+
+const StyledInputAdornment = styled(InputAdornment)`
+    align-self: center;
+    height: 32px;
+`;
