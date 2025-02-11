@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+        "api-generator:watch": "rimraf 'src/*/generated' && comet-api-generator generate --watch",
         "prebuild": "rimraf dist",
         "build": "nest build",
         "console": "NODE_OPTIONS='--max-old-space-size=256' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
