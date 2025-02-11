@@ -1,10 +1,8 @@
-import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
+import { CrudGenerator } from "@comet/cms-api";
+import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
-
-import { Product } from "./product.entity";
 
 @ObjectType()
 @Entity()
@@ -28,16 +26,6 @@ export class ProductCategory extends BaseEntity {
     @Field(() => Int)
     @Min(1)
     position: number;
-
-    @CrudField({
-        resolveField: true, //default is true
-        //search: true, //not implemented
-        //filter: true, //not implemented
-        //sort: true, //not implemented
-        input: false, //default is true
-    })
-    @OneToMany(() => Product, (products) => products.category)
-    products = new Collection<Product>(this);
 
     @Property()
     @Field()

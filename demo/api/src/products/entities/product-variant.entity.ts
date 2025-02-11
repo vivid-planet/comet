@@ -1,10 +1,8 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
-import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/postgresql";
+import { BlockDataInterface, CrudGenerator, DamImageBlock, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
-
-import { Product } from "./product.entity";
 
 @ObjectType()
 @Entity()
@@ -29,17 +27,6 @@ export class ProductVariant extends BaseEntity {
     @Field(() => Int)
     @Min(1)
     position: number;
-
-    @ManyToOne(() => Product, { ref: true })
-    @CrudField({
-        resolveField: true, // default is true
-        // search: true, // not yet supported for nested
-        // filter: true, // not yet supported for nested
-        // sort: true, // not yet supported for nested
-        // input: false, // ignored because product is a root argument for create
-        dedicatedResolverArg: true, //default is false
-    })
-    product: Ref<Product>;
 
     @Property()
     @Field()

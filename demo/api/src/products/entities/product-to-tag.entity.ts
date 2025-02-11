@@ -2,7 +2,6 @@ import { BaseEntity, Entity, ManyToOne, PrimaryKey, Property, Ref, types } from 
 import { Field, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { Product } from "./product.entity";
 import { ProductTag } from "./product-tag.entity";
 
 @Entity()
@@ -11,9 +10,6 @@ export class ProductToTag extends BaseEntity {
     @Field()
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
-
-    @ManyToOne(() => Product, { deleteRule: "cascade", ref: true })
-    product: Ref<Product>;
 
     @ManyToOne(() => ProductTag, { deleteRule: "cascade", ref: true })
     tag: Ref<ProductTag>;

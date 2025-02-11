@@ -1358,7 +1358,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
                 type: "filter",
             });
         }
-        if (hasSortArg) {
+        /*if (hasSortArg) {
             generatedFiles.push({
                 name: `dto/${fileNameSingular}.sort.ts`,
                 content: generateSortDto({ generatorOptions, metadata }),
@@ -1387,7 +1387,8 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             content: generateResolver({ generatorOptions, metadata }),
             type: "resolver",
         });
-
+*/
+        console.log("MetaData", metadata.props);
         metadata.props
             .filter((prop) => {
                 if (prop.kind === "1:m" && prop.orphanRemoval) {

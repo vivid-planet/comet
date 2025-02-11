@@ -1,5 +1,5 @@
 import { CLIHelper } from "@mikro-orm/cli";
-import { type Dictionary, type EntityMetadata } from "@mikro-orm/postgresql";
+import { type Dictionary, type EntityMetadata, NullCacheAdapter } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { watch } from "chokidar";
 import { Command } from "commander";
@@ -28,6 +28,10 @@ const startFileWatchMode = async () => {
         .on("change", async (path) => {
             const orm = await CLIHelper.getORM(undefined, undefined, {
                 dbName: "generator",
+                metadataCache: {
+                    adapter: NullCacheAdapter,
+                },
+
                 disableIdentityMap: true,
             });
 
@@ -37,6 +41,7 @@ const startFileWatchMode = async () => {
             LazyMetadataStorage.load();
 
             const entity = entityForPath(entities, path);
+
             if (entity) {
                 await generateCrudForEntity(entity);
             }
@@ -53,7 +58,9 @@ const startGenerateAllFiles = async () => {
         dbName: "generator",
         disableIdentityMap: true,
     });
-    const entities = orm.em.getMetadata().getAll();
+
+    const entities = orm.em.fork().getMetadata().getAll();
+
     LazyMetadataStorage.load();
 
     for (const name in entities) {
@@ -71,6 +78,7 @@ const startGenerateAllFiles = async () => {
 const generateCrudForEntity = async (entity: EntityMetadata) => {
     {
         const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
+
         if (generatorOptions) {
             console.log(`🚀 start generateCrud for Entity ${entity.path}`);
             const files = await generateCrud(generatorOptions, entity);
@@ -103,7 +111,7 @@ const generate = new Command("generate")
     .action(async (options: GenerateOptions) => {
         if (options.watch) {
             console.log("🚀 Start API generator in watch mode ...");
-            await startGenerateAllFiles();
+            //await startGenerateAllFiles();
             await startFileWatchMode();
         } else {
             console.log("🚀 Start API generator ...");
