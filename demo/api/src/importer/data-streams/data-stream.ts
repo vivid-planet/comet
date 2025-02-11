@@ -1,4 +1,4 @@
-export interface DataStreamAndMetaData {
+export interface DataStreamAndMetadata {
     dataStream: NodeJS.ReadableStream;
     params?: Record<string, unknown>;
     additionalData?: Record<string, unknown>;
@@ -7,5 +7,5 @@ export interface DataStreamAndMetaData {
 export type DataStreamClass = { new (): DataStream };
 
 export abstract class DataStream {
-    abstract getDataStreamsAndMetaData(): Promise<DataStreamAndMetaData | null>;
+    abstract getDataStreamsAndMetadata(): Promise<DataStreamAndMetadata | null>;
 }

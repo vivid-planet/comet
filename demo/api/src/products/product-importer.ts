@@ -1,11 +1,11 @@
 import { EntityManager } from "@mikro-orm/core";
 import { Injectable, Logger, LoggerService } from "@nestjs/common";
-import { DataStream, DataStreamAndMetaData } from "@src/importer/data-streams/data-stream";
+import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
 import { pipeline, Transform } from "stream";
 
 @Injectable()
 export class ProductImporter {
-    dataStream: DataStreamAndMetaData | null = null;
+    dataStream: DataStreamAndMetadata | null = null;
     name = "rawProductImport";
     transformPipes: Transform[] = [];
     logger: LoggerService;
@@ -21,7 +21,7 @@ export class ProductImporter {
     }
 
     async init({ dataStream }: { dataStream: DataStream }): Promise<void> {
-        this.dataStream = await dataStream.getDataStreamsAndMetaData();
+        this.dataStream = await dataStream.getDataStreamsAndMetadata();
     }
 
     getName(): string {

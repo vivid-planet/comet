@@ -3,7 +3,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { Logger } from "@nestjs/common";
 import path from "path";
 
-import { DataStreamAndMetaData } from "./data-stream";
+import { DataStreamAndMetadata } from "./data-stream";
 import { FileDataStream } from "./file-data-stream";
 
 export class LocalFileDataStream extends FileDataStream {
@@ -14,7 +14,7 @@ export class LocalFileDataStream extends FileDataStream {
         this.fileKey = fileKey;
     }
 
-    async getDataStreamsAndMetaData(): Promise<DataStreamAndMetaData | null> {
+    async getDataStreamsAndMetadata(): Promise<DataStreamAndMetadata | null> {
         const dataStreamAndSize = await this.getFileStreamAndSizeOfLocalFile({ filePath: this.fileKey });
         return this.getFileStreamResult(dataStreamAndSize);
     }
