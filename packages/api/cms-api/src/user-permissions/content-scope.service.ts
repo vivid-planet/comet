@@ -82,7 +82,7 @@ export class ContentScopeService {
                 }
 
                 for (const id of ids) {
-                    const row = await repo.findOneOrFail(id);
+                    const row = await repo.findOneOrFail(id, { filters: false }); // disable all default filters, e.g., excludeDeleted
                     if (row.scope) {
                         contentScopes.push([row.scope as ContentScope]);
                     } else {
