@@ -24,19 +24,18 @@ export class ProductImporter {
     }
 
     async executeRun(): Promise<boolean> {
-        if (this.dataStream) {
+        const dataStream = this.dataStream;
+        if (dataStream) {
             return new Promise((resolve, reject) => {
-                if (this.dataStream) {
-                    return pipeline([this.dataStream.dataStream, ...this.transformPipes], (err) => {
-                        this.transformPipes.map((stream) => stream.end());
-                        if (err) {
-                            reject(err);
-                        } else {
-                            this.logger.log("DataStream piped successfully");
-                            resolve(true);
-                        }
-                    });
-                }
+                return pipeline([dataStream.dataStream, ...this.transformPipes], (err) => {
+                    this.transformPipes.map((stream) => stream.end());
+                    if (err) {
+                        reject(err);
+                    } else {
+                        this.logger.log("DataStream piped successfully");
+                        resolve(true);
+                    }
+                });
             });
         }
         return false;
