@@ -1,9 +1,0 @@
-{
-    "compilerOptions": {
-        "outDir": "lib",
-        "rootDir": "src"
-    },
-    "exclude": [],
-    "extends": "../tsconfig.base.json",
-    "include": ["./src"]
-}

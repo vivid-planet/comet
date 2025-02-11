@@ -1,4 +1,4 @@
-import { createListBlock } from "@comet/blocks-admin";
+import { createListBlock } from "@comet/cms-admin";
 import { CallToActionBlock } from "@src/common/blocks/CallToActionBlock";
 import { FormattedMessage } from "react-intl";
 

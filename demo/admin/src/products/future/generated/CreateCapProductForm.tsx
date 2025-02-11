@@ -14,8 +14,7 @@ import {
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
-import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { type BlockState, createFinalFormBlock, DamImageBlock } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
 import { type GQLProductType } from "@src/graphql.generated";
 import { type FormApi } from "final-form";

@@ -74,9 +74,6 @@ importers:
       '@comet/admin-theme':
         specifier: workspace:*
         version: link:../../packages/admin/admin-theme
-      '@comet/blocks-admin':
-        specifier: workspace:*
-        version: link:../../packages/admin/blocks-admin
       '@comet/cms-admin':
         specifier: workspace:*
         version: link:../../packages/admin/cms-admin
@@ -1388,127 +1385,6 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
 
-  packages/admin/blocks-admin:
-    dependencies:
-      '@comet/admin':
-        specifier: workspace:^7.13.0
-        version: link:../admin
-      '@comet/admin-icons':
-        specifier: workspace:^7.13.0
-        version: link:../admin-icons
-      lodash.isequal:
-        specifier: ^4.5.0
-        version: 4.5.0
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.0.1
-      scroll-into-view-if-needed:
-        specifier: ^3.1.0
-        version: 3.1.0
-      uuid:
-        specifier: ^11.0.5
-        version: 11.0.5
-    devDependencies:
-      '@babel/cli':
-        specifier: ^7.26.4
-        version: 7.26.4(@babel/core@7.26.8)
-      '@babel/core':
-        specifier: ^7.26.8
-        version: 7.26.8
-      '@comet/admin-babel-preset':
-        specifier: workspace:^7.13.0
-        version: link:../admin-babel-preset
-      '@comet/cli':
-        specifier: workspace:^7.13.0
-        version: link:../../cli
-      '@comet/eslint-config':
-        specifier: workspace:^7.13.0
-        version: link:../../eslint-config
-      '@emotion/react':
-        specifier: ^11.14.0
-        version: 11.14.0(@types/react@18.3.18)(react@18.3.1)
-      '@emotion/styled':
-        specifier: ^11.14.0
-        version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1)
-      '@mui/material':
-        specifier: ^6.4.3
-        version: 6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/system':
-        specifier: ^6.4.3
-        version: 6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1)
-      '@types/jest':
-        specifier: ^29.5.14
-        version: 29.5.14
-      '@types/lodash.isequal':
-        specifier: ^4.5.8
-        version: 4.5.8
-      '@types/node':
-        specifier: ^22.13.1
-        version: 22.13.1
-      '@types/react':
-        specifier: ^18.3.18
-        version: 18.3.18
-      '@types/react-dom':
-        specifier: ^18.3.5
-        version: 18.3.5(@types/react@18.3.18)
-      '@types/react-router':
-        specifier: ^5.1.20
-        version: 5.1.20
-      '@types/react-router-dom':
-        specifier: ^5.0.0
-        version: 5.3.3
-      chokidar-cli:
-        specifier: ^3.0.0
-        version: 3.0.0
-      eslint:
-        specifier: ^9.18.0
-        version: 9.19.0(jiti@2.4.2)
-      final-form:
-        specifier: ^4.20.10
-        version: 4.20.10
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.1)(typescript@4.9.5))
-      jest-environment-jsdom:
-        specifier: ^29.7.0
-        version: 29.7.0
-      jest-junit:
-        specifier: ^16.0.0
-        version: 16.0.0
-      npm-run-all2:
-        specifier: ^5.0.2
-        version: 5.0.2
-      prettier:
-        specifier: ^3.5.0
-        version: 3.5.0
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dnd:
-        specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.13.1)(@types/react@18.3.18)(react@18.3.1)
-      react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
-      react-final-form:
-        specifier: ^6.5.9
-        version: 6.5.9(final-form@4.20.10)(react@18.3.1)
-      react-intl:
-        specifier: ^6.8.9
-        version: 6.8.9(react@18.3.1)(typescript@4.9.5)
-      react-router:
-        specifier: ^5.3.4
-        version: 5.3.4(react@18.3.1)
-      react-router-dom:
-        specifier: ^5.3.4
-        version: 5.3.4(react@18.3.1)
-      ts-jest:
-        specifier: ^29.2.5
-        version: 29.2.5(@babel/core@7.26.8)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.8))(jest@29.7.0(@types/node@22.13.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.1)(typescript@4.9.5)))(typescript@4.9.5)
-      typescript:
-        specifier: ^4.9.5
-        version: 4.9.5
-
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
@@ -1526,9 +1402,6 @@ importers:
       '@comet/admin-theme':
         specifier: workspace:^7.13.0
         version: link:../admin-theme
-      '@comet/blocks-admin':
-        specifier: workspace:^7.13.0
-        version: link:../blocks-admin
       '@graphql-tools/graphql-file-loader':
         specifier: ^7.5.17
         version: 7.5.17(graphql@15.10.1)
@@ -1613,6 +1486,9 @@ importers:
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
+      scroll-into-view-if-needed:
+        specifier: ^3.1.0
+        version: 3.1.0
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
@@ -2317,9 +2193,6 @@ importers:
       '@comet/admin-theme':
         specifier: workspace:*
         version: link:../packages/admin/admin-theme
-      '@comet/blocks-admin':
-        specifier: workspace:*
-        version: link:../packages/admin/blocks-admin
       '@comet/cms-admin':
         specifier: workspace:*
         version: link:../packages/admin/cms-admin

@@ -57,10 +57,6 @@
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/admin/blocks-admin": {
-            "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
-        },
         "packages/admin/cms-admin": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"]

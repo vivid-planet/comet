@@ -1,20 +1,5 @@
 import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
 import { Add, Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSectionGroup,
-    type BlockInterface,
-    BlocksFinalForm,
-    type BlockState,
-    Collapsible,
-    CollapsibleSwitchButtonHeader,
-    composeBlocks,
-    createBlockSkeleton,
-    createOptionalBlock,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
@@ -24,9 +9,21 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
 import { validateUrl } from "../validation/validateUrl";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSectionGroup } from "./common/BlockAdminComponentSectionGroup";
+import { Collapsible } from "./common/Collapsible";
+import { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonHeader";
+import { createOptionalBlock } from "./factories/createOptionalBlock";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
+import { type BlockInterface, type BlockState } from "./types";
 
 interface CreateSeoBlockOptions {
     image?: BlockInterface;
@@ -271,10 +268,10 @@ export function createSeoBlock(
 
                         {/* Alternate Hreflang */}
                         <Box marginTop={8} marginBottom={8}>
-                            <AdminComponentSectionGroup
+                            <BlockAdminComponentSectionGroup
                                 title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />}
                             >
-                                <AdminComponentPaper>
+                                <BlockAdminComponentPaper>
                                     <FieldArray name="alternativeLinks">
                                         {({ fields }) => (
                                             <>
@@ -311,19 +308,19 @@ export function createSeoBlock(
                                                         </Grid>
                                                     </Grid>
                                                 ))}
-                                                <AdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
+                                                <BlockAdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
                                                     <AddButtonContent>
                                                         <AddButtonIcon />
                                                         <Typography>
                                                             <FormattedMessage {...messages.add} />
                                                         </Typography>
                                                     </AddButtonContent>
-                                                </AdminComponentButton>
+                                                </BlockAdminComponentButton>
                                             </>
                                         )}
                                     </FieldArray>
-                                </AdminComponentPaper>
-                            </AdminComponentSectionGroup>
+                                </BlockAdminComponentPaper>
+                            </BlockAdminComponentSectionGroup>
                         </Box>
                     </BlocksFinalForm>
                 </div>
