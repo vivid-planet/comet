@@ -1,0 +1,40 @@
+type ResolveUrlOptions = {
+    /**
+     * the baseUrl will be prepended to the resulting path
+     *
+     * Sample: "http://localhost:3000/" or "/"
+     * @default: ""
+     */
+    baseUrl?: string;
+
+    /**
+     * path with leading /
+     *
+     * Sample: "/test/to/my/page"
+     */
+    path: string;
+
+    scope: {
+        language: string;
+    };
+
+    /**
+     * If provided, the anchor will be appended to the resulting URL
+     *
+     * Sample: "my-anchor"
+     */
+    anchor?: string;
+};
+
+/**
+ * Resolves a path, scope and a baseUrl to a real URL which can be navigated to.
+ *
+ * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
+ */
+export const createSiteUrl = ({ baseUrl = "", path, scope, anchor }: ResolveUrlOptions) => {
+    let anchorPostfix = "";
+    if (anchor) {
+        anchorPostfix = `#${anchor}`;
+    }
+    return `${baseUrl}${scope.language}${path}${anchorPostfix}`;
+};
