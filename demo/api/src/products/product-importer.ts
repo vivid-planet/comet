@@ -16,7 +16,7 @@ export class ProductImporter {
 
     constructor(private readonly em: EntityManager) {
         this.logger = new Logger("product-importer");
-        const parsePipes = new CsvParseAndTransformPipes(this.targetEntity, em).getPipes(this.logger, {});
+        const parsePipes = new CsvParseAndTransformPipes(this.targetEntity, em).getPipes(this.logger, { encoding: "utf-8" });
         this.transformPipes = [
             ...parsePipes,
             new Transform({
