@@ -244,7 +244,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
-                    value: "true",
+                    value: true,
                     label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
                     cellContent: (
                         <GridCellContent
@@ -254,7 +254,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                     ),
                 },
                 {
-                    value: "false",
+                    value: false,
                     label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
                     cellContent: (
                         <GridCellContent
