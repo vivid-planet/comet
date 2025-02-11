@@ -22,12 +22,12 @@ export class LocalFileDataStream extends FileDataStream {
     protected async getFileStreamAndSizeOfLocalFile({ filePath, encoding }: { filePath?: string; encoding?: BufferEncoding }) {
         const logger = new Logger();
         if (!filePath) {
-            await logger.error(new Error(`File ${filePath} does not exist`));
+            await logger.error(`File ${filePath} does not exist`);
             return null;
         }
         // check if file exists
         if (!existsSync(filePath)) {
-            await logger.error(new Error(`File ${filePath} does not exist`));
+            await logger.error(`File ${filePath} does not exist`);
             return null;
         }
 
