@@ -1,5 +1,5 @@
 ---
-"@comet/admin": patch
+"@comet/admin": minor
 ---
 
 Allow passing a `ReactNode` to `fieldLabel` of `CheckboxField` and `SwitchField`
