@@ -4,7 +4,7 @@ import { CsvColumnMetadata } from "@src/importer/decorators/csv-column.decorator
 
 import { ImporterPipe } from "../importer-pipe.type";
 
-export type ParserOptions = ParserOptionsArgs;
+export type ParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: BufferEncoding };
 
 export class CsvParsePipe implements ImporterPipe {
     private readonly parserOptions: ParserOptions;

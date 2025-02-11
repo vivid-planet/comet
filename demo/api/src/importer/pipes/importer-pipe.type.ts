@@ -2,7 +2,7 @@ import { LoggerService } from "@nestjs/common";
 import { ValidationError as ClassValidationError } from "class-validator";
 import { Transform } from "stream";
 
-import { ParserOptions } from "./parsers/csv-parser";
+import { ParserOptions } from "./parsers/csv-parser.pipe";
 
 export type PipeData = Record<string, unknown>;
 
