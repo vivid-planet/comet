@@ -1,4 +1,5 @@
-import { Button, Link } from "@mui/material";
+import { Button } from "@comet/admin";
+import { Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const Root = styled("div")`
