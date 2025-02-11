@@ -1,5 +1,6 @@
 import { type Breakpoints } from "@mui/material";
 import { type TypographyOptions } from "@mui/material/styles/createTypography";
+import { type CSSProperties } from "react";
 
 const fontFamily = "Roboto Flex Variable, Helvetica, Arial, sans-serif";
 
@@ -130,13 +131,13 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
 
 declare module "@mui/material/styles" {
     interface TypographyVariants {
-        list: React.CSSProperties;
-        listItem: React.CSSProperties;
+        list: CSSProperties;
+        listItem: CSSProperties;
     }
 
     interface TypographyVariantsOptions {
-        list?: React.CSSProperties;
-        listItem?: React.CSSProperties;
+        list?: CSSProperties;
+        listItem?: CSSProperties;
     }
 }
 

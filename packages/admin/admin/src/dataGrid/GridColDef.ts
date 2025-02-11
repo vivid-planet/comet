@@ -6,6 +6,7 @@ import {
 } from "@mui/x-data-grid";
 import { type GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
 import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
+import { type ReactNode } from "react";
 
 type ValueOption =
     | string
@@ -13,7 +14,7 @@ type ValueOption =
     | {
           value: any;
           label: string;
-          cellContent?: React.ReactNode;
+          cellContent?: ReactNode;
       };
 
 type GridColDefExtension<R extends GridValidRowModel = any> = {

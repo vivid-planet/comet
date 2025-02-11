@@ -24,6 +24,7 @@ const config = [
     {
         rules: {
             "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
+            "no-restricted-globals": ["error", "React"],
             "no-restricted-imports": [
                 "error",
                 {

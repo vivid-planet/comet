@@ -1,6 +1,8 @@
+import { type ButtonHTMLAttributes, type DetailedHTMLProps } from "react";
+
 import styles from "./button.module.css";
 
-interface ButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
     isOpen: boolean;
 }
 

@@ -1,7 +1,7 @@
 "use client";
 import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
 import { cookieIds } from "@src/util/cookieIds";
-import { type ComponentProps } from "react";
+import { type ComponentProps, type CSSProperties } from "react";
 import styled from "styled-components";
 
 import { FallbackCookiePlaceholder, LoadingCookiePlaceholder } from "../helpers/CookiePlaceholders";
@@ -24,7 +24,7 @@ export const CookieSafeYouTubeVideoBlock = (props: ComponentProps<typeof YouTube
     );
 };
 
-const Root = styled.div<{ $aspectRatio: React.CSSProperties["aspectRatio"] }>`
+const Root = styled.div<{ $aspectRatio: CSSProperties["aspectRatio"] }>`
     position: relative;
     aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
 `;

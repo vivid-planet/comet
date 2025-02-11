@@ -1,5 +1,5 @@
 "use client";
-import { type ReactNode, useState } from "react";
+import { type ReactElement, type ReactNode, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
@@ -27,7 +27,7 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
 interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
-    renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+    renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
     previewImageIcon?: ReactNode;
 }

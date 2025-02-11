@@ -59,6 +59,7 @@ const config = [
             "react/prop-types": "off",
             "react/jsx-curly-brace-presence": "error",
             "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
+            "no-restricted-globals": ["error", "React"],
             "no-restricted-imports": [
                 "error",
                 {

@@ -19,7 +19,7 @@ import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
 import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
-import { useContext } from "react";
+import { type ReactNode, useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
@@ -28,7 +28,7 @@ import { type GQLUserForGridFragment, type GQLUserGridQuery, type GQLUserGridQue
 import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
-    toolbarAction: React.ReactNode;
+    toolbarAction: ReactNode;
 }
 function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
     return (
@@ -45,9 +45,9 @@ function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGr
     );
 }
 type Props = {
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLUserForGridFragment, any>) => React.ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLUserForGridFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
