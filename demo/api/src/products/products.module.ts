@@ -51,6 +51,6 @@ import { ProductImporterService } from "./product-importer.service";
         ProductImporterConsole,
         ProductImporterService,
     ],
-    exports: [],
+    exports: [ProductImporterService],
 })
 export class ProductsModule {}
