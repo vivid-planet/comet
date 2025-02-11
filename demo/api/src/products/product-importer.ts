@@ -1,17 +1,16 @@
 import { EntityManager } from "@mikro-orm/core";
-import { Injectable, Logger, LoggerService } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
 import { pipeline, Transform } from "stream";
 
 @Injectable()
 export class ProductImporter {
+    private readonly logger = new Logger("product-importer");
     dataStream: DataStreamAndMetadata | null = null;
     name = "rawProductImport";
     transformPipes: Transform[] = [];
-    logger: LoggerService;
 
     constructor(private readonly em: EntityManager) {
-        this.logger = new Logger("product-importer");
         this.transformPipes = [
             new Transform({
                 objectMode: true,
