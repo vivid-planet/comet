@@ -1,4 +1,4 @@
-import { type DocumentNode, type QueryOptions, type TypedDocumentNode, useApolloClient } from "@apollo/client";
+import { type DocumentNode, type OperationVariables, type QueryOptions, type TypedDocumentNode, useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
 
 import { type SaveConflictHookReturn, useSaveConflict } from "./useSaveConflict";
@@ -12,7 +12,7 @@ interface SaveConflictDialogOptions {
     loadLatestVersion: () => Promise<void>;
     onDiscardButtonPressed: () => Promise<void>;
 }
-export function useSaveConflictQuery<TData, TVariables>(
+export function useSaveConflictQuery<TData, TVariables extends OperationVariables>(
     query: DocumentNode | TypedDocumentNode<TData, TVariables>,
     options: SaveConflictQueryHookOptions<TData, TVariables>,
     dialogOptions: SaveConflictDialogOptions,

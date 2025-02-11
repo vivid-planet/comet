@@ -19,8 +19,8 @@ import {
     usePersistedStateId,
     useTableQueryFilter,
 } from "@comet/admin";
+import { faker } from "@faker-js/faker";
 import { Link, Typography } from "@mui/material";
-import faker from "faker";
 
 interface ColorFilterFieldProps {
     colors: string[];
@@ -64,8 +64,8 @@ const tableData = Array.from(Array(10).keys()).map((i): Car => {
     return {
         id: i,
         model: faker.vehicle.model(),
-        color: faker.commerce.color(),
-        price: faker.commerce.price(100, 1000, 2),
+        color: faker.color.human(),
+        price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
         owner: {
             firstname: faker.name.firstName(),
             lastname: faker.name.lastName(),

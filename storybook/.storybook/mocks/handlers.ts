@@ -46,9 +46,9 @@ const allLaunches: Launch[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allLaunches.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         mission_name: faker.word.adjective(),
-        launch_date_local: faker.datatype.datetime(),
+        launch_date_local: faker.date.past(),
     });
 }
 
@@ -220,7 +220,7 @@ const allManufacturers: Manufacturer[] = [];
 
 for (let i = 0; i < 10; i += 1) {
     allManufacturers.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.company.name(),
     });
 }
@@ -242,7 +242,7 @@ const allProducts: Product[] = [];
 
 for (let i = 0; i < 100; i += 1) {
     allProducts.push({
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         name: faker.commerce.product(),
         manufacturer: faker.helpers.arrayElement(allManufacturers),
     });
