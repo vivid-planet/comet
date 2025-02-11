@@ -1,6 +1,6 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
 
-import { LoggerService } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import path from "path";
 
 import { DataStreamAndMetaData } from "./data-stream";
@@ -14,20 +14,13 @@ export class LocalFileDataStream extends FileDataStream {
         this.fileKey = fileKey;
     }
 
-    async getDataStreamsAndMetaData({ logger }: { logger: LoggerService }): Promise<DataStreamAndMetaData | null> {
-        const dataStreamAndSize = await this.getFileStreamAndSizeOfLocalFile({ filePath: this.fileKey, logger });
+    async getDataStreamsAndMetaData(): Promise<DataStreamAndMetaData | null> {
+        const dataStreamAndSize = await this.getFileStreamAndSizeOfLocalFile({ filePath: this.fileKey });
         return this.getFileStreamResult(dataStreamAndSize);
     }
 
-    protected async getFileStreamAndSizeOfLocalFile({
-        filePath,
-        logger,
-        encoding,
-    }: {
-        filePath?: string;
-        logger: LoggerService;
-        encoding?: BufferEncoding;
-    }) {
+    protected async getFileStreamAndSizeOfLocalFile({ filePath, encoding }: { filePath?: string; encoding?: BufferEncoding }) {
+        const logger = new Logger();
         if (!filePath) {
             await logger.error(new Error(`File ${filePath} does not exist`));
             return null;

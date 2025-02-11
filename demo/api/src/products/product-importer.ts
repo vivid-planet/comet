@@ -21,7 +21,7 @@ export class ProductImporter {
     }
 
     async init({ dataStream }: { dataStream: DataStream }): Promise<void> {
-        this.dataStream = await dataStream.getDataStreamsAndMetaData({ logger: this.logger });
+        this.dataStream = await dataStream.getDataStreamsAndMetaData();
     }
 
     getName(): string {

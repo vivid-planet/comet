@@ -1,5 +1,3 @@
-import { LoggerService } from "@nestjs/common";
-
 export interface DataStreamAndMetaData {
     dataStream: NodeJS.ReadableStream;
     params?: Record<string, unknown>;
@@ -9,5 +7,5 @@ export interface DataStreamAndMetaData {
 export type DataStreamClass = { new (): DataStream };
 
 export abstract class DataStream {
-    abstract getDataStreamsAndMetaData({ logger }: { logger: LoggerService }): Promise<DataStreamAndMetaData | null>;
+    abstract getDataStreamsAndMetaData(): Promise<DataStreamAndMetaData | null>;
 }
