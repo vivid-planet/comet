@@ -23,10 +23,6 @@ export class ProductImporter {
         this.dataStream = await dataStream.getDataStreamsAndMetadata();
     }
 
-    getName(): string {
-        return this.name;
-    }
-
     async executeRun(): Promise<boolean> {
         if (this.dataStream) {
             return new Promise((resolve, reject) => {
