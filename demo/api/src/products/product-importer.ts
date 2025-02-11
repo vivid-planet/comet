@@ -49,7 +49,7 @@ export class ProductImporter {
     }
 
     async displayData(row: unknown, encoding: string, callback: (error?: Error | null, data?: object[]) => void): Promise<void> {
-        this.logger.log("row: ", row);
+        this.logger.log("row: ", JSON.stringify(row, null, 2));
         return callback(null);
     }
 }
