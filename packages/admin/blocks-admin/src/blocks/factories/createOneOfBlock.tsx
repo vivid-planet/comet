@@ -445,6 +445,16 @@ export const createOneOfBlock = <T extends boolean = boolean>(
                 return displayName;
             }
         },
+
+        extractTextContents: (state) => {
+            const { state: blockState, block } = getActiveBlock(state);
+
+            if (blockState === undefined) {
+                return [];
+            }
+
+            return block?.extractTextContents?.(blockState.props) ?? [];
+        },
     };
     if (override) {
         return override(OneOfBlock);
