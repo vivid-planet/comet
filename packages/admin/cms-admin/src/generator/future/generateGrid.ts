@@ -526,6 +526,13 @@ export function generateGrid(
               }`
             : "";
 
+    config.moreActions?.overallActions?.forEach((action) => {
+        imports.push({
+            name: action.component.name,
+            importPath: action.component.import,
+        });
+    });
+
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         Button,
@@ -657,6 +664,7 @@ export function generateGrid(
                   excelExport: config.excelExport,
                   newEntryText: config.newEntryText,
                   fragmentName,
+                  moreActions: config.moreActions,
               })
             : ""
     }
