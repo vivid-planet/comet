@@ -5,7 +5,7 @@ import { pipeline, Transform } from "stream";
 
 @Injectable()
 export class ProductImporter {
-    private readonly logger = new Logger("product-importer");
+    private readonly logger = new Logger(ProductImporter.name);
     dataStream: DataStreamAndMetadata | null = null;
     name = "rawProductImport";
     transformPipes: Transform[] = [];
