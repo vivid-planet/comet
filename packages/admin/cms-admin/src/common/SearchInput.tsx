@@ -1,5 +1,4 @@
 import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
-import styled from "@emotion/styled";
 import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
@@ -93,7 +92,7 @@ export const SearchInput = ({
             }
             endAdornment={
                 internalQuery ? (
-                    <StyledInputAdornment position="end">
+                    <InputAdornment position="end">
                         <Typography variant="body2">
                             {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
                         </Typography>
@@ -106,14 +105,9 @@ export const SearchInput = ({
                         <IconButton onClick={handleClearClick} size="medium">
                             <Clear />
                         </IconButton>
-                    </StyledInputAdornment>
+                    </InputAdornment>
                 ) : null
             }
         />
     );
 };
-
-const StyledInputAdornment = styled(InputAdornment)`
-    align-self: center;
-    height: 32px;
-`;
