@@ -570,6 +570,18 @@ enum ProductType {
   Cap
   Shirt
   Tie
+  Pants
+  Jacket
+  Shoes
+  Socks
+  Mug
+  Pen
+  Calendar
+  Notebook
+  Bag
+  Watch
+  Sunglasses
+  Wallet
 }
 
 """

@@ -14,7 +14,7 @@ export class LocalFileDataStream extends FileDataStream {
         this.fileKey = fileKey;
     }
 
-    async getDataStreamsAndMetadata(): Promise<DataStreamAndMetadata | null> {
+    async getDataStreamAndMetadata(): Promise<DataStreamAndMetadata | null> {
         const dataStreamAndSize = await this.getFileStreamAndSizeOfLocalFile({ filePath: this.fileKey });
         return this.getFileStreamResult(dataStreamAndSize);
     }
@@ -34,7 +34,7 @@ export class LocalFileDataStream extends FileDataStream {
         const fileSize = statSync(filePath).size;
         // gzip filed must be read as binary, without encoding
         const fileStream = createReadStream(filePath, filePath.endsWith(".gz") && !encoding ? {} : { encoding: encoding || "utf-8" });
-        logger.log(`Providing fileStreams for local file (${filePath} fileSize: ${fileSize}).`);
+        logger.log(`Providing fileStream for local file (${filePath} fileSize: ${fileSize}).`);
         return { fileSize, fileStream, fileName: path.basename(filePath) };
     }
 }

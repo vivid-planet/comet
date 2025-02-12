@@ -7,7 +7,7 @@ import { ProductImporterService } from "./product-importer.service";
 @Injectable()
 @Console()
 export class ProductImporterConsole {
-    constructor(private readonly orm: MikroORM, private readonly ProductImporterService: ProductImporterService) {}
+    constructor(private readonly orm: MikroORM, private readonly productImporterService: ProductImporterService) {}
 
     @CreateRequestContext()
     @Command({
@@ -15,7 +15,7 @@ export class ProductImporterConsole {
         description: "Start import",
     })
     async execute(filePath: string): Promise<void> {
-        const importer = await this.ProductImporterService.createImporter(filePath);
+        const importer = await this.productImporterService.createImporter(filePath);
         await importer.executeRun();
     }
 }
