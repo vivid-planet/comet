@@ -1,3 +1,4 @@
+import { VisibilityParam } from "@src/middleware/domainRewrite";
 import type { ContentScope } from "@src/site-configs";
 import { cache } from "react";
 
@@ -23,3 +24,4 @@ function createServerContext<T>(defaultValue: T): [() => T, (v: T) => void] {
 }
 
 export const [getNotFoundContext, setNotFoundContext] = createServerContext<ContentScope | null>(null);
+export const [getVisibilityParam, setVisibilityParam] = createServerContext<VisibilityParam>("default");

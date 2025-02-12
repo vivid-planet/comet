@@ -1,6 +1,6 @@
 import { gql } from "@comet/cms-site";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
 import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -49,7 +49,7 @@ const predefinedPagesQuery = gql`
     }
 `;
 
-const graphQLFetch = createGraphQLFetch();
+const graphQLFetch = createGraphQLFetchMiddleware();
 
 async function fetchPredefinedPages(domain: string) {
     const key = `predefinedPages-${domain}`;
