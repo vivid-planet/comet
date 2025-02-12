@@ -21,7 +21,7 @@
         "build:types": "tsc --project ./tsconfig.build.json --emitDeclarationOnly",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
         "generate-block-types": "comet generate-block-types --inputs",
-        "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
+        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "generate-graphql-types": "graphql-codegen",
         "generate-graphql-types:watch": "$npm_execpath generate-graphql-types --watch",
         "lint": "run-p generate-graphql-types generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
