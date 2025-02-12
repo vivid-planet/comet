@@ -65,6 +65,11 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 backgroundColor: palette.primary.dark,
                 borderColor: palette.primary.dark,
             },
+
+            "&:focus": {
+                backgroundColor: palette.primary.main,
+                border: `2px solid  ${palette.primary.dark}`,
+            },
         },
         containedSecondary: {
             color: palette.secondary.contrastText,
@@ -74,12 +79,25 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 backgroundColor: palette.secondary.dark,
                 borderColor: palette.secondary.dark,
             },
+
+            "&:focus": {
+                border: `2px solid  ${palette.primary.dark}`,
+            },
+        },
+        containedSuccess: {
+            "&:hover": {
+                backgroundColor: palette.success.dark,
+            },
+
+            "&:focus": {
+                border: `2px solid  ${palette.success.dark}`,
+            },
         },
         outlined: {
-            color: palette.grey[900],
+            color: palette.common.black,
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: palette.grey[200],
+            borderColor: palette.grey[100],
             paddingTop: 11,
             paddingRight: 14,
             paddingBottom: 11,
@@ -87,13 +105,27 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             borderRadius: 4,
 
             ":hover": {
-                backgroundColor: palette.grey[50],
-                borderColor: palette.grey[200],
+                borderColor: palette.grey[900],
+            },
+
+            ":focus": {
+                borderWidth: "2px",
+                borderColor: palette.primary.dark,
             },
         },
         outlinedError: {
             color: palette.error.main,
             borderColor: palette.error.main,
+            backgroundColor: palette.common.white,
+
+            "&:hover": {
+                borderColor: palette.error.dark,
+                backgroundColor: palette.grey[50],
+            },
+
+            "&:focus": {
+                border: `2px solid ${palette.error.main} `,
+            },
         },
         startIcon: {
             marginLeft: 0,
