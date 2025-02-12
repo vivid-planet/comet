@@ -6,7 +6,7 @@ import {
     CheckboxField,
     Field,
     FinalForm,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -14,21 +14,20 @@ import {
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { type BlockState, createFinalFormBlock, DamImageBlock } from "@comet/cms-admin";
 import { InputAdornment } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
-import { FormApi } from "final-form";
+import { type GQLProductType } from "@src/graphql.generated";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
+import { type GQLProductCategoriesSelectQuery, type GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import {
-    GQLCreateCapProductFormDetailsFragment,
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
+    type GQLCreateCapProductFormDetailsFragment,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
 } from "./CreateCapProductForm.gql.generated";
 
 const rootBlocks = {

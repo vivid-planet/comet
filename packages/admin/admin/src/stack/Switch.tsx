@@ -1,11 +1,11 @@
 import {
     Children,
-    ComponentType,
+    type ComponentType,
     createContext,
     forwardRef,
-    ForwardRefRenderFunction,
-    ReactElement,
-    ReactNode,
+    type ForwardRefRenderFunction,
+    type ReactElement,
+    type ReactNode,
     useCallback,
     useContext,
     useImperativeHandle,
@@ -13,19 +13,20 @@ import {
     useRef,
     useState,
 } from "react";
-import { matchPath, RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
+import { matchPath, Route, type RouteChildrenProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
-import { IStackPageProps } from "./Page";
+import { type IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
 
 interface IProps {
     initialPage?: string;
     title?: ReactNode;
     children: Array<ReactElement<IStackPageProps>>;
+    disableForcePromptRoute?: boolean;
 }
 
 export const StackSwitchApiContext = createContext<IStackSwitchApi>({
@@ -195,13 +196,14 @@ const StackSwitchInner: ForwardRefRenderFunction<IStackSwitchApi, IProps & IHook
                 if (matchPath(location.pathname, { path })) {
                     routeMatched = true;
                 }
+                const RouteComponent = props.disableForcePromptRoute ? Route : ForcePromptRoute;
                 return (
-                    <ForcePromptRoute path={path}>
+                    <RouteComponent path={path}>
                         {(routeProps: RouteChildrenProps<IRouteParams>) => {
                             if (!routeProps.match) return null;
                             return renderRoute(page, routeProps);
                         }}
-                    </ForcePromptRoute>
+                    </RouteComponent>
                 );
             })}
             {!routeMatched && (

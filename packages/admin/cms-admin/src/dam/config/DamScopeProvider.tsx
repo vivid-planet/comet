@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { DamScopeContext } from "./DamScopeContext";

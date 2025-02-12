@@ -205,6 +205,28 @@ npx @comet/upgrade v8/update-class-validator.ts
 
 :::
 
+#### Sentry
+
+1. Upgrade the "@sentry/node" dependency in your `package.json` file:
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@sentry/node": "^7.0.0",
++       "@sentry/node": "^8.0.0",
+    },
+}
+```
+
+2. Update your `main.ts` file to remove all `Sentry.Handlers` and add `Sentry.setupExpressErrorHandler(app)`:
+
+```diff
+-   app.use(Sentry.Handlers.requestHandler());
+-   app.use(Sentry.Handlers.tracingHandler());
+-   app.use(Sentry.Handlers.errorHandler());
++   Sentry.setupExpressErrorHandler(app);
+```
+
 ### NestJS peer dependencies
 
 Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
@@ -229,6 +251,47 @@ npx @comet/upgrade v8/nest-peer-dependencies.ts
 ```
 
 :::
+
+### Remove `@comet/blocks-api`
+
+The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
+To upgrade, perform the following steps:
+
+1.  Remove the package:
+
+    ```diff title="api/package.json"
+    - "@comet/blocks-api": "^7.x.x",
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/remove-blocks-packages.ts
+    ```
+
+    :::
+
+2.  Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+    ```
+
+    :::
+
+3.  Update imports that have been renamed
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+    ```
+
+    :::
+
+4.  Remove usages of removed export `getFieldKeys` (probably none)
 
 ## Admin
 
@@ -477,6 +540,53 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
 ```
 
+### Remove `@comet/blocks-admin`
+
+The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
+To upgrade, perform the following steps:
+
+1.  Remove the package:
+
+    ```diff title="admin/package.json"
+    - "@comet/blocks-admin": "^7.x.x",
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/remove-blocks-packages.ts
+    ```
+
+    :::
+
+2.  Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+3.  Update imports that have been renamed
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+4.  Remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
+
+    :::tip
+
+    Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateAction`.
+
+    :::
+
 ## ESLint
 
 ### ESLint upgrade from v8 to v9 with ESM
@@ -571,3 +681,40 @@ It is recommended to perform the following steps separately in the `admin/` and 
 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
 The codemod does not handle all cases, so manual adjustments may still be necessary.
+
+### Consistent type imports
+
+To improve code consistency and readability, we now enforce the ESLint rule [@typescript-eslint/consistent-type-imports](https://typescript-eslint.io/rules/consistent-type-imports/) with the following configuration:
+
+```typescript
+"@typescript-eslint/consistent-type-imports": [
+  "error",
+  {
+    "prefer": "type-imports",
+    "disallowTypeAnnotations": false,
+    "fixStyle": "inline-type-imports"
+  }
+]
+```
+
+#### Why this change?
+
+This rule ensures that TypeScript type-only imports are explicitly marked with import type, leading to multiple benefits:
+
+- **Improved Code Clarity**
+  It is immediately clear that the imported symbol is used only for TypeScript type checking and not at runtime.
+  Avoids confusion between runtime imports and purely static type definitions.
+- **Performance & Tree-Shaking**
+  TypeScript can optimize build performance since it knows which imports are needed only at compile time.
+  Some bundlers can more effectively remove unused type imports, reducing bundle size.
+- **Reduced Circular Dependency Issues**
+  Circular dependencies can cause hard-to-debug issues in TypeScript projects.
+  Using import type ensures that types do not introduce unintended runtime dependencies.
+
+#### Migration Steps
+
+Run ESLint with the --fix option to automatically update imports:
+
+```bash
+npm run lint:eslint --fix
+```

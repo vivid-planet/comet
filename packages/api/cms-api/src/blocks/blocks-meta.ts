@@ -1,4 +1,4 @@
-import { BlockMetaFieldKind, BlockMetaInterface, getRegisteredBlocks } from "./block";
+import { BlockMetaFieldKind, type BlockMetaInterface, getRegisteredBlocks } from "./block";
 
 type BlockMetaField =
     | {

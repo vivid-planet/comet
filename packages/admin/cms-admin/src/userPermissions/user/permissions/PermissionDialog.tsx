@@ -12,15 +12,15 @@ import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLAvailablePermissionsQuery,
-    GQLAvailablePermissionsQueryVariables,
-    GQLCreateUserPermissionMutation,
-    GQLCreateUserPermissionMutationVariables,
-    GQLPermissionQuery,
-    GQLPermissionQueryVariables,
-    GQLUpdateUserPermissionMutation,
-    GQLUpdateUserPermissionMutationVariables,
-    GQLUserPermissionDialogFragment,
+    type GQLAvailablePermissionsQuery,
+    type GQLAvailablePermissionsQueryVariables,
+    type GQLCreateUserPermissionMutation,
+    type GQLCreateUserPermissionMutationVariables,
+    type GQLPermissionQuery,
+    type GQLPermissionQueryVariables,
+    type GQLUpdateUserPermissionMutation,
+    type GQLUpdateUserPermissionMutationVariables,
+    type GQLUserPermissionDialogFragment,
     namedOperations,
 } from "./PermissionDialog.generated";
 

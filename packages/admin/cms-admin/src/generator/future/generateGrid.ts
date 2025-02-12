@@ -1,34 +1,34 @@
-import { GridColDef } from "@comet/admin";
+import { type GridColDef } from "@comet/admin";
 import {
-    IntrospectionEnumType,
-    IntrospectionInputObjectType,
-    IntrospectionInputValue,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionInputObjectType,
+    type IntrospectionInputValue,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 import { plural } from "pluralize";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
+import { getCombinationColumnRenderCell, type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import {
-    ActionsGridColumnConfig,
-    GeneratorReturn,
-    GQLDocumentConfigMap,
-    GridColumnConfig,
-    GridConfig,
-    StaticSelectLabelCellContent,
+    type ActionsGridColumnConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    type GridColumnConfig,
+    type GridConfig,
+    type StaticSelectLabelCellContent,
 } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -536,6 +536,7 @@ export function generateGrid(
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
+        Button,
         CrudContextMenu,
         CrudMoreActionsMenu,
         DataGridToolbar,
@@ -552,7 +553,7 @@ export function generateGrid(
         muiGridSortToGql,
         StackLink,
         ToolbarActions,
-        ToolbarFillSpace,
+        FillSpace,
         ToolbarItem,
         Tooltip,
         useBufferedRowCount,
@@ -561,8 +562,8 @@ export function generateGrid(
         usePersistentColumnState,
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
-    import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
+    import { BlockPreviewContent } from "@comet/cms-admin";
+    import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
     import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -658,6 +659,8 @@ export function generateGrid(
                   instanceGqlType,
                   gqlType,
                   excelExport: config.excelExport,
+                  newEntryText: config.newEntryText,
+                  fragmentName,
               })
             : ""
     }

@@ -1,5 +1,5 @@
-import { RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
+import { Button, RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
+import { Typography } from "@mui/material";
 import { useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

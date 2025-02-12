@@ -47,6 +47,9 @@ const config: CodegenConfig = {
                 namingConvention: "keep",
                 scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), {}),
                 typesPrefix: "GQL",
+                skipDocumentsValidation: {
+                    ignoreRules: ["KnownFragmentNamesRule"], 
+                }
             },
             plugins: [
                 { add: { content: `import { ${rootBlocks.sort().join(", ")} } from "@src/blocks.generated";` } },

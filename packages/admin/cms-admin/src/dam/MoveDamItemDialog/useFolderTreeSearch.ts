@@ -1,9 +1,9 @@
 import escapeRegExp from "lodash.escaperegexp";
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
 import { traversePreOrder } from "../../pages/pageTree/treemap/TreeMapUtils";
-import { FolderSearchMatch } from "./MoveDamItemDialog";
-import { FolderTreeMap, FolderWithRenderInformation } from "./useFolderTree";
+import { type FolderSearchMatch } from "./MoveDamItemDialog";
+import { type FolderTreeMap, type FolderWithRenderInformation } from "./useFolderTree";
 
 const findMatchesAndExpandedIdsBasedOnSearchQuery = (
     searchQuery: string,

@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink } from "@comet/admin";
-import { Decorator } from "@storybook/react";
+import { type Decorator } from "@storybook/react";
 
 const createApolloClient = (uri: string) => {
     const link = ApolloLink.from([

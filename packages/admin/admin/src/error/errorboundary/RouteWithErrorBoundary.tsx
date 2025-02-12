@@ -1,4 +1,4 @@
-import { Route, RouteProps } from "react-router";
+import { Route, type RouteProps } from "react-router";
 
 import { ErrorBoundary } from "./ErrorBoundary";
 

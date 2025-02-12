@@ -11,8 +11,8 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
+import { faker } from "@faker-js/faker";
 import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-import faker from "faker";
 
 interface ColorFilterFieldProps {
     colors: string[];
@@ -193,9 +193,9 @@ export const FilterbarWithAllKindsOfFilters = {
                 id: i,
                 model: faker.vehicle.model(),
                 brand: faker.vehicle.manufacturer(),
-                color: faker.commerce.color(),
-                horsepower: faker.datatype.number({ min: 50, max: 200 }),
-                price: faker.commerce.price(100, 1000, 2),
+                color: faker.color.human(),
+                horsepower: faker.number.int({ min: 50, max: 200 }),
+                price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
                 owner: {
                     firstname: faker.name.firstName(),
                     lastname: faker.name.lastName(),

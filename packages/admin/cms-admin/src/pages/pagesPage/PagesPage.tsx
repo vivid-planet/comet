@@ -17,21 +17,21 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import { ComponentType, ReactNode, useCallback, useMemo, useRef } from "react";
+import { type ComponentType, type ReactNode, useCallback, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
+import { type ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
-import { DocumentInterface, DocumentType } from "../../documents/types";
+import { type DocumentInterface, type DocumentType } from "../../documents/types";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
-import { EditPageNodeProps } from "../createEditPageNode";
+import { type EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
-import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
+import { PageTree, type PageTreeRefApi } from "../pageTree/PageTree";
+import { type AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
-import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "./createPagesQuery";
+import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {

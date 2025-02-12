@@ -49,36 +49,11 @@ const config = [
     {
         ...importPlugin.flatConfigs.recommended,
         rules: {
-            "import/no-duplicates": "error",
+            "import/no-duplicates": ["error", { "prefer-inline": true }],
             "import/newline-after-import": "error",
             "import/no-extraneous-dependencies": "error",
         },
     },
-    {
-        languageOptions: {
-            globals: {
-                ...globals.node,
-                ...globals.jest,
-            },
-            parser: tseslint.parser,
-            parserOptions: {
-                projectService: true,
-                tsconfigRootDir: import.meta.dirname,
-            },
-        },
-        // Rules
-        rules: {
-            "no-unused-vars": "off",
-            "prefer-template": "error",
-            "no-console": ["error", { allow: ["warn", "error"] }],
-            "no-return-await": "error",
-            "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
-            "@typescript-eslint/no-inferrable-types": ["error", { ignoreProperties: true }],
-            "@typescript-eslint/prefer-enum-initializers": "error",
-            "@typescript-eslint/no-non-null-assertion": "error",
-        },
-    },
-    /* order matters -> json rules must be after typescript rules */
     ...eslintPluginJsonc["flat/recommended-with-json"],
     {
         ignores: [
@@ -92,6 +67,38 @@ const config = [
         },
     },
     packageJson,
+    {
+        ignores: ["**/*.json"],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+                ...globals.jest,
+            },
+            parser: tseslint.parser,
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+        rules: {
+            "no-unused-vars": "off",
+            "prefer-template": "error",
+            "no-console": ["error", { allow: ["warn", "error"] }],
+            "no-return-await": "error",
+            "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
+            "@typescript-eslint/no-inferrable-types": ["error", { ignoreProperties: true }],
+            "@typescript-eslint/prefer-enum-initializers": "error",
+            "@typescript-eslint/no-non-null-assertion": "error",
+            "@typescript-eslint/consistent-type-imports": [
+                "error",
+                {
+                    prefer: "type-imports",
+                    disallowTypeAnnotations: false,
+                    fixStyle: "inline-type-imports",
+                },
+            ],
+        },
+    },
 ];
 
 export default config;

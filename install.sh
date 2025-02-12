@@ -14,9 +14,6 @@ pnpm install
 # create site-config-envs
 npm run create-site-configs-env
 
-# admin Blocks
-ln -sf ../../api/cms-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
-
 # admin CMS
 ln -sf ../../api/cms-api/schema.gql ./packages/admin/cms-admin/schema.gql
 ln -sf ../../api/cms-api/block-meta.json ./packages/admin/cms-admin/block-meta.json

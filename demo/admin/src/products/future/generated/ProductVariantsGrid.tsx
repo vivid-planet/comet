@@ -2,17 +2,18 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -20,18 +21,18 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { IconButton } from "@mui/material";
+import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateProductVariantMutation,
-    GQLCreateProductVariantMutationVariables,
-    GQLDeleteProductVariantMutation,
-    GQLDeleteProductVariantMutationVariables,
-    GQLProductVariantsGridFutureFragment,
-    GQLProductVariantsGridQuery,
-    GQLProductVariantsGridQueryVariables,
+    type GQLCreateProductVariantMutation,
+    type GQLCreateProductVariantMutationVariables,
+    type GQLDeleteProductVariantMutation,
+    type GQLDeleteProductVariantMutationVariables,
+    type GQLProductVariantsGridFutureFragment,
+    type GQLProductVariantsGridQuery,
+    type GQLProductVariantsGridQueryVariables,
 } from "./ProductVariantsGrid.generated";
 
 const productVariantsFragment = gql`
@@ -84,10 +85,10 @@ function ProductVariantsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>

@@ -1,10 +1,10 @@
-import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
-import { ReactNode } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps } from "@mui/material";
+import { type ReactNode } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;

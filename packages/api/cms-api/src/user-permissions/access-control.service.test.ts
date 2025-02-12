@@ -1,7 +1,7 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { Test, type TestingModule } from "@nestjs/testing";
 
 import { AbstractAccessControlService } from "./access-control.service";
-import { CurrentUser } from "./dto/current-user";
+import { type CurrentUser } from "./dto/current-user";
 
 describe("AbstractAccessControlService", () => {
     class ConcreteAccessControlService extends AbstractAccessControlService {}

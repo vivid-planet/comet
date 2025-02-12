@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { LocaleContext, ResolveLocaleFunction } from "./LocaleContext";
+import { LocaleContext, type ResolveLocaleFunction } from "./LocaleContext";
 
 interface Props {
     resolveLocaleForScope: ResolveLocaleFunction;

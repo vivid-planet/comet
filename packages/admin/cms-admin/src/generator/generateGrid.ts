@@ -1,13 +1,13 @@
 import {
-    IntrospectionEnumType,
-    IntrospectionInputObjectType,
-    IntrospectionInputValue,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionInputObjectType,
+    type IntrospectionInputValue,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 
-import { CrudGeneratorConfig } from "./types";
+import { type CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -222,7 +222,7 @@ export async function writeCrudGrid(
         usePersistentColumnState,
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
-    import { BlockPreviewContent } from "@comet/blocks-admin";
+    import { BlockPreviewContent } from "@comet/cms-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";

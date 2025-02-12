@@ -1,13 +1,13 @@
-import { Type } from "@nestjs/common";
-import { ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
+import { type Type } from "@nestjs/common";
+import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
 
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
-import { BlockMigrationInterface } from "./migrations/types";
-import { SearchText } from "./search/get-search-text";
+import { type BlockMigrationInterface } from "./migrations/types";
+import { type SearchText } from "./search/get-search-text";
 
 export interface BlockTransformerServiceInterface<
     Block extends BlockDataInterface = BlockDataInterface,

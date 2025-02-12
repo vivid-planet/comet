@@ -1,5 +1,5 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (component, { palette, typography, breakpoints, spacing }) => ({
     ...component,
@@ -12,6 +12,7 @@ export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (compon
             color: "#ffffff",
             padding: spacing(2),
             fontSize: "14px",
+            boxSizing: "unset",
 
             [breakpoints.up("sm")]: {
                 minWidth: 0,

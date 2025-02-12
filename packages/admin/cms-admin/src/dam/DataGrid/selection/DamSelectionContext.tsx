@@ -1,22 +1,21 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { saveAs } from "file-saver";
-import { GraphQLError } from "graphql";
-import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useState } from "react";
+import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useState } from "react";
 
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
-import { DamItemSelectionMap } from "../FolderDataGrid";
+import { type DamItemSelectionMap } from "../FolderDataGrid";
 import {
-    GQLArchiveFilesMutation,
-    GQLArchiveFilesMutationVariables,
-    GQLDamFileDownloadInfoFragment,
-    GQLDeleteDamFileMutation,
-    GQLDeleteDamFileMutationVariables,
-    GQLDeleteDamFolderMutation,
-    GQLDeleteDamFolderMutationVariables,
-    GQLRestoreFilesMutation,
-    GQLRestoreFilesMutationVariables,
+    type GQLArchiveFilesMutation,
+    type GQLArchiveFilesMutationVariables,
+    type GQLDamFileDownloadInfoFragment,
+    type GQLDeleteDamFileMutation,
+    type GQLDeleteDamFileMutationVariables,
+    type GQLDeleteDamFolderMutation,
+    type GQLDeleteDamFolderMutationVariables,
+    type GQLRestoreFilesMutation,
+    type GQLRestoreFilesMutationVariables,
 } from "./DamSelectionContext.generated";
 
 const damFileDownloadInfoFragment = gql`
@@ -125,7 +124,7 @@ export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => 
             return { id: item[0], type: item[1] };
         });
 
-        let errors: readonly GraphQLError[] | undefined;
+        let errors;
         for (const selectedItem of selectedItems) {
             if (selectedItem.type === "file") {
                 const result = await apolloClient.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({

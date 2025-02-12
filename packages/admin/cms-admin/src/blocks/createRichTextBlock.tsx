@@ -1,21 +1,23 @@
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
-import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
+import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,
     convertFromRaw,
     convertToRaw,
     EditorState,
-    EntityInstance,
+    type EntityInstance,
     Modifier,
-    RawDraftContentState,
+    type RawDraftContentState,
 } from "draft-js";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
-import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
+import { type RichTextBlockData, type RichTextBlockInput } from "../blocks.generated";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
+import { BlockCategory, type BlockInterface, type LinkBlockInterface } from "./types";
 
 export interface RichTextBlockState {
     editorState: EditorState;
@@ -96,6 +98,9 @@ export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState
 
 export const createRichTextBlock = (
     options: RichTextBlockFactoryOptions,
+    override?: (
+        block: BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>,
+    ) => BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>,
 ): BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> => {
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
     const defaultRteOptions: IRteOptions = {
@@ -254,5 +259,10 @@ export const createRichTextBlock = (
             return content.hasText() ? [{ type: "text", content: content.getPlainText().slice(0, MAX_CHARS) }] : [];
         },
     };
+
+    if (override) {
+        return override(RichTextBlock);
+    }
+
     return RichTextBlock;
 };

@@ -1,11 +1,11 @@
 import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
-import { SvgIconProps, useTheme } from "@mui/material";
+import { type SvgIconProps, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ContentScopeInterface, useContentScope } from "./Provider";
+import { type ContentScopeInterface, useContentScope } from "./Provider";
 
 const capitalizeString = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);

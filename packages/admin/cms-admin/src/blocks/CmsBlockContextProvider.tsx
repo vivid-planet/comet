@@ -1,11 +1,11 @@
-import { ApolloClient, NormalizedCacheObject, useApolloClient } from "@apollo/client";
-import { DocumentNode } from "@apollo/client/core";
-import { BlockContextProvider } from "@comet/blocks-admin";
-import { AxiosInstance } from "axios";
-import { ReactNode } from "react";
+import { type ApolloClient, type NormalizedCacheObject, useApolloClient } from "@apollo/client";
+import { type DocumentNode } from "@apollo/client/core";
+import { type AxiosInstance } from "axios";
+import { type ReactNode } from "react";
 
-import { DocumentInterface, DocumentType } from "../documents/types";
-import { AllCategories } from "../pages/pageTree/PageTreeContext";
+import { type DocumentInterface, type DocumentType } from "../documents/types";
+import { type AllCategories } from "../pages/pageTree/PageTreeContext";
+import { BlockContextProvider } from "./context/BlockContextProvider";
 
 export interface CmsBlockContext {
     apolloClient: ApolloClient<NormalizedCacheObject>;

@@ -1,5 +1,99 @@
 # @comet/cms-admin
 
+## 7.13.0
+
+### Patch Changes
+
+- f49370a9e: Improve SVG validation
+
+    Following tags are banned in SVGs:
+
+    - script
+    - \[new\] foreignObject
+    - \[new\] use
+    - \[new\] image
+    - \[new\] animate
+    - \[new\] animateMotion
+    - \[new\] animateTransform
+    - \[new\] set
+
+    Following attributes are banned:
+
+    - Event handlers (`onload`, `onclick`, ...)
+    - \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
+
+- Updated dependencies [bd562d325]
+- Updated dependencies [5c06e4bee]
+- Updated dependencies [bd562d325]
+- Updated dependencies [b918c810b]
+- Updated dependencies [86c1d5996]
+    - @comet/admin@7.13.0
+    - @comet/blocks-admin@7.13.0
+    - @comet/admin-rte@7.13.0
+    - @comet/admin-date-time@7.13.0
+    - @comet/admin-icons@7.13.0
+    - @comet/admin-theme@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+- 604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+### Patch Changes
+
+- 64173b513: Fix page tree node slug validation to prevent URL encoded characters
+- 0837c4c64: Hide the "Dependents" tab in the DAM for users without the permission `dependencies`
+- cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    - `video/avi` doesn't actually exist
+    - `image/psd` doesn't exist / is non-standard
+    - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+      instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+- cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+- 02dd20ac4: Export `useDamScope` hook
+
+    This allows accessing the DAM scope in the application. This might be necessary when developing integrations with a third-party DAM.
+
+- 954635630: Update default icon of `ContentScopeSelect` and fix mobile styling for `AppHeader` components
+
+    - Update the default icon in `ContentScopeSelect` from `<Domain />` to `<Language />`
+    - Fix mobile styling of `BuildEntry` and `ContentScopeSelect` and `UserHeaderItem`
+
+- Updated dependencies [af51bb408]
+- Updated dependencies [92b3255d2]
+- Updated dependencies [47be4ebd3]
+- Updated dependencies [86479e770]
+- Updated dependencies [954635630]
+- Updated dependencies [e8003f9c7]
+- Updated dependencies [4f6e6b011]
+- Updated dependencies [5583c9cff]
+- Updated dependencies [ee597535a]
+- Updated dependencies [5583c9cff]
+- Updated dependencies [7da81fa2e]
+- Updated dependencies [3ddc2278b]
+- Updated dependencies [af350d086]
+- Updated dependencies [86479e770]
+- Updated dependencies [0bb181a52]
+- Updated dependencies [af51bb408]
+    - @comet/admin@7.12.0
+    - @comet/admin-theme@7.12.0
+    - @comet/blocks-admin@7.12.0
+    - @comet/admin-date-time@7.12.0
+    - @comet/admin-icons@7.12.0
+    - @comet/admin-rte@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes

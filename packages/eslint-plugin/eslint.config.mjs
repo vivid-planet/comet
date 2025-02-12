@@ -43,7 +43,16 @@ const config = [
             "import/no-extraneous-dependencies": "error",
         },
     },
+    ...eslintPluginJsonc["flat/recommended-with-json"],
     {
+        ignores: ["package.json"],
+        rules: {
+            "jsonc/sort-keys": "error",
+        },
+    },
+    packageJson,
+    {
+        ignores: ["*.json"],
         languageOptions: {
             globals: {
                 ...globals.node,
@@ -61,17 +70,16 @@ const config = [
             "prefer-template": "error",
             "no-console": ["error", { allow: ["warn", "error"] }],
             "no-return-await": "error",
+            "@typescript-eslint/consistent-type-imports": [
+                "error",
+                {
+                    prefer: "type-imports",
+                    disallowTypeAnnotations: false,
+                    fixStyle: "inline-type-imports",
+                },
+            ],
         },
     },
-    /* order matters -> json rules must be after typescript rules */
-    ...eslintPluginJsonc["flat/recommended-with-json"],
-    {
-        ignores: ["package.json"],
-        rules: {
-            "jsonc/sort-keys": "error",
-        },
-    },
-    packageJson,
 ];
 
 export default config;

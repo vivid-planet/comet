@@ -1,10 +1,11 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -16,15 +17,15 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLDeleteManufacturerMutation,
-    GQLDeleteManufacturerMutationVariables,
-    GQLManufacturersListQuery,
-    GQLManufacturersListQueryVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLDeleteManufacturerMutation,
+    type GQLDeleteManufacturerMutationVariables,
+    type GQLManufacturersListQuery,
+    type GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
 import gql from "graphql-tag";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -40,7 +41,7 @@ function ManufacturersGridToolbar() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>

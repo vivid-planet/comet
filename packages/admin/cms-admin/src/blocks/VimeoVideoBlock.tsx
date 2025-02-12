@@ -1,21 +1,17 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import {
-    AdminComponentSection,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    createBlockSkeleton,
-    resolveNewState,
-    SelectPreviewComponent,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { VimeoVideoBlockData, VimeoVideoBlockInput } from "../blocks.generated";
+import { type VimeoVideoBlockData, type VimeoVideoBlockInput } from "../blocks.generated";
+import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, type BlockInterface, type BlockState } from "./types";
+import { resolveNewState } from "./utils";
 
 type State = Omit<VimeoVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
@@ -68,7 +64,7 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, State, VimeoVi
     isValid: ({ vimeoIdentifier }) => !vimeoIdentifier || isValidVimeoIdentifier(vimeoIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
-        const isInPaper = useAdminComponentPaper();
+        const isInPaper = useBlockAdminComponentPaper();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
@@ -85,7 +81,7 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, State, VimeoVi
                         />
                         <VideoOptionsFields />
                     </BlocksFinalForm>
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
@@ -95,7 +91,7 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, State, VimeoVi
                                 });
                             }}
                         />
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </SelectPreviewComponent>
             </Box>
         );

@@ -178,7 +178,7 @@ export const HeadlineBlock = createCompositeBlock(
         displayName: "Headline",
         blocks: {
             eyebrow: {
-                block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
+                block: createCompositeBlockField<HeadlineBlockData["eyebrow"]>({
                     defaultValue: undefined,
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
@@ -195,7 +195,7 @@ export const HeadlineBlock = createCompositeBlock(
                 title: "Headline",
             },
             level: {
-                block: createCompositeSetting<HeadlineBlockData["level"]>({
+                block: createCompositeBlockField<HeadlineBlockData["level"]>({
                     defaultValue: "header-one",
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "level">>
@@ -232,11 +232,11 @@ _The admin component of the Headline block_
 
 The admin component is the primary way a user interacts with a block. For our Headline block, the admin component consists of a text field for the eyebrow text, a rich text editor for the headline, and a select for the headline level.
 
-Let's take a look at how the admin component is defined in code. The text field for the **eyebrow text** is a plain Final Form field, used the same way you'd use it in any COMET DXP Admin application. The form is wrapped using `createCompositeSetting`, which helps to integrate the form state into the block state. Also, note the use of the `HeadlineBlockData` type. This interface is generated using the block mentioned above meta -- how cool is that?!
+Let's take a look at how the admin component is defined in code. The text field for the **eyebrow text** is a plain Final Form field, used the same way you'd use it in any COMET DXP Admin application. The form is wrapped using `createCompositeBlockField`, which helps to integrate the form state into the block state. Also, note the use of the `HeadlineBlockData` type. This interface is generated using the block mentioned above meta -- how cool is that?!
 
 ```tsx title="HeadlineBlock.tsx"
 eyebrow: {
-    block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
+    block: createCompositeBlockField<HeadlineBlockData["eyebrow"]>({
         defaultValue: undefined,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
@@ -259,11 +259,11 @@ headline: {
 },
 ```
 
-For the **level** select, we're once again using a plain Final Form field in combination with createCompositeSetting.
+For the **level** select, we're once again using a plain Final Form field in combination with createCompositeBlockField.
 
 ```tsx title="HeadlineBlock.tsx"
 level: {
-    block: createCompositeSetting<HeadlineBlockData["level"]>({
+    block: createCompositeBlockField<HeadlineBlockData["level"]>({
         defaultValue: "header-one",
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<Pick<HeadlineBlockData, "level">>
@@ -313,8 +313,7 @@ The complete code for our Headline admin block (including all necessary imports)
     <div>
         <CodeBlock language="ts">
             {`import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
-import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
-import { createRichTextBlock } from "@comet/cms-admin";
+import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeBlockField, createRichTextBlock } from "@comet/cms-admin";
 import { MenuItem } from "@material-ui/core";
 import { HeadlineBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";\n
@@ -333,7 +332,7 @@ export const HeadlineBlock = createCompositeBlock(
         displayName: "Headline",
         blocks: {
             eyebrow: {
-                block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
+                block: createCompositeBlockField<HeadlineBlockData["eyebrow"]>({
                     defaultValue: undefined,
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
@@ -350,7 +349,7 @@ export const HeadlineBlock = createCompositeBlock(
                 title: "Headline",
             },
             level: {
-                block: createCompositeSetting<HeadlineBlockData["level"]>({
+                block: createCompositeBlockField<HeadlineBlockData["level"]>({
                     defaultValue: "header-one",
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "level">>

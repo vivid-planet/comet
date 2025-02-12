@@ -1,5 +1,5 @@
-import { ComponentNameToClassKey, ComponentsPropsList, Theme } from "@mui/material/styles";
-import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { type ComponentNameToClassKey, type ComponentsPropsList, type Theme } from "@mui/material/styles";
+import { type OverridesStyleRules } from "@mui/material/styles/overrides";
 import { deepmerge } from "@mui/utils";
 
 type OwnerState<PropsName extends keyof ComponentsPropsList> = PropsName extends keyof ComponentsPropsList

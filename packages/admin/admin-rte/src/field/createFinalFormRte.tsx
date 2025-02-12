@@ -1,9 +1,9 @@
-import { EditorState } from "draft-js";
-import { FunctionComponent, useRef } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type EditorState } from "draft-js";
+import { type FunctionComponent, useRef } from "react";
+import { type FieldRenderProps } from "react-final-form";
 
-import makeRteApi, { IMakeRteApiProps, OnDebouncedContentChangeFn } from "../core/makeRteApi";
-import { IOptions as RteOptions, Rte, RteProps } from "../core/Rte";
+import makeRteApi, { type IMakeRteApiProps, type OnDebouncedContentChangeFn } from "../core/makeRteApi";
+import { type IOptions as RteOptions, Rte, type RteProps } from "../core/Rte";
 import RteReadOnlyBase from "../core/RteReadOnly";
 
 interface IConfig<T = any> {

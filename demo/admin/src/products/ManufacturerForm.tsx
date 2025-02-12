@@ -5,7 +5,7 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     messages,
@@ -15,20 +15,20 @@ import {
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Divider, FormControlLabel } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createManufacturerMutation, manufacturerFormFragment, manufacturerQuery, updateManufacturerMutation } from "./ManufacturerForm.gql";
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLManufacturerFormDetailsFragment,
-    GQLManufacturerQuery,
-    GQLManufacturerQueryVariables,
-    GQLUpdateManufacturerMutation,
-    GQLUpdateManufacturerMutationVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLManufacturerFormDetailsFragment,
+    type GQLManufacturerQuery,
+    type GQLManufacturerQueryVariables,
+    type GQLUpdateManufacturerMutation,
+    type GQLUpdateManufacturerMutationVariables,
 } from "./ManufacturerForm.gql.generated";
 
 type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressAsEmbeddable"> & {

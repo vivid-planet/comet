@@ -1,13 +1,13 @@
 import {
-    IntrospectionEnumType,
-    IntrospectionField,
-    IntrospectionInputObjectType,
-    IntrospectionNamedTypeRef,
-    IntrospectionObjectType,
-    IntrospectionQuery,
+    type IntrospectionEnumType,
+    type IntrospectionField,
+    type IntrospectionInputObjectType,
+    type IntrospectionNamedTypeRef,
+    type IntrospectionObjectType,
+    type IntrospectionQuery,
 } from "graphql";
 
-import { CrudGeneratorConfig } from "./types";
+import { type CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -129,8 +129,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     } from "@comet/admin";
     import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
-    import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
+    import { BlockState, ContentScopeIndicator, createFinalFormBlock, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";

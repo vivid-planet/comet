@@ -1,15 +1,15 @@
 import { Minimize } from "@comet/admin-icons";
-import { useIFrameBridge } from "@comet/blocks-admin";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 
+import { useIFrameBridge } from "../../blocks/iframebridge/useIFrameBridge";
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
-import { BlockPreviewApi } from "./useBlockPreview";
+import { type BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;

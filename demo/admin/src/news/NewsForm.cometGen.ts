@@ -1,5 +1,5 @@
-import { future_FormConfig as FormConfig } from "@comet/cms-admin";
-import { GQLNews } from "@src/graphql.generated";
+import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { type GQLNews } from "@src/graphql.generated";
 
 export const NewsForm: FormConfig<GQLNews> = {
     type: "form",

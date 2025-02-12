@@ -1,13 +1,13 @@
 "use client";
 
-import { ReactElement, ReactNode, useState } from "react";
+import { type ReactElement, type ReactNode, useState } from "react";
 import styled, { css } from "styled-components";
 
-import { YouTubeVideoBlockData } from "../blocks.generated";
+import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { PropsWithData } from "./PropsWithData";
+import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import { type PropsWithData } from "./PropsWithData";
 
 const EXPECTED_YT_ID_LENGTH = 11;
 

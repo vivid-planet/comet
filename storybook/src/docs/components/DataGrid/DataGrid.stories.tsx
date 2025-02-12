@@ -1,12 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudMoreActionsMenu,
     dataGridDateTimeColumn,
     DataGridToolbar,
     FileIcon,
     FillSpace,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
@@ -20,9 +21,9 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
-import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
+import { Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { useRef, useState } from "react";
 
@@ -421,7 +422,7 @@ export const UseDataGridExcelExport = {
             }
         `;
 
-        const { data, loading, error } = useQuery<GQLQuery, QueryVariables | undefined>(query, {
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables>(query, {
             variables,
         });
 
@@ -442,7 +443,7 @@ export const UseDataGridExcelExport = {
                     <FillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
+                            <Button variant="textDark" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />}>
                                 More Actions
                             </Button>
                             <Menu

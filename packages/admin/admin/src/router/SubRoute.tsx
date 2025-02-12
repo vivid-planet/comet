@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext } from "react";
-import { __RouterContext, matchPath, Route, RouteChildrenProps, useLocation, useRouteMatch } from "react-router";
+import { createContext, type ReactNode, useContext } from "react";
+import { __RouterContext, matchPath, Route, type RouteChildrenProps, useLocation, useRouteMatch } from "react-router";
 
 interface SubRoutesContext {
     path: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { ErrorHandlerProvider } from "@comet/cms-site";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 export function ErrorHandler({ children }: PropsWithChildren) {
     function onError(error: Error, errorInfo: React.ErrorInfo) {
