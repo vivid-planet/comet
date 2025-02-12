@@ -8,7 +8,7 @@ const config = createConfig(process.env);
 async function bootstrap() {
     const appModule = AppModule.forRoot(config);
 
-    // @ts-expect-error CommandFactory doesn't except DynamicModule, only Type<any>
+    // @ts-expect-error CommandFactory doesn't accept DynamicModule, only Type<any>
     await CommandFactory.run(appModule, {
         logger: ["error", "warn", "log"],
         serviceErrorHandler: async (error) => {
