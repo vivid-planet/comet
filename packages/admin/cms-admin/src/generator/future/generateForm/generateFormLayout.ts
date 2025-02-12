@@ -70,7 +70,7 @@ export function generateFormLayout({
         code = `
         <FieldSet
             ${config.collapsible === undefined || config.collapsible ? `collapsible` : ``}
-            ${config.initiallyExpanded ? `initiallyExpanded` : ``}
+            ${config.initiallyExpanded != null ? `initiallyExpanded={${config.initiallyExpanded}}` : ``}
             title={<FormattedMessage id="${formattedMessageRootId}.${config.name}.title" defaultMessage="${title}" />}
             ${
                 config.supportText
