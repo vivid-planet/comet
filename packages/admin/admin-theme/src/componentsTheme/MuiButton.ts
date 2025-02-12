@@ -17,6 +17,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             letterSpacing: 0,
             textTransform: "none",
             fontWeight: 250,
+            height: 40,
 
             [`&.${buttonClasses.textSizeSmall}`]: {
                 fontSize: 14,
