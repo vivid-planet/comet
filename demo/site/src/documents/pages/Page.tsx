@@ -149,7 +149,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
     return (
         <>
             {document.seo.structuredData && document.seo.structuredData.length > 0 && (
-                <script type="application/ld+json">{document.seo.structuredData}</script>
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: document.seo.structuredData }} />
             )}
             <TopNavigation data={data.topMenu} />
             <Header header={data.header} />
