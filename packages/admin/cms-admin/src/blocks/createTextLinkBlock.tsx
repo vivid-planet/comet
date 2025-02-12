@@ -52,6 +52,7 @@ export function createTextLinkBlock(
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
                             onSubmit={({ text }: { text: string | undefined }) => {
+                                // abc
                                 updateState((prevState) => ({ ...prevState, text: text ?? "" }));
                             }}
                             initialValues={{ text: state.text }}
@@ -68,7 +69,18 @@ export function createTextLinkBlock(
 
         dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
 
-        extractTextContents: (state, options) => [state.text, ...(block.extractTextContents?.(state, options) ?? [])],
+        extractTextContents: (state, options) => {
+            const content = [];
+
+            if (state.text) {
+                content.push(state.text);
+            }
+
+            const blockContent = block.extractTextContents?.(state, options) ?? [];
+            content.push(...blockContent);
+
+            return content;
+        },
     };
 
     if (override) {
