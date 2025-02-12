@@ -1,4 +1,5 @@
 import {
+    Button,
     Field,
     FillSpace,
     FinalForm,
@@ -11,7 +12,7 @@ import {
     Toolbar,
     ToolbarActions,
 } from "@comet/admin";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
 import { useContext } from "react";
 
@@ -52,8 +53,6 @@ function Page1() {
                     <FillSpace />
                     <ToolbarActions>
                         <Button
-                            color="primary"
-                            variant="contained"
                             onClick={() => {
                                 switchApi?.activatePage("page2", "test");
                             }}

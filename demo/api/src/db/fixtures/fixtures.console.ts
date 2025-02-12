@@ -21,6 +21,7 @@ import slugify from "slugify";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 
 export interface PageTreeNodesFixtures {
@@ -55,6 +56,7 @@ export class FixturesConsole {
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly dependenciesService: DependenciesService,
         private readonly entityManager: EntityManager,
+        private readonly productsFixtureService: ProductsFixtureService,
     ) {}
 
     @Command({
@@ -289,6 +291,8 @@ export class FixturesConsole {
         await this.redirectsFixtureService.generateRedirects();
 
         await this.dependenciesService.createViews();
+
+        await this.productsFixtureService.generate();
 
         await this.orm.em.flush();
     }

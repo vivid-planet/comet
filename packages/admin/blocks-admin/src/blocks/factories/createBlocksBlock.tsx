@@ -104,19 +104,24 @@ interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, u
     AdditionalItemContent?: FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
 }
 
-export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
-    supportedBlocks,
-    name,
-    displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
-    maxVisibleBlocks,
-    additionalItemFields,
-    AdditionalItemContextMenuItems,
-    AdditionalItemContent,
-}: CreateBlocksBlockOptions<AdditionalItemFields>): BlockInterface<
-    BlocksBlockFragment<AdditionalItemFields>,
-    BlocksBlockState<AdditionalItemFields>,
-    BlocksBlockOutput<AdditionalItemFields>
-> {
+export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
+    {
+        supportedBlocks,
+        name,
+        displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
+        maxVisibleBlocks,
+        additionalItemFields,
+        AdditionalItemContextMenuItems,
+        AdditionalItemContent,
+    }: CreateBlocksBlockOptions<AdditionalItemFields>,
+    override?: (
+        block: BlockInterface<
+            BlocksBlockFragment<AdditionalItemFields>,
+            BlocksBlockState<AdditionalItemFields>,
+            BlocksBlockOutput<AdditionalItemFields>
+        >,
+    ) => BlockInterface<BlocksBlockFragment<AdditionalItemFields>, BlocksBlockState<AdditionalItemFields>, BlocksBlockOutput<AdditionalItemFields>>,
+): BlockInterface<BlocksBlockFragment<AdditionalItemFields>, BlocksBlockState<AdditionalItemFields>, BlocksBlockOutput<AdditionalItemFields>> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
     }
@@ -560,7 +565,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             return (
                 <>
-                    <StackSwitch>
+                    <StackSwitch disableForcePromptRoute>
                         <StackPage name="main">
                             <StackSwitchApiContext.Consumer>
                                 {(stackApi) => {
@@ -864,6 +869,11 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
             return `${blockItem.key}/blocks/${childPath}`;
         },
     };
+
+    if (override) {
+        return override(BlocksBlock);
+    }
+
     return BlocksBlock;
 }
 

@@ -27,7 +27,7 @@ export const TeaserItemBlock = withPreview(
                     <RichTextBlock data={description} renderers={descriptionRenderers} />
                 </Typography>
                 <TextLinkContainer>
-                    <SvgUse href="/assets/icons/arrow-right.svg#arrow-right" width={16} height={16} />
+                    <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
                     <LinkText>{link.text}</LinkText>
                 </TextLinkContainer>
             </ContentContainer>

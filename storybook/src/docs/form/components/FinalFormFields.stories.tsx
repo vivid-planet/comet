@@ -1,4 +1,5 @@
 import {
+    Button,
     Field,
     FieldContainer,
     FinalForm,
@@ -13,7 +14,7 @@ import {
     FinalFormSelect,
     FinalFormSwitch,
 } from "@comet/admin";
-import { Button, FormControlLabel } from "@mui/material";
+import { FormControlLabel } from "@mui/material";
 import { useMemo } from "react";
 
 interface Option {
@@ -38,9 +39,7 @@ export const _FinalFormInput = {
                 <Field component={FinalFormInput} name="number" label="Number" type="number" placeholder="12" fullWidth />
                 <Field component={FinalFormInput} name="email" label="Email" type="email" placeholder="john.doe@example.com" fullWidth />
                 <Field component={FinalFormInput} name="password" label="Password" type="password" placeholder="Password" fullWidth />
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -58,9 +57,7 @@ export const _FinalFormSearchTextField = {
                 }}
             >
                 <Field name="search" label="FinalFormSearchTextField" component={FinalFormSearchTextField} fullWidth />
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -131,9 +128,7 @@ export const _FinalFormAutocomplete = {
                     label="Autocomplete multiple select"
                     fullWidth
                 />
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -215,9 +210,7 @@ export const _FinalFormSelect = {
                     disabled
                 />
 
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -240,9 +233,7 @@ export const _FinalFormCheckbox = {
                 <Field name="checkboxDisabled" label="FinalFormCheckbox disabled" type="checkbox" fullWidth disabled>
                     {(props) => <FormControlLabel label="Confirm" control={<FinalFormCheckbox {...props} />} />}
                 </Field>
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -265,9 +256,7 @@ export const _FinalFormSwitch = {
                 <Field name="switchDisabled" label="FinalFormSwitch disabled" fullWidth disabled>
                     {(props) => <FormControlLabel label={props.input.value ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />}
                 </Field>
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -300,9 +289,7 @@ export const _FinalFormRadio = {
                         {(props) => <FormControlLabel label="Disabled Option 2" control={<FinalFormRadio {...props} />} />}
                     </Field>
                 </FieldContainer>
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
@@ -320,9 +307,7 @@ export const _FinalFormRangeInput = {
                 }}
             >
                 <Field name="price" label="FinalFormRangeInput" component={FinalFormRangeInput} startAdornment="€" fullWidth min={50} max={1000} />
-                <Button color="primary" variant="contained" type="submit">
-                    Submit
-                </Button>
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },

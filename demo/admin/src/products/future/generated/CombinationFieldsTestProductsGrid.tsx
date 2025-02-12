@@ -4,6 +4,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
@@ -11,7 +12,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -80,8 +80,8 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <FillSpace />
+            <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
 }

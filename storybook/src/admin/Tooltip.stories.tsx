@@ -1,6 +1,6 @@
-import { Tooltip } from "@comet/admin";
+import { Button, Tooltip } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
 import { ReactNode, useState } from "react";
 
 export default {
@@ -47,17 +47,17 @@ export const AllTooltipTriggers = {
                         </Typography>
                         <Stack direction="row" spacing={2} alignItems="center">
                             <Tooltip title="This is a tooltip" trigger="hover">
-                                <Button variant="contained" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
+                                <Button variant="primary" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
                                     Trigger: Hover
                                 </Button>
                             </Tooltip>
                             <Tooltip title="This is a tooltip" trigger="click">
-                                <Button variant="contained" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
+                                <Button variant="primary" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
                                     Trigger: Click
                                 </Button>
                             </Tooltip>
                             <Tooltip title="This is a tooltip" trigger="focus">
-                                <Button variant="contained" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
+                                <Button variant="primary" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
                                     Trigger: Focus
                                 </Button>
                             </Tooltip>
