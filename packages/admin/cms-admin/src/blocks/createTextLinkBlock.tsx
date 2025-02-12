@@ -51,8 +51,8 @@ export function createTextLinkBlock(
                 <AdminComponentPaper disablePadding>
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
-                            onSubmit={({ text }) => {
-                                updateState((prevState) => ({ ...prevState, text }));
+                            onSubmit={({ text }: { text: string | undefined }) => {
+                                updateState((prevState) => ({ ...prevState, text: text ?? "" }));
                             }}
                             initialValues={{ text: state.text }}
                         >
