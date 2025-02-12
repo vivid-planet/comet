@@ -47,9 +47,9 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
         }),
         contained: {
             paddingTop: 12,
-            paddingRight: 14,
+            paddingRight: 15,
             paddingBottom: 12,
-            paddingLeft: 14,
+            paddingLeft: 15,
             borderRadius: 4,
 
             [`&.${buttonClasses.disabled}`]: {
@@ -98,10 +98,10 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             borderWidth: 1,
             borderStyle: "solid",
             borderColor: palette.grey[100],
-            paddingTop: 11,
-            paddingRight: 14,
-            paddingBottom: 11,
-            paddingLeft: 14,
+            paddingTop: 12,
+            paddingRight: 15,
+            paddingBottom: 12,
+            paddingLeft: 15,
             borderRadius: 4,
 
             ":hover": {
