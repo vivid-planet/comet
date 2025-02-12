@@ -7,6 +7,7 @@ import { DataStreamAndMetadata } from "./data-stream";
 import { FileDataStream } from "./file-data-stream";
 
 export class LocalFileDataStream extends FileDataStream {
+    private readonly logger = new Logger();
     fileKey: string;
 
     constructor(fileKey: string) {
@@ -20,21 +21,20 @@ export class LocalFileDataStream extends FileDataStream {
     }
 
     protected async getFileStreamAndSizeOfLocalFile({ filePath, encoding }: { filePath?: string; encoding?: BufferEncoding }) {
-        const logger = new Logger();
         if (!filePath) {
-            await logger.error(`File ${filePath} does not exist`);
+            this.logger.error(`File ${filePath} does not exist`);
             return null;
         }
         // check if file exists
         if (!existsSync(filePath)) {
-            await logger.error(`File ${filePath} does not exist`);
+            this.logger.error(`File ${filePath} does not exist`);
             return null;
         }
 
         const fileSize = statSync(filePath).size;
         // gzip filed must be read as binary, without encoding
         const fileStream = createReadStream(filePath, filePath.endsWith(".gz") && !encoding ? {} : { encoding: encoding || "utf-8" });
-        logger.log(`Providing fileStreams for local file (${filePath} fileSize: ${fileSize}).`);
+        this.logger.log(`Providing fileStreams for local file (${filePath} fileSize: ${fileSize}).`);
         return { fileSize, fileStream, fileName: path.basename(filePath) };
     }
 }
