@@ -45,13 +45,25 @@ const Root = styled("div")<RootProps>`
                 background-image: url(${backgroundImageUrl["2x"]});
             }
         `}
+
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+        height: 230px;
+    }
 `;
 
 const Greeting = styled(Typography)`
     position: absolute;
-    left: ${({ theme }) => theme.spacing(8)};
-    bottom: ${({ theme }) => theme.spacing(8)};
-    font-size: 55px;
-    line-height: 64px;
-    font-weight: 200;
+    left: ${({ theme }) => theme.spacing(4)};
+    bottom: ${({ theme }) => theme.spacing(2.4)};
+    font-size: 30px;
+    line-height: 38px;
+    font-weight: 160;
+
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        left: ${({ theme }) => theme.spacing(8)};
+        bottom: ${({ theme }) => theme.spacing(8)};
+        font-size: 55px;
+        line-height: 64px;
+        font-weight: 200;
+    }
 `;
