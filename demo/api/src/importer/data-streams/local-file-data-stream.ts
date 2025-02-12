@@ -32,7 +32,7 @@ export class LocalFileDataStream extends FileDataStream {
         }
 
         const fileSize = statSync(filePath).size;
-        // gzip filed must be read as binary, without encoding
+        // gzip file must be read as binary, without encoding
         const fileStream = createReadStream(filePath, filePath.endsWith(".gz") && !encoding ? {} : { encoding: encoding || "utf-8" });
         this.logger.log(`Providing fileStreams for local file (${filePath} fileSize: ${fileSize}).`);
         return { fileSize, fileStream, fileName: path.basename(filePath) };
