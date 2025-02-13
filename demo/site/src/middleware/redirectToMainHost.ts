@@ -17,7 +17,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
                     (siteConfig.domains.pattern && host.match(new RegExp(siteConfig.domains.pattern))),
             );
             if (redirectSiteConfig) {
-                return NextResponse.redirect(redirectSiteConfig.url);
+                return NextResponse.redirect(redirectSiteConfig.url, { status: 301 });
             }
 
             return NextResponse.next({ status: 404 });
