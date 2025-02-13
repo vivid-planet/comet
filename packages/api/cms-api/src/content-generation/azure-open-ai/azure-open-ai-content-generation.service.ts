@@ -159,7 +159,6 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
             if (response) {
                 try {
                     const json = JSON.parse(response);
-                    console.log("json ", json);
                     if (validateObjectAgainstSeoTags(json)) {
                         seoTags = json;
                     }
