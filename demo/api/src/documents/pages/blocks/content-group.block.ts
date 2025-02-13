@@ -23,26 +23,26 @@ import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
 import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
 import { IsEnum } from "class-validator";
 
-const ContentBlock = createBlocksBlock(
+export const ContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
             accordion: AccordionBlock,
             anchor: AnchorBlock,
-            space: SpaceBlock,
-            teaser: TeaserBlock,
-            richtext: RichTextBlock,
-            heading: StandaloneHeadingBlock,
-            columns: ColumnsBlock,
             callToActionList: StandaloneCallToActionListBlock,
+            columns: ColumnsBlock,
+            heading: StandaloneHeadingBlock,
             keyFacts: KeyFactsBlock,
             media: StandaloneMediaBlock,
             mediaGallery: MediaGalleryBlock,
+            richtext: RichTextBlock,
+            space: SpaceBlock,
+            teaser: TeaserBlock,
         },
     },
     { name: "ContentGroupContent" },
 );
 
-enum BackgroundColor {
+export enum BackgroundColor {
     default = "default",
     lightGray = "lightGray",
     darkGray = "darkGray",
