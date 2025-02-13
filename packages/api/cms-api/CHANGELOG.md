@@ -1,5 +1,20 @@
 # @comet/cms-api
 
+## 7.14.0
+
+### Minor Changes
+
+-   a84d88cf9: Ignore filters in `@AffectedEntity` check
+
+    When using the `@AffectedEntity` decorator we possibly also want to check entities which are filtered by default. Since we don't know how the entity is handled in the resolver we ignore the filters completely.
+
+### Patch Changes
+
+-   0233d486b: Export `FileUploadInput`
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+-   Updated dependencies [7e7a4aae1]
+    -   @comet/blocks-api@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes

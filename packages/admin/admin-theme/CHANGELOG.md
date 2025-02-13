@@ -1,5 +1,12 @@
 # @comet/admin-theme
 
+## 7.14.0
+
+### Patch Changes
+
+-   84e063642: Fix dialog header height for dialogs with no title
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes

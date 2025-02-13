@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 7.14.0
+
+### Patch Changes
+
+-   Updated dependencies [84e063642]
+    -   @comet/admin-theme@7.14.0
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Minor Changes
