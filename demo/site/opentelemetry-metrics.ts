@@ -12,6 +12,8 @@ import {
 import { IncomingMessage, ServerResponse } from "http";
 import { NextUrlWithParsedQuery } from "next/dist/server/request-meta";
 
+import { getStatusCodeClass } from "./src/util/getStatusCodeClass";
+
 export enum MetricType {
     "Counter" = "Counter",
     "UpDownCounter" = "UpDownCounter",
@@ -57,14 +59,6 @@ export function getOrCreateObservableCounter(name: string, options: MetricOption
 
 export function getOrCreateObservableUpDownCounter(name: string, options: MetricOptions = {}): ObservableUpDownCounter {
     return getOrCreate(name, options, MetricType.ObservableUpDownCounter) as ObservableUpDownCounter;
-}
-
-function getStatusCodeClass(code: number): string {
-    if (code < 200) return "info";
-    if (code < 300) return "success";
-    if (code < 400) return "redirect";
-    if (code < 500) return "client_error";
-    return "server_error";
 }
 
 export function withMetrics(handle: (req: IncomingMessage, res: ServerResponse, parsedUrl?: NextUrlWithParsedQuery | undefined) => Promise<void>) {
