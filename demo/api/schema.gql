@@ -1491,12 +1491,14 @@ input ProductCategoryInput {
   title: String!
   slug: String!
   position: Int
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
   position: Int
+  products: [ID!]
 }
 
 input ProductTagInput {
