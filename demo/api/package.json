@@ -29,7 +29,7 @@
     "dependencies": {
         "@apollo/server": "^4.11.3",
         "@comet/cms-api": "workspace:*",
-        "@faker-js/faker": "^9.4.0",
+        "@faker-js/faker": "^9.5.0",
         "@kubernetes/client-node": "^1.0.0",
         "@mikro-orm/cli": "^6.4.5",
         "@mikro-orm/core": "^6.4.5",
@@ -46,7 +46,7 @@
         "@opentelemetry/exporter-prometheus": "^0.53.0",
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
         "@opentelemetry/sdk-node": "^0.53.0",
-        "@sentry/node": "^8.54.0",
+        "@sentry/node": "^8.55.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "compression": "^1.8.0",
