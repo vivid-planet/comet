@@ -67,7 +67,7 @@ export function useSeoTagGeneration() {
                     ),
                     error: "No content to generate SEO tags from",
                 });
-                throw new Error("No content to generate SEO tags from");
+                return "";
             }
 
             const cacheForTagExists = !!seoTagsCache[tag];
