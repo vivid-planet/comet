@@ -23,7 +23,7 @@ import { NewsListArgs } from "./dto/news-list.args";
 import { PaginatedNews } from "./dto/paginated-news";
 
 @Resolver(() => News)
-@RequiredPermission(["news"])
+@RequiredPermission(["news.read"])
 export class NewsResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -76,6 +76,7 @@ export class NewsResolver {
     }
 
     @Mutation(() => News)
+    @RequiredPermission(["news.create"])
     async createNews(
         @Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope,
         @Args("input", { type: () => NewsInput }) input: NewsInput,
@@ -96,6 +97,7 @@ export class NewsResolver {
 
     @Mutation(() => News)
     @AffectedEntity(News)
+    @RequiredPermission(["news.update"])
     async updateNews(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsUpdateInput }) input: NewsUpdateInput,
@@ -121,6 +123,7 @@ export class NewsResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(News)
+    @RequiredPermission(["news.delete"])
     async deleteNews(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const news = await this.repository.findOneOrFail(id);
         this.entityManager.remove(news);

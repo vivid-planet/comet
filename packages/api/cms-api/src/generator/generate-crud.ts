@@ -7,6 +7,7 @@ import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorato
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
+import { createRequiredPermissionDecorator } from "./utils/create-required-permission-decorator";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import { getCrudSearchFieldsFromMetadata } from "./utils/search-fields-from-metadata";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
@@ -806,7 +807,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "read")}
     export class ${classNameSingular}Resolver {
         ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
@@ -1036,7 +1037,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "read")}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,${
@@ -1156,6 +1157,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "create")}
         ${dedicatedResolverArgProps
             .map((dedicatedResolverArgProp) => {
                 return `@AffectedEntity(${dedicatedResolverArgProp.targetMeta?.className}, { idArg: "${dedicatedResolverArgProp.name}" })`;
@@ -1225,6 +1227,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "update")}
         async update${classNameSingular}(
             ${generateIdArg("id", metadata)},
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
@@ -1302,6 +1305,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "delete")}
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             this.entityManager.remove(${instanceNameSingular});${

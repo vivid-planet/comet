@@ -9,7 +9,7 @@ import { ProductTag } from "../entities/product-tag.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
 
 @Resolver(() => ProductToTag)
-@RequiredPermission(["products"], { skipScopeCheck: true })
+@RequiredPermission(["products.read"], { skipScopeCheck: true })
 export class ProductToTagResolver {
     @ResolveField(() => Product)
     async product(@Parent() productToTag: ProductToTag): Promise<Product> {

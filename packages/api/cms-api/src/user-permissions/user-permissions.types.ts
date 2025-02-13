@@ -18,7 +18,7 @@ export type Users = [User[], number];
 export type SystemUser = string;
 
 type PermissionForUser = {
-    permission: string;
+    permission: string | string[];
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
