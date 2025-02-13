@@ -52,7 +52,6 @@ export function createTextLinkBlock(
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
                             onSubmit={({ text }: { text: string | undefined }) => {
-                                // abc
                                 updateState((prevState) => ({ ...prevState, text: text ?? "" }));
                             }}
                             initialValues={{ text: state.text }}
