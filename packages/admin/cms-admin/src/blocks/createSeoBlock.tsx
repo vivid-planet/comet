@@ -27,7 +27,7 @@ import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { useDocumentContentGenerationApi } from "../documents/DocumentContentGenerationContext";
 import { validateUrl } from "../validation/validateUrl";
 import { PixelImageBlock } from "./PixelImageBlock";
-import { SeoTags, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
+import { SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
 
@@ -344,7 +344,7 @@ export function createSeoBlock(
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 interface FieldWithContentGenerationProps<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>
     extends FieldProps<FieldValue, FieldElement> {
-    name: SeoTags;
+    name: SeoTag;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
