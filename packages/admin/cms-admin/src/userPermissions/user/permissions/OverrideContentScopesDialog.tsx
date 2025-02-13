@@ -1,4 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
+<<<<<<< HEAD
 import { CancelButton, CheckboxListField, Field, FinalForm, FinalFormSwitch, SaveButton } from "@comet/admin";
 import {
     CircularProgress,
@@ -8,9 +9,15 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
+=======
+import { CancelButton, DataGridToolbar, Field, FinalForm, FinalFormSwitch, SaveButton, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import isEqual from "lodash.isequal";
+>>>>>>> main
 import { FormattedMessage } from "react-intl";
 
-import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
     type GQLOverrideContentScopesMutation,
     type GQLOverrideContentScopesMutationVariables,
@@ -31,6 +38,17 @@ interface FormProps {
 type ContentScope = {
     [key: string]: string;
 };
+
+function OverrideContentScopesDialogGridToolbar() {
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarFillSpace />
+        </DataGridToolbar>
+    );
+}
 
 export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialogClose }: FormProps) => {
     const client = useApolloClient();
@@ -58,13 +76,14 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
 
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
-            query PermissionContentScopes($permissionId: ID!, $userId: String) {
+            query PermissionContentScopes($permissionId: ID!, $userId: String!) {
                 availableContentScopes: userPermissionsAvailableContentScopes
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
                     contentScopes
                 }
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
         `,
         {
@@ -86,8 +105,10 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     };
     const disabled = data && data.permission.source === "BY_RULE";
 
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+
     return (
-        <Dialog maxWidth="sm" open={true}>
+        <Dialog maxWidth="lg" open={true}>
             <FinalForm<FormSubmitData>
                 mode="edit"
                 onSubmit={submit}
@@ -108,22 +129,37 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 disabled={disabled}
                             />
                             {values.overrideContentScopes && (
-                                <CheckboxListField
-                                    fullWidth
-                                    name="contentScopes"
-                                    variant="horizontal"
-                                    layout="column"
-                                    options={data.availableContentScopes.map((contentScope: ContentScope) => ({
-                                        label: Object.entries(contentScope).map(([scope, value]) => (
-                                            <>
-                                                {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                                <br />
-                                            </>
-                                        )),
-                                        value: JSON.stringify(contentScope),
-                                        disabled: disabled,
-                                    }))}
-                                />
+                                <Field name="contentScopes" fullWidth>
+                                    {(props) => {
+                                        return (
+                                            <DataGrid
+                                                autoHeight={true}
+                                                rows={
+                                                    data.availableContentScopes.filter(
+                                                        (obj) => !Object.values(obj).every((value) => value === undefined),
+                                                    ) ?? []
+                                                }
+                                                columns={columns}
+                                                rowCount={data.availableContentScopes.length}
+                                                loading={false}
+                                                getRowHeight={() => "auto"}
+                                                getRowId={(row) => JSON.stringify(row)}
+                                                checkboxSelection={!disabled}
+                                                selectionModel={props.input.value}
+                                                onSelectionModelChange={(selectionModel) => {
+                                                    props.input.onChange(selectionModel.map((id) => String(id)));
+                                                }}
+                                                components={{
+                                                    Toolbar: OverrideContentScopesDialogGridToolbar,
+                                                }}
+                                                pageSize={25}
+                                                isRowSelectable={(params) => {
+                                                    return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
+                                                }}
+                                            />
+                                        );
+                                    }}
+                                </Field>
                             )}
                         </DialogContent>
                         <DialogActions>
