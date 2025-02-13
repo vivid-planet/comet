@@ -79,19 +79,18 @@ export function useSeoTagGeneration() {
             }
 
             if (pendingRequest && pendingRequest.content === content) {
-                return pendingRequest.request.then((seoTags) => {
-                    return seoTags[tag];
-                });
+                const seoTags = await pendingRequest.request;
+                return seoTags[tag];
             }
 
             const request = getSeoTags(content);
             pendingRequest = { request, content };
 
-            return request.then((seoTags) => {
-                pendingRequest = undefined;
-                seoTagsCache = { content, ...seoTags };
-                return seoTags[tag];
-            });
+            const seoTags = await request;
+
+            pendingRequest = undefined;
+            seoTagsCache = { content, ...seoTags };
+            return seoTags[tag];
         },
         [documentContentGenerationApi?.seoBlock, errorDialog, getSeoTags],
     );
