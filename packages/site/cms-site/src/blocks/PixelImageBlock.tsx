@@ -11,6 +11,10 @@ import { PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio: string | number | "inherit";
+    /**
+     * Do not set an `alt` attribute. The alt text is set in the DAM.
+     */
+    alt?: never;
 }
 
 export const PixelImageBlock = withPreview(
