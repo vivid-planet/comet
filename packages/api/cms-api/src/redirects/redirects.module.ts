@@ -8,7 +8,7 @@ import { DependenciesResolverFactory } from "../dependencies/dependencies.resolv
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
-import { ImportRedirectsConsole } from "./import-redirects.console";
+import { ImportRedirectsCommand } from "./import-redirects.command";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { createRedirectsResolver } from "./redirects.resolver";
 import { RedirectsService } from "./redirects.service";
@@ -51,7 +51,7 @@ export class RedirectsModule {
         return {
             module: RedirectsModule,
             imports: [mikroOrmModule],
-            providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider, ImportRedirectsConsole],
+            providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider, ImportRedirectsCommand],
             exports: [RedirectsService, REDIRECTS_LINK_BLOCK, mikroOrmModule],
         };
     }

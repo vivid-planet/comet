@@ -1,25 +1,25 @@
 import { CreateRequestContext, MikroORM } from "@mikro-orm/postgresql";
-import { Injectable, Logger } from "@nestjs/common";
-import { Command, Console } from "nestjs-console";
+import { Logger } from "@nestjs/common";
+import { Command, CommandRunner } from "nest-commander";
 
 import { BuildsService } from "./builds.service";
 
-@Injectable()
-@Console()
-export class ChangesCheckerConsole {
-    private readonly logger = new Logger(ChangesCheckerConsole.name);
+@Command({
+    name: "check-changes",
+    description: "Checks if changes since last build happened and triggers a new build if so",
+})
+export class ChangesCheckerCommand extends CommandRunner {
+    private readonly logger = new Logger(ChangesCheckerCommand.name);
 
     constructor(
         private readonly orm: MikroORM, // MikroORM is injected so we can use the request context
         private readonly buildsService: BuildsService,
-    ) {}
+    ) {
+        super();
+    }
 
-    @Command({
-        command: "check-changes",
-        description: "Checks if changes since last build happened and triggers a new build if so",
-    })
     @CreateRequestContext()
-    async execute(): Promise<void> {
+    async run(): Promise<void> {
         this.logger.log("Checking if changes since last build occurred...");
 
         if (await this.buildsService.hasChangesSinceLastBuild()) {
