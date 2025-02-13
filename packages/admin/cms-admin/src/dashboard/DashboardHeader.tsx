@@ -54,7 +54,7 @@ const Root = styled("div")<RootProps>`
 const Greeting = styled(Typography)`
     position: absolute;
     left: ${({ theme }) => theme.spacing(4)};
-    bottom: ${({ theme }) => theme.spacing(2.4)};
+    bottom: 12px;
     font-size: 30px;
     line-height: 38px;
     font-weight: 160;

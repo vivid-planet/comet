@@ -29,7 +29,7 @@ export const DateTime = () => {
 
 const Root = styled("div")`
     position: absolute;
-    top: ${({ theme }) => theme.spacing(3.2)};
+    top: 16px;
     right: ${({ theme }) => theme.spacing(4)};
     text-align: right;
 
