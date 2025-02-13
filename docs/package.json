@@ -52,7 +52,7 @@
         "@mui/x-data-grid": "^7.26.0",
         "draft-js": "^0.11.7",
         "final-form": "^4.20.10",
-        "graphql": "^15.10.1",
+        "graphql": "^16.10.0",
         "history": "^4.10.1",
         "prism-react-renderer": "^2.4.1",
         "raw-loader": "^4.0.2",
