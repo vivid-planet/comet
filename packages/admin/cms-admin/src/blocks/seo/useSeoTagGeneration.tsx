@@ -21,7 +21,7 @@ export function useSeoTagGeneration() {
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
 
-    const getSeoTag = useCallback(
+    const getSeoTags = useCallback(
         async (content: string): Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> => {
             const { data, errors } = await apolloClient.mutate<GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables>({
                 mutation: generateSeoTagsMutation,
@@ -84,7 +84,7 @@ export function useSeoTagGeneration() {
                 });
             }
 
-            const request = getSeoTag(content);
+            const request = getSeoTags(content);
             pendingRequest = { request, content };
 
             return request.then((seoTags) => {
@@ -93,7 +93,7 @@ export function useSeoTagGeneration() {
                 return seoTags[tag];
             });
         },
-        [documentContentGenerationApi?.seoBlock, errorDialog, getSeoTag],
+        [documentContentGenerationApi?.seoBlock, errorDialog, getSeoTags],
     );
 
     return generateSeoTag;
