@@ -75,21 +75,41 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
     }, {} as NonNullRecord<S>);
 }
 
-function defaultCreatePath(values: ContentScopeValues) {
-    const dimensionValues: { [dimension: string]: Set<string> } = {};
-    values.forEach((value) => {
-        Object.keys(value).forEach((dimension) => {
-            if (!dimensionValues[dimension]) {
-                dimensionValues[dimension] = new Set();
-            }
-            dimensionValues[dimension].add(value[dimension].value);
-        });
+function groupObjectsIntoArrays(values: ContentScopeValues) {
+    const grouped = new Map();
+    values.forEach((item) => {
+        const key = JSON.stringify(Object.keys(item).sort());
+        if (grouped.has(key)) {
+            grouped.get(key).push(item);
+        } else {
+            grouped.set(key, [item]);
+        }
     });
-    return Object.keys(dimensionValues).reduce((path, dimension) => {
-        const plainValues = Array.from(dimensionValues[dimension]);
-        const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-        return `${path}/:${dimension}${whiteListedValuesString}`;
-    }, "");
+    return Array.from(grouped.values());
+}
+
+function defaultCreatePath(values: ContentScopeValues) {
+    const paths: string[] = [];
+
+    groupObjectsIntoArrays(values).forEach((value) => {
+        const dimensionValues: { [dimension: string]: Set<string> } = {};
+        value.forEach((innerValue: { [x: string]: { value: string } }) => {
+            Object.keys(innerValue).forEach((dimension) => {
+                if (!dimensionValues[dimension]) {
+                    dimensionValues[dimension] = new Set();
+                }
+                dimensionValues[dimension].add(innerValue[dimension].value);
+            });
+        });
+        const path = Object.keys(dimensionValues).reduce((path, dimension) => {
+            const plainValues = Array.from(dimensionValues[dimension]);
+            const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
+            return `${path}/:${dimension}${whiteListedValuesString}`;
+        }, "");
+        paths.push(path);
+    });
+
+    return paths;
 }
 
 function defaultCreateUrl(scope: ContentScopeInterface) {
@@ -143,15 +163,15 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     values,
     location = defaultContentScopeLocation,
 }: ContentScopeProviderProps<S>) {
-    const path = location.createPath(values);
+    const paths = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
-    const match = useRouteMatch<NonNullRecord<S>>(path);
+    const match = useRouteMatch<NonNullRecord<S>>(paths);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     return (
         <Context.Provider
             value={{
-                path,
+                path: paths,
                 redirectPathAfterChange,
                 setRedirectPathAfterChange,
                 values,
@@ -160,7 +180,7 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
         >
             <Switch>
                 {match && (
-                    <Route exact={false} strict={false} path={path}>
+                    <Route exact={false} strict={false} path={paths}>
                         {children({ match })}
                     </Route>
                 )}
