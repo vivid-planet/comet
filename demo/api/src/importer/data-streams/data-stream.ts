@@ -5,5 +5,5 @@ export interface DataStreamAndMetadata {
 }
 
 export abstract class DataStream {
-    abstract getDataStreamsAndMetadata(): Promise<DataStreamAndMetadata | null>;
+    abstract getDataStreamAndMetadata(): Promise<DataStreamAndMetadata | null>;
 }

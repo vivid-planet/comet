@@ -20,7 +20,7 @@ export class ProductImporter {
     }
 
     async init({ dataStream }: { dataStream: DataStream }): Promise<void> {
-        this.dataStream = await dataStream.getDataStreamsAndMetadata();
+        this.dataStream = await dataStream.getDataStreamAndMetadata();
     }
 
     async executeRun(): Promise<boolean> {

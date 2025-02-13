@@ -15,7 +15,7 @@ export class LocalFileDataStream extends FileDataStream {
         this.fileKey = fileKey;
     }
 
-    async getDataStreamsAndMetadata(): Promise<DataStreamAndMetadata | null> {
+    async getDataStreamAndMetadata(): Promise<DataStreamAndMetadata | null> {
         const dataStreamAndSize = await this.getFileStreamAndSizeOfLocalFile({ filePath: this.fileKey });
         return this.getFileStreamResult(dataStreamAndSize);
     }
