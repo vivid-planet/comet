@@ -121,221 +121,213 @@ export function createSeoBlock(
                             alternativeLinks: state.alternativeLinks,
                         }}
                     >
-                        {({ form: formApi }) => (
-                            <>
-                                {/* Meta */}
-                                <Box marginBottom={8}>
-                                    <Typography variant="h4" gutterBottom>
-                                        <FormattedMessage id="comet.blocks.seo.meta.sectionTitle" defaultMessage="Meta Tags" />
-                                    </Typography>
+                        {/* Meta */}
+                        <Box marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.meta.sectionTitle" defaultMessage="Meta Tags" />
+                            </Typography>
 
-                                    <FieldWithContentGeneration
-                                        label={intl.formatMessage({
-                                            id: "comet.blocks.seo.html  Title",
-                                            defaultMessage: "HTML Title",
-                                        })}
-                                        name="htmlTitle"
-                                        component={FinalFormInput}
-                                        fullWidth
-                                    />
+                            <FieldWithContentGeneration
+                                label={intl.formatMessage({
+                                    id: "comet.blocks.seo.html  Title",
+                                    defaultMessage: "HTML Title",
+                                })}
+                                name="htmlTitle"
+                                component={FinalFormInput}
+                                fullWidth
+                            />
 
-                                    <FieldWithContentGeneration
-                                        label={intl.formatMessage({
-                                            id: "comet.blocks.seo.metaDescription",
-                                            defaultMessage: "Meta Description",
-                                        })}
-                                        name="metaDescription"
-                                        multiline
-                                        rows={3}
-                                        rowsMax={5}
-                                        component={FinalFormInput}
-                                        fullWidth
-                                    />
-                                </Box>
+                            <FieldWithContentGeneration
+                                label={intl.formatMessage({
+                                    id: "comet.blocks.seo.metaDescription",
+                                    defaultMessage: "Meta Description",
+                                })}
+                                name="metaDescription"
+                                multiline
+                                rows={3}
+                                rowsMax={5}
+                                component={FinalFormInput}
+                                fullWidth
+                            />
+                        </Box>
 
-                                {/* Open Graph */}
-                                <Box marginTop={8} marginBottom={8}>
-                                    <Typography variant="h4" gutterBottom>
-                                        <FormattedMessage id="comet.blocks.seo.openGraph.sectionTitle" defaultMessage="Open Graph" />
-                                    </Typography>
-                                    <FieldWithContentGeneration
-                                        label={intl.formatMessage({
-                                            id: "comet.blocks.seo.openGraphTitle",
-                                            defaultMessage: "Title",
-                                        })}
-                                        name="openGraphTitle"
-                                        component={FinalFormInput}
-                                        fullWidth
-                                    />
-                                    <FieldWithContentGeneration
-                                        label={intl.formatMessage({
-                                            id: "comet.blocks.seo.openGraphDescription",
-                                            defaultMessage: "Description",
-                                        })}
-                                        name="openGraphDescription"
-                                        multiline={true}
-                                        rows={3}
-                                        rowsMax={5}
-                                        component={FinalFormInput}
-                                        fullWidth
-                                    />
-                                    {openGraphImage}
-                                </Box>
+                        {/* Open Graph */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.openGraph.sectionTitle" defaultMessage="Open Graph" />
+                            </Typography>
+                            <FieldWithContentGeneration
+                                label={intl.formatMessage({
+                                    id: "comet.blocks.seo.openGraphTitle",
+                                    defaultMessage: "Title",
+                                })}
+                                name="openGraphTitle"
+                                component={FinalFormInput}
+                                fullWidth
+                            />
+                            <FieldWithContentGeneration
+                                label={intl.formatMessage({
+                                    id: "comet.blocks.seo.openGraphDescription",
+                                    defaultMessage: "Description",
+                                })}
+                                name="openGraphDescription"
+                                multiline={true}
+                                rows={3}
+                                rowsMax={5}
+                                component={FinalFormInput}
+                                fullWidth
+                            />
+                            {openGraphImage}
+                        </Box>
 
-                                {/* Structured Data */}
-                                <Box marginTop={8} marginBottom={8}>
-                                    <Typography variant="h4" gutterBottom>
-                                        <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
-                                    </Typography>
-                                    <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
-                                </Box>
+                        {/* Structured Data */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
+                            </Typography>
+                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
+                        </Box>
 
-                                {/* Sitemap */}
-                                <Box marginTop={8} marginBottom={8}>
-                                    <Typography variant="h4" gutterBottom>
-                                        <FormattedMessage id="comet.blocks.seo.sitemap.sectionTitle" defaultMessage="Sitemap" />
-                                    </Typography>
+                        {/* Sitemap */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.sitemap.sectionTitle" defaultMessage="Sitemap" />
+                            </Typography>
 
-                                    <ReactFinalFormField
-                                        name="noIndex"
-                                        type="checkbox"
-                                        parse={(v) => {
-                                            return !v; // parse from noIndex to index
-                                        }}
-                                        format={(v) => {
-                                            return !v; // format back from index to noIndex
-                                        }}
-                                    >
-                                        {({ input: { checked, onChange } }) => {
-                                            const open = checked ? checked : false;
-                                            return (
-                                                <Paper variant="outlined">
-                                                    <Collapsible
-                                                        open={open}
-                                                        header={
-                                                            <CollapsibleSwitchButtonHeader
-                                                                checked={open}
-                                                                title={
-                                                                    <FormattedMessage id="comet.seo.sitemap.pageIndex" defaultMessage="Page Index" />
-                                                                }
-                                                            />
-                                                        }
-                                                        onChange={onChange}
+                            <ReactFinalFormField
+                                name="noIndex"
+                                type="checkbox"
+                                parse={(v) => {
+                                    return !v; // parse from noIndex to index
+                                }}
+                                format={(v) => {
+                                    return !v; // format back from index to noIndex
+                                }}
+                            >
+                                {({ input: { checked, onChange } }) => {
+                                    const open = checked ? checked : false;
+                                    return (
+                                        <Paper variant="outlined">
+                                            <Collapsible
+                                                open={open}
+                                                header={
+                                                    <CollapsibleSwitchButtonHeader
+                                                        checked={open}
+                                                        title={<FormattedMessage id="comet.seo.sitemap.pageIndex" defaultMessage="Page Index" />}
+                                                    />
+                                                }
+                                                onChange={onChange}
+                                            >
+                                                <Divider />
+                                                <Box padding={4}>
+                                                    <Field
+                                                        label={intl.formatMessage({
+                                                            id: "comet.blocks.seo.sitemap.priority",
+                                                            defaultMessage: "Priority",
+                                                        })}
+                                                        name="priority"
+                                                        fullWidth
                                                     >
-                                                        <Divider />
-                                                        <Box padding={4}>
-                                                            <Field
-                                                                label={intl.formatMessage({
-                                                                    id: "comet.blocks.seo.sitemap.priority",
-                                                                    defaultMessage: "Priority",
-                                                                })}
-                                                                name="priority"
-                                                                fullWidth
-                                                            >
-                                                                {(props) => (
-                                                                    <FinalFormSelect {...props} fullWidth>
-                                                                        {priorityOptions.map((option) => (
-                                                                            <MenuItem value={option.value} key={option.value}>
-                                                                                {option.label}
-                                                                            </MenuItem>
-                                                                        ))}
-                                                                    </FinalFormSelect>
-                                                                )}
-                                                            </Field>
-                                                            <Field
-                                                                label={intl.formatMessage({
-                                                                    id: "comet.blocks.seo.sitemap.changeFrequency",
-                                                                    defaultMessage: "Change Frequency",
-                                                                })}
-                                                                name="changeFrequency"
-                                                                fullWidth
-                                                            >
-                                                                {(props) => (
-                                                                    <FinalFormSelect {...props} fullWidth>
-                                                                        {changeFrequencyOptions.map((option) => (
-                                                                            <MenuItem value={option.value} key={option.value}>
-                                                                                {option.label}
-                                                                            </MenuItem>
-                                                                        ))}
-                                                                    </FinalFormSelect>
-                                                                )}
-                                                            </Field>
-                                                        </Box>
-                                                    </Collapsible>
-                                                </Paper>
-                                            );
-                                        }}
-                                    </ReactFinalFormField>
-                                </Box>
+                                                        {(props) => (
+                                                            <FinalFormSelect {...props} fullWidth>
+                                                                {priorityOptions.map((option) => (
+                                                                    <MenuItem value={option.value} key={option.value}>
+                                                                        {option.label}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </FinalFormSelect>
+                                                        )}
+                                                    </Field>
+                                                    <Field
+                                                        label={intl.formatMessage({
+                                                            id: "comet.blocks.seo.sitemap.changeFrequency",
+                                                            defaultMessage: "Change Frequency",
+                                                        })}
+                                                        name="changeFrequency"
+                                                        fullWidth
+                                                    >
+                                                        {(props) => (
+                                                            <FinalFormSelect {...props} fullWidth>
+                                                                {changeFrequencyOptions.map((option) => (
+                                                                    <MenuItem value={option.value} key={option.value}>
+                                                                        {option.label}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </FinalFormSelect>
+                                                        )}
+                                                    </Field>
+                                                </Box>
+                                            </Collapsible>
+                                        </Paper>
+                                    );
+                                }}
+                            </ReactFinalFormField>
+                        </Box>
 
-                                {/* Canonical Tag */}
-                                <Box marginTop={8} marginBottom={8}>
-                                    <Typography variant="h4" gutterBottom>
-                                        <FormattedMessage id="comet.blocks.seo.canonicalTag.sectionTitle" defaultMessage="Canonical Tag" />
-                                    </Typography>
-                                    <Field label={<FormattedMessage {...messages.url} />} name="canonicalUrl" component={FinalFormInput} fullWidth />
-                                </Box>
+                        {/* Canonical Tag */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.canonicalTag.sectionTitle" defaultMessage="Canonical Tag" />
+                            </Typography>
+                            <Field label={<FormattedMessage {...messages.url} />} name="canonicalUrl" component={FinalFormInput} fullWidth />
+                        </Box>
 
-                                {/* Alternate Hreflang */}
-                                <Box marginTop={8} marginBottom={8}>
-                                    <AdminComponentSectionGroup
-                                        title={
-                                            <FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />
-                                        }
-                                    >
-                                        <AdminComponentPaper>
-                                            <FieldArray name="alternativeLinks">
-                                                {({ fields }) => (
-                                                    <>
-                                                        {fields.map((link, i) => (
-                                                            <Grid key={i} container spacing={2} sx={{ marginBottom: 2 }}>
-                                                                <Grid item xs={3}>
-                                                                    <Field
-                                                                        label={
-                                                                            <FormattedMessage
-                                                                                id="comet.blocks.seo.alternativeLinks.code"
-                                                                                defaultMessage="Code"
-                                                                            />
-                                                                        }
-                                                                        name={`${link}.code`}
-                                                                        component={FinalFormInput}
-                                                                        placeholder="en-US"
+                        {/* Alternate Hreflang */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <AdminComponentSectionGroup
+                                title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />}
+                            >
+                                <AdminComponentPaper>
+                                    <FieldArray name="alternativeLinks">
+                                        {({ fields }) => (
+                                            <>
+                                                {fields.map((link, i) => (
+                                                    <Grid key={i} container spacing={2} sx={{ marginBottom: 2 }}>
+                                                        <Grid item xs={3}>
+                                                            <Field
+                                                                label={
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.seo.alternativeLinks.code"
+                                                                        defaultMessage="Code"
                                                                     />
-                                                                </Grid>
-                                                                <Grid item xs>
-                                                                    <Field
-                                                                        label={<FormattedMessage {...messages.url} />}
-                                                                        name={`${link}.url`}
-                                                                        component={FinalFormInput}
-                                                                        fullWidth
-                                                                        validate={(url) => validateUrl(url)}
-                                                                    />
-                                                                </Grid>
-                                                                <Grid item alignSelf="flex-start">
-                                                                    <DeleteButtonWrapper>
-                                                                        <IconButton onClick={() => fields.remove(i)} size="large">
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </DeleteButtonWrapper>
-                                                                </Grid>
-                                                            </Grid>
-                                                        ))}
-                                                        <AdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
-                                                            <AddButtonContent>
-                                                                <AddButtonIcon />
-                                                                <Typography>
-                                                                    <FormattedMessage {...messages.add} />
-                                                                </Typography>
-                                                            </AddButtonContent>
-                                                        </AdminComponentButton>
-                                                    </>
-                                                )}
-                                            </FieldArray>
-                                        </AdminComponentPaper>
-                                    </AdminComponentSectionGroup>
-                                </Box>
-                            </>
-                        )}
+                                                                }
+                                                                name={`${link}.code`}
+                                                                component={FinalFormInput}
+                                                                placeholder="en-US"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs>
+                                                            <Field
+                                                                label={<FormattedMessage {...messages.url} />}
+                                                                name={`${link}.url`}
+                                                                component={FinalFormInput}
+                                                                fullWidth
+                                                                validate={(url) => validateUrl(url)}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item alignSelf="flex-start">
+                                                            <DeleteButtonWrapper>
+                                                                <IconButton onClick={() => fields.remove(i)} size="large">
+                                                                    <Delete />
+                                                                </IconButton>
+                                                            </DeleteButtonWrapper>
+                                                        </Grid>
+                                                    </Grid>
+                                                ))}
+                                                <AdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
+                                                    <AddButtonContent>
+                                                        <AddButtonIcon />
+                                                        <Typography>
+                                                            <FormattedMessage {...messages.add} />
+                                                        </Typography>
+                                                    </AddButtonContent>
+                                                </AdminComponentButton>
+                                            </>
+                                        )}
+                                    </FieldArray>
+                                </AdminComponentPaper>
+                            </AdminComponentSectionGroup>
+                        </Box>
                     </BlocksFinalForm>
                 </div>
             );
