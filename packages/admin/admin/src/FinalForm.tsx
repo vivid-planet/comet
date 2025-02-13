@@ -179,7 +179,8 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
                     if (!validationWarnings) {
                         registeredFields.forEach((fieldName) => {
-                            if (formLevelWarnings.current[fieldName]) {
+                            const hasFormLevelWarning = Boolean(formLevelWarnings.current[fieldName]);
+                            if (hasFormLevelWarning) {
                                 setFieldData(fieldName, { warning: undefined });
                             }
                         });
