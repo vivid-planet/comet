@@ -534,9 +534,15 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
-        extractTextContents: (state) => {
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
             const content = state.blocks.reduce<string[]>((content, child) => {
-                return [...content, ...(block.extractTextContents?.(child.props) ?? [])];
+                if (!child.visible && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
             }, []);
             return content;
         },

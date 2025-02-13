@@ -28,6 +28,6 @@ export function createCompositeBlockSelectField<T extends string | number>({
                 <SelectField name="value" {...legacyFieldProps} {...fieldProps} options={options} />
             </BlocksFinalForm>
         ),
-        extractTextContents: (state) => extractTextContents?.(state) ?? [],
+        extractTextContents: (state, options) => extractTextContents?.(state, options) ?? [],
     });
 }

@@ -446,14 +446,22 @@ export const createOneOfBlock = <T extends boolean = boolean>(
             }
         },
 
-        extractTextContents: (state) => {
-            const { state: blockState, block } = getActiveBlock(state);
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
 
-            if (blockState === undefined) {
-                return [];
-            }
+            const content = state.attachedBlocks.reduce<string[]>((content, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
 
-            return block?.extractTextContents?.(blockState.props) ?? [];
+                if (child.type !== state.activeType && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
+            }, []);
+            return content;
         },
     };
     if (override) {
