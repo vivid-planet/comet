@@ -1,5 +1,16 @@
 # @comet/blocks-admin
 
+## 7.14.0
+
+### Minor Changes
+
+-   948e07bba: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   @comet/admin@7.14.0
+-   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
