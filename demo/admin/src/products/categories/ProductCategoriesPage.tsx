@@ -1,6 +1,8 @@
 import {
     FillSpace,
     MainContent,
+    RouterTab,
+    RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
@@ -12,6 +14,8 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { AssignedProductsTab } from "@src/products/categories/AssignedProductsTab";
+import React from "react";
 import { useIntl } from "react-intl";
 
 import ProductCategoriesTable from "./ProductCategoriesTable";
@@ -32,7 +36,7 @@ const ProductCategoriesPage = () => {
     const intl = useIntl();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories Handmade" })}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
@@ -44,7 +48,27 @@ const ProductCategoriesPage = () => {
                     {(selectedId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <ProductCategoryForm id={selectedId} />
+                            <RouterTabs>
+                                <RouterTab
+                                    forceRender={true}
+                                    path=""
+                                    label={intl.formatMessage({ id: "products.editProductCategory.formTab", defaultMessage: "Product category" })}
+                                >
+                                    <ProductCategoryForm id={selectedId} />
+                                </RouterTab>
+                                <RouterTab
+                                    forceRender={true}
+                                    path="/assigned-products"
+                                    label={intl.formatMessage({
+                                        id: "products.editProductCategory.assignedProducts",
+                                        defaultMessage: "Assigned Products",
+                                    })}
+                                >
+                                    <MainContent fullHeight disablePadding>
+                                        <AssignedProductsTab productCategoryId={selectedId} />
+                                    </MainContent>
+                                </RouterTab>
+                            </RouterTabs>
                         </SaveBoundary>
                     )}
                 </StackPage>
