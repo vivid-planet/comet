@@ -50,6 +50,8 @@ const mockedBuildTemplatesService = {
     getAllBuilderCronJobs: jest.fn<Promise<V1CronJob[]>, never[]>().mockResolvedValue([jobMainEnglish, jobMainGerman]),
 };
 
+jest.mock("@kubernetes/client-node", () => ({}));
+
 describe("BuildsService", () => {
     let service: BuildsService;
 

@@ -274,8 +274,8 @@ importers:
         specifier: ^9.5.0
         version: 9.5.0
       '@kubernetes/client-node':
-        specifier: ^0.22.3
-        version: 0.22.3
+        specifier: ^1.0.0
+        version: 1.0.0
       '@mikro-orm/cli':
         specifier: ^6.4.5
         version: 6.4.5
@@ -1813,8 +1813,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
       '@kubernetes/client-node':
-        specifier: ^0.22.3
-        version: 0.22.3
+        specifier: ^1.0.0
+        version: 1.0.0
       '@mikro-orm/cli':
         specifier: ^6.4.5
         version: 6.4.5
@@ -5237,8 +5237,8 @@ packages:
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
 
-  '@kubernetes/client-node@0.22.3':
-    resolution: {integrity: sha512-dG8uah3+HDJLpJEESshLRZlAZ4PgDeV9mZXT0u1g7oy4KMRzdZ7n5g0JEIlL6QhK51/2ztcIqURAnjfjJt6Z+g==}
+  '@kubernetes/client-node@1.0.0':
+    resolution: {integrity: sha512-a8NSvFDSHKFZ0sR1hbPSf8IDFNJwctEU5RodSCNiq/moRXWmrdmqhb1RRQzF+l+TSBaDgHw3YsYNxxE92STBzw==}
 
   '@leichtgewicht/ip-codec@2.0.4':
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
@@ -7717,8 +7717,14 @@ packages:
   '@types/stack-utils@2.0.1':
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
 
+  '@types/stream-buffers@3.0.7':
+    resolution: {integrity: sha512-azOCy05sXVXrO+qklf0c/B07H/oHaIuDDAiHPVwlk3A9Ek+ksHyTeMajLZl3r76FxpPpxem//4Te61G1iW3Giw==}
+
   '@types/stylis@4.2.5':
     resolution: {integrity: sha512-1Xve+NMN7FWjY14vLoY5tL3BVEQ/n42YLwaqJIPYhotZ9uBHt87VceMwWQpzmdEt2TNXIorIFG+YeCUUW7RInw==}
+
+  '@types/tar@6.1.13':
+    resolution: {integrity: sha512-IznnlmU5f4WcGTh2ltRu/Ijpmk8wiWXfF0VA4s+HPjHZgvFggk1YaIkbo5krX/zUCzWF8N/l4+W/LNxnvAJ8nw==}
 
   '@types/tedious@4.0.14':
     resolution: {integrity: sha512-KHPsfX/FoVbUGbyYvk1q9MMQHLPeRZhRJZdO45Q4YjvFkv4hMNghCWTvy7rdKessBsmtz4euWCWAB6/tVpI1Iw==}
@@ -8470,10 +8476,6 @@ packages:
   busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
     engines: {node: '>=10.16.0'}
-
-  byline@5.0.0:
-    resolution: {integrity: sha512-s6webAy+R4SR8XVuJWt2V2rGvhnrhxN+9S15GNuTK3wKPOXFF6RNc+8ug2XhH+2s4f+uudG4kUVYmYOQWL2g0Q==}
-    engines: {node: '>=0.10.0'}
 
   bytes@3.0.0:
     resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
@@ -12792,6 +12794,10 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
+  minipass@4.2.8:
+    resolution: {integrity: sha512-fNzuVyifolSLFL4NzpF+wEF4qrgqaaKX0haXPQEdQ7NKAN+WecoKMHV09YcuL/DHxrUsYQOK3MiuDf7Ip2OXfQ==}
+    engines: {node: '>=8'}
+
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -15499,6 +15505,9 @@ packages:
 
   title-case@3.0.3:
     resolution: {integrity: sha512-e1zGYRvbffpcHIrnuqT0Dh+gEJtDaxDSoG4JAIpq4oDFyooziLBIiYQv0GBT4FUAnUop5uZ1hiIAj7oAF6sOCA==}
+
+  tmp-promise@3.0.3:
+    resolution: {integrity: sha512-RwM7MoPojPxsOBYnyd2hy0bxtIlVrihNs9pj5SUvY8Zz1sQcQG2tG1hSr8PDxfgEB8RNKDhqbIlroIarSNDNsQ==}
 
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -21181,22 +21190,29 @@ snapshots:
     dependencies:
       jsep: 1.4.0
 
-  '@kubernetes/client-node@0.22.3':
+  '@kubernetes/client-node@1.0.0':
     dependencies:
-      byline: 5.0.0
+      '@types/js-yaml': 4.0.5
+      '@types/node': 22.13.1
+      '@types/node-fetch': 2.6.12
+      '@types/stream-buffers': 3.0.7
+      '@types/tar': 6.1.13
+      '@types/ws': 8.5.14
+      form-data: 4.0.0
       isomorphic-ws: 5.0.0(ws@8.18.0)
       js-yaml: 4.1.0
       jsonpath-plus: 10.2.0
-      request: 2.88.2
+      node-fetch: 2.7.0
+      openid-client: 6.1.7
       rfc4648: 1.5.2
       stream-buffers: 3.0.2
       tar: 7.4.3
+      tmp-promise: 3.0.3
       tslib: 2.8.1
       ws: 8.18.0
-    optionalDependencies:
-      openid-client: 6.1.7
     transitivePeerDependencies:
       - bufferutil
+      - encoding
       - utf-8-validate
 
   '@leichtgewicht/ip-codec@2.0.4': {}
@@ -24325,7 +24341,16 @@ snapshots:
 
   '@types/stack-utils@2.0.1': {}
 
+  '@types/stream-buffers@3.0.7':
+    dependencies:
+      '@types/node': 22.13.1
+
   '@types/stylis@4.2.5': {}
+
+  '@types/tar@6.1.13':
+    dependencies:
+      '@types/node': 22.13.1
+      minipass: 4.2.8
 
   '@types/tedious@4.0.14':
     dependencies:
@@ -25297,8 +25322,6 @@ snapshots:
   busboy@1.6.0:
     dependencies:
       streamsearch: 1.1.0
-
-  byline@5.0.0: {}
 
   bytes@3.0.0: {}
 
@@ -30719,6 +30742,8 @@ snapshots:
 
   minimist@1.2.8: {}
 
+  minipass@4.2.8: {}
+
   minipass@7.1.2: {}
 
   minizlib@3.0.1:
@@ -31009,8 +31034,7 @@ snapshots:
 
   oauth-sign@0.9.0: {}
 
-  oauth4webapi@3.1.4:
-    optional: true
+  oauth4webapi@3.1.4: {}
 
   object-assign@4.1.1: {}
 
@@ -31125,7 +31149,6 @@ snapshots:
     dependencies:
       jose: 5.9.6
       oauth4webapi: 3.1.4
-    optional: true
 
   optimism@0.18.1:
     dependencies:
@@ -33786,6 +33809,10 @@ snapshots:
   title-case@3.0.3:
     dependencies:
       tslib: 2.8.1
+
+  tmp-promise@3.0.3:
+    dependencies:
+      tmp: 0.2.1
 
   tmp@0.0.33:
     dependencies:
