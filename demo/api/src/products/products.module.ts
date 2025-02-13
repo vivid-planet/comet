@@ -20,6 +20,8 @@ import { ProductCategoryResolver } from "./generated/product-category.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
+import { ProductImporterConsole } from "./product-importer.console";
+import { ProductImporterService } from "./product-importer.service";
 
 @Module({
     imports: [
@@ -46,6 +48,8 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
         ManufacturerResolver,
         ManufacturerCountryResolver,
         ProductToTagResolver,
+        ProductImporterConsole,
+        ProductImporterService,
     ],
     exports: [],
 })
