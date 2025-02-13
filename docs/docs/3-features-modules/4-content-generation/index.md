@@ -109,7 +109,7 @@ export class ContentGenerationService implements ContentGenerationServiceInterfa
  >
 ```
 
-## SEO Block: Generating seo tags
+## SEO Block: Generating SEO tags
 
 To enable this feature, perform the following steps:
 
