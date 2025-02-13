@@ -41,7 +41,6 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
-import { validateTitle } from "../validateTitle";
 import {
     GQLManufacturersSelectQuery,
     GQLManufacturersSelectQueryVariables,
@@ -212,7 +211,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 name="title"
                                 label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
-                                validate={validateTitle}
+                                validate={(value: string) => (value.length < 3 ? "Title must be at least 3 characters long" : undefined)}
                             />
 
                             <TextField
@@ -422,14 +421,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="priceList"
                                 label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
                                 variant="horizontal"
-                                maxFileSize={4194304}
+                                maxFileSize={1024 * 1024 * 4}
                             />
                             <FileUploadField
                                 name="datasheets"
                                 label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
                                 variant="horizontal"
                                 multiple
-                                maxFileSize={4194304}
+                                maxFileSize={1024 * 1024 * 4}
                             />
                             <DateTimeField
                                 variant="horizontal"
