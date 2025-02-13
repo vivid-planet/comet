@@ -1,5 +1,5 @@
-import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
-import { Add, Delete } from "@comet/admin-icons";
+import { Field, FieldProps, FinalFormInput, FinalFormSelect, Loading, messages } from "@comet/admin";
+import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
@@ -18,13 +18,16 @@ import {
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
-import { Field as ReactFinalFormField } from "react-final-form";
+import { useState } from "react";
+import { Field as ReactFinalFormField, useForm } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
+import { useDocumentContentGenerationApi } from "../documents/DocumentContentGenerationContext";
 import { validateUrl } from "../validation/validateUrl";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
 
@@ -124,7 +127,7 @@ export function createSeoBlock(
                                 <FormattedMessage id="comet.blocks.seo.meta.sectionTitle" defaultMessage="Meta Tags" />
                             </Typography>
 
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.html  Title",
                                     defaultMessage: "HTML Title",
@@ -134,7 +137,7 @@ export function createSeoBlock(
                                 fullWidth
                             />
 
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.metaDescription",
                                     defaultMessage: "Meta Description",
@@ -153,7 +156,7 @@ export function createSeoBlock(
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.openGraph.sectionTitle" defaultMessage="Open Graph" />
                             </Typography>
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.openGraphTitle",
                                     defaultMessage: "Title",
@@ -162,7 +165,7 @@ export function createSeoBlock(
                                 component={FinalFormInput}
                                 fullWidth
                             />
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.openGraphDescription",
                                     defaultMessage: "Description",
@@ -329,18 +332,6 @@ export function createSeoBlock(
                 </div>
             );
         },
-
-        extractTextContents: ({ htmlTitle, metaDescription, openGraphDescription, openGraphTitle, structuredData }) => {
-            const contents = [];
-
-            if (htmlTitle) contents.push(htmlTitle);
-            if (metaDescription) contents.push(metaDescription);
-            if (openGraphDescription) contents.push(openGraphDescription);
-            if (openGraphTitle) contents.push(openGraphTitle);
-            if (structuredData) contents.push(structuredData);
-
-            return contents;
-        },
     };
 
     if (override) {
@@ -348,6 +339,52 @@ export function createSeoBlock(
     }
 
     return SeoBlock;
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+interface FieldWithContentGenerationProps<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>
+    extends FieldProps<FieldValue, FieldElement> {
+    name: SeoTag;
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
+    name,
+    endAdornment,
+    ...props
+}: FieldWithContentGenerationProps<FieldValue, FieldElement>) {
+    const documentContentGenerationApi = useDocumentContentGenerationApi();
+    const generateSeoTag = useSeoTagGeneration();
+    const formApi = useForm();
+
+    const [loading, setLoading] = useState(false);
+
+    return (
+        <Field
+            name={name}
+            {...(documentContentGenerationApi?.seoBlock
+                ? {
+                      endAdornment: (
+                          <>
+                              {endAdornment}
+                              <IconButton
+                                  color="primary"
+                                  onClick={async () => {
+                                      setLoading(true);
+                                      const seoTag = await generateSeoTag(name, formApi.getFieldState(name)?.value);
+                                      setLoading(false);
+                                      formApi.change(name, seoTag);
+                                  }}
+                              >
+                                  {loading ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+                              </IconButton>
+                          </>
+                      ),
+                  }
+                : {})}
+            {...props}
+        />
+    );
 }
 
 const AddButtonContent = styled("span")`
