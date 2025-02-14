@@ -1,6 +1,8 @@
 import { type future_GridConfig as GridConfig } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
+import { ProductTitle } from "./ProductTitle";
+
 const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
 
 export const ProductsGrid: GridConfig<GQLProduct> = {
@@ -64,7 +66,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         },
         {
             type: "text",
-            renderCell: ({ value, row }) => <div>Title: {value}</div>,
+            renderCell: ({ value, row }) => <ProductTitle title={value} />,
             name: "title",
             headerName: "Custom",
             minWidth: 200,

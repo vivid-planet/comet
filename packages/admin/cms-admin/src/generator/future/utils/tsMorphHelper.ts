@@ -1,8 +1,10 @@
 import {
     ArrayLiteralExpression,
+    ArrowFunction,
     ExportedDeclarations,
     Expression,
     Identifier,
+    Node,
     NumericLiteral,
     ObjectLiteralExpression,
     Project,
@@ -11,6 +13,8 @@ import {
     SyntaxKind,
     VariableDeclaration,
 } from "ts-morph";
+
+import { Imports } from "./generateImportsCode";
 
 const project = new Project({
     tsConfigFilePath: "tsconfig.json",
@@ -22,7 +26,31 @@ export function morphTsSource(path: string) {
     return tsSource;
 }
 
-function astExpressionToJson(node: Expression) {
+function findUsedImports(node: Node) {
+    const imports = [] as Imports;
+    node.getDescendantsOfKind(SyntaxKind.Identifier).forEach((identifier) => {
+        for (const referencedSymbol of identifier.findReferences()) {
+            for (const reference of referencedSymbol.getReferences()) {
+                const referenceNode = reference.getNode();
+                const importDeclaration = referenceNode.getFirstAncestorByKind(SyntaxKind.ImportDeclaration);
+                if (importDeclaration) {
+                    for (const namedImport of importDeclaration.getNamedImports()) {
+                        if ((namedImport.getAliasNode() || namedImport.getNameNode())?.getText() == referenceNode.getText()) {
+                            imports.push({
+                                name: namedImport.getNameNode().getText(),
+                                importPath: importDeclaration.getModuleSpecifierValue(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    });
+    return imports;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function astExpressionToJson(node: Expression): any {
     if (node.getKind() == SyntaxKind.ObjectLiteralExpression) {
         const ret = {} as Record<string, unknown>;
         for (const property of (node as ObjectLiteralExpression).getProperties()) {
@@ -51,8 +79,10 @@ function astExpressionToJson(node: Expression) {
         //what is this?
         return node.getText();
     } else if (node.getKind() == SyntaxKind.ArrowFunction) {
+        const body = (node as ArrowFunction).getBody();
         return {
             code: node.getText(),
+            imports: findUsedImports(body),
         };
     } else if (node.getKind() == SyntaxKind.ArrayLiteralExpression) {
         const ret = [] as Array<unknown>;
@@ -93,6 +123,7 @@ function astExpressionToJson(node: Expression) {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function exportedDeclarationToJson(node: ExportedDeclarations): any {
     if (node.getKind() == SyntaxKind.VariableDeclaration) {
         const variableDeclaration = node as VariableDeclaration;

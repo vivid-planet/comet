@@ -196,12 +196,12 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.{ts,tsx
         const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct
         const tsMorph = morphTsSource(file);
         for (const [name, declarations] of Array.from(tsMorph.getExportedDeclarations().entries())) {
-            console.log(name);
+            //console.log(name);
             if (declarations.length != 1) {
                 throw new Error(`Expected exactly one declaration for ${name}`);
             }
             const config = exportedDeclarationToJson(declarations[0]);
-            console.dir(config, { depth: 10 });
+            //console.dir(config, { depth: 10 });
             configs[name] = config;
         }
 

@@ -450,6 +450,15 @@ export function generateGrid(
         ) {
             if ("code" in column.renderCell) {
                 renderCell = column.renderCell.code as string;
+                if ("imports" in column.renderCell) {
+                    //TODO improve typing
+                    imports.push(
+                        ...(column.renderCell.imports as Imports).map((imprt) => ({
+                            name: imprt.name,
+                            importPath: imprt.importPath.startsWith("./") ? `.${imprt.importPath}` : imprt.importPath,
+                        })),
+                    );
+                }
             } else {
                 throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
             }

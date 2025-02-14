@@ -42,6 +42,7 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "../ManufacturerFilter";
+import { ProductTitle } from "../ProductTitle";
 import {
     type GQLCreateProductMutation,
     type GQLCreateProductMutationVariables,
@@ -221,7 +222,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         {
             field: "title",
             headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Custom" }),
-            renderCell: ({ value }) => <div>{value}</div>,
+            renderCell: ({ value, row }) => <ProductTitle title={value} />,
             flex: 1,
             visible: theme.breakpoints.down("md"),
             minWidth: 200,
