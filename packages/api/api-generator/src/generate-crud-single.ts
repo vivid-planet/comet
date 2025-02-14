@@ -1,7 +1,7 @@
+import { type CrudSingleGeneratorOptions, hasFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
-import { type CrudSingleGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { type GeneratedFile } from "./utils/write-generated-files";
 

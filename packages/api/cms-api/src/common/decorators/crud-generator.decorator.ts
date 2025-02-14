@@ -66,10 +66,3 @@ export function CrudField({
         );
     };
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function hasFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
-    const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
-    const defaultValue = option == "dedicatedResolverArg" ? false : true;
-    return crudField[option] ?? defaultValue;
-}

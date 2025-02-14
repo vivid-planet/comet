@@ -1,8 +1,13 @@
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 
-import { hasFieldFeature } from "../crud-generator.decorator";
+import { type CrudFieldOptions } from "../decorators/crud-generator.decorator";
 
-// TODO: duplicate, check if we really need this in @comet/cms-api
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function hasFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
+    const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
+    const defaultValue = option == "dedicatedResolverArg" ? false : true;
+    return crudField[option] ?? defaultValue;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {

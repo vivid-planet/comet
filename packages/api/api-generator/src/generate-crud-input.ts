@@ -1,7 +1,7 @@
+import { hasFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
-import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildOptions } from "./generate-crud";
 import { buildNameVariants } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";

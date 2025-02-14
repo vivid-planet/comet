@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { type CrudGeneratorOptions, hasFieldFeature } from "@comet/cms-api";
+import { getCrudSearchFieldsFromMetadata } from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
 
-import { type CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, type Imports } from "./utils/generate-imports-code";
-import { getCrudSearchFieldsFromMetadata } from "./utils/search-fields-from-metadata";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { type GeneratedFile } from "./utils/write-generated-files";
 

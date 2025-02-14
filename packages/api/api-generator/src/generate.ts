@@ -1,8 +1,8 @@
+import { type CrudGeneratorOptions, type CrudSingleGeneratorOptions } from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { Command } from "commander";
 
-import { type CrudGeneratorOptions, type CrudSingleGeneratorOptions } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { generateCrudSingle } from "./generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
