@@ -211,7 +211,7 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@types/react-router-dom':
-        specifier: ^5.0.0
+        specifier: ^5.3.3
         version: 5.3.3
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.2
@@ -933,7 +933,7 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@types/react-router-dom':
-        specifier: ^5.1.7
+        specifier: ^5.3.3
         version: 5.3.3
       eslint:
         specifier: ^9.20.1
@@ -1596,7 +1596,7 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@types/react-router-dom':
-        specifier: ^5.0.0
+        specifier: ^5.3.3
         version: 5.3.3
       '@types/react-window':
         specifier: ^1.8.8
@@ -2327,8 +2327,8 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@types/react-router-dom':
-        specifier: ^4.3.5
-        version: 4.3.5
+        specifier: ^5.3.3
+        version: 5.3.3
       draft-js:
         specifier: ^0.11.7
         version: 0.11.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -7653,9 +7653,6 @@ packages:
 
   '@types/react-router-config@5.0.7':
     resolution: {integrity: sha512-pFFVXUIydHlcJP6wJm7sDii5mD/bCmmAY0wQzq+M+uX7bqS95AQqHZWP1iNMKrWVQSuHIzj5qi9BvrtLX2/T4w==}
-
-  '@types/react-router-dom@4.3.5':
-    resolution: {integrity: sha512-eFajSUASYbPHg2BDM1G8Btx+YqGgvROPIg6sBhl3O4kbDdYXdFdfrgQFf/pcBuQVObjfT9AL/dd15jilR5DIEA==}
 
   '@types/react-router-dom@5.3.3':
     resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
@@ -24275,12 +24272,6 @@ snapshots:
       '@types/react': 18.3.18
 
   '@types/react-router-config@5.0.7':
-    dependencies:
-      '@types/history': 4.7.11
-      '@types/react': 18.3.18
-      '@types/react-router': 5.1.20
-
-  '@types/react-router-dom@4.3.5':
     dependencies:
       '@types/history': 4.7.11
       '@types/react': 18.3.18

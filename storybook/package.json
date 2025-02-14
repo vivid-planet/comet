@@ -66,7 +66,7 @@
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "@types/react-router": "^5.1.20",
-        "@types/react-router-dom": "^4.3.5",
+        "@types/react-router-dom": "^5.3.3",
         "draft-js": "^0.11.7",
         "draft-js-export-html": "^1.4.1",
         "draft-js-export-markdown": "^1.4.0",
