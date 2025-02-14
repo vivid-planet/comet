@@ -587,6 +587,20 @@ To upgrade, perform the following steps:
 
     :::
 
+### Add `DialogContent` to `EditDialog`
+
+`DialogContent` was removed from `EditDialog`. Add `DialogContent` as a child passed to `EditDialog` to maintain the styling:
+
+```diff
+    <EditDialog>
+    //...
++       <DialogContent>
++         //...
++       </DialogContent>
+     // ...
+    </EditDialog>
+```
+
 ## ESLint
 
 ### ESLint upgrade from v8 to v9 with ESM
