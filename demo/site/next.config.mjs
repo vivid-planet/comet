@@ -29,6 +29,16 @@ const nextConfig = {
     },
     cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
+    rewrites: () => {
+        return {
+            afterFiles: [
+                {
+                    source: "/_next/:path*",
+                    destination: "/404",
+                },
+            ],
+        };
+    },
 };
 
 export default withBundleAnalyzer(nextConfig);
