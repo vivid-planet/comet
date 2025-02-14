@@ -21,5 +21,5 @@ export async function writeGeneratedFile(filePath: string, contents: string): Pr
     if (output) {
         await fs.writeFile(filePath, output);
     }
-    console.log(`generated ${filePath}`);
+    console.log(`✅ generated ${filePath}`);
 }

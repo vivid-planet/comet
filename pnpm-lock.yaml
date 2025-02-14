@@ -370,6 +370,9 @@ importers:
         specifier: ^11.0.5
         version: 11.0.5
     devDependencies:
+      '@comet/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -1941,6 +1944,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../api/cms-api
+      chokidar:
+        specifier: ^4.0.3
+        version: 4.0.3
       commander:
         specifier: ^9.5.0
         version: 9.5.0
@@ -2007,7 +2013,7 @@ importers:
         version: 16.9.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@22.13.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.4)(typescript@4.9.5))
+        version: 29.7.0(@types/node@22.13.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.4)(typescript@5.7.3))
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -2016,13 +2022,13 @@ importers:
         version: 0.2.2
       ts-jest:
         specifier: ^29.2.5
-        version: 29.2.5(@babel/core@7.26.8)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.8))(jest@29.7.0(@types/node@22.13.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.4)(typescript@4.9.5)))(typescript@4.9.5)
+        version: 29.2.5(@babel/core@7.26.8)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.8))(jest@29.7.0(@types/node@22.13.4)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.4)(typescript@5.7.3)))(typescript@5.7.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.4)(typescript@4.9.5)
+        version: 10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.4)(typescript@5.7.3)
       typescript:
-        specifier: ^4.9.5
-        version: 4.9.5
+        specifier: ^5.7.3
+        version: 5.7.3
 
   packages/eslint-config:
     dependencies:
@@ -8673,6 +8679,10 @@ packages:
 
   chokidar@4.0.1:
     resolution: {integrity: sha512-n8enUVCED/KVRQlab1hr3MVpcVMvxtZjmEa956u+4YijlmQED223XMSYj2tLuKvr4jcCTzNNMpQDUer72MMmzA==}
+    engines: {node: '>= 14.16.0'}
+
+  chokidar@4.0.3:
+    resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
   chownr@3.0.0:
@@ -25579,6 +25589,10 @@ snapshots:
       fsevents: 2.3.3
 
   chokidar@4.0.1:
+    dependencies:
+      readdirp: 4.0.2
+
+  chokidar@4.0.3:
     dependencies:
       readdirp: 4.0.2
 
