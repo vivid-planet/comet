@@ -15,7 +15,6 @@ export const watchMode = async () => {
      * Collection of last ChildProcesses for each file
      */
     const childProcesses: Record<string, ChildProcessWithoutNullStreams> = {};
-
     watch("./src", {
         awaitWriteFinish: {
             stabilityThreshold: 300,
@@ -23,7 +22,7 @@ export const watchMode = async () => {
         },
         ignored: (path, stats) => {
             if (stats?.isFile()) {
-                return !!path.match(/\/generated\//);
+                return !path.endsWith("entity.ts");
             }
             return false;
         },
@@ -44,7 +43,9 @@ export const watchMode = async () => {
             //
             // Triggering the generator with changed files in the same process has problems with
             // reflection. New Classes / Decorator are recognised.
-            const childProcess = spawn(`node ${__dirname}/../bin/comet-api-generator.js generate -f ${path}`, { shell: true });
+            const childProcess = spawn(`node ${__dirname}/../bin/comet-api-generator.js generate -f ${path}`, {
+                shell: true,
+            });
             childProcesses[path] = childProcess;
 
             try {
