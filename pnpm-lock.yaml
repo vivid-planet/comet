@@ -1812,9 +1812,6 @@ importers:
       '@kubernetes/client-node':
         specifier: ^1.0.0
         version: 1.0.0
-      '@mikro-orm/cli':
-        specifier: ^6.4.6
-        version: 6.4.6
       '@mikro-orm/core':
         specifier: ^6.4.6
         version: 6.4.6

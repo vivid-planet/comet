@@ -78,7 +78,6 @@
         "@comet/eslint-config": "workspace:^7.13.0",
         "@golevelup/ts-jest": "^0.6.2",
         "@kubernetes/client-node": "^1.0.0",
-        "@mikro-orm/cli": "^6.4.6",
         "@mikro-orm/core": "^6.4.6",
         "@mikro-orm/migrations": "^6.4.6",
         "@mikro-orm/nestjs": "^6.1.0",
