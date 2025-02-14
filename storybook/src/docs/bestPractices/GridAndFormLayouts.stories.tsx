@@ -29,7 +29,7 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
@@ -234,7 +234,9 @@ export const SimpleFormInADialog = {
                     <Typography variant="h3">Open the dialog to see the form.</Typography>
                 </StackMainContent>
                 <EditDialog title="Dialog title">
-                    <Form id={selectedId} mode={mode} />
+                    <DialogContent>
+                        <Form id={selectedId} mode={mode} />
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -291,7 +293,9 @@ export const LargeFormInADialog = {
                 <StackMainContent>
                     <Typography variant="h3">Open the dialog to see the form.</Typography>
                     <EditDialog title="Dialog title">
-                        <Form id={selectedId} />
+                        <DialogContent>
+                            <Form id={selectedId} />
+                        </DialogContent>
                     </EditDialog>
                 </StackMainContent>
             </>
@@ -444,7 +448,9 @@ export const GridWithFormInADialog = {
                     <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
                 <EditDialog title={mode === "add" ? "Add new item" : `${rows.find((row) => row.id === selectedId)?.title}`}>
-                    <Form id={selectedId} />
+                    <DialogContent>
+                        <Form id={selectedId} />
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -676,7 +682,9 @@ export const NestedGridsAndFormsWithTabs = {
                     </StackPage>
                 </StackSwitch>
                 <EditDialog title="Add new item">
-                    <Form />
+                    <DialogContent>
+                        <Form />
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -812,7 +820,9 @@ export const NestedFormInGridInTabsInGrid = {
                     </StackPage>
                 </StackSwitch>
                 <EditDialog title="Add new item">
-                    <Form />
+                    <DialogContent>
+                        <Form />
+                    </DialogContent>
                 </EditDialog>
             </>
         );
