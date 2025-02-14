@@ -5,7 +5,6 @@ const packageFolderMapping = {
     "@comet/admin-icons": "packages/admin/admin-icons",
     "@comet/admin-rte": "packages/admin/admin-rte",
     "@comet/admin-theme": "packages/admin/admin-theme",
-    "@comet/blocks-admin": "packages/admin/blocks-admin",
     "@comet/cms-admin": "packages/admin/cms-admin",
     "@comet/cms-api": "packages/api/cms-api",
     "@comet/cms-site": "packages/site/cms-site",
@@ -55,34 +54,22 @@ module.exports = {
 
         // group cms-admin
         {
-            name: "blocks-admin",
-            script: "pnpm --filter @comet/blocks-admin run start",
-            group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons"),
-        },
-        {
-            name: "blocks-admin-codegen-block-types",
-            script: "pnpm --filter @comet/blocks-admin run generate-block-types:watch",
-            group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons"),
-        },
-        {
             name: "cms-admin",
             script: "pnpm --filter @comet/cms-admin run start",
             group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme", "@comet/blocks-admin"),
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme"),
         },
         {
             name: "cms-admin-codegen-graphql-types",
             script: "pnpm --filter @comet/cms-admin run generate-graphql-types:watch",
             group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme", "@comet/blocks-admin"),
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme"),
         },
         {
             name: "cms-admin-codegen-block-types",
             script: "pnpm --filter @comet/cms-admin run generate-block-types:watch",
             group: ["cms-admin", "cms"],
-            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme", "@comet/blocks-admin"),
+            waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme"),
         },
 
         //group cms-api
@@ -120,14 +107,7 @@ module.exports = {
             script: "pnpm --filter comet-demo-admin run start",
             group: ["demo-admin", "demo"],
             waitOn: [
-                ...waitOnPackages(
-                    "@comet/admin",
-                    "@comet/admin-icons",
-                    "@comet/admin-rte",
-                    "@comet/admin-theme",
-                    "@comet/blocks-admin",
-                    "@comet/cms-admin",
-                ),
+                ...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/admin-theme", "@comet/cms-admin"),
                 "tcp:$API_PORT",
             ],
         },

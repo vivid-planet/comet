@@ -25,8 +25,15 @@ import {
 } from "@comet/admin";
 import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
-import { type BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import {
+    type BlockState,
+    ContentScopeIndicator,
+    createFinalFormBlock,
+    DamImageBlock,
+    queryUpdatedAt,
+    resolveHasSaveConflict,
+    useFormSaveConflict,
+} from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
