@@ -3,7 +3,7 @@ module.exports = {
     reporters: ["default"],
     testEnvironment: "node",
     transform: {
-        "\\.[jt]sx?$": "ts-jest",
+        "\\.ts$": "ts-jest",
     },
     testTimeout: 10000,
 };
