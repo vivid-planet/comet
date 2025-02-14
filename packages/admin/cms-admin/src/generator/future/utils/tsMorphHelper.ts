@@ -9,11 +9,13 @@ import {
     ObjectLiteralExpression,
     Project,
     PropertyAssignment,
+    SourceFile,
     StringLiteral,
     SyntaxKind,
     VariableDeclaration,
 } from "ts-morph";
 
+import { GeneratorConfig } from "../generator";
 import { Imports } from "./generateImportsCode";
 
 const project = new Project({
@@ -24,6 +26,20 @@ export function morphTsSource(path: string) {
     let tsSource = project.getSourceFile(path);
     if (!tsSource) tsSource = project.addSourceFileAtPath(path);
     return tsSource;
+}
+
+export function configsFromSourceFile(sourceFile: SourceFile) {
+    const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct
+    for (const [name, declarations] of Array.from(sourceFile.getExportedDeclarations().entries())) {
+        //console.log(name);
+        if (declarations.length != 1) {
+            throw new Error(`Expected exactly one declaration for ${name}`);
+        }
+        const config = exportedDeclarationToJson(declarations[0]);
+        //console.dir(config, { depth: 10 });
+        configs[name] = config;
+    }
+    return configs;
 }
 
 function findUsedImports(node: Node) {

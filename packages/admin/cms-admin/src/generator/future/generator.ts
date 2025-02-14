@@ -17,7 +17,7 @@ import { generateGrid } from "./generateGrid";
 import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
-import { exportedDeclarationToJson, morphTsSource } from "./utils/tsMorphHelper";
+import { configsFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
 
 export type ImportReference = {
@@ -192,18 +192,9 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.{ts,tsx
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
         const baseOutputFilename = basename(file).replace(/\.cometGen\.tsx?$/, "");
+
+        const configs = configsFromSourceFile(morphTsSource(file));
         //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
-        const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct
-        const tsMorph = morphTsSource(file);
-        for (const [name, declarations] of Array.from(tsMorph.getExportedDeclarations().entries())) {
-            //console.log(name);
-            if (declarations.length != 1) {
-                throw new Error(`Expected exactly one declaration for ${name}`);
-            }
-            const config = exportedDeclarationToJson(declarations[0]);
-            //console.dir(config, { depth: 10 });
-            configs[name] = config;
-        }
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
