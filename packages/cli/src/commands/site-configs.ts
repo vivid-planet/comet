@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Command } from "commander";
 import fs from "fs";
 import { resolve } from "path";

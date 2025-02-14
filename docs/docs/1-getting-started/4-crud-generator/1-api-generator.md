@@ -6,6 +6,14 @@ id: api-generator
 
 The API Generator can be used to generate the usual CRUD operations in GraphQL for an entity.
 
+## Installation
+
+The API Generator is inside the `@comet/cli package`.
+
+```bash
+npm install --dev @comet/cli
+```
+
 ## Annotate entity
 
 The API Generator uses the entity and the fields defined within it to generate resolvers, services, inputs, and other
@@ -73,7 +81,7 @@ If it's still missing, you can add it to `api/package.json`:
 {
   ...
   "scripts": {
-    "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+    "api-generator": "rimraf 'src/*/generated' && comet api-generator",
     ...
   }
 }
