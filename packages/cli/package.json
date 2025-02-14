@@ -38,6 +38,7 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:^7.13.0",
+        "@kubernetes/client-node": "^1.0.0",
         "@mikro-orm/cli": "^6.4.5",
         "@mikro-orm/core": "^6.4.5",
         "@mikro-orm/postgresql": "^6.4.5",

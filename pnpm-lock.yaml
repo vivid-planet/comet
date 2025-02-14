@@ -1966,6 +1966,9 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:^7.13.0
         version: link:../eslint-config
+      '@kubernetes/client-node':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@mikro-orm/cli':
         specifier: ^6.4.5
         version: 6.4.6
