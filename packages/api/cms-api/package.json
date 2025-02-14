@@ -103,7 +103,7 @@
         "@types/mime": "^2.0.3",
         "@types/mime-db": "^1.43.5",
         "@types/multer": "^1.4.12",
-        "@types/node": "^22.13.2",
+        "@types/node": "^22.13.4",
         "@types/node-fetch": "^2.6.12",
         "@types/passport-http": "^0.3.11",
         "@types/passport-jwt": "^3.0.13",
