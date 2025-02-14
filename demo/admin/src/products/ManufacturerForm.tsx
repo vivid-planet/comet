@@ -14,7 +14,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { Divider, FormControlLabel } from "@mui/material";
+import { Collapse, Divider, FormControlLabel } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -249,8 +249,8 @@ export function ManufacturerForm({ id }: FormProps) {
                                 )}
                             </Field>
                             <Field name="useAlternativeAddress" subscription={{ value: true }}>
-                                {({ input: { value } }) =>
-                                    value ? (
+                                {({ input: { value } }) => (
+                                    <Collapse in={value}>
                                         <>
                                             <TextField
                                                 required
@@ -300,8 +300,8 @@ export function ManufacturerForm({ id }: FormProps) {
                                                 }
                                             />
                                         </>
-                                    ) : null
-                                }
+                                    </Collapse>
+                                )}
                             </Field>
                         </FieldSet>
                         <FieldSet

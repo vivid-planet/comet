@@ -12,6 +12,10 @@ interface LayoutProps {
 }
 
 export default async function Layout({ children, params: { domain, language } }: PropsWithChildren<LayoutProps>) {
+    const siteConfig = getSiteConfigForDomain(domain);
+    if (!siteConfig.scope.languages.includes(language)) {
+        language = "en";
+    }
     const graphqlFetch = createGraphQLFetch();
 
     const { footer } = await graphqlFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
