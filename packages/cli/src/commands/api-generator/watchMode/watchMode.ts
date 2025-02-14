@@ -22,7 +22,7 @@ export const watchMode = async () => {
         },
         ignored: (path, stats) => {
             if (stats?.isFile()) {
-                return !path.endsWith("entity.ts");
+                return !path.endsWith(".entity.ts");
             }
             return false;
         },
