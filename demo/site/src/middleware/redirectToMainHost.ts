@@ -14,7 +14,7 @@ const matchesHostWithAdditionalDomain = (siteConfig: PublicSiteConfig, host: str
 
 const matchesHostWithPattern = (siteConfig: PublicSiteConfig, host: string) => {
     if (!siteConfig.domains.pattern) return false;
-    return host.match(new RegExp(siteConfig.domains.pattern)) !== null;
+    return new RegExp(siteConfig.domains.pattern).test(host);
 };
 
 /**
