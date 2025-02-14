@@ -1,4 +1,4 @@
-import { type QueryHookOptions, type QueryResult, useQuery } from "@apollo/client";
+import { type OperationVariables, type QueryHookOptions, type QueryResult, useQuery } from "@apollo/client";
 import { type DocumentNode } from "graphql";
 import { useEffect } from "react";
 
@@ -15,7 +15,8 @@ export interface ITableData<TRow extends { id: string | number } = { id: string 
     totalCount?: number;
     pagingInfo?: IPagingInfo;
 }
-interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableData> extends QueryHookOptions<TData, TVariables> {
+interface ITableQueryHookOptions<TData, TVariables extends OperationVariables, TTableData extends ITableData>
+    extends QueryHookOptions<TData, TVariables> {
     resolveTableData: (data: TData) => TTableData;
     selectionApi?: ISelectionApi;
     globalErrorHandling?: boolean;
@@ -24,7 +25,8 @@ interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableDat
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
+export interface ITableQueryHookResult<TData, TVariables extends OperationVariables, TTableData extends ITableData>
+    extends QueryResult<TData, TVariables> {
     tableData?: TTableData;
     api: ITableQueryApi;
 }
@@ -32,7 +34,7 @@ export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITa
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function useTableQuery<TInnerData, TInnerVariables>() {
+export function useTableQuery<TInnerData, TInnerVariables extends OperationVariables>() {
     function useTableQueryInner<TTableData extends ITableData>(
         q: DocumentNode,
         options: ITableQueryHookOptions<TInnerData, TInnerVariables, TTableData>,

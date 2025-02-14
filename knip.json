@@ -57,10 +57,6 @@
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/admin/blocks-admin": {
-            "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
-        },
         "packages/admin/cms-admin": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
@@ -78,7 +74,7 @@
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/generated/**"],
-            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port", "cosmiconfig-toml-loader"]
+            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port", "cosmiconfig-toml-loader", "@babel/core"]
         },
         "demo/api": {
             "entry": [

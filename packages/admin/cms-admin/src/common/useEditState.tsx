@@ -27,7 +27,7 @@ interface EditStateReturn<TData, TVariables, TState, TOutput> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useEditState<TData = any, TVariables = OperationVariables, TState = any, TOutput = any>(
+export function useEditState<TData = any, TVariables extends OperationVariables = OperationVariables, TState = any, TOutput = any>(
     options: EditStateOptions<TData, TVariables, TState, TOutput>,
 ): EditStateReturn<TData, TVariables, TState, TOutput> {
     const [referenceContent, setReferenceContent] = useState<TOutput | undefined>(

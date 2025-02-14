@@ -222,7 +222,7 @@ export async function writeCrudGrid(
         usePersistentColumnState,
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
-    import { BlockPreviewContent } from "@comet/blocks-admin";
+    import { BlockPreviewContent } from "@comet/cms-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";

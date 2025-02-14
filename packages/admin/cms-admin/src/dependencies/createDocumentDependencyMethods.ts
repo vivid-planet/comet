@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import { type BlockInputApi, type BlockInterface } from "@comet/blocks-admin";
 
+import { type BlockInputApi, type BlockInterface } from "../blocks/types";
 import { type GQLPageTreeNode, type Maybe } from "../graphql.generated";
 import { type DependencyInterface } from "./types";
 

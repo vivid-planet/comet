@@ -6,6 +6,7 @@ import {
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     type GridColDef,
     GridFilterButton,
@@ -14,15 +15,13 @@ import {
     renderStaticSelectCell,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { BlockPreviewContent } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
@@ -85,7 +84,7 @@ function NewsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
