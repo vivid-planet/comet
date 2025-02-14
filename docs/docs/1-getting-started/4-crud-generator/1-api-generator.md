@@ -95,6 +95,7 @@ Although this is generated code, it should still be checked into the repository.
 :::
 
 ### Watch Mode
+
 The api-generator script also supports the `-w` or `--watch` flag. This will watch for changes in the .entity.ts files and regenerate the corresponding files.
 
 ```json
