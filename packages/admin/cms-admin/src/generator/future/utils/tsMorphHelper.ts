@@ -1,21 +1,21 @@
 import {
-    ArrayLiteralExpression,
-    ArrowFunction,
-    ExportedDeclarations,
-    Expression,
-    Identifier,
-    Node,
-    NumericLiteral,
-    ObjectLiteralExpression,
+    type ArrayLiteralExpression,
+    type ArrowFunction,
+    type ExportedDeclarations,
+    type Expression,
+    type Identifier,
+    type Node,
+    type NumericLiteral,
+    type ObjectLiteralExpression,
     Project,
-    PropertyAssignment,
-    SourceFile,
-    StringLiteral,
+    type PropertyAssignment,
+    type SourceFile,
+    type StringLiteral,
     SyntaxKind,
-    VariableDeclaration,
+    type VariableDeclaration,
 } from "ts-morph";
 
-import { GeneratorConfig } from "../generator";
+import { type GeneratorConfig } from "../generator";
 
 const project = new Project({
     tsConfigFilePath: "tsconfig.json",

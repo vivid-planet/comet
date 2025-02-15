@@ -154,7 +154,7 @@ export function generateGrid(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     config: GridConfig<any>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;

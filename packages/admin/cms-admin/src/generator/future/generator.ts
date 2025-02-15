@@ -1,17 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
-import { type BlockInterface } from "@comet/blocks-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { type IconProps } from "@mui/material";
-import { type GridCellParams, type GridFilterItem, type GridFilterOperator, type GridRenderCellParams, type GridSortDirection, type GridValidRowModel } from "@mui/x-data-grid";
+import {
+    type GridCellParams,
+    type GridFilterItem,
+    type GridFilterOperator,
+    type GridRenderCellParams,
+    type GridSortDirection,
+    type GridValidRowModel,
+} from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import { ComponentType, ReactNode } from "react";
+import { type ComponentType, type ReactNode } from "react";
 
+import { type BlockInterface } from "../../blocks/types";
 import { type FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
@@ -80,7 +87,7 @@ export type FormFieldConfig<T> = (
     helperText?: string;
     readOnly?: boolean;
 };
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
 }
@@ -89,7 +96,6 @@ type OptionalNestedFieldsConfig<T> = {
     type: "optionalNestedFields";
     name: keyof T; // object name containing fields
     checkboxLabel?: string;
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     fields: FormFieldConfig<any>[];
 };
 export type FormLayoutConfig<T> =
@@ -103,7 +109,7 @@ export type FormLayoutConfig<T> =
           fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T> | ComponentFormFieldConfig)[];
       }
     | OptionalNestedFieldsConfig<T>;
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+
 export function isFormLayoutConfig<T>(arg: any): arg is FormLayoutConfig<T> {
     return arg.type !== undefined && ["fieldSet", "optionalNestedFields"].includes(arg.type);
 }
