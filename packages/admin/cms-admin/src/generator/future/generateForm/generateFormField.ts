@@ -137,16 +137,20 @@ export function generateFormField({
 
     let validateCode = "";
     if (config.validate) {
-        let importPath = config.validate.import;
-        if (importPath.startsWith("./")) {
-            //go one level up as generated files are in generated subfolder
-            importPath = `.${importPath}`;
+        if ("import" in config.validate) {
+            let importPath = config.validate.import;
+            if (importPath.startsWith("./")) {
+                //go one level up as generated files are in generated subfolder
+                importPath = `.${importPath}`;
+            }
+            imports.push({
+                name: config.validate.name,
+                importPath,
+            });
+            validateCode = `validate={${config.validate.name}}`;
+        } else if ("code" in config.validate) {
+            validateCode = `validate={${config.validate.code}}`;
         }
-        imports.push({
-            name: config.validate.name,
-            importPath,
-        });
-        validateCode = `validate={${config.validate.name}}`;
     }
 
     const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;

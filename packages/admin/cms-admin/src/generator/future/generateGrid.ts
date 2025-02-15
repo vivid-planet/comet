@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type GridColDef } from "@comet/admin";
 import {
     type IntrospectionEnumType,
@@ -321,7 +322,7 @@ export function generateGrid(
     const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
     const gridColumnFields = (
-        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<any> | GridCombinationColumnConfig<string>>
     ).map((column) => {
         const type = column.type;
         const name = String(column.name);

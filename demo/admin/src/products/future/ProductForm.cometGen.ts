@@ -1,4 +1,4 @@
-import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { DamImageBlock, type future_FormConfig as FormConfig } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
 export const ProductForm: FormConfig<GQLProduct> = {
@@ -18,7 +18,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     name: "title",
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
                     required: true, // default is inferred from gql schema
-                    validate: { name: "validateTitle", import: "./validateTitle" },
+                    //validate: { name: "validateTitle", import: "./validateTitle" },
+                    validate: (value: string) => (value.length < 3 ? "Title must be at least 3 characters long" : undefined),
                 },
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
@@ -69,7 +70,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
                 { type: "component", component: { name: "FutureProductNotice", import: "../../helpers/FutureProductNotice" } },
-                { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+                { type: "block", name: "image", label: "Image", block: DamImageBlock },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4, download: false },
                 { type: "dateTime", name: "lastCheckedAt", label: "Last checked at" },

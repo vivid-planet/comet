@@ -1,5 +1,6 @@
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
+import { type BlockInterface } from "@comet/blocks-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { type IconProps } from "@mui/material";
@@ -15,6 +16,7 @@ import { generateGrid } from "./generateGrid";
 import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
+import { exportedDeclarationToJson, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
 
 export type ImportReference = {
@@ -69,7 +71,7 @@ export type FormFieldConfig<T> = (
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
-    | { type: "block"; block: ImportReference }
+    | { type: "block"; block: ImportReference | BlockInterface }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
 ) & {
@@ -77,7 +79,7 @@ export type FormFieldConfig<T> = (
     label?: string;
     required?: boolean;
     virtual?: boolean;
-    validate?: ImportReference;
+    validate?: ImportReference | ((value: unknown) => string | undefined);
     helperText?: string;
     readOnly?: boolean;
 };
@@ -190,8 +192,18 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
         const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
-        const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
-        //const configs = await import(`${process.cwd()}/${file}`);
+        //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
+        const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct
+        const tsMorph = morphTsSource(file);
+        for (const [name, declarations] of Array.from(tsMorph.getExportedDeclarations().entries())) {
+            console.log(name);
+            if (declarations.length != 1) {
+                throw new Error(`Expected exactly one declaration for ${name}`);
+            }
+            const config = exportedDeclarationToJson(declarations[0]);
+            console.dir(config, { depth: 10 });
+            configs[name] = config;
+        }
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
@@ -199,7 +211,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         console.log(`generating ${file}`);
 
         for (const exportName in configs) {
-            const config = configs[exportName] as GeneratorConfig;
+            const config = configs[exportName];
             let generated: GeneratorReturn;
             if (config.type == "form") {
                 generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);

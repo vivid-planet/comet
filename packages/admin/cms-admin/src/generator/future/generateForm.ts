@@ -108,10 +108,12 @@ export function generateForm(
             return field;
         });
     rootBlockFields.forEach((field) => {
-        imports.push({
-            name: field.block.name,
-            importPath: field.block.import,
-        });
+        if ("import" in field.block) {
+            imports.push({
+                name: field.block.name,
+                importPath: field.block.import,
+            });
+        }
     });
 
     const readOnlyFields = formFields.filter((field) => field.readOnly);
