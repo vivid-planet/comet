@@ -8,6 +8,7 @@ import {
 
 import { type Adornment, type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { convertConfigImport } from "../utils/convertConfigImport";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { type Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
@@ -35,10 +36,8 @@ const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ador
     } else if (typeof adornmentData.icon === "object") {
         if ("import" in adornmentData.icon) {
             adornmentString = `<${adornmentData.icon.name} />`;
-            adornmentImport = {
-                name: `${adornmentData.icon.name}`,
-                importPath: `${adornmentData.icon.import}`,
-            };
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            adornmentImport = convertConfigImport(adornmentData.icon as any); // TODO: improve typing, generator runtime vs. config mismatch
         } else {
             const { name, ...iconProps } = adornmentData.icon;
             adornmentString = `<${name}Icon
@@ -138,15 +137,8 @@ export function generateFormField({
     let validateCode = "";
     if (config.validate) {
         if ("import" in config.validate) {
-            let importPath = config.validate.import;
-            if (importPath.startsWith("./")) {
-                //go one level up as generated files are in generated subfolder
-                importPath = `.${importPath}`;
-            }
-            imports.push({
-                name: config.validate.name,
-                importPath,
-            });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            imports.push(convertConfigImport(config.validate as any)); // TODO: improve typing, generator runtime vs. config mismatch
             validateCode = `validate={${config.validate.name}}`;
         } else if ("code" in config.validate) {
             validateCode = `validate={${config.validate.code}}`;

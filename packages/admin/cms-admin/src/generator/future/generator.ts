@@ -5,11 +5,12 @@ import { type BlockInterface } from "@comet/blocks-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { type IconProps } from "@mui/material";
-import { type GridFilterItem, type GridRenderCellParams, type GridSortDirection, type GridValidRowModel } from "@mui/x-data-grid";
+import { type GridCellParams, type GridFilterItem, type GridFilterOperator, type GridRenderCellParams, type GridSortDirection, type GridValidRowModel } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { ComponentType, ReactNode } from "react";
 
 import { type FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
@@ -20,16 +21,11 @@ import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { configsFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
 
-export type ImportReference = {
-    name: string;
-    import: string;
-};
-
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
     name: IconName;
 };
 
-type Icon = IconName | IconObject | ImportReference;
+type Icon = IconName | IconObject | ComponentType;
 export type Adornment = string | { icon: Icon };
 
 type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
@@ -47,7 +43,7 @@ type InputBaseFieldConfig = {
     endAdornment?: Adornment;
 };
 
-export type ComponentFormFieldConfig = { type: "component"; component: ImportReference };
+export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
@@ -72,7 +68,7 @@ export type FormFieldConfig<T> = (
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
-    | { type: "block"; block: ImportReference | BlockInterface }
+    | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
 ) & {
@@ -80,7 +76,7 @@ export type FormFieldConfig<T> = (
     label?: string;
     required?: boolean;
     virtual?: boolean;
-    validate?: ImportReference | ((value: unknown) => string | undefined);
+    validate?: (value: unknown) => ReactNode | undefined;
     helperText?: string;
     readOnly?: boolean;
 };
@@ -142,10 +138,10 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "date"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
     | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
-    | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
+    | { type: "block"; block: BlockInterface }
+) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
+export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
 
 type InitialFilterConfig = {
     items: GridFilterItem[];

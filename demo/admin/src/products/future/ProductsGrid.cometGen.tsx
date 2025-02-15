@@ -1,6 +1,8 @@
 import { type future_GridConfig as GridConfig } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
+import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "./ManufacturerFilter";
 import { ProductTitle } from "./ProductTitle";
 
 const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
@@ -112,11 +114,11 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             name: "manufacturer.name",
             headerName: "Manufacturer",
             fieldName: "manufacturer",
-            filterOperators: { name: "ManufacturerFilterOperators", import: "./ManufacturerFilter" },
+            filterOperators: ManufacturerFilterOperators,
         },
         {
             type: "actions",
-            component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
+            component: ProductsGridPreviewAction,
         },
     ],
 };

@@ -10,6 +10,7 @@ import {
     isFormFieldConfig,
     isFormLayoutConfig,
 } from "./generator";
+import { convertConfigImport } from "./utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
@@ -109,10 +110,8 @@ export function generateForm(
         });
     rootBlockFields.forEach((field) => {
         if ("import" in field.block) {
-            imports.push({
-                name: field.block.name,
-                importPath: field.block.import,
-            });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            imports.push(convertConfigImport(field.block as any)); // TODO: improve typing, generator runtime vs. config mismatch
         }
     });
 

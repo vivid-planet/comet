@@ -16,7 +16,6 @@ import {
 } from "ts-morph";
 
 import { GeneratorConfig } from "../generator";
-import { Imports } from "./generateImportsCode";
 
 const project = new Project({
     tsConfigFilePath: "tsconfig.json",
@@ -29,7 +28,7 @@ export function morphTsSource(path: string) {
 }
 
 export function configsFromSourceFile(sourceFile: SourceFile) {
-    const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct
+    const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct (runtime vs config mismatch)
     for (const [name, declarations] of Array.from(sourceFile.getExportedDeclarations().entries())) {
         //console.log(name);
         if (declarations.length != 1) {
@@ -43,7 +42,7 @@ export function configsFromSourceFile(sourceFile: SourceFile) {
 }
 
 function findUsedImports(node: Node) {
-    const imports = [] as Imports;
+    const imports = [] as Array<{ name: string; import: string }>;
     node.getDescendantsOfKind(SyntaxKind.Identifier).forEach((identifier) => {
         for (const referencedSymbol of identifier.findReferences()) {
             for (const reference of referencedSymbol.getReferences()) {
@@ -54,7 +53,7 @@ function findUsedImports(node: Node) {
                         if ((namedImport.getAliasNode() || namedImport.getNameNode())?.getText() == referenceNode.getText()) {
                             imports.push({
                                 name: namedImport.getNameNode().getText(),
-                                importPath: importDeclaration.getModuleSpecifierValue(),
+                                import: importDeclaration.getModuleSpecifierValue(),
                             });
                         }
                     }

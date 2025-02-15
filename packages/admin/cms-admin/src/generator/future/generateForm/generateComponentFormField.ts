@@ -1,9 +1,10 @@
 import { type ComponentFormFieldConfig } from "../generator";
-import { type Imports } from "../utils/generateImportsCode";
+import { convertConfigImport } from "../utils/convertConfigImport";
 import { type GenerateFieldsReturn } from "./generateFields";
 
 export function generateComponentFormField({ config }: { config: ComponentFormFieldConfig }): GenerateFieldsReturn {
-    const imports: Imports = [{ name: config.component.name, importPath: config.component.import }];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const imports = [convertConfigImport(config.component as any)]; // TODO: improve typing, generator runtime vs. config mismatch
     const code = `<${config.component.name} />`;
 
     return {

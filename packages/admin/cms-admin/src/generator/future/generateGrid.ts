@@ -26,6 +26,7 @@ import {
     type StaticSelectLabelCellContent,
 } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
+import { convertConfigImport } from "./utils/convertConfigImport";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -191,15 +192,13 @@ export function generateGrid(
     rootBlockColumns.forEach((field) => {
         if (rootBlocks[String(field.name)]) {
             // update rootBlocks if they are also used in columns
-            rootBlocks[String(field.name)].import = field.block.import;
-            rootBlocks[String(field.name)].name = field.block.name;
+            const block = field.block as any; // TODO: improve typing, generator runtime vs. config mismatch
+            rootBlocks[String(field.name)].import = block.import;
+            rootBlocks[String(field.name)].name = block.name;
         }
     });
     Object.values(rootBlocks).forEach((block) => {
-        imports.push({
-            name: block.name,
-            importPath: block.import,
-        });
+        imports.push(convertConfigImport(block as any)); // TODO: improve typing, generator runtime vs. config mismatch
     });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
@@ -318,6 +317,9 @@ export function generateGrid(
         visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
+    if (actionsColumnComponent) {
+        imports.push(convertConfigImport(actionsColumnComponent as any)); // TODO: improve typing, generator runtime vs. config mismatch
+    }
 
     const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
@@ -334,18 +336,14 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         let filterOperators: string | undefined;
-        if (column.filterOperators) {
-            let importPath = column.filterOperators.import;
-            if (importPath.startsWith("./")) {
-                //go one level up as generated files are in generated subfolder
-                importPath = `.${importPath}`;
+        if (column.type != "combination" && column.filterOperators) {
+            const configFilterOperators = column.filterOperators as any; // TODO: improve typing, generator runtime vs. config mismatch
+            if (configFilterOperators.import) {
+                imports.push(convertConfigImport(configFilterOperators));
+            } else {
+                throw new Error("Unsupported filterOperators, only imports are supported for now");
             }
-            imports.push({
-                name: column.filterOperators.name,
-                importPath,
-            });
-
-            filterOperators = column.filterOperators.name;
+            filterOperators = configFilterOperators.name;
         }
 
         if (type == "dateTime") {
@@ -377,10 +375,7 @@ export function generateGrid(
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
                         if ("import" in value.label.icon) {
-                            imports.push({
-                                name: value.label.icon.name,
-                                importPath: value.label.icon.import,
-                            });
+                            imports.push(convertConfigImport(value.label.icon as any)); // TODO: improve typing, generator runtime vs. config mismatch
                         } else {
                             iconsToImport.push(value.label.icon.name);
                         }
@@ -451,13 +446,9 @@ export function generateGrid(
             if ("code" in column.renderCell) {
                 renderCell = column.renderCell.code as string;
                 if ("imports" in column.renderCell) {
-                    //TODO improve typing
-                    imports.push(
-                        ...(column.renderCell.imports as Imports).map((imprt) => ({
-                            name: imprt.name,
-                            importPath: imprt.importPath.startsWith("./") ? `.${imprt.importPath}` : imprt.importPath,
-                        })),
-                    );
+                    // TODO: improve typing, generator runtime vs. config mismatch
+                    const renderCellImports = (column.renderCell as any).imports;
+                    imports.push(...renderCellImports.map((imprt: any) => convertConfigImport(imprt)));
                 }
             } else {
                 throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
@@ -599,11 +590,6 @@ export function generateGrid(
     import { ReactNode } from "react";
     import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
-
-    ${Object.entries(rootBlocks)
-        .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
-        .join("\n")}
-    ${actionsColumnComponent ? `import { ${actionsColumnComponent.name} } from "${actionsColumnComponent.import}";` : ""}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {

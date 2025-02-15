@@ -9,12 +9,17 @@ import {
     Typography,
 } from "@mui/material";
 import { type GridCellParams, type GridValidRowModel } from "@mui/x-data-grid-pro";
-import { type GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
-import { type GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
+import { FormattedMessage } from "react-intl";
+
+import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { GridCellParams } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-type Props = GridCellParams<GridValidRowModel, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
+import { GQLProductsGridFutureFragment } from "./future/generated/ProductsGrid.generated";
+import { GQLProductsListManualFragment } from "./ProductsGrid.generated";
+
+type Props = GridCellParams<unknown, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
 
 export const ProductsGridPreviewAction = ({ row }: Props) => {
     const [showDetails, setShowDetails] = useState(false);

@@ -1,5 +1,7 @@
-import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { type DamImageBlock, type future_FormConfig as FormConfig } from "@comet/cms-admin";
 import { type GQLNews } from "@src/graphql.generated";
+
+import { NewsContentBlock } from "./blocks/NewsContentBlock";
 
 export const NewsForm: FormConfig<GQLNews> = {
     type: "form",
@@ -36,13 +38,13 @@ export const NewsForm: FormConfig<GQLNews> = {
             type: "block",
             name: "image",
             label: "Image",
-            block: { name: "DamImageBlock", import: "@comet/cms-admin" },
+            block: DamImageBlock,
         },
         {
             type: "block",
             name: "content",
             label: "Content",
-            block: { name: "NewsContentBlock", import: "../blocks/NewsContentBlock" },
+            block: NewsContentBlock,
         },
     ],
 };
