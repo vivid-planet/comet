@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
 import { type BlockInterface } from "@comet/blocks-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { type IconProps } from "@mui/material";
-import { type GridFilterItem, type GridSortDirection } from "@mui/x-data-grid";
+import { type GridFilterItem, type GridRenderCellParams, type GridSortDirection, type GridValidRowModel } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -134,12 +135,12 @@ export type StaticSelectLabelCellContent = {
     icon?: Icon;
 };
 
-export type GridColumnConfig<T> = (
-    | { type: "text" }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
-    | { type: "dateTime" }
+export type GridColumnConfig<T extends GridValidRowModel> = (
+    | { type: "text"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
+    | { type: "number"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
+    | { type: "boolean"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
+    | { type: "date"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
+    | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<any, T, any>) => JSX.Element }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
@@ -173,14 +174,13 @@ export type GridConfig<T extends { __typename?: string }> = {
     rowActionProp?: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 type GQLDocumentConfig = { document: string; export: boolean };
 export type GQLDocumentConfigMap = Record<string, GQLDocumentConfig>;
 export type GeneratorReturn = { code: string; gqlDocuments: GQLDocumentConfigMap };
 
-export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
+export async function runFutureGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -191,7 +191,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
-        const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
+        const baseOutputFilename = basename(file).replace(/\.cometGen\.tsx?$/, "");
         //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
         const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct
         const tsMorph = morphTsSource(file);
@@ -205,7 +205,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             configs[name] = config;
         }
 
-        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
+        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
         // eslint-disable-next-line no-console
         console.log(`generating ${file}`);
@@ -230,7 +230,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         await writeGenerated(codeOuputFilename, outputCode);
 
         if (gqlDocumentsOutputCode != "") {
-            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";

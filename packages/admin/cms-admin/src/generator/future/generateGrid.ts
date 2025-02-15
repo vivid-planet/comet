@@ -444,6 +444,17 @@ export function generateGrid(
             renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
+        if (
+            (column.type == "text" || column.type == "number" || column.type == "boolean" || column.type == "date" || column.type == "dateTime") &&
+            column.renderCell
+        ) {
+            if ("code" in column.renderCell) {
+                renderCell = column.renderCell.code as string;
+            } else {
+                throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
+            }
+        }
+
         //TODO support n:1 relation with singleSelect
 
         return {
