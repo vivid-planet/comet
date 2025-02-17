@@ -65,6 +65,34 @@ You must recreate the block index views after
 You can automate this process by following the steps in the [migration guide](/docs/migration-guide/migration-from-v5-to-v6/#block-index).
 For new projects, it should already be automated.
 
+### Providing dependency information
+
+If your block depends on certain entities, you should provide dependency information.
+You can do that using the `indexData()` method in your block data class like this:
+
+```ts
+class MyCustomBlockData extends BlockData {
+    // ...
+
+    indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
+        return {
+            dependencies: [
+                {
+                    targetEntityName: DamFile.name,
+                    id: this.damFileId,
+                },
+            ],
+        };
+    }
+}
+```
+
+This works for all entities - not just `DamFile`.
+
 ### Displaying dependencies in the admin interface
 
 Next, you probably want to display the dependencies or dependents (usages) of an entity in the admin interface.
