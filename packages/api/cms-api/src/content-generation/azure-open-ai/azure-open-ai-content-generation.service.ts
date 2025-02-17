@@ -53,7 +53,8 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
         });
     }
 
-    async generateAltText(fileId: string): Promise<string> {
+    async generateAltText(fileId: string, options?: { language: string }): Promise<string> {
+        const language = options?.language ?? "en";
         const config = this.getConfigForMethod("generateAltText");
 
         const file = await this.filesService.findOneById(fileId);
@@ -66,8 +67,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
         const prompt: Array<ChatCompletionMessageParam> = [
             {
                 role: "system",
-                content:
-                    "You are an expert in writing alternative text for HTML images. The user will provide you with an image and your job is to provide an alternative text for this image. This text should help visually impaired users understand the content of the image. Keep yourself to a short description, ideally 3 sentences or less. Don't put the text in quotation marks.",
+                content: `You are an expert in writing alternative text for HTML images. The user will provide you with an image and your job is to provide an alternative text for this image. This text should help visually impaired users understand the content of the image. Keep yourself to a short description, ideally 3 sentences or less. Don't put the text in quotation marks. Answer in the language "${language}".`,
             },
             {
                 role: "user",
@@ -82,11 +82,13 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
                 ],
             },
         ];
+
         const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 
-    async generateImageTitle(fileId: string): Promise<string> {
+    async generateImageTitle(fileId: string, options?: { language: string }): Promise<string> {
+        const language = options?.language ?? "en";
         const config = this.getConfigForMethod("generateImageTitle");
 
         const file = await this.filesService.findOneById(fileId);
@@ -99,8 +101,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
         const prompt: Array<ChatCompletionMessageParam> = [
             {
                 role: "system",
-                content:
-                    "The user will provide you with an image. Write a short text that can be displayed in the HTML title attribute of this image. Do not put the title inside quotation marks",
+                content: `The user will provide you with an image. Write a short text that can be displayed in the HTML title attribute of this image. Do not put the title inside quotation marks. Answer in the language "${language}".`,
             },
             {
                 role: "user",
@@ -119,7 +120,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
         return result.choices[0].message?.content ?? "";
     }
 
-    async generateSeoTags(content: string): Promise<SeoTags> {
+    async generateSeoTags(content: string, { language }: { language: string }): Promise<SeoTags> {
         const config = this.getConfigForMethod("generateSeoTags");
 
         const client = this.createClient(config);
@@ -136,7 +137,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
                         "openGraphDescription": "",
                     }
                     
-                    Only answer in valid JSON. Don't put the JSON in quotation marks or markdown. Don't include any placeholders.
+                    Only answer in valid JSON. Don't put the JSON in quotation marks or markdown. Don't include any placeholders. Answer in the language "${language}".
                     `,
             },
             {

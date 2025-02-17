@@ -11,8 +11,11 @@ export class GenerateImageTitleResolver {
 
     @RequiredPermission(["dam"], { skipScopeCheck: true })
     @Mutation(() => String)
-    async generateImageTitle(@Args("fileId", { type: () => String }) fileId: string): Promise<string> {
-        const imageTitle = await this.contentGenerationService.generateImageTitle?.(fileId);
+    async generateImageTitle(
+        @Args("fileId", { type: () => String }) fileId: string,
+        @Args("language", { type: () => String, nullable: true }) language?: string,
+    ): Promise<string> {
+        const imageTitle = await this.contentGenerationService.generateImageTitle?.(fileId, { language: language ?? "en" });
         if (!imageTitle) throw new Error("Image title generation failed or is not supported");
         return imageTitle;
     }

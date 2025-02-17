@@ -11,8 +11,11 @@ export class GenerateSeoTagsResolver {
 
     @RequiredPermission(["pageTree"], { skipScopeCheck: true })
     @Mutation(() => SeoTags)
-    async generateSeoTags(@Args("content", { type: () => String }) content: string): Promise<SeoTags> {
-        const seoTags = await this.contentGenerationService.generateSeoTags?.(content);
+    async generateSeoTags(
+        @Args("content", { type: () => String }) content: string,
+        @Args("language", { type: () => String }) language: string,
+    ): Promise<SeoTags> {
+        const seoTags = await this.contentGenerationService.generateSeoTags?.(content, { language });
         if (!seoTags) throw new Error("SEO tag generation failed or is not supported");
         return seoTags;
     }
