@@ -17,6 +17,6 @@ export function createCompositeBlockSwitchField({ defaultValue = false, fullWidt
                 <SwitchField name="value" fullWidth={fullWidth} {...fieldProps} />
             </BlocksFinalForm>
         ),
-        extractTextContents: (state) => extractTextContents?.(state) ?? [],
+        extractTextContents: (state, options) => extractTextContents?.(state, options) ?? [],
     });
 }
