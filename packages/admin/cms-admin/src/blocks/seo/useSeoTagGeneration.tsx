@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { useErrorDialog } from "@comet/admin";
+import { LocalErrorScopeApolloContext, useErrorDialog } from "@comet/admin";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -26,6 +26,8 @@ export function useSeoTagGeneration() {
             const { data, errors } = await apolloClient.mutate<GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables>({
                 mutation: generateSeoTagsMutation,
                 variables: { content },
+                context: LocalErrorScopeApolloContext,
+                errorPolicy: "all",
             });
 
             if (errors || !data?.generateSeoTags) {
@@ -78,15 +80,27 @@ export function useSeoTagGeneration() {
                 return seoTagsCache[tag];
             }
 
+            let seoTags: GQLGenerateSeoTagsMutation["generateSeoTags"];
+
             if (pendingRequest && pendingRequest.content === content) {
-                const seoTags = await pendingRequest.request;
+                try {
+                    seoTags = await pendingRequest.request;
+                } catch {
+                    return "";
+                }
                 return seoTags[tag];
             }
 
             const request = getSeoTags(content);
             pendingRequest = { request, content };
 
-            const seoTags = await request;
+            try {
+                seoTags = await request;
+            } catch (err) {
+                console.error(err);
+                pendingRequest = undefined;
+                return "";
+            }
 
             pendingRequest = undefined;
             seoTagsCache = { content, ...seoTags };
