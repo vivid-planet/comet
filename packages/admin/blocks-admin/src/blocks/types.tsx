@@ -85,7 +85,7 @@ export interface BlockMethods<
     dependencies?: (state: State) => BlockDependency[];
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
     resolveDependencyPath: (state: State, jsonPath: string) => string;
-    extractTextContents?: (state: State, options?: { includeInvisibleContent: boolean }) => string[];
+    extractTextContents?: (state: State, options: { includeInvisibleContent: boolean }) => string[];
 }
 
 export interface AnonymousBlockInterface<
