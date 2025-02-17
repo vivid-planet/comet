@@ -10,6 +10,19 @@ jest.mock("../../documents/ContentGenerationConfigContext", () => {
         useContentGenerationConfig: jest.fn(),
     };
 });
+
+jest.mock("../../contentScope/Provider", () => {
+    return {
+        useContentScope: jest.fn(),
+    };
+});
+
+jest.mock("../../locale/useLocale", () => {
+    return {
+        useLocale: jest.fn(),
+    };
+});
+
 jest.mock("@comet/admin", () => {
     return {
         useErrorDialog: jest.fn(),
