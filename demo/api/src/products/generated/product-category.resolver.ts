@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { AffectedEntity, extractGraphqlFields, gqlArgsToMikroOrmQuery, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, FindOptions, Reference } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
@@ -20,6 +20,7 @@ export class ProductCategoryResolver {
         private readonly entityManager: EntityManager,
         private readonly productCategoriesService: ProductCategoriesService,
         @InjectRepository(ProductCategory) private readonly repository: EntityRepository<ProductCategory>,
+        @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
     ) {}
 
     @Query(() => ProductCategory)
@@ -74,10 +75,18 @@ export class ProductCategoryResolver {
             position = lastPosition + 1;
         }
 
+        const { products: productsInput, ...assignInput } = input;
         const productCategory = this.repository.create({
-            ...input,
+            ...assignInput,
             position,
         });
+
+        if (productsInput) {
+            const products = await this.productRepository.find({ id: productsInput });
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that were passed as input");
+            await productCategory.products.loadItems();
+            productCategory.products.set(products.map((product) => Reference.create(product)));
+        }
 
         await this.entityManager.flush();
 
@@ -104,9 +113,17 @@ export class ProductCategoryResolver {
             }
         }
 
+        const { products: productsInput, ...assignInput } = input;
         productCategory.assign({
-            ...input,
+            ...assignInput,
         });
+
+        if (productsInput) {
+            const products = await this.productRepository.find({ id: productsInput });
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that were passed as input");
+            await productCategory.products.loadItems();
+            productCategory.products.set(products.map((product) => Reference.create(product)));
+        }
 
         await this.entityManager.flush();
 

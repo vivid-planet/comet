@@ -1,10 +1,10 @@
-import { gql, previewParams } from "@comet/cms-site";
+import { gql } from "@comet/cms-site";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
-import { setNotFoundContext } from "@src/util/NotFoundContext";
+import { setNotFoundContext } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { type PropsWithChildren } from "react";
 
@@ -19,8 +19,7 @@ export default async function Page({ children, params: { domain, language } }: P
 
     const messages = await loadMessages(language);
 
-    const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const graphqlFetch = createGraphQLFetch();
 
     const { footer } = await graphqlFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
         gql`

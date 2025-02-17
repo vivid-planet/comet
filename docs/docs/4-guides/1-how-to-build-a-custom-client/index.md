@@ -407,7 +407,7 @@ The Comet API creates this `block-meta.json` and this file gets symlinked to the
 {
     "scripts": {
         "generate-block-types": "comet generate-block-types",
-        "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""
+        "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"npm run generate-block-types\""
     }
 }
 ```
