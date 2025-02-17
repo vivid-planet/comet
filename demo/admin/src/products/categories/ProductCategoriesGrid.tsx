@@ -7,7 +7,6 @@ import {
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
-    muiGridSortToGql,
     ToolbarActions,
     ToolbarItem,
     useBufferedRowCount,
@@ -15,7 +14,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { useTheme } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRenderCellParams, GridRowOrderChangeParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductCategoryFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -28,6 +27,9 @@ import {
     GQLProductCategoriesGridQuery,
     GQLProductCategoriesGridQueryVariables,
     GQLProductCategoryGridFutureFragment,
+    GQLUpdateProductCategoryPositionMutation,
+    GQLUpdateProductCategoryPositionMutationVariables,
+    namedOperations,
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
@@ -65,6 +67,16 @@ const createProductCategoryMutation = gql`
     }
 `;
 
+const updateProductCategoryPositionMutation = gql`
+    mutation UpdateProductCategoryPosition($id: ID!, $input: ProductCategoryUpdateInput!) {
+        updateProductCategory(id: $id, input: $input) {
+            id
+            updatedAt
+            position
+        }
+    }
+`;
+
 function ProductCategoriesGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
@@ -92,6 +104,15 @@ export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, action
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
+
+    const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
+        await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
+            mutation: updateProductCategoryPositionMutation,
+            variables: { id, input: { position: targetIndex + 1 } },
+            awaitRefetchQueries: true,
+            refetchQueries: [namedOperations.Query.ProductCategoriesGrid],
+        });
+    };
 
     const theme = useTheme();
 
@@ -159,7 +180,7 @@ export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, action
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(dataGridProps.sortModel),
+            sort: { field: "position", direction: "ASC" },
         },
     });
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
@@ -180,6 +201,8 @@ export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, action
             componentsProps={{
                 toolbar: { toolbarAction },
             }}
+            rowReordering
+            onRowOrderChange={handleRowOrderChange}
         />
     );
 }
