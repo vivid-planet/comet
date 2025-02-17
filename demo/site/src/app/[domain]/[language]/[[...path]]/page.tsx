@@ -2,6 +2,7 @@ import { gql, previewParams } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { Metadata, ResolvingMetadata } from "next";
@@ -70,7 +71,11 @@ export default async function Page({ params }: PageProps) {
                     case "internal": {
                         const internalLink = target.block.props as InternalLinkBlockData;
                         if (internalLink.targetPage) {
-                            destination = `/${(internalLink.targetPage.scope as GQLPageTreeNodeScope).language}/${internalLink.targetPage.path}`;
+                            destination = createSiteUrl({
+                                baseUrl: "/",
+                                path: internalLink.targetPage.path,
+                                scope: { language: (internalLink.targetPage.scope as GQLPageTreeNodeScope).language },
+                            });
                         }
                         break;
                     }
@@ -79,6 +84,7 @@ export default async function Page({ params }: PageProps) {
                         break;
                 }
             }
+
             if (destination) {
                 redirect(destination);
             }
