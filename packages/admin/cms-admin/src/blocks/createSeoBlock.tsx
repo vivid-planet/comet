@@ -358,7 +358,7 @@ interface FieldWithContentGenerationProps<FieldValue = any, FieldElement extends
 function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
     name,
     generateSeoTag,
-    endAdornment,
+    endAdornment: passedEndAdornment,
     ...props
 }: FieldWithContentGenerationProps<FieldValue, FieldElement>) {
     const contentGenerationConfig = useContentGenerationConfig();
@@ -366,32 +366,26 @@ function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLE
 
     const [loading, setLoading] = useState(false);
 
-    return (
-        <Field
-            name={name}
-            {...(contentGenerationConfig?.seo
-                ? {
-                      endAdornment: (
-                          <>
-                              {endAdornment}
-                              <IconButton
-                                  color="primary"
-                                  onClick={async () => {
-                                      setLoading(true);
-                                      const seoTag = await generateSeoTag(name, formApi.getFieldState(name)?.value);
-                                      setLoading(false);
-                                      formApi.change(name, seoTag);
-                                  }}
-                              >
-                                  {loading ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
-                              </IconButton>
-                          </>
-                      ),
-                  }
-                : {})}
-            {...props}
-        />
+    const endAdornment = contentGenerationConfig?.seo ? (
+        <>
+            {passedEndAdornment}
+            <IconButton
+                color="primary"
+                onClick={async () => {
+                    setLoading(true);
+                    const seoTag = await generateSeoTag(name, formApi.getFieldState(name)?.value);
+                    setLoading(false);
+                    formApi.change(name, seoTag);
+                }}
+            >
+                {loading ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+            </IconButton>
+        </>
+    ) : (
+        passedEndAdornment
     );
+
+    return <Field name={name} endAdornment={endAdornment} {...props} />;
 }
 
 const AddButtonContent = styled("span")`
