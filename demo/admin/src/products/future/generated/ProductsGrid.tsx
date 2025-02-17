@@ -98,7 +98,7 @@ const createProductMutation = gql`
 `;
 
 interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
-    toolbarAction: React.ReactNode;
+    toolbarAction: ReactNode;
     exportApi: ExportApi;
 }
 function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarToolbarProps) {
@@ -167,12 +167,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const typeLabels: Record<string, React.ReactNode> = {
+                const typeLabels: Record<string, ReactNode> = {
                     Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
                     Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
                 };
-                const inStockLabels: Record<string, React.ReactNode> = {
+                const inStockLabels: Record<string, ReactNode> = {
                     true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
                     false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
                 };
