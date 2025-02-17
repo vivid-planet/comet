@@ -141,9 +141,9 @@ export class ContentGenerationService implements ContentGenerationServiceInterfa
 }
 ```
 
-### 2) Admin: Wrap the `SeoBlock` with the `DocumentContentGenerationProvider`:
+### 2) Admin: Wrap the `SeoBlock` with the `ContentGenerationConfigProvider`:
 
-Via the `DocumentContentGenerationProvider` you can provide the content of a document to the `SeoBlock`.
+Via the `ContentGenerationConfigProvider` you can provide the content of a document to the `SeoBlock`.
 You can use the `extractTextContents()` method to get the content.
 
 ```tsx
@@ -153,9 +153,9 @@ export const EditPage = ({ id }: Props) => {
     // ...
 
     return (
-        <DocumentContentGenerationProvider
-            seoBlock={{
-                getDocumentContent: () => {
+        <ContentGenerationConfigProvider
+            seo={{
+                getRelevantContent: () => {
                     if (!pageState || !pageState.document) return [];
 
                     return PageContentBlock.extractTextContents?.(pageState.document.content) ?? [];
@@ -163,7 +163,7 @@ export const EditPage = ({ id }: Props) => {
             }}
         >
             {/* ... */}
-        </DocumentContentGenerationProvider>
+        </ContentGenerationConfigProvider>
     );
 };
 ```
