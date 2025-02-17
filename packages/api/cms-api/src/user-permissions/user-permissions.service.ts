@@ -97,7 +97,7 @@ export class UserPermissionsService {
         });
         if (this.accessControlService.getPermissionsForUser) {
             if (user) {
-                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
+                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }

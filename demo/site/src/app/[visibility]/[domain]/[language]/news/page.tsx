@@ -1,15 +1,27 @@
+<<<<<<< HEAD:demo/site/src/app/[domain]/[language]/news/page.tsx
 import { gql, previewParams } from "@comet/cms-site";
 import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
+=======
+export const dynamic = "error";
+
+import { gql } from "@comet/cms-site";
+import { GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { VisibilityParam } from "@src/middleware/domainRewrite";
+>>>>>>> main:demo/site/src/app/[visibility]/[domain]/[language]/news/page.tsx
 import { NewsList } from "@src/news/NewsList";
 import { newsListFragment } from "@src/news/NewsList.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { setVisibilityParam } from "@src/util/ServerContext";
 
 import { type GQLNewsIndexPageQuery, type GQLNewsIndexPageQueryVariables } from "./page.generated";
 
-export default async function NewsIndexPage({ params }: { params: { domain: string; language: string } }) {
-    // TODO support multiple domains, get domain by Host header
-    const { scope, previewData } = (await previewParams()) || { scope: { domain: params.domain, language: params.language }, previewData: undefined };
-    const graphqlFetch = createGraphQLFetch(previewData);
+export default async function NewsIndexPage({
+    params: { domain, language, visibility },
+}: {
+    params: { domain: string; language: string; visibility: VisibilityParam };
+}) {
+    setVisibilityParam(visibility);
+    const graphqlFetch = createGraphQLFetch();
 
     const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
         gql`
@@ -21,7 +33,7 @@ export default async function NewsIndexPage({ params }: { params: { domain: stri
 
             ${newsListFragment}
         `,
-        { scope: scope as GQLNewsContentScopeInput, sort: [{ field: "createdAt", direction: "DESC" }] },
+        { scope: { domain, language } as GQLNewsContentScopeInput, sort: [{ field: "createdAt", direction: "DESC" }] },
     );
 
     return <NewsList newsList={newsList} />;

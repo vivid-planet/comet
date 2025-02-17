@@ -1,12 +1,22 @@
 "use client";
+<<<<<<< HEAD
 import { type ReactElement, type ReactNode, useState } from "react";
+=======
+import { ReactNode, useRef, useState } from "react";
+>>>>>>> main
 import styled, { css } from "styled-components";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+<<<<<<< HEAD
 import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
+=======
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
+import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import { PropsWithData } from "./PropsWithData";
+>>>>>>> main
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
@@ -43,15 +53,27 @@ export const VimeoVideoBlock = withPreview(
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
+        const inViewRef = useRef<HTMLDivElement>(null);
+        const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-        if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+        const handleVisibilityChange = (isVisible: boolean) => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(
+                    JSON.stringify({ method: isVisible && autoplay ? "play" : "pause" }),
+                    "https://player.vimeo.com",
+                );
+            }
+        };
+
+        useIsElementInViewport(inViewRef, handleVisibilityChange);
+
+        if (!vimeoIdentifier) {
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+        }
 
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
         const searchParams = new URLSearchParams();
-
-        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
-            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
         if (autoplay) searchParams.append("muted", "1");
 
         if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
@@ -87,8 +109,8 @@ export const VimeoVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <VimeoContainer src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
+                    <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                        <VimeoContainer ref={iframeRef} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
                     </VideoContainer>
                 )}
             </>

@@ -1,8 +1,19 @@
+<<<<<<< HEAD:demo/site/src/app/[domain]/[language]/[[...path]]/page.tsx
 import { gql, previewParams } from "@comet/cms-site";
 import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
+=======
+export const dynamic = "error";
+
+import { gql } from "@comet/cms-site";
+import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import { documentTypes } from "@src/documents";
+import { GQLPageTreeNodeScope } from "@src/graphql.generated";
+import { VisibilityParam } from "@src/middleware/domainRewrite";
+>>>>>>> main:demo/site/src/app/[visibility]/[domain]/[language]/[[...path]]/page.tsx
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { setVisibilityParam } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { type Metadata, type ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -27,8 +38,7 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode(params: { path: string[]; domain: string; language: string }) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
+async function fetchPageTreeNode(params: PageProps["params"]) {
     const siteConfig = getSiteConfigForDomain(params.domain);
 
     // Redirects are scoped by domain only, not by language.
@@ -38,7 +48,7 @@ async function fetchPageTreeNode(params: { path: string[]; domain: string; langu
 
     const path = `/${(params.path ?? []).join("/")}`;
     const { scope } = { scope: { domain: params.domain, language: params.language } };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch();
 
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
@@ -54,10 +64,11 @@ async function fetchPageTreeNode(params: { path: string[]; domain: string; langu
 }
 
 interface PageProps {
-    params: { path: string[]; domain: string; language: string };
+    params: { path: string[]; domain: string; language: string; visibility: VisibilityParam };
 }
 
 export default async function Page({ params }: PageProps) {
+    setVisibilityParam(params.visibility);
     const scope = { domain: params.domain, language: params.language };
     const data = await fetchPageTreeNode(params);
 
@@ -116,8 +127,4 @@ export async function generateMetadata({ params }: PageProps, parent: ResolvingM
     if (!generateMetadata) return {};
 
     return generateMetadata(props, parent);
-}
-
-export async function generateStaticParams() {
-    return [];
 }
