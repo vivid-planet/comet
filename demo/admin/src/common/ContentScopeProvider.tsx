@@ -37,7 +37,7 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
     }
 
     return (
-        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={user.allowedContentScopes[0] as ContentScope}>
+        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={userContentScopes[0]}>
             {children}
         </ContentScopeProviderLibrary>
     );
