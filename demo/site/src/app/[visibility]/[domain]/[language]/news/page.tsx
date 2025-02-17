@@ -1,13 +1,8 @@
-<<<<<<< HEAD:demo/site/src/app/[domain]/[language]/news/page.tsx
-import { gql, previewParams } from "@comet/cms-site";
-import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
-=======
 export const dynamic = "error";
 
 import { gql } from "@comet/cms-site";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
-import { VisibilityParam } from "@src/middleware/domainRewrite";
->>>>>>> main:demo/site/src/app/[visibility]/[domain]/[language]/news/page.tsx
+import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { type VisibilityParam } from "@src/middleware/domainRewrite";
 import { NewsList } from "@src/news/NewsList";
 import { newsListFragment } from "@src/news/NewsList.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";

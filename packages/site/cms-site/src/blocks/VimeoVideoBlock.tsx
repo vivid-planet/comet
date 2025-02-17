@@ -1,22 +1,13 @@
 "use client";
-<<<<<<< HEAD
-import { type ReactElement, type ReactNode, useState } from "react";
-=======
-import { ReactNode, useRef, useState } from "react";
->>>>>>> main
+import { type ReactElement, type ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-<<<<<<< HEAD
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
-=======
-import { useIsElementInViewport } from "./helpers/useIsElementVisible";
-import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { PropsWithData } from "./PropsWithData";
->>>>>>> main
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;

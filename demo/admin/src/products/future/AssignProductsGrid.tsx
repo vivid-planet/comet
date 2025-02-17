@@ -1,14 +1,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Loading, Savable } from "@comet/admin";
 import {
-    GQLGetProductIdsForProductCategoryQuery,
-    GQLGetProductIdsForProductCategoryQueryVariables,
-    GQLSetProductCategoryMutation,
-    GQLSetProductCategoryMutationVariables,
+    type GQLGetProductIdsForProductCategoryQuery,
+    type GQLGetProductIdsForProductCategoryQueryVariables,
+    type GQLSetProductCategoryMutation,
+    type GQLSetProductCategoryMutationVariables,
 } from "@src/products/future/AssignProductsGrid.generated";
 import { ProductsGrid as SelectProductsGrid } from "@src/products/future/generated/SelectProductsGrid";
 import isEqual from "lodash.isequal";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 const setProductCategoryMutation = gql`
@@ -33,7 +33,7 @@ interface FormProps {
     productCategoryId: string;
 }
 
-export function AssignProductsGrid({ productCategoryId }: FormProps): React.ReactElement {
+export function AssignProductsGrid({ productCategoryId }: FormProps) {
     const client = useApolloClient();
 
     const { data, error, loading } = useQuery<GQLGetProductIdsForProductCategoryQuery, GQLGetProductIdsForProductCategoryQueryVariables>(
@@ -68,8 +68,8 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
                 }}
             />
             <SelectProductsGrid
-                selectionModel={values}
-                onSelectionModelChange={(newSelectionModel) => {
+                rowSelectionModel={values}
+                onRowSelectionModelChange={(newSelectionModel) => {
                     setValues(newSelectionModel.map((rowId) => String(rowId)));
                 }}
             />

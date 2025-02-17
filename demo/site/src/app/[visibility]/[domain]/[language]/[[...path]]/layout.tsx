@@ -1,16 +1,12 @@
-<<<<<<< HEAD:demo/site/src/app/[domain]/[language]/[[...path]]/layout.tsx
-import { gql, previewParams } from "@comet/cms-site";
-import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "@src/app/[domain]/[language]/[[...path]]/layout.generated";
-=======
 import { gql } from "@comet/cms-site";
-import { GQLLayoutQuery, GQLLayoutQueryVariables } from "@src/app/[visibility]/[domain]/[language]/[[...path]]/layout.generated";
->>>>>>> main:demo/site/src/app/[visibility]/[domain]/[language]/[[...path]]/layout.tsx
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata } from "next";
 import { type PropsWithChildren } from "react";
+
+import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "./layout.generated";
 
 interface LayoutProps {
     params: { domain: string; language: string };

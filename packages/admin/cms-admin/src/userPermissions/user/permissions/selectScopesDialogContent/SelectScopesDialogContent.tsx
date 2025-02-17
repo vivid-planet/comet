@@ -1,18 +1,19 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { DataGridToolbar, Field, FinalForm, Loading, ToolbarFillSpace, ToolbarItem, useFormApiRef } from "@comet/admin";
-import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGridToolbar, Field, FinalForm, type GridColDef, Loading, ToolbarFillSpace, ToolbarItem, useFormApiRef } from "@comet/admin";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
+import { type FunctionComponent, type PropsWithChildren } from "react";
 
 import { generateGridColumnsFromContentScopeProperties } from "../ContentScopeGrid";
-import { GQLContentScopesQuery } from "../ContentScopeGrid.generated";
+import { type GQLContentScopesQuery } from "../ContentScopeGrid.generated";
 import {
-    GQLAvailableContentScopesQuery,
-    GQLUpdateContentScopesMutation,
-    GQLUpdateContentScopesMutationVariables,
+    type GQLAvailableContentScopesQuery,
+    type GQLUpdateContentScopesMutation,
+    type GQLUpdateContentScopesMutationVariables,
 } from "./SelectScopesDialogContent.generated";
 
-export interface SelectScopesDialogContentProps {
+interface SelectScopesDialogContentProps {
     userId: string;
     userContentScopes: GQLContentScopesQuery["userContentScopes"];
     userContentScopesSkipManual: GQLContentScopesQuery["userContentScopesSkipManual"];
@@ -37,7 +38,7 @@ function SelectScopesDialogContentGridToolbar() {
     );
 }
 
-export const SelectScopesDialogContent: React.FunctionComponent<React.PropsWithChildren<SelectScopesDialogContentProps>> = ({
+export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<SelectScopesDialogContentProps>> = ({
     userId,
     userContentScopes,
     userContentScopesSkipManual,
@@ -45,13 +46,11 @@ export const SelectScopesDialogContent: React.FunctionComponent<React.PropsWithC
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
 
-    const { data, error } = useQuery<GQLAvailableContentScopesQuery>(
-        gql`
-            query AvailableContentScopes {
-                availableContentScopes: userPermissionsAvailableContentScopes
-            }
-        `,
-    );
+    const { data, error } = useQuery<GQLAvailableContentScopesQuery>(gql`
+        query AvailableContentScopes {
+            availableContentScopes: userPermissionsAvailableContentScopes
+        }
+    `);
 
     const submit = async (values: FormValues) => {
         await client.mutate<GQLUpdateContentScopesMutation, GQLUpdateContentScopesMutationVariables>({
@@ -104,14 +103,14 @@ export const SelectScopesDialogContent: React.FunctionComponent<React.PropsWithC
                                 return !userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                             }}
                             checkboxSelection
-                            selectionModel={props.input.value}
-                            onSelectionModelChange={(selectionModel) => {
+                            rowSelectionModel={props.input.value}
+                            onRowSelectionModelChange={(selectionModel) => {
                                 props.input.onChange(selectionModel.map((id) => String(id)));
                             }}
-                            components={{
-                                Toolbar: SelectScopesDialogContentGridToolbar,
+                            slots={{
+                                toolbar: SelectScopesDialogContentGridToolbar,
                             }}
-                            pageSize={25}
+                            initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                         />
                     );
                 }}

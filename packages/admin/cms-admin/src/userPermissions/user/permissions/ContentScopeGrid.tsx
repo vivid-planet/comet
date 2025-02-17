@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CancelButton,
-    GridColDef,
+    type GridColDef,
     Loading,
     messages,
     SaveBoundary,
@@ -11,25 +11,26 @@ import {
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
-import { Button, Card, CardContent, Dialog, DialogActions, DialogTitle, Toolbar, Typography } from "@mui/material";
+import {
+    Button,
+    Card,
+    CardContent,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Toolbar,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-<<<<<<< HEAD
-import {
-    type GQLContentScopesQuery,
-    type GQLContentScopesQueryVariables,
-    type GQLUpdateContentScopesMutation,
-    type GQLUpdateContentScopesMutationVariables,
-} from "./ContentScopeGrid.generated";
-=======
-import { GQLContentScopesQuery, GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
+import { type GQLContentScopesQuery, type GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
 import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
-import { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
->>>>>>> main
+import { type GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
 
 type ContentScope = {
     [key: string]: string;

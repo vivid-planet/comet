@@ -1,4 +1,4 @@
-import { gql, previewParams } from "@comet/cms-site";
+import { gql } from "@comet/cms-site";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -19,8 +19,7 @@ export default async function Page({ children, params: { domain, language } }: P
 
     const messages = await loadMessages(language);
 
-    const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const graphqlFetch = createGraphQLFetch();
 
     const { footer } = await graphqlFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
         gql`

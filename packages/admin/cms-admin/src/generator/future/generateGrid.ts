@@ -506,13 +506,13 @@ export function generateGrid(
     if (config.selectionProps) {
         imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
-            name: "selectionModel",
-            type: `DataGridProProps["selectionModel"]`,
+            name: "rowSelectionModel",
+            type: `DataGridProProps["rowSelectionModel"]`,
             optional: true,
         });
         props.push({
-            name: "onSelectionModelChange",
-            type: `DataGridProProps["onSelectionModelChange"]`,
+            name: "onRowSelectionModelChange",
+            type: `DataGridProProps["onRowSelectionModelChange"]`,
             optional: true,
         });
     }
@@ -685,12 +685,12 @@ export function generateGrid(
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
-        config.selectionProps === "multiSelect"
-            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
-            : config.selectionProps === "singleSelect"
-            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
-            : ``
-    } };
+            config.selectionProps === "multiSelect"
+                ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+                : config.selectionProps === "singleSelect"
+                  ? `, rowSelectionModel, onRowSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+                  : ``
+        } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 

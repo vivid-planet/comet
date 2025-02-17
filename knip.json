@@ -73,8 +73,8 @@
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./src/**/generated/**"],
-            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port", "cosmiconfig-toml-loader", "@babel/core"]
+            "ignore": ["./src/**/generated/**", "./src/products/future/AssignProductsGrid.tsx"],
+            "ignoreDependencies": ["@swc/plugin-emotion", "cosmiconfig-toml-loader", "@babel/core"]
         },
         "demo/api": {
             "entry": [

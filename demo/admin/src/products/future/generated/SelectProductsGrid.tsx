@@ -6,7 +6,7 @@ import {
     dataGridDateTimeColumn,
     DataGridToolbar,
     FillSpace,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -16,11 +16,14 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { DataGridPro, DataGridProProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { DataGridPro, type DataGridProProps, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useIntl } from "react-intl";
 
-import { GQLProductsGridQuery, GQLProductsGridQueryVariables, GQLSelectProductsGridFutureFragment } from "./SelectProductsGrid.generated";
+import {
+    type GQLProductsGridQuery,
+    type GQLProductsGridQueryVariables,
+    type GQLSelectProductsGridFutureFragment,
+} from "./SelectProductsGrid.generated";
 
 const productsFragment = gql`
     fragment SelectProductsGridFuture on Product {
@@ -61,17 +64,17 @@ function ProductsGridToolbar() {
 }
 
 type Props = {
-    selectionModel?: DataGridProProps["selectionModel"];
-    onSelectionModelChange?: DataGridProProps["onSelectionModelChange"];
+    rowSelectionModel?: DataGridProProps["rowSelectionModel"];
+    onRowSelectionModelChange?: DataGridProProps["onRowSelectionModelChange"];
 };
 
-export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props): React.ReactElement {
+export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: Props) {
     const intl = useIntl();
     const dataGridProps = {
         ...useDataGridRemote(),
         ...usePersistentColumnState("ProductsGrid"),
-        selectionModel,
-        onSelectionModelChange,
+        rowSelectionModel,
+        onRowSelectionModelChange,
         checkboxSelection: true,
         keepNonExistentRowsSelected: true,
     };
@@ -96,7 +99,7 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
-            valueFormatter: ({ value }) => value?.toString(),
+            valueFormatter: (value, row) => row.type?.toString(),
             valueOptions: [
                 {
                     value: "Cap",
@@ -136,8 +139,8 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -148,13 +151,12 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );
