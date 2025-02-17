@@ -44,7 +44,6 @@ describe("useSeoTagGeneration", () => {
         jest.resetAllMocks();
         (useContentGenerationConfig as jest.Mock).mockReturnValue(mockContentGenerationConfig);
         (useErrorDialog as jest.Mock).mockReturnValue(mockErrorDialog);
-        // _resetSeoTagsCache();
     });
 
     it("shows error when no content is available", async () => {
