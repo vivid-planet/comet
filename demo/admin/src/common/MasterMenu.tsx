@@ -28,6 +28,7 @@ import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPag
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
+import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
@@ -317,6 +318,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/manufacturers-handmade",
                             component: ManufacturersHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategoryHandmade" defaultMessage="Product Category Handmade" />,
+                        route: {
+                            path: "/product-category-handmade",
+                            component: ProductCategoriesHandmadePage,
                         },
                     },
                 ],
