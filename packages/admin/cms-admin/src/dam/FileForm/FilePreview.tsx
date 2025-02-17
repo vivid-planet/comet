@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
-import { useStackApi } from "@comet/admin";
+import { Button, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
-import { Button, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
 import { ReactNode, useState } from "react";

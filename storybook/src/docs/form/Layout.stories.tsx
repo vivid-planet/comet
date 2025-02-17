@@ -1,4 +1,5 @@
 import {
+    Button,
     CancelButton,
     Field,
     FieldContainer,
@@ -10,19 +11,7 @@ import {
     OkayButton,
 } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControlLabel,
-    Grid,
-    MenuItem,
-    Paper,
-    ThemeProvider,
-    Typography,
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, MenuItem, Paper, ThemeProvider, Typography } from "@mui/material";
 import { styled, StyledEngineProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -179,7 +168,7 @@ export const FieldsInDialog = {
                 </Dialog>
 
                 <div style={{ textAlign: "center" }}>
-                    <Button variant="contained" color="primary" onClick={() => setShowDialog(true)}>
+                    <Button variant="primary" onClick={() => setShowDialog(true)}>
                         Show Dialog
                     </Button>
                 </div>

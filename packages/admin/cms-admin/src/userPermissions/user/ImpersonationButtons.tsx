@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@mui/material";
+import { Button, ButtonProps } from "@comet/admin";
 import Cookies from "js-cookie";
 
 import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
@@ -29,14 +29,14 @@ export const StartImpersonationButton = ({ userId }: { userId: string }) => {
 
     if (currentUser.id !== userId && !currentUser.impersonated) {
         return (
-            <Button onClick={startImpersonation} variant="contained">
+            <Button onClick={startImpersonation} variant="primary">
                 {commonImpersonationMessages.startImpersonation}
             </Button>
         );
     }
 
     if (currentUser.impersonated && currentUser.id === userId) {
-        return <StopImpersonationButton variant="contained" />;
+        return <StopImpersonationButton variant="primary" />;
     }
 
     return null;
