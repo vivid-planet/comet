@@ -79,6 +79,8 @@ export function createSeoBlock(
             const priorityOptions = useSitemapPagePriorityFormOptions();
             const changeFrequencyOptions = useSitemapChangeFrequencyFormOptions();
 
+            const generateSeoTag = useSeoTagGeneration();
+
             return (
                 <div>
                     <BlocksFinalForm
@@ -133,6 +135,7 @@ export function createSeoBlock(
                                     defaultMessage: "HTML Title",
                                 })}
                                 name="htmlTitle"
+                                generateSeoTag={generateSeoTag}
                                 component={FinalFormInput}
                                 fullWidth
                             />
@@ -143,6 +146,7 @@ export function createSeoBlock(
                                     defaultMessage: "Meta Description",
                                 })}
                                 name="metaDescription"
+                                generateSeoTag={generateSeoTag}
                                 multiline
                                 rows={3}
                                 rowsMax={5}
@@ -162,6 +166,7 @@ export function createSeoBlock(
                                     defaultMessage: "Title",
                                 })}
                                 name="openGraphTitle"
+                                generateSeoTag={generateSeoTag}
                                 component={FinalFormInput}
                                 fullWidth
                             />
@@ -171,6 +176,7 @@ export function createSeoBlock(
                                     defaultMessage: "Description",
                                 })}
                                 name="openGraphDescription"
+                                generateSeoTag={generateSeoTag}
                                 multiline={true}
                                 rows={3}
                                 rowsMax={5}
@@ -345,16 +351,17 @@ export function createSeoBlock(
 interface FieldWithContentGenerationProps<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>
     extends FieldProps<FieldValue, FieldElement> {
     name: SeoTag;
+    generateSeoTag: (tag: SeoTag, currentValue: string | undefined) => Promise<string>;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
     name,
+    generateSeoTag,
     endAdornment,
     ...props
 }: FieldWithContentGenerationProps<FieldValue, FieldElement>) {
     const contentGenerationConfig = useContentGenerationConfig();
-    const generateSeoTag = useSeoTagGeneration();
     const formApi = useForm();
 
     const [loading, setLoading] = useState(false);

@@ -3,7 +3,7 @@ import { useErrorDialog } from "@comet/admin";
 import { act, renderHook } from "@testing-library/react-hooks";
 
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
-import { _resetSeoTagsCache, useSeoTagGeneration } from "./useSeoTagGeneration";
+import { useSeoTagGeneration } from "./useSeoTagGeneration";
 
 jest.mock("../../documents/ContentGenerationConfigContext", () => {
     return {
@@ -44,7 +44,7 @@ describe("useSeoTagGeneration", () => {
         jest.resetAllMocks();
         (useContentGenerationConfig as jest.Mock).mockReturnValue(mockContentGenerationConfig);
         (useErrorDialog as jest.Mock).mockReturnValue(mockErrorDialog);
-        _resetSeoTagsCache();
+        // _resetSeoTagsCache();
     });
 
     it("shows error when no content is available", async () => {

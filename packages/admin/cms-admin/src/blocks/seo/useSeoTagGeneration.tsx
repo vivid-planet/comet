@@ -1,25 +1,24 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext, useErrorDialog } from "@comet/admin";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
 import { GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
 
-let seoTagsCache: GQLGenerateSeoTagsMutation["generateSeoTags"] & { content: string } = {
-    content: "",
-    htmlTitle: "",
-    metaDescription: "",
-    openGraphTitle: "",
-    openGraphDescription: "",
-};
-
-let pendingRequest: { content: string; request: Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> } | undefined;
-
 export function useSeoTagGeneration() {
     const contentGenerationConfig = useContentGenerationConfig();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
+
+    const pendingRequest = useRef<{ content: string; request: Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> } | undefined>(undefined);
+    const seoTagsCache = useRef<GQLGenerateSeoTagsMutation["generateSeoTags"] & { content: string }>({
+        content: "",
+        htmlTitle: "",
+        metaDescription: "",
+        openGraphTitle: "",
+        openGraphDescription: "",
+    });
 
     const getSeoTags = useCallback(
         async (content: string): Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> => {
@@ -72,19 +71,19 @@ export function useSeoTagGeneration() {
                 return "";
             }
 
-            const cacheForTagExists = !!seoTagsCache[tag];
-            const currentValueDoesntEqualCachedValue = currentValue !== seoTagsCache[tag];
-            const currentContentEqualsCachedContent = content === seoTagsCache.content;
+            const cacheForTagExists = !!seoTagsCache.current[tag];
+            const currentValueDoesntEqualCachedValue = currentValue !== seoTagsCache.current[tag];
+            const currentContentEqualsCachedContent = content === seoTagsCache.current.content;
 
             if (cacheForTagExists && currentValueDoesntEqualCachedValue && currentContentEqualsCachedContent) {
-                return seoTagsCache[tag];
+                return seoTagsCache.current[tag];
             }
 
             let seoTags: GQLGenerateSeoTagsMutation["generateSeoTags"];
 
-            if (pendingRequest && pendingRequest.content === content) {
+            if (pendingRequest && pendingRequest.current?.content === content) {
                 try {
-                    seoTags = await pendingRequest.request;
+                    seoTags = await pendingRequest.current?.request;
                 } catch {
                     return "";
                 }
@@ -92,18 +91,18 @@ export function useSeoTagGeneration() {
             }
 
             const request = getSeoTags(content);
-            pendingRequest = { request, content };
+            pendingRequest.current = { request, content };
 
             try {
                 seoTags = await request;
             } catch (err) {
                 console.error(err);
-                pendingRequest = undefined;
+                pendingRequest.current = undefined;
                 return "";
             }
 
-            pendingRequest = undefined;
-            seoTagsCache = { content, ...seoTags };
+            pendingRequest.current = undefined;
+            seoTagsCache.current = { content, ...seoTags };
             return seoTags[tag];
         },
         [contentGenerationConfig?.seo, errorDialog, getSeoTags],
@@ -124,15 +123,3 @@ export const generateSeoTagsMutation = gql`
 `;
 
 export type SeoTag = "htmlTitle" | "metaDescription" | "openGraphTitle" | "openGraphDescription";
-
-// only used for tests
-export function _resetSeoTagsCache() {
-    seoTagsCache = {
-        content: "",
-        htmlTitle: "",
-        metaDescription: "",
-        openGraphTitle: "",
-        openGraphDescription: "",
-    };
-    pendingRequest = undefined;
-}
