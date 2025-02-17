@@ -119,7 +119,7 @@ export const EditPage = ({ id }: Props) => {
                     getRelevantContent: () => {
                         if (!pageState || !pageState.document) return [];
 
-                        return PageContentBlock.extractTextContents?.(pageState.document.content) ?? [];
+                        return PageContentBlock.extractTextContents?.(pageState.document.content, { includeInvisibleContent: false }) ?? [];
                     },
                 }}
             >
