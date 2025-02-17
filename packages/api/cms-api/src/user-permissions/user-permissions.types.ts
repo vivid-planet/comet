@@ -1,6 +1,4 @@
 import { type ModuleMetadata, type Type } from "@nestjs/common";
-import { type Request } from "express";
-import { type JwtPayload } from "jsonwebtoken";
 
 import { type CurrentUser } from "./dto/current-user";
 import { type FindUsersArgs } from "./dto/paginated-user-list";
@@ -34,7 +32,6 @@ export interface AccessControlServiceInterface {
 export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
-    createUserFromRequest?: (request: Request, idToken: JwtPayload) => Promise<User> | User;
 }
 
 export interface UserPermissionsOptions {
