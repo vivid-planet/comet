@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { getFieldsAndDecoratorForType } from "@nestjs/graphql/dist/schema-builder/utils/get-fields-and-decorator.util";
+import { IsString } from "class-validator";
 
 export interface ContentGenerationServiceInterface {
     generateAltText?(fileId: string): Promise<string>;
@@ -10,29 +10,18 @@ export interface ContentGenerationServiceInterface {
 @ObjectType()
 export class SeoTags {
     @Field()
+    @IsString()
     htmlTitle: string;
 
     @Field()
+    @IsString()
     metaDescription: string;
 
     @Field()
+    @IsString()
     openGraphTitle: string;
 
     @Field()
+    @IsString()
     openGraphDescription: string;
-}
-
-// TODO: use class transformer to validate the object
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function validateObjectAgainstSeoTags(obj: { [key: string]: any }): obj is SeoTags {
-    const { fields } = getFieldsAndDecoratorForType(SeoTags);
-    const requiredKeys = fields.map((field) => field.name);
-
-    for (const key of requiredKeys) {
-        if (!Object.hasOwn(obj, key) || typeof obj[key] !== "string") {
-            return false;
-        }
-    }
-
-    return true;
 }

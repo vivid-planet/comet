@@ -1,9 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
+import { validateSync } from "class-validator";
 import { AzureOpenAI } from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 import { FilesService } from "../../dam/files/files.service";
-import { ContentGenerationServiceInterface, SeoTags, validateObjectAgainstSeoTags } from "../content-generation-service.interface";
+import { ContentGenerationServiceInterface, SeoTags } from "../content-generation-service.interface";
 import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./azure-open-ai.constants";
 
 export type AzureOpenAiContentGenerationServiceConfig = AzureOpenAiConfig | ConfigByMethod;
@@ -159,8 +161,11 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
             if (response) {
                 try {
                     const json = JSON.parse(response);
-                    if (validateObjectAgainstSeoTags(json)) {
-                        seoTags = json;
+                    seoTags = plainToInstance(SeoTags, json);
+                    const errors = validateSync(seoTags, { skipMissingProperties: false });
+
+                    if (errors.length > 0) {
+                        throw new Error(errors.toString());
                     }
                 } catch {
                     seoTags = undefined;
