@@ -465,9 +465,15 @@ export function createColumnsBlock<T extends BlockInterface>(
             return `${blockItem.key}/edit/${childPath}`;
         },
 
-        extractTextContents: (state) => {
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
             return state.columns.reduce<string[]>((content, column) => {
-                return [...content, ...(contentBlock.extractTextContents?.(column.props) ?? [])];
+                if (!column.visible && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(contentBlock.extractTextContents?.(column.props, options) ?? [])];
             }, []);
         },
     };
