@@ -5,9 +5,9 @@ import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     AzureAiTranslatorProvider,
     BlockPreviewWithTabs,
+    ContentGenerationConfigProvider,
     ContentScopeIndicator,
     createUsePage,
-    DocumentContentGenerationProvider,
     openSitePreviewWindow,
     PageName,
     useBlockPreview,
@@ -114,9 +114,9 @@ export const EditPage = ({ id }: Props) => {
 
     return (
         <AzureAiTranslatorProvider showApplyTranslationDialog={true} enabled={true}>
-            <DocumentContentGenerationProvider
-                seoBlock={{
-                    getDocumentContent: () => {
+            <ContentGenerationConfigProvider
+                seo={{
+                    getRelevantContent: () => {
                         if (!pageState || !pageState.document) return [];
 
                         return PageContentBlock.extractTextContents?.(pageState.document.content) ?? [];
@@ -212,7 +212,7 @@ export const EditPage = ({ id }: Props) => {
                     </BlockPreviewWithTabs>
                 </MainContent>
                 {dialogs}
-            </DocumentContentGenerationProvider>
+            </ContentGenerationConfigProvider>
         </AzureAiTranslatorProvider>
     );
 };

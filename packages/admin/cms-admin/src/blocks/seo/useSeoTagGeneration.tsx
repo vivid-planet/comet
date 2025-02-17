@@ -3,7 +3,7 @@ import { LocalErrorScopeApolloContext, useErrorDialog } from "@comet/admin";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useDocumentContentGenerationApi } from "../../documents/DocumentContentGenerationContext";
+import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
 import { GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
 
 let seoTagsCache: GQLGenerateSeoTagsMutation["generateSeoTags"] & { content: string } = {
@@ -17,7 +17,7 @@ let seoTagsCache: GQLGenerateSeoTagsMutation["generateSeoTags"] & { content: str
 let pendingRequest: { content: string; request: Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> } | undefined;
 
 export function useSeoTagGeneration() {
-    const documentContentGenerationApi = useDocumentContentGenerationApi();
+    const contentGenerationConfig = useContentGenerationConfig();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
 
@@ -54,7 +54,7 @@ export function useSeoTagGeneration() {
     // During each generateSeoTag request, all tags are generated and cached. The cache makes responses quicker by avoiding unnecessary requests and saves LLM tokens.
     const generateSeoTag = useCallback(
         async (tag: SeoTag, currentValue: string | undefined): Promise<string> => {
-            const content = documentContentGenerationApi?.seoBlock?.getDocumentContent().join(" ");
+            const content = contentGenerationConfig?.seo?.getRelevantContent().join(" ");
 
             if (!content || content.length === 0) {
                 errorDialog?.showError({
@@ -106,7 +106,7 @@ export function useSeoTagGeneration() {
             seoTagsCache = { content, ...seoTags };
             return seoTags[tag];
         },
-        [documentContentGenerationApi?.seoBlock, errorDialog, getSeoTags],
+        [contentGenerationConfig?.seo, errorDialog, getSeoTags],
     );
 
     return generateSeoTag;

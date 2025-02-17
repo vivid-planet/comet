@@ -24,7 +24,7 @@ import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
-import { useDocumentContentGenerationApi } from "../documents/DocumentContentGenerationContext";
+import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
 import { validateUrl } from "../validation/validateUrl";
 import { PixelImageBlock } from "./PixelImageBlock";
 import { SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
@@ -353,7 +353,7 @@ function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLE
     endAdornment,
     ...props
 }: FieldWithContentGenerationProps<FieldValue, FieldElement>) {
-    const documentContentGenerationApi = useDocumentContentGenerationApi();
+    const contentGenerationConfig = useContentGenerationConfig();
     const generateSeoTag = useSeoTagGeneration();
     const formApi = useForm();
 
@@ -362,7 +362,7 @@ function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLE
     return (
         <Field
             name={name}
-            {...(documentContentGenerationApi?.seoBlock
+            {...(contentGenerationConfig?.seo
                 ? {
                       endAdornment: (
                           <>

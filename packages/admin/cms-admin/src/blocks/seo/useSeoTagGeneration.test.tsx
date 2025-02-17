@@ -2,12 +2,12 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { useErrorDialog } from "@comet/admin";
 import { act, renderHook } from "@testing-library/react-hooks";
 
-import { useDocumentContentGenerationApi } from "../../documents/DocumentContentGenerationContext";
+import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
 import { _resetSeoTagsCache, useSeoTagGeneration } from "./useSeoTagGeneration";
 
-jest.mock("../../documents/DocumentContentGenerationContext", () => {
+jest.mock("../../documents/ContentGenerationConfigContext", () => {
     return {
-        useDocumentContentGenerationApi: jest.fn(),
+        useContentGenerationConfig: jest.fn(),
     };
 });
 jest.mock("@comet/admin", () => {
@@ -16,9 +16,9 @@ jest.mock("@comet/admin", () => {
     };
 });
 
-const mockDocumentContentGenerationApi = {
-    seoBlock: {
-        getDocumentContent: jest.fn(),
+const mockContentGenerationConfig = {
+    seo: {
+        getRelevantContent: jest.fn(),
     },
 };
 
@@ -42,18 +42,18 @@ describe("useSeoTagGeneration", () => {
     beforeEach(() => {
         jest.resetModules();
         jest.resetAllMocks();
-        (useDocumentContentGenerationApi as jest.Mock).mockReturnValue(mockDocumentContentGenerationApi);
+        (useContentGenerationConfig as jest.Mock).mockReturnValue(mockContentGenerationConfig);
         (useErrorDialog as jest.Mock).mockReturnValue(mockErrorDialog);
         _resetSeoTagsCache();
     });
 
     it("shows error when no content is available", async () => {
-        mockDocumentContentGenerationApi.seoBlock.getDocumentContent.mockReturnValue([]);
+        mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([]);
 
         const { result } = renderHook(() => useSeoTagGeneration());
 
         await act(async () => {
-            await expect(result.current("htmlTitle", undefined)).rejects.toThrow("No content to generate SEO tags from");
+            expect(await result.current("htmlTitle", undefined)).toEqual("");
             expect(mockErrorDialog.showError).toHaveBeenCalled();
         });
     });
@@ -67,7 +67,7 @@ describe("useSeoTagGeneration", () => {
             openGraphDescription: "Test OG Description",
         };
 
-        mockDocumentContentGenerationApi.seoBlock.getDocumentContent.mockReturnValue([content]);
+        mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([content]);
         mockApolloClient.mutate = jest.fn().mockResolvedValue({
             data: {
                 generateSeoTags: seoTags,
@@ -91,7 +91,7 @@ describe("useSeoTagGeneration", () => {
             openGraphDescription: "Test OG Description",
         };
 
-        mockDocumentContentGenerationApi.seoBlock.getDocumentContent.mockReturnValue([content]);
+        mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([content]);
         mockApolloClient.mutate = jest.fn().mockResolvedValue({
             data: {
                 generateSeoTags: seoTags,
@@ -122,7 +122,7 @@ describe("useSeoTagGeneration", () => {
             openGraphDescription: "Test OG Description",
         };
 
-        mockDocumentContentGenerationApi.seoBlock.getDocumentContent.mockReturnValue([content]);
+        mockContentGenerationConfig.seo.getRelevantContent.mockReturnValue([content]);
         mockApolloClient.mutate = jest.fn().mockResolvedValue({
             data: {
                 generateSeoTags: seoTags,
