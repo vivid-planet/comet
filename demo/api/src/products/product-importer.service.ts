@@ -1,8 +1,10 @@
 import { EntityManager } from "@mikro-orm/core";
+import { Injectable } from "@nestjs/common";
 import { LocalFileDataStream } from "@src/importer/data-streams/local-file-data-stream";
 
 import { ProductImporter } from "./product-importer";
 
+@Injectable()
 export class ProductImporterService {
     constructor(private readonly em: EntityManager) {}
 

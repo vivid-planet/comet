@@ -1,9 +1,8 @@
 import { EntityManager } from "@mikro-orm/core";
-import { Injectable, Logger } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
 import { pipeline, Transform } from "stream";
 
-@Injectable()
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
     dataStream: DataStreamAndMetadata | null = null;
