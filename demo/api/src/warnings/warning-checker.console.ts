@@ -32,6 +32,8 @@ export class WarningCheckerConsole {
     })
     @CreateRequestContext()
     async execute(): Promise<void> {
+        const startDate = new Date();
+
         // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
         for (const data of this.groupRootBlockDataByEntity()) {
             const { tableName, className, rootBlockData } = data;
@@ -63,7 +65,6 @@ export class WarningCheckerConsole {
                             const warnings = node.block.warnings();
 
                             if (warnings.length > 0) {
-                                // TODO: (in the next PRs) auto resolve warnings
                                 for (const warning of warnings) {
                                     const type = "Block";
                                     const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
@@ -92,6 +93,10 @@ export class WarningCheckerConsole {
             } while (rootBlocks.length > 0);
         }
         await this.entityManager.flush();
+
+        // remove all Block-Warnings that are not present anymore
+        const bufferTime = startDate.setSeconds(startDate.getSeconds() - 1); // Create a buffer time by subtracting 1 second from the startDate to avoid deleting records inserted in the same second
+        await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: new Date(bufferTime) } });
     }
 
     // Group root block data by tableName and className to reduce database calls.
