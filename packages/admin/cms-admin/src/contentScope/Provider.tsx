@@ -1,17 +1,19 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
+import { defaultCreatePaths } from "./utils/defaultCreatePaths";
+
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 }
 
 type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
-    createPath: (scope: ContentScopeValues<S>) => string | string[];
+    createPaths: (scope: ContentScopeValues<S>) => string | string[];
     createUrl: (scope: S) => string;
 };
 
-const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
+const defaultContentScopeLocation = { createPaths: defaultCreatePaths, createUrl: defaultCreateUrl };
 
 interface ContentScopeContext {
     path: string | string[];
@@ -75,43 +77,6 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
     }, {} as NonNullRecord<S>);
 }
 
-function groupObjectsIntoArrays(values: ContentScopeValues) {
-    const grouped = new Map();
-    values.forEach((item) => {
-        const key = JSON.stringify(Object.keys(item).sort());
-        if (grouped.has(key)) {
-            grouped.get(key).push(item);
-        } else {
-            grouped.set(key, [item]);
-        }
-    });
-    return Array.from(grouped.values());
-}
-
-function defaultCreatePath(values: ContentScopeValues) {
-    const paths: string[] = [];
-
-    groupObjectsIntoArrays(values).forEach((value) => {
-        const dimensionValues: { [dimension: string]: Set<string> } = {};
-        value.forEach((innerValue: { [x: string]: { value: string } }) => {
-            Object.keys(innerValue).forEach((dimension) => {
-                if (!dimensionValues[dimension]) {
-                    dimensionValues[dimension] = new Set();
-                }
-                dimensionValues[dimension].add(innerValue[dimension].value);
-            });
-        });
-        const path = Object.keys(dimensionValues).reduce((path, dimension) => {
-            const plainValues = Array.from(dimensionValues[dimension]);
-            const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-            return `${path}/:${dimension}${whiteListedValuesString}`;
-        }, "");
-        paths.push(path);
-    });
-
-    return paths;
-}
-
 function defaultCreateUrl(scope: ContentScopeInterface) {
     const formattedMatchParams = formatScopeToRouterMatchParams(scope);
     return Object.entries(formattedMatchParams).reduce((a, [, value]) => `${a}/${value}`, "");
@@ -163,7 +128,7 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     values,
     location = defaultContentScopeLocation,
 }: ContentScopeProviderProps<S>) {
-    const paths = location.createPath(values);
+    const paths = location.createPaths(values);
     const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<S>>(paths);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
