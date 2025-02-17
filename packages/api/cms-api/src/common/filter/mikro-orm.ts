@@ -22,6 +22,9 @@ export function filterToMikroOrmQuery(
         | DateTimeFilter
         | DateFilter
         | BooleanFilter
+        | ManyToOneFilter
+        | OneToManyFilter
+        | ManyToManyFilter
         | EnumFilterInterface<unknown>
         | EnumsFilterInterface<unknown>,
     propertyName: string,
