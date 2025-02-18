@@ -34,7 +34,7 @@ export const generateGridToolbar = ({
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
-                <ToolbarFillSpace />
+                <FillSpace />
                 ${renderToolbarActions({
                     forwardToolbarAction,
                     addItemText: getFormattedMessageNode(
@@ -58,7 +58,7 @@ const getGridToolbarProps = (componentName: string, toolbarAction: boolean, expo
     if (toolbarAction) {
         props.push({
             destructured: "toolbarAction",
-            typeDefinition: "toolbarAction?: React.ReactNode",
+            typeDefinition: "toolbarAction?: ReactNode",
         });
     }
 
@@ -135,7 +135,7 @@ const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, 
 const renderToolbarProps = (componentName: string, forwardToolbarAction: boolean | undefined, exportApi: boolean) => {
     if (forwardToolbarAction || exportApi) {
         return `interface ${componentName}ToolbarProps extends GridToolbarProps {
-         ${forwardToolbarAction && "toolbarAction: React.ReactNode;"}
+         ${forwardToolbarAction && "toolbarAction: ReactNode;"}
          ${exportApi ? "exportApi: ExportApi;" : ""}
 }`;
     }

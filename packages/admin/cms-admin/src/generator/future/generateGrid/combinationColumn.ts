@@ -1,4 +1,5 @@
 import { type GridColDef } from "@comet/admin";
+import { type ComponentProps } from "react";
 import { type FormattedNumber } from "react-intl";
 
 import { type BaseColumnConfig, type ImportReference } from "../generator";
@@ -18,7 +19,7 @@ type StaticText = {
     text: string;
 };
 
-type FormattedNumberPropsForNumberField = Omit<React.ComponentProps<typeof FormattedNumber>, "value" | "children">;
+type FormattedNumberPropsForNumberField = Omit<ComponentProps<typeof FormattedNumber>, "value" | "children">;
 
 type NumberField<FieldName extends string> = AbstractField<FieldName> &
     FormattedNumberPropsForNumberField & {
@@ -163,7 +164,7 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             })
             .join(", ");
 
-        const labelMappingVar = `const ${labelsVariableName}: Record<string, React.ReactNode> = { ${labelMapping} };`;
+        const labelMappingVar = `const ${labelsVariableName}: Record<string, ReactNode> = { ${labelMapping} };`;
         const textContent = `(${rowValue} == null ? ${emptyText} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
 
         return {

@@ -31,7 +31,7 @@
     },
     "dependencies": {
         "@algolia/client-search": "^4.24.0",
-        "@apollo/client": "^3.12.10",
+        "@apollo/client": "^3.13.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
@@ -47,9 +47,9 @@
         "@emotion/styled": "^11.14.0",
         "@fontsource/roboto": "^5.1.1",
         "@mdx-js/react": "^3.1.0",
-        "@mui/material": "^6.4.3",
+        "@mui/material": "^6.4.4",
         "@mui/system": "^6.4.3",
-        "@mui/x-data-grid": "^7.25.0",
+        "@mui/x-data-grid": "^7.26.0",
         "draft-js": "^0.11.7",
         "final-form": "^4.20.10",
         "graphql": "^15.10.1",
@@ -68,7 +68,7 @@
         "search-insights": "^2.17.3"
     },
     "devDependencies": {
-        "@babel/core": "^7.26.7",
+        "@babel/core": "^7.26.9",
         "@comet/eslint-config": "workspace:*",
         "@docusaurus/module-type-aliases": "^3.7.0",
         "@docusaurus/tsconfig": "^3.7.0",
@@ -76,12 +76,12 @@
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "cspell": "^8.17.3",
-        "eslint": "^9.18.0",
+        "eslint": "^9.20.1",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.4.2",
+        "prettier": "^3.5.1",
         "sucrase": "^3.35.0",
         "typescript": "5.7.3",
-        "webpack": "^5.97.1"
+        "webpack": "^5.98.0"
     },
     "engines": {
         "node": ">=18.0"

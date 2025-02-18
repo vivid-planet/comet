@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { createContext, type ReactNode, useCallback, useContext, useState } from "react";
+import { createContext, type PropsWithChildren, useCallback, useContext, useState } from "react";
 
 import { type GQLFilenameResponse } from "../../../graphql.generated";
 import { useDamScope } from "../../config/useDamScope";
@@ -28,7 +28,7 @@ export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenames
 
 export type DuplicateAction = "replace" | "copy" | "skip";
 
-export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent<{ children: ReactNode }> = ({ children }) => {
+export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: PropsWithChildren) => {
     const client = useApolloClient();
     const scope = useDamScope();
 

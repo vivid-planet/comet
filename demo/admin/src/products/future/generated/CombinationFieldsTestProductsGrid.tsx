@@ -4,6 +4,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     type GridColDef,
@@ -11,7 +12,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -72,7 +72,7 @@ const createProductMutation = gql`
 `;
 
 interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
-    toolbarAction: React.ReactNode;
+    toolbarAction: ReactNode;
 }
 function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps) {
     return (
@@ -83,7 +83,7 @@ function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps)
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
@@ -119,7 +119,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const typeLabels: Record<string, React.ReactNode> = {
+                const typeLabels: Record<string, ReactNode> = {
                     Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
                     Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
@@ -137,7 +137,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const inStockLabels: Record<string, React.ReactNode> = {
+                const inStockLabels: Record<string, ReactNode> = {
                     true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage={`It's in stock :D`} />,
                     false: <FormattedMessage id="product.staticSelectInStock.primaryText.false" defaultMessage="No longer available :(" />,
                 };

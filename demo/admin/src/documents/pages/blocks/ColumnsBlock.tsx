@@ -1,11 +1,11 @@
 import {
+    AnchorBlock,
     ColumnsLayoutPreview,
     ColumnsLayoutPreviewContent,
     ColumnsLayoutPreviewSpacing,
     createBlocksBlock,
     createColumnsBlock,
-} from "@comet/blocks-admin";
-import { AnchorBlock } from "@comet/cms-admin";
+} from "@comet/cms-admin";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
