@@ -35,7 +35,7 @@ export function withAdditionalBlockAttributes<Add extends Record<string, Default
                 ...Object.keys(add).reduce((acc, c) => ({ ...acc, [c]: output[c] }), {}),
             }),
 
-            createPreviewState: (state, previewCtx) => ({
+            createPreviewState: (state: BlockState<Block>, previewCtx) => ({
                 ...block.createPreviewState(state, previewCtx),
                 ...Object.keys(add).reduce((acc, c) => ({ ...acc, [c]: state[c] }), {}),
             }),

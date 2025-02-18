@@ -42,8 +42,8 @@ export interface DocumentInterface<
     editComponent?: ComponentType<{ id: string; category: string }>;
     updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentOutput>>;
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
-    menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
-    hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
+    menuIcon: (props: SvgIconProps<"svg">) => ReactNode;
+    hideInMenuIcon?: (props: SvgIconProps<"svg">) => ReactNode;
     InfoTag?: ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
