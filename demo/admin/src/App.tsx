@@ -19,6 +19,7 @@ import {
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { ConfigProvider, createConfig } from "@src/config";
+import { ContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
@@ -96,7 +97,7 @@ export function App() {
                                 }}
                             >
                                 <IntlProvider locale="en" messages={getMessages()}>
-                                    <LocaleProvider resolveLocaleForScope={(scope) => scope.domain}>
+                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
                                         <MuiThemeProvider theme={theme}>
                                             <DndProvider options={HTML5toTouch}>
                                                 <SnackbarProvider>

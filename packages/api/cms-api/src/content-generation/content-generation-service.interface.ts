@@ -2,9 +2,9 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
 export interface ContentGenerationServiceInterface {
-    generateAltText?(fileId: string): Promise<string>;
-    generateImageTitle?(fileId: string): Promise<string>;
-    generateSeoTags?(content: string): Promise<SeoTags>;
+    generateAltText?(fileId: string, options?: { language: string }): Promise<string>;
+    generateImageTitle?(fileId: string, options?: { language: string }): Promise<string>;
+    generateSeoTags?(content: string, options: { language: string }): Promise<SeoTags>;
 }
 
 @ObjectType()

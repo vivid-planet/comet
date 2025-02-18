@@ -63,11 +63,11 @@ To enable this feature, perform the following steps:
 ```ts
 @Injectable()
 export class ContentGenerationService implements ContentGenerationServiceInterface {
-    async generateAltText(fileId: string) {
+    async generateAltText(fileId: string, options?: { language: string }) {
         // ...
     }
 
-    async generateImageTitle(fileId: string) {
+    async generateImageTitle(fileId: string, options?: { language: string }) {
         // ...
     }
 }
@@ -84,12 +84,12 @@ export class ContentGenerationService implements ContentGenerationServiceInterfa
         private readonly openAiContentGenerationService: AzureOpenAiContentGenerationService,
     ) {}
 
-    async generateAltText(fileId: string) {
-        return this.openAiContentGenerationService.generateAltText(fileId);
+    async generateAltText(fileId: string, options?: { language: string }) {
+        return this.openAiContentGenerationService.generateAltText(fileId, options);
     }
 
-    async generateImageTitle(fileId: string) {
-        return this.openAiContentGenerationService.generateAltText(fileId);
+    async generateImageTitle(fileId: string, options?: { language: string }) {
+        return this.openAiContentGenerationService.generateImageTitle(fileId, options);
     }
 }
 ```
@@ -118,7 +118,7 @@ To enable this feature, perform the following steps:
 ```ts
 @Injectable()
 export class ContentGenerationService implements ContentGenerationServiceInterface {
-    async generateSeoTags(content: string) {
+    async generateSeoTags(content: string, options: { language: string }) {
         // ...
     }
 }
@@ -135,8 +135,8 @@ export class ContentGenerationService implements ContentGenerationServiceInterfa
         private readonly openAiContentGenerationService: AzureOpenAiContentGenerationService,
     ) {}
 
-    async generateSeoTags(content: string) {
-        return this.openAiContentGenerationService.generateSeoTags(content);
+    async generateSeoTags(content: string, options: { language: string }) {
+        return this.openAiContentGenerationService.generateSeoTags(content, options);
     }
 }
 ```

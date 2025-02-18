@@ -3,13 +3,17 @@ import { LocalErrorScopeApolloContext, useErrorDialog } from "@comet/admin";
 import { useCallback, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
+import { useLocale } from "../../locale/useLocale";
 import { GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
 
 export function useSeoTagGeneration() {
     const contentGenerationConfig = useContentGenerationConfig();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
+    const scope = useContentScope();
+    const locale = useLocale(scope);
 
     const pendingRequest = useRef<{ content: string; request: Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> } | undefined>(undefined);
     const seoTagsCache = useRef<GQLGenerateSeoTagsMutation["generateSeoTags"] & { content: string }>({
@@ -24,7 +28,7 @@ export function useSeoTagGeneration() {
         async (content: string): Promise<GQLGenerateSeoTagsMutation["generateSeoTags"]> => {
             const { data, errors } = await apolloClient.mutate<GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables>({
                 mutation: generateSeoTagsMutation,
-                variables: { content },
+                variables: { content, language: locale },
                 context: LocalErrorScopeApolloContext,
                 errorPolicy: "all",
             });
@@ -47,7 +51,7 @@ export function useSeoTagGeneration() {
 
             return data.generateSeoTags;
         },
-        [apolloClient, errorDialog],
+        [apolloClient, errorDialog, locale],
     );
 
     // During each generateSeoTag request, all tags are generated and cached. The cache makes responses quicker by avoiding unnecessary requests and saves LLM tokens.
@@ -112,8 +116,8 @@ export function useSeoTagGeneration() {
 }
 
 export const generateSeoTagsMutation = gql`
-    mutation GenerateSeoTags($content: String!) {
-        generateSeoTags(content: $content) {
+    mutation GenerateSeoTags($content: String!, $language: String!) {
+        generateSeoTags(content: $content, language: $language) {
             htmlTitle
             metaDescription
             openGraphTitle
