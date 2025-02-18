@@ -50,7 +50,7 @@
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@faker-js/faker": "^9.5.0",
-        "@graphql-mocks/network-msw": "^0.3.0",
+        "@graphql-mocks/network-msw": "^0.4.4",
         "@storybook/addon-actions": "^8.5.6",
         "@storybook/addon-controls": "^8.5.6",
         "@storybook/addon-docs": "^8.5.6",
