@@ -13,7 +13,7 @@ The Grid Generator will create a form with all defined options and fields.
 Here is an overview of all general form options. These affect the form as a whole. Detailed explanations can be found below.
 
 | Parameter        | Type                             | Required | Default     | Description                                                                     |
-|------------------|----------------------------------|----------|-------------|---------------------------------------------------------------------------------|
+| ---------------- | -------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------- |
 | `type`           | `"grid"` \| `"form"` \| `"tabs"` | `true`   | `undefined` | When `"form"` is set, the file is treated as a form during generation.          |
 | `gqlType`        | `string`                         | `true`   | `undefined` | The `GQLType` to use for form generation.                                       |
 | `fields`         | `object[]`                       | `true`   | `undefined` | Array of field definitions.                                                     |
@@ -41,7 +41,7 @@ All field types and options can be found [below](/docs/getting-started/crud-gene
 
 ### mode
 
-This option determines what kind of actions the form will support. 
+This option determines what kind of actions the form will support.
 If only an "edit" form is needed, set it to `"edit"`.
 If only an "add" form is needed, set it to `"add"`.
 The default is `"all"`, meaning both `"edit"` and `"add"` will be available in the generated form.
@@ -58,7 +58,7 @@ When unset, the Admin Generator uses the default create mutation of the `GQLType
 ## General Field Options
 
 | Parameter    | Type      | Required | Default             | Description                                                           |
-|--------------|-----------|----------|---------------------|-----------------------------------------------------------------------|
+| ------------ | --------- | -------- | ------------------- | --------------------------------------------------------------------- |
 | `type`       | `string`  | `true`   | `undefined`         | Define the type of value that is entered in this field.               |
 | `name`       | `string`  | `true`   | `undefined`         | The name of the `GQLType` property that will be edited in this field. |
 | `label`      | `string`  | `false`  | The `name` property | Set a custom field label. Translations can be added here.             |
@@ -125,7 +125,7 @@ If `true`, the field is not editable.
 ## Field Types
 
 | Type                   | Adornment Support | Description                                                                                  |
-|------------------------|-------------------|----------------------------------------------------------------------------------------------|
+| ---------------------- | ----------------- | -------------------------------------------------------------------------------------------- |
 | `text`                 | `true`            | For `string` based values.                                                                   |
 | `number`               | `true`            | For `number` based values.                                                                   |
 | `numberRange`          | `true`            | For `number` range values. Minimum and maximum values are required.                          |
@@ -164,11 +164,10 @@ When adding an adornment to this field, both fields will have the adornment.
 The field requires a set minimum and maximum value.
 
 | Parameter       | Type      | Required | Description                                                                           |
-|-----------------|-----------|----------|---------------------------------------------------------------------------------------|
+| --------------- | --------- | -------- | ------------------------------------------------------------------------------------- |
 | `minValue`      | `number`  | `true`   | The minimum settable value of the range.                                              |
 | `maxValue`      | `number`  | `true`   | The maximum settable value of the range.                                              |
 | `disableSlider` | `boolean` | `false`  | When `false` disables the slider to select the min and max values. Default is `true`. |
-
 
 ```typescript
 {
@@ -210,7 +209,7 @@ This can be overridden by setting the `inputType` option to `radio` or `select`.
     type: "staticSelect",
     name: "color",
     inputType: "select",
-    values: [  
+    values: [
         "red",
         { value: "blue", label: "Blue" },
         { value: "green", label: "Green" },
@@ -234,7 +233,7 @@ This field currently supports only object values, meaning fields that are refere
 Following is the list of `asyncSelect` specific options:
 
 | Parameter     | Type                               | Required | Description                                       |
-|---------------|------------------------------------|----------|---------------------------------------------------|
+| ------------- | ---------------------------------- | -------- | ------------------------------------------------- |
 | `rootQuery`   | `string`                           | `true`   | The `query` that will be used to load the values. |
 | `labelField`  | `string`                           | `false`  | The property to be shown in the field.            |
 | `filterField` | `{name: string, gqlName?: string}` | `false`  | Used to filter the available values.              |
@@ -278,19 +277,22 @@ will generate a field with a query like this:
 
 ```typescript jsx
 <AsyncSelectField
-   //...
+    //...
     loadOptions={async () => {
-        const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+        const { data } = await client.query<
+            GQLProductCategoriesSelectQuery,
+            GQLProductCategoriesSelectQueryVariables
+        >({
             query: gql`
-                    query ProductCategoriesSelect {
-                        productCategories {
-                            nodes {
-                                id
-                                title
-                            }
+                query ProductCategoriesSelect {
+                    productCategories {
+                        nodes {
+                            id
+                            title
                         }
                     }
-                `,
+                }
+            `,
         });
         return data.productCategories.nodes;
     }}
@@ -367,7 +369,7 @@ Block fields are defined with an import reference to the block component:
     label: "Image",
     block: { name: "DamImageBlock", import: "@comet/cms-admin" },
 },
-````
+```
 
 ### fileUpload
 
@@ -375,14 +377,14 @@ Block fields are defined with an import reference to the block component:
 
 Following is a list of all `fileUpload` options:
 
-| Parameter     | Type      | Required | Default       | Description                                                                                                 |
-|---------------|-----------|----------|---------------|-------------------------------------------------------------------------------------------------------------|
-| `name`        | `string`  | `true`   | `undefined`   | The `name` of the corresponding entity property.                                                            |
-| `label`       | `string`  | `false`  | `undefined`   | The `label` to be shown for the field.                                                                      |
-| `maxFileSize` | `number`  | `false`  | `undefined`   | The maximum file size in Bytes. If `undefined`, there is no limit.                                          |
-| `multiple`    | `boolean` | `false`  | `false`       | If `true`, allows to upload multiple files in one field.                                                    |
-| `maxFiles`    | `number`  | `false`  | `undefined`   | The maximum number of files to be uploaded in this field. This is overridden to 1 if `multiple` is `false`. |
-| `download`    | `boolean` | `false`  | `false`       | If `true`, allows to download the file or files.                                                            |
+| Parameter     | Type      | Required | Default     | Description                                                                                                 |
+| ------------- | --------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| `name`        | `string`  | `true`   | `undefined` | The `name` of the corresponding entity property.                                                            |
+| `label`       | `string`  | `false`  | `undefined` | The `label` to be shown for the field.                                                                      |
+| `maxFileSize` | `number`  | `false`  | `undefined` | The maximum file size in Bytes. If `undefined`, there is no limit.                                          |
+| `multiple`    | `boolean` | `false`  | `false`     | If `true`, allows to upload multiple files in one field.                                                    |
+| `maxFiles`    | `number`  | `false`  | `undefined` | The maximum number of files to be uploaded in this field. This is overridden to 1 if `multiple` is `false`. |
+| `download`    | `boolean` | `false`  | `false`     | If `true`, allows to download the file or files.                                                            |
 
 ### fieldSet
 
@@ -390,14 +392,14 @@ A `fieldSet` is used to wrap form fields to create a collapsible section.
 
 Following is a list of all `fieldSet` options:
 
-| Parameter           | Type        | Required | Default     | Description                                                                                                                   |
-|---------------------|-------------|----------|-------------|-------------------------------------------------------------------------------------------------------------------------------|
-| `name`              | `string`    | `true`   | `undefined` | The `string` that will prefix all generated `FormattedMessage` `id`s. Will be displayed as header title if no `title` is set. |
-| `title`             | `string`    | `false`  | `undefined` | The `title` that is displayed in the header of the `fieldSet`. Overrides the `name`.                                          |
-| `supportText`       | `string`    | `false`  | `undefined` | A subtitle that is shown below the `title`.                                                                                   |
-| `collapsible`       | `boolean`   | `false`  | `true`      | If `true`, allows the `fieldSet` to be collapsed.                                                                             |
-| `initiallyExpanded` | `boolean`   | `false`  | `false`     | If `true`, the `fieldSet` will be initially expanded.                                                                         |
-| `fields`            | `object[]`  | `true`   | `undefined` | The list of fields that are within the `fieldSet`. Defined like any other form fields.                                        |
+| Parameter           | Type       | Required | Default     | Description                                                                                                                   |
+| ------------------- | ---------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `name`              | `string`   | `true`   | `undefined` | The `string` that will prefix all generated `FormattedMessage` `id`s. Will be displayed as header title if no `title` is set. |
+| `title`             | `string`   | `false`  | `undefined` | The `title` that is displayed in the header of the `fieldSet`. Overrides the `name`.                                          |
+| `supportText`       | `string`   | `false`  | `undefined` | A subtitle that is shown below the `title`.                                                                                   |
+| `collapsible`       | `boolean`  | `false`  | `true`      | If `true`, allows the `fieldSet` to be collapsed.                                                                             |
+| `initiallyExpanded` | `boolean`  | `false`  | `false`     | If `true`, the `fieldSet` will be initially expanded.                                                                         |
+| `fields`            | `object[]` | `true`   | `undefined` | The list of fields that are within the `fieldSet`. Defined like any other form fields.                                        |
 
 :::caution
 `fieldSet`s cannot be nested within each other. This will result in an error.
@@ -412,7 +414,7 @@ Arbitrary components can be used in forms as well. They are defined with an impo
     type: "component",
     component: { name: "FutureProductNotice", import: "../../helpers/FutureProductNotice" },
 },
-````
+```
 
 ### optionalNestedFields
 
@@ -438,18 +440,18 @@ A field defined like this:
 has `width`, `height` and `depth` combined into one type in the entities property definition. See the example in the entity [here](https://github.com/vivid-planet/comet/blob/main/demo/api/src/products/entities/product.entity.ts#L162).
 
 :::caution
-* Only optional fields work in this section. `required` or `component` fields will lead to an error.
-* `optionalNestedFields` cannot be nested within each other. This will result in an error.
-:::
+
+-   Only optional fields work in this section. `required` or `component` fields will lead to an error.
+-   `optionalNestedFields` cannot be nested within each other. This will result in an error.
+    :::
 
 Following is a list of all `optionalNestedFields` options:
 
-| Parameter           | Type        | Required | Default     | Description                                                                                                 |
-|---------------------|-------------|----------|-------------|-------------------------------------------------------------------------------------------------------------|
-| `name`              | `string`    | `true`   | `undefined` | `name` of the object containing all the optional fields. Will be used as label for the switch.              |
-| `checkBoxLabel`     | `string`    | `false`  | `undefined` | If set, overrides the `name` and is used as label for the switch.                                           |
-| `fields`            | `object[]`  | `true`   | `undefined` | The list of fields that are within the `optionalNestedFields`. They are defined like any other form fields. |
-
+| Parameter       | Type       | Required | Default     | Description                                                                                                 |
+| --------------- | ---------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| `name`          | `string`   | `true`   | `undefined` | `name` of the object containing all the optional fields. Will be used as label for the switch.              |
+| `checkBoxLabel` | `string`   | `false`  | `undefined` | If set, overrides the `name` and is used as label for the switch.                                           |
+| `fields`        | `object[]` | `true`   | `undefined` | The list of fields that are within the `optionalNestedFields`. They are defined like any other form fields. |
 
 ## Setting Adornments
 

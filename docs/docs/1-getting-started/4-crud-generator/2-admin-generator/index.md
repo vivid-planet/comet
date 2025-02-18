@@ -152,11 +152,11 @@ Although this is generated code, it needs to be checked into the repository. The
 ## Field And Column Compatibility
 
 Data from a form will be displayed in a grid, and grid entries need to be edited.
-However, not all form field types can be displayed in a grid and vice versa. 
+However, not all form field types can be displayed in a grid and vice versa.
 Following is a table of all field and column types with their type match:
 
 | Grid Column Type | Form Field Type | Notes                                                                     |
-|------------------|-----------------|---------------------------------------------------------------------------|
+| ---------------- | --------------- | ------------------------------------------------------------------------- |
 | `text`           | `text`          |                                                                           |
 | `number`         | `number`        |                                                                           |
 | `combination`    | `numberRange`   | To display two number values, use the `combination` column.               |
@@ -169,16 +169,3 @@ Following is a table of all field and column types with their type match:
 | `action`         | none            | This grid column contains the context menu and other action buttons.      |
 | `text`           | `asyncSelect`   | Form `asyncSelect` values are rendered as `text` in grids.                |
 | none             | `fileUpload`    | `fileUploads` cannot be displayed in grids at the moment.                 |
-
-
-
-
-   
-   
-   
-       
-   
-
-    
-
-      

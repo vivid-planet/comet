@@ -149,7 +149,7 @@ This option sets an initial sort for grid columns. This sort can be overridden b
 The array values are applied in order.
 
 | Parameter | Type                | Required | Description                                       |
-|-----------|---------------------|----------|---------------------------------------------------|
+| --------- | ------------------- | -------- | ------------------------------------------------- |
 | `field`   | `string`            | `true`   | The property of the `GQLType` to sort by.         |
 | `sort`    | `"asc"` \| `"desc"` | `true`   | The column can be sorted ascending or descending. |
 
@@ -169,7 +169,7 @@ This option sets an initial filter for the grid. This sort can be overridden by 
 The array values are applied in order.
 
 | Parameter      | Type               | Required | Description                                                 |
-|----------------|--------------------|----------|-------------------------------------------------------------|
+| -------------- | ------------------ | -------- | ----------------------------------------------------------- |
 | `items`        | `GridFilterItem[]` | `true`   | The filter definitions.                                     |
 | `linkOperator` | `"and"` \| `"or"`  | `false`  | The operator to connect the conditions. Default is `"and"`. |
 
@@ -214,7 +214,7 @@ For every column, the following general options can be set. Each column `type` m
 They can be found [below](/docs/getting-started/crud-generator/admin-generator/grid-generator#column-types).
 
 | Type                | Type      | Required | Default             | Description                                                                         |
-|---------------------|-----------|----------|---------------------|-------------------------------------------------------------------------------------|
+| ------------------- | --------- | -------- | ------------------- | ----------------------------------------------------------------------------------- |
 | `type`              | `string`  | `true`   | `undefined`         | Define the type of values that is displayed in this column.                         |
 | `name`              | `string`  | `true`   | `undefined`         | The name of the `GQLType` property that will be displayed in the column.            |
 | `headerName`        | `string`  | `false`  | The `name` property | Use this option to set a custom column header name. Translations can be added here. |
@@ -364,7 +364,7 @@ Each column is defined by an object that requires at least these two properties:
 Each column amy have additional individual options.
 
 | Type           | Description                                                                                      |
-|----------------|--------------------------------------------------------------------------------------------------|
+| -------------- | ------------------------------------------------------------------------------------------------ |
 | `text`         | For `string` based columns. Also used for `asyncSelect` values.                                  |
 | `number`       | For `number` based columns.                                                                      |
 | `boolean`      | For `boolean` based columns. Renders X and checkmark icons.                                      |
