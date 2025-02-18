@@ -85,7 +85,7 @@ Translations can be defined here:
 {
     type: "text",
     name: "description",
-    label: "Beschreibung",
+    label: "Description",
     //...
 },
 ```
@@ -201,7 +201,7 @@ There are no further type specific options.
 ### staticSelect
 
 `staticSelect` fields can be generated in two different styles: As radio buttons or as a select field.
-The default behaviour is to use radio buttons for equal or less than 5 values and a select field for more than 5 values.
+The default behavior is to use radio buttons for equal or less than 5 values and a select field for more than 5 values.
 This can be overridden by setting the `inputType` option to `radio` or `select`.
 
 ```typescript

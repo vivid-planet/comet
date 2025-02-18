@@ -250,7 +250,7 @@ Translations can be defined here:
 {
     type: "text",
     name: "description",
-    headerName: "Beschreibung",
+    headerName: "Description",
     //...
 },
 ```
