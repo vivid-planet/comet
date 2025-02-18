@@ -5,7 +5,7 @@ export const getMuiListItemAvatar: GetMuiComponentTheme<"MuiListItemAvatar"> = (
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiListItemAvatar">(component?.styleOverrides, {
         root: {
-            gap: spacing(2),
+            minWidth: 0,
         },
     }),
 });
