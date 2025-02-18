@@ -1,15 +1,15 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiListItemAvatar: GetMuiComponentTheme<"MuiListItemAvatar"> = (component) => ({
+export const getMuiListItemAvatar: GetMuiComponentTheme<"MuiListItemAvatar"> = (component, { spacing }) => ({
     ...component,
     defaultProps: {
         dense: true,
         ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiListItem">(component?.styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiListItemAvatar">(component?.styleOverrides, {
         root: {
-            gap: "10px",
+            gap: spacing(2),
         },
     }),
 });

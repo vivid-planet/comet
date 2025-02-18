@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = (component) => ({
+export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = (component, { spacing }) => ({
     ...component,
     defaultProps: {
         dense: true,
@@ -9,7 +9,7 @@ export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = (component) =
     },
     styleOverrides: mergeOverrideStyles<"MuiListItem">(component?.styleOverrides, {
         root: {
-            gap: "10px",
+            gap: spacing(2),
         },
     }),
 });
