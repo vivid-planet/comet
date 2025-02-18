@@ -36,7 +36,7 @@
         "@mui/system": "^6.4.3",
         "@mui/x-data-grid": "^7.26.0",
         "@mui/x-data-grid-pro": "^7.26.0",
-        "change-case": "^5.2.0",
+        "change-case": "^5.4.4",
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
         "graphql": "^15.10.1",
