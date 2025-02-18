@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = (component) => ({
+export const getMuiListItemAvatar: GetMuiComponentTheme<"MuiListItemAvatar"> = (component) => ({
     ...component,
     defaultProps: {
         dense: true,
