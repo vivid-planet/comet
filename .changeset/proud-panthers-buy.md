@@ -7,11 +7,11 @@
 
 Add content generation capabilities to `createSeoBlock`
 
-The SeoBlock (when created using the `createSeoBlock` factory) now supports automatic generation of
+The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
 
 -   HTML title
 -   Meta description
--   OpenGraph title
--   OpenGraph description
+-   Open Graph title
+-   Open Graph description
 
-For instructions on how to enable this feature see https://docs.comet-dxp.com/docs/features-modules/content-generation/
+See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
