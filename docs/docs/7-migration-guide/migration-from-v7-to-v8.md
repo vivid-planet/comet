@@ -15,7 +15,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 - Upgrade MUI packages to v6
 - Run MUI codemods
 - Upgrade MUI X packages to v6
-- Upgrade NestJS packages to v10
+- Upgrade NestJS packages to v11
 - Upgrade Prettier to v3
 - Remove all passport-related dependencies (we don't use passport anymore)
 - Add @nestjs/jwt dependency
@@ -28,9 +28,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 #### NestJS
 
-The NestJS peer dependency has been bumped to v10.
+The NestJS peer dependency has been bumped to v11.
 
-1.  Upgrade all your dependencies to support NestJS v10:
+1.  Upgrade all your dependencies to support NestJS v11:
 
     ```diff title=api/package.json
     {
@@ -43,24 +43,28 @@ The NestJS peer dependency has been bumped to v10.
     -       "@nestjs/graphql": "^10.0.0",
     -       "@nestjs/passport": "^9.0.0",
     -       "@nestjs/platform-express": "^9.0.0",
-    +       "@nestjs/apollo": "^12.0.0",
-    +       "@nestjs/common": "^10.0.0",
-    +       "@nestjs/core": "^10.0.0",
-    +       "@nestjs/graphql": "^12.0.0",
-    +       "@nestjs/passport": "^10.0.0",
-    +       "@nestjs/platform-express": "^10.0.0",
+    +       "@nestjs/apollo": "^13.0.0",
+    +       "@nestjs/common": "^11.0.0",
+    +       "@nestjs/core": "^11.0.0",
+    +       "@nestjs/graphql": "^13.0.0",
+    +       "@nestjs/passport": "^11.0.0",
+    +       "@nestjs/platform-express": "^11.0.0",
     -       "apollo-server-core": "^3.0.0",
     -       "apollo-server-express": "^3.0.0",
+    -       "express": "^4.0.0",
+    +       "express": "^5.0.0",
     -       "graphql": "^15.0.0",
-    +       "graphql": "^16.6.0",
+    +       "graphql": "^16.10.0",
         },
         "devDependencies": {
     -       "@nestjs/cli": "^9.0.0",
     -       "@nestjs/schematics": "^9.0.0",
     -       "@nestjs/testing": "^9.0.0",
-    +       "@nestjs/cli": "^10.0.0",
-    +       "@nestjs/schematics": "^10.0.0",
-    +       "@nestjs/testing": "^10.0.0"
+    +       "@nestjs/cli": "^11.0.0",
+    +       "@nestjs/schematics": "^11.0.0",
+    +       "@nestjs/testing": "^11.0.0",
+    -       "@types/express": "^4.0.0",
+    +       "@types/express": "^5.0.0",
         }
     }
     ```
@@ -107,6 +111,9 @@ The NestJS peer dependency has been bumped to v10.
     ```
 
     :::
+
+3.  You may need to update some of your routes to support Express v5.
+    See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
 
 #### MikroORM
 
