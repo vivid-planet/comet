@@ -38,7 +38,7 @@
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^4.0.3",
         "@hapi/accept": "^5.0.2",
-        "@nestjs/mapped-types": "^2.0.6",
+        "@nestjs/mapped-types": "^2.1.0",
         "@opentelemetry/api": "^1.9.0",
         "@types/get-image-colors": "^4.0.5",
         "base64url": "^3.0.1",
