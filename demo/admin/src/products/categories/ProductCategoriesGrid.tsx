@@ -29,7 +29,6 @@ import {
     GQLProductCategoryGridFutureFragment,
     GQLUpdateProductCategoryPositionMutation,
     GQLUpdateProductCategoryPositionMutationVariables,
-    namedOperations,
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
@@ -110,7 +109,7 @@ export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, action
             mutation: updateProductCategoryPositionMutation,
             variables: { id, input: { position: targetIndex + 1 } },
             awaitRefetchQueries: true,
-            refetchQueries: [namedOperations.Query.ProductCategoriesGrid],
+            refetchQueries: [productCategoriesQuery],
         });
     };
 
