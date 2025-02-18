@@ -1,40 +1,64 @@
+import { ContentScopeValues } from "../Provider";
 import { groupObjectsIntoArrays } from "./groupObjectsIntoArrays";
 
 describe("groupObjectsIntoArrays", () => {
     it("should group objects with the same keys into arrays", () => {
-        const input: Record<string, any>[] = [{ a: 1, b: 2 }, { a: 1, b: 3 }, { c: 2, a: 3 }, { c: 4 }];
+        const input = [
+            { domain: { value: "main" }, language: { label: "EN", value: "en" } },
+            { domain: { value: "secondary" }, language: { label: "EN", value: "en" } },
+            { country: { label: "Country", value: "us" }, domain: { value: "third" } },
+            { country: { label: "Country", value: "us" } },
+        ] as ContentScopeValues;
         const expectedOutput = [
             [
-                { a: 1, b: 2 },
-                { a: 1, b: 3 },
+                { domain: { value: "main" }, language: { label: "EN", value: "en" } },
+                { domain: { value: "secondary" }, language: { label: "EN", value: "en" } },
             ],
-            [{ c: 2, a: 3 }],
-            [{ c: 4 }],
+            [{ country: { label: "Country", value: "us" }, domain: { value: "third" } }],
+            [{ country: { label: "Country", value: "us" } }],
         ];
         expect(groupObjectsIntoArrays(input)).toEqual(expectedOutput);
     });
 
     it("should handle an empty array", () => {
-        const input: Record<string, any>[] = [];
-        const expectedOutput: Record<string, any>[] = [];
+        const input: [] = [];
+        const expectedOutput: [] = [];
         expect(groupObjectsIntoArrays(input)).toEqual(expectedOutput);
     });
 
     it("should handle an array with one object", () => {
-        const input: Record<string, any>[] = [{ a: 1 }];
-        const expectedOutput: Record<string, any>[] = [[{ a: 1 }]];
+        const input = [{ domain: { value: "main" }, language: { label: "EN", value: "en" } }];
+        const expectedOutput = [[{ domain: { value: "main" }, language: { label: "EN", value: "en" } }]];
         expect(groupObjectsIntoArrays(input)).toEqual(expectedOutput);
     });
 
     it("should group objects with different keys separately", () => {
-        const input: Record<string, any>[] = [{ a: 1 }, { b: 2 }, { c: 3 }];
-        const expectedOutput: Record<string, any>[] = [[{ a: 1 }], [{ b: 2 }], [{ c: 3 }]];
+        const input = [
+            { domain: { value: "main" }, language: { label: "EN", value: "en" } },
+            { country: { label: "Country", value: "us" } },
+            { language: { value: "DE" } },
+        ] as ContentScopeValues;
+        const expectedOutput = [
+            [{ domain: { value: "main" }, language: { label: "EN", value: "en" } }],
+            [{ country: { label: "Country", value: "us" } }],
+            [{ language: { value: "DE" } }],
+        ];
         expect(groupObjectsIntoArrays(input)).toEqual(expectedOutput);
     });
 
     it("should group objects with the same keys but different values into the same array", () => {
-        const input: Record<string, any>[] = [{ a: 1 }, { a: 2 }, { a: 3 }];
-        const expectedOutput: Record<string, any>[] = [[{ a: 1 }, { a: 2 }, { a: 3 }]];
+        const input = [
+            { domain: { value: "main" }, language: { label: "EN", value: "en" } },
+            { domain: { value: "secondary" }, language: { label: "DE", value: "de" } },
+            { domain: { value: "third" }, language: { label: "ES", value: "es" } },
+        ];
+        const expectedOutput = [
+            [
+                { domain: { value: "main" }, language: { label: "EN", value: "en" } },
+                { domain: { value: "secondary" }, language: { label: "DE", value: "de" } },
+                { domain: { value: "third" }, language: { label: "ES", value: "es" } },
+            ],
+        ];
         expect(groupObjectsIntoArrays(input)).toEqual(expectedOutput);
     });
 });

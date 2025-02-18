@@ -3,14 +3,14 @@ import { defaultCreatePaths } from "./defaultCreatePaths";
 
 describe("defaultCreatePaths", () => {
     it("should create paths from content scope values", () => {
-        const values = [
+        const values: ContentScopeValues = [
             { domain: { value: "main" }, language: { label: "DE", value: "de" } },
             { domain: { value: "main" }, language: { label: "EN", value: "en" } },
             { domain: { value: "secondary" }, language: { label: "EN", value: "en" } },
             { domain: { value: "secondary" }, language: { label: "DE", value: "de" } },
             { country: { value: "secondary" } },
         ];
-        const result = defaultCreatePaths(values as unknown as ContentScopeValues);
+        const result = defaultCreatePaths(values);
 
         expect(result).toEqual(["/:domain(main|secondary)/:language(de|en)", "/:country(secondary)"]);
     });
