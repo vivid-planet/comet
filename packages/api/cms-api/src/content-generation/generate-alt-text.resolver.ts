@@ -8,7 +8,7 @@ import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
 import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
 
 @ArgsType()
-export class GenerateAltTextArgs {
+class GenerateAltTextArgs {
     @IsUUID()
     @Field(() => String)
     fileId: string;

@@ -7,7 +7,7 @@ import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
 import { ContentGenerationServiceInterface, SeoTags } from "./content-generation-service.interface";
 
 @ArgsType()
-export class GenerateSeoTagsArgs {
+class GenerateSeoTagsArgs {
     @IsString()
     @Field(() => String)
     content: string;
