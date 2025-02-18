@@ -33,8 +33,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       knip:
-        specifier: ^5.44.0
-        version: 5.44.0(@types/node@22.13.4)(typescript@5.7.3)
+        specifier: ^5.44.1
+        version: 5.44.1(@types/node@22.13.4)(typescript@5.7.3)
       lint-staged:
         specifier: ^15.4.3
         version: 15.4.3
@@ -1275,9 +1275,6 @@ importers:
       '@types/draft-js':
         specifier: ^0.11.18
         version: 0.11.18
-      '@types/immutable':
-        specifier: ^3.8.7
-        version: 3.8.7
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -7454,10 +7451,6 @@ packages:
   '@types/http-proxy@1.17.9':
     resolution: {integrity: sha512-QsbSjA/fSk7xB+UXlCT3wHBy5ai9wOcNDWwZAtud+jXhwOM3l+EYZh8Lng4+/6n8uar0J7xILzqftJdJ/Wdfkw==}
 
-  '@types/immutable@3.8.7':
-    resolution: {integrity: sha512-nsHFDX48Tl3RaP4BF47HHe5njx40Pcp+0a8CIqzJata80Fp7JzkcuGB7UhZBGjH9aA1fMEahIqvPQQNmro5YLg==}
-    deprecated: This is a stub types definition for Facebook's Immutable (https://github.com/facebook/immutable-js). Facebook's Immutable provides its own type definitions, so you don't need @types/immutable installed!
-
   '@types/inquirer@7.3.3':
     resolution: {integrity: sha512-HhxyLejTHMfohAuhRun4csWigAMjXTmRyiJTU1Y/I1xmggikFMkOUoMQRlFm+zQcPEGHSs3io/0FAmNZf8EymQ==}
 
@@ -12064,8 +12057,8 @@ packages:
       tedious:
         optional: true
 
-  knip@5.44.0:
-    resolution: {integrity: sha512-j39v3LYCmU6P6HN/TG14bc0Dlthl12g6NogdEZHQdhlVS6BqfnGGS3ospYYwLill6Sdc68eptwGtThunqq7lxA==}
+  knip@5.44.1:
+    resolution: {integrity: sha512-YJrz7K6AA3SwXJ5LL9ZlzQX9wcihMNwKoGBAaY5kUn4rLNOZ5ehsjFV+xm8gQuIJdjsFIKcFsy0K3U3yM/mabw==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -23977,10 +23970,6 @@ snapshots:
     dependencies:
       '@types/node': 22.13.4
 
-  '@types/immutable@3.8.7':
-    dependencies:
-      immutable: 3.8.2
-
   '@types/inquirer@7.3.3':
     dependencies:
       '@types/through': 0.0.30
@@ -29612,7 +29601,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  knip@5.44.0(@types/node@22.13.4)(typescript@5.7.3):
+  knip@5.44.1(@types/node@22.13.4)(typescript@5.7.3):
     dependencies:
       '@nodelib/fs.walk': 3.0.1
       '@snyk/github-codeowners': 1.1.0
