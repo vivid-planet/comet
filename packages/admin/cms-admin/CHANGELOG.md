@@ -1,5 +1,47 @@
 # @comet/cms-admin
 
+## 7.14.0
+
+### Minor Changes
+
+-   97cd0a3dd: User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+-   c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   Updated dependencies [6b75f20e4]
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+-   Updated dependencies [948e07bba]
+-   Updated dependencies [bb041f7a7]
+-   Updated dependencies [7f72e82fc]
+    -   @comet/admin@7.14.0
+    -   @comet/admin-theme@7.14.0
+    -   @comet/blocks-admin@7.14.0
+    -   @comet/admin-rte@7.14.0
+    -   @comet/admin-date-time@7.14.0
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
