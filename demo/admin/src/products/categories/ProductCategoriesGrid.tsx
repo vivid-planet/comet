@@ -2,20 +2,15 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
-    FillSpace,
     filterByFragment,
     GridColDef,
-    GridFilterButton,
-    muiGridFilterToGql,
     ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { useTheme } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridRowOrderChangeParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { GQLProductCategoryFilter } from "@src/graphql.generated";
+import { DataGridPro, GridRenderCellParams, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -41,8 +36,8 @@ const productCategoriesFragment = gql`
 `;
 
 const productCategoriesQuery = gql`
-    query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!], $search: String, $filter: ProductCategoryFilter) {
-        productCategories(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+    query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
+        productCategories(offset: $offset, limit: $limit, sort: $sort) {
             nodes {
                 ...ProductCategoryGridFuture
             }
@@ -79,27 +74,19 @@ const updateProductCategoryPositionMutation = gql`
 function ProductCategoriesGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
 }
 
 type Props = {
-    filter?: GQLProductCategoryFilter;
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductCategoryGridFutureFragment, any>) => React.ReactNode;
     actionsColumnWidth?: number;
 };
 
-export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
+export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
@@ -122,13 +109,23 @@ export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, action
             flex: 1,
             visible: theme.breakpoints.up("md"),
             minWidth: 150,
+            filterable: false,
+            sortable: false,
         },
-        { field: "slug", headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }), flex: 1, minWidth: 150 },
+        {
+            field: "slug",
+            headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
+            flex: 1,
+            minWidth: 150,
+            filterable: false,
+            sortable: false,
+        },
         {
             field: "position",
             headerName: intl.formatMessage({ id: "productCategory.position", defaultMessage: "Position" }),
             type: "number",
             filterable: false,
+            sortable: false,
             flex: 1,
             minWidth: 150,
         },
@@ -171,12 +168,8 @@ export function ProductCategoriesGrid({ filter, toolbarAction, rowAction, action
         },
     ];
 
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
-
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
-            filter: filter ? { and: [gqlFilter, filter] } : gqlFilter,
-            search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: { field: "position", direction: "ASC" },
