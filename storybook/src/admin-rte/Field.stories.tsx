@@ -1,7 +1,7 @@
-import { Field, FinalFormInput, FormSection } from "@comet/admin";
+import { Button, Field, FinalFormInput, FormSection } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
-import { Button, Card, CardContent, Grid } from "@mui/material";
-import * as React from "react";
+import { Card, CardContent, Grid } from "@mui/material";
+import { useReducer, useState } from "react";
 import { Form } from "react-final-form";
 
 const { RteField, RteReadOnly } = createFinalFormRte();
@@ -11,8 +11,8 @@ export default {
 };
 
 export const _Field = () => {
-    const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: undefined });
-    const [disabled, toggleDisabled] = React.useReducer((s) => !s, false);
+    const [submittedValue, setSubmittedValue] = useState<{ rteContent: any }>({ rteContent: undefined });
+    const [disabled, toggleDisabled] = useReducer((s) => !s, false);
 
     return (
         <Grid container spacing={4} style={{ maxWidth: 800 }}>
@@ -29,21 +29,12 @@ export const _Field = () => {
                                     <Field name="somethingElse" label="Something else" component={FinalFormInput} disabled={disabled} />
                                     <Grid container spacing={4}>
                                         <Grid item>
-                                            <Button
-                                                color="secondary"
-                                                variant="contained"
-                                                type="button"
-                                                component="button"
-                                                disableTouchRipple
-                                                onClick={toggleDisabled}
-                                            >
+                                            <Button variant="secondary" onClick={toggleDisabled}>
                                                 {disabled ? "Enable" : "Disable"} inputs
                                             </Button>
                                         </Grid>
                                         <Grid item>
-                                            <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
-                                                Submit
-                                            </Button>
+                                            <Button type="submit">Submit</Button>
                                         </Grid>
                                     </Grid>
                                 </form>

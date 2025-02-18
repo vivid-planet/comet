@@ -1,5 +1,195 @@
 # @comet/admin
 
+## 7.13.0
+
+### Minor Changes
+
+-   bd562d325: Add `disableForcePromptRoute` option to `StackSwitch`
+
+    This can be useful when a navigation in a switch shouldn't trigger a prompt, e.g., when navigating inside a block.
+
+-   5c06e4bee: Reduce `MainContent` padding on mobile
+-   b918c810b: Add support for custom components to `CrudMoreActionsMenu`
+
+    **Example**
+
+    ```tsx
+    const CustomAction = () => (
+        <CrudMoreActionsMenuItem
+            onClick={() => {
+                // Perform action
+            }}
+        >
+            <ListItemIcon>
+                <Favorite />
+            </ListItemIcon>
+            Custom Action
+        </CrudMoreActionsMenuItem>
+    );
+
+    <CrudMoreActionsMenu overallActions={[<CustomAction key="custom-action" />]} />;
+    ```
+
+    **Note:** Use the `CrudMoreActionsMenuItem` component or `CrudMoreActionsMenuContext` to close the menu after clicking an item.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.13.0
+-   @comet/admin-theme@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   af51bb408: Make the width of `GridToolbarQuickFilter` responsive when used inside `DataGridToolbar`
+-   92b3255d2: Hide group title in `CrudMoreActionsMenu` when only one group is present
+-   e8003f9c7: Add a new `FillSpace` component to replace `ToolbarFillSpace` and `AppHeaderFillSpace`
+
+    `ToolbarFillSpace` and `AppHeaderFillSpace` are now deprecated.
+
+-   4f6e6b011: Deprecate `FinalFormRadio` and `FinalFormCheckbox`
+-   5583c9cff: Export `renderFinalFormChildren` helper
+-   7da81fa2e: Add a new `Button` component to replace `ToolbarActionButton` and MUI's `Button`
+
+    Compared to MUI's `Button` component, the `color` prop has been removed, and the `variant` prop now defines those variants, defined by the Comet design guidelines, `primary` is the default variant.
+
+    ```diff
+    -import { Button } from "@mui/material";
+    +import { Button } from "@comet/admin";
+
+     export const AllButtonVariants = () => (
+         <>
+    -        <Button variant="contained" color="primary">Primary</Button>
+    +        <Button>Primary</Button>
+    -        <Button variant="contained" color="secondary">Secondary</Button>
+    +        <Button variant="secondary">Secondary</Button>
+    -        <Button variant="outlined">Outlined</Button>
+    +        <Button variant="outlined">Outlined</Button>
+    -        <Button variant="outlined" color="error">Destructive</Button>
+    +        <Button variant="destructive">Destructive</Button>
+    -        <Button variant="contained" color="success">Success</Button>
+    +        <Button variant="success">Success</Button>
+    -        <Button variant="text" sx={{ color: "white" }}>Text Light</Button>
+    +        <Button variant="textLight">Text Light</Button>
+    -        <Button variant="text" sx={{ color: "black" }}>Text Dark</Button>
+    +        <Button variant="textDark">Text Dark</Button>
+         </>
+     );
+    ```
+
+    **Responsive behavior**
+
+    `ToolbarActionButton` is now deprecated.
+    Previously, `ToolbarActionButton` would hide its text content on mobile and add it with a tooltip instead.
+    This behavior can now be achieved by setting the `responsive` prop on the `Button` component.
+
+    ```diff
+    -import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
+    +import { Button } from "@comet/admin";
+     import { Favorite } from "@comet/admin-icons";
+
+     const Example = () => {
+    -    return <ToolbarActionButton startIcon={<Favorite />}>Hello</ToolbarActionButton>;
+    +    return <Button responsive startIcon={<Favorite />}>Hello</Button>;
+     };
+    ```
+
+### Patch Changes
+
+-   954635630: Fix mobile styling of `AppHeaderMenuButton`
+-   3ddc2278b: Adjust the spacings inside `Toolbar` and `DataGridToolbar` to match the Comet design
+-   0bb181a52: `usePersistentColumnState`: Prevent Data Grids with the same name to overwrite each others pinned and column-visibility states
+-   Updated dependencies [47be4ebd3]
+-   Updated dependencies [ee597535a]
+-   Updated dependencies [af51bb408]
+    -   @comet/admin-theme@7.12.0
+    -   @comet/admin-icons@7.12.0
+
+## 7.11.0
+
+### Minor Changes
+
+-   b8b8e2747: Make `GridFilterButton` and `GridColumnsButton` responsive by moving their text to a tooltip on mobile
+
+    -   This also makes the button's styles consistent with the standard `Button` component
+    -   `GridFilterButton` now supports props to override the default button props
+
+-   e9f547d95: Adjust how tooltips are triggered
+
+    This is to achieve a more consistent and user-friendly experience by ensuring tooltips are always shown when the user interacts with the underlying element.
+
+    -   When using the default `hover` trigger, tooltips will now be shown on both `hover` and `focus`. Previously, you had to choose between `hover` and `focus`.
+    -   The `trigger` prop is deprecated and will be removed in a future major version. The combined `hover`/`focus` trigger will be the only supported behavior.
+    -   Tooltips on touch devices will be shown immediately when the user starts interacting with the underlying element.
+
+### Patch Changes
+
+-   1e01cca21: Prevent scrolling of `DialogTitle` and `DialogActions` in `EditDialog`
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+-   20f63417e: Prevent the page content from overflowing the window, causing a horizontal scrollbar
+
+    This happened when using elements like `Tabs` that are intended to be horizontally scrollable and could, therefore, be wider than the window.
+
+-   8114a6ae7: Fix `onClick` and other props not being passed to the icon version of some button components
+-   Updated dependencies [9f2a1272b]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [a4fcdeb51]
+-   Updated dependencies [5ba64aab6]
+    -   @comet/admin-theme@7.11.0
+    -   @comet/admin-icons@7.11.0
+
+## 7.10.0
+
+### Minor Changes
+
+-   8f924d591: Add new custom `Dialog`
+
+    The component extends the MUI `Dialog` component to enable common use cases:
+
+    -   The `title` prop can be used to set the dialog title
+    -   A close button is shown when the `onClose` is used
+
+    **Example**
+
+    ```tsx
+    <Dialog
+        title="Dialog Title"
+        onClose={() => {
+            // Handle dialog closing here
+        }}
+    />
+    ```
+
+-   6eba5abea: Add a `forceVerticalContainerSize` prop to `FieldContainer`
+
+    Use it to define below which container size the `vertical` styling is applied when using the `horizontal` variant.
+
+-   589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
+
+    -   `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
+    -   `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
+
+    **Example:**
+
+    ```tsx
+    <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon" secondaryHelperText="0/100">
+        <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+    </FieldContainer>
+    ```
+
+### Patch Changes
+
+-   aa02ca13f: Fix a bug in `useDataGridExcelExport` that would cause an Excel export to fail when a cell's value was `undefined`
+-   6eba5abea: Prevent unintended layout shift after the initial render of `FieldContainer` when using the `horizontal` variant
+-   bf6b03fe0: Fix alignment of `Alert` icon with the title
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

@@ -2,25 +2,28 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
+    filterByFragment,
     GridColDef,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import * as React from "react";
@@ -32,31 +35,27 @@ import {
     GQLCreateNewsMutationVariables,
     GQLDeleteNewsMutation,
     GQLDeleteNewsMutationVariables,
+    GQLNewsGridFragment,
     GQLNewsGridQuery,
     GQLNewsGridQueryVariables,
-    GQLNewsListFragment,
 } from "./NewsGrid.generated";
 
 const newsFragment = gql`
-    fragment NewsList on News {
+    fragment NewsGrid on News {
         id
-        slug
         title
-        status
         date
         category
         image
         content
-        createdAt
-        updatedAt
     }
 `;
 
 const newsQuery = gql`
-    query NewsGrid($offset: Int, $limit: Int, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
+    query NewsGrid($offset: Int!, $limit: Int!, $sort: [NewsSort!], $search: String, $filter: NewsFilter, $scope: NewsContentScopeInput!) {
         newsList(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scope: $scope) {
             nodes {
-                ...NewsList
+                ...NewsGrid
             }
             totalCount
         }
@@ -87,10 +86,10 @@ function NewsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="news.newNews" defaultMessage="New News" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
@@ -103,70 +102,53 @@ export function NewsGrid(): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
 
-    const columns: GridColDef<GQLNewsListFragment>[] = [
-        { field: "slug", headerName: intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" }), width: 150 },
-        { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), width: 150 },
-        {
-            field: "status",
-            headerName: intl.formatMessage({ id: "news.status", defaultMessage: "Status" }),
-            type: "singleSelect",
-            valueOptions: [
-                { value: "Active", label: intl.formatMessage({ id: "news.status.active", defaultMessage: "Active" }) },
-                { value: "Deleted", label: intl.formatMessage({ id: "news.status.deleted", defaultMessage: "Deleted" }) },
-            ],
-            width: 150,
-        },
-        {
-            field: "date",
-            headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
+    const columns: GridColDef<GQLNewsGridFragment>[] = [
+        { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
+        { ...dataGridDateColumn, field: "date", headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }), flex: 1, minWidth: 150 },
         {
             field: "category",
             headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
             type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
-                { value: "Events", label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }) },
-                { value: "Company", label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }) },
-                { value: "Awards", label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }) },
+                {
+                    value: "Events",
+                    label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }),
+                },
+                {
+                    value: "Company",
+                    label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }),
+                },
+                {
+                    value: "Awards",
+                    label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }),
+                },
             ],
-            width: 150,
+            renderCell: renderStaticSelectCell,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "image",
             headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
             filterable: false,
             sortable: false,
-            width: 150,
             renderCell: (params) => {
                 return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
             },
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "content",
             headerName: intl.formatMessage({ id: "news.content", defaultMessage: "Content" }),
             filterable: false,
             sortable: false,
-            width: 150,
             renderCell: (params) => {
                 return <BlockPreviewContent block={NewsContentBlock} input={params.row.content} />;
             },
-        },
-        {
-            field: "createdAt",
-            headerName: intl.formatMessage({ id: "news.createdAt", defaultMessage: "Created At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
@@ -174,23 +156,23 @@ export function NewsGrid(): React.ReactElement {
             sortable: false,
             filterable: false,
             type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <EditIcon />
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
-                                const row = params.row;
+                                // Don't copy id, because we want to create a new entity with this data
+                                const { id, ...filteredData } = filterByFragment(newsFragment, params.row);
                                 return {
-                                    slug: row.slug,
-                                    title: row.title,
-                                    status: row.status,
-                                    date: row.date,
-                                    category: row.category,
-                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
-                                    content: NewsContentBlock.state2Output(NewsContentBlock.input2State(row.content)),
+                                    ...filteredData,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
+                                    content: NewsContentBlock.state2Output(NewsContentBlock.input2State(filteredData.content)),
                                 };
                             }}
                             onPaste={async ({ input }) => {
@@ -230,18 +212,16 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: NewsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: NewsGridToolbar,
+            }}
+        />
     );
 }

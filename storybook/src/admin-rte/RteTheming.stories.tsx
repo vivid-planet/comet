@@ -1,6 +1,5 @@
 import { makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import * as React from "react";
 
 const [useRteApi] = makeRteApi();
 

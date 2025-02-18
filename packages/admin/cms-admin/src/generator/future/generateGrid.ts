@@ -495,10 +495,24 @@ export function generateGrid(
         });
     }
 
+    if (config.selectionProps) {
+        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
+        props.push({
+            name: "selectionModel",
+            type: `DataGridProProps["selectionModel"]`,
+            optional: true,
+        });
+        props.push({
+            name: "onSelectionModelChange",
+            type: `DataGridProProps["onSelectionModelChange"]`,
+            optional: true,
+        });
+    }
+
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
-        config.initialSort || config.queryParamsPrefix
+        config.initialSort || config.queryParamsPrefix || config.initialFilter
             ? `{${
                   config.initialSort
                       ? ` initialSort: [${config.initialSort
@@ -508,12 +522,27 @@ export function generateGrid(
                             .join(",\n")} ], `
                       : ""
               }
+              ${
+                  config.initialFilter
+                      ? `initialFilter:{ ${
+                            config.initialFilter.linkOperator
+                                ? `linkOperator: GridLinkOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
+                                : ""
+                        }
+                      items: [${config.initialFilter.items
+                          .map((item) => {
+                              return `{columnField: "${item.columnField}", operatorValue: "${item.operatorValue}", value: "${item.value}" }`;
+                          })
+                          .join(",\n")} ],},`
+                      : ""
+              }
               ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
               }`
             : "";
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
+        Button,
         CrudContextMenu,
         CrudMoreActionsMenu,
         DataGridToolbar,
@@ -530,7 +559,7 @@ export function generateGrid(
         muiGridSortToGql,
         StackLink,
         ToolbarActions,
-        ToolbarFillSpace,
+        FillSpace,
         ToolbarItem,
         Tooltip,
         useBufferedRowCount,
@@ -540,8 +569,8 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -640,6 +669,8 @@ export function generateGrid(
                   instanceGqlType,
                   gqlType,
                   excelExport: config.excelExport,
+                  newEntryText: config.newEntryText,
+                  fragmentName,
               })
             : ""
     }
@@ -649,7 +680,13 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        config.selectionProps === "multiSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+            : config.selectionProps === "singleSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+            : ``
+    } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 

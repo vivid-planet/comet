@@ -1,12 +1,12 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    FillSpace,
     FinalForm,
     FinalFormSaveButton,
     Loading,
     MainContent,
     SelectField,
     Toolbar,
-    ToolbarFillSpace,
     ToolbarItem,
     useFormApiRef,
     useStackApi,
@@ -107,7 +107,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
                             </IconButton>
                         </ToolbarItem>
                         <PageName pageId={pageTreeNodeId} />
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarItem>
                             <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarItem>

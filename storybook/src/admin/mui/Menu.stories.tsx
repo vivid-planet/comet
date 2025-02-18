@@ -1,8 +1,8 @@
 import {
     AppHeader,
-    AppHeaderFillSpace,
     AppHeaderMenuButton,
     CometLogo,
+    FillSpace,
     MainContent,
     MasterLayout,
     Menu,
@@ -14,14 +14,13 @@ import {
 } from "@comet/admin";
 import { CometColor, Dashboard, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Typography } from "@mui/material";
-import * as React from "react";
 import { Route, Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const permanentMenuMinWidth = 1024;
 
-const AppMenu: React.FC = () => {
+const AppMenu = () => {
     const windowSize = useWindowSize();
 
     return (
@@ -55,11 +54,11 @@ const AppMenu: React.FC = () => {
     );
 };
 
-const Header: React.FC = () => (
+const Header = () => (
     <AppHeader>
         <AppHeaderMenuButton />
         <CometLogo />
-        <AppHeaderFillSpace />
+        <FillSpace />
     </AppHeader>
 );
 

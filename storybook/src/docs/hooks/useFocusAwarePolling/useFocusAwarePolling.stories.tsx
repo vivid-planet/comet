@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { useFocusAwarePolling } from "@comet/admin";
+import { Button, useFocusAwarePolling } from "@comet/admin";
 import { Pause, Play } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
-import * as React from "react";
+import { Typography } from "@mui/material";
+import { useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 
@@ -59,7 +59,7 @@ export const BasicExample = {
 
 export const WithSkipOption = {
     render: () => {
-        const [paused, setPaused] = React.useState(false);
+        const [paused, setPaused] = useState(false);
 
         const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
             gql`

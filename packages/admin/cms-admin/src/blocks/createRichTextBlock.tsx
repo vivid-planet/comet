@@ -96,6 +96,9 @@ export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState
 
 export const createRichTextBlock = (
     options: RichTextBlockFactoryOptions,
+    override?: (
+        block: BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>,
+    ) => BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput>,
 ): BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> => {
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
     const defaultRteOptions: IRteOptions = {
@@ -254,5 +257,10 @@ export const createRichTextBlock = (
             return content.hasText() ? [{ type: "text", content: content.getPlainText().slice(0, MAX_CHARS) }] : [];
         },
     };
+
+    if (override) {
+        return override(RichTextBlock);
+    }
+
     return RichTextBlock;
 };

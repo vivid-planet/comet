@@ -1,0 +1,912 @@
+---
+title: Factories
+---
+
+# Block factories
+
+COMET DXP offers factories for common block use cases.
+
+## BlocksBlock
+
+The BlocksBlock factory is used to create a block that consists of multiple child blocks.
+
+import BlocksBlock from "./images/blocks-block.png";
+
+<figure>
+
+<img src={BlocksBlock} width="500px" />
+
+<figcaption>A BlocksBlock that supports rich text, image, and link list child blocks</figcaption>
+</figure>
+
+### API
+
+Use the `createBlocksBlock` factory:
+
+```ts title="page-content.block.ts"
+import { createBlocksBlock } from "@comet/blocks-api";
+
+export const PageContentBlock = createBlocksBlock(
+    {
+        supportedBlocks: {
+            richText: RichTextBlock,
+            image: DamImageBlock,
+            linkList: LinkListBlock,
+        },
+    },
+    "PageContent",
+);
+```
+
+### Admin
+
+Use the `createBlocksBlock` factory:
+
+```tsx title="PageContentBlock.tsx"
+import { createBlocksBlock } from "@comet/blocks-admin";
+
+export const PageContentBlock = createBlocksBlock({
+    name: "PageContent",
+    supportedBlocks: {
+        richText: RichTextBlock,
+        image: DamImageBlock,
+        linkList: LinkListBlock,
+    },
+});
+```
+
+### Site
+
+Use the `BlocksBlock` component:
+
+```tsx title="PageContentBlock.tsx"
+import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { PageContentBlockData } from "@src/blocks.generated";
+
+const supportedBlocks: SupportedBlocks = {
+    richText: (props) => <RichTextBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} />,
+    linkList: (props) => <LinkListBlock data={props} />,
+};
+
+export function PageContentBlock({ data }: PropsWithData<PageContentBlockData>) {
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+}
+```
+
+## ColumnsBlock
+
+The ColumnsBlock factory is used to create a block that displays content in multiple columns.
+A ColumnsBlock may support different layouts for the same number of columns.
+For instance, two columns could be represented by three layouts: Same width, weighted left, weighted right.
+
+import ColumnsBlock from "./images/columns-block.png";
+
+<figure>
+
+<img src={ColumnsBlock} width="500px" />
+
+<figcaption>A ColumnsBlock that supports single-column and two columns layouts</figcaption>
+</figure>
+
+### API
+
+Use the `ColumnsBlockFactory`:
+
+```ts title="columns.block.ts"
+import { ColumnsBlockFactory, createBlocksBlock } from "@comet/blocks-api";
+
+const ColumnsContentBlock = createBlocksBlock(
+    {
+        supportedBlocks: {
+            space: SpaceBlock,
+            richText: RichTextBlock,
+            headline: HeadlineBlock,
+            image: DamImageBlock,
+        },
+    },
+    "ColumnsContent",
+);
+
+export const ColumnsBlock = ColumnsBlockFactory.create(
+    {
+        contentBlock: ColumnsContentBlock,
+        layouts: [{ name: "one-column" }, { name: "two-columns" }],
+    },
+    "Columns",
+);
+```
+
+### Admin
+
+Use the `createColumnsBlock` factory:
+
+```tsx title="ColumnsBlock.tsx"
+import {
+    ColumnsLayoutPreview,
+    ColumnsLayoutPreviewContent,
+    ColumnsLayoutPreviewSpacing,
+    createBlocksBlock,
+    createColumnsBlock,
+} from "@comet/blocks-admin";
+
+const ColumnsContentBlock = createBlocksBlock({
+    name: "ColumnsContent",
+    supportedBlocks: {
+        space: SpaceBlock,
+        richText: RichTextBlock,
+        headline: HeadlineBlock,
+        image: DamImageBlock,
+    },
+});
+
+export const ColumnsBlock = createColumnsBlock({
+    name: "Columns",
+    layouts: [
+        {
+            name: "one-column",
+            label: "One column",
+            columns: 1,
+            preview: (
+                <ColumnsLayoutPreview>
+                    <ColumnsLayoutPreviewSpacing width={2} />
+                    <ColumnsLayoutPreviewContent width={20} />
+                    <ColumnsLayoutPreviewSpacing width={2} />
+                </ColumnsLayoutPreview>
+            ),
+        },
+        {
+            name: "two-columns",
+            label: "Two columns",
+            columns: 2,
+            preview: (
+                <ColumnsLayoutPreview>
+                    <ColumnsLayoutPreviewContent width={10} />
+                    <ColumnsLayoutPreviewSpacing width={4} />
+                    <ColumnsLayoutPreviewContent width={10} />
+                </ColumnsLayoutPreview>
+            ),
+        },
+    ],
+    contentBlock: ColumnsContentBlock,
+});
+```
+
+### Site
+
+```tsx title="ColumnsBlock.tsx"
+import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
+
+const supportedBlocks: SupportedBlocks = {
+    space: (props) => <SpaceBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
+    headline: (props) => <HeadlineBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} />,
+};
+
+function ColumnsContentBlock({ data }: PropsWithData<ColumnsContentBlockData>) {
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+}
+
+export function ColumnsBlock({ data: { layout, columns } }: PropsWithData<ColumnsBlockData>) {
+    const Root = layout === "one-column" ? OneColumnRoot : TwoColumnRoot;
+    return (
+        <Root>
+            {columns.map((column) => (
+                <ColumnsContentBlock key={column.key} data={column.props} />
+            ))}
+        </Root>
+    );
+}
+```
+
+## CompositeBlock (Admin only)
+
+The `createCompositeBlock` factory composes several child blocks and fields into a block.
+For most of your blocks, you will use this factory to create the block in the admin.
+
+```tsx title="FullWidthImageBlock.tsx"
+import { createCompositeBlock } from "@comet/blocks-admin";
+
+export const FullWidthImageBlock = createCompositeBlock({
+    name: "FullWidthImage",
+    displayName: (
+        <FormattedMessage id="cometDemo.blocks.fullWidthImage" defaultMessage="Full Width Image" />
+    ),
+    category: BlockCategory.Media,
+    blocks: {
+        image: {
+            block: DamImageBlock,
+            title: <FormattedMessage id="cometDemo.generic.image" defaultMessage="Image" />,
+            paper: true,
+        },
+        content: {
+            block: FullWidthImageContentBlock,
+            title: <FormattedMessage id="cometDemo.generic.content" defaultMessage="Content" />,
+        },
+    },
+});
+```
+
+## FinalFormBlock (Admin only)
+
+The FinalFormBlock factory can be used to convert a block's `AdminComponent` API to the Final Form `Field` API.
+See [Using blocks in forms](blocks-in-forms/) for more details.
+
+## ImageLinkBlock
+
+The ImageLinkBlock factory can be used to combine an image and a link block.
+It requires a link block to be set.
+An image block can be set.
+If none is set, it will default to `PixelImageBlock`.
+
+import ImageLinkBlock from "./images/image-link-block.png";
+
+<figure>
+
+<img src={ImageLinkBlock} width="500px" />
+
+<figcaption>An ImageLinkBlock</figcaption>
+</figure>
+
+### API
+
+Use the `createImageLinkBlock` factory:
+
+```ts title="image-link.block.ts"
+import { createImageLinkBlock, DamImageBlock } from "@comet/cms-api";
+import { LinkBlock } from "@src/common/blocks/linkBlock/link.block";
+
+export const ImageLinkBlock = createImageLinkBlock({ link: LinkBlock, image: DamImageBlock });
+```
+
+### Admin
+
+Use the `createImageLinkBlock` factory:
+
+```tsx title="ImageLinkBlock.tsx"
+import { createImageLinkBlock, DamImageBlock } from "@comet/cms-admin";
+import { LinkBlock } from "@src/common/blocks/LinkBlock";
+
+export const ImageLinkBlock = createImageLinkBlock({ link: LinkBlock, image: DamImageBlock });
+```
+
+### Site
+
+```tsx title="ImageLinkBlock.tsx"
+import { PropsWithData } from "@comet/cms-site";
+import { ImageLinkBlockData } from "@src/blocks.generated";
+import { DamImageBlock } from "@src/blocks/DamImageBlock";
+import { LinkBlock } from "@src/blocks/LinkBlock";
+
+export function ImageLinkBlock({ data: { link, image } }: PropsWithData<ImageLinkBlockData>) {
+    return (
+        <LinkBlock data={link}>
+            <DamImageBlock data={image} aspectRatio="1x1" />
+        </LinkBlock>
+    );
+}
+```
+
+## LinkBlock
+
+The LinkBlock factory is a specialized OneOfBlock factory that supports setting a title.
+
+import LinkBlock from "./images/link-block.png";
+
+<figure>
+
+<img src={LinkBlock} width="500px" />
+
+<figcaption>A LinkBlock with a title field</figcaption>
+</figure>
+
+### API
+
+Use the `createLinkBlock` factory:
+
+```ts title="link.block.ts"
+import { createLinkBlock } from "@comet/cms-api";
+
+export const LinkBlock = createLinkBlock({
+    supportedBlocks: {
+        internal: InternalLinkBlock,
+        external: ExternalLinkBlock,
+        news: NewsLinkBlock,
+        damFileDownload: DamFileDownloadLinkBlock,
+        phone: PhoneLinkBlock,
+        email: EmailLinkBlock,
+    },
+});
+```
+
+### Admin
+
+Use the `createLinkBlock` factory:
+
+```tsx title="LinkBlock.tsx"
+import { createLinkBlock } from "@comet/cms-admin";
+
+export const LinkBlock = createLinkBlock({
+    supportedBlocks: {
+        internal: InternalLinkBlock,
+        external: ExternalLinkBlock,
+        news: NewsLinkBlock,
+        damFileDownload: DamFileDownloadLinkBlock,
+        email: EmailLinkBlock,
+        phone: PhoneLinkBlock,
+    },
+});
+```
+
+### Site
+
+```tsx title="LinkBlock.tsx"
+"use client";
+import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { LinkBlockData } from "@src/blocks.generated";
+
+const supportedBlocks: SupportedBlocks = {
+    internal: ({ children, title, className, ...props }) => (
+        <InternalLinkBlock data={props} title={title} className={className}>
+            {children}
+        </InternalLinkBlock>
+    ),
+    external: ({ children, title, className, ...props }) => (
+        <ExternalLinkBlock data={props} title={title} className={className}>
+            {children}
+        </ExternalLinkBlock>
+    ),
+    news: ({ children, title, className, ...props }) => (
+        <NewsLinkBlock data={props} title={title} className={className}>
+            {children}
+        </NewsLinkBlock>
+    ),
+    damFileDownload: ({ children, title, className, ...props }) => (
+        <DamFileDownloadLinkBlock data={props} title={title} className={className}>
+            {children}
+        </DamFileDownloadLinkBlock>
+    ),
+    email: ({ children, title, className, ...props }) => (
+        <EmailLinkBlock data={props} title={title} className={className}>
+            {children}
+        </EmailLinkBlock>
+    ),
+    phone: ({ children, title, className, ...props }) => (
+        <PhoneLinkBlock data={props} title={title} className={className}>
+            {children}
+        </PhoneLinkBlock>
+    ),
+};
+
+interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>> {
+    className?: string;
+}
+
+export function LinkBlock({ data, children, className }: LinkBlockProps) {
+    return (
+        <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
+            {children}
+        </OneOfBlock>
+    );
+}
+```
+
+## ListBlock
+
+Similar to the BlocksBlock factory, the ListBlock factory is used to create a block that consists of multiple child blocks.
+The main difference is that the ListBlock factory only supports a single child block type.
+
+import ListBlock from "./images/list-block.png";
+
+<figure>
+
+<img src={ListBlock} width="500px" />
+
+<figcaption>A ListBlock based on a link block</figcaption>
+</figure>
+
+### API
+
+Use the `createListBlock` factory:
+
+```ts title="link-list.block.ts"
+import { createListBlock } from "@comet/blocks-api";
+
+export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList");
+```
+
+### Admin
+
+Use the `createListBlock` factory:
+
+```tsx title="LinkListBlock.tsx"
+import { createListBlock } from "@comet/blocks-admin";
+
+export const LinkListBlock = createListBlock({
+    name: "LinkList",
+    block: TextLinkBlock,
+});
+```
+
+### Site
+
+Use the `ListBlock` component:
+
+```tsx title="LinkListBlock.tsx"
+import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { LinkListBlockData } from "@src/blocks.generated";
+
+export function LinkListBlock({ data }: PropsWithData<LinkListBlockData>) {
+    return <ListBlock data={data} block={(props) => <TextLinkBlock data={props} />} />;
+}
+```
+
+## OneOfBlock
+
+The OneOfBlock factory is used to create a block that can be one of several child blocks.
+Think of it as a switch or select.
+
+import OneOfBlock from "./images/one-of-block.png";
+
+<figure>
+
+<img src={OneOfBlock} width="500px" />
+
+<figcaption>A link block that is based on an OneOfBlock to support both internal and external links</figcaption>
+</figure>
+
+### API
+
+Use the `createOneOfBlock` factory:
+
+```ts title="link.block.ts"
+import { createOneOfBlock } from "@comet/blocks-api";
+
+export const LinkBlock = createOneOfBlock(
+    {
+        supportedBlocks: {
+            internal: InternalLinkBlock,
+            external: ExternalLinkBlock,
+            news: NewsLinkBlock,
+        },
+        allowEmpty: false,
+    },
+    "Link",
+);
+```
+
+### Admin
+
+Use the `createOneOfBlock` factory:
+
+```tsx title="LinkBlock.tsx"
+import { createOneOfBlock } from "@comet/blocks-admin";
+
+export const LinkBlock = createOneOfBlock({
+    supportedBlocks: {
+        internal: InternalLinkBlock,
+        external: ExternalLinkBlock,
+        news: NewsLinkBlock,
+    },
+});
+```
+
+### Site
+
+Use the `OneOfBlock` component:
+
+```tsx title="LinkBlock.tsx"
+import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { LinkBlockData } from "@src/blocks.generated";
+
+const supportedBlocks: SupportedBlocks = {
+    internal: ({ children, ...props }) => (
+        <InternalLinkBlock data={props}>{children}</InternalLinkBlock>
+    ),
+    external: ({ children, ...props }) => (
+        <ExternalLinkBlock data={props}>{children}</ExternalLinkBlock>
+    ),
+    news: ({ children, ...props }) => <NewsLinkBlock data={props}>{children}</NewsLinkBlock>,
+};
+
+interface LinkBlockProps extends PropsWithData<LinkBlockData> {
+    children: React.ReactElement;
+}
+
+export function LinkBlock({ data, children }: LinkBlockProps) {
+    return (
+        <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
+            {children}
+        </OneOfBlock>
+    );
+}
+```
+
+## OptionalBlock
+
+The OptionalBlock factory is used to make a block optional.
+Use it when some content is optional.
+
+:::note
+
+Prefer reacting to empty states (e.g., hiding a block when no image is selected) over using an OptionalBlock.
+Using an OptionalBlock adds additional complexity for users by requiring them to toggle the visibility.
+:::
+
+import OptionalBlock from "./images/optional-block.png";
+
+<figure>
+
+<img src={OptionalBlock} width="500px" />
+
+<figcaption>A full-width image block with optional content using an OptionalBlock</figcaption>
+</figure>
+
+### API
+
+Use the `createOptionalBlock` factory:
+
+```ts title="optional-image.block.ts"
+import { createOptionalBlock } from "@comet/blocks-api";
+
+export const OptionalImageBlock = createOptionalBlock(ImageBlock);
+```
+
+### Admin
+
+Use the `createOptionalBlock` factory:
+
+```tsx title="OptionalImageBlock.tsx"
+import { createOptionalBlock } from "@comet/blocks-admin";
+
+export const OptionalImageBlock = createOptionalBlock(ImageBlock);
+```
+
+### Site
+
+Use the `OptionalBlock` component:
+
+```tsx title="LinkBlock.tsx"
+import { OptionalBlock, PropsWithData } from "@comet/cms-site";
+import { OptionalImageBlockData } from "@src/blocks.generated";
+
+export function OptionalImageBlock({ data }: PropsWithData<OptionalImageBlockData>) {
+    return <OptionalBlock block={(props) => <ImageBlock data={props} />} data={data} />;
+}
+```
+
+## RichTextBlock
+
+The RichTextBlock factory can be used to create a block with a rich text.
+It requires a link block to be set.
+
+import RichTextBlock from "./images/rich-text-block.png";
+
+<figure>
+
+<img src={RichTextBlock} width="500px" />
+
+<figcaption>A RichTextBlock</figcaption>
+</figure>
+
+### API
+
+Use the `createRichTextBlock` factory:
+
+```ts title="rich-text.block.ts"
+import { createRichTextBlock } from "@comet/blocks-api";
+
+import { LinkBlock } from "./linkBlock/link.block";
+
+export const RichTextBlock = createRichTextBlock({ link: LinkBlock });
+```
+
+### Admin
+
+Use the `createRichTextBlock` factory:
+
+```tsx title="RichTextBlock.tsx"
+import { createRichTextBlock } from "@comet/cms-admin";
+
+import { LinkBlock } from "./LinkBlock";
+
+export const RichTextBlock = createRichTextBlock({ link: LinkBlock });
+```
+
+### Site
+
+```tsx title="RichTextBlock.tsx"
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData } from "@comet/cms-site";
+import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
+import redraft, { Renderers } from "redraft";
+
+import { LinkBlock } from "./LinkBlock";
+
+const defaultRenderers: Renderers = {
+    inline: {
+        BOLD: (children, { key }) => <strong key={key}>{children}</strong>,
+        ITALIC: (children, { key }) => <em key={key}>{children}</em>,
+    },
+    blocks: {
+        unstyled: (children, { keys }) =>
+            children.map((child, idx) => <p key={keys[idx]}>{child}</p>),
+        "header-one": (children, { keys }) =>
+            children.map((child, idx) => <h1 key={keys[idx]}>{child}</h1>),
+        "header-two": (children, { keys }) =>
+            children.map((child, idx) => <h2 key={keys[idx]}>{child}</h2>),
+        "header-three": (children, { keys }) =>
+            children.map((child, idx) => <h3 key={keys[idx]}>{child}</h3>),
+        "header-four": (children, { keys }) =>
+            children.map((child, idx) => <h4 key={keys[idx]}>{child}</h4>),
+        "header-five": (children, { keys }) =>
+            children.map((child, idx) => <h5 key={keys[idx]}>{child}</h5>),
+        "header-six": (children, { keys }) =>
+            children.map((child, idx) => <h6 key={keys[idx]}>{child}</h6>),
+    },
+    entities: {
+        LINK: (children, data, { key }) => {
+            return (
+                <LinkBlock key={key} data={data as LinkBlockData}>
+                    {children}
+                </LinkBlock>
+            );
+        },
+    },
+};
+
+interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
+    renderers?: Renderers;
+}
+
+export function RichTextBlock({ data, renderers = defaultRenderers }: RichTextBlockProps) {
+    const rendered = redraft(data.draftContent, renderers);
+
+    return (
+        <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
+            {rendered}
+        </PreviewSkeleton>
+    );
+}
+```
+
+## SeoBlock
+
+The SeoBlock factory can be used to create a block for common SEO options, e.g. HTML title or meta description.
+An image block can be set for the Open Graph image.
+If none is set, it will default to `PixelImageBlock`.
+
+import SeoBlock from "./images/seo-block.png";
+
+<figure>
+
+<img src={SeoBlock} width="500px" />
+
+<figcaption>A SeoBlock</figcaption>
+</figure>
+
+### API
+
+Use the `createSeoBlock` factory:
+
+```ts title="seo.block.ts"
+import { createSeoBlock } from "@comet/cms-api";
+
+export const SeoBlock = createSeoBlock();
+```
+
+### Admin
+
+Use the `createSeoBlock` factory:
+
+```ts title="SeoBlock.tsx"
+import { createSeoBlock } from "@comet/cms-admin";
+
+export const SeoBlock = createSeoBlock();
+```
+
+### Site (Pages Router only)
+
+Use the `SeoBlock` component:
+
+```tsx title="Page.tsx"
+import { SeoBlock } from "@comet/cms-site";
+
+<SeoBlock data={document.seo} title="Custom title" />;
+```
+
+## SpaceBlock
+
+The SpaceBlock factory can be used to create a block where a spacing can be selected from a list of available options.
+
+import SpaceBlock from "./images/space-block.png";
+
+<figure>
+
+<img src={SpaceBlock} width="500px" />
+
+<figcaption>A SpaceBlock with a list of spacings</figcaption>
+</figure>
+
+### API
+
+Use the `createSpaceBlock` factory:
+
+```ts title="space.block.ts"
+import { createSpaceBlock } from "@comet/blocks-api";
+
+export enum Spacing {
+    d150 = "d150",
+    d200 = "d200",
+    d250 = "d250",
+    d300 = "d300",
+    d350 = "d350",
+    d400 = "d400",
+    d450 = "d450",
+    d500 = "d500",
+    d550 = "d550",
+    d600 = "d600",
+}
+
+export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+```
+
+### Admin
+
+Use the `createSpaceBlock` factory:
+
+```tsx title="SpaceBlock.tsx"
+import { createSpaceBlock } from "@comet/blocks-admin";
+
+const options: { value: string; label: string }[] = [
+    { value: "d150", label: "Dynamic 150" },
+    { value: "d200", label: "Dynamic 200" },
+    { value: "d250", label: "Dynamic 250" },
+    { value: "d300", label: "Dynamic 300" },
+    { value: "d350", label: "Dynamic 350" },
+    { value: "d400", label: "Dynamic 400" },
+    { value: "d450", label: "Dynamic 450" },
+    { value: "d500", label: "Dynamic 500" },
+    { value: "d550", label: "Dynamic 550" },
+    { value: "d600", label: "Dynamic 600" },
+];
+
+export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
+```
+
+### Site
+
+```tsx title="SpaceBlock.tsx"
+import { PropsWithData } from "@comet/cms-site";
+import { SpaceBlockData } from "@src/blocks.generated";
+
+const spaceMapping: Record<string, number> = {
+    d150: 10,
+    d200: 20,
+    d250: 40,
+    d300: 60,
+    d350: 80,
+    d400: 100,
+    d450: 150,
+    d500: 200,
+    d550: 250,
+    d600: 300,
+};
+
+export function SpaceBlock({ data: { spacing } }: PropsWithData<SpaceBlockData>) {
+    return <div style={{ height: `${spaceMapping[spacing]}px` }} />;
+}
+```
+
+## TextImageBlock
+
+The TextImageBlock factory can be used to combine a text and an image block.
+It supports setting the image position and aspect ratio.
+
+import TextImageBlock from "./images/text-image-block.png";
+
+<figure>
+
+<img src={TextImageBlock} width="500px" />
+
+<figcaption>A TextImageBlock</figcaption>
+</figure>
+
+### API
+
+Use the `createTextImageBlock` factory:
+
+```ts title="text-image.block.ts"
+import { createTextImageBlock, DamImageBlock } from "@comet/cms-api";
+import { RichTextBlock } from "@src/common/blocks/rich-text.block";
+
+export const TextImageBlock = createTextImageBlock({ text: RichTextBlock, image: DamImageBlock });
+```
+
+### Admin
+
+Use the `createTextImageBlock` factory:
+
+```tsx title="TextImageBlock.tsx"
+import { createTextImageBlock, DamImageBlock } from "@comet/cms-admin";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+
+export const TextImageBlock = createTextImageBlock({ text: RichTextBlock, image: DamImageBlock });
+```
+
+### Site
+
+```tsx title="TextImageBlock.tsx"
+import { PropsWithData } from "@comet/cms-site";
+import { TextImageBlockData } from "@src/blocks.generated";
+
+import { DamImageBlock } from "./DamImageBlock";
+import { RichTextBlock } from "./RichTextBlock";
+
+export function TextImageBlock({
+    data: { text, image, imageAspectRatio, imagePosition },
+}: PropsWithData<TextImageBlockData>) {
+    return (
+        <>
+            {imagePosition === "left" && (
+                <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
+            )}
+            <RichTextBlock data={text} />
+            {imagePosition === "right" && (
+                <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
+            )}
+        </>
+    );
+}
+```
+
+## TextLinkBlock
+
+The TextLinkBlock factory can be used to combine a text field and a link block.
+
+import TextLinkBlock from "./images/text-link-block.png";
+
+<figure>
+
+<img src={TextLinkBlock} width="500px" />
+
+<figcaption>A TextLinkBlock</figcaption>
+</figure>
+
+### API
+
+Use the `createTextLinkBlock` factory:
+
+```ts title="text-link.block.ts"
+import { createTextLinkBlock } from "@comet/blocks-api";
+
+import { LinkBlock } from "./linkBlock/link.block";
+
+export const TextLinkBlock = createTextLinkBlock({ link: LinkBlock });
+```
+
+### Admin
+
+Use the `createTextLinkBlock` factory:
+
+```tsx title="TextLinkBlock.tsx"
+import { createTextLinkBlock } from "@comet/cms-admin";
+
+import { LinkBlock } from "./LinkBlock";
+
+export const TextLinkBlock = createTextLinkBlock({ link: LinkBlock });
+```
+
+### Site
+
+```tsx title="TextLinkBlock.tsx"
+import { PropsWithData } from "@comet/cms-site";
+import { DemoTextLinkBlockData } from "@src/blocks.generated";
+
+import { LinkBlock } from "./LinkBlock";
+
+export function TextLinkBlock({ data: { link, text } }: PropsWithData<DemoTextLinkBlockData>) {
+    return <LinkBlock data={link}>{text}</LinkBlock>;
+}
+```

@@ -1,6 +1,5 @@
 import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "@comet/admin-icons",

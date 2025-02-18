@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FinalFormRadio, SelectField } from "@comet/admin";
-import { Box, Divider, FormControlLabel, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
+import { Field, RadioGroupField, SelectField } from "@comet/admin";
+import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import { ReactNode, useCallback } from "react";
@@ -67,14 +67,19 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     allowEmpty?: T;
 }
 
-export const createOneOfBlock = <T extends boolean = boolean>({
-    supportedBlocks,
-    name,
-    displayName = "Switch",
-    category = BlockCategory.Other,
-    variant = "select",
-    allowEmpty: passedAllowEmpty,
-}: CreateOneOfBlockOptions<T>): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
+export const createOneOfBlock = <T extends boolean = boolean>(
+    {
+        supportedBlocks,
+        name,
+        displayName = "Switch",
+        category = BlockCategory.Other,
+        variant = "select",
+        allowEmpty: passedAllowEmpty,
+    }: CreateOneOfBlockOptions<T>,
+    override?: (
+        block: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
+    ) => BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
+): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
     // allowEmpty can't have a default type because it's typed by a generic
     const allowEmpty = (passedAllowEmpty ?? true) satisfies boolean;
 
@@ -374,13 +379,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <FieldContainer>
-                                                {options.map((option) => (
-                                                    <Field key={option.value} name="blockType" type="radio" value={option.value} fullWidth>
-                                                        {(props) => <FormControlLabel label={option.label} control={<FinalFormRadio {...props} />} />}
-                                                    </Field>
-                                                ))}
-                                            </FieldContainer>
+                                            <RadioGroupField name="blockType" fullWidth options={options} />
                                         </Box>
                                         {activeBlock.block && <Divider />}
                                     </>
@@ -447,6 +446,9 @@ export const createOneOfBlock = <T extends boolean = boolean>({
             }
         },
     };
+    if (override) {
+        return override(OneOfBlock);
+    }
     return OneOfBlock;
 };
 

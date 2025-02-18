@@ -17,3 +17,5 @@ rgba
 subcomponent
 subpage
 typesafe
+exif
+brevo

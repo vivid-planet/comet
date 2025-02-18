@@ -137,7 +137,7 @@ export default class CacheHandler {
             const responseBody = parseBodyForGqlError(value.data.body);
             if (responseBody?.errors) {
                 // Must not cache GraphQL errors
-                console.error("CacheHandler.set GraphQL Error: ", responseBody.error);
+                console.error("CacheHandler.set GraphQL Error: ", responseBody.errors);
                 return;
             }
         }
@@ -157,10 +157,16 @@ export default class CacheHandler {
             } catch (e) {
                 console.error("CacheHandler.set error", e);
             }
+            return;
         }
         if (CACHE_HANDLER_DEBUG) {
             console.log("CacheHandler.set fallbackCache", key);
         }
         fallbackCache.set(key, value, { size: stringData.length });
+    }
+
+    async revalidateTag(tags: string | string[]): Promise<void> {
+        if (tags.length === 0) return;
+        console.warn("CacheHandler.revalidateTag", tags);
     }
 }

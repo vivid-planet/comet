@@ -15,7 +15,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { DateField } from "@comet/admin-date-time";
+import { DateField, DateTimeField } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -39,6 +39,7 @@ import { useMemo } from "react";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "./helpers/FutureProductNotice";
 import {
     GQLProductCategoriesSelectQuery,
     GQLProductCategoriesSelectQueryVariables,
@@ -111,6 +112,7 @@ export function ProductForm({ id, width }: FormProps) {
                       id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
                   }
                 : undefined,
+            lastCheckedAt: filteredData.lastCheckedAt ? new Date(filteredData.lastCheckedAt) : null,
         };
     }, [data, width]);
 
@@ -140,6 +142,7 @@ export function ProductForm({ id, width }: FormProps) {
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
             manufacturer: formValues.manufacturer?.id,
+            lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
         };
 
         if (mode === "edit") {
@@ -207,6 +210,7 @@ export function ProductForm({ id, width }: FormProps) {
                         name="availableSince"
                         label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                     />
+                    <FutureProductNotice />
                     <AsyncSelectField
                         name="manufacturerCountry"
                         loadOptions={async () => {
@@ -356,6 +360,11 @@ export function ProductForm({ id, width }: FormProps) {
                         maxFileSize={1024 * 1024 * 4} // 4 MB
                         fullWidth
                         layout="grid"
+                    />
+                    <DateTimeField
+                        label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
+                        name="lastCheckedAt"
+                        fullWidth
                     />
                 </>
             )}

@@ -1,7 +1,6 @@
 import { Selection, SelectionRoute, useSelection, useSelectionRoute } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { List, ListItem, ListItemIcon, ListItemText, Paper } from "@mui/material";
-import * as React from "react";
 import { Redirect, Route, useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../story-router.decorator";
