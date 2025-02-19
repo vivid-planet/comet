@@ -2,11 +2,16 @@ import { LinkExternal } from "@comet/admin-icons";
 import { type ListItemButtonProps } from "@mui/material";
 import { type HTMLProps } from "react";
 
-import { MenuItem, type MenuItemProps } from "./Item";
+import { MainNavigationItem, type MainNavigationItemProps } from "./Item";
 
-export type MenuItemAnchorLinkProps = MenuItemProps & ListItemButtonProps & HTMLProps<HTMLAnchorElement>;
+export type MainNavigationItemAnchorLinkProps = MainNavigationItemProps & ListItemButtonProps & HTMLProps<HTMLAnchorElement>;
 
-export const MenuItemAnchorLink = ({ secondaryAction: passedSecondaryAction, isMenuOpen, slotProps, ...props }: MenuItemAnchorLinkProps) => {
+export const MainNavigationItemAnchorLink = ({
+    secondaryAction: passedSecondaryAction,
+    isMenuOpen,
+    slotProps,
+    ...props
+}: MainNavigationItemAnchorLinkProps) => {
     const secondaryAction =
         passedSecondaryAction !== undefined ? ( // don't use ?? to allow null as value and with that an empty secondaryAction
             passedSecondaryAction
@@ -15,7 +20,7 @@ export const MenuItemAnchorLink = ({ secondaryAction: passedSecondaryAction, isM
         );
 
     return (
-        <MenuItem
+        <MainNavigationItem
             selected={false}
             component="a"
             secondaryAction={secondaryAction}
