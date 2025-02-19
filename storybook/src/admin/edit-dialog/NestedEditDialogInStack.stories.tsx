@@ -1,6 +1,6 @@
 import { FinalForm, MainContent, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, TextField, useEditDialog } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -45,20 +45,22 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
                 />
             </MainContent>
             <EditDialog>
-                <Typography variant="h6" py={2}>
-                    EditDialog selection ID: {editDialogSelectionId}
-                </Typography>
-                <FinalForm
-                    mode="edit"
-                    onSubmit={() => {
-                        console.log("Submitted!");
-                    }}
-                    onAfterSubmit={() => {
-                        editDialogApi.closeDialog();
-                    }}
-                >
-                    <TextField name="name" label="Name" fullWidth />
-                </FinalForm>
+                <DialogContent>
+                    <Typography variant="h6" py={2}>
+                        EditDialog selection ID: {editDialogSelectionId}
+                    </Typography>
+                    <FinalForm
+                        mode="edit"
+                        onSubmit={() => {
+                            console.log("Submitted!");
+                        }}
+                        onAfterSubmit={() => {
+                            editDialogApi.closeDialog();
+                        }}
+                    >
+                        <TextField name="name" label="Name" fullWidth />
+                    </FinalForm>
+                </DialogContent>
             </EditDialog>
         </>
     );
