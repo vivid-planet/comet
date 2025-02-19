@@ -9,7 +9,7 @@ Contrary to the API Generator, the Admin Generator does not use Decorators to de
 The configuration is done in its own config file.
 
 :::info
-Many file examples can be found in the [Comet Demo](https://github.com/vivid-planet/comet/tree/main/demo/admin/src) project.
+Many example configs can be found in the [Comet Demo](https://github.com/vivid-planet/comet/tree/main/demo/admin/src) project.
 :::
 
 ## The Generation File
