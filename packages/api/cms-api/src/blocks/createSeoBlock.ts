@@ -17,6 +17,7 @@ import {
     OptionalBlockInputInterface,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
+    WarningSeverity,
 } from "@comet/blocks-api";
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
@@ -136,6 +137,14 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
 
                 alternativeLinks: this.alternativeLinks,
             };
+        }
+
+        warnings() {
+            if (!this.htmlTitle) {
+                const severity: WarningSeverity = "low";
+                return [{ severity, message: "Missing HTML title" }];
+            }
+            return [];
         }
     }
 

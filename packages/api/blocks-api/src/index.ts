@@ -31,6 +31,7 @@ export {
     TraversableTransformResponse,
     TraversableTransformResponseArray,
 } from "./blocks/block";
+export { WarningSeverity } from "./blocks/block";
 export { createRichTextBlock } from "./blocks/createRichTextBlock";
 export { createSpaceBlock } from "./blocks/createSpaceBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
