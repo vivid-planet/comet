@@ -30,7 +30,7 @@ type RootProps = {
 
 const Root = styled("div")<RootProps>`
     position: relative;
-    height: 300px;
+    height: 230px;
     color: ${({ textColor }) => (textColor === "light" ? "white" : textColor === "dark" ? "black" : "inherit")};
     background-color: ${({ theme }) => theme.palette.grey[700]};
 
@@ -46,8 +46,8 @@ const Root = styled("div")<RootProps>`
             }
         `}
 
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-        height: 230px;
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        height: 300px;
     }
 `;
 
