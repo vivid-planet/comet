@@ -42,7 +42,7 @@ const IconWrapper = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0 0 0 50%);
+    background-color: rgba(0, 0, 0, 0.5);
     appearance: none;
     border: none;
     padding: 0;
