@@ -631,6 +631,7 @@ type Warning {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  message: String!
   type: String!
   severity: WarningSeverity!
   status: WarningStatus!
@@ -1211,6 +1212,7 @@ input ManufacturerCountryFilter {
 input WarningFilter {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
+  message: StringFilter
   type: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
@@ -1238,6 +1240,7 @@ input WarningSort {
 enum WarningSortField {
   createdAt
   updatedAt
+  message
   type
   severity
   status
@@ -1610,12 +1613,14 @@ input ManufacturerUpdateInput {
 }
 
 input WarningInput {
+  message: String!
   type: String!
   severity: WarningSeverity!
   status: WarningStatus! = open
 }
 
 input WarningUpdateInput {
+  message: String
   type: String
   severity: WarningSeverity
   status: WarningStatus

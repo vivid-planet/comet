@@ -1,3 +1,4 @@
+
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
@@ -15,6 +16,7 @@ import {
     ExtractBlockInput,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
+    WarningSeverity,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
@@ -134,6 +136,14 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
 
                 alternativeLinks: this.alternativeLinks,
             };
+        }
+
+        warnings() {
+            if (!this.htmlTitle) {
+                const severity: WarningSeverity = "low";
+                return [{ severity, message: "Missing HTML title" }];
+            }
+            return [];
         }
     }
 
