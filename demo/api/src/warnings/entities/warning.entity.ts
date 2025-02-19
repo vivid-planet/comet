@@ -4,6 +4,7 @@ import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
+import { WarningBlockInfo } from "../dto/warning-block-info";
 import { WarningSeverity } from "./warning-severity.enum";
 import { WarningStatus } from "./warning-status.enum";
 
@@ -26,6 +27,11 @@ export class Warning extends BaseEntity<Warning, "id"> {
     @Field()
     updatedAt: Date = new Date();
 
+    @Property({ columnType: "text" })
+    @Field()
+    @CrudField()
+    message: string;
+
     @Property()
     @Field()
     @CrudField()
@@ -35,7 +41,9 @@ export class Warning extends BaseEntity<Warning, "id"> {
     @Field(() => WarningSeverity)
     severity: WarningSeverity;
 
-    // TODO: add blockInfos with COM-958
+    @Property({ columnType: "jsonb" })
+    @CrudField()
+    blockInfo: WarningBlockInfo;
 
     @Enum({ items: () => WarningStatus })
     @Field(() => WarningStatus)

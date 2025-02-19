@@ -3,6 +3,7 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    BlockWarning,
     ChildBlock,
     ChildBlockInput,
     createBlock,
@@ -30,6 +31,14 @@ class HeadlineBlockData extends BlockData {
 
     @BlockField({ type: "enum", enum: HeadlineLevel })
     level: HeadlineLevel;
+
+    // This is only for testing --> Remove for PR
+    warnings(): BlockWarning[] {
+        if (this.eyebrow && this.eyebrow?.length < 5) {
+            return [{ message: "Eyebrow is too short", severity: "critical" }];
+        }
+        return [];
+    }
 }
 
 class HeadlineBlockInput extends BlockInput {
