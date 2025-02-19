@@ -11,11 +11,12 @@ export interface VideoPreviewImageProps {
     sizes?: string;
     fill?: boolean;
     icon?: ReactNode;
+    className?: string;
 }
 
-export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon /> }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon />, className }: VideoPreviewImageProps) => {
     return (
-        <Root $fill={fill}>
+        <Root $fill={fill} className={className}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
             <IconWrapper onClick={onPlay}>{icon}</IconWrapper>
         </Root>
@@ -42,8 +43,7 @@ const IconWrapper = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
-    opacity: 0.5;
+    background-color: rgba(0 0 0 50%);
     appearance: none;
     border: none;
     padding: 0;
