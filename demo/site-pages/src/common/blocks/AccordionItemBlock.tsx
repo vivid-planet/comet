@@ -84,6 +84,7 @@ const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
 `;
 
 const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
+    position: relative;
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.5s ease-out;
