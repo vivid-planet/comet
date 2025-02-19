@@ -8,7 +8,7 @@ import { groupObjectsIntoArrays } from "./groupObjectsIntoArrays";
  * @param values - The content scope values used to generate the paths.
  * @returns An array of generated paths.
  */
-export function defaultCreatePaths(values: ContentScopeValues) {
+export function defaultCreatePath(values: ContentScopeValues) {
     const paths: string[] = [];
 
     groupObjectsIntoArrays(values).forEach((value) => {

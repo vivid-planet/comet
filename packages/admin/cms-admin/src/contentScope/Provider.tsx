@@ -1,7 +1,7 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
-import { defaultCreatePaths } from "./utils/defaultCreatePaths";
+import { defaultCreatePath } from "./utils/defaultCreatePath";
 
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,11 +9,11 @@ export interface ContentScopeInterface {
 }
 
 type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
-    createPaths: (scope: ContentScopeValues<S>) => string | string[];
+    createPath: (scope: ContentScopeValues<S>) => string | string[];
     createUrl: (scope: S) => string;
 };
 
-const defaultContentScopeLocation = { createPaths: defaultCreatePaths, createUrl: defaultCreateUrl };
+const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
 
 interface ContentScopeContext {
     path: string | string[];
@@ -128,7 +128,7 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     values,
     location = defaultContentScopeLocation,
 }: ContentScopeProviderProps<S>) {
-    const paths = location.createPaths(values);
+    const paths = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<S>>(paths);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");

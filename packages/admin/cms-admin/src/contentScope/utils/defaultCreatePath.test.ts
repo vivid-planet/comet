@@ -1,7 +1,7 @@
 import { ContentScopeValues } from "../Provider";
-import { defaultCreatePaths } from "./defaultCreatePaths";
+import { defaultCreatePath } from "./defaultCreatePath";
 
-describe("defaultCreatePaths", () => {
+describe("defaultCreatePath", () => {
     it("should create paths from content scope values", () => {
         const values: ContentScopeValues = [
             { domain: { value: "main" }, language: { label: "DE", value: "de" } },
@@ -10,7 +10,7 @@ describe("defaultCreatePaths", () => {
             { domain: { value: "secondary" }, language: { label: "DE", value: "de" } },
             { country: { value: "secondary" } },
         ];
-        const result = defaultCreatePaths(values);
+        const result = defaultCreatePath(values);
 
         expect(result).toEqual(["/:domain(main|secondary)/:language(de|en)", "/:country(secondary)"]);
     });
@@ -18,7 +18,7 @@ describe("defaultCreatePaths", () => {
     it("should handle empty values", () => {
         const values: ContentScopeValues = [];
 
-        const result = defaultCreatePaths(values);
+        const result = defaultCreatePath(values);
 
         expect(result).toEqual([]);
     });
@@ -26,7 +26,7 @@ describe("defaultCreatePaths", () => {
     it("should handle single value", () => {
         const values: ContentScopeValues = [{ domain: { value: "main" } }];
 
-        const result = defaultCreatePaths(values);
+        const result = defaultCreatePath(values);
 
         expect(result).toEqual(["/:domain(main)"]);
     });
@@ -34,7 +34,7 @@ describe("defaultCreatePaths", () => {
     it("should handle multiple dimensions", () => {
         const values: ContentScopeValues = [{ domain: { value: "main" }, language: { value: "de" }, country: { value: "DE" } }];
 
-        const result = defaultCreatePaths(values);
+        const result = defaultCreatePath(values);
 
         expect(result).toEqual(["/:domain(main)/:language(de)/:country(DE)"]);
     });
