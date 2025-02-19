@@ -16,6 +16,7 @@ import { DocumentInterface, DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
 import { GQLSlugAvailability } from "../graphql.generated";
 import { useLocale } from "../locale/useLocale";
+import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "../redirects/RedirectForm.generated";
 import {
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
@@ -40,6 +41,7 @@ interface CreateEditPageNodeProps {
     nodeFragment?: { name: string; fragment: DocumentNode };
     valuesToInput?: (values: EditPageNodeFinalFormValues) => EditPageNodeFinalFormValues;
     disableHideInMenu?: boolean;
+    scopeParts?: string[];
 }
 
 export interface EditPageNodeProps {
@@ -54,6 +56,7 @@ export function createEditPageNode({
     nodeFragment,
     valuesToInput,
     disableHideInMenu = false,
+    scopeParts = ["domain"],
 }: CreateEditPageNodeProps): (props: EditPageNodeProps) => JSX.Element {
     const editPageNodeQuery = gql`
         query EditPageNode($id: ID!) {
@@ -103,6 +106,13 @@ export function createEditPageNode({
         const intl = useIntl();
         const apollo = useApolloClient();
         const { scope } = useContentScope();
+
+        const { scope: completeScope } = useContentScope();
+        const redirectScope = scopeParts.reduce((acc, scopePart) => {
+            acc[scopePart] = completeScope[scopePart];
+            return acc;
+        }, {} as { [key: string]: unknown });
+
         const locale = useLocale({ scope });
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
@@ -167,6 +177,22 @@ export function createEditPageNode({
             [apollo, scope, parentId, slug],
         );
 
+        const isRedirectSourceAvailable = useCallback(
+            async (value: string): Promise<boolean> => {
+                const redirectSource = `/${value}`;
+
+                const { data: redirectData } = await apollo.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
+                    query: redirectSourceAvailableForPageEdit,
+                    variables: {
+                        scope: redirectScope,
+                        source: redirectSource,
+                    },
+                });
+                return redirectData.redirectSourceAvailable;
+            },
+            [apollo, redirectScope],
+        );
+
         const validateSlug = async (value: string) => {
             if (!isValidSlug(value)) {
                 return intl.formatMessage({
@@ -189,6 +215,16 @@ export function createEditPageNode({
                         id: "comet.pages.pages.page.validate.path.block",
                         defaultMessage: "Slug leads to reserved path",
                     });
+                }
+
+                if (!(await isRedirectSourceAvailable(value))) {
+                    return (
+                        <FormattedMessage
+                            id="comet.pages.pages.page.validate.path.sourceTaken"
+                            defaultMessage="Source {source} is not available as there is a redirect for this source"
+                            values={{ source: value }}
+                        />
+                    );
                 }
             }
         };
@@ -498,6 +534,12 @@ const createPageNodeMutation = gql`
         createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
             id
         }
+    }
+`;
+
+const redirectSourceAvailableForPageEdit = gql`
+    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+        redirectSourceAvailable(scope: $scope, source: $source)
     }
 `;
 
