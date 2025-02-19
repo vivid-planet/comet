@@ -51,7 +51,6 @@ export class WarningCheckerConsole {
                 const queryBuilder = baseQueryBuilder.clone();
                 queryBuilder.offset(offset);
                 rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockData }>;
-
                 for (const { column, block } of rootBlockData) {
                     for (const rootBlock of rootBlocks) {
                         const blockData = rootBlock[column];
@@ -69,7 +68,6 @@ export class WarningCheckerConsole {
                                     const type = "Block";
                                     const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
                                     const id = v5(`${tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
-                                    // TODO: (in the next PRs) add blockInfos/metadata
 
                                     await this.entityManager.upsert(
                                         Warning,
@@ -80,6 +78,12 @@ export class WarningCheckerConsole {
                                             type,
                                             message: warning.message,
                                             severity: WarningSeverity[warning.severity],
+                                            blockInfo: {
+                                                rootEntityName: tableName,
+                                                rootColumnName: column,
+                                                rootPrimaryKey: "id", // TODO: Make this dynamic
+                                                targetId: rootBlock["id"] as unknown as string, // TODO: avoid this cast
+                                            },
                                         },
                                         { onConflictExcludeFields: ["createdAt"] },
                                     );

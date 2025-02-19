@@ -61,7 +61,7 @@ enum WarningEntityWarningSeverity {
 }
 export type WarningSeverity = `${WarningEntityWarningSeverity}`;
 
-interface BlockWarning {
+export interface BlockWarning {
     message: string;
     severity: WarningSeverity;
 }

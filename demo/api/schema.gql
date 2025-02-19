@@ -1572,12 +1572,21 @@ input WarningInput {
   message: String!
   type: String!
   severity: WarningSeverity!
+  blockInfo: WarningBlockInfoInput!
   status: WarningStatus! = open
+}
+
+input WarningBlockInfoInput {
+  rootEntityName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
+  targetId: String!
 }
 
 input WarningUpdateInput {
   message: String
   type: String
   severity: WarningSeverity
+  blockInfo: WarningBlockInfoInput
   status: WarningStatus
 }
