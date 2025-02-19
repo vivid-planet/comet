@@ -4,6 +4,7 @@ import "@src/polyfills";
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
+    BlocksConfigProvider,
     BuildInformationProvider,
     CmsBlockContextProvider,
     createDamFileDependency,
@@ -100,58 +101,68 @@ export function App() {
                             >
                                 <IntlProvider locale="en" messages={getMessages()}>
                                     <LocaleProvider resolveLocaleForScope={(scope) => scope.domain}>
-                                        <MuiThemeProvider theme={theme}>
-                                            <DndProvider options={HTML5toTouch}>
-                                                <SnackbarProvider>
-                                                    <CmsBlockContextProvider
-                                                        damConfig={{
-                                                            apiUrl: config.apiUrl,
-                                                            apiClient,
-                                                            maxFileSize: config.dam.uploadsMaxFileSize,
-                                                            maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                            allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
-                                                        }}
-                                                        pageTreeCategories={pageTreeCategories}
-                                                        pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                    >
-                                                        <ErrorDialogHandler />
-                                                        <CurrentUserProvider>
-                                                            <RouterBrowserRouter>
-                                                                <GlobalStyle />
-                                                                <ContentScopeProvider>
-                                                                    {({ match }) => (
-                                                                        <Switch>
-                                                                            <Route
-                                                                                path={`${match.path}/preview`}
-                                                                                render={(props) => (
-                                                                                    <SitePreview
-                                                                                        resolvePath={(path: string, scope) => {
-                                                                                            return `/${scope.language}${path}`;
-                                                                                        }}
-                                                                                        {...props}
-                                                                                    />
-                                                                                )}
-                                                                            />
-                                                                            <Route
-                                                                                render={() => (
-                                                                                    <MasterLayout
-                                                                                        headerComponent={MasterHeader}
-                                                                                        menuComponent={AppMasterMenu}
-                                                                                    >
-                                                                                        <MasterMenuRoutes menu={masterMenuData} />
-                                                                                    </MasterLayout>
-                                                                                )}
-                                                                            />
-                                                                        </Switch>
-                                                                    )}
-                                                                </ContentScopeProvider>
-                                                            </RouterBrowserRouter>
-                                                        </CurrentUserProvider>
-                                                    </CmsBlockContextProvider>
-                                                </SnackbarProvider>
-                                            </DndProvider>
-                                        </MuiThemeProvider>
+                                        <BlocksConfigProvider
+                                            supportsBlock={(name, scope) => {
+                                                if (scope.domain === "main") {
+                                                    return true;
+                                                } else {
+                                                    return name !== "NewsDetail" && name !== "NewsList";
+                                                }
+                                            }}
+                                        >
+                                            <MuiThemeProvider theme={theme}>
+                                                <DndProvider options={HTML5toTouch}>
+                                                    <SnackbarProvider>
+                                                        <CmsBlockContextProvider
+                                                            damConfig={{
+                                                                apiUrl: config.apiUrl,
+                                                                apiClient,
+                                                                maxFileSize: config.dam.uploadsMaxFileSize,
+                                                                maxSrcResolution: config.imgproxy.maxSrcResolution,
+                                                                allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
+                                                            }}
+                                                            pageTreeCategories={pageTreeCategories}
+                                                            pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                            additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
+                                                        >
+                                                            <ErrorDialogHandler />
+                                                            <CurrentUserProvider>
+                                                                <RouterBrowserRouter>
+                                                                    <GlobalStyle />
+                                                                    <ContentScopeProvider>
+                                                                        {({ match }) => (
+                                                                            <Switch>
+                                                                                <Route
+                                                                                    path={`${match.path}/preview`}
+                                                                                    render={(props) => (
+                                                                                        <SitePreview
+                                                                                            resolvePath={(path: string, scope) => {
+                                                                                                return `/${scope.language}${path}`;
+                                                                                            }}
+                                                                                            {...props}
+                                                                                        />
+                                                                                    )}
+                                                                                />
+                                                                                <Route
+                                                                                    render={() => (
+                                                                                        <MasterLayout
+                                                                                            headerComponent={MasterHeader}
+                                                                                            menuComponent={AppMasterMenu}
+                                                                                        >
+                                                                                            <MasterMenuRoutes menu={masterMenuData} />
+                                                                                        </MasterLayout>
+                                                                                    )}
+                                                                                />
+                                                                            </Switch>
+                                                                        )}
+                                                                    </ContentScopeProvider>
+                                                                </RouterBrowserRouter>
+                                                            </CurrentUserProvider>
+                                                        </CmsBlockContextProvider>
+                                                    </SnackbarProvider>
+                                                </DndProvider>
+                                            </MuiThemeProvider>
+                                        </BlocksConfigProvider>
                                     </LocaleProvider>
                                 </IntlProvider>
                             </DependenciesConfigProvider>
