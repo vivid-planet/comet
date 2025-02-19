@@ -3,11 +3,11 @@ import { YouTubeVideoBlock } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 
-import { SvgImageBlockFixtureService } from "./svg-image-block-fixture.service";
+import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.service";
 
 @Injectable()
 export class YouTubeVideoBlockFixtureService {
-    constructor(private readonly svgImageBlockFixtureService: SvgImageBlockFixtureService) {}
+    constructor(private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof YouTubeVideoBlock>> {
         const identifier = ["Ye8Oih0oxWs", "erpaPEGn7X0"];
@@ -18,7 +18,7 @@ export class YouTubeVideoBlockFixtureService {
             loop: faker.datatype.boolean(),
             showControls: !autoplay,
             youtubeIdentifier: faker.helpers.arrayElement(identifier),
-            previewImage: await this.svgImageBlockFixtureService.generateBlockInput(),
+            previewImage: await this.pixelImageBlockFixtureService.generateBlockInput(),
         };
     }
 }

@@ -3,11 +3,11 @@ import { VimeoVideoBlock } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 
-import { SvgImageBlockFixtureService } from "./svg-image-block-fixture.service";
+import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.service";
 
 @Injectable()
 export class VimeoVideoBlockFixtureService {
-    constructor(private readonly svgImageBlockFixtureService: SvgImageBlockFixtureService) {}
+    constructor(private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof VimeoVideoBlock>> {
         const identifier = ["Ye8Oih0oxWs", "erpaPEGn7X0"];
@@ -18,7 +18,7 @@ export class VimeoVideoBlockFixtureService {
             loop: faker.datatype.boolean(),
             showControls: !autoplay,
             vimeoIdentifier: faker.helpers.arrayElement(identifier),
-            previewImage: await this.svgImageBlockFixtureService.generateBlockInput(),
+            previewImage: await this.pixelImageBlockFixtureService.generateBlockInput(),
         };
     }
 }

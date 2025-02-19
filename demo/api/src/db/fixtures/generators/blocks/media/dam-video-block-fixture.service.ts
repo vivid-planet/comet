@@ -4,13 +4,13 @@ import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 
 import { VideoFixtureService } from "../../video-fixture.service";
-import { SvgImageBlockFixtureService } from "./svg-image-block-fixture.service";
+import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.service";
 
 @Injectable()
 export class DamVideoBlockFixtureService {
     constructor(
         private readonly videoFixtureService: VideoFixtureService,
-        private readonly svgImageBlockFixtureService: SvgImageBlockFixtureService,
+        private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService,
     ) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof DamVideoBlock>> {
@@ -22,7 +22,7 @@ export class DamVideoBlockFixtureService {
             loop: faker.datatype.boolean(),
             showControls: !autoplay,
             damFileId,
-            previewImage: await this.svgImageBlockFixtureService.generateBlockInput(),
+            previewImage: await this.pixelImageBlockFixtureService.generateBlockInput(),
         };
     }
 }

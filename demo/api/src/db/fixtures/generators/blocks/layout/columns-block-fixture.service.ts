@@ -12,7 +12,7 @@ import { StandaloneHeadingBlockFixtureService } from "../text-and-content/standa
 import { AccordionBlockFixtureService } from "./accordion-block-fixture.service";
 import { SpaceBlockFixtureService } from "./space-block-fixture.service";
 
-const oneColumnLayouts = [{ name: "12" }];
+const oneColumnLayouts = [{ name: "2-20-2" }];
 
 @Injectable()
 export class ColumnsBlockFixtureService {
@@ -64,11 +64,6 @@ export class ColumnsBlockFixtureService {
         return {
             layout: faker.helpers.arrayElement(oneColumnLayouts).name,
             columns: [
-                {
-                    key: faker.string.uuid(),
-                    visible: true,
-                    props: content,
-                },
                 {
                     key: faker.string.uuid(),
                     visible: true,
