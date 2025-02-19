@@ -20,11 +20,13 @@ import {
     type SetStateAction,
     useCallback,
     useEffect,
+    useMemo,
     useState,
 } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { CannotPasteBlockDialog } from "../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../clipboard/useBlockClipboard";
 import { AddBlockDrawer } from "../common/AddBlockDrawer";
@@ -114,6 +116,7 @@ interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, u
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
+    filterBlocksForScope?: (scope: ContentScopeInterface) => Record<BlockType, BlockInterface>;
 }
 
 export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
@@ -125,6 +128,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         additionalItemFields,
         AdditionalItemContextMenuItems,
         AdditionalItemContent,
+        filterBlocksForScope,
     }: CreateBlocksBlockOptions<AdditionalItemFields>,
     override?: (
         block: BlockInterface<
@@ -470,7 +474,16 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 [updateState],
             );
 
-            const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(supportedBlocks) });
+            const { scope } = useContentScope();
+            const filteredSupportedBlocks = useMemo(() => {
+                if (filterBlocksForScope) {
+                    return filterBlocksForScope(scope);
+                } else {
+                    return supportedBlocks;
+                }
+            }, [scope]);
+
+            const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(filteredSupportedBlocks) });
 
             const pasteBlock = async (insertAt: number) => {
                 const response = await getClipboardContent();
@@ -792,7 +805,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                             <AddBlockDrawer
                                                 open={showAddBlockDrawer}
                                                 onClose={handleCloseAddBlockDrawer}
-                                                blocks={supportedBlocks}
+                                                blocks={filteredSupportedBlocks}
                                                 onAddNewBlock={(type, addAndEdit) => {
                                                     const key = addNewBlock(type, beforeIndex);
 

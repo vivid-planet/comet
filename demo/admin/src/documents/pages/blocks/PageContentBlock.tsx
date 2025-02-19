@@ -21,30 +21,31 @@ import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { KeyFactsBlock } from "./KeyFactsBlock";
 import { TeaserBlock } from "./TeaserBlock";
 
+const supportedBlocks = {
+    accordion: AccordionBlock,
+    anchor: AnchorBlock,
+    billboardTeaser: BillboardTeaserBlock,
+    space: SpaceBlock,
+    teaser: TeaserBlock,
+    richtext: RichTextBlock,
+    heading: StandaloneHeadingBlock,
+    columns: ColumnsBlock,
+    callToActionList: StandaloneCallToActionListBlock,
+    keyFacts: KeyFactsBlock,
+    media: StandaloneMediaBlock,
+    contentGroup: ContentGroupBlock,
+    mediaGallery: MediaGalleryBlock,
+    image: DamImageBlock,
+    newsDetail: NewsDetailBlock,
+    newsList: NewsListBlock,
+    layout: LayoutBlock,
+    textImage: TextImageBlock,
+    fullWidthImage: FullWidthImageBlock,
+};
+
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
-    supportedBlocks: {
-        accordion: AccordionBlock,
-        anchor: AnchorBlock,
-        billboardTeaser: BillboardTeaserBlock,
-        space: SpaceBlock,
-        teaser: TeaserBlock,
-        richtext: RichTextBlock,
-        heading: StandaloneHeadingBlock,
-        columns: ColumnsBlock,
-        callToActionList: StandaloneCallToActionListBlock,
-        keyFacts: KeyFactsBlock,
-        media: StandaloneMediaBlock,
-        contentGroup: ContentGroupBlock,
-        mediaGallery: MediaGalleryBlock,
-
-        image: DamImageBlock,
-        newsDetail: NewsDetailBlock,
-        newsList: NewsListBlock,
-        layout: LayoutBlock,
-        textImage: TextImageBlock,
-        fullWidthImage: FullWidthImageBlock,
-    },
+    supportedBlocks,
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
     },
@@ -53,5 +54,13 @@ export const PageContentBlock = createBlocksBlock({
     },
     AdditionalItemContent: ({ item }) => {
         return <UserGroupChip item={item} />;
+    },
+    filterBlocksForScope: (scope) => {
+        if (scope.domain === "main") {
+            return supportedBlocks;
+        } else {
+            const { newsDetail, newsList, ...filteredBlocks } = supportedBlocks;
+            return filteredBlocks;
+        }
     },
 });
