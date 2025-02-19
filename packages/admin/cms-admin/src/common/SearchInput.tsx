@@ -93,7 +93,7 @@ export const SearchInput = ({
             endAdornment={
                 internalQuery ? (
                     <InputAdornment position="end">
-                        <Typography variant="body2">
+                        <Typography variant="body2" sx={{ marginRight: "10px" }}>
                             {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
                         </Typography>
                         <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="medium">
