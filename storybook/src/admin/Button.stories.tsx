@@ -77,21 +77,14 @@ export const AllVariants = {
         return (
             <Stack spacing={10}>
                 <Stack direction="row" alignItems="center" spacing={8}>
-                    <Button variant="primary">Button</Button>
-                    <Button variant="primary" startIcon={<ArrowRight />}>
-                        Button
-                    </Button>
-                    <Button variant="primary" endIcon={<ArrowRight />}>
-                        Button
-                    </Button>
-                    <Button variant="primary" endIcon={<Chip label="5" />}>
-                        Button
-                    </Button>
-                    <Button variant="primary" startIcon={<ArrowRight />} endIcon={<Chip label="5" />}>
+                    <Button>Button</Button>
+                    <Button startIcon={<ArrowRight />}>Button</Button>
+                    <Button endIcon={<ArrowRight />}>Button</Button>
+                    <Button endIcon={<Chip label="5" />}>Button</Button>
+                    <Button startIcon={<ArrowRight />} endIcon={<Chip label="5" />}>
                         Button
                     </Button>
                     <Button
-                        variant="primary"
                         endIcon={
                             <>
                                 <ArrowRight />
@@ -101,7 +94,7 @@ export const AllVariants = {
                     >
                         Button
                     </Button>
-                    <Button variant="primary">
+                    <Button>
                         <ArrowRight />
                     </Button>
                 </Stack>
