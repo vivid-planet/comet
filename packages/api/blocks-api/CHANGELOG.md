@@ -1,5 +1,7 @@
 # @comet/blocks-api
 
+## 7.14.1
+
 ## 7.14.0
 
 ### Patch Changes
