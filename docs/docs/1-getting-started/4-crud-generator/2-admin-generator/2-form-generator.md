@@ -15,11 +15,11 @@ Here is an overview of all general form options. These affect the form as a whol
 | Parameter        | Type                             | Required | Default     | Description                                                                     |
 | ---------------- | -------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------- |
 | `type`           | `"grid"` \| `"form"` \| `"tabs"` | `true`   | `undefined` | When `"form"` is set, the file is treated as a form during generation.          |
-| `gqlType`        | `string`                         | `true`   | `undefined` | The `GQLType` to use for form generation.                                       |
+| `gqlType`        | `string`                         | `true`   | `undefined` | The GraphQL object type to use for form generation.                             |
 | `fields`         | `object[]`                       | `true`   | `undefined` | Array of field definitions.                                                     |
 | `mode`           | `"add"` \| `"edit"` \| `"all"`   | `false`  | `undefined` | When set, allows these functions. Default is `"all"`.                           |
 | `fragmentName`   | `string`                         | `false`  | `undefined` | When set, uses this custom name for the GQL fragment names. Highly recommended. |
-| `createMutation` | `string`                         | `false`  | `undefined` | When set, uses this query instead of the default create query of the `GQLType`. |
+| `createMutation` | `string`                         | `false`  | `undefined` | When set, uses this query instead of the default create query of the `gqlType`. |
 
 ### type
 
@@ -27,10 +27,10 @@ This option determines the type of generation. Set it to `"form"` to generate a 
 
 ### gqlType
 
-The `GQLType` that will be displayed in the grid.
+The GraphQL object type that will be displayed in the grid.
 
 :::info
-The `GQLType` does not exist? Check the API logs for errors.
+The GraphQL object type does not exist? Check the API logs for errors.
 :::
 
 ### fields
@@ -48,25 +48,25 @@ The default is `"all"`, meaning both `"edit"` and `"add"` will be available in t
 
 ### fragmentName
 
-When unset, the fragmentName is generated as `${GQLType}Form`. Set this to prevent duplicate fragment names when generating multiple forms for the same `GQLType`.
+When unset, the fragmentName is generated as `${GQLType}Form`. Set this to prevent duplicate fragment names when generating multiple forms for the same GraphQL object type.
 This is highly recommended, but not necessary for generation to function.
 
 ### createMutation
 
-When unset, the Admin Generator uses the default create mutation of the `GQLType` for the form. `createMutation` can be used to set a custom list query.
+When unset, the Admin Generator uses the default create mutation of the GraphQL object type for the form. `createMutation` can be used to set a custom list query.
 
 ## General Field Options
 
-| Parameter    | Type      | Required | Default             | Description                                                           |
-| ------------ | --------- | -------- | ------------------- | --------------------------------------------------------------------- |
-| `type`       | `string`  | `true`   | `undefined`         | Define the type of value that is entered in this field.               |
-| `name`       | `string`  | `true`   | `undefined`         | The name of the `GQLType` property that will be edited in this field. |
-| `label`      | `string`  | `false`  | The `name` property | Set a custom field label. Translations can be added here.             |
-| `required`   | `boolean` | `false`  | `false`             | If `true`, the field is generated as `required`.                      |
-| `virtual`    | `boolean` | `false`  | `false`             | If `true`, the field value will not be persisted.                     |
-| `validate`   | `object`  | `false`  | `undefined`         | Set custom validation here.                                           |
-| `helperText` | `string`  | `false`  | `undefined`         | Set a `helperText` that is displayed below the input field.           |
-| `readOnly`   | `boolean` | `false`  | `false`             | If `true`, the field is not editable.                                 |
+| Parameter    | Type      | Required | Default             | Description                                                                     |
+| ------------ | --------- | -------- | ------------------- | ------------------------------------------------------------------------------- |
+| `type`       | `string`  | `true`   | `undefined`         | Define the type of value that is entered in this field.                         |
+| `name`       | `string`  | `true`   | `undefined`         | The name of the GraphQL object type property that will be edited in this field. |
+| `label`      | `string`  | `false`  | The `name` property | Set a custom field label. Translations can be added here.                       |
+| `required`   | `boolean` | `false`  | `false`             | If `true`, the field is generated as `required`.                                |
+| `virtual`    | `boolean` | `false`  | `false`             | If `true`, the field value will not be persisted.                               |
+| `validate`   | `object`  | `false`  | `undefined`         | Set custom validation here.                                                     |
+| `helperText` | `string`  | `false`  | `undefined`         | Set a `helperText` that is displayed below the input field.                     |
+| `readOnly`   | `boolean` | `false`  | `false`             | If `true`, the field is not editable.                                           |
 
 ### type
 
@@ -74,7 +74,7 @@ This determines what kind of field is generated. See the list of available types
 
 ### name
 
-The `name` determines the `GQLType` property that will be shown in that field.
+The `name` determines the GraphQL object type property that will be shown in that field.
 
 ### label
 

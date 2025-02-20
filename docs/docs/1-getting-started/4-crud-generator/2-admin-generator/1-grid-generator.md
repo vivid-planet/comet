@@ -15,10 +15,10 @@ Here is an overview of all general grid options. These affect the grid as a whol
 | Parameter           | Type                             | Required | Default     | Description                                                                                    |
 | ------------------- | -------------------------------- | -------- | ----------- | ---------------------------------------------------------------------------------------------- |
 | `type`              | `"grid"` \| `"form"` \| `"tabs"` | `true`   | `undefined` | When `"grid"` is set, the file is treated as a grid during generation.                         |
-| `gqlType`           | `string`                         | `true`   | `undefined` | The `GQLType` to use for grid generation.                                                      |
+| `gqlType`           | `string`                         | `true`   | `undefined` | The GraphQL object type to use for grid generation.                                            |
 | `columns`           | `object[]`                       | `true`   | `undefined` | Array of column definitions.                                                                   |
 | `fragmentName`      | `string`                         | `false`  | `undefined` | When set, uses this custom name for the GQL fragment names. Highly recommended.                |
-| `query`             | `string`                         | `false`  | `undefined` | When set, uses this query instead of the default list query of the `GQLType`.                  |
+| `query`             | `string`                         | `false`  | `undefined` | When set, uses this query instead of the default list query of the `gqlType`.                  |
 | `queryParamsPrefix` | `string`                         | `false`  | `undefined` | When set, prefixes search and filter parameters in the URL with this string.                   |
 | `add`               | `boolean`                        | `false`  | `true`      | If `true`, includes the "add" operation in the row context menu.                               |
 | `edit`              | `boolean`                        | `false`  | `true`      | If `true`, includes the "edit" operation in the row context menu.                              |
@@ -40,10 +40,10 @@ This option determines the type of generation. Set it to `"grid"` to generate a 
 
 ### gqlType
 
-The `GQLType` that will be displayed in the grid.
+The GraphQL object type that will be displayed in the grid.
 
 :::info
-The `GQLType` does not exist? Check the API logs for errors.
+The GraphQL object type does not exist? Check the API logs for errors.
 :::
 
 ### columns
@@ -54,12 +54,12 @@ All column types and options can be found [below](/docs/getting-started/crud-gen
 
 ### fragmentName
 
-When unset, the fragmentName is generated as `${GQLType}Grid`. Set this to prevent duplicate fragment names when generating multiple grids for the same `GQLType`.
+When unset, the fragmentName is generated as `${GQLType}Grid`. Set this to prevent duplicate fragment names when generating multiple grids for the same GraphQL object type.
 This is highly recommended, but not necessary for generation to function.
 
 ### query
 
-When unset, the Admin Generator uses the default list query of the `GQLType` for the grid. `query` can be used to set a custom list query.
+When unset, the Admin Generator uses the default list query of the GraphQL object for the grid. `query` can be used to set a custom list query.
 
 ### queryParamsPrefix
 
@@ -148,12 +148,12 @@ This option will be overridden by the options `toolbar: false` or `add: false`.
 This option sets an initial sort for grid columns. This sort can be overridden by the user via the grid column headers.
 The array values are applied in order.
 
-| Parameter | Type                | Required | Description                                       |
-| --------- | ------------------- | -------- | ------------------------------------------------- |
-| `field`   | `string`            | `true`   | The property of the `GQLType` to sort by.         |
-| `sort`    | `"asc"` \| `"desc"` | `true`   | The column can be sorted ascending or descending. |
+| Parameter | Type                | Required | Description                                         |
+| --------- | ------------------- | -------- | --------------------------------------------------- |
+| `field`   | `string`            | `true`   | The property of the GraphQL object type to sort by. |
+| `sort`    | `"asc"` \| `"desc"` | `true`   | The column can be sorted ascending or descending.   |
 
-Assume the used `GQLType` has the properties `quantity` and `description`.
+Assume the used GraphQL object type has the properties `quantity` and `description`.
 A grid with this `initialSort` configuration will list all entries by most `quantity`, then entries with the same `quantity` are sorted alphabetically by `description`.
 
 ```typescript
@@ -173,7 +173,7 @@ The array values are applied in order.
 | `items`        | `GridFilterItem[]` | `true`   | The filter definitions.                                     |
 | `linkOperator` | `"and"` \| `"or"`  | `false`  | The operator to connect the conditions. Default is `"and"`. |
 
-Assume the used `GQLType` has the property `color`. Only the `color` values of `"green"` and `"red"` should be shown in the grid.
+Assume the used GraphQL object type has the property `color`. Only the `color` values of `"green"` and `"red"` should be shown in the grid.
 See the example for its use below.
 
 ```typescript
@@ -216,7 +216,7 @@ They can be found [below](/docs/getting-started/crud-generator/admin-generator/g
 | Type                | Type      | Required | Default             | Description                                                                         |
 | ------------------- | --------- | -------- | ------------------- | ----------------------------------------------------------------------------------- |
 | `type`              | `string`  | `true`   | `undefined`         | Define the type of values that is displayed in this column.                         |
-| `name`              | `string`  | `true`   | `undefined`         | The name of the `GQLType` property that will be displayed in the column.            |
+| `name`              | `string`  | `true`   | `undefined`         | The name of the GraphQL object type property that will be displayed in the column.  |
 | `headerName`        | `string`  | `false`  | The `name` property | Use this option to set a custom column header name. Translations can be added here. |
 | `headerInfoTooltip` | `string`  | `false`  | `undefined`         | When set, shows the string as a tooltip on hover over the column header.            |
 | `width`             | `number`  | `false`  | 150                 | Set the width of the column.                                                        |
@@ -239,7 +239,7 @@ This determines how the column values are treated for display. See the list of a
 
 ### name
 
-The `name` determines the `GQLType` property that will be shown in that column.
+The `name` determines the GraphQL object type property that will be shown in that column.
 
 ### headerName
 
@@ -294,7 +294,7 @@ Set the flex parameter of the column. Default is `1`.
 ### pinned
 
 Columns can be pinned to the left or right side of a grid.
-To do so, add the `GQLType` property name to either the `left` or `right` array in the `pinned` object.
+To do so, add the GraphQL object type property name to either the `left` or `right` array in the `pinned` object.
 The pinned columns can be updated by the user via the column header context menu.
 
 Here is an example: The `description` column is pinned to the left side, and the `quantity` and `color` columns are pinned to the right side.
@@ -448,7 +448,7 @@ Secondary text can be added as well. It is displayed in a second line below.
 ```
 
 :::caution
-Make sure to use identical values for a property across grids and forms with the same `GQLType`.
+Make sure to use identical values for a property across grids and forms with the same GraphQL object type.
 Translated values are generated as `FormattedMessage`s and they will conflict in the generated `defaultMessages`s otherwise.
 :::
 
@@ -504,7 +504,7 @@ There are no further type specific options.
 ### combination
 
 The `combination` column type is very powerful.
-It can be used to combine multiple values of different `GQLType` properties into one column.
+It can be used to combine multiple values of different GraphQL object type properties into one column.
 Fields in this column can be nested and adapted with custom text and formatting.
 
 :::info

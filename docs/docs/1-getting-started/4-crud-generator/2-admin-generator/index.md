@@ -3,7 +3,7 @@ title: Admin Generator
 sidebar_position: 2
 ---
 
-The Admin Generator can be used to generate grid and form components based on `GQLTypes`.
+The Admin Generator can be used to generate grid and form components based on GraphQL object types.
 
 Contrary to the API Generator, the Admin Generator does not use Decorators to define its options.
 The configuration is done in its own config file.
