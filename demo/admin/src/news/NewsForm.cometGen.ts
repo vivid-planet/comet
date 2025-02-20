@@ -1,4 +1,4 @@
-import { type DamImageBlock, type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { DamImageBlock, type future_FormConfig as FormConfig } from "@comet/cms-admin";
 import { type GQLNews } from "@src/graphql.generated";
 
 import { NewsContentBlock } from "./blocks/NewsContentBlock";
