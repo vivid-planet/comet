@@ -15,7 +15,10 @@ export interface ImporterEntityClass extends Constructor {
 
 @ObjectType({ isAbstract: true, description: "Base import entity" })
 @Entity({ abstract: true })
-export abstract class BaseTargetEntity extends BaseEntity<BaseTargetEntity, "id"> implements BaseImportInterface {
+export abstract class BaseTargetEntity<Entity extends object, Primary extends keyof Entity>
+    extends BaseEntity<Entity, Primary>
+    implements BaseImportInterface
+{
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
     id: string = v4();

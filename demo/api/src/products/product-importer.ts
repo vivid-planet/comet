@@ -5,13 +5,13 @@ import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
 import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Transform } from "stream";
 
-import { RawProduct } from "./entities/raw-product.entity";
+import { Product } from "./entities/product.entity";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
     dataStream: DataStreamAndMetadata | null = null;
-    name = "rawProductImport";
-    targetEntity: ImporterEntityClass = RawProduct;
+    name = "productImport";
+    targetEntity: ImporterEntityClass = Product;
     transformPipes: Transform[] = [];
 
     constructor(private readonly em: EntityManager) {

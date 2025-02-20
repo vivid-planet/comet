@@ -531,6 +531,9 @@ type ProductPriceRange {
 
 type Product {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   title: String!
   status: ProductStatus!
   slug: String!
@@ -547,8 +550,6 @@ type Product {
   articleNumbers: [String!]!
   dimensions: ProductDimensions
   statistics: ProductStatistics
-  createdAt: DateTime!
-  updatedAt: DateTime!
   priceList: FileUpload
   datasheets: [FileUpload!]!
   category: ProductCategory
