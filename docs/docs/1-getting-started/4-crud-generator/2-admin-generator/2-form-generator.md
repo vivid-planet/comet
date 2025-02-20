@@ -443,7 +443,8 @@ has `width`, `height` and `depth` combined into one type in the entities propert
 
 -   Only optional fields work in this section. `required` or `component` fields will lead to an error.
 -   `optionalNestedFields` cannot be nested within each other. This will result in an error.
-    :::
+
+:::
 
 Following is a list of all `optionalNestedFields` options:
 
