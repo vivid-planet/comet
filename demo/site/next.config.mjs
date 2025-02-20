@@ -33,7 +33,8 @@ const nextConfig = {
         return {
             afterFiles: [
                 {
-                    source: "/:path(_next|assets)/:file*",
+                    // Show a 404 instead of trying to render page for paths starting with /_next/ or /assets/ as they don't get rewritten in DomainRewriteMiddleware and cause errors in ...path page
+                    source: "/:prefix(_next|assets)/:path*",
                     destination: "/404",
                 },
             ],
