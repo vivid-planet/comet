@@ -71,6 +71,7 @@ const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps,
 export const Button = forwardRef(<C extends ElementType = "button">(inProps: ButtonProps<C>, ref: ForwardedRef<any>) => {
     const {
         slotProps,
+        sx,
         variant = "primary",
         responsive,
         mobileIcon = "auto",
@@ -97,6 +98,10 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
 
     const commonButtonProps = {
         ...variantToMuiProps[variant],
+        sx: {
+            ...variantToMuiProps[variant].sx,
+            ...sx,
+        },
         ...restProps,
         ownerState,
         ...slotProps?.root,
