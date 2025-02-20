@@ -1,6 +1,8 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
+import { defaultCreatePath } from "./utils/defaultCreatePath";
+
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
@@ -75,23 +77,6 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
     }, {} as NonNullRecord<S>);
 }
 
-function defaultCreatePath(values: ContentScopeValues) {
-    const dimensionValues: { [dimension: string]: Set<string> } = {};
-    values.forEach((value) => {
-        Object.keys(value).forEach((dimension) => {
-            if (!dimensionValues[dimension]) {
-                dimensionValues[dimension] = new Set();
-            }
-            dimensionValues[dimension].add(value[dimension].value);
-        });
-    });
-    return Object.keys(dimensionValues).reduce((path, dimension) => {
-        const plainValues = Array.from(dimensionValues[dimension]);
-        const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-        return `${path}/:${dimension}${whiteListedValuesString}`;
-    }, "");
-}
-
 function defaultCreateUrl(scope: ContentScopeInterface) {
     const formattedMatchParams = formatScopeToRouterMatchParams(scope);
     return Object.entries(formattedMatchParams).reduce((a, [, value]) => `${a}/${value}`, "");
@@ -143,15 +128,15 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     values,
     location = defaultContentScopeLocation,
 }: ContentScopeProviderProps<S>) {
-    const path = location.createPath(values);
+    const paths = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
-    const match = useRouteMatch<NonNullRecord<S>>(path);
+    const match = useRouteMatch<NonNullRecord<S>>(paths);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     return (
         <Context.Provider
             value={{
-                path,
+                path: paths,
                 redirectPathAfterChange,
                 setRedirectPathAfterChange,
                 values,
@@ -160,7 +145,7 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
         >
             <Switch>
                 {match && (
-                    <Route exact={false} strict={false} path={path}>
+                    <Route exact={false} strict={false} path={paths}>
                         {children({ match })}
                     </Route>
                 )}
