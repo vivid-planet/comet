@@ -1,6 +1,4 @@
 import { type ModuleMetadata, type Type } from "@nestjs/common";
-import { type Request } from "express";
-import { type JwtPayload } from "jsonwebtoken";
 
 import { type CurrentUser } from "./dto/current-user";
 import { type FindUsersArgs } from "./dto/paginated-user-list";
@@ -27,14 +25,13 @@ export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentSc
 
 export interface AccessControlServiceInterface {
     isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
-    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
+    getPermissionsForUser?: (user: User, availablePermissions: string[]) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
 export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
-    createUserFromRequest?: (request: Request, idToken: JwtPayload) => Promise<User> | User;
 }
 
 export interface UserPermissionsOptions {
