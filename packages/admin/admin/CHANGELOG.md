@@ -1,5 +1,20 @@
 # @comet/admin
 
+## 7.14.0
+
+### Minor Changes
+
+-   6b75f20e4: Deprecate `density` prop of `DataGridToolbar`
+
+    The density setting of the surrounding Data Grid now controls the styling of the toolbar.
+
+### Patch Changes
+
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+    -   @comet/admin-theme@7.14.0
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Minor Changes

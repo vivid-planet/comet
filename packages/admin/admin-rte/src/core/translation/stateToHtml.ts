@@ -2,9 +2,13 @@ import { type EditorState } from "draft-js";
 import { type RenderConfig, stateToHTML } from "draft-js-export-html";
 
 import defaultBlocktypeMap from "../defaultBlocktypeMap";
+<<<<<<< HEAD
 import { type IRteOptions } from "../Rte";
+=======
+import { IOptions } from "../Rte";
+>>>>>>> main
 
-export function stateToHtml({ editorState, options }: { editorState: EditorState; options: IRteOptions }) {
+export function stateToHtml({ editorState, options }: { editorState: EditorState; options: IOptions }) {
     const contentState = editorState.getCurrentContent();
 
     const customInlineStyleKeys = options?.customInlineStyles ? Object.keys(options.customInlineStyles) : [];

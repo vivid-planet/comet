@@ -172,6 +172,8 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
         const registeredFields = formRenderProps.form.getRegisteredFields();
 
+        const formLevelWarnings = useRef<Record<string, string | undefined>>({});
+
         useEffect(() => {
             if (validateWarning) {
                 const validate = async () => {
@@ -187,10 +189,16 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
                     if (!validationWarnings) {
                         registeredFields.forEach((fieldName) => {
-                            setFieldData(fieldName, { warning: undefined });
+                            const hasFormLevelWarning = Boolean(formLevelWarnings.current[fieldName]);
+                            if (hasFormLevelWarning) {
+                                setFieldData(fieldName, { warning: undefined });
+                            }
                         });
+                        formLevelWarnings.current = {};
                         return;
                     }
+
+                    formLevelWarnings.current = validationWarnings;
 
                     Object.entries(validationWarnings).forEach(([fieldName, warning]) => {
                         setFieldData(fieldName, { warning });

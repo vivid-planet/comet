@@ -172,6 +172,20 @@ export function createOptionalBlock<T extends BlockInterface>(
         previewContent: ({ block, visible }, ctx) => {
             return block && visible ? decoratedBlock.previewContent(block, ctx) : [];
         },
+
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            if (state.block === undefined) {
+                return [];
+            }
+
+            if (state.visible || includeInvisibleContent) {
+                return decoratedBlock.extractTextContents?.(state.block, options) ?? [];
+            }
+
+            return [];
+        },
     };
 
     if (override) {

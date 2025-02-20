@@ -1,11 +1,17 @@
+<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/composeBlocks/createSettingsBlock.ts
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
 import { type AnonymousBlockInterface, type BlockAdminComponent } from "../../types";
+=======
+import { AnonymousBlockInterface, BlockAdminComponent, BlockMethods } from "../../types";
+import { createBlockSkeleton } from "../createBlockSkeleton";
+>>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/composeBlocks/createSettingsBlock.ts
 
 interface Options<State> {
     defaultValues: State;
     AdminComponent: BlockAdminComponent<State>;
     isValid?: (values: State) => boolean | Promise<boolean>;
     definesOwnPadding?: boolean;
+    extractTextContents?: BlockMethods["extractTextContents"];
 }
 
 export function createSettingsAnonymousBlock<State>({
@@ -13,6 +19,7 @@ export function createSettingsAnonymousBlock<State>({
     AdminComponent,
     isValid,
     definesOwnPadding,
+    extractTextContents,
 }: Options<State>): AnonymousBlockInterface<State, State, State, State> {
     const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State, State> = {
         ...createBlockSkeleton(),
@@ -33,6 +40,10 @@ export function createSettingsAnonymousBlock<State>({
     };
     if (isValid) {
         AnonymousSettingsBlock.isValid = isValid;
+    }
+
+    if (extractTextContents) {
+        AnonymousSettingsBlock.extractTextContents = extractTextContents;
     }
     return AnonymousSettingsBlock;
 }

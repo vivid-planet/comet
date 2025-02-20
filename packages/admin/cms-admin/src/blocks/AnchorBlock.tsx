@@ -43,6 +43,10 @@ const AnchorBlock: BlockInterface<AnchorBlockData, AnchorBlockData, AnchorBlockI
     previewContent: (state) => {
         return state.name !== undefined ? [{ type: "text", content: `#${state.name}` }] : [];
     },
+
+    extractTextContents: (state) => {
+        return state.name !== undefined ? [state.name] : [];
+    },
 };
 
 export { AnchorBlock };

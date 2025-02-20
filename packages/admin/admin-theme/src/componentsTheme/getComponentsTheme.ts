@@ -35,6 +35,7 @@ import { getMuiInputBase } from "./MuiInputBase";
 import { getMuiLinearProgress } from "./MuiLinearProgress";
 import { getMuiLink } from "./MuiLink";
 import { getMuiListItem } from "./MuiListItem";
+import { getMuiListItemAvatar } from "./MuiListItemAvatar";
 import { getMuiListItemIcon } from "./MuiListItemIcon";
 import { getMuiMenu } from "./MuiMenu";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
@@ -101,6 +102,7 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiLink: getMuiLink(components.MuiLink, themeData),
     MuiListItem: getMuiListItem(components.MuiListItem, themeData),
     MuiListItemIcon: getMuiListItemIcon(components.MuiListItemIcon, themeData),
+    MuiListItemAvatar: getMuiListItemAvatar(components.MuiListItemAvatar, themeData),
     MuiMenu: getMuiMenu(components.MuiMenu, themeData),
     MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, themeData),
     MuiPaper: getMuiPaper(components.MuiPaper, themeData),

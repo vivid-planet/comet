@@ -101,7 +101,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
             return (
                 <>
-                    <ListItemIcon sx={{ minWidth: "none" }}>
+                    <ListItemIcon>
                         <Domain />
                     </ListItemIcon>
                     <ListItemText

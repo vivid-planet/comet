@@ -1,7 +1,13 @@
 import { SelectField, type SelectFieldOption, type SelectFieldProps } from "@comet/admin";
 
+<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/createCompositeBlockSelectField.tsx
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
+=======
+import { BlocksFinalForm } from "../../form/BlocksFinalForm";
+import { BlockMethods } from "../types";
+import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
+>>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/createCompositeBlockSelectField.tsx
 
 interface Options<T extends string | number> extends Partial<SelectFieldProps<T>> {
     defaultValue: T;
@@ -10,6 +16,7 @@ interface Options<T extends string | number> extends Partial<SelectFieldProps<T>
      * @deprecated Set the props directly instead of nesting inside fieldProps
      */
     fieldProps?: Partial<SelectFieldProps<T>>;
+    extractTextContents?: BlockMethods["extractTextContents"];
 }
 
 export function createCompositeBlockSelectField<T extends string | number>({
@@ -17,6 +24,7 @@ export function createCompositeBlockSelectField<T extends string | number>({
     options,
     fullWidth = true,
     fieldProps: legacyFieldProps,
+    extractTextContents,
     ...fieldProps
 }: Options<T>) {
     return createCompositeBlockField<T>({
@@ -26,5 +34,6 @@ export function createCompositeBlockSelectField<T extends string | number>({
                 <SelectField name="value" fullWidth={fullWidth} {...legacyFieldProps} {...fieldProps} options={options} />
             </BlocksFinalForm>
         ),
+        extractTextContents: (state, options) => extractTextContents?.(state, options) ?? [],
     });
 }

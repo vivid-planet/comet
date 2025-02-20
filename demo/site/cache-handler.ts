@@ -164,4 +164,9 @@ export default class CacheHandler {
         }
         fallbackCache.set(key, value, { size: stringData.length });
     }
+
+    async revalidateTag(tags: string | string[]): Promise<void> {
+        if (tags.length === 0) return;
+        console.warn("CacheHandler.revalidateTag", tags);
+    }
 }

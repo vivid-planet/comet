@@ -170,4 +170,8 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
             },
         ];
     },
+
+    extractTextContents: (state) => {
+        return state.targetPage?.name ? [state.targetPage.name] : [];
+    },
 };
