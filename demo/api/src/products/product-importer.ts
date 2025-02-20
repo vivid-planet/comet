@@ -1,16 +1,24 @@
 import { EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
 import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
+import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
+import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Transform } from "stream";
+
+import { Product } from "./entities/product.entity";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
     dataStream: DataStreamAndMetadata | null = null;
-    name = "rawProductImport";
+    name = "productImport";
+    targetEntity: ImporterEntityClass = Product;
     transformPipes: Transform[] = [];
 
     constructor(private readonly em: EntityManager) {
+        this.logger = new Logger("product-importer");
+        const parsePipes = new CsvParseAndTransformPipes(this.targetEntity, this.em).getPipes(this.logger, { encoding: "utf-8" });
         this.transformPipes = [
+            ...parsePipes,
             new Transform({
                 objectMode: true,
                 transform: this.displayData.bind(this),
@@ -41,7 +49,7 @@ export class ProductImporter {
     }
 
     async displayData(row: unknown, encoding: string, callback: (error?: Error | null, data?: object[]) => void): Promise<void> {
-        this.logger.log("row: ", row);
+        this.logger.log("row: ", JSON.stringify(row, null, 2));
         return callback(null);
     }
 }
