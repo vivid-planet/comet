@@ -1,13 +1,14 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { MainContent, MuiThemeProvider } from "@comet/admin";
+import { DataGridPanel, MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
+import type {} from "@mui/x-data-grid/themeAugmentation";
 import type { Preview } from "@storybook/react";
 import { Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { IntlProvider } from "react-intl";
+import { IntlContext, IntlProvider, IntlShape } from "react-intl";
 
 import { worker } from "./mocks/browser";
 import { previewGlobalStyles } from "./preview.styles";
@@ -57,6 +58,26 @@ const messages = {
     },
 };
 
+const getCometTheme = (intl: IntlShape) =>
+    createCometTheme({
+        components: {
+            MuiDataGrid: {
+                defaultProps: {
+                    localeText: {
+                        filterPanelColumns: intl.formatMessage({ id: "dataGrid.filterPanelColumns", defaultMessage: "Column" }),
+                        columnsPanelTextFieldPlaceholder: intl.formatMessage({
+                            id: "dataGrid.columnsPanelTextFieldPlaceholder",
+                            defaultMessage: "Find column...",
+                        }),
+                    },
+                    components: {
+                        Panel: DataGridPanel,
+                    },
+                },
+            },
+        },
+    });
+
 const preview: Preview = {
     argTypes: {
         theme: {
@@ -70,25 +91,28 @@ const preview: Preview = {
     decorators: [
         (Story, context) => {
             const { theme: selectedTheme, locale: selectedLocale } = context.args;
-            const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
 
             return (
-                <MuiThemeProvider theme={theme}>
-                    <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
-                        <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
-                            <GlobalStyles styles={previewGlobalStyles} />
-                            <>
-                                {context.parameters.layout === "padded" ? (
-                                    <MainContent>
-                                        <Story />
-                                    </MainContent>
-                                ) : (
-                                    <Story />
-                                )}
-                            </>
-                        </DateFnsLocaleProvider>
-                    </IntlProvider>
-                </MuiThemeProvider>
+                <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
+                    <IntlContext.Consumer>
+                        {(intl) => (
+                            <MuiThemeProvider theme={selectedTheme === themeOptions.defaultMui ? createMuiTheme() : getCometTheme(intl)}>
+                                <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
+                                    <GlobalStyles styles={previewGlobalStyles} />
+                                    <>
+                                        {context.parameters.layout === "padded" ? (
+                                            <MainContent>
+                                                <Story />
+                                            </MainContent>
+                                        ) : (
+                                            <Story />
+                                        )}
+                                    </>
+                                </DateFnsLocaleProvider>
+                            </MuiThemeProvider>
+                        )}
+                    </IntlContext.Consumer>
+                </IntlProvider>
             );
         },
     ],

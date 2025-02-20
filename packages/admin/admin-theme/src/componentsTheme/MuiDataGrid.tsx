@@ -1,14 +1,11 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
 import {
     buttonBaseClasses,
-    buttonClasses,
-    formControlClasses,
     getSwitchUtilityClass,
     iconButtonClasses,
-    inputAdornmentClasses,
     inputBaseClasses,
-    inputClasses,
     inputLabelClasses,
+    nativeSelectClasses,
     svgIconClasses,
     SvgIconProps,
     switchClasses,
@@ -21,15 +18,19 @@ import type {} from "@mui/x-data-grid/themeAugmentation";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
+const filtersLeftSectionWidth = 120;
+const filterDeleteIconSize = 32;
+const filterLeftSectionGap = 5;
+const filterOperatorInputWidth = filtersLeftSectionWidth - filterDeleteIconSize - filterLeftSectionGap;
+
+export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing, breakpoints }) => ({
     ...component,
     defaultProps: {
         ...component?.defaultProps,
         components: {
-            /* @TODO: add FilterPanelAddIcon to display Comet Add Icon once MUI Datagrid is updated to v6 or higher  */
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
-            FilterPanelDeleteIcon: Delete,
+            FilterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
             BooleanCellTrueIcon: Check,
             BooleanCellFalseIcon: Close,
             ColumnSortedAscendingIcon: ArrowUp,
@@ -38,8 +39,16 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             ...component?.defaultProps?.components,
         },
+        componentsProps: {
+            ...component?.defaultProps?.componentsProps,
+            baseButton: {
+                color: "info",
+                ...component?.defaultProps?.componentsProps?.baseButton,
+            },
+        },
         localeText: {
             noRowsLabel: GRID_DEFAULT_LOCALE_TEXT.noResultsOverlayLabel,
+            columnsPanelTextFieldLabel: "",
             ...component?.defaultProps?.localeText,
         },
     },
@@ -58,8 +67,19 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 },
             },
         },
+        panelHeader: {
+            padding: `4px 4px ${spacing(1)} 4px`,
+            borderBottom: `1px solid ${palette.divider}`,
+        },
+        columnsPanel: {
+            padding: 0,
+        },
         columnsPanelRow: {
             marginBottom: spacing(2),
+
+            "&:last-child": {
+                marginBottom: 0,
+            },
 
             [`& .${switchClasses.root}`]: {
                 marginRight: 0,
@@ -113,126 +133,124 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             height: "20px",
             marginRight: "10px",
         },
-        panel: {
-            ["@media (max-width: 900px)"]: {
-                width: "100%",
-                transform: "translate3d(0,0,0)",
-            },
-        },
         panelContent: {
-            padding: spacing(1, 0),
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
-                display: "flex",
-            },
-            ["@media (max-width: 900px)"]: {
-                maxHeight: "none",
-                padding: 0,
-            },
+            padding: spacing(4),
+        },
+        paper: {
+            border: `1px solid ${palette.grey[100]}`,
+            boxShadow: shadows[4],
+            borderRadius: 4,
+            maxHeight: "none",
+            flexDirection: "column",
         },
         filterForm: {
-            margin: spacing(5, 4, 0, 4),
-            padding: spacing(2, 1),
-            gap: "5px",
-            borderBottom: `1px solid ${palette.grey[50]}`,
-            ["@media (max-width: 900px)"]: {
-                flexDirection: "row",
-                flexWrap: "wrap",
-                margin: spacing(4, 4, 0, 4),
-                gap: 0,
-                padding: 0,
-                paddingBottom: spacing(5),
-                "&:last-child": {
-                    marginBottom: 0,
-                    paddingBottom: 0,
+            flexDirection: "row",
+            flexWrap: "wrap",
+            padding: 0,
+
+            [`${breakpoints.up("md")}`]: {
+                flexWrap: "nowrap",
+                gap: spacing(1),
+            },
+
+            ["&:not(:last-child)"]: {
+                paddingBottom: spacing(4),
+                marginBottom: spacing(4),
+                borderBottom: `1px solid ${palette.divider}`,
+
+                [`${breakpoints.up("md")}`]: {
+                    paddingBottom: spacing(2),
+                    marginBottom: spacing(2),
+                    borderBottomColor: palette.grey[50],
                 },
             },
-            "&:last-child": {
-                border: "none",
+
+            [`&:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+                // The first "Operator"-select is fully hidden by default when there is only one filter.
+                // Setting `display: block` makes sure it takes up it's space as if it were visible to prevent the alignment from breaking.
+                // Even though `display: block` is set now, it's still not visible, due to it's default styling of `visibility: hidden`.
+                display: "block",
             },
-            [`.${formControlClasses.root}`]: {
-                marginRight: 0,
-            },
-            [`.${iconButtonClasses.root}`]: {
-                height: 32,
-                width: 32,
-            },
+
             [`.${inputLabelClasses.root}`]: {
-                transform: "translateY(-22px)",
+                position: "static",
+                transform: "none",
                 fontSize: 14,
-                ["@media (max-width: 900px)"]: {
-                    position: "relative",
-                    transform: "unset",
-                },
+                fontWeight: 600,
             },
-            [`.${inputClasses.root}`]: {
-                marginTop: 0,
-            },
-            [`& .${inputAdornmentClasses.root}`]: {
-                padding: spacing(0, 1, 0, 0),
-            },
-        },
-        filterFormLinkOperatorInput: {
-            ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 1),
-                width: "27.2%",
+
+            [`.${nativeSelectClasses.select}`]: {
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
             },
         },
         filterFormDeleteIcon: {
+            width: filterDeleteIconSize,
+            height: filterDeleteIconSize,
+            marginRight: filterLeftSectionGap,
+            marginTop: "auto",
+            marginBottom: 3,
             justifyContent: "center",
 
-            [`& .${svgIconClasses.root}`]: {
-                width: 16,
-                height: 16,
+            [`${breakpoints.up("md")}`]: {
+                marginRight: 0,
             },
 
-            ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 1),
-                alignItems: "flex-start",
-                justifyContent: "flex-end",
-                width: "11.1%",
+            [`& > .${iconButtonClasses.root}`]: {
+                height: "100%",
             },
         },
-        panelFooter: {
-            borderTop: `1px solid ${palette.grey[100]}`,
-            padding: "7px 0",
-            [`.${buttonClasses.root}`]: {
-                color: palette.primary.main,
-            },
-            ["@media (max-width: 900px)"]: {
-                justifyContent: "center",
-                boxShadow: shadows[4],
+        filterFormLinkOperatorInput: {
+            width: filterOperatorInputWidth,
+            marginRight: 0,
+
+            [`${breakpoints.up("md")}`]: {
+                width: 80,
             },
         },
         filterFormColumnInput: {
-            marginRight: spacing(4),
+            width: `calc(100% - ${filtersLeftSectionWidth}px)`,
+            paddingLeft: spacing(2),
+            boxSizing: "border-box",
 
-            ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 1),
-                width: "61.6%",
+            [`${breakpoints.up("md")}`]: {
+                width: 199,
+                paddingLeft: 0,
             },
         },
         filterFormOperatorInput: {
-            margin: spacing(0, 4, 0, 0),
+            marginTop: spacing(3),
+            flexBasis: filterOperatorInputWidth,
+            flexGrow: 1,
 
-            ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 1),
-                width: "38.3%",
+            [`${breakpoints.up("md")}`]: {
+                marginTop: 0,
+                width: 110,
             },
         },
         filterFormValueInput: {
-            ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 1),
-                width: "61.6%",
+            width: `calc(100% - ${filtersLeftSectionWidth}px)`,
+            paddingLeft: spacing(2),
+            boxSizing: "border-box",
+            marginTop: spacing(3),
+
+            [`${breakpoints.up("md")}`]: {
+                width: 199,
+                paddingLeft: 0,
+                marginTop: 0,
+            },
+
+            "&:empty": {
+                display: "none", // Make space for `filterFormOperatorInput` to expand and take up the full width
+            },
+
+            [`& .${inputBaseClasses.root}`]: {
+                marginTop: 0,
             },
         },
-        paper: {
-            boxShadow: shadows[4],
-            border: `1px solid ${palette.divider}`,
-            borderRadius: "4px",
-            ["@media (max-width: 900px)"]: {
-                height: "100%",
-                maxHeight: "none",
-            },
+        panelFooter: {
+            padding: spacing(2),
+            borderTop: `1px solid ${palette.divider}`,
         },
         // @ts-expect-error This key exists but is missing in the types.
         toolbarQuickFilter: {
