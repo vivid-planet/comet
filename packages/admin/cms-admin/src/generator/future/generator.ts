@@ -177,7 +177,7 @@ export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
-export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
+export async function runFutureGenerate(filePattern = "src/**/*.cometGen.+(ts|tsx)") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -188,11 +188,11 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
-        const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
-        const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
+        const baseOutputFilename = basename(file).replace(/(\.cometGen\.ts$)|(\.cometGen\.tsx$)/, "");
+        const configs = await import(`${process.cwd()}/${file.replace(/(\.ts$)|(\.tsx$)/, "")}`);
         //const configs = await import(`${process.cwd()}/${file}`);
 
-        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
+        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/(\.cometGen\.ts$)|(\.cometGen\.tsx$)/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
         // eslint-disable-next-line no-console
         console.log(`generating ${file}`);
@@ -216,7 +216,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         await writeGenerated(codeOuputFilename, outputCode);
 
         if (gqlDocumentsOutputCode != "") {
-            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/(\.cometGen\.ts$)|(\.cometGen\.tsx$)/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
