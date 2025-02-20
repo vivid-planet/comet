@@ -33,7 +33,7 @@ const nextConfig = {
         return {
             afterFiles: [
                 {
-                    source: "/_next/:path*",
+                    source: "/:path(_next|assets)/:file*",
                     destination: "/404",
                 },
             ],
