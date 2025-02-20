@@ -12,6 +12,7 @@ export { BlockAdminTabs } from "./blocks/common/BlockAdminTabs";
 export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
+export { type BlocksConfig, BlocksConfigProvider, useBlocksConfig } from "./blocks/config/BlocksConfigContext";
 export { BlockContextProvider } from "./blocks/context/BlockContextProvider";
 export { useBlockContext } from "./blocks/context/useBlockContext";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
