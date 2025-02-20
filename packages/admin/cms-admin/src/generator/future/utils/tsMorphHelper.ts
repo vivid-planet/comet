@@ -27,6 +27,21 @@ export function morphTsSource(path: string) {
     return tsSource;
 }
 
+const supportedImportPaths = [
+    "[type=grid].columns.filterOperators",
+    "[type=grid].columns.block",
+    "[type=grid].columns.component",
+    // TODO implement in generator "[type=grid].columns.renderCell",
+    "[type=form].fields.validate",
+    "[type=form].fields.block",
+    "[type=form].fields.component",
+];
+const supportedInlineCodePaths = [
+    // TODO implement in generator "[type=grid].columns.filterOperators",
+    "[type=grid].columns.renderCell",
+    "[type=form].fields.validate",
+];
+
 export function configsFromSourceFile(sourceFile: SourceFile) {
     const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct (runtime vs config mismatch)
     for (const [name, declarations] of Array.from(sourceFile.getExportedDeclarations().entries())) {
@@ -64,16 +79,36 @@ function findUsedImports(node: Node) {
     return imports;
 }
 
+function getTypePropertyFromObjectLiteral(node: ObjectLiteralExpression) {
+    for (const property of (node as ObjectLiteralExpression).getProperties()) {
+        if (property.getKind() == SyntaxKind.PropertyAssignment) {
+            const propertyAssignment = property as PropertyAssignment;
+            if (propertyAssignment.getName() == "type") {
+                const propertyAssignmentInitializer = propertyAssignment.getInitializer();
+                if (propertyAssignmentInitializer?.getKind() == SyntaxKind.StringLiteral) {
+                    return (propertyAssignmentInitializer as StringLiteral).getLiteralValue();
+                }
+            }
+        }
+    }
+    return null;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function astExpressionToJson(node: Expression): any {
+function astExpressionToJson(node: Expression, path: string): any {
     if (node.getKind() == SyntaxKind.ObjectLiteralExpression) {
+        if (path == "") {
+            // first entry of path is the type, then property names (. separated) are added
+            const typeProperty = getTypePropertyFromObjectLiteral(node as ObjectLiteralExpression);
+            path = typeProperty ? `[type=${typeProperty}]` : "";
+        }
         const ret = {} as Record<string, unknown>;
         for (const property of (node as ObjectLiteralExpression).getProperties()) {
             if (property.getKind() == SyntaxKind.PropertyAssignment) {
                 const propertyAssignment = property as PropertyAssignment;
                 const propertyAssignmentInitializer = propertyAssignment.getInitializer();
                 if (propertyAssignmentInitializer) {
-                    ret[propertyAssignment.getName()] = astExpressionToJson(propertyAssignmentInitializer);
+                    ret[propertyAssignment.getName()] = astExpressionToJson(propertyAssignmentInitializer, `${path}.${propertyAssignment.getName()}`);
                 } else {
                     throw new Error(`Initializer is required for propertyAssignment '${propertyAssignment.getName()}'`);
                 }
@@ -94,15 +129,19 @@ function astExpressionToJson(node: Expression): any {
         //what is this?
         return node.getText();
     } else if (node.getKind() == SyntaxKind.ArrowFunction) {
-        const body = (node as ArrowFunction).getBody();
-        return {
-            code: node.getText(),
-            imports: findUsedImports(body),
-        };
+        if (supportedInlineCodePaths.includes(path)) {
+            const body = (node as ArrowFunction).getBody();
+            return {
+                code: node.getText(),
+                imports: findUsedImports(body),
+            };
+        } else {
+            throw new Error(`Inline Function is not allowed here and calling the function is not supported: ${path}`);
+        }
     } else if (node.getKind() == SyntaxKind.ArrayLiteralExpression) {
         const ret = [] as Array<unknown>;
         for (const element of (node as ArrayLiteralExpression).getElements()) {
-            ret.push(astExpressionToJson(element));
+            ret.push(astExpressionToJson(element, path));
         }
         return ret;
     } else if (node.getKind() == SyntaxKind.Identifier) {
@@ -114,17 +153,21 @@ function astExpressionToJson(node: Expression): any {
                 if (importDeclaration) {
                     for (const namedImport of importDeclaration.getNamedImports()) {
                         if ((namedImport.getAliasNode() || namedImport.getNameNode())?.getText() == referenceNode.getText()) {
-                            return {
-                                name: namedImport.getNameNode().getText(),
-                                import: importDeclaration.getModuleSpecifierValue(),
-                            };
+                            if (supportedImportPaths.includes(path)) {
+                                return {
+                                    name: namedImport.getNameNode().getText(),
+                                    import: importDeclaration.getModuleSpecifierValue(),
+                                };
+                            } else {
+                                throw new Error(`Following the import is not supported: ${path} ${namedImport.getText()}`);
+                            }
                         }
                     }
                 } else if (variableDeclaration) {
                     if (variableDeclaration.getName() == node.getText()) {
                         const variableInitializer = variableDeclaration.getInitializer();
                         if (variableInitializer) {
-                            return astExpressionToJson(variableInitializer);
+                            return astExpressionToJson(variableInitializer, path);
                         } else {
                             throw new Error(`Initializer is required for variableDeclaration '${variableDeclaration.getName()}'`);
                         }
@@ -144,7 +187,7 @@ export function exportedDeclarationToJson(node: ExportedDeclarations): any {
         const variableDeclaration = node as VariableDeclaration;
         const initializer = variableDeclaration.getInitializer();
         if (initializer) {
-            return astExpressionToJson(initializer);
+            return astExpressionToJson(initializer, "");
         } else {
             throw new Error(`Initializer is required for variableDeclaration '${variableDeclaration.getName()}'`);
         }

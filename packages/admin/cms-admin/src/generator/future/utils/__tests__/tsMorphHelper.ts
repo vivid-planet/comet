@@ -24,35 +24,54 @@ describe("AdminGenerator TsMorph Parse Config", () => {
         expect(configs.ProductsGrid).toEqual({ type: "grid", gqlType: "Product" });
     });
 
-    it("parses a arrow function", () => {
+    it("parses an arrow function", () => {
         const configs = parseString(`
             import { future_GridConfig as GridConfig } from "@comet/cms-admin";
             import { GQLProduct } from "@src/graphql.generated";
 
-            export const ProductsGrid: GridConfig<GQLProduct> = {
-                foo: () => true,
+            export const ProductForm: FormConfig<GQLProduct> = {
+                type: "form",
+                fields: [{
+                    name: "foo",
+                    validate: () => true
+                }]
             }
         `);
-        expect(configs.ProductsGrid).toEqual({ foo: { code: "() => true", imports: [] } });
+        expect(configs.ProductForm).toEqual({ type: "form", fields: [{ name: "foo", validate: { code: "() => true", imports: [] } }] });
     });
 
-    it("parses a arrow function referencing an imported component", () => {
+    it("parses an arrow function referencing an imported component", () => {
         const configs = parseString(`
             import { future_GridConfig as GridConfig } from "@comet/cms-admin";
             import { GQLProduct } from "@src/graphql.generated";
 
             import { ProductTitle } from "./ProductTitle";
 
+            export const ProductsGrid: GridConfig<GQLProduct> = {
+                type: "grid",
+                columns: [
+                    {
+                        name: "title",
+                        renderCell: () => <ProductTitle />,
+                    }
+                ]
+            }
             export const ProductsGrid: GridConfig<GQLProduct> = {
                 foo: () => <ProductTitle />,
             }
         `);
         expect(configs.ProductsGrid).toEqual({
-            foo: { code: "() => <ProductTitle />", imports: [{ name: "ProductTitle", importPath: "./ProductTitle" }] },
+            type: "grid",
+            columns: [
+                {
+                    name: "title",
+                    renderCell: { code: "() => <ProductTitle />", imports: [{ name: "ProductTitle", import: "./ProductTitle" }] },
+                },
+            ],
         });
     });
 
-    it("parses a arrow function referencing an imported component using an function body", () => {
+    it("parses an arrow function referencing an imported component using an function body", () => {
         const configs = parseString(`
             import { future_GridConfig as GridConfig } from "@comet/cms-admin";
             import { GQLProduct } from "@src/graphql.generated";
@@ -60,11 +79,23 @@ describe("AdminGenerator TsMorph Parse Config", () => {
             import { ProductTitle } from "./ProductTitle";
 
             export const ProductsGrid: GridConfig<GQLProduct> = {
-                foo: () => { return <ProductTitle /> },
+                type: "grid",
+                columns: [
+                    {
+                        name: "title",
+                        renderCell: () => { return <ProductTitle /> },
+                    }
+                ]
             }
         `);
         expect(configs.ProductsGrid).toEqual({
-            foo: { code: "() => { return <ProductTitle /> }", imports: [{ name: "ProductTitle", importPath: "./ProductTitle" }] },
+            type: "grid",
+            columns: [
+                {
+                    name: "title",
+                    renderCell: { code: "() => { return <ProductTitle /> }", imports: [{ name: "ProductTitle", import: "./ProductTitle" }] },
+                },
+            ],
         });
     });
 
@@ -82,5 +113,33 @@ describe("AdminGenerator TsMorph Parse Config", () => {
         expect(configs.ProductsGrid).toEqual({
             foo: 123,
         });
+    });
+
+    it("parser throws error for function at unsupported location", () => {
+        expect(() => {
+            parseString(`
+                import { future_GridConfig as GridConfig } from "@comet/cms-admin";
+                import { GQLProduct } from "@src/graphql.generated";
+        
+                export const ProductsGrid: GridConfig<GQLProduct> = {
+                    foo: () => true
+                }
+            `);
+        }).toThrow();
+    });
+
+    it("parser throws error for import at unsupported location", () => {
+        expect(() => {
+            parseString(`
+                import { future_GridConfig as GridConfig } from "@comet/cms-admin";
+                import { GQLProduct } from "@src/graphql.generated";
+
+                import { Foo } from "./Foo";
+        
+                export const ProductsGrid: GridConfig<GQLProduct> = {
+                    foo: Foo
+                }
+            `);
+        }).toThrow();
     });
 });
