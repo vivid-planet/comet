@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default async function NotFound404(): Promise<JSX.Element> {
+export default function NotFound404() {
     return (
         <html lang="en">
             <body>
