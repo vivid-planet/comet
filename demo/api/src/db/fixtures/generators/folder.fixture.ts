@@ -1,5 +1,5 @@
-import { FolderInterface, FoldersService } from "@comet/cms-api";
-import faker from "faker";
+import { type FolderInterface, type FoldersService } from "@comet/cms-api";
+import { faker } from "@faker-js/faker";
 
 export class FolderFixture {
     constructor(private foldersService: FoldersService) {}

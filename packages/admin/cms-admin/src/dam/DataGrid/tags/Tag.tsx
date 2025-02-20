@@ -7,7 +7,6 @@ export const Tag = styled("div")<{ type?: "warning" | "error" | "info" | "neutra
     align-items: center;
     height: 20px;
     border-radius: 4px;
-    margin-left: 10px;
     padding: 4px 5px;
     box-sizing: border-box;
     font-size: 12px;

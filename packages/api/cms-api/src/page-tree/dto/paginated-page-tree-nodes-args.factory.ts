@@ -1,19 +1,20 @@
 import { Type } from "@nestjs/common";
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type as TransformerType } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
 import { PageTreeNodeCategory, ScopeInterface } from "../types";
 import { EmptyPageTreeNodeScope } from "./empty-page-tree-node-scope";
 import { PageTreeNodeSort } from "./page-tree-node.sort";
 
-export interface PaginatedPageTreeNodesArgsInterface {
+interface PaginatedPageTreeNodesArgsInterface {
     scope: ScopeInterface;
     category?: string;
     sort?: PageTreeNodeSort[];
     offset: number;
     limit: number;
+    documentType?: string;
 }
 
 export class PaginatedPageTreeNodesArgsFactory {
@@ -33,6 +34,11 @@ export class PaginatedPageTreeNodesArgsFactory {
             @TransformerType(() => PageTreeNodeSort)
             @ValidateNested({ each: true })
             sort?: PageTreeNodeSort[];
+
+            @Field({ nullable: true })
+            @IsOptional()
+            @IsString()
+            documentType?: string;
         }
         return PageTreeNodesArgs;
     }

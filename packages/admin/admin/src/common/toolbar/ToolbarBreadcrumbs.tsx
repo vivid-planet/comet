@@ -1,35 +1,20 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { ButtonBase, ComponentsOverrides, css, ListItemText, Menu, MenuItem, Theme, Typography, useThemeProps } from "@mui/material";
-import { Fragment, ReactNode, useRef, useState } from "react";
+import { ButtonBase, type ComponentsOverrides, css, ListItemText, Menu, MenuItem, type Theme, Typography, useThemeProps } from "@mui/material";
+import { Fragment, type ReactNode, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 
-// TODO: Remove debug code when we have stories for the new Toolbar to simulate a large stack
-const __DEBUG__numberOfPages = 6;
-const __DEBUG__dummyStackPages = [
-    { title: "Lorem ipsum", url: "/lorem-ipsum" },
-    { title: "Foo Bar", url: "/foo-bar" },
-    { title: "Nested page", url: "/nested-page" },
-    { title: "Another page", url: "/another-page" },
-    { title: "More nested pages", url: "/more-nested-pages" },
-    { title: "And even more nested pages", url: "/and-even-more-nested-pages" },
-    { title: "Foo", url: "/foo" },
-    { title: "Lorem", url: "/lorem" },
-    { title: "More pages", url: "/more-pages" },
-];
-const __DEBUG__usedNumberOfStackPages = __DEBUG__dummyStackPages.slice(0, __DEBUG__numberOfPages);
-const __DEBUG__useDebugBreadcrumbData = false;
-
-type ToolbarBreadcrumbsClassKey =
+export type ToolbarBreadcrumbsClassKey =
     | "root"
     | "breadcrumbsList"
     | "mobileBreadcrumbsButton"
     | "currentBreadcrumbsItem"
     | "breadcrumbsItem"
+    | "mobileStandaloneCurrentBreadcrumbItem"
     | "breadcrumbsItemSeparator"
     | "breadcrumbsEllipsisItem"
     | "mobileMenu"
@@ -38,13 +23,14 @@ type ToolbarBreadcrumbsClassKey =
     | "mobileMenuItemText"
     | "mobileMenuItemNestingIndicator";
 
-interface ToolbarBreadcrumbsProps
+export interface ToolbarBreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         breadcrumbsList: "div";
         mobileBreadcrumbsButton: typeof ButtonBase;
         currentBreadcrumbsItem: typeof Typography;
         breadcrumbsItem: typeof Typography;
+        mobileStandaloneCurrentBreadcrumbItem: "div";
         breadcrumbsItemSeparator: "div";
         breadcrumbsEllipsisItem: typeof Typography;
         mobileMenu: typeof Menu;
@@ -71,20 +57,21 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
     const rootRef = useRef<HTMLDivElement>(null);
     const stackApi = useStackApi();
 
-    const breadcrumbs = __DEBUG__useDebugBreadcrumbData ? __DEBUG__usedNumberOfStackPages : stackApi?.breadCrumbs ?? [];
+    const breadcrumbs = stackApi?.breadCrumbs ?? [];
     const menuWidth = useObservedWidth(rootRef);
-
-    if (!breadcrumbs.length) {
-        return null;
-    }
-
-    const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
 
     const toggleMobileMenu = () => {
         setShowMobileMenu((val) => !val);
     };
 
     const itemSeparator = <BreadcrumbsItemSeparator>{itemSeparatorIcon}</BreadcrumbsItemSeparator>;
+
+    const lastBreadcrumbTitle = breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1].title : null;
+    const currentBreadcrumbItem = (
+        <CurrentBreadcrumbsItem variant="body2" {...slotProps?.currentBreadcrumbsItem}>
+            {lastBreadcrumbTitle}
+        </CurrentBreadcrumbsItem>
+    );
 
     return (
         <>
@@ -122,20 +109,22 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                         );
                     })}
                 </BreadcrumbsList>
-                <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
-                    {breadcrumbs.length > 1 && (
+                {breadcrumbs.length > 1 ? (
+                    <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
                         <>
                             <BreadcrumbsEllipsisItem variant="body2" {...slotProps?.breadcrumbsEllipsisItem}>
                                 ...
                             </BreadcrumbsEllipsisItem>
                             {itemSeparator}
                         </>
-                    )}
-                    <CurrentBreadcrumbsItem variant="body2" {...slotProps?.currentBreadcrumbsItem}>
-                        {lastBreadcrumb.title}
-                    </CurrentBreadcrumbsItem>
-                    <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{showMobileMenu ? closeMobileMenuIcon : openMobileMenuIcon}</MobileMenuIcon>
-                </MobileBreadcrumbsButton>
+                        {currentBreadcrumbItem}
+                        <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{showMobileMenu ? closeMobileMenuIcon : openMobileMenuIcon}</MobileMenuIcon>
+                    </MobileBreadcrumbsButton>
+                ) : (
+                    <MobileStandaloneCurrentBreadcrumbItem {...slotProps?.mobileStandaloneCurrentBreadcrumbItem}>
+                        {currentBreadcrumbItem}
+                    </MobileStandaloneCurrentBreadcrumbItem>
+                )}
             </Root>
             <MobileMenu
                 open={showMobileMenu}
@@ -153,7 +142,6 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                     ...slotProps?.mobileMenu?.transformOrigin,
                 }}
                 MenuListProps={{
-                    // @ts-expect-error This works but the `component` prop seems to be missing in the type definitions
                     component: "div",
                     ...slotProps?.mobileMenu?.MenuListProps,
                 }}
@@ -236,6 +224,17 @@ const MobileBreadcrumbsButton = createComponentSlot(ButtonBase)<ToolbarBreadcrum
     `,
 );
 
+const MobileStandaloneCurrentBreadcrumbItem = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileStandaloneCurrentBreadcrumbItem",
+})(
+    ({ theme }) => css`
+        ${theme.breakpoints.up("md")} {
+            display: none;
+        }
+    `,
+);
+
 const getCommonItemStyles = (theme: Theme) => css`
     color: ${theme.palette.grey[900]};
     text-overflow: ellipsis;
@@ -312,6 +311,10 @@ const MobileMenu = createComponentSlot(Menu)<ToolbarBreadcrumbsClassKey>({
     slotName: "mobileMenu",
 })(
     ({ theme }) => css`
+        .MuiPopover-paper {
+            min-width: 220px;
+        }
+
         .MuiMenu-list {
             padding-top: ${theme.spacing(3)};
             padding-bottom: ${theme.spacing(3)};

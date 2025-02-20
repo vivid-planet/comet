@@ -1,10 +1,10 @@
 import { ArrowLeft } from "@comet/admin-icons";
-import { ComponentsOverrides, IconButton as MuiIconButton, Theme } from "@mui/material";
+import { type ComponentsOverrides, IconButton as MuiIconButton, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem as CommonToolbarItem } from "../item/ToolbarItem";
 
@@ -17,7 +17,6 @@ const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
     ({ theme }) => css`
         flex: 0;
         display: flex;
-        align-items: stretch;
 
         .CometAdminToolbarItem-root {
             padding: 0;
@@ -30,10 +29,12 @@ const IconButton = createComponentSlot(MuiIconButton)<ToolbarBackButtonClassKey>
     slotName: "iconButton",
 })(
     ({ theme }) => css`
-        padding: 0 ${theme.spacing(1)};
+        padding: ${theme.spacing(1)};
+        margin: auto;
+        height: fit-content;
 
         ${theme.breakpoints.up("sm")} {
-            padding: 0 ${theme.spacing(2)};
+            padding: ${theme.spacing(2)};
         }
     `,
 );

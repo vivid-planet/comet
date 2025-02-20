@@ -25,6 +25,13 @@ export class Migration20240702123233 extends Migration {
         const mimetypeToExtensionsMap: { [key: string]: string[] } = mimetypes.reduce((prev, m) => {
             const mimetype = m.mimetype;
             const extensions = getValidExtensionsForMimetype(mimetype);
+
+            if (extensions === undefined || extensions.length === 0) {
+                throw new Error(
+                    `No valid extensions found for mimetype ${mimetype}. This type is not allowed in the DAM and files of this type should be removed.`,
+                );
+            }
+
             return { ...prev, [mimetype]: extensions };
         }, {});
 

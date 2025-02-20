@@ -1,6 +1,8 @@
 // @ts-check
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const { themes } = require("prism-react-renderer");
+
+const lightCodeTheme = themes.github;
+const darkCodeTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -48,25 +50,24 @@ const config = {
                 items: [
                     {
                         type: "doc",
-                        docId: "overview/Overview",
+                        docId: "Overview",
                         position: "left",
                         label: "Docs",
+                    },
+                    {
+                        href: "https://storybook.comet-dxp.com/",
+                        position: "right",
+                        label: "Storybook",
+                    },
+                    {
+                        href: "https://github.com/vivid-planet/comet",
+                        position: "right",
+                        label: "GitHub",
                     },
                 ],
             },
             footer: {
                 style: "dark",
-                links: [
-                    {
-                        title: "More",
-                        items: [
-                            {
-                                label: "GitHub",
-                                href: "https://github.com/vivid-planet/comet",
-                            },
-                        ],
-                    },
-                ],
                 copyright: `Copyright © ${new Date().getFullYear()} Vivid Planet Software GmbH. Built with Docusaurus.`,
             },
             prism: {
@@ -89,6 +90,7 @@ const config = {
                         block: { start: "removal-start", end: "removal-end" },
                     },
                 ],
+                additionalLanguages: ["bash", "diff", "json"],
             },
             announcementBar: {
                 id: "work-in-progress",

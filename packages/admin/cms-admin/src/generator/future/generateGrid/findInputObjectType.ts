@@ -1,4 +1,4 @@
-import { IntrospectionInputObjectType, IntrospectionInputValue, IntrospectionQuery } from "graphql";
+import { type IntrospectionInputObjectType, type IntrospectionInputValue, type IntrospectionQuery } from "graphql";
 
 export function findInputObjectType(input: IntrospectionInputValue, schema: IntrospectionQuery) {
     let type = input.type;

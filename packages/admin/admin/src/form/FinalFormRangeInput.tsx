@@ -1,11 +1,11 @@
-import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
-import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useEffect, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { FormControl, InputBase, Slider, type SliderProps } from "@mui/material";
+import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, useEffect, useState } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FinalFormRangeInputClassKey =
     | "root"

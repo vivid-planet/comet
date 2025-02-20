@@ -1,14 +1,17 @@
-import { BreadcrumbItem } from "@comet/admin";
+import { type BreadcrumbItem } from "@comet/admin";
 import { ChevronRight, LevelUp } from "@comet/admin-icons";
 import { Breadcrumbs, IconButton, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
-import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "./FolderBreadcrumbs.gql.generated";
+import {
+    type GQLDamFolderBreadcrumbFragment,
+    type GQLDamFolderBreadcrumbQuery,
+    type GQLDamFolderBreadcrumbQueryVariables,
+} from "./FolderBreadcrumbs.gql.generated";
 
 interface DamBreadcrumbItem {
     id: string | null;
@@ -57,7 +60,7 @@ const BackButtonSeparator = styled("div")`
     margin-right: 12px;
 `;
 
-const BackButton = ({ damBreadcrumbs }: BackButtonProps): React.ReactElement => {
+const BackButton = ({ damBreadcrumbs }: BackButtonProps) => {
     return (
         <BackButtonWrapper>
             <Link
@@ -75,7 +78,7 @@ const BackButton = ({ damBreadcrumbs }: BackButtonProps): React.ReactElement => 
     );
 };
 
-const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
+const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps) => {
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
             // Cannot be null because of skip
@@ -104,7 +107,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
     );
 };
 
-const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }: FolderBreadcrumbsProps): React.ReactElement | null => {
+const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }: FolderBreadcrumbsProps) => {
     // before stackBreadcrumbs are generated, they have no items
     if (stackBreadcrumbs.length === 0) {
         return null;

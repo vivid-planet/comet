@@ -19,7 +19,7 @@ export function createFetchInMemoryCache(fetch: Fetch): Fetch {
                         //looks like a gql query, cache any method
                         cacheKey = `${input.toString()}#${init.body.toString()}`;
                     }
-                } catch (e) {
+                } catch {
                     //not a valid json
                 }
             }

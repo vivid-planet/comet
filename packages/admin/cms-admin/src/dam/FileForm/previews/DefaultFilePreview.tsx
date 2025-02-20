@@ -1,7 +1,7 @@
 import { File } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { type ReactElement } from "react";
 
 const OtherFilePreviewWrapper = styled("div")`
     width: 100%;
@@ -32,10 +32,10 @@ const DocumentIcon = styled(File)`
 `;
 
 interface OtherFilePreviewProps {
-    customIcon?: React.ReactElement;
+    customIcon?: ReactElement;
 }
 
-export const DefaultFilePreview = ({ customIcon }: OtherFilePreviewProps): React.ReactElement => {
+export const DefaultFilePreview = ({ customIcon }: OtherFilePreviewProps) => {
     return (
         <OtherFilePreviewWrapper>
             <IconWrapper>{customIcon ?? <DocumentIcon />}</IconWrapper>

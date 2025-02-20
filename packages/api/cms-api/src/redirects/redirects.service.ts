@@ -1,5 +1,5 @@
-import { EntityRepository, FilterQuery } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository, FilterQuery } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
 import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
@@ -18,6 +18,7 @@ export class RedirectsService {
         @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
         @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
         @Inject(REDIRECTS_LINK_BLOCK) private readonly linkBlock: RedirectsLinkBlock,
+        private readonly entityManager: EntityManager,
     ) {}
 
     getFindCondition({
@@ -72,7 +73,7 @@ export class RedirectsService {
     async createAutomaticRedirects(node: PageTreeNodeInterface): Promise<void> {
         const readApi = this.pageTreeService.createReadApi({ visibility: "all" });
         const path = await readApi.nodePath(node);
-        await this.repository.persistAndFlush(
+        await this.entityManager.persistAndFlush(
             this.repository.create({
                 scope: node.scope,
                 sourceType: RedirectSourceTypeValues.path,

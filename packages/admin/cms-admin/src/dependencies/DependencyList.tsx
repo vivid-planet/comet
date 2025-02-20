@@ -1,20 +1,19 @@
-import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
+import { type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
+import { Alert, type GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
-import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
-import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
+import { IconButton, tablePaginationClasses } from "@mui/material";
+import { type LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
 import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
-import { GQLDependency } from "../graphql.generated";
+import { type GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./DependenciesConfig";
 import * as sc from "./DependencyList.sc";
-import { DependencyInterface } from "./types";
+import { type DependencyInterface } from "./types";
 
-export type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
+type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
     id: string;
     graphqlObjectType: string;
 };
@@ -54,8 +53,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
         variables: {
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             ...variables,
         },
     });
@@ -135,6 +134,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     let items: DependencyItem[] = [];
     let totalCount = 0;
 
+    if (error) {
+        throw error;
+    }
+
     if (data?.item.dependencies) {
         items = data.item.dependencies.nodes.map((node) => ({
             ...node,
@@ -156,7 +159,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     return (
         <>
             <sc.Toolbar>
-                <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
+                <Tooltip title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
                     <IconButton
                         onClick={() => {
                             refetch({
@@ -170,10 +173,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             </sc.Toolbar>
             <DataGrid
                 {...dataGridProps}
-                components={{
-                    LoadingOverlay: loading && data ? LinearProgress : undefined,
-                }}
-                componentsProps={{
+                slotProps={{
+                    loadingOverlay: {
+                        variant: "linear-progress",
+                    },
                     pagination: {
                         labelDisplayedRows: DisplayedRows,
                         sx: {
@@ -192,10 +195,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     },
                 }}
                 rowHeight={60}
-                disableSelectionOnClick
                 disableColumnMenu
-                loading={loading}
-                error={error}
+                loading={loading && data != null}
                 autoHeight={true}
                 columns={columns}
                 rows={items}
@@ -204,6 +205,12 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
                 }}
             />
+            <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
+                <FormattedMessage
+                    id="comet.dam.file.dependents.info.content"
+                    defaultMessage="Dependents are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
+                />
+            </Alert>
         </>
     );
 };

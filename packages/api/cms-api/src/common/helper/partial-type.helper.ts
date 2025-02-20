@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-import { Type } from "@nestjs/common";
+import { type Type } from "@nestjs/common";
 import { isFunction } from "@nestjs/common/utils/shared.utils";
 import { Field } from "@nestjs/graphql";
-import { ClassDecoratorFactory } from "@nestjs/graphql/dist/interfaces/class-decorator-factory.interface";
+import { type ClassDecoratorFactory } from "@nestjs/graphql/dist/interfaces/class-decorator-factory.interface";
 import { METADATA_FACTORY_NAME } from "@nestjs/graphql/dist/plugin/plugin-constants";
 import { getFieldsAndDecoratorForType } from "@nestjs/graphql/dist/schema-builder/utils/get-fields-and-decorator.util";
 import { applyFieldDecorators } from "@nestjs/graphql/dist/type-helpers/type-helpers.utils";
@@ -53,6 +52,7 @@ export function PartialType<T>(classRef: Type<T>, decorator?: ClassDecoratorFact
     return PartialObjectType as Type<Partial<T>>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 function applyIsOptionalDecorator(targetClass: Function, propertyKey: string): void {
     //don't conditionally use class-validator (as @nestjs/mapped-types does), as we depend on it anyway
     const decoratorFactory = IsUndefinable();

@@ -1,15 +1,15 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
+import { SplitButton, type SplitButtonProps } from "./common/buttons/split/SplitButton";
 import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
 
-export interface FormSaveButtonProps {
+interface FormSaveButtonProps {
     localStorageKey?: string;
     hasConflict?: boolean;
 }
@@ -25,15 +25,19 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
     const setSubmitEvent = form.mutators.setSubmitEvent
         ? form.mutators.setSubmitEvent
         : () => {
-              // eslint-disable-next-line no-console
               console.warn(`Can't set submitEvent, as the setSubmitEvent mutator is missing. Did you forget to add the mutator to the form?`);
           };
 
     const splitButtonProps: Partial<SplitButtonProps> = {};
     if (hasConflict) {
-        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
+        splitButtonProps.selectIcon = (
+            <ChevronDown
+                sx={(theme) => ({
+                    color: theme.palette.error.contrastText,
+                })}
+            />
+        );
     }
-
     return (
         <SplitButton {...splitButtonProps} disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton

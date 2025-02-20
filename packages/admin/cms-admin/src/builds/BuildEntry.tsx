@@ -1,14 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
-import { LocalErrorScopeApolloContext, useFocusAwarePolling } from "@comet/admin";
+import { AppHeaderDropdown, LocalErrorScopeApolloContext, useFocusAwarePolling } from "@comet/admin";
 import { SsgRunning, SsgStandby } from "@comet/admin-icons";
-import { List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { differenceInMinutes, parseISO } from "date-fns";
-import * as React from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage, FormattedTime } from "react-intl";
 
-import { DropdownMenuItem } from "../common/DropdownMenuItem";
-import { GQLBuildStatusQuery } from "./BuildEntry.generated";
+import { type GQLBuildStatusQuery } from "./BuildEntry.generated";
 import { PublishButton } from "./PublishButton";
 
 const buildStatusQuery = gql`
@@ -30,8 +29,8 @@ const buildStatusQuery = gql`
     }
 `;
 
-const BuildStatusPopperContent: React.FunctionComponent<{ data: GQLBuildStatusQuery }> = ({ data: { autoBuildStatus, builds } }) => {
-    const content: React.ReactNode[] = [];
+const BuildStatusPopperContent = ({ data: { autoBuildStatus, builds } }: { data: GQLBuildStatusQuery }) => {
+    const content: ReactNode[] = [];
     const lastBuild = builds.length > 0 ? builds[0] : undefined;
 
     if (lastBuild) {
@@ -103,7 +102,7 @@ const BuildStatusPopperContent: React.FunctionComponent<{ data: GQLBuildStatusQu
     );
 };
 
-export function BuildEntry(): React.ReactElement {
+export function BuildEntry() {
     const { data, error, refetch, startPolling, stopPolling } = useQuery<GQLBuildStatusQuery>(buildStatusQuery, {
         skip: process.env.NODE_ENV === "development",
         fetchPolicy: "network-only",
@@ -121,7 +120,25 @@ export function BuildEntry(): React.ReactElement {
     const running = data?.builds[0]?.status === "active" || data?.builds[0]?.status === "pending";
 
     return (
-        <DropdownMenuItem buttonIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />} disableArrow>
+        <AppHeaderDropdown
+            startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />}
+            dropdownArrow={null}
+            slotProps={{
+                button: {
+                    slotProps: {
+                        content: {
+                            sx: (theme) => ({
+                                paddingX: "17px",
+
+                                [theme.breakpoints.up("md")]: {
+                                    paddingX: theme.spacing(4),
+                                },
+                            }),
+                        },
+                    },
+                },
+            }}
+        >
             <Content>
                 <List>
                     <ListItem dense={false}>
@@ -141,12 +158,12 @@ export function BuildEntry(): React.ReactElement {
                     {data && <BuildStatusPopperContent data={data} />}
                 </List>
             </Content>
-        </DropdownMenuItem>
+        </AppHeaderDropdown>
     );
 }
 
-const Content = styled("div")`
+const Content = styled(Box)`
+    padding: ${({ theme }) => theme.spacing(1, 0)};
     width: 300px;
     min-height: 40px;
-    padding: 4px 0;
 `;

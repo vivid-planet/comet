@@ -1,4 +1,4 @@
-import { EntityClass, EntityName } from "@mikro-orm/core";
+import { type EntityClass, type EntityName } from "@mikro-orm/postgresql";
 
 export interface AffectedEntityOptions {
     idArg?: string;
@@ -6,7 +6,6 @@ export interface AffectedEntityOptions {
     nullable?: boolean;
 }
 export type AffectedEntityMeta = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entity: EntityClass<object>;
     options: AffectedEntityOptions;
 };

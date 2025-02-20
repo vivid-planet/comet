@@ -26,7 +26,7 @@ import { FilesEntityInfoService } from "./files/files-entity-info.service";
 import { FoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
-import { CalculateDominantImageColor } from "./images/calculateDominantImageColor.console";
+import { CalculateDominantImageColorCommand } from "./images/calculateDominantImageColor.command";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { ImagesController } from "./images/images.controller";
 import { ImagesService } from "./images/images.service";
@@ -123,7 +123,7 @@ export class DamModule {
                 IsAllowedImageAspectRatioConstraint,
                 IsValidImageAspectRatioConstraint,
                 FileImagesResolver,
-                CalculateDominantImageColor,
+                CalculateDominantImageColorCommand,
                 FileValidationService,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,

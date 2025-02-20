@@ -14,8 +14,8 @@ export default class ScrollManager {
             offsetYOfDragged < top
                 ? { direction: "backward", distanceToEl: top - offsetYOfDragged }
                 : offsetYOfDragged > bottom
-                ? { direction: "forward", distanceToEl: offsetYOfDragged - bottom }
-                : false;
+                  ? { direction: "forward", distanceToEl: offsetYOfDragged - bottom }
+                  : false;
         if (!stateOfDraggable) {
             return false;
         }

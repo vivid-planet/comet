@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { FormSection, useStackApi } from "@comet/admin";
+import { Alert, FormSection, useStackApi } from "@comet/admin";
 import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@comet/admin-icons";
 import {
     Button,
@@ -12,12 +12,11 @@ import {
     ListItemText,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
+import { type GQLDamFileDuplicatesQuery, type GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
 
-export const damFileDuplicatesQuery = gql`
+const damFileDuplicatesQuery = gql`
     query DamFileDuplicates($id: ID!) {
         damFile(id: $id) {
             duplicates {
@@ -36,7 +35,7 @@ export const damFileDuplicatesQuery = gql`
     }
 `;
 
-const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
+const Duplicates = ({ fileId }: { fileId: string }) => {
     const stackApi = useStackApi();
     const { data, loading, refetch } = useQuery<GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables>(damFileDuplicatesQuery, {
         variables: {
@@ -98,6 +97,15 @@ const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
                     </ListItem>
                 )}
             </List>
+            <Alert
+                title={<FormattedMessage id="comet.dam.file.duplicates.info.title" defaultMessage="What are duplicate assets?" />}
+                sx={{ marginTop: 4 }}
+            >
+                <FormattedMessage
+                    id="comet.dam.file.duplicates.info.content"
+                    defaultMessage="Duplicates refer to one or more identical copies of a digital asset stored in the DAM system. The DAM automatically detects identical assets, even if their file names are different, to reduce storage usage."
+                />
+            </Alert>
         </FormSection>
     );
 };

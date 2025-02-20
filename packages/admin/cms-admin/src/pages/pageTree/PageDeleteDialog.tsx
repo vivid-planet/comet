@@ -1,15 +1,24 @@
 import { DeleteButton, messages } from "@comet/admin";
 import { ArrowRight, Clear, Delete } from "@comet/admin-icons";
-import { AdminComponentPaper } from "@comet/blocks-admin";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import * as React from "react";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography,
+} from "@mui/material";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
+import { type GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 
-export interface PageDeleteDialogProps {
+interface PageDeleteDialogProps {
     dialogOpen: boolean;
     handleCancelClick: () => void;
     handleDeleteClick: () => void;
@@ -25,10 +34,10 @@ interface DeleteDialogInformation {
     totalPageCount: number;
 }
 
-export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
+export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
     const { dialogOpen, handleCancelClick, handleDeleteClick } = props;
 
-    const dialogInformation = React.useMemo<DeleteDialogInformation | undefined>(() => {
+    const dialogInformation = useMemo<DeleteDialogInformation | undefined>(() => {
         if (props.selectedNodes) {
             const dialogInformation = {
                 hasSubpages: props.selectedNodes.find((element) => element.parentId !== props.selectedNodes[0].parentId) !== undefined,
@@ -79,7 +88,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                 </DeleteContentInformation>
 
                 {dialogInformation && dialogInformation?.publishedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Published" />
@@ -95,10 +104,10 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
                 {dialogInformation && dialogInformation?.unpublishedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Unpublished" />
@@ -114,10 +123,10 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
                 {dialogInformation && dialogInformation?.archivedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Archived" />
@@ -133,7 +142,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
             </DialogContent>
             <DialogActions>

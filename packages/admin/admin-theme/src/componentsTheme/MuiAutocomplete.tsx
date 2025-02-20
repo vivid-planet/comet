@@ -2,7 +2,7 @@ import { Clear } from "@comet/admin-icons";
 import { autocompleteClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (component, { spacing }) => ({
     ...component,
@@ -26,6 +26,9 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
         popupIndicator: {
             "&:hover": {
                 backgroundColor: "transparent",
+            },
+            "& .MuiSvgIcon-root": {
+                fontSize: "12px",
             },
         },
     }),

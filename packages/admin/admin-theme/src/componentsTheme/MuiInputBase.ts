@@ -1,7 +1,7 @@
 import { inputBaseClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component, { palette, spacing }) => ({
     ...component,
@@ -13,6 +13,15 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
 
             [`&.${inputBaseClasses.focused}`]: {
                 borderColor: palette.primary.main,
+            },
+
+            [`&.${inputBaseClasses.disabled}`]: {
+                borderColor: palette.grey[100],
+                backgroundColor: palette.grey[50],
+            },
+
+            [`&:hover:not(.${inputBaseClasses.disabled}):not(.${inputBaseClasses.focused})`]: {
+                borderColor: palette.grey[200],
             },
         },
         adornedStart: {
@@ -37,6 +46,7 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
         },
         inputMultiline: {
             padding: `calc(${spacing(2)} - 1px)`,
+            resize: "vertical",
         },
         inputAdornedStart: {
             paddingLeft: spacing(2),

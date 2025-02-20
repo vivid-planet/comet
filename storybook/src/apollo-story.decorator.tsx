@@ -1,7 +1,6 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink } from "@comet/admin";
-import type { StoryContext } from "@storybook/addons";
-import * as React from "react";
+import { type Decorator } from "@storybook/react";
 
 const createApolloClient = (uri: string) => {
     const link = ApolloLink.from([
@@ -17,8 +16,8 @@ const createApolloClient = (uri: string) => {
     });
 };
 
-export function apolloStoryDecorator(clientOrUri: ApolloClient<any> | string) {
-    return (Story: React.ComponentType, c: StoryContext) => {
+export function apolloStoryDecorator(clientOrUri: ApolloClient<any> | string): Decorator {
+    return (Story) => {
         return (
             <ApolloProvider client={typeof clientOrUri == "string" ? createApolloClient(clientOrUri) : clientOrUri}>
                 <Story />
