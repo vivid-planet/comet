@@ -1,7 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    dataGridDateTimeColumn,
     DataGridToolbar,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -14,11 +15,11 @@ import {
 import { WarningSolid } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { GQLWarningSeverity } from "@src/graphql.generated";
-import * as React from "react";
-import { FormattedDate, FormattedTime, useIntl } from "react-intl";
+import { type GQLWarningSeverity } from "@src/graphql.generated";
+import { type ReactElement } from "react";
+import { useIntl } from "react-intl";
 
-import { GQLWarningsGridQuery, GQLWarningsGridQueryVariables, GQLWarningsListFragment } from "./WarningsGrid.generated";
+import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
 
 const warningsFragment = gql`
     fragment WarningsList on Warning {
@@ -57,23 +58,18 @@ function WarningsGridToolbar() {
     );
 }
 
-export function WarningsGrid(): React.ReactElement {
+export function WarningsGrid(): ReactElement {
     const intl = useIntl();
     const dataGridProps = {
-        ...useDataGridRemote({ initialFilter: { items: [{ columnField: "state", operatorValue: "is", value: "open" }] } }),
+        ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
         ...usePersistentColumnState("WarningsGrid"),
     };
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
+            ...dataGridDateTimeColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "warning.dateTime", defaultMessage: "Date / Time" }),
-            type: "dateTime",
-            renderCell: (params) => (
-                <>
-                    <FormattedDate value={params.value} /> <FormattedTime value={params.value} />
-                </>
-            ),
             width: 200,
         },
         {
@@ -131,8 +127,8 @@ export function WarningsGrid(): React.ReactElement {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -144,13 +140,12 @@ export function WarningsGrid(): React.ReactElement {
         <MainContent fullHeight>
             <DataGrid
                 {...dataGridProps}
-                disableSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: WarningsGridToolbar,
+                slots={{
+                    toolbar: WarningsGridToolbar,
                 }}
             />
         </MainContent>

@@ -1,10 +1,10 @@
-import { Block, BlockData, FlatBlocks } from "@comet/blocks-api";
+import { Block, BlockData, FlatBlocks } from "@comet/cms-api";
 import { DiscoverService } from "@comet/cms-api/lib/dependencies/discover.service";
 import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { Command, Console } from "nestjs-console";
+import { Command, CommandRunner } from "nest-commander";
 import { v5 } from "uuid";
 
 import { Warning } from "./entities/warning.entity";
@@ -17,21 +17,22 @@ interface RootBlockEntityData {
 }
 
 @Injectable()
-@Console()
-export class WarningCheckerConsole {
+@Command({
+    name: "check-warnings",
+    description: "Checks for warnings",
+})
+export class WarningCheckerConsole extends CommandRunner {
     constructor(
         private readonly orm: MikroORM,
         private readonly discoverService: DiscoverService,
         private readonly entityManager: EntityManager,
         @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
-    ) {}
+    ) {
+        super();
+    }
 
-    @Command({
-        command: "check-warnings",
-        description: "Checks for warnings",
-    })
     @CreateRequestContext()
-    async execute(): Promise<void> {
+    async run(): Promise<void> {
         // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
         for (const data of this.groupRootBlockDataByEntity()) {
             const { tableName, className, rootBlockData } = data;
