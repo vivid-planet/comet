@@ -12,14 +12,14 @@ The Grid Generator will create a form with all defined options and fields.
 
 Here is an overview of all general form options. These affect the form as a whole. Detailed explanations can be found below.
 
-| Parameter        | Type                             | Required | Default     | Description                                                                     |
-| ---------------- | -------------------------------- | -------- | ----------- | ------------------------------------------------------------------------------- |
-| `type`           | `"grid"` \| `"form"` \| `"tabs"` | `true`   | `undefined` | When `"form"` is set, the file is treated as a form during generation.          |
-| `gqlType`        | `string`                         | `true`   | `undefined` | The GraphQL object type to use for form generation.                             |
-| `fields`         | `object[]`                       | `true`   | `undefined` | Array of field definitions.                                                     |
-| `mode`           | `"add"` \| `"edit"` \| `"all"`   | `false`  | `undefined` | When set, allows these functions. Default is `"all"`.                           |
-| `fragmentName`   | `string`                         | `false`  | `undefined` | When set, uses this custom name for the GQL fragment names. Highly recommended. |
-| `createMutation` | `string`                         | `false`  | `undefined` | When set, uses this query instead of the default create query of the `gqlType`. |
+| Parameter        | Type                           | Required | Default     | Description                                                                     |
+| ---------------- | ------------------------------ | -------- | ----------- | ------------------------------------------------------------------------------- |
+| `type`           | `"grid"` \| `"form"`           | `true`   | `undefined` | When `"form"` is set, the file is treated as a form during generation.          |
+| `gqlType`        | `string`                       | `true`   | `undefined` | The GraphQL object type to use for form generation.                             |
+| `fields`         | `object[]`                     | `true`   | `undefined` | Array of field definitions.                                                     |
+| `mode`           | `"add"` \| `"edit"` \| `"all"` | `false`  | `undefined` | When set, allows these functions. Default is `"all"`.                           |
+| `fragmentName`   | `string`                       | `false`  | `undefined` | When set, uses this custom name for the GQL fragment names. Highly recommended. |
+| `createMutation` | `string`                       | `false`  | `undefined` | When set, uses this query instead of the default create query of the `gqlType`. |
 
 ### type
 

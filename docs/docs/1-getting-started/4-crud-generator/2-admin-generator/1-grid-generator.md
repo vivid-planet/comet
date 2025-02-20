@@ -12,27 +12,27 @@ The Grid Generator will create a DataGrid component with all defined options and
 
 Here is an overview of all general grid options. These affect the grid as a whole. Detailed explanations can be found below.
 
-| Parameter           | Type                             | Required | Default     | Description                                                                                    |
-| ------------------- | -------------------------------- | -------- | ----------- | ---------------------------------------------------------------------------------------------- |
-| `type`              | `"grid"` \| `"form"` \| `"tabs"` | `true`   | `undefined` | When `"grid"` is set, the file is treated as a grid during generation.                         |
-| `gqlType`           | `string`                         | `true`   | `undefined` | The GraphQL object type to use for grid generation.                                            |
-| `columns`           | `object[]`                       | `true`   | `undefined` | Array of column definitions.                                                                   |
-| `fragmentName`      | `string`                         | `false`  | `undefined` | When set, uses this custom name for the GQL fragment names. Highly recommended.                |
-| `query`             | `string`                         | `false`  | `undefined` | When set, uses this query instead of the default list query of the `gqlType`.                  |
-| `queryParamsPrefix` | `string`                         | `false`  | `undefined` | When set, prefixes search and filter parameters in the URL with this string.                   |
-| `add`               | `boolean`                        | `false`  | `true`      | If `true`, includes the "add" operation in the row context menu.                               |
-| `edit`              | `boolean`                        | `false`  | `true`      | If `true`, includes the "edit" operation in the row context menu.                              |
-| `delete`            | `boolean`                        | `false`  | `true`      | If `true`, includes the "delete" operation in the row context menu.                            |
-| `copyPaste`         | `boolean`                        | `false`  | `true`      | If `true`, includes the "copyPaste" operation in the row context menu.                         |
-| `readOnly`          | `boolean`                        | `false`  | `false`     | If `true`, disables "add", "edit", "delete" and "copyPaste".                                   |
-| `toolbar`           | `boolean`                        | `false`  | `true`      | If `false`, no toolbar is generated. Toolbar options do not have any effect.                   |
-| `toolbarActionProp` | `boolean`                        | `false`  | `false`     | If `true`, a parameter to pass a custom toolbar action to the grid is generated.               |
-| `newEntryText`      | `string`                         | `false`  | `undefined` | If set, this string will be generated as the message in the main action button of the toolbar. |
-| `excelExport`       | `boolean`                        | `false`  | `false`     | If `true`, the "excelExport" option is included in "More Actions".                             |
-| `filterProp`        | `boolean`                        | `false`  | `false`     | If `true`, a parameter to pass a filter to the grid component is generated.                    |
-| `rowActionProp`     | `boolean`                        | `false`  | `false`     | If `true`, a parameter to pass a custom row action to the grid is generated.                   |
-| `initialSort`       | `object[]`                       | `false`  | `undefined` | When set, the grids columns are rendered with this preset sort.                                |
-| `initialFilter`     | `object[]`                       | `false`  | `undefined` | When set, the grid columns are rendered with this preset filter.                               |
+| Parameter           | Type                 | Required | Default     | Description                                                                                    |
+| ------------------- | -------------------- | -------- | ----------- | ---------------------------------------------------------------------------------------------- |
+| `type`              | `"grid"` \| `"form"` | `true`   | `undefined` | When `"grid"` is set, the file is treated as a grid during generation.                         |
+| `gqlType`           | `string`             | `true`   | `undefined` | The GraphQL object type to use for grid generation.                                            |
+| `columns`           | `object[]`           | `true`   | `undefined` | Array of column definitions.                                                                   |
+| `fragmentName`      | `string`             | `false`  | `undefined` | When set, uses this custom name for the GQL fragment names. Highly recommended.                |
+| `query`             | `string`             | `false`  | `undefined` | When set, uses this query instead of the default list query of the `gqlType`.                  |
+| `queryParamsPrefix` | `string`             | `false`  | `undefined` | When set, prefixes search and filter parameters in the URL with this string.                   |
+| `add`               | `boolean`            | `false`  | `true`      | If `true`, includes the "add" operation in the row context menu.                               |
+| `edit`              | `boolean`            | `false`  | `true`      | If `true`, includes the "edit" operation in the row context menu.                              |
+| `delete`            | `boolean`            | `false`  | `true`      | If `true`, includes the "delete" operation in the row context menu.                            |
+| `copyPaste`         | `boolean`            | `false`  | `true`      | If `true`, includes the "copyPaste" operation in the row context menu.                         |
+| `readOnly`          | `boolean`            | `false`  | `false`     | If `true`, disables "add", "edit", "delete" and "copyPaste".                                   |
+| `toolbar`           | `boolean`            | `false`  | `true`      | If `false`, no toolbar is generated. Toolbar options do not have any effect.                   |
+| `toolbarActionProp` | `boolean`            | `false`  | `false`     | If `true`, a parameter to pass a custom toolbar action to the grid is generated.               |
+| `newEntryText`      | `string`             | `false`  | `undefined` | If set, this string will be generated as the message in the main action button of the toolbar. |
+| `excelExport`       | `boolean`            | `false`  | `false`     | If `true`, the "excelExport" option is included in "More Actions".                             |
+| `filterProp`        | `boolean`            | `false`  | `false`     | If `true`, a parameter to pass a filter to the grid component is generated.                    |
+| `rowActionProp`     | `boolean`            | `false`  | `false`     | If `true`, a parameter to pass a custom row action to the grid is generated.                   |
+| `initialSort`       | `object[]`           | `false`  | `undefined` | When set, the grids columns are rendered with this preset sort.                                |
+| `initialFilter`     | `object[]`           | `false`  | `undefined` | When set, the grid columns are rendered with this preset filter.                               |
 
 ### type
 

@@ -66,44 +66,7 @@ The minimum requirements to generate a grid or form are the `type` and `gqlType`
 
 ### Configuration of Tabs
 
-The Admin Generator supports generating tabs around grids and forms, as they are often used together.
-To do so, the configurations are wrapped in a `TabsConfig` object.
-
-```typescript
-export const TabsExample: TabsConfig = {
-    type: "tabs",
-    tabs: [
-        {
-            name: "Details",
-            content: {
-                type: "form",
-                gqlType: "Product",
-                // other general options
-                fields: [
-                    {
-                        // field definitions
-                    },
-                ],
-            },
-        },
-        {
-            name: "General",
-            content: ProductsGrid,
-        },
-    ],
-};
-
-const ProductsGrid: GridConfig<GQLProduct> = {
-    type: "grid",
-    gqlType: "Product",
-    // other general options
-    columns: [
-        {
-            // column definitions
-        },
-    ],
-};
-```
+Coming soon.
 
 ### Page Generator
 
