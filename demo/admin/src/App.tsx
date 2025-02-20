@@ -106,7 +106,7 @@ export function App() {
                                                 if (scope.domain === "main") {
                                                     return true;
                                                 } else {
-                                                    return name !== "NewsDetail" && name !== "NewsList";
+                                                    return name !== "NewsDetail" && name !== "NewsList" && name !== "NewsLink";
                                                 }
                                             }}
                                         >

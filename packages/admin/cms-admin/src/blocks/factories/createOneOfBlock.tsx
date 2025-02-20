@@ -2,11 +2,13 @@ import { Field, RadioGroupField, SelectField } from "@comet/admin";
 import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { type Dispatch, type ReactNode, type SetStateAction, useCallback } from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
+import { useBlocksConfig } from "../config/BlocksConfigContext";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
@@ -113,17 +115,6 @@ export const createOneOfBlock = <T extends boolean = boolean>(
             type: activeBlockState.type,
         };
     }
-
-    const options: Array<{ value: string; label: ReactNode }> = allowEmpty
-        ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
-        : [];
-
-    Object.entries(supportedBlocks).forEach(([blockType, block]) => {
-        options.push({
-            value: blockType,
-            label: block.displayName,
-        });
-    });
 
     const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
@@ -278,6 +269,34 @@ export const createOneOfBlock = <T extends boolean = boolean>(
 
         AdminComponent: ({ state, updateState }) => {
             const isInPaper = useBlockAdminComponentPaper();
+
+            const { scope } = useContentScope();
+            const { supportsBlock } = useBlocksConfig();
+
+            const options = useMemo(() => {
+                let filteredSupportedBlocks;
+
+                if (supportsBlock) {
+                    filteredSupportedBlocks = Object.fromEntries(
+                        Object.entries(supportedBlocks).filter(([, block]) => supportsBlock(block.name, scope)),
+                    );
+                } else {
+                    filteredSupportedBlocks = supportedBlocks;
+                }
+
+                const options: Array<{ value: string; label: ReactNode }> = allowEmpty
+                    ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
+                    : [];
+
+                Object.entries(filteredSupportedBlocks).forEach(([blockType, block]) => {
+                    options.push({
+                        value: blockType,
+                        label: block.displayName,
+                    });
+                });
+
+                return options;
+            }, [scope, supportsBlock]);
 
             const handleBlockSelect = useCallback(
                 (blockType: string) => {
