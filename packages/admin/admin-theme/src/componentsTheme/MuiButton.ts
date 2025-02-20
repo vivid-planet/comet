@@ -129,6 +129,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             backgroundColor: palette.common.white,
 
             "&:hover": {
+                color: palette.error.dark,
                 borderColor: palette.error.dark,
                 backgroundColor: palette.grey[50],
             },
