@@ -69,8 +69,8 @@ export class UserPermissionsService {
         if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
         return {
             id: idToken.sub,
-            name: idToken.name,
-            email: idToken.email,
+            name: idToken.name || "Unknown User",
+            email: idToken.email || "",
         };
     }
 
