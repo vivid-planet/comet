@@ -1,16 +1,27 @@
+<<<<<<< HEAD
+=======
+import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
+>>>>>>> main
 import { Injectable } from "@nestjs/common";
 
 import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
-import { DamFileDownloadLinkBlockData } from "./dam-file-download-link.block";
+import { DamScopeInterface } from "../types";
+import { DamFileDownloadLinkBlockData, OpenFileTypeMethod } from "./dam-file-download-link.block";
+
+type File = {
+    id: string;
+    name: string;
+    fileUrl: string;
+    size: number;
+    scope?: DamScopeInterface;
+    altText?: string;
+    title?: string;
+};
 
 type TransformResponse = {
-    damFile?: {
-        id: string;
-        name: string;
-        fileUrl: string;
-        size: number;
-    };
+    file?: File;
+    openFileType: OpenFileTypeMethod;
 };
 
 @Injectable()
@@ -18,7 +29,11 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
+<<<<<<< HEAD
         const ret: TraversableTransformBlockResponse = {
+=======
+        const ret: TransformResponse = {
+>>>>>>> main
             openFileType: block.openFileType,
         };
 
@@ -28,10 +43,11 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
 
         const file = await this.filesService.findOneById(block.fileId);
 
-        if (file && block.openFileType === "NewTab") {
-            ret.file = {
+        if (file) {
+            const retFile: Omit<File, "fileUrl"> = {
                 id: file.id,
                 name: file.name,
+<<<<<<< HEAD
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
                 size: file.size,
                 scope: file.scope,
@@ -42,8 +58,25 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
                 name: file.name,
                 fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
                 size: file.size,
+=======
+                size: Number(file.size),
+>>>>>>> main
                 scope: file.scope,
+                altText: file.altText,
+                title: file.title,
             };
+
+            if (block.openFileType === "NewTab") {
+                ret.file = {
+                    ...retFile,
+                    fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                };
+            } else if (block.openFileType === "Download") {
+                ret.file = {
+                    ...retFile,
+                    fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
+                };
+            }
         }
 
         return ret;
