@@ -53,6 +53,16 @@ app.prepare().then(() => {
                 };
             }
 
+            const originalWriteHead = res.writeHead;
+            res.writeHead = function (statusCode: number, ...args: unknown[]) {
+                // since writeHead is a callback function, it's called after handle() -> we get the actual response statusCode
+                if (statusCode >= 400) {
+                    // prevent caching of error responses
+                    res.setHeader("Cache-Control", "private, no-cache, no-store, max-age=0, must-revalidate");
+                }
+                return originalWriteHead.apply(this, [statusCode, ...args]);
+            };
+
             await handle(req, res, parsedUrl);
         } catch (err) {
             console.error("Error occurred handling", req.url, err);
