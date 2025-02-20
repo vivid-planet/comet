@@ -38,6 +38,15 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 marginLeft: 5,
             },
 
+            "&:hover": {
+                color: palette.primary.main,
+                backgroundColor: "transparent",
+            },
+
+            "&:focus": {
+                border: `2px solid ${palette.primary.dark}`,
+            },
+
             ...(ownerState.color === "info" && {
                 color: palette.grey[900],
 
