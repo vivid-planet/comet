@@ -85,6 +85,7 @@ export interface BlockMethods<
     dependencies?: (state: State) => BlockDependency[];
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
     resolveDependencyPath: (state: State, jsonPath: string) => string;
+    extractTextContents?: (state: State, options: { includeInvisibleContent: boolean }) => string[];
 }
 
 export interface AnonymousBlockInterface<
@@ -99,6 +100,7 @@ export interface AnonymousBlockInterface<
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
     definesOwnTitle?: boolean;
+    extractTextContents?: BlockMethods<InputApi, State, OutputApi, PreviewState>["extractTextContents"];
 }
 
 export interface BlockInterface<

@@ -1,9 +1,37 @@
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
 
 import { environment as envVarsToLoad } from "./src/environment";
+
+const adminPackagesPathRegex = /\/packages\/admin\/.*\/src\//;
+
+/**
+ * Plugin to watch for changes in admin packages and restart the dev server to force the optimizer to re-bundle.
+ * Inspired by https://prosopo.io/articles/using-vite-to-rebuild-local-dependencies-in-an-npm-workspace/.
+ */
+const adminPackagesHotReloadPlugin: Plugin = {
+    name: "admin-packages-hot-reload",
+    buildStart() {
+        this.addWatchFile("../../packages/admin/admin/src");
+        this.addWatchFile("../../packages/admin/admin-color-picker/src");
+        this.addWatchFile("../../packages/admin/admin-date-time/src");
+        this.addWatchFile("../../packages/admin/admin-icons/src");
+        this.addWatchFile("../../packages/admin/admin-react-select/src");
+        this.addWatchFile("../../packages/admin/admin-rte/src");
+        this.addWatchFile("../../packages/admin/admin-theme/src");
+        this.addWatchFile("../../packages/admin/blocks-admin/src");
+        this.addWatchFile("../../packages/admin/cms-admin/src");
+    },
+    async handleHotUpdate({ file, server }) {
+        const isChangeInAdminPackage = adminPackagesPathRegex.test(file);
+
+        if (isChangeInAdminPackage) {
+            await server.restart(true);
+        }
+    },
+};
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -45,6 +73,7 @@ export default defineConfig(({ mode }) => {
                     },
                 },
             }),
+            adminPackagesHotReloadPlugin,
         ],
         server: {
             host: true,

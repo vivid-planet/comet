@@ -14,7 +14,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { Divider } from "@mui/material";
+import { Collapse, Divider } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -244,8 +244,8 @@ export function ManufacturerForm({ id }: FormProps) {
                                 label={values.useAlternativeAddress ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
                             />
                             <Field name="useAlternativeAddress" subscription={{ value: true }}>
-                                {({ input: { value } }) =>
-                                    value ? (
+                                {({ input: { value } }) => (
+                                    <Collapse in={value}>
                                         <>
                                             <TextField
                                                 required
@@ -295,8 +295,8 @@ export function ManufacturerForm({ id }: FormProps) {
                                                 }
                                             />
                                         </>
-                                    ) : null
-                                }
+                                    </Collapse>
+                                )}
                             </Field>
                         </FieldSet>
                         <FieldSet

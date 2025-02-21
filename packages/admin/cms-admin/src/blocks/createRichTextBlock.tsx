@@ -1,4 +1,4 @@
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
 import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
@@ -249,12 +249,16 @@ export const createRichTextBlock = (
                 </SelectPreviewComponent>
             );
         },
-        previewContent: (state) => {
+        previewContent: function (state) {
             // get first text block
             const content = state.editorState.getCurrentContent();
             const MAX_CHARS = 100;
 
             return content.hasText() ? [{ type: "text", content: content.getPlainText().slice(0, MAX_CHARS) }] : [];
+        },
+        extractTextContents: function (state) {
+            const content = state.editorState.getCurrentContent();
+            return content.hasText() ? [stateToHtml({ editorState: state.editorState, options: rteOptions }).html] : [];
         },
     };
 

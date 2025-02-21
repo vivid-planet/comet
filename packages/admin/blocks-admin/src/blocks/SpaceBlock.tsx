@@ -65,4 +65,6 @@ export const SpaceBlock: BlockInterface<SpaceBlockData, State, SpaceBlockInput> 
     previewContent: ({ height }) => {
         return [{ type: "text", content: `${height}px` }];
     },
+
+    extractTextContents: () => [],
 };
