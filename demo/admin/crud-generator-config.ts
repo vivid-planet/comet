@@ -6,10 +6,6 @@ export default [
         entityName: "Product",
     },
     {
-        target: "src/news/generated",
-        entityName: "News",
-    },
-    {
         target: "src/warnings/generated",
         entityName: "Warning",
     },
