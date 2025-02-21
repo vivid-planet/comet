@@ -20,6 +20,7 @@ import { IsEnum } from "class-validator";
 
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
+import { SliderBlock } from "./slider.block";
 
 const supportedBlocks = {
     accordion: AccordionBlock,
@@ -35,6 +36,7 @@ const supportedBlocks = {
     media: StandaloneMediaBlock,
     contentGroup: ContentGroupBlock,
     mediaGallery: MediaGalleryBlock,
+    slider: SliderBlock,
 
     image: DamImageBlock,
     newsDetail: NewsDetailBlock,
