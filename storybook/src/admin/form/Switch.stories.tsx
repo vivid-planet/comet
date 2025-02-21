@@ -13,7 +13,7 @@ export const Switch = () => {
                 onSubmit={(values) => {
                     //
                 }}
-                render={({ handleSubmit, values }) => (
+                render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Card variant="outlined">
                             <CardContent>
@@ -22,7 +22,7 @@ export const Switch = () => {
                                     fullWidth
                                     name="dynamicLabel"
                                     fieldLabel="Switch with dynamic label"
-                                    label={values.dynamicLabel ? "Yes" : "No"}
+                                    label={(checked) => (checked ? "Yes" : "No")}
                                 />
                                 <SwitchField fullWidth name="disabled" fieldLabel="Disabled switch" label="Disabled" disabled />
                             </CardContent>

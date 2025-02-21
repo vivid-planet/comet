@@ -248,11 +248,11 @@ export const _FinalFormSwitch = {
             >
                 {({ values }) => (
                     <>
-                        <SwitchField name="switch" fieldLabel="FinalFormSwitch" label={values.switch ? "On" : "Off"} fullWidth />
+                        <SwitchField name="switch" fieldLabel="FinalFormSwitch" label={(checked) => (checked ? "On" : "Off")} fullWidth />
                         <SwitchField
                             name="switchDisabled"
                             fieldLabel="FinalFormSwitch disabled"
-                            label={values.switchDisabled ? "On" : "Off"}
+                            label={(checked) => (checked ? "On" : "Off")}
                             fullWidth
                             disabled
                         />
