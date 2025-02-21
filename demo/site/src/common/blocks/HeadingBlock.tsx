@@ -11,7 +11,7 @@ const eyebrowRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
 };
 
-const getHeadlineRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers => ({
+const getHeadingRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers => ({
     inline: defaultRichTextInlineStyleMap,
     blocks: {
         "header-one": createTextBlockRenderFn({ variant: "h600", as: htmlTag, bottomSpacing: true }),
@@ -23,7 +23,7 @@ const getHeadlineRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers =
     },
 });
 
-const headlineTagMap: Record<HeadingBlockData["htmlTag"], keyof HTMLElementTagNameMap> = {
+const headingTagMap: Record<HeadingBlockData["htmlTag"], keyof HTMLElementTagNameMap> = {
     H1: "h1",
     H2: "h2",
     H3: "h3",
@@ -35,8 +35,8 @@ const headlineTagMap: Record<HeadingBlockData["htmlTag"], keyof HTMLElementTagNa
 type HeadingBlockProps = PropsWithData<HeadingBlockData>;
 
 export const HeadingBlock = withPreview(
-    ({ data: { eyebrow, headline, htmlTag } }: HeadingBlockProps) => {
-        const headlineTag = headlineTagMap[htmlTag];
+    ({ data: { eyebrow, heading, htmlTag } }: HeadingBlockProps) => {
+        const headingTag = headingTagMap[htmlTag];
 
         return (
             <>
@@ -46,14 +46,14 @@ export const HeadingBlock = withPreview(
                     </Typography>
                 )}
                 <PreviewSkeleton
-                    hasContent={hasRichTextBlockContent(headline)}
+                    hasContent={hasRichTextBlockContent(heading)}
                     title={
-                        <HeadlineSkeleton variant="h550" as="span">
-                            Headline
-                        </HeadlineSkeleton>
+                        <HeadingSkeleton variant="h550" as="span">
+                            Heading
+                        </HeadingSkeleton>
                     }
                 >
-                    <RichTextBlock data={headline} renderers={getHeadlineRenderers(headlineTag)} />
+                    <RichTextBlock data={heading} renderers={getHeadingRenderers(headingTag)} />
                 </PreviewSkeleton>
             </>
         );
@@ -61,6 +61,6 @@ export const HeadingBlock = withPreview(
     { label: "Heading" },
 );
 
-const HeadlineSkeleton = styled(Typography)`
+const HeadingSkeleton = styled(Typography)`
     color: inherit;
 `;
