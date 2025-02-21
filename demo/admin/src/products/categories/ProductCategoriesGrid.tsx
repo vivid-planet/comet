@@ -170,8 +170,8 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
 
     const { data, loading, error } = useQuery<GQLProductCategoriesGridQuery, GQLProductCategoriesGridQueryVariables>(productCategoriesQuery, {
         variables: {
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: 0,
+            limit: 100,
             sort: { field: "position", direction: "ASC" },
         },
     });
@@ -195,6 +195,7 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
             }}
             rowReordering
             onRowOrderChange={handleRowOrderChange}
+            hideFooterPagination
         />
     );
 }
