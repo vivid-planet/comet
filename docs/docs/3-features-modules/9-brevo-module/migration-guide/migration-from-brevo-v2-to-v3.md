@@ -66,6 +66,18 @@ Environment variables containing Brevo configuration information can be removed 
 -   BREVO_DOUBLE_OPT_IN_TEMPLATE_ID
 -   BREVO_ALLOWED_REDIRECT_URL
 
+### Add `scope` to `BrevoConfig`
+
+A custom database migration must be created in the project to add individual `scope` columns to `BrevoConfig`.
+
+```
+//...
+ this.addSql(
+            `alter table "BrevoConfig" add column "scope_domain" text not null, add column "scope_language" text not null;`,
+            );
+//...
+```
+
 ### Remove `allowedRedirectionUrl` from the Brevo module configuration
 
 ```diff
