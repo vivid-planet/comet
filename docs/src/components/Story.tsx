@@ -1,4 +1,3 @@
-import { createCometTheme } from "@comet/admin-theme";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import CodeBlock from "@theme/CodeBlock";
 import type { Props as PlaygroundProps } from "@theme/Playground";
@@ -16,7 +15,6 @@ const importStory = async (name: string) => {
 };
 
 export const Story = ({ path, ...props }: StoryProps) => {
-    const theme = createCometTheme();
     const [code, setCode] = useState("");
 
     useEffect(() => {
@@ -29,7 +27,9 @@ export const Story = ({ path, ...props }: StoryProps) => {
                 // https://docusaurus.io/docs/docusaurus-core/#browseronly
 
                 // eslint-disable-next-line @typescript-eslint/no-require-imports
-                const { MuiThemeProvider } = require("@comet/admin");
+                const { createCometTheme, MuiThemeProvider } = require("@comet/admin");
+
+                const theme = createCometTheme();
 
                 return (
                     <IntlProvider locale="en">

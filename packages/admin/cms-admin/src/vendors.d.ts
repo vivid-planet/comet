@@ -1,5 +1,3 @@
-/// <reference types="@comet/admin-theme" />
-
 import { type HTMLAttributes } from "react";
 
 declare module "react" {

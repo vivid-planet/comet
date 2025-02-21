@@ -39,7 +39,6 @@
         "@comet/admin-date-time": "workspace:^7.14.0",
         "@comet/admin-icons": "workspace:^7.14.0",
         "@comet/admin-rte": "workspace:^7.14.0",
-        "@comet/admin-theme": "workspace:^7.14.0",
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "axios": "^0.29.0",
