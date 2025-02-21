@@ -76,14 +76,14 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             visible: "up('md')",
             values: [
                 {
-                    value: "true",
+                    value: true,
                     label: {
                         primaryText: "In stock",
                         icon: { name: "StateFilled", color: "success" },
                     },
                 },
                 {
-                    value: "false",
+                    value: false,
                     label: {
                         primaryText: "Out of stock",
                         icon: { name: "StateFilled", color: "error" },

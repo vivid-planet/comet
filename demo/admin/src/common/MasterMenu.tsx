@@ -30,6 +30,7 @@ import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/product
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
+import { StaticSelectFieldsTestProductsPage } from "@src/products/future/StaticSelectFieldsTestProductsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
@@ -263,6 +264,15 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/combination-fields-test-products-future",
                             component: CombinationFieldsTestProductsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.staticSelectFieldsTest" defaultMessage="StaticSelect Fields Test" />,
+                        secondary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        route: {
+                            path: "/static-select-fields-test-products-future",
+                            component: StaticSelectFieldsTestProductsPage,
                         },
                     },
                 ],
