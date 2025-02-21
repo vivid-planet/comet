@@ -10,6 +10,7 @@ import {
     isFormFieldConfig,
     isFormLayoutConfig,
 } from "./generator";
+import { convertConfigImport } from "./utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
@@ -110,10 +111,10 @@ export function generateForm(
             return field;
         });
     rootBlockFields.forEach((field) => {
-        imports.push({
-            name: field.block.name,
-            importPath: field.block.import,
-        });
+        if ("import" in field.block) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            imports.push(convertConfigImport(field.block as any)); // TODO: improve typing, generator runtime vs. config mismatch
+        }
     });
 
     const readOnlyFields = formFields.filter((field) => field.readOnly);
