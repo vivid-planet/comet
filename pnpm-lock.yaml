@@ -71,9 +71,6 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../../packages/admin/admin-icons
-      '@comet/admin-theme':
-        specifier: workspace:*
-        version: link:../../packages/admin/admin-theme
       '@comet/cms-admin':
         specifier: workspace:*
         version: link:../../packages/admin/cms-admin
@@ -681,9 +678,6 @@ importers:
       '@comet/admin-rte':
         specifier: workspace:*
         version: link:../packages/admin/admin-rte
-      '@comet/admin-theme':
-        specifier: workspace:*
-        version: link:../packages/admin/admin-theme
       '@docusaurus/core':
         specifier: ^3.7.0
         version: 3.7.0(@mdx-js/react@3.1.0(@types/react@18.3.18)(react@18.3.1))(acorn@8.14.0)(eslint@9.20.1(jiti@2.4.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
@@ -817,9 +811,6 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:^7.14.0
         version: link:../admin-icons
-      '@comet/admin-theme':
-        specifier: workspace:^7.14.0
-        version: link:../admin-theme
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
@@ -884,6 +875,9 @@ importers:
       '@mui/system':
         specifier: ^6.4.3
         version: 6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1)
+      '@mui/utils':
+        specifier: ^6.4.3
+        version: 6.4.3(@types/react@18.3.18)(react@18.3.1)
       '@mui/x-data-grid':
         specifier: ^7.27.1
         version: 7.27.1(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@mui/material@6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1327,64 +1321,6 @@ importers:
         specifier: ^5.7.3
         version: 5.7.3
 
-  packages/admin/admin-theme:
-    dependencies:
-      '@comet/admin-icons':
-        specifier: workspace:^7.14.0
-        version: link:../admin-icons
-      '@mui/utils':
-        specifier: ^6.4.3
-        version: 6.4.3(@types/react@18.3.18)(react@18.3.1)
-    devDependencies:
-      '@babel/cli':
-        specifier: ^7.26.4
-        version: 7.26.4(@babel/core@7.26.9)
-      '@babel/core':
-        specifier: ^7.26.9
-        version: 7.26.9
-      '@comet/admin-babel-preset':
-        specifier: workspace:^7.14.0
-        version: link:../admin-babel-preset
-      '@comet/eslint-config':
-        specifier: workspace:^7.14.0
-        version: link:../../eslint-config
-      '@mui/material':
-        specifier: ^6.4.5
-        version: 6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/system':
-        specifier: ^6.4.3
-        version: 6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1)
-      '@mui/x-data-grid':
-        specifier: ^7.27.1
-        version: 7.27.1(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@mui/material@6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ^18.3.18
-        version: 18.3.18
-      '@types/react-dom':
-        specifier: ^18.3.5
-        version: 18.3.5(@types/react@18.3.18)
-      eslint:
-        specifier: ^9.20.1
-        version: 9.20.1(jiti@2.4.2)
-      npm-run-all2:
-        specifier: ^5.0.2
-        version: 5.0.2
-      prettier:
-        specifier: ^3.5.2
-        version: 3.5.2
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.0.1
-      typescript:
-        specifier: ^5.7.3
-        version: 5.7.3
-
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
@@ -1399,9 +1335,6 @@ importers:
       '@comet/admin-rte':
         specifier: workspace:^7.14.0
         version: link:../admin-rte
-      '@comet/admin-theme':
-        specifier: workspace:^7.14.0
-        version: link:../admin-theme
       '@graphql-tools/graphql-file-loader':
         specifier: ^7.5.17
         version: 7.5.17(graphql@15.10.1)
@@ -2175,9 +2108,6 @@ importers:
       '@comet/admin-rte':
         specifier: workspace:*
         version: link:../packages/admin/admin-rte
-      '@comet/admin-theme':
-        specifier: workspace:*
-        version: link:../packages/admin/admin-theme
       '@comet/cms-admin':
         specifier: workspace:*
         version: link:../packages/admin/cms-admin

@@ -1,5 +1,4 @@
-import { AppHeader, CometLogo, MuiThemeProvider } from "@comet/admin";
-import { createCometTheme } from "@comet/admin-theme";
+import { AppHeader, CometLogo, createCometTheme, MuiThemeProvider } from "@comet/admin";
 
 export default {
     title: "@comet/admin/theming",
