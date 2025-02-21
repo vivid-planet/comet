@@ -5,13 +5,13 @@ import { unlink } from "fs/promises";
 import got from "got";
 import * as mimedb from "mime-db";
 import os from "os";
-import { sep } from "path";
+import { basename, extname } from "path";
 import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { FileUploadInput } from "./dto/file-upload.input";
+import { type FileUploadInput } from "./dto/file-upload.input";
 import { FilesService } from "./files.service";
 
 const pipeline = promisify(stream.pipeline);
@@ -20,8 +20,6 @@ export function slugifyFilename(filename: string, extension: string): string {
     const extensionWithDot = extension.startsWith(".") ? extension : `.${extension}`;
     return `${slugify(filename)}${extensionWithDot}`;
 }
-
-export const createHashedPath = (contentHash: string): string => [contentHash.substr(0, 2), contentHash.substr(2, 2), contentHash].join(sep);
 
 export const calculatePartialRanges = (size: number, range: string): { start: number; end: number; contentLength: number } => {
     let [start, end] = range.replace(/bytes=/, "").split("-") as Array<string | number>;
@@ -51,34 +49,54 @@ type SvgNode =
           [key: string]: SvgNode;
       };
 
-const recursivelyFindJSInSvg = (node: SvgNode): boolean => {
+const disallowedSvgTags = [
+    "script", // can lead to XSS
+    "foreignObject", // can embed non-SVG content
+    "use", // can load external resources
+    "image", // can load external resources
+    "animate", // can modify attributes; resource exhaustion
+    "animateMotion", // can modify attributes; resource exhaustion
+    "animateTransform", // can modify attributes; resource exhaustion
+    "set", // can modify attributes
+];
+
+const recursiveIsValidSvgNode = (node: SvgNode): boolean => {
     if (typeof node === "string") {
         // is plain text -> can't contain JS
-        return false;
+        return true;
     }
 
-    for (const tagOrAttr of Object.keys(node)) {
-        if (tagOrAttr.toLowerCase() === "script" || tagOrAttr.toLowerCase().startsWith("on")) {
-            // is script tag or event handler
-            return true;
+    for (const [tagOrAttributeName, value] of Object.entries(node)) {
+        const containsDisallowedTags = disallowedSvgTags.some((tag) => tag.toLowerCase() === tagOrAttributeName.toLowerCase());
+
+        const containsEventHandler = tagOrAttributeName.toLowerCase().startsWith("on"); // can execute JavaScript
+
+        const containsHref = // can execute JavaScript or link to malicious targets
+            ["href", "xlink:href"].includes(tagOrAttributeName) &&
+            typeof value === "string" &&
+            (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("javascript:"));
+
+        if (containsDisallowedTags || containsEventHandler || containsHref) {
+            return false;
         }
 
         // is node -> children can contain JS
-        const children = node[tagOrAttr];
-        const childrenContainJS = recursivelyFindJSInSvg(children);
-        if (childrenContainJS) {
-            return true;
+        const children = node[tagOrAttributeName];
+        const childrenAreValid = recursiveIsValidSvgNode(children);
+
+        if (!childrenAreValid) {
+            return false;
         }
     }
 
-    return false;
+    return true;
 };
 
-export const svgContainsJavaScript = (svg: string) => {
+export const isValidSvg = (svg: string) => {
     const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" });
     const jsonObj = parser.parse(svg) as SvgNode;
 
-    return recursivelyFindJSInSvg(jsonObj);
+    return recursiveIsValidSvgNode(jsonObj);
 };
 
 export const removeMulterTempFile = async (file: FileUploadInput) => {
@@ -119,11 +137,11 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
 
     const fileType = await FileType.fromFile(tempFile);
     const stats = fs.statSync(tempFile); // TODO don't use sync
-    const filename = url.substring(url.lastIndexOf("/") + 1);
+    const filenameWithoutExtension = basename(url, extname(url));
 
     return {
         fieldname: FilesService.UPLOAD_FIELD,
-        originalname: `${filename}.${fileType?.ext}`,
+        originalname: `${filenameWithoutExtension}.${fileType?.ext}`,
         encoding: "utf8",
         mimetype: fileType?.mime as string,
         size: stats.size,

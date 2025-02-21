@@ -1,0 +1,27 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as ClearInputButtonStories from "./ClearInputButton.stories";
+
+<Meta of={ClearInputButtonStories} />
+
+# ClearInputButton
+
+The ClearInputButton is a Button which is used inside a clearable Input Field. It can be used inside an InputAdornment of an InputField.
+The ClearInputButton extends the props from the [Material UI ButtonBase](https://mui.com/api/button-base/) component with the `icon` prop.
+It lets you specify which ClearIcon you want to display.
+
+<Canvas of={ClearInputButtonStories.Default} />
+
+## Examples
+
+### Clearable Input Field
+
+<Canvas of={ClearInputButtonStories.ClearableInputField} />
+
+### Disabled Clear InputButton
+
+<Canvas of={ClearInputButtonStories.Disabled} />
+
+### Custom Clear Icon
+
+<Canvas of={ClearInputButtonStories.CustomClearIcon} />

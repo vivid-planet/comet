@@ -1,7 +1,7 @@
 import { Check, Error, Error as ErrorIcon, Save, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, ButtonClassKey, buttonGroupClasses, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useEffect, useState } from "react";
+import { Button, type ButtonClassKey, buttonGroupClasses, type ButtonProps, type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
@@ -85,7 +85,7 @@ export interface SaveButtonProps extends ButtonProps {
     conflictIcon?: ReactNode;
 }
 
-export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
+type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
 
 export function SaveButton(inProps: SaveButtonProps) {
     const {

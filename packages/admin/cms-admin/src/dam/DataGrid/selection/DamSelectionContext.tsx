@@ -1,25 +1,24 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { saveAs } from "file-saver";
-import { GraphQLError } from "graphql";
-import React from "react";
+import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useState } from "react";
 
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
-import { DamItemSelectionMap } from "../FolderDataGrid";
+import { type DamItemSelectionMap } from "../FolderDataGrid";
 import {
-    GQLArchiveFilesMutation,
-    GQLArchiveFilesMutationVariables,
-    GQLDamFileDownloadInfoFragment,
-    GQLDeleteDamFileMutation,
-    GQLDeleteDamFileMutationVariables,
-    GQLDeleteDamFolderMutation,
-    GQLDeleteDamFolderMutationVariables,
-    GQLRestoreFilesMutation,
-    GQLRestoreFilesMutationVariables,
+    type GQLArchiveFilesMutation,
+    type GQLArchiveFilesMutationVariables,
+    type GQLDamFileDownloadInfoFragment,
+    type GQLDeleteDamFileMutation,
+    type GQLDeleteDamFileMutationVariables,
+    type GQLDeleteDamFolderMutation,
+    type GQLDeleteDamFolderMutationVariables,
+    type GQLRestoreFilesMutation,
+    type GQLRestoreFilesMutationVariables,
 } from "./DamSelectionContext.generated";
 
-export const damFileDownloadInfoFragment = gql`
+const damFileDownloadInfoFragment = gql`
     fragment DamFileDownloadInfo on DamFile {
         id
         fileUrl
@@ -29,7 +28,7 @@ export const damFileDownloadInfoFragment = gql`
 
 interface DamSelectionApi {
     selectionMap: DamItemSelectionMap;
-    setSelectionMap: React.Dispatch<React.SetStateAction<DamItemSelectionMap>>;
+    setSelectionMap: Dispatch<SetStateAction<DamItemSelectionMap>>;
 
     // delete
     deleteSelected: () => void;
@@ -57,7 +56,7 @@ interface DamSelectionApi {
     hasDownloadErrors: boolean;
 }
 
-export const DamSelectionContext = React.createContext<DamSelectionApi>({
+const DamSelectionContext = createContext<DamSelectionApi>({
     selectionMap: new Map(),
     setSelectionMap: () => {
         throw new Error("Missing DamSelectionContext. Please add a <DamSelectionProvider /> somewhere up in the tree.");
@@ -95,14 +94,14 @@ export const DamSelectionContext = React.createContext<DamSelectionApi>({
 });
 
 export const useDamSelectionApi = () => {
-    return React.useContext(DamSelectionContext);
+    return useContext(DamSelectionContext);
 };
 
-export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
+export const DamSelectionProvider = ({ children }: { children?: ReactNode }) => {
     const apolloClient = useApolloClient();
-    const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
+    const [selectionMap, setSelectionMap] = useState<DamItemSelectionMap>(new Map());
 
-    const showError = (setError: React.Dispatch<React.SetStateAction<boolean>>) => {
+    const showError = (setError: Dispatch<SetStateAction<boolean>>) => {
         setError(true);
         setTimeout(() => {
             setError(false);
@@ -110,22 +109,22 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
     };
 
     // delete
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
-    const [deleting, setDeleting] = React.useState(false);
-    const [hasDeletionErrors, setHasDeletionErrors] = React.useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+    const [deleting, setDeleting] = useState(false);
+    const [hasDeletionErrors, setHasDeletionErrors] = useState(false);
 
-    const openDeleteDialog = React.useCallback(() => {
+    const openDeleteDialog = useCallback(() => {
         setDeleteDialogOpen(true);
     }, []);
 
-    const deleteSelected = React.useCallback(async () => {
+    const deleteSelected = useCallback(async () => {
         setDeleting(true);
 
         const selectedItems = Array.from(selectionMap.entries()).map((item) => {
             return { id: item[0], type: item[1] };
         });
 
-        let errors: readonly GraphQLError[] | undefined;
+        let errors;
         for (const selectedItem of selectedItems) {
             if (selectedItem.type === "file") {
                 const result = await apolloClient.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
@@ -164,10 +163,10 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
     }, [apolloClient, selectionMap]);
 
     // restore
-    const [restoring, setRestoring] = React.useState(false);
-    const [hasRestoreErrors, setHasRestoreErrors] = React.useState(false);
+    const [restoring, setRestoring] = useState(false);
+    const [hasRestoreErrors, setHasRestoreErrors] = useState(false);
 
-    const restoreSelected = React.useCallback(async () => {
+    const restoreSelected = useCallback(async () => {
         setRestoring(true);
 
         const fileIds = Array.from(selectionMap.entries())
@@ -201,10 +200,10 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
     }, [apolloClient, selectionMap]);
 
     // archive
-    const [archiving, setArchiving] = React.useState(false);
-    const [hasArchiveErrors, setHasArchiveErrors] = React.useState(false);
+    const [archiving, setArchiving] = useState(false);
+    const [hasArchiveErrors, setHasArchiveErrors] = useState(false);
 
-    const archiveSelected = React.useCallback(async () => {
+    const archiveSelected = useCallback(async () => {
         setArchiving(true);
 
         const fileIds = Array.from(selectionMap.entries())
@@ -238,17 +237,17 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
     }, [apolloClient, selectionMap]);
 
     // move
-    const [moveDialogOpen, setMoveDialogOpen] = React.useState(false);
-    const [moving, setMoving] = React.useState(false);
-    const [hasMoveErrors, setHasMoveErrors] = React.useState(false);
+    const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+    const [moving, setMoving] = useState(false);
+    const [hasMoveErrors, setHasMoveErrors] = useState(false);
 
-    const openMoveDialog = React.useCallback(() => {
+    const openMoveDialog = useCallback(() => {
         setMoveDialogOpen(true);
     }, []);
 
     // download
-    const [downloading, setDownloading] = React.useState(false);
-    const [hasDownloadErrors, setHasDownloadErrors] = React.useState(false);
+    const [downloading, setDownloading] = useState(false);
+    const [hasDownloadErrors, setHasDownloadErrors] = useState(false);
 
     const downloadSelected = async () => {
         setDownloading(true);

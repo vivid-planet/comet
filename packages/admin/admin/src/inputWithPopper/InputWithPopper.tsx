@@ -1,9 +1,16 @@
-import { ClickAwayListener, Grow, InputBase as MuiInputBase, InputBaseProps, Paper as MuiPaper, Popper as MuiPopper } from "@mui/material";
+import {
+    ClickAwayListener,
+    Grow,
+    type InputBase as MuiInputBase,
+    type InputBaseProps,
+    type Paper as MuiPaper,
+    type Popper as MuiPopper,
+} from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { TransitionProps } from "@mui/material/transitions";
-import { ElementType, ReactNode, RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { type TransitionProps } from "@mui/material/transitions";
+import { type ElementType, type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from "react";
 
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { InputBase, Paper, Popper, Root } from "./InputWithPopper.slots";
 
 export type InputWithPopperComponents = InputBaseProps["components"] & {
@@ -108,7 +115,7 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
                     {...inputBaseProps}
                     inputRef={inputRef}
                     onFocus={(e) => {
-                        inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
+                        inputBaseProps.onFocus?.(e);
                         openPopper();
                     }}
                     components={inputBaseComponents}
@@ -128,15 +135,7 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
                         },
                     }}
                 />
-                <Popper
-                    open={showPopper}
-                    anchorEl={rootRef.current}
-                    placement="bottom-start"
-                    transition
-                    onResize={undefined} // see https://github.com/mui/material-ui/issues/35287
-                    onResizeCapture={undefined}
-                    {...slotProps?.popper}
-                >
+                <Popper open={showPopper} anchorEl={rootRef.current} placement="bottom-start" transition {...slotProps?.popper}>
                     {({ TransitionProps }) => (
                         <Transition {...TransitionProps} {...slotProps?.transition}>
                             <Paper {...slotProps?.paper}>{typeof children === "function" ? children(closePopper) : children}</Paper>

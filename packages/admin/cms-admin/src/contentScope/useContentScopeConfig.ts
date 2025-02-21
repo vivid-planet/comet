@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 
 import { useContentScope } from "./Provider";
 
@@ -9,7 +9,7 @@ export interface ContentScopeConfigProps {
 export function useContentScopeConfig({ redirectPathAfterChange }: ContentScopeConfigProps): void {
     const { setRedirectPathAfterChange } = useContentScope();
 
-    React.useEffect(() => {
+    useEffect(() => {
         setRedirectPathAfterChange(redirectPathAfterChange);
         return () => {
             setRedirectPathAfterChange(undefined);

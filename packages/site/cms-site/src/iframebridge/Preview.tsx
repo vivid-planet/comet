@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { type PropsWithChildren, useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
 import styled from "styled-components";
 
@@ -68,6 +68,6 @@ export const Preview = ({ adminRoute, children, label, enabledAutoScrolling = tr
     return <>{children}</>;
 };
 
-export const PreviewElementContainer = styled.div`
+const PreviewElementContainer = styled.div`
     display: contents;
 `;

@@ -1,15 +1,16 @@
 import { orange, yellow } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import escapeRegExp from "lodash.escaperegexp";
+import { Fragment, type ReactNode } from "react";
 
 export type TextMatch = { start: number; end: number; focused: boolean };
 
-export const MarkedMatches: React.FunctionComponent<{ text: string; matches: TextMatch[] }> = ({ text, matches }) => {
+export const MarkedMatches = ({ text, matches }: { text: string; matches: TextMatch[] }) => {
     if (matches.length === 0) {
         return <>{text}</>;
     }
 
-    const textSegments: React.ReactNode[] = [text.substring(0, matches[0].start)];
+    const textSegments: ReactNode[] = [text.substring(0, matches[0].start)];
 
     for (let i = 0; i < matches.length - 1; i++) {
         const match = matches[i];
@@ -25,7 +26,7 @@ export const MarkedMatches: React.FunctionComponent<{ text: string; matches: Tex
     return (
         <Text>
             {textSegments.map((segment, index) => (
-                <React.Fragment key={index}>{segment}</React.Fragment>
+                <Fragment key={index}>{segment}</Fragment>
             ))}
         </Text>
     );
@@ -39,3 +40,24 @@ const Mark = styled("mark")<{ focused: boolean }>`
     color: ${({ theme }) => theme.palette.common.black};
     background-color: ${({ focused }) => (focused ? orange[500] : yellow[500])};
 `;
+
+export const findTextMatches = (text: string, query?: string): Array<TextMatch> => {
+    const matches: Array<TextMatch> = [];
+    if (!query) {
+        return matches;
+    }
+
+    const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        matches.push({
+            start: match.index,
+            end: match.index + query.length - 1,
+            focused: false,
+        });
+    }
+
+    return matches;
+};

@@ -3,9 +3,9 @@ import hasha from "hasha";
 import { sep } from "path";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
-import { createHashedPath } from "../files/files.utils";
 import { FileCache } from "./dto/file-cache.interface";
 
 @Injectable()
@@ -49,13 +49,13 @@ export class ScaledImagesCacheService {
             const path = [fileDirectory, hasha(scaleSettingsCacheKey, { algorithm: "md5" })].join(sep);
             try {
                 await this.blobStorageBackendService.removeFile(this.config.cacheDirectory, path);
-            } catch (e) {
+            } catch {
                 // empty
             }
         } else {
             try {
                 await this.blobStorageBackendService.removeFile(this.config.cacheDirectory, fileDirectory);
-            } catch (e) {
+            } catch {
                 // empty
             }
         }

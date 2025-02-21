@@ -1,6 +1,6 @@
-import { InputBase, InputBaseProps } from "@mui/material";
-import { ChangeEvent, FocusEvent, useCallback, useEffect, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { InputBase, type InputBaseProps } from "@mui/material";
+import { type ChangeEvent, type FocusEvent, useCallback, useEffect, useState } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
@@ -43,6 +43,7 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
     );
 
     const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+        input.onBlur(event);
         const { value } = event.target;
         const numberParts = intl.formatNumberToParts(1111.111);
         const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
@@ -81,16 +82,18 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
             onChange={handleChange}
             onBlur={handleBlur}
             endAdornment={
-                <>
-                    {endAdornment}
-                    {clearable && (
-                        <ClearInputAdornment
-                            position="end"
-                            hasClearableContent={typeof input.value === "number"}
-                            onClick={() => input.onChange(undefined)}
-                        />
-                    )}
-                </>
+                (endAdornment || clearable) && (
+                    <>
+                        {clearable && (
+                            <ClearInputAdornment
+                                position="end"
+                                hasClearableContent={typeof input.value === "number"}
+                                onClick={() => input.onChange(undefined)}
+                            />
+                        )}
+                        {endAdornment}
+                    </>
+                )
             }
         />
     );

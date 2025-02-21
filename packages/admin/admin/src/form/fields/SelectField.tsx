@@ -1,5 +1,14 @@
-import { Field, FieldProps } from "../Field";
-import { FinalFormSelect, FinalFormSelectProps } from "../FinalFormSelect";
+import { MenuItem } from "@mui/material";
+import { type ComponentProps, type ReactNode } from "react";
+
+import { Field, type FieldProps } from "../Field";
+import { FinalFormSelect } from "../FinalFormSelect";
+
+export type SelectFieldOption<Value extends string | number = string | number> = {
+    label: ReactNode;
+    value: Value;
+    disabled?: boolean;
+};
 
 type SelectFieldPropsToExtendFrom<Value extends string | number> = FieldProps<Value, HTMLSelectElement>;
 
@@ -9,19 +18,26 @@ type SelectFieldPropsToExtendFromWithoutChildren<Value extends string | number> 
 };
 
 export interface SelectFieldProps<Value extends string | number> extends SelectFieldPropsToExtendFromWithoutChildren<Value> {
-    children: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
+    children?: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
+    options?: SelectFieldOption<Value>[];
     componentsProps?: {
-        finalFormSelect?: FinalFormSelectProps<Value>;
+        finalFormSelect?: Partial<ComponentProps<typeof FinalFormSelect<Value>>>;
     };
 }
 
-export function SelectField<Value extends string | number>({ componentsProps = {}, children, ...restProps }: SelectFieldProps<Value>) {
+export function SelectField<Value extends string | number>({ componentsProps = {}, children, options, ...restProps }: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
     return (
         <Field {...restProps}>
             {(props) => (
                 <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
-                    {children}
+                    {children
+                        ? children
+                        : options?.map(({ label, value, disabled }) => (
+                              <MenuItem key={value} value={value} disabled={disabled}>
+                                  {label}
+                              </MenuItem>
+                          ))}
                 </FinalFormSelect>
             )}
         </Field>

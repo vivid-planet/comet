@@ -1,6 +1,7 @@
 import objectPath from "object-path";
 
-import { ActionsGridColumnConfig, GridColumnConfig } from "../generator";
+import { type ActionsGridColumnConfig, type GridColumnConfig } from "../generator";
+import { getAllColumnFieldNames, type GridCombinationColumnConfig } from "./combinationColumn";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {
@@ -20,11 +21,21 @@ const recursiveStringify = (obj: FieldsObjectType): string => {
     return ret;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function generateGqlFieldList({ columns }: { columns: Array<GridColumnConfig<any> | ActionsGridColumnConfig> }) {
+export function generateGqlFieldList({
+    columns,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    columns: Array<GridColumnConfig<any> | GridCombinationColumnConfig<string> | ActionsGridColumnConfig>;
+}) {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
         if (field.type !== "actions") {
-            objectPath.set(acc, field.name, true);
+            if (field.type === "combination") {
+                getAllColumnFieldNames(field).map((fieldName) => {
+                    objectPath.set(acc, fieldName, true);
+                });
+            } else {
+                objectPath.set(acc, field.name, true);
+            }
         }
         return acc;
     }, {});

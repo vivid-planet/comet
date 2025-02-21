@@ -1,16 +1,27 @@
 import { Check, Close, Delete, RteLink } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
+import {
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormLabel,
+    Grid,
+    InputBase,
+} from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
-import { MouseEvent, useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
-import { IControlProps } from "../../types";
+import { type IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
 import selectionIsInOneBlock from "../../utils/selectionIsInOneBlock";
 import { ENTITY_TYPE } from "./Decorator";
-import { ILinkProps } from "./EditorComponent";
+import { type ILinkProps } from "./EditorComponent";
 
 export default function ToolbarButton(props: IControlProps) {
     const [open, setOpen] = useState(false);

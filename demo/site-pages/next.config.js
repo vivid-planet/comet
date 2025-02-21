@@ -56,6 +56,12 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
     },
+    compiler: {
+        styledComponents: true,
+    },
+    experimental: {
+        optimizePackageImports: ["@comet/cms-site"],
+    },
 };
 
 module.exports = nextConfig;

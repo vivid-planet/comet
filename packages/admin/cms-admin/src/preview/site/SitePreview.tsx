@@ -1,25 +1,28 @@
+import { gql, useQuery } from "@apollo/client";
+import { Tooltip } from "@comet/admin";
 import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
-import { Grid, Tooltip, Typography } from "@mui/material";
-import * as React from "react";
+import { Grid, Typography } from "@mui/material";
+import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { RouteComponentProps, useHistory, useLocation } from "react-router";
+import { type RouteComponentProps, useHistory, useLocation } from "react-router";
 
-import { ExternalLinkBlockData } from "../../blocks.generated";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ExternalLinkBlockData } from "../../blocks.generated";
+import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
-import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
+import { type SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
+import { type GQLSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
-    logo?: React.ReactNode;
+    logo?: ReactNode;
 }
 
 function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
@@ -31,7 +34,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     const queryParams = new URLSearchParams(location.search);
     const strValue = queryParams.get(name);
     const value = parseValue(strValue !== null ? strValue : undefined);
-    const setValue = React.useCallback(
+    const setValue = useCallback(
         (newValue: string) => {
             const newQueryParams = new URLSearchParams(location.search);
             newQueryParams.set(name, newValue);
@@ -41,7 +44,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props) {
     const { scope } = useContentScope();
 
     //initialPath: path the preview is intialized with; WITHOUT resolvePath called, might be not the path actually used in site
@@ -63,7 +66,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     //needed to prevent the iframe from reloading on every change
     //doesn't change during navigation within site
     //changed when settings (showOnlyVisible) change
-    const [iframePath, setIframePath] = React.useState(sitePath);
+    const [iframePath, setIframePath] = useState(sitePath);
 
     const [device, setDevice] = useSearchState("device", (v) => {
         if (![Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(v))) {
@@ -73,7 +76,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     });
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
-    const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
+    const [linkToOpen, setLinkToOpen] = useState<ExternalLinkBlockData | undefined>(undefined);
 
     const siteConfig = useSiteConfig({ scope });
 
@@ -81,7 +84,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
 
     // the site in the iframe notifies us about it's current location
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
-    const handlePreviewLocationChange = React.useCallback(
+    const handlePreviewLocationChange = useCallback(
         (message: SitePrevewIFrameLocationMessage) => {
             if (sitePath !== message.data.pathname) {
                 setSitePath(message.data.pathname);
@@ -98,6 +101,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         const newShowOnlyVisible = !showOnlyVisible;
         setShowOnlyVisible(String(newShowOnlyVisible));
         setIframePath(sitePath); //reload iframe with new settings
+        refetch();
     };
 
     const siteLink = `${siteConfig.url}${sitePath}`;
@@ -113,13 +117,26 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         }
     });
 
-    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({
-        scope: JSON.stringify(scope),
-        path: iframePath,
-        settings: JSON.stringify({
-            includeInvisible: showOnlyVisible ? false : true,
-        }),
-    }).toString()}`;
+    const { data, error, refetch } = useQuery<GQLSitePreviewJwtQuery>(
+        gql`
+            query SitePreviewJwt($scope: JSONObject!, $path: String!, $includeInvisible: Boolean!) {
+                sitePreviewJwt(scope: $scope, path: $path, includeInvisible: $includeInvisible)
+            }
+        `,
+        {
+            fetchPolicy: "network-only",
+            variables: {
+                scope,
+                path: iframePath,
+                includeInvisible: showOnlyVisible ? false : true,
+            },
+            pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
+        },
+    );
+    if (error) throw new Error(error.message);
+    if (!data) return <div />;
+
+    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({ jwt: data.sitePreviewJwt }).toString()}`;
 
     return (
         <Root>

@@ -1,11 +1,11 @@
 import { RouterMemoryRouter } from "@comet/admin";
 import { action } from "@storybook/addon-actions";
-import { StoryContext } from "@storybook/addons";
-import { Action, History, UnregisterCallback } from "history";
-import * as React from "react";
-import { MemoryRouterProps, Route, RouteComponentProps } from "react-router";
+import { type Decorator } from "@storybook/react";
+import { type Action, type History, type UnregisterCallback } from "history";
+import { type PropsWithChildren, type ReactNode, useEffect } from "react";
+import { type MemoryRouterProps, Route, type RouteComponentProps } from "react-router";
 
-const StoryRouter = ({ children, routerProps }: { children: React.ReactNode; routerProps?: MemoryRouterProps }) => {
+const StoryRouter = ({ children, routerProps }: { children: ReactNode; routerProps?: MemoryRouterProps }) => {
     return (
         <RouterMemoryRouter {...routerProps}>
             <Route render={(props) => <HistoryWatcher {...props}>{children}</HistoryWatcher>} />
@@ -13,8 +13,8 @@ const StoryRouter = ({ children, routerProps }: { children: React.ReactNode; rou
     );
 };
 
-function HistoryWatcher({ history, children }: React.PropsWithChildren<RouteComponentProps>) {
-    React.useEffect(() => {
+function HistoryWatcher({ history, children }: PropsWithChildren<RouteComponentProps>) {
+    useEffect(() => {
         const onHistoryChanged: History.LocationListener = (location, historyAction: Action) => {
             const path = location.pathname;
             action(historyAction ? historyAction : (location as any).action)(path);
@@ -29,8 +29,8 @@ function HistoryWatcher({ history, children }: React.PropsWithChildren<RouteComp
     return <>{children}</>;
 }
 
-export function storyRouterDecorator() {
-    return (Story: React.ComponentType, c: StoryContext) => {
+export function storyRouterDecorator(): Decorator {
+    return (Story) => {
         return (
             <StoryRouter>
                 <Story />

@@ -1,18 +1,18 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
+import { Field, filterByFragment, FinalForm, FinalFormInput, type FinalFormSubmitEvent, useFormApiRef } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { productPriceFormFragment, productPriceFormQuery, updateProductPriceFormMutation } from "./ProductPriceForm.gql";
 import {
-    GQLProductPriceFormFragment,
-    GQLProductPriceFormQuery,
-    GQLProductPriceFormQueryVariables,
-    GQLProductPriceFormUpdateProductMutation,
-    GQLProductPriceFormUpdateProductMutationVariables,
+    type GQLProductPriceFormFragment,
+    type GQLProductPriceFormQuery,
+    type GQLProductPriceFormQueryVariables,
+    type GQLProductPriceFormUpdateProductMutation,
+    type GQLProductPriceFormUpdateProductMutationVariables,
 } from "./ProductPriceForm.gql.generated";
 
 interface FormProps {
@@ -62,7 +62,7 @@ export function ProductPriceForm({ id }: FormProps) {
     };
 
     if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
     }
 
     if (loading) {
@@ -84,15 +84,13 @@ export function ProductPriceForm({ id }: FormProps) {
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <Field
-                            fullWidth
-                            name="price"
-                            component={FinalFormInput}
-                            inputProps={{ type: "number" }}
-                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
-                        />
-                    </MainContent>
+                    <Field
+                        fullWidth
+                        name="price"
+                        component={FinalFormInput}
+                        inputProps={{ type: "number" }}
+                        label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                    />
                 </>
             )}
         </FinalForm>

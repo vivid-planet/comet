@@ -1,13 +1,25 @@
-import { BaseEntity, Collection, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, Ref, types } from "@mikro-orm/core";
+import {
+    BaseEntity,
+    Collection,
+    defineConfig,
+    Entity,
+    ManyToOne,
+    MikroORM,
+    OneToMany,
+    PrimaryKey,
+    Property,
+    Ref,
+    types,
+} from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 @Entity()
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,14 +28,14 @@ export class Product extends BaseEntity<Product, "id"> {
 }
 
 @Entity()
-export class ProductToCategory extends BaseEntity<ProductToCategory, "id"> {
+export class ProductToCategory extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @ManyToOne(() => Product, { onDelete: "cascade", ref: true })
+    @ManyToOne(() => Product, { deleteRule: "cascade", ref: true })
     product: Ref<Product>;
 
-    @ManyToOne(() => Category, { onDelete: "cascade", ref: true })
+    @ManyToOne(() => Category, { deleteRule: "cascade", ref: true })
     category: Ref<Category>;
 
     @Property({ type: types.boolean })
@@ -31,7 +43,7 @@ export class ProductToCategory extends BaseEntity<ProductToCategory, "id"> {
 }
 
 @Entity()
-export class Category extends BaseEntity<ProductToCategory, "id"> {
+export class Category extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -44,18 +56,20 @@ describe("GenerateCrud Relation n:m with additional column", () => {
     let orm: MikroORM;
     beforeEach(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [Product, ProductToCategory, Category],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [Product, ProductToCategory, Category],
+            }),
+        );
 
         const out = await generateCrud(
             { targetDirectory: __dirname, create: false, update: true, delete: false },
             orm.em.getMetadata().get("Product"),
         );
-        const lintedOut = await lintGeneratedFiles(out);
-        const foundFile = lintedOut.find((file) => file.name === "product.resolver.ts");
+        const formattedOut = await formatGeneratedFiles(out);
+        const foundFile = formattedOut.find((file) => file.name === "product.resolver.ts");
         if (!foundFile) throw new Error("File not found");
 
         file = foundFile;

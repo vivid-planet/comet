@@ -1,4 +1,4 @@
-import { Field, FieldProps } from "../Field";
+import { Field, type FieldProps } from "../Field";
 import { FinalFormAsyncSelect } from "../FinalFormAsyncSelect";
 
 export interface AsyncSelectFieldProps<Option> extends FieldProps<Option, HTMLSelectElement> {

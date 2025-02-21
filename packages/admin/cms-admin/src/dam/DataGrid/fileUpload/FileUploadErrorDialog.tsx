@@ -1,6 +1,7 @@
 import { messages } from "@comet/admin";
 import {
     Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
@@ -15,10 +16,9 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileUploadValidationError } from "./useDamFileUpload";
+import { type FileUploadValidationError } from "./useDamFileUpload";
 
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};
@@ -36,7 +36,7 @@ interface FileUploadErrorDialogProps {
     validationErrors?: FileUploadValidationError[];
 }
 
-export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors }: FileUploadErrorDialogProps): React.ReactElement | null => {
+export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors }: FileUploadErrorDialogProps) => {
     if (validationErrors === undefined) {
         return null;
     }

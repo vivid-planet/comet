@@ -1,35 +1,30 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    IPreviewContext,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
+import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { type GQLSvgImageBlockDamFileQuery, type GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface, type BlockPreviewContext } from "./types";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
-export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
+type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
-export function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
+function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
     if (!damFile) return "";
     return new URL(
         `${apiUrl}/dam/files/preview/$fileId/$fileName`
@@ -49,7 +44,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: IPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
         ...state,
         urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
         adminMeta: { route: previewCtx.parentUrl },
@@ -125,7 +120,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+        const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
@@ -142,7 +137,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         return (
             <SelectPreviewComponent>
                 {state.damFile ? (
-                    <AdminComponentPaper disablePadding>
+                    <BlockAdminComponentPaper disablePadding>
                         <Box padding={3}>
                             <Grid container alignItems="center" spacing={3}>
                                 <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
@@ -169,9 +164,9 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                             </Grid>
                         </Box>
                         <Divider />
-                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
+                        <BlockAdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
                             <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                        </AdminComponentButton>
+                        </BlockAdminComponentButton>
                         {showMenu && (
                             <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                                 {dependencyMap["DamFile"] && state.damFile?.id && (
@@ -192,7 +187,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                                 )}
                             </Menu>
                         )}
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 ) : (
                     <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
                         onSubmit={(newValues) => {

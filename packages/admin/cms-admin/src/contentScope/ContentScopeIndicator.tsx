@@ -1,11 +1,11 @@
 import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
-import { SvgIconProps, useTheme } from "@mui/material";
+import { type SvgIconProps, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ContentScopeInterface, useContentScope } from "./Provider";
+import { type ContentScopeInterface, useContentScope } from "./Provider";
 
 const capitalizeString = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,34 +16,26 @@ interface ContentScopeIndicatorProps {
     scope?: ContentScopeInterface;
 }
 
-export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: React.PropsWithChildren<ContentScopeIndicatorProps>) => {
+export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: PropsWithChildren<ContentScopeIndicatorProps>) => {
     const theme = useTheme();
     const { scope: contentScope, values } = useContentScope();
     const scope = passedScope ?? contentScope;
 
     const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
         const label = values.find((value) => {
-            return value[scopePart].value === scope[scopePart];
+            return value[scopePart] && value[scopePart]?.value === scope[scopePart];
         })?.[scopePart].label;
 
-        return label ?? capitalizeString(scope[scopePart]);
+        return label ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
     };
 
-    let content: React.ReactNode;
+    let content: ReactNode;
     if (global) {
         content = <FormattedMessage {...messages.globalContentScope} />;
     } else {
         const scopeParts = Object.keys(scope);
-        content = scopeParts.map((scopePart, index, array) => {
-            const isLastPart = index === array.length - 1;
-
-            const ret = [findLabelForScopePart(scopePart)];
-            if (!isLastPart) {
-                ret.push(" / ");
-            }
-
-            return ret;
-        });
+        const scopeLabels = scopeParts.map((scopePart) => findLabelForScopePart(scopePart)).filter((label) => typeof label === "string") as string[];
+        content = scopeLabels.join(" / ");
     }
 
     return (

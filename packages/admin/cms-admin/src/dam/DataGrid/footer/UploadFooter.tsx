@@ -1,7 +1,6 @@
 import { Upload } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamFooter } from "./DamFooter";
@@ -21,7 +20,7 @@ interface DamFooterProps {
     folderName?: string;
 }
 
-export const DamUploadFooter: React.VoidFunctionComponent<DamFooterProps> = ({ open, folderName }) => {
+export const DamUploadFooter = ({ open, folderName }: DamFooterProps) => {
     if (!open) {
         return null;
     }
@@ -34,7 +33,7 @@ export const DamUploadFooter: React.VoidFunctionComponent<DamFooterProps> = ({ o
                     id="comet.dam.footer.dropFilesHereToUpload"
                     defaultMessage="Drop files here to upload them to the folder: <strong>{folderName}</strong>"
                     values={{
-                        strong: (chunks: string) => (
+                        strong: (chunks) => (
                             <strong>
                                 {/*Otherwise there is no whitespace between other text and strong*/}
                                 &nbsp;

@@ -1,6 +1,4 @@
-import * as React from "react";
-
-function CometDigitalExperienceLogo(): React.ReactElement {
+function CometDigitalExperienceLogo() {
     return (
         <svg width="300" height="84" viewBox="0 0 300 84" xmlns="http://www.w3.org/2000/svg">
             <defs>

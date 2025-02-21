@@ -2,6 +2,7 @@
 /dist
 /node_modules
 .env
+src/site-configs.d.ts
 
 # Logs
 logs
@@ -33,3 +34,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Hot reloading for API packages
+src/reload.ts

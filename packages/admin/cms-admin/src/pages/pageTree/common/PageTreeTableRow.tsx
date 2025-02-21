@@ -1,6 +1,6 @@
-import { keyframes, TableRow, TableRowProps } from "@mui/material";
+import { keyframes, TableRow, type TableRowProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import * as React from "react";
+import { type RefObject } from "react";
 
 const slideInAnimation = keyframes`
     from {
@@ -20,10 +20,10 @@ interface Props extends TableRowProps {
     clickable?: boolean;
     disabled?: boolean;
     slideIn?: boolean;
-    rowRef?: React.RefObject<HTMLTableRowElement>;
+    rowRef?: RefObject<HTMLTableRowElement>;
 }
 
-export const PageTreeTableRow: React.FC<Props> = ({ children, clickable, disabled, isSelected, isMouseHovered, slideIn, rowRef, ...restProps }) => {
+export const PageTreeTableRow = ({ children, clickable, disabled, isSelected, isMouseHovered, slideIn, rowRef, ...restProps }: Props) => {
     return (
         <Root
             ref={rowRef}

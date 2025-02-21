@@ -1,18 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { List } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "./JobRuntime";
 import {
-    GQLKubernetesCronJobQuery,
-    GQLKubernetesCronJobQueryVariables,
-    GQLKubernetesJobsQuery,
-    GQLKubernetesJobsQueryVariables,
+    type GQLKubernetesCronJobQuery,
+    type GQLKubernetesCronJobQueryVariables,
+    type GQLKubernetesJobsQuery,
+    type GQLKubernetesJobsQueryVariables,
 } from "./JobsGrid.generated";
 import { JobStatus } from "./JobStatus";
 
@@ -63,7 +62,7 @@ function JobsToolbar(props: { cronJobName: string }) {
                     }}
                 />
             </ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
         </Toolbar>
     );
 }
@@ -82,6 +81,9 @@ export function JobsGrid(props: JobsGridProps) {
         pollInterval: 10 * 1000,
     });
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.kubernetesJobs ?? [];
 
     return (
@@ -89,7 +91,6 @@ export function JobsGrid(props: JobsGridProps) {
             <DataGrid
                 rows={rows}
                 loading={loading}
-                error={error}
                 hideFooterPagination
                 columns={[
                     {
@@ -110,7 +111,7 @@ export function JobsGrid(props: JobsGridProps) {
                         headerName: intl.formatMessage({ id: "comet.pages.jobs.runtime", defaultMessage: "Runtime" }),
                         flex: 1,
                         ...disableFieldOptions,
-                        valueGetter: ({ row }) => {
+                        valueGetter: (params, row) => {
                             return {
                                 startTime: row.startTime,
                                 completionTime: row.completionTime,
@@ -137,7 +138,7 @@ export function JobsGrid(props: JobsGridProps) {
                     },
                 ]}
                 disableColumnSelector
-                components={{ Toolbar: () => <JobsToolbar cronJobName={cronJob} /> }}
+                slots={{ toolbar: () => <JobsToolbar cronJobName={cronJob} /> }}
             />
         </MainContent>
     );

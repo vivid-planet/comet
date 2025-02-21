@@ -1,10 +1,10 @@
 "use client";
 
-import { cloneElement, ReactElement } from "react";
+import { cloneElement, type ReactElement } from "react";
 
-import { DamFileDownloadLinkBlockData } from "../blocks.generated";
+import { type DamFileDownloadLinkBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
-import { PropsWithData } from "./PropsWithData";
+import { type PropsWithData } from "./PropsWithData";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
     children: ReactElement;

@@ -1,4 +1,4 @@
-import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { type IntrospectionObjectType, type IntrospectionQuery } from "graphql";
 
 export function findMutationType(mutationName: string, schema: IntrospectionQuery) {
     if (!schema.__schema.mutationType) throw new Error("Schema has no Mutation type");

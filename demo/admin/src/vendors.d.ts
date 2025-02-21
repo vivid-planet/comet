@@ -16,5 +16,3 @@ declare module "*.jpg" {
     const content: any;
     export = content;
 }
-
-declare module "react-xml-viewer";

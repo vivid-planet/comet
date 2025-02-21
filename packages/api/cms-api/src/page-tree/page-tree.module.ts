@@ -11,11 +11,12 @@ import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
-import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
+import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY, SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeNodeDocumentEntityInfoService } from "./page-tree-node-document-entity-info.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
+import { SitePreviewResolver } from "./site-preview.resolver";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
 import { PageExistsConstraint } from "./validators/page-exists.validator";
 
@@ -30,6 +31,7 @@ interface PageTreeModuleOptions {
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
+    sitePreviewSecret: string;
 }
 
 @Global()
@@ -90,6 +92,13 @@ export class PageTreeModule {
                 PageTreeNodeDocumentEntityInfoService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,
+                {
+                    provide: SITE_PREVIEW_CONFIG,
+                    useValue: {
+                        secret: options.sitePreviewSecret,
+                    },
+                },
+                SitePreviewResolver,
             ],
             exports: [
                 PageTreeService,

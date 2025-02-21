@@ -1,5 +1,5 @@
 // inspired by https://stackoverflow.com/questions/24613955/is-there-a-type-in-typescript-for-anything-except-functions#answer-48045023
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useMemo, useState } from "react";
 
 type NoFunctionValue = boolean | string | number | null | undefined | NoFunctionObject | NoFunctionArray;
 

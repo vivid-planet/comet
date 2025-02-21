@@ -26,7 +26,7 @@ export class PageTreeService {
     constructor(
         @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
         @InjectRepository(AttachedDocument) public readonly attachedDocumentsRepository: EntityRepository<AttachedDocument>,
-        private readonly em: EntityManager,
+        private readonly entityManager: EntityManager,
         private readonly redirectsService: RedirectsService,
         @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
     ) {}
@@ -60,9 +60,10 @@ export class PageTreeService {
 
         // insert newly created nodes at the last position
         const pos = siblingNodeWithHighestPosition ? siblingNodeWithHighestPosition.pos + 1 : 1;
-
+        const parent = parentId ? await this.pageTreeRepository.findOneOrFail(parentId) : undefined;
         const newNode = this.pageTreeRepository.create({
             ...restInput,
+            parent,
             parentId,
             pos,
             visibility: input.slug === "home" ? Visibility.Published : Visibility.Unpublished,
@@ -70,10 +71,10 @@ export class PageTreeService {
             category,
             documentType: attachedDocumentInput.type,
         });
-        await this.pageTreeRepository.persistAndFlush(newNode);
+        await this.entityManager.persistAndFlush(newNode);
 
         if (attachedDocumentInput.id) {
-            await this.attachedDocumentsRepository.persistAndFlush(
+            await this.entityManager.persistAndFlush(
                 this.attachedDocumentsRepository.create({
                     pageTreeNodeId: newNode.id,
                     type: attachedDocumentInput.type,
@@ -112,7 +113,7 @@ export class PageTreeService {
             throw new CometValidationException("Slug leads to duplicate path");
         }
 
-        const { attachedDocument: attachedDocumentInput, ...restInput } = input;
+        const { attachedDocument: attachedDocumentInput, createAutomaticRedirectsOnSlugChange, ...restInput } = input;
 
         existingNode.assign(restInput);
 
@@ -129,7 +130,7 @@ export class PageTreeService {
                 // check if document is already attached and attach if not
                 const attachedDocument = await this.attachedDocumentsRepository.findOne({ pageTreeNodeId: id, documentId: attachedDocumentInput.id });
                 if (!attachedDocument) {
-                    this.em.persist(
+                    this.entityManager.persist(
                         this.attachedDocumentsRepository.create({
                             pageTreeNodeId: id,
                             type: attachedDocumentInput.type,
@@ -140,7 +141,7 @@ export class PageTreeService {
             }
         }
 
-        await this.em.flush();
+        await this.entityManager.flush();
 
         return readApi.getNodeOrFail(id); // refresh data
     }
@@ -159,7 +160,7 @@ export class PageTreeService {
             const slug = node.slug;
 
             let slugIncrement = 0;
-            // eslint-disable-next-line no-constant-condition
+
             while (true) {
                 const nextSlugToTest = slugIncrement ? `${slug}-${slugIncrement}` : slug;
 
@@ -177,7 +178,7 @@ export class PageTreeService {
         node.assign({ visibility: newVisibility, slug: changedSlug ?? node.slug });
 
         // TODO flush shouldn't happen here, remove in a major version
-        await this.pageTreeRepository.flush();
+        await this.entityManager.flush();
     }
 
     async updateNodePosition(id: string, input: MovePageTreeNodesByPosInput): Promise<PageTreeNodeInterface> {
@@ -200,7 +201,8 @@ export class PageTreeService {
         const parentId = input.parentId;
 
         if (input.pos !== existingNode.pos || input.parentId !== existingNode.parentId) {
-            await this.pageTreeRepository.persistAndFlush(existingNode.assign({ parentId, pos: input.pos, slug: newSlug ?? existingNode.slug }));
+            const parent = parentId ? await this.pageTreeRepository.findOneOrFail(parentId) : null;
+            await this.entityManager.persistAndFlush(existingNode.assign({ parent, parentId, pos: input.pos, slug: newSlug ?? existingNode.slug }));
 
             const qb = this.pageTreeRepository
                 .createQueryBuilder()
@@ -220,7 +222,7 @@ export class PageTreeService {
             }
 
             const nodesToIncrement = await qb.getResultList();
-            await this.pageTreeRepository.persistAndFlush(nodesToIncrement.map((c) => c.assign({ pos: c.pos + 1 })));
+            await this.entityManager.persistAndFlush(nodesToIncrement.map((c) => c.assign({ pos: c.pos + 1 })));
         }
 
         return readApi.getNodeOrFail(existingNode.id);
@@ -243,7 +245,7 @@ export class PageTreeService {
             throw new Error("Requested slug is already taken");
         }
 
-        await this.pageTreeRepository.persistAndFlush(node.assign({ slug: slug }));
+        await this.entityManager.persistAndFlush(node.assign({ slug: slug }));
 
         return pageTreeReadApi.getNodeOrFail(id);
     }
@@ -270,7 +272,7 @@ export class PageTreeService {
         // 0 is added to avoid negative infinity for empty array
         const lastPosition = Math.max(0, ...rootNodes.map((node) => node.pos)) + 1;
 
-        await this.pageTreeRepository.persistAndFlush(node.assign({ category, parentId: null, pos: lastPosition }));
+        await this.entityManager.persistAndFlush(node.assign({ category, parent: null, parentId: null, pos: lastPosition }));
     }
 
     async delete(pageTreeNode: PageTreeNodeInterface): Promise<boolean> {
@@ -291,10 +293,10 @@ export class PageTreeService {
         for (const attachedDocument of attachedDocuments) {
             if (attachedDocument.id) {
                 try {
-                    const repository = this.em.getRepository(attachedDocument.type);
+                    const repository = this.entityManager.getRepository(attachedDocument.type);
                     const document = await repository.findOneOrFail(attachedDocument.documentId);
-                    await repository.removeAndFlush(document);
-                    await this.attachedDocumentsRepository.removeAndFlush(attachedDocument);
+                    await this.entityManager.removeAndFlush(document);
+                    await this.entityManager.removeAndFlush(attachedDocument);
                 } catch {
                     throw new Error(`documentType ${attachedDocument.type} and documentId ${attachedDocument.id} cannot resolve`);
                 }
@@ -303,7 +305,7 @@ export class PageTreeService {
 
         // 2. Delete page tree node itself
         try {
-            await this.pageTreeRepository.removeAndFlush(pageTreeNode);
+            await this.entityManager.removeAndFlush(pageTreeNode);
             return true;
         } catch {
             return false;
@@ -312,7 +314,7 @@ export class PageTreeService {
 
     async resolveDocument(documentType: string, documentId: string): Promise<unknown | null> {
         try {
-            const repository = this.em.getRepository(documentType);
+            const repository = this.entityManager.getRepository(documentType);
             const document = await repository.findOne(documentId);
             return document ?? null;
         } catch {
@@ -353,7 +355,7 @@ export class PageTreeService {
         const attachedDocument = await this.attachedDocumentsRepository.findOne({ pageTreeNodeId: node.id, documentId: attachedDocumentInput.id });
 
         if (!attachedDocument) {
-            this.attachedDocumentsRepository.persist(
+            this.entityManager.persist(
                 this.attachedDocumentsRepository.create({
                     pageTreeNodeId: node.id,
                     type: attachedDocumentInput.type,

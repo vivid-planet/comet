@@ -1,4 +1,3 @@
-/* eslint-disable @calm/react-intl/missing-formatted-message */
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render } from "@testing-library/react";
 import { createMemoryHistory } from "history";

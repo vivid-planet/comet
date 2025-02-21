@@ -1,23 +1,23 @@
 import { useStoredState } from "@comet/admin";
-import React from "react";
+import { useEffect, useRef } from "react";
 import { Redirect, useLocation, useRouteMatch } from "react-router";
 
 interface RedirectToPersistedDamLocationProps {
     stateKey: string;
 }
 
-export const RedirectToPersistedDamLocation: React.VoidFunctionComponent<RedirectToPersistedDamLocationProps> = ({ stateKey }) => {
+export const RedirectToPersistedDamLocation = ({ stateKey }: RedirectToPersistedDamLocationProps) => {
     const location = useLocation();
     const match = useRouteMatch();
 
-    const isInitialRender = React.useRef(true);
+    const isInitialRender = useRef(true);
     const [persistedDamLocation, setPersistedDamLocation] = useStoredState<string>(stateKey, location.pathname, window.sessionStorage);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setPersistedDamLocation(location.pathname);
     }, [location.pathname, setPersistedDamLocation]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         isInitialRender.current = false;
     }, []);
 

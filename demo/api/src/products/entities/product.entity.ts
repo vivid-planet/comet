@@ -1,5 +1,4 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
+import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -14,7 +13,7 @@ import {
     Property,
     Ref,
     types,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
@@ -65,10 +64,22 @@ export class ProductDimensions {
 }
 
 @ObjectType()
+@InputType("ProductPriceRangeInput")
+export class ProductPriceRange {
+    @Field()
+    @IsNumber()
+    min: number;
+
+    @Field()
+    @IsNumber()
+    max: number;
+}
+
+@ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -109,7 +120,10 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field({ nullable: true })
     price?: number = undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+    @Property({ type: "json", nullable: true })
+    @Field(() => ProductPriceRange, { nullable: true })
+    priceRange?: ProductPriceRange = undefined;
+
     @Property({ type: types.boolean })
     @Field()
     inStock: boolean = true;
@@ -129,7 +143,7 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field({ nullable: true })
     lastCheckedAt?: Date = undefined;
 
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 

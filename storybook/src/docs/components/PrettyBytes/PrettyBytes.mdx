@@ -1,0 +1,25 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as PrettyBytesStories from "./PrettyBytes.stories";
+
+# PrettyBytes
+
+<Meta of={PrettyBytesStories} />
+
+The PrettyBytes component can be used to display file sizes or other byte values.
+
+Supported units are: `"byte" | "kilobyte" | "megabyte" | "gigabyte" | "terabyte" | "petabyte"`
+
+<Canvas of={PrettyBytesStories.Basic} />
+
+## Fixed Unit
+
+Per default, the unit is determined automatically. But it is also possible to manually set the unit. In the following example, the unit is manually set to `kilobyte`.
+
+<Canvas of={PrettyBytesStories.FixedUnit} />
+
+## Custom Maximum Fraction Digits
+
+The default value for `maximumFractionDigits` is `2`. But it is possible to override this value. In the following example, the maximumFractionDigits are set to `4`.
+
+<Canvas of={PrettyBytesStories.CustomMaximumFractionDigits} />

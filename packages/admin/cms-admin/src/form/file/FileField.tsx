@@ -1,13 +1,13 @@
 import { useApolloClient } from "@apollo/client";
 import { Assets } from "@comet/admin-icons";
-import { AdminComponentButton } from "@comet/blocks-admin";
-import * as React from "react";
-import { FieldRenderProps } from "react-final-form";
+import { useState } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { damFileFieldFileQuery } from "./FileField.gql";
-import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+import { type GQLDamFileFieldFileFragment, type GQLDamFileFieldFileQuery, type GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
 
 export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
@@ -16,15 +16,15 @@ interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment, H
     allowedMimetypes?: string[];
 }
 
-const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps): React.ReactElement => {
-    const [chooseFileDialogOpen, setChooseFileDialogOpen] = React.useState<boolean>(false);
+const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
+    const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const client = useApolloClient();
 
     return (
         <>
-            <AdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
+            <BlockAdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
                 {buttonText ?? <FormattedMessage id="comet.form.file.chooseFile" defaultMessage="Choose file" />}
-            </AdminComponentButton>
+            </BlockAdminComponentButton>
             <ChooseFileDialog
                 open={chooseFileDialogOpen}
                 allowedMimetypes={allowedMimetypes}

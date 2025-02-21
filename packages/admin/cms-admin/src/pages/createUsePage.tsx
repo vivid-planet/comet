@@ -1,20 +1,15 @@
-import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import {
-    BindBlockAdminComponent,
-    BlockInterface,
-    BlockState,
-    DispatchSetStateAction,
-    parallelAsyncEvery,
-    resolveNewState,
-} from "@comet/blocks-admin";
+import { type ApolloError, gql, type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
+import { messages, SaveButton, type SaveButtonProps } from "@comet/admin";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { createElement, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { GQLDocumentInterface } from "../graphql.generated";
-import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
+import { type BlockInterface, type BlockState } from "../blocks/types";
+import { resolveNewState } from "../blocks/utils";
+import { parallelAsyncEvery } from "../blocks/utils/parallelAsyncEvery";
+import { type GQLDocumentInterface } from "../graphql.generated";
+import { type GQLCheckForChangesQuery, type GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
@@ -44,7 +39,10 @@ type BlockGQLData<T extends RootBlocksInterface> = {
 // all static configuration options needed to create a usePage hook
 
 interface CreateUsePage {
-    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: { rootBlocks: RootBlocks; pageType: PageType }): <
+    <RootBlocks extends RootBlocksInterface, PageType extends string>(outerOptions: {
+        rootBlocks: RootBlocks;
+        pageType: PageType;
+    }): <
         GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null, // the page state is infered from this
         GQLEditPageQueryVariables extends { id: string } = { id: string }, // for type-safety, query must match this shape
         GQLUpdatePageMutation extends { id: string } & BlockGQLData<RootBlocks> = {
@@ -75,7 +73,7 @@ type ReplaceBlockInputDataWithBlockState<Doc extends Record<string, unknown> | n
           [K in keyof Doc]: K extends "id" ? string : K extends keyof RootBlocks ? BlockState<RootBlocks[K]> : Doc[K]; // key id is always a string and never a block
       };
 
-export type PageState<
+type PageState<
     GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null,
     RootBlocks extends RootBlocksInterface,
     PageType extends string,
@@ -91,7 +89,7 @@ export type PageState<
 // hook exposes a block-api
 type BlockNodeApi<RootBlocks extends RootBlocksInterface> = {
     [K in keyof RootBlocks]: {
-        adminUI: BindBlockAdminComponent<RootBlocks[K]["AdminComponent"]>; // state and updateState props are bound to the state handler of usePageHook
+        adminUI: ReactNode;
         isValid: () => Promise<boolean>;
     };
 };
@@ -109,7 +107,7 @@ interface UsePageApi<PageState, RootBlocks extends RootBlocksInterface> {
     saving: boolean;
     saveError: "invalid" | "conflict" | "error" | undefined;
     pageSaveButton: JSX.Element;
-    dialogs: React.ReactNode;
+    dialogs: ReactNode;
     resetPageStateToLatest: () => Promise<void>;
 }
 
@@ -168,10 +166,10 @@ export const createUsePage: CreateUsePage =
             onValidationFailed,
         }: UsePageProps): UsePageApi<PageState<GQLEditPageQuery, RootBlocks, PageType>, RootBlocks> {
             const client = useApolloClient();
-            const [pageState, setPageState] = React.useState<undefined | PS>(undefined);
-            const [referenceOutput, setReferenceOutput] = React.useState<undefined | Output>(undefined);
-            const [saving, setSaving] = React.useState(false);
-            const [saveError, setSaveError] = React.useState<"invalid" | "conflict" | "error" | undefined>();
+            const [pageState, setPageState] = useState<undefined | PS>(undefined);
+            const [referenceOutput, setReferenceOutput] = useState<undefined | Output>(undefined);
+            const [saving, setSaving] = useState(false);
+            const [saveError, setSaveError] = useState<"invalid" | "conflict" | "error" | undefined>();
 
             const generateOutput = (ps: PS): Output => {
                 return {
@@ -235,7 +233,7 @@ export const createUsePage: CreateUsePage =
             );
 
             // manage sync of page state and gql-api
-            React.useEffect(() => {
+            useEffect(() => {
                 if (data?.page) {
                     const page = {
                         ...data.page,
@@ -259,7 +257,7 @@ export const createUsePage: CreateUsePage =
                 }
             }, [data, pageId]);
 
-            const handleSavePage = React.useCallback(async () => {
+            const handleSavePage = useCallback(async () => {
                 // TODO show progress and error handling
                 if (pageState && pageState.document && pageState.document.__typename === gqlPageType && pageState.document.id) {
                     setSaving(true);
@@ -270,7 +268,7 @@ export const createUsePage: CreateUsePage =
                     });
 
                     if (!isValid) {
-                        onValidationFailed && onValidationFailed();
+                        onValidationFailed?.();
                         setSaving(false);
                         setSaveError("invalid");
                         return;
@@ -340,8 +338,8 @@ export const createUsePage: CreateUsePage =
             }, [data, client, pageId, pageState, onValidationFailed, checkForSaveConflict]);
 
             // allow to create an updateHandler for each block-node
-            const createHandleUpdate = React.useCallback((key: string) => {
-                const handleUpdateState: DispatchSetStateAction<BlockInterface> = (setStateAction) => {
+            const createHandleUpdate = useCallback((key: string) => {
+                const handleUpdateState: Dispatch<SetStateAction<BlockInterface>> = (setStateAction) => {
                     setPageState((s) => {
                         if (!s || !s.document) {
                             return;
@@ -365,7 +363,7 @@ export const createUsePage: CreateUsePage =
 
             // create block-api
             // - bind state, updatehandler to admin-component
-            const rootBlocksApi: BlockNodeApi<RootBlocks> = React.useMemo(() => {
+            const rootBlocksApi: BlockNodeApi<RootBlocks> = useMemo(() => {
                 const localAnchors =
                     pageState?.document === undefined
                         ? {}
@@ -389,7 +387,7 @@ export const createUsePage: CreateUsePage =
                         [key]: {
                             adminUI: state ? (
                                 <LocalPageTreeNodeDocumentAnchorsProvider localAnchors={localAnchors}>
-                                    {React.createElement(UnboundComponent, { state, updateState: handleUpdateState })}
+                                    {createElement(UnboundComponent, { state, updateState: handleUpdateState })}
                                 </LocalPageTreeNodeDocumentAnchorsProvider>
                             ) : null,
                             isValid: async () => value.isValid(state),
@@ -398,7 +396,7 @@ export const createUsePage: CreateUsePage =
                 }, {} as BlockNodeApi<RootBlocks>);
             }, [pageState, createHandleUpdate, pageId]);
 
-            const pageSaveButton = React.useMemo<JSX.Element>(
+            const pageSaveButton = useMemo<JSX.Element>(
                 () => (
                     <PageSaveButton
                         hasConflict={hasConflict}

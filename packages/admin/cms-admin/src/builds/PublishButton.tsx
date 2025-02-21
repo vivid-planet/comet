@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { StartBuildsDialog } from "./StartBuildsDialog";
 
-export const PublishButton: React.FunctionComponent = () => {
-    const [isStartBuildsDialogOpen, setIsStartBuildsDialogOpen] = React.useState(false);
+export const PublishButton = () => {
+    const [isStartBuildsDialogOpen, setIsStartBuildsDialogOpen] = useState(false);
 
     const handlePublishClick = () => {
         setIsStartBuildsDialogOpen(true);

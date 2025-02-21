@@ -1,9 +1,9 @@
-import { IEditDialogApi, useStackSwitchApi } from "@comet/admin";
+import { type IEditDialogApi, useStackSwitchApi } from "@comet/admin";
 import { Checkbox } from "@mui/material";
-import React from "react";
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { type CSSProperties, type Dispatch, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { DebouncedState } from "use-debounce/lib/useDebouncedCallback";
+import { type DebouncedState } from "use-debounce";
 
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
 import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
@@ -13,9 +13,9 @@ import PageInfo from "./PageInfo";
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeRow.sc";
 import { PageTreeRowDivider } from "./PageTreeRowDivider";
-import PageTreeService, { DropInfo } from "./PageTreeService";
+import { type DropInfo, type PageTreeService } from "./PageTreeService";
 import PageVisibility from "./PageVisibility";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 export type DropTarget = "ADD_BEFORE" | "ADD_AFTER" | "ADD_AS_CHILD";
@@ -31,15 +31,15 @@ interface PageTreeRowProps {
     onSelectChanged: (pageId: string, value: boolean) => void;
     pageTreeService: PageTreeService;
     debouncedSetHoverState: DebouncedState<
-        (setHoverState: React.Dispatch<React.SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => void
+        (setHoverState: Dispatch<SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => void
     >;
     siteUrl: string;
-    virtualizedStyle?: React.CSSProperties;
+    virtualizedStyle?: CSSProperties;
     slideIn?: boolean;
     selectedPages: PageTreePage[];
 }
 
-export interface PageTreeTableRowElement extends HTMLTableRowElement {
+interface PageTreeTableRowElement extends HTMLTableRowElement {
     previousElementSibling: HTMLTableRowElement | null;
     nextElementSibling: HTMLTableRowElement | null;
 }
@@ -60,32 +60,32 @@ const PageTreeRow = ({
     virtualizedStyle,
     slideIn,
     selectedPages,
-}: PageTreeRowProps): React.ReactElement => {
-    const rowRef = React.useRef<PageTreeTableRowElement | null>(null);
-    const [hover, setHover] = React.useState(false);
+}: PageTreeRowProps) => {
+    const rowRef = useRef<PageTreeTableRowElement | null>(null);
+    const [hover, setHover] = useState(false);
 
-    const [hoverState, setHoverState] = React.useState<DropInfo | undefined>();
+    const [hoverState, setHoverState] = useState<DropInfo | undefined>();
     const { activatePage } = useStackSwitchApi();
     const { documentTypes } = usePageTreeContext();
     const isEditable = !!(page.visibility !== "Archived" && documentTypes[page.documentType].editComponent);
 
     const { top: topInBetweenButtonHovered, bottom: bottomInBetweenButtonHovered, defaultHandler: inBetweenButtonHandle } = useButtonHoverStates();
 
-    const resetHoverState = React.useCallback(() => {
+    const resetHoverState = useCallback(() => {
         // timeout is required to ensure that reset is called last
         setTimeout(() => {
             setHoverState(undefined);
         }, 0);
     }, []);
 
-    const updateHoverState = React.useCallback(
+    const updateHoverState = useCallback(
         (newHoverState?: DropInfo) => {
             debouncedSetHoverState(setHoverState, newHoverState);
         },
         [debouncedSetHoverState],
     );
 
-    const calculateTargetLevel = React.useCallback(
+    const calculateTargetLevel = useCallback(
         (mouseX: number, itemX: number, dropTarget: DropTarget) => {
             let neighbouringLevel;
             if (dropTarget === "ADD_BEFORE") {
@@ -103,7 +103,7 @@ const PageTreeRow = ({
         [pageTreeService, nextPage?.level, page.level, prevPage?.level],
     );
 
-    const getDropInfo = React.useCallback(
+    const getDropInfo = useCallback(
         (monitor: DropTargetMonitor): DropInfo | undefined => {
             const mouseXY = monitor.getClientOffset();
             if (!rowRef.current || !mouseXY) {
@@ -125,7 +125,7 @@ const PageTreeRow = ({
     });
 
     // Is necessary for the CustomDragLayer to work
-    React.useEffect(() => {
+    useEffect(() => {
         preview(getEmptyImage(), { captureDraggingState: true });
         // as seen in react-dnd-Doku:
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,7 +171,7 @@ const PageTreeRow = ({
         },
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (page.visibility !== "Archived") {
             // Archived pages cannot be moved
             dragSource(rowRef);
@@ -190,7 +190,7 @@ const PageTreeRow = ({
         }
     };
 
-    const _onSelectChanged = React.useCallback(() => {
+    const _onSelectChanged = useCallback(() => {
         onSelectChanged(page.id, !page.selected);
     }, [page, onSelectChanged]);
 

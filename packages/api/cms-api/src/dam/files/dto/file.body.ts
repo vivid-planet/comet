@@ -60,3 +60,38 @@ export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface>
 
     return UploadFileBody;
 }
+
+export class ReplaceFileByIdBody {
+    @IsString()
+    fileId: string;
+
+    @IsOptional()
+    @IsString()
+    title?: string;
+
+    @IsOptional()
+    @IsString()
+    altText?: string;
+
+    @Transform(({ value }) => plainToInstance(LicenseInput, JSON.parse(value)))
+    @IsOptional()
+    @ClassTransformerType(() => LicenseInput)
+    @ValidateNested()
+    license?: LicenseInput;
+
+    @Transform(({ value }) => plainToInstance(ImageCropAreaInput, JSON.parse(value)))
+    @IsOptional()
+    @ClassTransformerType(() => ImageCropAreaInput)
+    @ValidateNested()
+    imageCropArea?: ImageCropAreaInput;
+
+    @IsString()
+    @IsNotEmpty()
+    @ValidateIf((input) => input.importSourceType !== undefined)
+    importSourceId?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @ValidateIf((input) => input.importSourceId !== undefined)
+    importSourceType?: string;
+}

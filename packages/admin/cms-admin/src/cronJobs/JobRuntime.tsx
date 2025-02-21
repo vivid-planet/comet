@@ -1,5 +1,4 @@
 import { differenceInMinutes, isSameDay } from "date-fns";
-import * as React from "react";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
 interface RuntimeProps {

@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
 import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
-import React from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -23,13 +23,13 @@ export const SearchInput = ({
     jumpToPreviousMatch,
     autoFocus = false,
 }: SearchInputProps) => {
-    const inputRef = React.useRef<HTMLInputElement | null>(null);
-    const [internalQuery, setInternalQuery] = React.useState(query);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const [internalQuery, setInternalQuery] = useState(query);
     const isPressed = useIsHotkeyPressed();
 
     const debouncedOnQueryChange = useDebouncedCallback(onQueryChange, 250);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setInternalQuery(query);
     }, [query]);
 
@@ -48,7 +48,7 @@ export const SearchInput = ({
         inputRef.current?.focus();
     });
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         updateQuery(event.target.value);
     };
 
@@ -57,7 +57,7 @@ export const SearchInput = ({
         inputRef.current?.focus();
     };
 
-    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
         switch (event.key) {
             case "Enter":
                 if (isPressed("shift")) {

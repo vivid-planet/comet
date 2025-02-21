@@ -3,17 +3,17 @@ import { Command } from "commander";
 import fs from "fs";
 import { resolve } from "path";
 
-import { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "../site-configs.types";
+import { type BaseSiteConfig, type ExtractPrivateSiteConfig, type ExtractPublicSiteConfig } from "../site-configs.types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .description("Inject site-configs into a file")
     .requiredOption("-i, --in-file <file>", "The filename of a template file to inject.")
     .requiredOption("-o, --out-file <file>", "Write the injected template to a file.")
     .option("-d --dotenv", "dotenv compatibility") // https://github.com/motdotla/dotenv/issues/521#issuecomment-999016064
+    .option("--base64", "use base64 encoding")
     .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
-        const configFile = options.siteConfigFile ?? `${process.cwd()}/site-configs.ts`;
+        const configFile = `${process.cwd()}/${options.siteConfigFile || "site-configs.ts"}`;
         const getSiteConfigs: (env: string) => BaseSiteConfig[] = (await import(configFile)).default;
 
         console.log(`inject-site-configs: Replace site-configs in ${options.inFile}`);
@@ -24,13 +24,14 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
             return domain.includes("localhost") ? `http://${domain}` : `https://${domain}`;
         };
 
-        const replacerFunctions: Record<string, (siteConfigs: BaseSiteConfig[]) => unknown> = {
-            private: (siteConfigs: BaseSiteConfig[]): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
+        const replacerFunctions: Record<string, (siteConfigs: BaseSiteConfig[], env: string) => unknown> = {
+            private: (siteConfigs: BaseSiteConfig[], env: string): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) =>
                     (({ public: publicVars, ...rest }) => ({
                         ...publicVars,
                         ...rest,
                         url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
+                        preloginEnabled: siteConfig.preloginEnabled ?? !["prod", "local"].includes(env),
                     }))(siteConfig),
                 ),
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
@@ -50,7 +51,11 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 console.error(`inject-site-configs: ERROR: type must be ${Object.keys(replacerFunctions).join("|")} (got ${type})`);
                 return substr;
             }
-            const ret = JSON.stringify(replacerFunctions[type](siteConfigs)).replace(/\\/g, "\\\\");
+            const str = replacerFunctions[type](siteConfigs, env);
+            if (options.base64) {
+                return Buffer.from(JSON.stringify(str)).toString("base64");
+            }
+            const ret = JSON.stringify(str).replace(/\\/g, "\\\\");
             if (options.dotenv) return ret.replace(/\$/g, "\\$");
             return ret;
         });
@@ -66,10 +71,9 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     ...filteredSiteConfigs.filter((d) => d.domains.additional).flatMap((d) => d.domains.additional),
                 ]);
             } else if (type === "prelogin") {
-                const filteredSiteConfigs = siteConfigs.filter((d) => d.preloginEnabled || d.domains.preliminary);
                 return JSON.stringify([
-                    ...filteredSiteConfigs.map((d) => d.domains.main),
-                    ...filteredSiteConfigs.filter((d) => d.domains.preliminary).map((d) => d.domains.preliminary),
+                    ...siteConfigs.filter((d) => d.preloginEnabled).map((d) => d.domains.main),
+                    ...siteConfigs.filter((d) => d.domains.preliminary).map((d) => d.domains.preliminary),
                 ]);
             }
             throw new Error('type must be "site", "prelogin"');

@@ -1,0 +1,31 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as FilterBarStories from "./05_FilterBar.stories";
+
+**The `Table` component has been deprecated in favor of [MUI X Data Grid](https://mui.com/x/react-data-grid/) in combination with `useDataGridRemote`. View [docs](?path=/docs/docs-components-datagrid--docs).**
+
+<Meta of={FilterBarStories} />
+
+# Filterbar
+
+Often the user wants to filter the data in a `Table`.
+To implement various filters, stick to the following steps:
+
+1. get a `filterApi` instance from the `useTableQueryFilter()` hook
+2. add a `TableFilterFinalForm` component and pass the `filterApi`
+3. add a `FilterBar` component inside the `TableFilterFinalForm`
+4. add filters to the `FilterBar`. A filter typically consists of a `FilterBarPopoverFilter` with one or multiple `Field`s
+5. use the values of `filterApi` for filtering. Typically, this will happen by passing them as variables to a GraphQL query (in the following example, filtering is done on the client-side for simplicity reasons)
+
+<Canvas of={FilterBarStories.TableWithFilterbar} />
+
+## Filterbar and Persisted State
+
+Oftentimes every item in a table can be viewed or edited individually.
+If the user navigates to a detail page or form and later returns to the table page, all the filters are gone.
+
+To prevent this behaviour, you can pass a `persistedStateId` to the `useTableQueryFilter()` hook.
+Then, the filters are saved in a global variable once the user leaves the table page.
+When the user returns, the filters are recovered from the global variable.
+
+<Canvas of={FilterBarStories.TableWithFilterbarAndPersistedState} />

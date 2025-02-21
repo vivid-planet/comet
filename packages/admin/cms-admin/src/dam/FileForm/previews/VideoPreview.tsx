@@ -1,8 +1,7 @@
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDetails } from "../EditFile";
+import { type DamFileDetails } from "../EditFile";
 
 const VideoPreviewWrapper = styled("div")`
     width: 100%;
@@ -21,7 +20,7 @@ interface VideoPreviewProps {
     file: DamFileDetails;
 }
 
-export const VideoPreview = ({ file }: VideoPreviewProps): React.ReactElement => {
+export const VideoPreview = ({ file }: VideoPreviewProps) => {
     return (
         <VideoPreviewWrapper>
             <StyledVideo controls src={file.fileUrl}>

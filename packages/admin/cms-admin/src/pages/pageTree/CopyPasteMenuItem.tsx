@@ -1,18 +1,17 @@
 import { RowActionsItem } from "@comet/admin";
 import { Copy, Paste } from "@comet/admin-icons";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
 import { useCopyPastePages } from "./useCopyPastePages";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
     page: PageTreePage;
 }
 
-export const CopyPasteMenuItem = ({ page }: Props): React.ReactElement => {
+export const CopyPasteMenuItem = ({ page }: Props) => {
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
     const { tree } = usePageTreeContext();
 

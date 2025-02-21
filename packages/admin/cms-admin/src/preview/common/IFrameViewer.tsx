@@ -1,7 +1,7 @@
 import { Loading } from "@comet/admin";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { forwardRef, type ReactNode, useState } from "react";
 import useDimensions from "react-cool-dimensions";
 
 import { Device } from "./Device";
@@ -10,7 +10,7 @@ import { DeviceFrameMobile } from "./icons/DeviceFrameMobile";
 import { DeviceFrameTablet } from "./icons/DeviceFrameTablet";
 
 interface DeviceConfig {
-    deviceFrame: React.ReactNode;
+    deviceFrame: ReactNode;
     outerFrame: {
         width: number;
         height: number;
@@ -50,11 +50,11 @@ interface Props {
     initialPageUrl: string;
 }
 
-const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
+const IFrameViewer = forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
     const deviceConfig = resolveDeviceConfig(device);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     const scaleFactor = deviceConfig ? calcScaleFactor(width, height, deviceConfig) : 1;
 
@@ -109,7 +109,6 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    overflow-y: auto;
     will-change: transform;
 
     ${({ deviceConfig }) =>
@@ -127,7 +126,7 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
 const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceConfig" })<IFrameProps>`
     display: block;
     border-style: unset;
-    border-width: 1px;
+    border-width: 0px;
     width: 100%;
     height: 100%;
     background-color: ${({ theme }) => theme.palette.common.white};

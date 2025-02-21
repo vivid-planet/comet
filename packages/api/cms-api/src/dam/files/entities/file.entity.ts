@@ -11,7 +11,7 @@ import {
     OptionalProps,
     PrimaryKey,
     Property,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -23,7 +23,7 @@ import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
-export interface FileInterface extends BaseEntity<FileInterface, "id"> {
+export interface FileInterface extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
     id: string;
     folder?: FolderInterface;
@@ -48,7 +48,7 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
-    class FileBase extends BaseEntity<FileBase, "id"> implements FileInterface {
+    class FileBase extends BaseEntity implements FileInterface {
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
         id: string = uuid();
@@ -67,7 +67,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         name: string;
 
         @Field(() => Int)
-        @Property({ type: BigIntType })
+        @Property({ type: new BigIntType("number") })
         size: number;
 
         @Field()

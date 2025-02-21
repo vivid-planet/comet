@@ -1,7 +1,6 @@
 import { styled } from "@mui/material/styles";
-import React from "react";
 
-import { DamFileDetails } from "../EditFile";
+import { type DamFileDetails } from "../EditFile";
 
 const PdfPreviewWrapper = styled("div")`
     width: 100%;
@@ -18,7 +17,7 @@ interface PdfPreviewProps {
     file: DamFileDetails;
 }
 
-export const PdfPreview = ({ file }: PdfPreviewProps): React.ReactElement => {
+export const PdfPreview = ({ file }: PdfPreviewProps) => {
     return (
         <PdfPreviewWrapper>
             <PdfPreviewIFrame src={file.fileUrl} />

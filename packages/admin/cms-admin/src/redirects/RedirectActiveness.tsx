@@ -2,16 +2,16 @@ import { gql, useMutation } from "@apollo/client";
 import { Invisible, Visible } from "@comet/admin-icons";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
-import * as React from "react";
+import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLRedirectActivenessFragment,
-    GQLUpdateRedirectActivenessMutation,
-    GQLUpdateRedirectActivenessMutationVariables,
+    type GQLRedirectActivenessFragment,
+    type GQLUpdateRedirectActivenessMutation,
+    type GQLUpdateRedirectActivenessMutationVariables,
 } from "./RedirectActiveness.generated";
 
-export const updateRedirectActivenessMutation = gql`
+const updateRedirectActivenessMutation = gql`
     mutation UpdateRedirectActiveness($id: ID!, $input: RedirectUpdateActivenessInput!) {
         updateRedirectActiveness(id: $id, input: $input) {
             id
@@ -35,9 +35,9 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
     const [updateRedirectActiveness] = useMutation<GQLUpdateRedirectActivenessMutation, GQLUpdateRedirectActivenessMutationVariables>(
         updateRedirectActivenessMutation,
     );
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 

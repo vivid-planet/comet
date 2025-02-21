@@ -1,5 +1,33 @@
 # @comet/eslint-plugin
 
+## 7.13.0
+
+## 7.12.0
+
+## 7.11.0
+
+## 7.10.0
+
+## 7.9.0
+
+## 7.8.0
+
+## 7.7.0
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.2
+
+## 7.4.1
+
+## 7.4.0
+
+## 7.3.2
+
+## 7.3.1
+
 ## 7.3.0
 
 ## 7.2.1
@@ -86,7 +114,7 @@
 
 ### Minor Changes
 
--   ec0582e6: Add new ESLint rule to enforce absolute imports when importing from other modules
+- ec0582e6: Add new ESLint rule to enforce absolute imports when importing from other modules
 
     For instance, an import `import { AThingInModuleA } from "../moduleA/AThingInModuleA"` in module `B` needs to be imported as `import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"`.
     The default source root `"./src"` and alias `"@src"` can be changed via the rule's `sourceRoot` and `sourceRootAlias` options.

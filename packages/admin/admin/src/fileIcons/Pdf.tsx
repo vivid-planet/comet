@@ -1,4 +1,4 @@
-import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
+import SvgIcon, { type SvgIconProps } from "@mui/material/SvgIcon";
 
 export const Pdf = (props: SvgIconProps) => (
     <SvgIcon htmlColor="#ce1f19" {...props} viewBox="0 0 100 100">

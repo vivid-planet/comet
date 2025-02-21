@@ -1,11 +1,11 @@
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { useEffect, useState } from "react";
 import { FormattedDate } from "react-intl";
 
 export const DateTime = () => {
-    const [currentTime, setCurrentTime] = React.useState<Date>(new Date());
+    const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
-    React.useEffect(() => {
+    useEffect(() => {
         const intervalHandle = setInterval(() => {
             setCurrentTime(new Date());
         }, 1000);

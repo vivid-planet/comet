@@ -1,15 +1,15 @@
 import { Error as ErrorIcon } from "@comet/admin-icons";
-import { ComponentsOverrides, FormHelperText, Typography } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
-import { Accept, DropzoneOptions } from "react-dropzone";
+import { type ComponentsOverrides, FormHelperText, Typography } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
+import { type Accept, type DropzoneOptions } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
-import { ErrorFileSelectItem, FileSelectItem, ValidFileSelectItem } from "./fileSelectItemTypes";
+import { type ErrorFileSelectItem, type FileSelectItem, type ValidFileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
 import { getFilesInfoText } from "./getFilesInfoText";
 
@@ -47,7 +47,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDrop?: DropzoneOptions["onDrop"];
     onRemove?: (file: ValidFileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
     onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
-    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
+    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string | undefined;
     disabled?: boolean;
     readOnly?: boolean;
     accept?: Accept;
@@ -135,6 +135,17 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                         <>
                             {files.map((file, index) => {
                                 const isValidFile = !("error" in file) && !("loading" in file);
+                                let filePreview: string | boolean;
+
+                                if (layout === "grid") {
+                                    if (isValidFile && file.previewUrl) {
+                                        filePreview = file.previewUrl;
+                                    } else {
+                                        filePreview = true;
+                                    }
+                                } else {
+                                    filePreview = false;
+                                }
 
                                 return (
                                     <FileListItem
@@ -149,7 +160,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                         }
                                         downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
                                         onClickDelete={readOnly || !onRemove || "loading" in file ? undefined : () => onRemove(file)}
-                                        filePreview={layout === "grid"}
+                                        filePreview={filePreview}
                                         {...slotProps?.fileListItem}
                                     />
                                 );

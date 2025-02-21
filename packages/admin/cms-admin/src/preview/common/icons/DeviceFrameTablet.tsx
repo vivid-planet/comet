@@ -1,6 +1,4 @@
-import * as React from "react";
-
-function DeviceFrameTablet(): React.ReactElement {
+function DeviceFrameTablet() {
     return (
         <svg width="1063" height="766" viewBox="0 0 1063 766" xmlns="http://www.w3.org/2000/svg">
             <defs>

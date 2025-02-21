@@ -4,15 +4,14 @@ import {
     FilterBarPopoverFilter,
     FinalFormSearchTextField,
     FinalFormSwitch,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
     TableFilterFinalForm,
 } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DamFilter } from "../../DamTable";
+import { type DamFilter } from "../../DamTable";
 import { DamSortPopover } from "./DamSortPopover";
 
 interface DamTableFilterProps {
@@ -20,15 +19,24 @@ interface DamTableFilterProps {
     filterApi: IFilterApi<DamFilter>;
 }
 
-export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterProps): React.ReactElement => {
+export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterProps) => {
     const intl = useIntl();
 
     return (
         <TableFilterFinalForm filterApi={filterApi}>
             <FilterBar>
-                <Field name="searchText" component={FinalFormSearchTextField} clearable disableContentTranslation />
+                <Field
+                    name="searchText"
+                    component={FinalFormSearchTextField}
+                    clearable
+                    disableContentTranslation
+                    fieldContainerProps={{ fieldMargin: "never" }}
+                />
                 {!hideArchiveFilter && (
-                    <FilterBarPopoverFilter label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}>
+                    <FilterBarPopoverFilter
+                        label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}
+                        sx={{ marginRight: 2, marginLeft: 2 }}
+                    >
                         <Field name="archived" type="checkbox">
                             {(props) => (
                                 <FormControlLabel

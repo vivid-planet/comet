@@ -1,15 +1,15 @@
 import { useApolloClient } from "@apollo/client";
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
-import { Button, Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
-import * as React from "react";
+import { Button, Checkbox, Grid, IconButton, useTheme } from "@mui/material";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
+import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
-import { traverse, TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
+import { traverse, type TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { GQLPageTreePageFragment, PageTreeSelectionState } from "../pageTree/usePageTree";
+import { type GQLPageTreePageFragment, type PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
@@ -24,7 +24,7 @@ interface ConfirmActionState {
     handleAction: () => void;
 }
 
-export interface PagesPageActionToolbarProps {
+interface PagesPageActionToolbarProps {
     selectedState: PageTreeSelectionState;
     onSelectAllPressed: () => void;
 
@@ -35,31 +35,31 @@ export interface PagesPageActionToolbarProps {
     onCollapseAllPressed: () => void;
 }
 
-export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionToolbarProps> = ({
+export const PagesPageActionToolbar = ({
     selectedState,
     selectedTree,
     onSelectAllPressed,
     collapseAllDisabled,
     onCollapseAllPressed,
-}) => {
-    const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = React.useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [confirmAction, setConfirmAction] = React.useState<ConfirmActionState | null>(null);
+}: PagesPageActionToolbarProps) => {
+    const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<ConfirmActionState | null>(null);
 
     const { tree } = usePageTreeContext();
-    const [publishLoading, setPublishLoading] = React.useState(false);
-    const [unpublishLoading, setUnpublishLoading] = React.useState(false);
-    const [archiveLoading, setArchiveLoading] = React.useState(false);
-    const [copyLoading, setCopyLoading] = React.useState(false);
-    const [pasteLoading, setPasteLoading] = React.useState(false);
-    const [deleting, setDeleting] = React.useState(false);
+    const [publishLoading, setPublishLoading] = useState(false);
+    const [unpublishLoading, setUnpublishLoading] = useState(false);
+    const [archiveLoading, setArchiveLoading] = useState(false);
+    const [copyLoading, setCopyLoading] = useState(false);
+    const [pasteLoading, setPasteLoading] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
 
     const theme = useTheme();
     const client = useApolloClient();
     const snackbarApi = useSnackbarApi();
 
-    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: React.ReactNode) => {
+    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: ReactNode) => {
         snackbarApi.showSnackbar(
             <UndoSnackbar
                 message={message}
@@ -273,8 +273,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                                     variables: { id: node.id },
                                 });
                             }
-                        } catch (e) {
-                            // eslint-disable-next-line no-console
+                        } catch {
                             console.error("Error deleting pages");
                         } finally {
                             client.refetchQueries({ include: ["Pages"] });

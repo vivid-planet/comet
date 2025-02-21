@@ -1,4 +1,4 @@
-import { GQLUserGroup } from "@src/graphql.generated";
+import { type GQLUserGroup } from "@src/graphql.generated";
 
 const userGroupAdditionalItemFields = {
     userGroup: {

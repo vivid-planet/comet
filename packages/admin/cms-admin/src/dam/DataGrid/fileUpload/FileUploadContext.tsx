@@ -1,6 +1,6 @@
-import React from "react";
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
 
-import { FileWithFolderPath } from "./useDamFileUpload";
+import { type FileWithFolderPath } from "./useDamFileUpload";
 
 export interface NewlyUploadedItem {
     id: string;
@@ -14,20 +14,20 @@ interface FileUploadContextApi {
     addNewlyUploadedItems: (newlyUploadedItems: NewlyUploadedItem[]) => void;
 }
 
-const FileUploadContext = React.createContext<FileUploadContextApi>({
+const FileUploadContext = createContext<FileUploadContextApi>({
     newlyUploadedItems: [],
     addNewlyUploadedItems: () => {
         console.warn("If you want to track newlyUploadedItems, FileUploadContextProvider has to be defined higher up in the tree");
     },
 });
 
-export const useFileUploadContext = () => React.useContext(FileUploadContext);
+export const useFileUploadContext = () => useContext(FileUploadContext);
 
-export const FileUploadContextProvider: React.FunctionComponent = ({ children }) => {
-    const timeouts = React.useRef<NodeJS.Timeout[]>([]);
-    const [newlyUploadedItems, setNewlyUploadedItems] = React.useState<NewlyUploadedItem[]>([]);
+export const FileUploadContextProvider = ({ children }: { children?: ReactNode }) => {
+    const timeouts = useRef<NodeJS.Timeout[]>([]);
+    const [newlyUploadedItems, setNewlyUploadedItems] = useState<NewlyUploadedItem[]>([]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             for (const timeout of timeouts.current) {
                 clearTimeout(timeout);

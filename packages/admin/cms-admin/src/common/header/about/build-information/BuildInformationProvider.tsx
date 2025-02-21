@@ -1,12 +1,11 @@
-import * as React from "react";
+import { type PropsWithChildren } from "react";
 
-import { BuildInformation, BuildInformationContext } from "./BuildInformationContext";
+import { type BuildInformation, BuildInformationContext } from "./BuildInformationContext";
 
 interface Props {
-    children: React.ReactNode;
     value: BuildInformation;
 }
 
-export const BuildInformationProvider = ({ children, value }: Props): React.ReactElement => {
+export const BuildInformationProvider = ({ children, value }: PropsWithChildren<Props>) => {
     return <BuildInformationContext.Provider value={value}>{children}</BuildInformationContext.Provider>;
 };

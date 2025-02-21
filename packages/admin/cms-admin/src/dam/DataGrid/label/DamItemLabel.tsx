@@ -1,12 +1,10 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
-import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
+import { MarkedMatches, type TextMatch } from "../../../common/MarkedMatches";
 import { isFile } from "../../helpers/isFile";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
+import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { ArchivedTag } from "../tags/ArchivedTag";
-import { LicenseValidityTags } from "../tags/LicenseValidityTags";
 import { DamThumbnail } from "../thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -54,7 +52,7 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps): React.ReactElement => {
+const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps) => {
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />
@@ -63,14 +61,6 @@ const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = 
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
             {isFile(asset) && asset.archived && <ArchivedTag />}
-            {isFile(asset) && showLicenseWarnings && (
-                <LicenseValidityTags
-                    expirationDate={asset.license?.expirationDate ? new Date(asset.license.expirationDate) : undefined}
-                    isNotValidYet={asset.license?.isNotValidYet}
-                    expiresWithinThirtyDays={asset.license?.expiresWithinThirtyDays}
-                    hasExpired={asset.license?.hasExpired}
-                />
-            )}
         </LabelWrapper>
     );
 };

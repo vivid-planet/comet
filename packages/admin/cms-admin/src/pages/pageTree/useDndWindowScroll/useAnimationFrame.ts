@@ -24,7 +24,9 @@ export default function useAnimationFrame(callback: (time?: number) => void): vo
     useEffect(() => {
         requestRef.current = requestAnimationFrame(animate);
         return () => {
-            requestRef.current && cancelAnimationFrame(requestRef.current);
+            if (requestRef.current) {
+                cancelAnimationFrame(requestRef.current);
+            }
         };
     }, [animate]); // Make sure the effect runs only once
 }

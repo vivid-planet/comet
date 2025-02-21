@@ -1,14 +1,14 @@
-import * as React from "react";
+import { useEffect } from "react";
 
-import { SitePreviewIFrameMessage, SitePreviewIFrameMessageType } from "./SitePreviewIFrameMessage";
+import { type SitePreviewIFrameMessage, SitePreviewIFrameMessageType } from "./SitePreviewIFrameMessage";
 
 export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePreviewIFrameMessage) => void) {
-    React.useEffect(() => {
+    useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             let message;
             try {
                 message = JSON.parse(event.data);
-            } catch (e) {
+            } catch {
                 // empty
             }
             // Check if message is an iframe message from us -> there are more messaging from e.g webpack,etc.

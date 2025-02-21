@@ -1,6 +1,5 @@
-import { useBlockContext } from "@comet/blocks-admin";
-
-import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { type CmsBlockContext } from "./CmsBlockContextProvider";
+import { useBlockContext } from "./context/useBlockContext";
 
 function useCmsBlockContext(): CmsBlockContext {
     return useBlockContext() as CmsBlockContext;

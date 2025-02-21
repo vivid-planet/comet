@@ -1,13 +1,13 @@
-import { BreadcrumbItem } from "@comet/admin";
+import { type BreadcrumbItem } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useOptimisticQuery } from "../../common/useOptimisticQuery";
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
 import { damFolderMPathFragment, damFolderMPathQuery } from "./FolderHead.gql";
-import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
+import { type GQLDamFolderMPathFragment, type GQLDamFolderMPathQuery, type GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
 
 export { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
 
@@ -30,8 +30,8 @@ const BoldTypography = styled(Typography)`
     font-weight: 500;
 `;
 
-export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps): React.ReactElement => {
-    let content: React.ReactNode = null;
+export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps) => {
+    let content: ReactNode = null;
 
     const { data, loading } = useOptimisticQuery<GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables>(damFolderMPathQuery, {
         variables: {

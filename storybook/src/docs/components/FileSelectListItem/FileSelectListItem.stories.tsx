@@ -1,15 +1,20 @@
 import { FileSelectListItem } from "@comet/admin";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import { type Meta } from "@storybook/react";
 
-storiesOf("stories/components/FileSelectListItem", module)
-    .addDecorator((story) => (
-        <Card>
-            <CardContent>{story()}</CardContent>
-        </Card>
-    ))
-    .add("FileSelectListItem", () => {
+export default {
+    title: "Docs/Components/FileSelectListItem",
+    decorators: [
+        (story) => (
+            <Card>
+                <CardContent>{story()}</CardContent>
+            </Card>
+        ),
+    ],
+} as Meta<typeof FileSelectListItem>;
+
+export const Basic = {
+    render: () => {
         return (
             <>
                 {/* Data for this file has not been loaded yet */}
@@ -65,8 +70,13 @@ storiesOf("stories/components/FileSelectListItem", module)
                 />
             </>
         );
-    })
-    .add("Preview", () => {
+    },
+
+    name: "FileSelectListItem",
+};
+
+export const Preview = {
+    render: () => {
         return (
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
                 <FileSelectListItem
@@ -128,4 +138,5 @@ storiesOf("stories/components/FileSelectListItem", module)
                 />
             </Box>
         );
-    });
+    },
+};

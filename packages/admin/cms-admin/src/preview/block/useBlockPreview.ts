@@ -1,15 +1,15 @@
 import { useStoredState } from "@comet/admin";
-import * as React from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
 import { Device } from "../common/Device";
 
 interface BlockPreviewApi {
     device: Device;
-    setDevice: React.Dispatch<React.SetStateAction<Device>>;
+    setDevice: Dispatch<SetStateAction<Device>>;
     showOnlyVisible: boolean;
-    setShowOnlyVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowOnlyVisible: Dispatch<SetStateAction<boolean>>;
     minimized: boolean;
-    setMinimized: React.Dispatch<React.SetStateAction<boolean>>;
+    setMinimized: Dispatch<SetStateAction<boolean>>;
 }
 
 function useBlockPreview(): BlockPreviewApi {

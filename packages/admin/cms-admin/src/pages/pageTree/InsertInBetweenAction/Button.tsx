@@ -1,11 +1,11 @@
-import { IEditDialogApi } from "@comet/admin";
+import { type IEditDialogApi } from "@comet/admin";
 import { AddNoCircle } from "@comet/admin-icons";
 import { ButtonBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { type MouseEvent } from "react";
 
 import { serializeInitialValues } from "../../../form/serializeInitialValues";
-import { PageTreeNodePosition } from "../PageTreeService";
+import { type PageTreeNodePosition } from "../PageTreeService";
 
 const IconWrapper = styled("div")`
     padding: 4px;
@@ -37,12 +37,12 @@ const Root = styled(ButtonBase)`
 interface Props {
     editDialogApi: IEditDialogApi;
     position: PageTreeNodePosition;
-    onMouseOverButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-    onMouseOutButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    onMouseOverButton?: (event: MouseEvent<HTMLButtonElement>) => void;
+    onMouseOutButton?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 // renders one ore two insert-buttons
-export default function Button({ editDialogApi, position, onMouseOverButton, onMouseOutButton }: Props): React.ReactElement {
+export default function Button({ editDialogApi, position, onMouseOverButton, onMouseOutButton }: Props) {
     return (
         <Root
             onMouseOver={onMouseOverButton}

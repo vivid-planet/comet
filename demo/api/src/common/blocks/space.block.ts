@@ -1,16 +1,16 @@
-import { createSpaceBlock } from "@comet/blocks-api";
+import { createSpaceBlock } from "@comet/cms-api";
 
 export enum Spacing {
-    d150 = "d150",
-    d200 = "d200",
-    d250 = "d250",
-    d300 = "d300",
-    d350 = "d350",
-    d400 = "d400",
-    d450 = "d450",
-    d500 = "d500",
-    d550 = "d550",
-    d600 = "d600",
+    D100 = "D100",
+    D200 = "D200",
+    D300 = "D300",
+    D400 = "D400",
+    S100 = "S100",
+    S200 = "S200",
+    S300 = "S300",
+    S400 = "S400",
+    S500 = "S500",
+    S600 = "S600",
 }
 
-export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+export const SpaceBlock = createSpaceBlock({ spacing: Spacing });

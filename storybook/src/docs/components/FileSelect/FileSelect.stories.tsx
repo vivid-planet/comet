@@ -1,15 +1,20 @@
-import { FileSelect, FileSelectItem } from "@comet/admin";
+import { FileSelect, type FileSelectItem } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import { type Meta } from "@storybook/react";
 
-storiesOf("stories/components/FileSelect", module)
-    .addDecorator((story) => (
-        <Card>
-            <CardContent>{story()}</CardContent>
-        </Card>
-    ))
-    .add("FileSelect", () => {
+export default {
+    title: "Docs/Components/FileSelect",
+    decorators: [
+        (story) => (
+            <Card>
+                <CardContent>{story()}</CardContent>
+            </Card>
+        ),
+    ],
+} as Meta<typeof FileSelect>;
+
+export const Basic = {
+    render: () => {
         const value: FileSelectItem[] = [
             {
                 name: "Filename.xyz",
@@ -46,8 +51,12 @@ storiesOf("stories/components/FileSelect", module)
                 maxFiles={5}
             />
         );
-    })
-    .add("ReadOnly FileSelect", () => {
+    },
+    name: "FileSelect",
+};
+
+export const Readonly = {
+    render: () => {
         const value: FileSelectItem[] = [
             {
                 name: "Filename.xyz",
@@ -68,8 +77,12 @@ storiesOf("stories/components/FileSelect", module)
                 readOnly
             />
         );
-    })
-    .add("Grid with preview", () => {
+    },
+    name: "ReadOnly FileSelect",
+};
+
+export const GridWithPreview = {
+    render: () => {
         const value: FileSelectItem[] = [
             {
                 name: "Filename.xyz",
@@ -107,4 +120,6 @@ storiesOf("stories/components/FileSelect", module)
                 layout="grid"
             />
         );
-    });
+    },
+    name: "Grid with preview",
+};

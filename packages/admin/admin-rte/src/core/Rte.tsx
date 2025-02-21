@@ -1,27 +1,27 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
+import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
 import {
-    DraftBlockType,
-    DraftEditorCommand,
-    DraftHandleValue,
-    DraftStyleMap,
+    type DraftBlockType,
+    type DraftEditorCommand,
+    type DraftHandleValue,
+    type DraftStyleMap,
     Editor as DraftJsEditor,
-    EditorProps as DraftJsEditorProps,
-    EditorState,
+    type EditorProps as DraftJsEditorProps,
+    type EditorState,
     getDefaultKeyBinding,
     RichUtils,
 } from "draft-js";
 import { onDraftEditorCopy, onDraftEditorCut } from "draftjs-conductor";
 import {
-    ClipboardEvent,
-    CSSProperties,
+    type ClipboardEvent,
+    type CSSProperties,
     forwardRef,
-    ForwardRefExoticComponent,
-    KeyboardEvent,
-    PropsWithoutRef,
-    RefAttributes,
+    type ForwardRefExoticComponent,
+    type KeyboardEvent,
+    type PropsWithoutRef,
+    type RefAttributes,
     useCallback,
     useImperativeHandle,
     useRef,
@@ -33,7 +33,7 @@ import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
-import { CustomInlineStyles, IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
+import { type CustomInlineStyles, type IBlocktypeMap, type ICustomBlockTypeMap_Deprecated, type ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 import getRteTheme from "./utils/getRteTheme";
 import { pasteAndFilterText } from "./utils/pasteAndFilterText";
@@ -376,7 +376,7 @@ const Editor = createComponentSlot("div")<RteClassKey, OwnerState>({
 
             ${ownerState.minHeight !== undefined &&
             css`
-                min-height: ${ownerState.minHeight};
+                min-height: ${`${ownerState.minHeight}px`};
             `}
 
             padding: 20px;

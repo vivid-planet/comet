@@ -5,31 +5,30 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
-    MainContent,
     messages,
     TextField,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { Divider, FormControlLabel } from "@mui/material";
-import { FormApi } from "final-form";
+import { Collapse, Divider, FormControlLabel } from "@mui/material";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createManufacturerMutation, manufacturerFormFragment, manufacturerQuery, updateManufacturerMutation } from "./ManufacturerForm.gql";
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLManufacturerFormDetailsFragment,
-    GQLManufacturerQuery,
-    GQLManufacturerQueryVariables,
-    GQLUpdateManufacturerMutation,
-    GQLUpdateManufacturerMutationVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLManufacturerFormDetailsFragment,
+    type GQLManufacturerQuery,
+    type GQLManufacturerQueryVariables,
+    type GQLUpdateManufacturerMutation,
+    type GQLUpdateManufacturerMutationVariables,
 } from "./ManufacturerForm.gql.generated";
 
 type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressAsEmbeddable"> & {
@@ -46,19 +45,20 @@ type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressA
                   | null;
           })
         | null;
-    addressAsEmbeddable:
-        | Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
-              streetNumber: string | null;
-              zip: string;
-              alternativeAddress:
-                  | Omit<
-                        NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
-                        "streetNumber" | "zip"
-                    > & {
-                        streetNumber: string | null;
-                        zip: string;
-                    };
-          };
+    addressAsEmbeddable: Omit<
+        NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>,
+        "streetNumber" | "zip" | "alternativeAddress"
+    > & {
+        streetNumber: string | null;
+        zip: string;
+        alternativeAddress: Omit<
+            NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
+            "streetNumber" | "zip"
+        > & {
+            streetNumber: string | null;
+            zip: string;
+        };
+    };
 };
 
 interface FormProps {
@@ -198,8 +198,10 @@ export function ManufacturerForm({ id }: FormProps) {
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
+                    <>
+                        <FieldSet>
+                            <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
+                        </FieldSet>
                         <FieldSet
                             title={<FormattedMessage id="manufacturer.address" defaultMessage="Address" />}
                             supportText={<FormattedMessage id="manufacturer.address.supportText" defaultMessage="The main address" />}
@@ -248,8 +250,8 @@ export function ManufacturerForm({ id }: FormProps) {
                                 )}
                             </Field>
                             <Field name="useAlternativeAddress" subscription={{ value: true }}>
-                                {({ input: { value } }) =>
-                                    value ? (
+                                {({ input: { value } }) => (
+                                    <Collapse in={value}>
                                         <>
                                             <TextField
                                                 required
@@ -299,8 +301,8 @@ export function ManufacturerForm({ id }: FormProps) {
                                                 }
                                             />
                                         </>
-                                    ) : null
-                                }
+                                    </Collapse>
+                                )}
                             </Field>
                         </FieldSet>
                         <FieldSet
@@ -367,7 +369,7 @@ export function ManufacturerForm({ id }: FormProps) {
                                 label={<FormattedMessage id="manufacturer.address.alternativeAddress.country" defaultMessage="Alt-Address Country" />}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

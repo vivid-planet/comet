@@ -1,5 +1,6 @@
-import { AzureKeyCredential, ChatRequestMessage, OpenAIClient } from "@azure/openai";
 import { Inject, Injectable } from "@nestjs/common";
+import { AzureOpenAI } from "openai";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 import { FilesService } from "../../dam/files/files.service";
 import { ContentGenerationServiceInterface } from "../content-generation-service.interface";
@@ -11,6 +12,7 @@ export type AzureOpenAiConfig = {
     deploymentId: string;
     apiKey: string;
     apiUrl: string;
+    apiVersion?: string;
 };
 
 type ConfigByMethod = Partial<Record<ServiceMethods, AzureOpenAiConfig>>;
@@ -40,6 +42,15 @@ export class AzureOpenAiContentGenerationService {
         return config;
     }
 
+    private createClient(config: AzureOpenAiConfig): AzureOpenAI {
+        return new AzureOpenAI({
+            apiKey: config.apiKey,
+            deployment: config.deploymentId,
+            apiVersion: config.apiVersion ?? "2024-03-01-preview",
+            endpoint: config.apiUrl,
+        });
+    }
+
     async generateAltText(fileId: string): Promise<string> {
         const config = this.getConfigForMethod("generateAltText");
 
@@ -49,8 +60,8 @@ export class AzureOpenAiContentGenerationService {
             throw new Error("File doesn't exist");
         }
 
-        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
-        const prompt: ChatRequestMessage[] = [
+        const client = this.createClient(config);
+        const prompt: Array<ChatCompletionMessageParam> = [
             {
                 role: "system",
                 content:
@@ -61,7 +72,7 @@ export class AzureOpenAiContentGenerationService {
                 content: [
                     {
                         type: "image_url",
-                        imageUrl: {
+                        image_url: {
                             url: await this.filesService.getFileAsBase64String(file),
                             detail: "low",
                         },
@@ -69,7 +80,7 @@ export class AzureOpenAiContentGenerationService {
                 ],
             },
         ];
-        const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
+        const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 
@@ -82,8 +93,8 @@ export class AzureOpenAiContentGenerationService {
             throw new Error("File doesn't exist");
         }
 
-        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
-        const prompt: ChatRequestMessage[] = [
+        const client = this.createClient(config);
+        const prompt: Array<ChatCompletionMessageParam> = [
             {
                 role: "system",
                 content:
@@ -94,7 +105,7 @@ export class AzureOpenAiContentGenerationService {
                 content: [
                     {
                         type: "image_url",
-                        imageUrl: {
+                        image_url: {
                             url: await this.filesService.getFileAsBase64String(file),
                             detail: "low",
                         },
@@ -102,7 +113,7 @@ export class AzureOpenAiContentGenerationService {
                 ],
             },
         ];
-        const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
+        const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 }

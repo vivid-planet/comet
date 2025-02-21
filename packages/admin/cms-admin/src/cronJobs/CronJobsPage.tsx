@@ -1,12 +1,11 @@
 import { Stack, StackPage, StackSwitch } from "@comet/admin";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { CronJobsGrid } from "./CronJobsGrid";
 import { JobLogs } from "./JobLogs";
 import { JobsGrid } from "./JobsGrid";
 
-export function CronJobsPage(): React.ReactElement {
+export function CronJobsPage() {
     const intl = useIntl();
 
     return (

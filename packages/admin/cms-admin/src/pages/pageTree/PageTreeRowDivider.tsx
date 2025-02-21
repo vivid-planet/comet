@@ -1,5 +1,4 @@
 import { css, styled } from "@mui/material/styles";
-import * as React from "react";
 
 const Root = styled("div")<Pick<Props, "align">>`
     position: absolute;
@@ -48,7 +47,7 @@ interface Props {
     highlight: boolean;
 }
 
-export function PageTreeRowDivider({ align, leftSpacing, highlight }: Props): React.ReactElement {
+export function PageTreeRowDivider({ align, leftSpacing, highlight }: Props) {
     return (
         <Root align={align}>
             {align === "top" && highlight && <TopHighlight leftSpacing={leftSpacing} />}

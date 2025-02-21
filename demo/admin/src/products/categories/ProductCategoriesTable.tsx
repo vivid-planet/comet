@@ -1,34 +1,35 @@
 import { useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductCategoryMutation,
-    GQLCreateProductCategoryMutationVariables,
-    GQLDeleteProductCategoryMutation,
-    GQLDeleteProductCategoryMutationVariables,
-    GQLProductCategoriesListQuery,
-    GQLProductCategoriesListQueryVariables,
-    GQLProductsCategoriesListFragment,
+    type GQLCreateProductCategoryMutation,
+    type GQLCreateProductCategoryMutationVariables,
+    type GQLDeleteProductCategoryMutation,
+    type GQLDeleteProductCategoryMutationVariables,
+    type GQLProductCategoriesListQuery,
+    type GQLProductCategoriesListQueryVariables,
+    type GQLProductsCategoriesListFragment,
 } from "./ProductCategoriesTable.generated";
 
 function ProductCategoriesTableToolbar() {
@@ -37,12 +38,12 @@ function ProductCategoriesTableToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
                 </Button>
             </ToolbarItem>
@@ -57,15 +58,15 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
         width: 150,
     },
     {
-        field: "action",
+        field: "actions",
         headerName: "",
         sortable: false,
         filterable: false,
         renderCell: (params) => {
             return (
                 <>
-                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                        <Edit color="primary" />
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit />
                     </IconButton>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {
@@ -103,24 +104,25 @@ function ProductCategoriesTable() {
     const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            ...muiGridPagingToGql({ page: dataGridProps.paginationModel.page, pageSize: dataGridProps.paginationModel.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productCategories.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
 
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            error={error}
-            components={{
-                Toolbar: ProductCategoriesTableToolbar,
+            slots={{
+                toolbar: ProductCategoriesTableToolbar,
             }}
         />
     );

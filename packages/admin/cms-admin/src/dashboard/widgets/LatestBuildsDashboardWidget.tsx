@@ -1,18 +1,22 @@
 import { gql, useQuery } from "@apollo/client";
-import { GridColDef } from "@comet/admin";
+import { type GridColDef } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "../../cronJobs/JobRuntime";
 import { JobStatus } from "../../cronJobs/JobStatus";
 import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
-import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
+import { type GQLLatestBuildsQuery, type GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
 
 export const LatestBuildsDashboardWidget = () => {
     const { data, loading, error } = useQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>(LATEST_BUILDS);
+
     const intl = useIntl();
+
+    if (error) {
+        throw error;
+    }
 
     const columns: GridColDef<GQLLatestBuildsQuery["builds"][number]>[] = [
         {
@@ -38,16 +42,7 @@ export const LatestBuildsDashboardWidget = () => {
 
     return (
         <DashboardWidgetRoot header={<FormattedMessage id="dashboard.latestBuildsWidget.title" defaultMessage="Latest Builds" />}>
-            <DataGrid
-                disableSelectionOnClick
-                disableColumnMenu
-                hideFooter
-                autoHeight
-                columns={columns}
-                rows={data?.builds ?? []}
-                loading={loading}
-                error={error}
-            />
+            <DataGrid disableColumnMenu hideFooter autoHeight columns={columns} rows={data?.builds ?? []} loading={loading} />
         </DashboardWidgetRoot>
     );
 };

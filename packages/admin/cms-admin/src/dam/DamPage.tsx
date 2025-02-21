@@ -1,21 +1,19 @@
 import { styled } from "@mui/material/styles";
-import * as React from "react";
-import { useRouteMatch } from "react-router";
+import { type ReactNode } from "react";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
-import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
+import { type ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { DamScopeProvider } from "./config/DamScopeProvider";
 import { useDamConfig } from "./config/useDamConfig";
 import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
 type Props = {
-    renderContentScopeIndicator?: (scope: ContentScopeInterface) => React.ReactNode;
+    renderContentScopeIndicator?: (scope: ContentScopeInterface) => ReactNode;
     /**
      * @deprecated Use `additionalToolbarItems` option in `DamConfigProvider` instead
      */
-    additionalToolbarItems?: React.ReactNode;
+    additionalToolbarItems?: ReactNode;
 };
 
 const DefaultContentScopeIndicator = () => {
@@ -35,11 +33,8 @@ const DamTableWrapper = styled("div")`
     grid-template-rows: max-content;
 `;
 
-function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props): React.ReactElement {
-    const { scope, match } = useContentScope();
-    const routeMatch = useRouteMatch();
-    const damRouteLocation = routeMatch.url.replace(match.url, "");
-    useContentScopeConfig({ redirectPathAfterChange: damRouteLocation });
+function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
+    const { scope } = useContentScope();
     const damConfig = useDamConfig();
 
     return (

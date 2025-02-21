@@ -1,19 +1,16 @@
-import React from "react";
+import { type Dispatch, type MouseEvent, type SetStateAction, useState } from "react";
 
 interface InsertInBetweenButtonHoverStatesApi {
     top: boolean;
     bottom: boolean;
-    setTop: React.Dispatch<React.SetStateAction<boolean>>;
-    setBottom: React.Dispatch<React.SetStateAction<boolean>>;
-    defaultHandler: Record<
-        "mouseOverTop" | "mouseOutTop" | "mouseOverBottom" | "mouseOutBottom",
-        (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-    >;
+    setTop: Dispatch<SetStateAction<boolean>>;
+    setBottom: Dispatch<SetStateAction<boolean>>;
+    defaultHandler: Record<"mouseOverTop" | "mouseOutTop" | "mouseOverBottom" | "mouseOutBottom", (event: MouseEvent<HTMLButtonElement>) => void>;
 }
 // convinience hook to have a nicer api
 export function useButtonHoverStates(): InsertInBetweenButtonHoverStatesApi {
-    const [top, setTop] = React.useState(false);
-    const [bottom, setBottom] = React.useState(false);
+    const [top, setTop] = useState(false);
+    const [bottom, setBottom] = useState(false);
 
     const defaultHandler = {
         mouseOverTop: () => {

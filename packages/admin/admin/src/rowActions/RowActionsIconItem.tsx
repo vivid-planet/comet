@@ -1,7 +1,8 @@
-import { IconButton, IconButtonProps, Tooltip, TooltipProps } from "@mui/material";
-import { forwardRef, ReactNode } from "react";
+import { IconButton, type IconButtonProps, type TooltipProps } from "@mui/material";
+import { forwardRef, type ReactNode } from "react";
 
-import { CommonRowActionItemProps } from "./RowActionsItem";
+import { Tooltip } from "../common/Tooltip";
+import { type CommonRowActionItemProps } from "./RowActionsItem";
 
 export interface RowActionsIconItemComponentsProps {
     tooltip?: Partial<TooltipProps>;
@@ -16,13 +17,17 @@ export interface RowActionsIconItemProps extends CommonRowActionItemProps {
 export const RowActionsIconItem = forwardRef<HTMLButtonElement, RowActionsIconItemProps>(
     ({ icon, tooltip, componentsProps = {}, ...restIconButtonProps }, ref) => {
         const { tooltip: tooltipProps, iconButton: iconButtonProps } = componentsProps;
+
+        const combinedIconButtonProps = { ...restIconButtonProps, ...iconButtonProps };
+        const buttonIsDisabled = Boolean(combinedIconButtonProps.disabled);
+
         const button = (
-            <IconButton {...restIconButtonProps} {...iconButtonProps} ref={ref}>
+            <IconButton {...combinedIconButtonProps} ref={ref}>
                 {icon}
             </IconButton>
         );
 
-        if (tooltip) {
+        if (tooltip && !buttonIsDisabled) {
             return (
                 <Tooltip title={tooltip} {...tooltipProps}>
                     {button}

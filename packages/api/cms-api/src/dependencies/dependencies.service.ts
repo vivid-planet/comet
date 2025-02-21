@@ -1,11 +1,10 @@
-import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, EntityManager, EntityRepository, Knex, QueryOrder } from "@mikro-orm/postgresql";
 import { Injectable, Logger, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef } from "@nestjs/core";
 import { subMinutes } from "date-fns";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { EntityInfoGetter, EntityInfoServiceInterface } from "./decorators/entity-info.decorator";
 import { DiscoverService } from "./discover.service";
@@ -95,18 +94,18 @@ export class DependenciesService {
 
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
-            const uuid = v4();
+            const id = uuid();
             // Before forking the entity manager, race conditions occurred frequently
             // when executing the refresh asynchronous
             const forkedEntityManager = this.entityManager.fork();
-            console.time(`refresh materialized block dependency ${uuid}`);
+            console.time(`refresh materialized block dependency ${id}`);
             const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
             await forkedEntityManager.persistAndFlush(blockIndexRefresh);
 
             await forkedEntityManager.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
             await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: subMinutes(new Date(), 5) }));
-            console.timeEnd(`refresh materialized block dependency ${uuid}`);
+            console.timeEnd(`refresh materialized block dependency ${id}`);
         };
 
         const abortActiveRefreshes = async (activeRefreshes: PGStatActivity[]) => {

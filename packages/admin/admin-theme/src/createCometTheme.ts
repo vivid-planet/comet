@@ -1,9 +1,8 @@
-import { createTheme, Theme, ThemeOptions } from "@mui/material";
-import createPalette, { PaletteOptions } from "@mui/material/styles/createPalette";
-import createTypography, { TypographyOptions } from "@mui/material/styles/createTypography";
+import { createTheme, type Theme, type ThemeOptions } from "@mui/material";
+import createPalette, { type PaletteOptions } from "@mui/material/styles/createPalette";
+import createTypography, { type TypographyOptions } from "@mui/material/styles/createTypography";
 import muiDefaultZIndex from "@mui/material/styles/zIndex";
-import { createBreakpoints, createSpacing } from "@mui/system";
-import { BreakpointsOptions } from "@mui/system/createTheme/createBreakpoints";
+import { type BreakpointsOptions, createBreakpoints, createSpacing } from "@mui/system";
 import { deepmerge } from "@mui/utils";
 
 import { breakpointsOptions as cometBreakpointsOptions } from "./breakpointsOptions";
@@ -51,6 +50,11 @@ export const createCometTheme = (
         typography: typographyOptions,
         shape: {
             borderRadius: 2,
+        },
+        mixins: {
+            MuiDataGrid: {
+                containerBackground: "rgb(255, 255, 255)",
+            },
         },
         shadows,
         zIndex,

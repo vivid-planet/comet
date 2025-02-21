@@ -1,11 +1,13 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
+import { type PhoneLinkBlockData, type PhoneLinkBlockInput } from "../blocks.generated";
 import { isPhoneNumber } from "../validation/isPhoneNumber";
 import { validatePhoneNumber } from "../validation/validatePhoneNumber";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { BlockCategory, type BlockInterface } from "./types";
 
 export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockData, PhoneLinkBlockInput> = {
     ...createBlockSkeleton(),
@@ -14,7 +16,7 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
 
     displayName: <FormattedMessage id="comet.blocks.link.phone" defaultMessage="Phone Number" />,
 
-    defaultValues: () => ({ phone: "" }),
+    defaultValues: () => ({ phone: undefined }),
 
     category: BlockCategory.Navigation,
 

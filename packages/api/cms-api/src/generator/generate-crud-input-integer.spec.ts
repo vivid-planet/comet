@@ -1,14 +1,13 @@
-import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityWithIntegerTypes extends BaseEntity<TestEntityWithIntegerTypes, "id"> {
+class TestEntityWithIntegerTypes extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -56,15 +55,17 @@ class TestEntityWithIntegerTypes extends BaseEntity<TestEntityWithIntegerTypes, 
 describe("GenerateCrudInputInteger", () => {
     it("should generate correct input type for integer values", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithIntegerTypes],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                connect: false,
+                entities: [TestEntityWithIntegerTypes],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithIntegerTypes"));
-        const lintedOut = await lintGeneratedFiles(out);
-        const file = lintedOut.find((file) => file.name === "dto/test-entity-with-integer-types.input.ts");
+        const formattedOut = await formatGeneratedFiles(out);
+        const file = formattedOut.find((file) => file.name === "dto/test-entity-with-integer-types.input.ts");
         if (!file) throw new Error("File not found");
         const source = parseSource(file.content);
 

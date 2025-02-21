@@ -1,7 +1,7 @@
-import { ComponentType, PropsWithChildren, ReactNode, useCallback, useMemo } from "react";
+import { type ComponentType, type PropsWithChildren, type ReactNode, useCallback, useMemo } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router";
 
-import { ISelectionApi } from "./SelectionApi";
+import { type ISelectionApi } from "./SelectionApi";
 
 interface IRouteParams {
     id?: string;
@@ -68,7 +68,7 @@ export interface ISelectionRouterRenderPropArgs {
     selectionApi: ISelectionApi;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface IProps {}
 export const SelectionRouteInner = ({ children }: PropsWithChildren<IProps>) => {
     const { path } = useRouteMatch();

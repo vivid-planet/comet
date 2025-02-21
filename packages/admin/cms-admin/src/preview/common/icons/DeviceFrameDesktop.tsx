@@ -1,6 +1,4 @@
-import * as React from "react";
-
-function DeviceFrameDesktop(): React.ReactElement {
+function DeviceFrameDesktop() {
     return (
         <svg viewBox="0 0 1600 885">
             <path

@@ -1,14 +1,14 @@
 {
-    "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "lib",
-        "rootDir": "src",
         "baseUrl": "src",
+        "outDir": "lib",
         "paths": {
-            // See https://testing-library.com/docs/react-testing-library/setup/#configuring-jest-with-test-utils
             "test-utils": ["./utils/test-utils"]
-        }
+        },
+        "rootDir": "src",
+        "typeRoots": ["node_modules/@types", "node_modules/@testing-library"]
     },
-    "include": ["./src"],
-    "exclude": []
+    "exclude": [],
+    "extends": "../tsconfig.base.json",
+    "include": ["./src"]
 }

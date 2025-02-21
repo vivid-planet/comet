@@ -1,11 +1,11 @@
-import { EntityMetadata } from "@mikro-orm/core";
+import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildOptions } from "./generate-crud";
 import { buildNameVariants } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
-import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { generateImportsCode, type Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
     findBlockName,
@@ -15,7 +15,7 @@ import {
     findValidatorImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
-import { GeneratedFile } from "./utils/write-generated-files";
+import { type GeneratedFile } from "./utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
@@ -44,11 +44,15 @@ export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
-    options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[] } = { nested: false, excludeFields: [] },
+    options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[]; generateUpdateInput?: boolean } = {
+        nested: false,
+        excludeFields: [],
+        generateUpdateInput: true,
+    },
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
-    const { dedicatedResolverArgProps } = buildOptions(metadata);
+    const { dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
 
     const props = metadata.props
         .filter((prop) => {
@@ -64,20 +68,42 @@ export async function generateCrudInput(
         .filter((prop) => !options.excludeFields.includes(prop.name));
 
     let fieldsOut = "";
-    const imports: Imports = [];
+    const imports: Imports = [
+        { name: "IsSlug", importPath: "@comet/cms-api" },
+        { name: "RootBlockInputScalar", importPath: "@comet/cms-api" },
+        { name: "IsNullable", importPath: "@comet/cms-api" },
+        { name: "PartialType", importPath: "@comet/cms-api" },
+        { name: "BlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
+    ];
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        if (!prop.nullable) {
-            decorators.push("@IsNotEmpty()");
-        } else {
-            decorators.push("@IsNullable()");
+        let isOptional = prop.nullable;
+
+        if (prop.name != "position") {
+            if (!prop.nullable) {
+                decorators.push("@IsNotEmpty()");
+            } else {
+                decorators.push("@IsNullable()");
+            }
         }
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
+        } else if (prop.name == "position") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
+            isOptional = true;
+            decorators.push(`@IsOptional()`);
+            decorators.push(`@Min(1)`);
+            decorators.push("@IsInt()");
+            decorators.push(`@Field(() => Int, ${fieldOptions})`);
+
+            type = "number";
         } else if (prop.enum) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
@@ -166,7 +192,7 @@ export async function generateCrudInput(
             );
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
-        } else if (prop.reference == "m:1") {
+        } else if (prop.kind == "m:1") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined);
             const fieldOptions = tsCodeRecordToString({
@@ -193,14 +219,14 @@ export async function generateCrudInput(
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
-        } else if (prop.reference == "1:m") {
+        } else if (prop.kind == "1:m") {
             if (prop.orphanRemoval) {
                 //if orphanRemoval is enabled, we need to generate a nested input type
                 decorators.length = 0;
                 if (!prop.targetMeta) throw new Error("No targetMeta");
                 const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
                 {
-                    const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
+                    const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "m:1" && p.targetMeta == metadata).map((p) => p.name);
 
                     const { fileNameSingular } = buildNameVariants(metadata);
                     const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
@@ -247,7 +273,7 @@ export async function generateCrudInput(
                     console.warn(`${prop.name}: Unsupported referenced type`);
                 }
             }
-        } else if (prop.reference == "m:n") {
+        } else if (prop.kind == "m:n") {
             decorators.length = 0;
             decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable" : "defaultValue: []"}})`);
             decorators.push(`@IsArray()`);
@@ -269,11 +295,11 @@ export async function generateCrudInput(
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
-        } else if (prop.reference == "1:1") {
+        } else if (prop.kind == "1:1") {
             if (!prop.targetMeta) throw new Error("No targetMeta");
             const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
             {
-                const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
+                const excludeFields = prop.targetMeta.props.filter((p) => p.kind == "1:1" && p.targetMeta == metadata).map((p) => p.name);
                 const { fileNameSingular } = buildNameVariants(metadata);
                 const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
                 const fileName = `dto/${fileNameSingular}-nested-${targetFileNameSingular}.input.ts`;
@@ -308,8 +334,8 @@ export async function generateCrudInput(
                     prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined)
                         ? "null"
                         : initializer == "[]"
-                        ? "[]"
-                        : undefined;
+                          ? "[]"
+                          : undefined;
                 const fieldOptions = tsCodeRecordToString({
                     nullable: prop.nullable ? "true" : undefined,
                     defaultValue: defaultValue,
@@ -390,17 +416,15 @@ export async function generateCrudInput(
         }
 
         fieldsOut += `${decorators.join("\n")}
-    ${fieldName}${prop.nullable ? "?" : ""}: ${type};
+    ${fieldName}${isOptional ? "?" : ""}: ${type};
     
     `;
     }
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
-import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 
@@ -410,7 +434,7 @@ export class ${className} {
 }
 
 ${
-    !options.nested
+    options.generateUpdateInput && !options.nested
         ? `
 @InputType()
 export class ${className.replace(/Input$/, "")}UpdateInput extends PartialType(${className}) {}

@@ -1,15 +1,15 @@
-import React from "react";
+import { type ReactNode } from "react";
 
 import Button from "./Button";
 import * as sc from "./InsertInBetweenAction.sc";
 
 interface Props {
-    top?: React.ReactNode;
-    bottom?: React.ReactNode;
+    top?: ReactNode;
+    bottom?: ReactNode;
 }
 
 // Layout component, a button can be on top, on bottom or on both of the tree-row
-export default function InsertInBetweenAction({ top, bottom }: Props): React.ReactElement {
+export default function InsertInBetweenAction({ top, bottom }: Props) {
     return (
         <sc.Root>
             <sc.TopSpot>{top}</sc.TopSpot>

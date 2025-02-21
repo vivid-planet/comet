@@ -1,11 +1,22 @@
 import { Close, Delete, Save, Warning } from "@comet/admin-icons";
-import { Button, ComponentsOverrides, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Theme, Typography } from "@mui/material";
+import {
+    Button,
+    type ComponentsOverrides,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    type Theme,
+    Typography,
+} from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 
 export type RouterConfirmationDialogClassKey =

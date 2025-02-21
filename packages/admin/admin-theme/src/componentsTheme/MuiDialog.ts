@@ -1,7 +1,7 @@
-import { Components } from "@mui/material/styles/components";
+import { type Components } from "@mui/material/styles/components";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (component, { spacing }): Components["MuiDialog"] => ({
     ...component,
@@ -31,6 +31,11 @@ export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (component, { spa
         },
         paperFullWidth: {
             width: `calc(100% - ${spacing(16)})`,
+        },
+        paperFullScreen: {
+            borderRadius: 0,
+            maxWidth: "none",
+            margin: 0,
         },
     }),
 });

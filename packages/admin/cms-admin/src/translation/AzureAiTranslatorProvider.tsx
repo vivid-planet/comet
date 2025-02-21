@@ -1,16 +1,16 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { ContentTranslationServiceProvider } from "@comet/admin";
-import React from "react";
+import { type ComponentProps, type PropsWithChildren } from "react";
 
 import { useContentScope } from "../contentScope/Provider";
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
-import { GQLTranslateQuery, GQLTranslateQueryVariables } from "./AzureAiTranslatorProvider.generated";
+import { type GQLTranslateQuery, type GQLTranslateQueryVariables } from "./AzureAiTranslatorProvider.generated";
 
-interface AzureAiTranslatorProps extends Omit<React.ComponentProps<typeof ContentTranslationServiceProvider>, "enabled" | "translate"> {
+interface AzureAiTranslatorProps extends Omit<ComponentProps<typeof ContentTranslationServiceProvider>, "enabled" | "translate"> {
     enabled?: boolean;
 }
 
-export const AzureAiTranslatorProvider = ({ children, enabled = false, ...rest }: React.PropsWithChildren<AzureAiTranslatorProps>) => {
+export const AzureAiTranslatorProvider = ({ children, enabled = false, ...rest }: PropsWithChildren<AzureAiTranslatorProps>) => {
     const { scope } = useContentScope();
     const apolloClient = useApolloClient();
     const isAllowed = useUserPermissionCheck();

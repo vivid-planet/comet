@@ -1,22 +1,21 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { FinalForm, ISelectionApi, Loading } from "@comet/admin";
-import React from "react";
+import { FinalForm, type ISelectionApi, Loading } from "@comet/admin";
 
 import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
 import {
-    GQLEditFolderQuery,
-    GQLEditFolderQueryVariables,
-    GQLUpdateDamFolderMutation,
-    GQLUpdateDamFolderMutationVariables,
+    type GQLEditFolderQuery,
+    type GQLEditFolderQueryVariables,
+    type GQLUpdateDamFolderMutation,
+    type GQLUpdateDamFolderMutationVariables,
 } from "./EditFolder.gql.generated";
-import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
+import { FolderFormFields, type FolderFormValues } from "./FolderFormFields";
 
 interface EditFolderProps {
     id: string;
     selectionApi: ISelectionApi;
 }
 
-const EditFolder = ({ id, selectionApi }: EditFolderProps): React.ReactElement => {
+const EditFolder = ({ id, selectionApi }: EditFolderProps) => {
     const { loading, data } = useQuery<GQLEditFolderQuery, GQLEditFolderQueryVariables>(editFolderQuery, {
         variables: {
             id: id,

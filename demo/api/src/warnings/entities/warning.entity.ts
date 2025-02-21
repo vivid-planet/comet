@@ -1,5 +1,4 @@
-import { RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator } from "@comet/cms-api";
+import { CrudField, CrudGenerator, RootBlockEntity } from "@comet/cms-api";
 import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -11,7 +10,7 @@ import { WarningStatus } from "./warning-status.enum";
 @Entity()
 @RootBlockEntity<Warning>()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["warnings"] })
-export class Warning extends BaseEntity<Warning, "id"> {
+export class Warning extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })

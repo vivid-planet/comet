@@ -1,19 +1,37 @@
-import { IntrospectionQuery } from "graphql";
+import { type IntrospectionQuery } from "graphql";
 
-import { generateFields, GenerateFieldsReturn } from "./generateForm/generateFields";
+import { generateFields, type GenerateFieldsReturn } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
-import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "./generator";
+import {
+    type FormConfig,
+    type FormFieldConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    isFormFieldConfig,
+    isFormLayoutConfig,
+} from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
-import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+
+    const uniqueProps = props.reduce<Prop[]>((acc, item) => {
+        const propWithSameName = acc.find((prop) => prop.name == item.name);
+        if (!propWithSameName) return [item, ...acc];
+        if (propWithSameName.type != item.type || propWithSameName.optional != item.optional) {
+            // this is currently not supported
+            return [item, ...acc];
+        }
+        return acc;
+    }, []);
+
     return {
         formPropsTypeCode: `interface FormProps {
-            ${props.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
+            ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${props.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
     };
 }
 
@@ -27,9 +45,13 @@ export function generateForm(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormConfig<any>,
 ): GeneratorReturn {
+    assertValidConfig(config);
+
     const gqlType = config.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
-    const gqlDocuments: Record<string, string> = {};
+    const formFragmentName = config.fragmentName ?? `${gqlType}Form`;
+    const gqlDocuments: GQLDocumentConfigMap = {};
+
     const imports: Imports = [];
     const props: Prop[] = [];
 
@@ -42,7 +64,12 @@ export function generateForm(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
         if (isFormLayoutConfig(field)) {
-            acc.push(...field.fields);
+            // using forEach instead of acc.push(...field.fields.filter(isFormFieldConfig)) because typescript can't handle mixed typing
+            field.fields.forEach((nestedFieldConfig) => {
+                if (isFormFieldConfig(nestedFieldConfig)) {
+                    acc.push(nestedFieldConfig);
+                }
+            });
         } else if (isFormFieldConfig(field)) {
             acc.push(field);
         }
@@ -92,6 +119,17 @@ export function generateForm(
     const readOnlyFields = formFields.filter((field) => field.readOnly);
     const fileFields = formFields.filter((field) => field.type == "fileUpload");
 
+    if (fileFields.length > 0) {
+        imports.push({ name: "GQLFinalFormFileUploadFragment", importPath: "@comet/cms-admin" });
+    }
+
+    // Unnecessary field.type == "fileUpload" check to make TypeScript happy
+    const downloadableFileFields = fileFields.filter((field) => field.type == "fileUpload" && field.download);
+
+    if (fileFields.length > 0) {
+        imports.push({ name: "GQLFinalFormFileUploadDownloadableFragment", importPath: "@comet/cms-admin" });
+    }
+
     let hooksCode = "";
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
@@ -100,10 +138,15 @@ export function generateForm(
         gqlIntrospection,
         baseOutputFilename,
         fields: config.fields,
+        formFragmentName,
         formConfig: config,
+        gqlType: config.gqlType,
     });
     for (const name in generatedFields.gqlDocuments) {
-        gqlDocuments[name] = generatedFields.gqlDocuments[name];
+        gqlDocuments[name] = {
+            document: generatedFields.gqlDocuments[name].document,
+            export: true,
+        };
     }
     imports.push(...generatedFields.imports);
     hooksCode += generatedFields.hooksCode;
@@ -111,69 +154,81 @@ export function generateForm(
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
 
-    const fragmentName = config.fragmentName ?? `${gqlType}Form`;
-    gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
+    gqlDocuments[`${instanceGqlType}FormFragment`] = {
+        document: `
+        fragment ${formFragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
         }
-        ${fileFields.length > 0 ? "${finalFormFileUploadFragment}" : ""}
-    `;
+        ${fileFields.length > 0 && fileFields.length !== downloadableFileFields.length ? "${finalFormFileUploadFragment}" : ""}
+        ${downloadableFileFields.length > 0 ? "${finalFormFileUploadDownloadableFragment}" : ""}
+    `,
+        export: editMode,
+    };
 
     if (editMode) {
-        gqlDocuments[`${instanceGqlType}Query`] = `
+        gqlDocuments[`${instanceGqlType}Query`] = {
+            document: `
             query ${gqlType}($id: ID!) {
                 ${instanceGqlType}(id: $id) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
-        `;
+        `,
+            export: true,
+        };
     }
 
     if (addMode && createMutationType) {
-        gqlDocuments[`create${gqlType}Mutation`] = `
+        gqlDocuments[`create${gqlType}Mutation`] = {
+            document: `
             mutation Create${gqlType}(${
-            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
-                ? `${gqlArgs
-                      .filter((gqlArg) => !gqlArg.isInputArgSubfield)
-                      .map((gqlArg) => {
-                          return `$${gqlArg.name}: ${gqlArg.type}!`;
-                      })
-                      .join(", ")}, `
-                : ``
-        }$input: ${gqlType}Input!) {
+                gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
+                    ? `${gqlArgs
+                          .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                          .map((gqlArg) => {
+                              return `$${gqlArg.name}: ${gqlArg.type}!`;
+                          })
+                          .join(", ")}, `
+                    : ``
+            }$input: ${gqlType}Input!) {
                 ${createMutationType.name}(${
-            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
-                ? `${gqlArgs
-                      .filter((gqlArg) => !gqlArg.isInputArgSubfield)
-                      .map((gqlArg) => {
-                          return `${gqlArg.name}: $${gqlArg.name}`;
-                      })
-                      .join(", ")}, `
-                : ``
-        }input: $input) {
+                    gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
+                        ? `${gqlArgs
+                              .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                              .map((gqlArg) => {
+                                  return `${gqlArg.name}: $${gqlArg.name}`;
+                              })
+                              .join(", ")}, `
+                        : ``
+                }input: $input) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
-        `;
+        `,
+            export: true,
+        };
     }
 
     if (editMode) {
-        gqlDocuments[`update${gqlType}Mutation`] = `
+        gqlDocuments[`update${gqlType}Mutation`] = {
+            document: `
             mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
                 update${gqlType}(id: $id, input: $input) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
-        `;
+        `,
+            export: true,
+        };
     }
 
     for (const name in gqlDocuments) {
@@ -182,7 +237,7 @@ export function generateForm(
             name: name,
             importPath: `./${baseOutputFilename}.gql`,
         });
-        const match = gqlDocument.match(/^\s*(query|mutation|fragment)\s+(\w+)/);
+        const match = gqlDocument.document.match(/^\s*(query|mutation|fragment)\s+(\w+)/);
         if (!match) throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
         const type = match[1];
         const documentName = match[2];
@@ -196,57 +251,67 @@ export function generateForm(
         });
     }
 
-    let filterByFragmentType = `GQL${fragmentName}Fragment`;
+    const finalFormSubscription = Object.keys(generatedFields.finalFormConfig?.subscription ?? {});
+    const finalFormRenderProps = Object.keys(generatedFields.finalFormConfig?.renderProps ?? {});
+
+    let filterByFragmentType = `GQL${formFragmentName}Fragment`;
     let customFilterByFragment = "";
 
     if (fileFields.length > 0) {
         const keysToOverride = fileFields.map((field) => field.name);
 
-        customFilterByFragment = `type ${fragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
+        customFilterByFragment = `type ${formFragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
             .map((key) => `"${String(key)}"`)
             .join(" | ")}> & {
             ${fileFields
                 .map((field) => {
+                    if (field.type !== "fileUpload") {
+                        throw new Error("Field is not a file upload field");
+                    }
+
                     if (
                         ("multiple" in field && field.multiple) ||
                         ("maxFiles" in field && typeof field.maxFiles === "number" && field.maxFiles > 1)
                     ) {
-                        return `${String(field.name)}: GQLFinalFormFileUploadFragment[];`;
+                        return `${String(field.name)}: ${
+                            field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                        }[];`;
                     }
-                    return `${String(field.name)}: GQLFinalFormFileUploadFragment | null;`;
+                    return `${String(field.name)}: ${
+                        field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                    } | null;`;
                 })
                 .join("\n")}
         }`;
 
-        filterByFragmentType = `${fragmentName}Fragment`;
+        filterByFragmentType = `${formFragmentName}Fragment`;
     }
 
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
         AsyncSelectField,
+        CheckboxField,
         Field,
         filterByFragment,
         FinalForm,
-        FinalFormCheckbox,
         FinalFormInput,
+        FinalFormRangeInput,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
-        MainContent,
+        RadioGroupField,
         TextAreaField,
         TextField,
         useFormApiRef,
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft, Lock } from "@comet/admin-icons";
-    import { FinalFormDatePicker } from "@comet/admin-date-time";
-    import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField, GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
-    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+    import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
+    import { BlockState, createFinalFormBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
-    import React from "react";
+    import { useMemo } from "react";
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
     ${
@@ -279,7 +344,7 @@ export function generateForm(
 
     ${formPropsTypeCode}
 
-    export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
+    export function ${exportName}(${formPropsParamsCode}) {
         const client = useApolloClient();
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
@@ -298,7 +363,7 @@ export function generateForm(
 
         ${
             editMode
-                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+                ? `const initialValues = useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filterByFragment<${filterByFragmentType}>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${formValuesConfig
@@ -355,7 +420,7 @@ export function generateForm(
                 ${
                     editMode
                         ? `
-                if (!id) throw new Error();
+                ${readOnlyFields.some((field) => field.name === "id") ? "" : "if (!id) throw new Error();"}
                 const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
@@ -378,13 +443,13 @@ export function generateForm(
                                   .join(",")} }`
                             : "output"
                     }${
-                              gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
-                                  ? `, ${gqlArgs
-                                        .filter((prop) => !prop.isInputArgSubfield)
-                                        .map((arg) => arg.name)
-                                        .join(",")}`
-                                  : ""
-                          } },
+                        gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
+                            ? `, ${gqlArgs
+                                  .filter((prop) => !prop.isInputArgSubfield)
+                                  .map((arg) => arg.name)
+                                  .join(",")}`
+                            : ""
+                    } },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.${createMutationType.name}.id;
@@ -419,14 +484,14 @@ export function generateForm(
                 mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}
                 initialValues={initialValues}
                 initialValuesEqual={isEqual} //required to compare block data correctly
-                subscription={{}}
+                subscription={{ ${finalFormSubscription.length ? finalFormSubscription.map((field) => `${field}: true`).join(", ") : ``} }}
             >
-                {() => (
+                {(${finalFormRenderProps.length ? `{${finalFormRenderProps.join(", ")}}` : ``}) => (
                     ${editMode ? `<>` : ``}
                         ${editMode ? `{saveConflict.dialogs}` : ``}
-                        <MainContent>
+                        <>
                             ${fieldsCode}
-                        </MainContent>
+                        </>
                     ${editMode ? `</>` : ``}
                 )}
             </FinalForm>
@@ -439,4 +504,30 @@ export function generateForm(
         code,
         gqlDocuments,
     };
+}
+
+/**
+ * Checks if the provided form config is valid.
+ *
+ * Examples of invalid configs:
+ * - The "id" field is not read-only
+ *
+ * @param config The form config to check.
+ * @throws Will throw an error if the provided config is invalid.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function assertValidConfig(config: FormConfig<any>) {
+    function validateFields(fields: typeof config.fields) {
+        for (const field of fields) {
+            if (isFormFieldConfig(field)) {
+                if (field.name === "id" && !field.readOnly) {
+                    throw new Error(`Invalid form config: the "id" field must be read-only`);
+                }
+            } else if (isFormLayoutConfig(field)) {
+                validateFields(field.fields);
+            }
+        }
+    }
+
+    validateFields(config.fields);
 }

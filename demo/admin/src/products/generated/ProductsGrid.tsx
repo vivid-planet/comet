@@ -4,7 +4,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -18,21 +18,19 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { BlockPreviewContent } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductsGridQuery,
-    GQLProductsGridQueryVariables,
-    GQLProductsListFragment,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductsGridQuery,
+    type GQLProductsGridQueryVariables,
+    type GQLProductsListFragment,
 } from "./ProductsGrid.generated";
 
 const productsFragment = gql`
@@ -99,7 +97,7 @@ function ProductsGridToolbar() {
     );
 }
 
-export function ProductsGrid(): React.ReactElement {
+export function ProductsGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -137,28 +135,28 @@ export function ProductsGrid(): React.ReactElement {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "lastCheckedAt",
             headerName: intl.formatMessage({ id: "product.lastCheckedAt", defaultMessage: "Last Checked At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "updatedAt",
             headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
@@ -225,8 +223,8 @@ export function ProductsGrid(): React.ReactElement {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -238,13 +236,12 @@ export function ProductsGrid(): React.ReactElement {
         <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ProductsGridToolbar,
+                slots={{
+                    toolbar: ProductsGridToolbar,
                 }}
             />
         </MainContent>

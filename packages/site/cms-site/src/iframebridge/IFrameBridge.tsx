@@ -1,14 +1,15 @@
 "use client";
 
-import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
+import isEqual from "lodash.isequal";
+import { createContext, type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebounceCallback } from "usehooks-ts";
 
-import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
+import { type AdminMessage, AdminMessageType, type IFrameMessage, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
 import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement } from "./utils";
 
-export type PreviewElement = {
+type PreviewElement = {
     element: HTMLElement;
     adminRoute: string;
     label: string;
@@ -32,7 +33,7 @@ export interface IFrameBridgeContext {
     block?: any;
     showOnlyVisible: boolean;
     selectedAdminRoute?: string;
-    hoveredAdminRoute?: string;
+    hoveredAdminRoute?: string | null;
     sendSelectComponent: (id: string) => void;
     sendHoverComponent: (route: string | null) => void;
     /**
@@ -41,6 +42,7 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
+    graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
     removePreviewElement: (element: PreviewElement) => void;
@@ -60,6 +62,7 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
+    graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
         // empty
@@ -73,47 +76,57 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [block, setBlock] = useState<unknown | undefined>(undefined);
     const [showOnlyVisible, setShowOnlyVisible] = useState<boolean>(false);
     const [selectedAdminRoute, setSelectedAdminRoute] = useState<string | undefined>(undefined);
-    const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | undefined>(undefined);
+    const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | null>(null);
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
+    const [graphQLApiUrl, setGraphQLApiUrl] = useState<string>("");
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
 
     const childrenWrapperRef = useRef<HTMLDivElement>(null);
 
     const recalculatePreviewElementsData = useCallback(() => {
-        setPreviewElementsData(
-            previewElements
-                .map((previewElement) => {
-                    const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
-                    const positioning = getCombinedPositioningOfElements(childNodes);
+        const newPreviewElementsData = previewElements
+            .map((previewElement) => {
+                const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
+                const positioning = getCombinedPositioningOfElements(childNodes);
 
-                    return {
-                        adminRoute: previewElement.adminRoute,
-                        label: previewElement.label,
-                        position: {
-                            top: positioning.top,
-                            left: positioning.left,
-                            width: positioning.width,
-                            height: positioning.height,
-                        },
-                    };
-                })
-                .sort((previousElementData, nextElementData) => {
-                    const previousSize = previousElementData.position.width * previousElementData.position.height;
-                    const nextSize = nextElementData.position.width * nextElementData.position.height;
-                    return nextSize - previousSize;
-                })
-                .map((elementData, index) => {
-                    return {
-                        ...elementData,
-                        position: {
-                            ...elementData.position,
-                            zIndex: index + 1,
-                        },
-                    };
-                }),
-        );
+                return {
+                    adminRoute: previewElement.adminRoute,
+                    label: previewElement.label,
+                    position: {
+                        top: positioning.top,
+                        left: positioning.left,
+                        width: positioning.width,
+                        height: positioning.height,
+                    },
+                };
+            })
+            .sort((previousElementData, nextElementData) => {
+                const previousSize = previousElementData.position.width * previousElementData.position.height;
+                const nextSize = nextElementData.position.width * nextElementData.position.height;
+                return nextSize - previousSize;
+            })
+            .map((elementData, index) => {
+                return {
+                    ...elementData,
+                    position: {
+                        ...elementData.position,
+                        zIndex: index + 1,
+                    },
+                };
+            });
+
+        setPreviewElementsData((previousElementsData) => {
+            const dataDidNotChange = isEqual(previousElementsData, newPreviewElementsData);
+
+            if (dataDidNotChange) {
+                // Returning the previous object (same reference) prevents the state-update from triggering a re-render
+                return previousElementsData;
+            }
+
+            return newPreviewElementsData;
+        });
     }, [previewElements]);
 
     useEffect(() => {
@@ -126,7 +139,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 recalculatePreviewElementsData();
             });
 
-            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
+            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true, attributes: true });
             resizeObserver.observe(childrenWrapperRef.current);
 
             return () => {
@@ -136,11 +149,11 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
         }
     }, [recalculatePreviewElementsData]);
 
-    const sendMessage = (message: IFrameMessage) => {
+    const sendMessage = useCallback((message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
-    };
+    }, []);
 
-    const debounceDeactivateOutlines = useDebouncedCallback(() => {
+    const debounceDeactivateOutlines = useDebounceCallback(() => {
         setShowOutlines(false);
     }, 2500);
 
@@ -168,6 +181,9 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 case AdminMessageType.ContentScope:
                     setContentScope(message.data.contentScope);
                     break;
+                case AdminMessageType.GraphQLApiUrl:
+                    setGraphQLApiUrl(message.data.graphQLApiUrl);
+                    break;
             }
         },
         [debounceDeactivateOutlines],
@@ -186,7 +202,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 if (message.hasOwnProperty("cometType")) {
                     onReceiveMessage(message as AdminMessage);
                 }
-            } catch (e) {
+            } catch {
                 // empty
             }
         };
@@ -198,7 +214,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
         return () => {
             window.removeEventListener("message", handleMessage, false);
         };
-    }, [onReceiveMessage]);
+    }, [onReceiveMessage, sendMessage]);
 
     const addPreviewElement = useCallback(
         (element: PreviewElement) => {
@@ -214,29 +230,45 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
         [setPreviewElements],
     );
 
+    const iFrameBridgeValues = useMemo(
+        () => ({
+            showOutlines,
+            hasBridge: true,
+            block,
+            showOnlyVisible,
+            selectedAdminRoute,
+            hoveredAdminRoute,
+            sendSelectComponent: (adminRoute: string) => {
+                setSelectedAdminRoute(adminRoute);
+                sendMessage({ cometType: IFrameMessageType.SelectComponent, data: { adminRoute } });
+            },
+            sendHoverComponent: (route: string | null) => {
+                sendMessage({ cometType: IFrameMessageType.HoverComponent, data: { route } });
+            },
+            sendMessage,
+            contentScope,
+            graphQLApiUrl,
+            previewElementsData,
+            addPreviewElement,
+            removePreviewElement,
+        }),
+        [
+            showOutlines,
+            block,
+            showOnlyVisible,
+            selectedAdminRoute,
+            hoveredAdminRoute,
+            sendMessage,
+            contentScope,
+            graphQLApiUrl,
+            previewElementsData,
+            addPreviewElement,
+            removePreviewElement,
+        ],
+    );
+
     return (
-        <IFrameBridgeContext.Provider
-            value={{
-                showOutlines,
-                hasBridge: true,
-                block,
-                showOnlyVisible,
-                selectedAdminRoute,
-                hoveredAdminRoute,
-                sendSelectComponent: (adminRoute: string) => {
-                    setSelectedAdminRoute(adminRoute);
-                    sendMessage({ cometType: IFrameMessageType.SelectComponent, data: { adminRoute } });
-                },
-                sendHoverComponent: (route: string | null) => {
-                    sendMessage({ cometType: IFrameMessageType.HoverComponent, data: { route } });
-                },
-                sendMessage,
-                contentScope,
-                previewElementsData,
-                addPreviewElement,
-                removePreviewElement,
-            }}
-        >
+        <IFrameBridgeContext.Provider value={iFrameBridgeValues}>
             <div
                 onMouseMove={() => {
                     setShowOutlines(true);

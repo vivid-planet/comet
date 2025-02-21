@@ -3,33 +3,31 @@
 import { gql, useApolloClient } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FinalForm,
-    FinalFormCheckbox,
-    FinalFormSubmitEvent,
-    MainContent,
+    type FinalFormSubmitEvent,
     TextAreaField,
     TextField,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
-import { FormControlLabel } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
-import { FormApi } from "final-form";
+import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
+import { type BlockState, createFinalFormBlock, DamImageBlock } from "@comet/cms-admin";
+import { InputAdornment } from "@mui/material";
+import { type GQLProductType } from "@src/graphql.generated";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
+import { type GQLProductCategoriesSelectQuery, type GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
 import { createProductMutation } from "./CreateCapProductForm.gql";
 import {
-    GQLCreateCapProductFormDetailsFragment,
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
+    type GQLCreateCapProductFormDetailsFragment,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
 } from "./CreateCapProductForm.gql.generated";
 
 const rootBlocks = {
@@ -44,7 +42,7 @@ interface FormProps {
     type: GQLProductType;
 }
 
-export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
+export function CreateCapProductForm({ type }: FormProps) {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
@@ -86,7 +84,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <MainContent>
+                <>
                     <TextField
                         required
                         variant="horizontal"
@@ -133,14 +131,12 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                         }}
                         getOptionLabel={(option) => option.title}
                     />
-                    <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                        {(props) => (
-                            <FormControlLabel
-                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                control={<FinalFormCheckbox {...props} />}
-                            />
-                        )}
-                    </Field>
+                    <CheckboxField
+                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                        name="inStock"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
                     <Field
                         variant="horizontal"
@@ -148,11 +144,22 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                         name="availableSince"
                         component={FinalFormDatePicker}
                         label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <CalendarTodayIcon />
+                            </InputAdornment>
+                        }
                     />
-                    <Field name="image" isEqual={isEqual}>
+                    <Field
+                        name="image"
+                        isEqual={isEqual}
+                        label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                        variant="horizontal"
+                        fullWidth
+                    >
                         {createFinalFormBlock(rootBlocks.image)}
                     </Field>
-                </MainContent>
+                </>
             )}
         </FinalForm>
     );

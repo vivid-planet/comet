@@ -1,13 +1,13 @@
-import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useContext } from "react";
+import { type ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
+import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -22,8 +22,12 @@ export interface ToolbarProps
     children?: ReactNode;
     scopeIndicator?: ReactNode;
     hideTopBar?: boolean;
+    /**
+     * The height of the header above the toolbar. Default behaviour is to use the height of the headerHeight from the
+     * MasterLayoutContext, but can be overriden here
+     */
+    headerHeight?: number;
 }
-
 type OwnerState = {
     headerHeight: number;
 };
@@ -52,8 +56,18 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
-        padding-left: ${theme.spacing(4)};
-        padding-right: ${theme.spacing(4)};
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+
+        ${theme.breakpoints.up("sm")} {
+            padding-left: ${theme.spacing(2)};
+            padding-right: ${theme.spacing(2)};
+        }
+
+        ${theme.breakpoints.up("md")} {
+            padding-left: ${theme.spacing(4)};
+            padding-right: ${theme.spacing(4)};
+        }
     `,
 );
 
@@ -73,11 +87,18 @@ const BottomBar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
         border-top: solid 1px ${theme.palette.grey["50"]};
         box-sizing: border-box;
         min-height: 60px;
-        padding: 0 5px;
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
 
         ${theme.breakpoints.up("sm")} {
             min-height: 60px;
-            padding: 0 10px;
+            padding-left: ${theme.spacing(2)};
+            padding-right: ${theme.spacing(2)};
+        }
+
+        ${theme.breakpoints.up("md")} {
+            padding-left: ${theme.spacing(4)};
+            padding-right: ${theme.spacing(4)};
         }
 
         // necessary to override strange MUI default styling
@@ -112,9 +133,8 @@ export const Toolbar = (inProps: ToolbarProps) => {
     const { headerHeight } = useContext(MasterLayoutContext);
 
     const ownerState: OwnerState = {
-        headerHeight,
+        headerHeight: inProps.headerHeight ?? headerHeight,
     };
-
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (

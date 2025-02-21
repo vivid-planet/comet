@@ -1,13 +1,19 @@
 import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
-import { Dialog, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ExternalLinkBlockData } from "../../blocks.generated";
+import { type ExternalLinkBlockData } from "../../blocks.generated";
 
 interface OpenLinkDialogProps {
     onClose?: () => void;
@@ -18,7 +24,7 @@ interface OpenLinkDialogProps {
 const IconContainer = styled("div")`
     margin-right: 10px;
 `;
-function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.ReactElement {
+function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps) {
     return (
         <Dialog open={open} onClose={onClose} maxWidth={false}>
             <DialogTitle>
@@ -39,7 +45,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.Rea
                 <Typography>
                     <FormattedMessage
                         id="comet.preview.openExternalLink.description"
-                        defaultMessage={'Do you want to open "{url}" in a new Browser tab?'}
+                        defaultMessage='Do you want to open "{url}" in a new Browser tab?'
                         values={{
                             url: link?.targetUrl,
                         }}
