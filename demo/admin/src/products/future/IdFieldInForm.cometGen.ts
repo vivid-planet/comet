@@ -1,4 +1,4 @@
-import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { DamImageBlock, type future_FormConfig as FormConfig } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
 export const ProductForm: FormConfig<GQLProduct> = {
@@ -8,6 +8,6 @@ export const ProductForm: FormConfig<GQLProduct> = {
     fields: [
         { type: "text", name: "id", label: "ID", readOnly: true },
         { type: "text", name: "title", label: "Title", required: true },
-        { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+        { type: "block", name: "image", label: "Image", block: DamImageBlock },
     ],
 };
