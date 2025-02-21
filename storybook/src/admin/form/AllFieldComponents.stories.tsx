@@ -104,7 +104,7 @@ export const AllFieldComponents = {
                                     variant={fieldVariant}
                                     fullWidth
                                 />
-                                <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
+                                <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} fieldLabel="Switch" variant={fieldVariant} />
                             </FieldSet>
                             <FieldSet title="Checkboxes">
                                 <FormSection title="Individual Checkboxes">
