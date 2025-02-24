@@ -8,10 +8,10 @@ The API Generator can be used to generate the usual CRUD operations in GraphQL f
 
 ## Installation
 
-The API Generator is inside the `@comet/cli package`.
+The API Generator is inside the `@comet/api-generator package`.
 
 ```bash
-npm install --dev @comet/cli
+npm install --dev @comet/api-generator
 ```
 
 ## Annotate entity
@@ -81,7 +81,7 @@ If it's still missing, you can add it to `api/package.json`:
 {
   ...
   "scripts": {
-    "api-generator": "rimraf 'src/*/generated' && comet api-generator",
+    "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
     ...
   }
 }

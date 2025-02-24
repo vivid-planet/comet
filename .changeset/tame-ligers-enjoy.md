@@ -2,4 +2,4 @@
 "@comet/cli": major
 ---
 
-Api generator is now part of `@comet/cli` package and can be run with `comet api-generator` command.
+Api generator is now in separated `@comet/api-generator` package and can be run with the same command as before `comet-api-generator` command.
