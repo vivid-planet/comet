@@ -58,7 +58,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^6.8.9",
         "rimraf": "^6.0.1",
-        "ts-jest": "^29.2.5",
+        "ts-jest": "^29.2.6",
         "typescript": "^5.7.3"
     },
     "peerDependencies": {
