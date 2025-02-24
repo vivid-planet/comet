@@ -26,16 +26,14 @@
         "lint:tsc": "tsc"
     },
     "dependencies": {
-        "@comet/cms-api": "workspace:*",
         "commander": "^9.5.0",
-        "prettier": "^3.5.2"
+        "prettier": "^3.5.1"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:^7.14.0",
         "@types/node": "^22.13.5",
         "eslint": "^9.20.1",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.5.1",
         "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.7.3"
