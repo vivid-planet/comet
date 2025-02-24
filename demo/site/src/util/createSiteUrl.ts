@@ -17,9 +17,8 @@ type CreateSiteUrlOptions = {
      */
     anchor?: string;
 };
-
 /**
- * Resolves a path, scope to a reachable Path which can be navigated to.
+ * Resolves a path, scope to a reachable path which can be navigated to.
  *
  * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
  */
