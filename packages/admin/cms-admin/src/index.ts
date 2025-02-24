@@ -122,6 +122,8 @@ export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
+export type { CometConfig } from "./config/CometConfigContext";
+export { CometConfigProvider, useCometConfig } from "./config/CometConfigContext";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
 export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";
 export { ContentScopeControls } from "./contentScope/Controls";

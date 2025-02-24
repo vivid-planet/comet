@@ -7,6 +7,7 @@ import {
     BlocksConfigProvider,
     BuildInformationProvider,
     CmsBlockContextProvider,
+    CometConfigProvider,
     createDamFileDependency,
     createHttpClient,
     CurrentUserProvider,
@@ -19,7 +20,7 @@ import {
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import { ConfigProvider, createConfig } from "@src/config";
+import { createConfig } from "@src/config";
 import { type ContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
@@ -56,7 +57,7 @@ const apiClient = createHttpClient(config.apiUrl);
 
 export function App() {
     return (
-        <ConfigProvider config={config}>
+        <CometConfigProvider apiUrl={config.apiUrl} graphQLApiUrl={`${config.apiUrl}/graphql`} adminUrl={config.adminUrl}>
             <ApolloProvider client={apolloClient}>
                 <BuildInformationProvider value={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}>
                     <SitesConfigProvider
@@ -178,6 +179,6 @@ export function App() {
                     </SitesConfigProvider>
                 </BuildInformationProvider>
             </ApolloProvider>
-        </ConfigProvider>
+        </CometConfigProvider>
     );
 }
