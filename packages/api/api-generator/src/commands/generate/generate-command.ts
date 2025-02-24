@@ -7,7 +7,7 @@ import { generateCrud } from "./generateCrud/generate-crud";
 import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
 
-export const apiGeneratorCommand = new Command("generate").action(async (options) => {
+export const generateCommand = new Command("generate").action(async (options) => {
     const orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });
 
     const entities = orm.em.getMetadata().getAll();

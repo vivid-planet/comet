@@ -1,9 +1,9 @@
 import { Command } from "commander";
 
-import { apiGeneratorCommand } from "./commands/generate/api-generator-command";
+import { generateCommand } from "./commands/generate/generate-command";
 
 const program = new Command();
 
-program.addCommand(apiGeneratorCommand);
+program.addCommand(generateCommand);
 
 program.parse();
