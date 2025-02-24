@@ -7,22 +7,22 @@ import {
     type Theme,
     useThemeProps,
 } from "@mui/material";
-import { type ReactElement, type ReactNode, useContext } from "react";
+import { type ReactElement, type ReactNode } from "react";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MenuContext } from "./Context";
-import { Icon, type MenuItemClassKey, type OwnerState, Root, Text } from "./Item.styles";
+import { useMainNavigation } from "./Context";
+import { Icon, type MainNavigationItemClassKey, type OwnerState, Root, Text } from "./Item.styles";
 
-export type MenuItemLevel = 1 | 2 | 3;
+export type MainNavigationItemLevel = 1 | 2 | 3;
 
-export interface MenuItemProps
+export interface MainNavigationItemProps
     extends ThemedComponentBaseProps<{
             root: typeof ListItemButton;
             icon: typeof ListItemIcon;
             text: typeof ListItemText;
         }>,
         ListItemButtonProps {
-    level?: MenuItemLevel;
+    level?: MainNavigationItemLevel;
     primary: ReactNode;
     secondary?: ReactNode;
     icon?: ReactElement;
@@ -32,7 +32,7 @@ export interface MenuItemProps
     hasSubitems?: boolean;
 }
 
-export const MenuItem = (inProps: MenuItemProps) => {
+export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
     const {
         primary,
         secondary,
@@ -44,9 +44,9 @@ export const MenuItem = (inProps: MenuItemProps) => {
         isCollapsibleOpen,
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminMenuItem" });
+    } = useThemeProps({ props: inProps, name: "CometAdminMainNavigationItem" });
 
-    const { drawerVariant } = useContext(MenuContext);
+    const { drawerVariant } = useMainNavigation();
 
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
@@ -78,17 +78,17 @@ export const MenuItem = (inProps: MenuItemProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMenuItem: MenuItemProps;
+        CometAdminMainNavigationItem: MainNavigationItemProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminMenuItem: MenuItemClassKey;
+        CometAdminMainNavigationItem: MainNavigationItemClassKey;
     }
 
     interface Components {
-        CometAdminMenuItem?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuItem"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItem"];
+        CometAdminMainNavigationItem?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMainNavigationItem"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainNavigationItem"];
         };
     }
 }
