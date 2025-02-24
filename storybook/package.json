@@ -30,7 +30,7 @@
         "@mui/system": "^6.4.3",
         "@mui/x-data-grid": "^7.26.0",
         "@mui/x-data-grid-pro": "^7.26.0",
-        "@types/node": "^22.13.4",
+        "@types/node": "^22.13.5",
         "apollo-link-rest": "^0.9.0",
         "date-fns": "^4.1.0",
         "final-form": "^4.20.10",
