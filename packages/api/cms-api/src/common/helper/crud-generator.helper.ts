@@ -22,8 +22,8 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
                     throw new Error(`reference ${prop.name} has no targetMeta`);
                 }
                 prop.targetMeta.props
-
                     .filter(
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         (innerProp) => hasCrudFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"),
                     )
                     .forEach((innerProp) => {
