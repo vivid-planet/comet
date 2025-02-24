@@ -15,7 +15,6 @@ export function NewsList({ newsList }: { newsList: GQLNewsListFragment }) {
                     <Card
                         key={news.id}
                         href={createSiteUrl({
-                            baseUrl: "/",
                             scope: {
                                 language: news.scope.language,
                             },

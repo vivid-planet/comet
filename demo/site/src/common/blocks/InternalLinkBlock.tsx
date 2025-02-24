@@ -22,7 +22,6 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
     return (
         <Link
             href={createSiteUrl({
-                baseUrl: "/",
                 scope: {
                     language: (targetPage.scope as Record<string, string>).language,
                 },
