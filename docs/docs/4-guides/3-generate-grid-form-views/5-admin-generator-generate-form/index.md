@@ -48,7 +48,8 @@ This configuration is one of the most simplified once and can fore sure be exten
 Same as with the DataGrid generation, to generate the Form, you have to run the Admin Generator manually. This will delete all already generated files and generate them again.
 
 ```bash
-npm run --prefix admin admin-generator
+cd admin 
+npm run admin-generator
 ```
 
 ![AdminGeneratorCLI](./images/adminGeneratorCli.png)

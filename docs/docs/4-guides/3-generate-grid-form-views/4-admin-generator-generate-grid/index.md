@@ -35,7 +35,8 @@ Unfortunately there is no watch mode available for the Admin Generator. To gener
 Run the following command:
 
 ```bash
-npm run --prefix admin admin-generator
+cd admin
+npm run admin-generator
 ```
 
 The `admin-generator` script is configured in `admin/package.json` and will execute the admin generator binary.
