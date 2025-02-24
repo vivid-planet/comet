@@ -10,7 +10,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { useLocale } from "../../locale/useLocale";
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";

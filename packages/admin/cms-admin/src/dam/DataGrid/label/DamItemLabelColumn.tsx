@@ -5,7 +5,7 @@ import { type ReactNode, useEffect, useRef } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 
 import { type TextMatch } from "../../../common/MarkedMatches";
-import { useDamConfig } from "../../config/useDamConfig";
+import { useDamConfig } from "../../config/damConfig";
 import { type DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";

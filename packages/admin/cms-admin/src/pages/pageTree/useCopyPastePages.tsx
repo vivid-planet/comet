@@ -3,7 +3,7 @@ import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDial
 import { type ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { useCometConfig } from "../../config/CometConfigContext";
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
@@ -66,12 +66,12 @@ interface UseCopyPastePagesApi {
  * This hooks provides some helper functions to copy / paste Pages and PageTreeNodes
  */
 function useCopyPastePages(): UseCopyPastePagesApi {
+    const { apiUrl } = useCometConfig();
     const { documentTypes } = usePageTreeConfig();
     const { currentCategory } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
     const damScope = useDamScope();
-    const blockContext = useCmsBlockContext();
     const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
     const errorDialog = useErrorDialog();
 
@@ -174,7 +174,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const sendPagesCb = useCallback(
         async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
             try {
-                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope, currentCategory }, updateProgress);
+                await sendPages(parentId, pages, options, { client, scope, documentTypes, apiUrl, damScope, currentCategory }, updateProgress);
             } catch (e) {
                 errorDialog?.showError({
                     title: <FormattedMessage {...messages.error} />,
@@ -187,7 +187,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 updateProgress(undefined); //hides progress dialog
             }
         },
-        [client, scope, documentTypes, blockContext, damScope, currentCategory, updateProgress, errorDialog],
+        [client, scope, documentTypes, apiUrl, damScope, currentCategory, updateProgress, errorDialog],
     );
 
     return {

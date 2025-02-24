@@ -1,5 +1,7 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
+import { type DamConfig } from "../dam/config/damConfig";
+import { type ImgproxyConfig } from "../imgproxy/imgproxyConfig";
 import { type PageTreeConfig } from "../pages/pageTreeConfig";
 
 export interface CometConfig {
@@ -7,6 +9,8 @@ export interface CometConfig {
     graphQLApiUrl: string;
     adminUrl: string;
     pageTree?: PageTreeConfig;
+    dam?: DamConfig;
+    imgproxy?: ImgproxyConfig;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
