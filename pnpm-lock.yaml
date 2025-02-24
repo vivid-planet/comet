@@ -2033,7 +2033,7 @@ importers:
         specifier: ^9.5.0
         version: 9.5.0
       prettier:
-        specifier: ^3.5.1
+        specifier: ^3.5.2
         version: 3.5.2
     devDependencies:
       '@comet/eslint-config':
