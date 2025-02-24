@@ -1,4 +1,4 @@
-import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { type FormConfig } from "@comet/admin-generator";
 import { type GQLProduct } from "@src/graphql.generated";
 
 export const ProductPriceForm: FormConfig<GQLProduct> = {
