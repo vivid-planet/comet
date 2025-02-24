@@ -10,7 +10,7 @@ import { type BlockDependency, type ReplaceDependencyObject } from "../../../blo
 import { type ContentScopeInterface } from "../../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { type GQLDamFile } from "../../../graphql.generated";
-import { type PageTreeContext } from "../PageTreeContext";
+import { type PageTreeConfig } from "../../pageTreeConfig";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { type PageClipboard, type PagesClipboard } from "../useCopyPastePages";
 import { createInboxFolder } from "./createInboxFolder";
@@ -69,7 +69,7 @@ export interface SendPagesOptions {
 interface SendPagesDependencies {
     client: ApolloClient<unknown>;
     scope: ContentScopeInterface;
-    documentTypes: PageTreeContext["documentTypes"];
+    documentTypes: PageTreeConfig["documentTypes"];
     blockContext: CmsBlockContext;
     damScope: Record<string, unknown>;
     currentCategory: string;

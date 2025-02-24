@@ -7,6 +7,7 @@ import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { sendPages, type SendPagesOptions } from "./useCopyPastePages/sendPages";
 import { type GQLPageTreePageFragment } from "./usePageTree";
@@ -65,7 +66,8 @@ interface UseCopyPastePagesApi {
  * This hooks provides some helper functions to copy / paste Pages and PageTreeNodes
  */
 function useCopyPastePages(): UseCopyPastePagesApi {
-    const { documentTypes, currentCategory } = usePageTreeContext();
+    const { documentTypes } = usePageTreeConfig();
+    const { currentCategory } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
     const damScope = useDamScope();

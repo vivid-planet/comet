@@ -20,7 +20,7 @@ import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch }
 import { type ComponentType, type ReactNode, useCallback, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
+import { type ContentScopeInterface, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
@@ -29,14 +29,14 @@ import { type EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, type PageTreeRefApi } from "../pageTree/PageTree";
-import { type AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
+import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {
     category: string;
-    allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScopeInterface) => ReactNode;
@@ -46,14 +46,13 @@ const DefaultEditPageNode = createEditPageNode({});
 
 export function PagesPage({
     category,
-    allCategories,
     documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props) {
     const intl = useIntl();
     const { scope } = useContentScope();
-    const { additionalPageTreeNodeFragment } = useCmsBlockContext();
+    const { additionalPageTreeNodeFragment } = usePageTreeConfig();
 
     const siteConfig = useSiteConfig({ scope });
     const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
@@ -152,9 +151,7 @@ export function PagesPage({
                         </Toolbar>
                         <PageTreeContext.Provider
                             value={{
-                                allCategories,
                                 currentCategory: category,
-                                documentTypes,
                                 getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
                                 tree,
                                 query: pagesQuery,
