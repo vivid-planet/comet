@@ -87,7 +87,7 @@
         "@graphql-codegen/near-operation-file-preset": "^3.0.0",
         "@graphql-codegen/typescript": "^4.1.5",
         "@graphql-codegen/typescript-operations": "^4.5.1",
-        "@mui/material": "^6.4.4",
+        "@mui/material": "^6.4.5",
         "@mui/system": "^6.4.3",
         "@mui/x-data-grid": "^7.26.0",
         "@types/draft-js": "^0.11.18",
