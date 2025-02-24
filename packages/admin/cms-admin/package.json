@@ -126,7 +126,7 @@
         "react-intl": "^6.8.9",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "ts-jest": "^29.2.5",
+        "ts-jest": "^29.2.6",
         "ts-node": "^10.9.2",
         "typescript": "^5.7.3"
     },
