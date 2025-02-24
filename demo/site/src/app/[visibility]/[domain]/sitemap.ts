@@ -42,13 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         const seoBlock = pageTreeNode.document.seo;
                         if (!seoBlock.noIndex) {
                             sitemap.push({
-                                url: createSiteUrl({
-                                    baseUrl: `${siteConfig.url}/`,
+                                url: `${siteConfig.url}${createSiteUrl({
                                     scope: {
                                         language: language,
                                     },
                                     path: pageTreeNode.path,
-                                }),
+                                })}`,
                                 priority: Number(seoBlock.priority.replace("_", ".")),
                                 changeFrequency: seoBlock.changeFrequency,
                                 lastModified: pageTreeNode.document.updatedAt,
