@@ -1,18 +1,14 @@
 import { ButtonBase } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import * as React from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type ReactNode } from "react";
+import { type FieldRenderProps } from "react-final-form";
 
 interface Props<FieldValue> extends FieldRenderProps<FieldValue, HTMLDivElement> {
-    options: Array<{ value: FieldValue; icon: React.ReactNode }>;
+    options: Array<{ value: FieldValue; icon: ReactNode }>;
     optionsPerRow?: number;
 }
 
-export function FinalFormToggleButtonGroup<FieldValue = unknown>({
-    input: { value, onChange },
-    options,
-    optionsPerRow,
-}: Props<FieldValue>): React.ReactElement {
+export function FinalFormToggleButtonGroup<FieldValue = unknown>({ input: { value, onChange }, options, optionsPerRow }: Props<FieldValue>) {
     return (
         <Root $optionsPerRow={optionsPerRow}>
             {options.map(({ value: optionValue, icon }, index) => (

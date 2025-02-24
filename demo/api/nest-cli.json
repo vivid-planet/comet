@@ -1,8 +1,4 @@
 {
     "collection": "@nestjs/schematics",
-    "sourceRoot": "src",
-    "compilerOptions": {
-        "assets": ["node_modules/@comet/**/src/**/*.ts"],
-        "watchAssets": true
-    }
+    "sourceRoot": "src"
 }

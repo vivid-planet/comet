@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Stream } from "stream";
+import { type Readable, Stream } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageFileConfig } from "./blob-storage-file.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageFileConfig } from "./blob-storage-file.config";
 
 export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     private readonly headersFile = "headers.json";
@@ -16,7 +16,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     async folderExists(folderName: string): Promise<boolean> {
         try {
             await fs.promises.access(`${this.path}/${folderName}`);
-        } catch (e) {
+        } catch {
             return false;
         }
 
@@ -38,7 +38,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
 
         try {
             await fs.promises.access(`${this.path}/${folderName}/${fileName}`);
-        } catch (e) {
+        } catch {
             return false;
         }
 
@@ -56,7 +56,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         }
 
         await Promise.all([
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
                 const stream = fs.createWriteStream(`${this.path}/${folderName}/${fileName}`);
                 stream.on("error", reject);
                 stream.on("finish", resolve);
@@ -76,11 +76,11 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         ]);
     }
 
-    async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+    async getFile(folderName: string, fileName: string): Promise<Readable> {
         return fs.createReadStream(`${this.path}/${folderName}/${fileName}`);
     }
 
-    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable> {
         return fs.createReadStream(`${this.path}/${folderName}/${fileName}`, {
             start: offset,
             end: offset + length - 1,

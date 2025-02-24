@@ -1,6 +1,7 @@
-import { V1CronJob } from "@kubernetes/client-node";
+import { type V1CronJob } from "@kubernetes/client-node";
 import { getRepositoryToken } from "@mikro-orm/nestjs";
-import { Test, TestingModule } from "@nestjs/testing";
+import { EntityManager } from "@mikro-orm/postgresql";
+import { Test, type TestingModule } from "@nestjs/testing";
 
 import { KubernetesModule } from "../kubernetes/kubernetes.module";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
@@ -49,6 +50,8 @@ const mockedBuildTemplatesService = {
     getAllBuilderCronJobs: jest.fn<Promise<V1CronJob[]>, never[]>().mockResolvedValue([jobMainEnglish, jobMainGerman]),
 };
 
+jest.mock("@kubernetes/client-node", () => ({}));
+
 describe("BuildsService", () => {
     let service: BuildsService;
 
@@ -60,6 +63,7 @@ describe("BuildsService", () => {
                 { provide: getRepositoryToken(ChangesSinceLastBuild), useValue: {} },
                 { provide: BuildTemplatesService, useValue: mockedBuildTemplatesService },
                 { provide: ACCESS_CONTROL_SERVICE, useValue: {} },
+                { provide: EntityManager, useValue: {} },
             ],
         }).compile();
 

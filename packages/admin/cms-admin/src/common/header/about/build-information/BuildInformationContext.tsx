@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext } from "react";
 
 export interface BuildInformation {
     date: string;
@@ -6,4 +6,4 @@ export interface BuildInformation {
     number: string;
 }
 
-export const BuildInformationContext = React.createContext<BuildInformation | undefined>(undefined);
+export const BuildInformationContext = createContext<BuildInformation | undefined>(undefined);

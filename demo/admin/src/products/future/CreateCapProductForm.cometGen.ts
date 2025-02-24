@@ -1,5 +1,5 @@
-import { future_FormConfig as FormConfig } from "@comet/cms-admin";
-import { GQLProduct } from "@src/graphql.generated";
+import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { type GQLProduct } from "@src/graphql.generated";
 
 export const CreateCapProductForm: FormConfig<GQLProduct> = {
     type: "form",
@@ -18,7 +18,7 @@ export const CreateCapProductForm: FormConfig<GQLProduct> = {
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "boolean", name: "inStock" },
-        { type: "date", name: "availableSince" },
+        { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
         { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
     ],
 };

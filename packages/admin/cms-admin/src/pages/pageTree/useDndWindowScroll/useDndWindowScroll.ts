@@ -1,24 +1,24 @@
-import * as React from "react";
+import { type RefObject, useCallback, useRef } from "react";
 import { useDragDropManager } from "react-dnd";
-import { ListOnScrollProps } from "react-window";
+import { type ListOnScrollProps } from "react-window";
 
 import ScrollManager from "./ScrollManager";
 import useAnimationFrame from "./useAnimationFrame";
 
 interface UseSmoothScrollApi {
     onScroll: (props: ListOnScrollProps) => void;
-    outerRef: React.RefObject<HTMLElement>;
+    outerRef: RefObject<HTMLElement>;
 }
 
 export function useDndWindowScroll(): UseSmoothScrollApi {
-    const domRef = React.useRef<HTMLElement>(null); // Dom-el to the virtual-list-element
-    const scrollPosition = React.useRef<ListOnScrollProps>(); // Scroll-position of the virtual-list-element
+    const domRef = useRef<HTMLElement>(null); // Dom-el to the virtual-list-element
+    const scrollPosition = useRef<ListOnScrollProps>(); // Scroll-position of the virtual-list-element
     const ddm = useDragDropManager();
 
     // Manipulating the dom directly with dom-api
     // Changes the scroll position on every frame, when the drag-onject is over or below the virtual-list-element
     // Scrolling-velocity varies with the distance of the dragged-object to virtual-list-element
-    const handleListScroll = React.useCallback(() => {
+    const handleListScroll = useCallback(() => {
         const monitor = ddm.getMonitor();
 
         // Is the user dragging an object?
@@ -40,7 +40,7 @@ export function useDndWindowScroll(): UseSmoothScrollApi {
     }, [ddm]); // ddm is a reference itself, that's why we could also omit ddm-dependency
 
     // Update the current scroll position on every scroll
-    const handleScroll = React.useCallback((props: ListOnScrollProps) => {
+    const handleScroll = useCallback((props: ListOnScrollProps) => {
         scrollPosition.current = props;
     }, []);
 

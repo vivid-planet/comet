@@ -1,7 +1,7 @@
-import { FormControlLabel, FormControlLabelProps } from "@mui/material";
+import { FormControlLabel, type FormControlLabelProps } from "@mui/material";
 
-import { Field, FieldProps } from "../Field";
-import { FinalFormSwitch, FinalFormSwitchProps } from "../Switch";
+import { Field, type FieldProps } from "../Field";
+import { FinalFormSwitch, type FinalFormSwitchProps } from "../Switch";
 
 export interface SwitchFieldProps extends FieldProps<string, HTMLInputElement> {
     fieldLabel?: string;

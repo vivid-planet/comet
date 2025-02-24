@@ -1,9 +1,9 @@
-import { ServerError } from "@apollo/client";
-import { NetworkError } from "@apollo/client/errors";
+import { type ServerError } from "@apollo/client";
+import { type NetworkError } from "@apollo/client/errors";
 import { onError } from "@apollo/client/link/error";
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
-import { ErrorType } from "./ErrorDialog";
+import { type ErrorType } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 import { ErrorScope, errorScopeForOperationContext } from "./ErrorScope";
 
@@ -22,7 +22,7 @@ export const createErrorDialogApolloLink = (config?: { signInUrl?: string }) => 
         if (graphQLErrors) {
             if (graphQLErrors.some((e) => e.message === "UNAUTHENTICATED")) {
                 errorType = "unauthenticated"; // Error is triggered by Comet Guard
-            } else if (graphQLErrors.some((e) => e.extensions.response?.statusCode === StatusCodes.UNAUTHORIZED)) {
+            } else if (graphQLErrors.some((e) => e.extensions?.response?.statusCode === StatusCodes.UNAUTHORIZED)) {
                 errorType = "unauthorized"; // Error is triggered by UnauthorizedException
             } else {
                 errorType = "graphql";

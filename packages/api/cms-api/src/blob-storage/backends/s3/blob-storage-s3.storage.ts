@@ -1,10 +1,10 @@
 import * as AWS from "@aws-sdk/client-s3";
-import { SdkError } from "@aws-sdk/types";
+import { type SdkError } from "@aws-sdk/types";
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageS3Config } from "./blob-storage-s3.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageS3Config } from "./blob-storage-s3.config";
 
 export class BlobStorageS3Storage implements BlobStorageBackendInterface {
     private readonly client: AWS.S3Client;
@@ -12,6 +12,13 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
 
     constructor(config: BlobStorageS3Config["s3"]) {
         this.client = new AWS.S3({
+            requestHandler: config.requestHandler ?? {
+                // https://github.com/aws/aws-sdk-js-v3/blob/main/supplemental-docs/CLIENTS.md#request-handler-requesthandler
+                // Workaround to prevent socket exhaustion caused by dangling streams (e.g., when the user leaves the site).
+                // Close the connection when no request/response was sent for 60 seconds, indicating that the file stream was terminated.
+                requestTimeout: 60000,
+                connectionTimeout: 6000, // fail faster if there are no available connections
+            },
             credentials: {
                 accessKeyId: config.accessKeyId,
                 secretAccessKey: config.secretAccessKey,
@@ -95,14 +102,14 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         await this.client.send(new AWS.PutObjectCommand(input));
     }
 
-    async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+    async getFile(folderName: string, fileName: string): Promise<Readable> {
         const response = await this.client.send(new AWS.GetObjectCommand(this.getCommandInput(folderName, fileName)));
 
         // Blob is not supported and used in node
         return Readable.from(response.Body as Readable | NodeJS.ReadableStream);
     }
 
-    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable> {
         const input: AWS.GetObjectCommandInput = {
             ...this.getCommandInput(folderName, fileName),
             Range: `bytes=${offset}-${offset + length - 1}`,

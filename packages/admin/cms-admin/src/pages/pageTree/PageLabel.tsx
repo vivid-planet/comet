@@ -1,20 +1,20 @@
 import { Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { type MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { MarkedMatches } from "../../common/MarkedMatches";
 import { PageTypeIcon } from "./PageTypeIcon";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface PageLabelProps {
     page: PageTreePage;
     disabled?: boolean;
-    onClick?: (e: React.MouseEvent) => void;
+    onClick?: (e: MouseEvent) => void;
 }
 
-const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, onClick }) => {
+const PageLabel = ({ page, disabled, onClick }: PageLabelProps) => {
     const { documentTypes } = usePageTreeContext();
     const documentType = documentTypes[page.documentType];
     const pathMatches = page.matches.filter((match) => match.where === "path");

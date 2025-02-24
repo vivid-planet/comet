@@ -3,49 +3,61 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
-    FinalFormSelect,
-    FinalFormSubmitEvent,
+    FinalFormInput,
+    FinalFormRangeInput,
+    type FinalFormSubmitEvent,
+    FinalFormSwitch,
     Loading,
-    MainContent,
+    messages,
+    OnChangeField,
+    RadioGroupField,
     TextAreaField,
     TextField,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
+import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
 import {
+    type BlockState,
+    createFinalFormBlock,
     DamImageBlock,
     FileUploadField,
-    GQLFinalFormFileUploadFragment,
+    type GQLFinalFormFileUploadDownloadableFragment,
+    type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
-import { FormApi } from "final-form";
+import { FormControlLabel, InputAdornment } from "@mui/material";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import {
+    type GQLManufacturersSelectQuery,
+    type GQLManufacturersSelectQueryVariables,
+    type GQLProductCategoriesSelectQuery,
+    type GQLProductCategoriesSelectQueryVariables,
+} from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLProductFormDetailsFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLProductFormDetailsFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 const rootBlocks = {
@@ -53,11 +65,17 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = ProductFormDetailsFragment & {
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
+    dimensionsEnabled: boolean;
+    dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
+        width: string;
+        height: string;
+        depth: string;
+    };
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -65,7 +83,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -76,14 +94,23 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      dimensionsEnabled: !!data.product.dimensions,
+                      dimensions: data.product.dimensions
+                          ? {
+                                width: String(data.product.dimensions.width),
+                                height: String(data.product.dimensions.height),
+                                depth: String(data.product.dimensions.depth),
+                            }
+                          : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
+                      lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
                   }
                 : {
                       inStock: false,
@@ -103,11 +130,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
+            dimensions:
+                dimensionsEnabled && formValues.dimensions
+                    ? {
+                          width: parseFloat(formValues.dimensions.width),
+                          height: parseFloat(formValues.dimensions.height),
+                          depth: parseFloat(formValues.dimensions.depth),
+                      }
+                    : null,
+            manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -148,12 +184,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }}
         >
-            {() => (
+            {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
+                    <>
                         <FieldSet
                             initiallyExpanded
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
@@ -210,27 +246,27 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <Field
+                            <RadioGroupField
                                 required
                                 variant="horizontal"
                                 fullWidth
                                 name="type"
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
-                            >
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Cap">
-                                            <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />
-                                        </MenuItem>
-                                        <MenuItem value="Shirt">
-                                            <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                        </MenuItem>
-                                        <MenuItem value="Tie">
-                                            <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                        </MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                options={[
+                                    {
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
+                                        value: "Cap",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />,
+                                        value: "Shirt",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.tie" defaultMessage="Tie" />,
+                                        value: "Tie",
+                                    },
+                                ]}
+                            />
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
@@ -253,17 +289,113 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 }}
                                 getOptionLabel={(option) => option.title}
                             />
-                        </FieldSet>
 
-                        <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
-                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            />
+                            <Field
+                                fullWidth
+                                name="dimensionsEnabled"
+                                type="checkbox"
+                                label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions" />}
+                            >
                                 {(props) => (
                                     <FormControlLabel
-                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                        control={<FinalFormCheckbox {...props} />}
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
                                     />
                                 )}
                             </Field>
+                            <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.width"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.height"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.depth"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
+                        </FieldSet>
+
+                        <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <LocationIcon />
+                                    </InputAdornment>
+                                }
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                        query: gql`
+                                            query ManufacturersSelect($filter: ManufacturerFilter) {
+                                                manufacturers(filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                    });
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option) => option.name}
+                                disabled={!values?.type}
+                            />
+                            <OnChangeField name="type">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"
@@ -271,8 +403,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
-                            <Field name="image" isEqual={isEqual}>
+                            <FutureProductNotice />
+                            <Field
+                                name="image"
+                                isEqual={isEqual}
+                                label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                                variant="horizontal"
+                                fullWidth
+                            >
                                 {createFinalFormBlock(rootBlocks.image)}
                             </Field>
                             <FileUploadField
@@ -288,8 +432,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 multiple
                                 maxFileSize={4194304}
                             />
+                            <DateTimeField
+                                variant="horizontal"
+                                fullWidth
+                                name="lastCheckedAt"
+                                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
+                            />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

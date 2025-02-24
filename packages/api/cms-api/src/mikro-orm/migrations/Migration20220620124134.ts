@@ -42,7 +42,7 @@ export class Migration20220620124134 extends Migration {
         );
         this.addSql('alter table "Redirect" drop column "target";');
         this.addSql(
-            "alter table \"Redirect\" add constraint \"Redirect_targetType_check\" check(\"targetType\" = ANY (ARRAY['intern'::text, 'extern'::text]));",
+            'alter table "Redirect" add constraint "Redirect_targetType_check" check("targetType" = ANY (ARRAY[\'intern\'::text, \'extern\'::text]));',
         );
     }
 }

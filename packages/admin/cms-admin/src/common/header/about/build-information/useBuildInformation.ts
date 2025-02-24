@@ -1,7 +1,7 @@
-import * as React from "react";
+import { useContext } from "react";
 
-import { BuildInformation, BuildInformationContext } from "./BuildInformationContext";
+import { type BuildInformation, BuildInformationContext } from "./BuildInformationContext";
 
 export function useBuildInformation(): BuildInformation | undefined {
-    return React.useContext(BuildInformationContext);
+    return useContext(BuildInformationContext);
 }

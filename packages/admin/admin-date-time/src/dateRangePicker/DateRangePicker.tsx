@@ -1,17 +1,17 @@
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
-import { ClearInputAdornment, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, type InputWithPopperProps } from "@comet/admin";
 import { Calendar } from "@comet/admin-icons";
-import { ComponentsOverrides } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
-import { Range } from "react-date-range";
-import { FormatDateOptions, useIntl } from "react-intl";
+import { type ComponentsOverrides } from "@mui/material";
+import { type Theme, useThemeProps } from "@mui/material/styles";
+import { type Range } from "react-date-range";
+import { type FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
 import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
-import { DateRange, DateRangePickerClassKey, Root, SlotProps, StartAdornment } from "./DateRangePicker.slots";
+import { DateRange, type DateRangePickerClassKey, Root, type SlotProps, StartAdornment } from "./DateRangePicker.slots";
 
 export type DateRange = {
     start: string;

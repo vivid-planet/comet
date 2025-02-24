@@ -1,14 +1,21 @@
----
+## Description
 
-<!-- Everything below this line will be removed from the commit message when the PR is merged -->
+## Acceptance criteria
 
-## PR Checklist
+- [ ] I have verified if my change requires [an example](https://github.com/vivid-planet/comet/blob/HEAD/CONTRIBUTING.md#example)
+- [ ] I have verified if my change requires [a changeset](https://github.com/vivid-planet/comet/blob/HEAD/CONTRIBUTING.md#changeset)
+- [ ] I have verified if my change requires [screenshots/screencasts](https://github.com/vivid-planet/comet/blob/HEAD/CONTRIBUTING.md#screenshotsscreencasts)
 
--   [ ] Verify if the change requires a changeset. See [CONTRIBUTING.md](https://github.com/vivid-planet/comet/blob/HEAD/CONTRIBUTING.md)
--   [ ] Link to the respective task if one exists: <!-- For instance, COM-123 -->
--   [ ] Provide screenshots/screencasts if the change contains visual changes
+## Screenshots/screencasts
 
-<details>
-    <summary>Screenshots/screencasts</summary>
-    <!-- Insert screenshots/screencasts here -->
-</details>
+| Before | After |
+| ------ | ----- |
+| Link   | Link  |
+
+## Open TODOs/questions
+
+- [ ] Add changeset
+
+## Further information
+
+- Task: https://vivid-planet.atlassian.net/browse/COM-XXX

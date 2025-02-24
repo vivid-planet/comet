@@ -1,24 +1,27 @@
 import { gql, useQuery } from "@apollo/client";
-import { GridColDef, TableDeleteButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, type GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
 import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
-import React from "react";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
-import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
+import {
+    type GQLPermissionForGridFragment,
+    type GQLPermissionsQuery,
+    type GQLPermissionsQueryVariables,
+    namedOperations,
+} from "./PermissionGrid.generated";
 
-export const PermissionGrid: React.FC<{
-    userId: string;
-}> = ({ userId }) => {
+export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
-    const [permissionId, setPermissionId] = React.useState<string | "add" | null>(null);
-    const [overrideContentScopesId, setOverrideContentScopesId] = React.useState<string | null>(null);
+    const [permissionId, setPermissionId] = useState<string | "add" | null>(null);
+    const [overrideContentScopesId, setOverrideContentScopesId] = useState<string | null>(null);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -123,8 +126,9 @@ export const PermissionGrid: React.FC<{
                     onClick={() => {
                         setPermissionId(row.id);
                     }}
+                    color="primary"
                 >
-                    <Edit color="primary" />
+                    <Edit />
                 </IconButton>
             ),
         },
@@ -163,14 +167,13 @@ export const PermissionGrid: React.FC<{
                 rowCount={data?.permissions.length ?? 0}
                 loading={loading}
                 getRowHeight={() => "auto"}
-                sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
-                components={{
-                    Toolbar: () => (
+                slots={{
+                    toolbar: () => (
                         <GridToolbar>
                             <ToolbarTitleItem>
                                 <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />
                             </ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 <Button
                                     variant="contained"

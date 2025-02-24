@@ -1,10 +1,10 @@
-import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
-import { ReactNode } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps } from "@mui/material";
+import { type ReactNode } from "react";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;
@@ -12,6 +12,14 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     children?: ReactNode;
     required?: boolean;
 }
+
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+    if (multiple && Array.isArray(value)) {
+        return value.length > 0;
+    }
+
+    return value !== undefined && value !== "";
+};
 
 export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
@@ -21,7 +29,6 @@ export const FinalFormSelect = <T,>({
     loading = false,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
-            // eslint-disable-next-line no-console
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
         }
         return "";
@@ -47,7 +54,7 @@ export const FinalFormSelect = <T,>({
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
+            hasClearableContent={getHasClearableContent(value, multiple)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;

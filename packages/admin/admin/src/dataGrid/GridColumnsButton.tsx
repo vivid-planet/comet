@@ -1,23 +1,21 @@
 import { Columns4 } from "@comet/admin-icons";
-import { GridToolbarColumnsButton } from "@mui/x-data-grid";
-import { ComponentProps } from "react";
+import { GridPreferencePanelsValue, useGridApiContext } from "@mui/x-data-grid";
+import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button, type ButtonProps } from "../common/buttons/Button";
 import { messages } from "../messages";
 
-type Props = Omit<ComponentProps<typeof GridToolbarColumnsButton>, "onResize" | "onResizeCapture">;
+export function GridColumnsButton(props: ButtonProps) {
+    const apiRef = useGridApiContext();
 
-export function GridColumnsButton(props: Props) {
+    const handleFilterClick = useCallback(() => {
+        apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
+    }, [apiRef]);
+
     return (
-        <GridToolbarColumnsButton
-            startIcon={<Columns4 />}
-            variant="outlined"
-            color="info"
-            onResize={undefined}
-            onResizeCapture={undefined}
-            {...props}
-        >
+        <Button responsive startIcon={<Columns4 />} variant="outlined" onClick={handleFilterClick} {...props}>
             <FormattedMessage {...messages.columns} />
-        </GridToolbarColumnsButton>
+        </Button>
     );
 }

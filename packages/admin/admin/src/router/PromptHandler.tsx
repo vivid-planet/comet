@@ -1,10 +1,10 @@
-import * as History from "history";
-import { MutableRefObject, PropsWithChildren, useRef, useState } from "react";
+import type * as History from "history";
+import { type MutableRefObject, type PropsWithChildren, useRef, useState } from "react";
 import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
-import { PromptRoutes } from "./Prompt";
+import { type PromptRoutes } from "./Prompt";
 
 interface PromptHandlerState {
     showConfirmationDialog: boolean;
@@ -114,7 +114,7 @@ interface Props {
     apiRef: MutableRefObject<PromptHandlerApi | undefined>;
 }
 
-export type SaveActionSuccess = boolean;
+type SaveActionSuccess = boolean;
 export type SaveAction = (() => Promise<SaveActionSuccess>) | (() => SaveActionSuccess);
 export type ResetAction = () => void;
 
@@ -141,7 +141,6 @@ export const RouterPromptHandler = function ({ children, apiRef }: PropsWithChil
         registeredMessages.current[id] = { message, path, subRoutePath, saveAction, resetAction, promptRoutes };
         // If saveAction is passed it has to be passed for all registered components
         if (saveAction && Object.values(registeredMessages.current).some((registeredMessage) => !registeredMessage.saveAction)) {
-            // eslint-disable-next-line no-console
             console.error(
                 "A component (e.g. RouterPrompt) is missing a saveAction-prop. If you fail to do so, the Save-Button in the Dirty-Dialog won't save the changes",
             );

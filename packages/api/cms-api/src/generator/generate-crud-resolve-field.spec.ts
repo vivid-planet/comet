@@ -1,14 +1,13 @@
-import { BaseEntity, Collection, Entity, ManyToMany, PrimaryKey } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, defineConfig, Entity, ManyToMany, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
 import { CrudField } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
-import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+import { formatGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityCategory extends BaseEntity<TestEntityCategory, "id"> {
+class TestEntityCategory extends BaseEntity {
     @PrimaryKey({ columnType: "int", type: "integer" })
     id: number;
 
@@ -17,7 +16,7 @@ class TestEntityCategory extends BaseEntity<TestEntityCategory, "id"> {
 }
 
 @Entity()
-class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
+class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -36,15 +35,17 @@ describe("GenerateCrudResolveField", () => {
     describe("Resolve field", () => {
         it("should not include categories in resolver", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategory],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityProduct, TestEntityCategory],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "test-entity-product.resolver.ts");
+            const formattedOut = await formatGeneratedFiles(out);
+            const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
             if (!file) throw new Error("File not found");
 
             const source = parseSource(file.content);

@@ -1,15 +1,14 @@
 import { Type } from "@nestjs/common";
-import { ArgsType, Field } from "@nestjs/graphql";
+import { ArgsType, Field, Int } from "@nestjs/graphql";
 import { Type as TransformerType } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsInt, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 
-import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
 import { RedirectScopeInterface } from "../types";
 import { EmptyRedirectScope } from "./empty-redirect-scope";
 import { RedirectSort } from "./redirect.sort";
 import { RedirectFilter } from "./redirects.filter";
 
-export interface PaginatedRedirectsArgsInterface {
+interface PaginatedRedirectsArgsInterface {
     scope: RedirectScopeInterface;
     search?: string;
     filter?: RedirectFilter;
@@ -21,7 +20,7 @@ export interface PaginatedRedirectsArgsInterface {
 export class PaginatedRedirectsArgsFactory {
     static create({ Scope }: { Scope: Type<RedirectScopeInterface> }): Type<PaginatedRedirectsArgsInterface> {
         @ArgsType()
-        class PaginatedRedirectsArgs extends OffsetBasedPaginationArgs implements PaginatedRedirectsArgsInterface {
+        class PaginatedRedirectsArgs implements PaginatedRedirectsArgsInterface {
             @Field(() => Scope, { defaultValue: Scope === EmptyRedirectScope ? {} : undefined })
             @TransformerType(() => Scope)
             @ValidateNested()
@@ -41,6 +40,16 @@ export class PaginatedRedirectsArgsFactory {
             @ValidateNested({ each: true })
             @TransformerType(() => RedirectSort)
             sort?: RedirectSort[];
+
+            @Field(() => Int, { defaultValue: 0 })
+            @IsInt()
+            @Min(0)
+            offset: number;
+
+            @Field(() => Int, { defaultValue: 25 })
+            @Min(1)
+            @Max(1000)
+            limit: number;
         }
         return PaginatedRedirectsArgs;
     }

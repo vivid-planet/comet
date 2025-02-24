@@ -1,12 +1,11 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { DamImageBlock, FileInterface, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
-import faker from "faker";
+import { type DamImageBlock, type ExtractBlockInputFactoryProps, type FileInterface, FocalPoint, type ImageCropAreaInput } from "@comet/cms-api";
+import { faker } from "@faker-js/faker";
 
 export const generateImageBlock = (
     imageFiles: FileInterface[] | FileInterface,
     cropArea?: ImageCropAreaInput,
 ): ExtractBlockInputFactoryProps<typeof DamImageBlock> => {
-    const imageFile = Array.isArray(imageFiles) ? faker.random.arrayElement(imageFiles) : imageFiles;
+    const imageFile = Array.isArray(imageFiles) ? faker.helpers.arrayElement(imageFiles) : imageFiles;
     const type = imageFile.mimetype == "image/svg+xml" ? "svgImage" : "pixelImage";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const props: any = {
@@ -26,9 +25,8 @@ export const generateImageBlock = (
     };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAreaInput => {
-    const focalPoint = faker.random.arrayElement([
+    const focalPoint = faker.helpers.arrayElement([
         FocalPoint.SMART,
         FocalPoint.CENTER,
         FocalPoint.NORTHEAST,
@@ -41,7 +39,7 @@ export const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAr
         focalPoint,
         x: focalPoint !== FocalPoint.SMART ? 0 : undefined,
         y: focalPoint !== FocalPoint.SMART ? 0 : undefined,
-        height: focalPoint !== FocalPoint.SMART ? faker.datatype.number({ min: 20, max: 100 }) : undefined,
-        width: focalPoint !== FocalPoint.SMART ? faker.datatype.number({ min: 20, max: 100 }) : undefined,
+        height: focalPoint !== FocalPoint.SMART ? faker.number.int({ min: 20, max: 100 }) : undefined,
+        width: focalPoint !== FocalPoint.SMART ? faker.number.int({ min: 20, max: 100 }) : undefined,
     };
 };

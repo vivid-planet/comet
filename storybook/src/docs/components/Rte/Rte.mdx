@@ -1,0 +1,100 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as RteStories from "./Rte.stories";
+
+<Meta of={RteStories} />
+
+# Rich Text Editor
+
+## Minimal Configuration
+
+Create a useRteApi hook:
+
+```tsx
+const [useRteApi] = makeRteApi();
+```
+
+This hook has 3 responsibilities:
+
+- Keeps the editor-state https://draftjs.org/docs/api-reference-editor-state/
+- Parses and formats the source data (draftjs, html, markdown, custom)
+- Applies decorator https://draftjs.org/docs/advanced-topics-decorators/
+
+Make a component for your Rich Text Editor:
+
+```ts
+const [useRteApi] = makeRteApi();
+
+export default function MyRte() {
+    const { editorState, setEditorState } = useRteApi();
+    return <Rte value={editorState} onChange={setEditorState} />;
+}
+```
+
+<Canvas of={RteStories.Minimal} />
+
+## Define format of your source data
+
+The content displayed and managed in the Rich Text Editor is typically stored and kept somewhere on a server. This source data can be kept in different formats.
+Two functions `parse` and `format` can be passed to the `makeRteApi` factory-function. `parse` is responsible for converting the source data to the editor's `ContentState` https://draftjs.org/docs/api-reference-content-state/, `format` is responsible to convert the editor's `ContentState` back to the format of the source data.
+
+By default draftjs' raw format is used to store the data (`RawDraftContentState` - stringified). https://draftjs.org/docs/api-reference-data-conversion/
+
+```tsx
+import { convertFromRaw, convertToRaw } from "draft-js";
+
+const [useRteApi] = makeRteApi({
+    parse: (v) => convertFromRaw(JSON.parse(v)), // this is the default implementation
+    format: (v) => JSON.stringify(convertToRaw(v)), // this is the default implementation
+});
+```
+
+<Canvas of={RteStories.SourceDataDefault} />
+
+When your persistence layer supports storing JSON-objects, string serialization is not needed. This is the implementation in Comet CMS.
+
+```tsx
+import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
+
+const [useRteApi] = makeRteApi<RawDraftContentState>({
+    parse: (v) => convertFromRaw(v),
+    format: (v) => convertToRaw(v),
+});
+```
+
+### Setup with Markdown as source data
+
+```tsx
+import { stateToMarkdown } from "draft-js-export-markdown";
+import { stateFromMarkdown } from "draft-js-import-markdown";
+
+type Markdown = string;
+
+const [useRteApi] = makeRteApi<Markdown>({
+    parse: (v) => stateFromMarkdown(v),
+    format: (v) => stateToMarkdown(v),
+});
+```
+
+<Canvas of={RteStories.SourceDataMarkdown} />
+
+### Setup with HTML as source data
+
+```tsx
+import { ContentState, convertFromHTML } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+
+type Html = string;
+
+const [useRteApi] = makeRteApi<Html>({
+    parse: (v) => {
+        const blocksFromHTML = convertFromHTML(v);
+        return ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+    },
+    format: (v) => {
+        return stateToHTML(v);
+    },
+});
+```
+
+<Canvas of={RteStories.SourceDataHtml} />
