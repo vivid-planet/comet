@@ -12,4 +12,3 @@ Finally, we will integrate the generated DataGrid and Form into a new page and m
 
 ![DataGridFormIntegration](./6-integrate-admin-generator-datagrid-into-comet-application/images/DataGridFormIntegration.gif)
 
-You can find the complete sample code for this guide [here](https://github.com/vivid-planet/comet-starter/compare/docs/api-admin-generator-test).
