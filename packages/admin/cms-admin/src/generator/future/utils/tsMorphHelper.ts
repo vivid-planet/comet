@@ -35,11 +35,19 @@ const supportedImportPaths = [
     "[type=form].fields.validate",
     "[type=form].fields.block",
     "[type=form].fields.component",
+
+    //nested fieldSet/optionalNestedFields: TODO support recursion
+    "[type=form].fields.fields.validate",
+    "[type=form].fields.fields.block",
+    "[type=form].fields.fields.component",
 ];
 const supportedInlineCodePaths = [
     // TODO implement in generator "[type=grid].columns.filterOperators",
     "[type=grid].columns.renderCell",
     "[type=form].fields.validate",
+
+    //nested fieldSet/optionalNestedFields: TODO support recursion
+    "[type=form].fields.fields.validate",
 ];
 
 export function configsFromSourceFile(sourceFile: SourceFile) {
