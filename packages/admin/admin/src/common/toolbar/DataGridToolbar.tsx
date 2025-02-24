@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import { type ComponentsOverrides } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-=======
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { useGridApiContext } from "@mui/x-data-grid";
->>>>>>> main
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -63,7 +58,7 @@ export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
     const { density, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
 
     const apiRef = useGridApiContext();
-    const gridDensity = apiRef.current?.state?.density.value;
+    const gridDensity = apiRef.current?.state?.density;
 
     const ownerState: OwnerState = {
         density: density || gridDensity,

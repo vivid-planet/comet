@@ -4,9 +4,9 @@
 
 ### Patch Changes
 
--   Updated dependencies [6b75f20e4]
-    -   @comet/admin@7.14.0
-    -   @comet/admin-icons@7.14.0
+- Updated dependencies [6b75f20e4]
+    - @comet/admin@7.14.0
+    - @comet/admin-icons@7.14.0
 
 ## 7.13.0
 

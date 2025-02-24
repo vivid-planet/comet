@@ -4,17 +4,17 @@
 
 ### Minor Changes
 
--   6163b83a4: Play/pause auto-play videos depending on their visibility
+- 6163b83a4: Play/pause auto-play videos depending on their visibility
 
     Start videos in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock` when the block is in or enters the viewport.
     Pause them when the block is leaving the viewport.
 
--   d07a6da51: Add comment explaining why we omit the `alt`-prop in `PixelImageBlock`
+- d07a6da51: Add comment explaining why we omit the `alt`-prop in `PixelImageBlock`
 
 ### Patch Changes
 
--   6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
--   8e648a757: Set alt attribute to empty string as default in `SvgImageBlock`
+- 6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
+- 8e648a757: Set alt attribute to empty string as default in `SvgImageBlock`
 
 ## 7.13.0
 

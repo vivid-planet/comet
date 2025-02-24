@@ -1,25 +1,5 @@
-<<<<<<< HEAD
-import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
-import { Add, Delete } from "@comet/admin-icons";
-=======
-import { Field, FieldProps, FinalFormInput, FinalFormSelect, Loading, messages } from "@comet/admin";
+import { Field, type FieldProps, FinalFormInput, FinalFormSelect, Loading, messages } from "@comet/admin";
 import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSectionGroup,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    Collapsible,
-    CollapsibleSwitchButtonHeader,
-    composeBlocks,
-    createBlockSkeleton,
-    createOptionalBlock,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
->>>>>>> main
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
@@ -28,12 +8,8 @@ import { Field as ReactFinalFormField, useForm } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
-<<<<<<< HEAD
 import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
-=======
-import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
->>>>>>> main
 import { validateUrl } from "../validation/validateUrl";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -47,7 +23,7 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
-import { SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
+import { type SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
 import { type BlockInterface, type BlockState } from "./types";

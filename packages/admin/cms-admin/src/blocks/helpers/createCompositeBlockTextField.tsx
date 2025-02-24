@@ -1,13 +1,8 @@
 import { TextField, type TextFieldProps } from "@comet/admin";
 
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/createCompositeBlockTextField.tsx
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
+import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
-=======
-import { BlocksFinalForm } from "../../form/BlocksFinalForm";
-import { BlockMethods } from "../types";
-import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/createCompositeBlockTextField.tsx
 
 interface Options extends Partial<TextFieldProps> {
     defaultValue?: string;
@@ -18,13 +13,14 @@ interface Options extends Partial<TextFieldProps> {
     extractTextContents?: BlockMethods["extractTextContents"];
 }
 
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/createCompositeBlockTextField.tsx
-export function createCompositeBlockTextField({ defaultValue = "", fullWidth = true, fieldProps: legacyFieldProps, ...fieldProps }: Options) {
+export function createCompositeBlockTextField({
+    defaultValue = "",
+    fullWidth = true,
+    fieldProps: legacyFieldProps,
+    extractTextContents,
+    ...fieldProps
+}: Options) {
     return createCompositeBlockField<string>({
-=======
-export function createCompositeBlockTextField({ defaultValue = "", fieldProps: legacyFieldProps, extractTextContents, ...fieldProps }: Options) {
-    return createCompositeSetting<string>({
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/createCompositeBlockTextField.tsx
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }>

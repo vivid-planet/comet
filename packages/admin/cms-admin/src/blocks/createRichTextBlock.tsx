@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
-=======
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
-import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
->>>>>>> main
+import { type IRteOptions, makeRteApi, pasteAndFilterText, Rte, stateToHtml } from "@comet/admin-rte";
 import {
     BlockMapBuilder,
     convertFromHTML,

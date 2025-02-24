@@ -84,39 +84,17 @@ const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
     transition: transform 0.4s ease;
 `;
 
-<<<<<<< HEAD
-const ContentWrapper = styled.div`
-    overflow: hidden;
-`;
-
-const ContentWrapperInner = styled.div<{ $isExpanded: boolean }>`
-    padding-bottom: ${({ theme }) => theme.spacing.S300};
-    margin-top: -100%;
-    opacity: 0;
-    transition:
-        margin-top 0.8s ease-out 0.3s,
-        opacity 0.3s linear;
-=======
 const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
     position: relative;
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.5s ease-out;
->>>>>>> main
 
     ${({ $isExpanded }) =>
         $isExpanded &&
         css`
-<<<<<<< HEAD
-            margin-top: 0;
-            opacity: 1;
-            transition:
-                margin-top 0.5s ease-out,
-                opacity 0.3s linear 0.4s;
-=======
             grid-template-rows: 1fr;
             padding-bottom: ${({ theme }) => theme.spacing.S300};
->>>>>>> main
         `}
 `;
 

@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { useErrorDialog } from "@comet/admin";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react";
 
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
 import { useSeoTagGeneration } from "./useSeoTagGeneration";

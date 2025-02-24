@@ -120,97 +120,6 @@ export const EditPage = ({ id }: Props) => {
 
     return (
         <AzureAiTranslatorProvider showApplyTranslationDialog={true} enabled={true}>
-<<<<<<< HEAD
-            {hasChanges && (
-                <RouterPrompt
-                    message={(location) => {
-                        if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                        return intl.formatMessage({
-                            id: "editPage.discardChanges",
-                            defaultMessage: "Discard unsaved changes?",
-                        });
-                    }}
-                    saveAction={async () => {
-                        try {
-                            await handleSavePage();
-                            return true;
-                        } catch {
-                            return false;
-                        }
-                    }}
-                />
-            )}
-            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
-                <ToolbarItem>
-                    <IconButton onClick={stackApi?.goBack} size="large">
-                        <ArrowLeft />
-                    </IconButton>
-                </ToolbarItem>
-                <PageName pageId={id} />
-                <FillSpace />
-                <ToolbarActions>
-                    <Stack direction="row" spacing={1}>
-                        <Button
-                            startIcon={<Preview />}
-                            variant="textDark"
-                            disabled={!pageState}
-                            onClick={() => {
-                                openSitePreviewWindow(pageState.path, contentScopeMatch.url);
-                            }}
-                        >
-                            <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
-                        </Button>
-                        {pageSaveButton}
-                    </Stack>
-                </ToolbarActions>
-            </Toolbar>
-            <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={previewUrl} previewState={previewState} previewApi={previewApi}>
-                    {[
-                        {
-                            key: "content",
-                            label: (
-                                <BlockAdminTabLabel isValid={rootBlocksApi.content.isValid}>
-                                    <FormattedMessage id="generic.blocks" defaultMessage="Blocks" />
-                                </BlockAdminTabLabel>
-                            ),
-                            content: (
-                                <BlockAdminComponentRoot
-                                    title={intl.formatMessage({ id: "pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
-                                >
-                                    {rootBlocksApi.content.adminUI}
-                                </BlockAdminComponentRoot>
-                            ),
-                        },
-                        {
-                            key: "stage",
-                            label: (
-                                <BlockAdminTabLabel isValid={rootBlocksApi.stage.isValid}>
-                                    <FormattedMessage id="pages.page.edit.stage" defaultMessage="Stage" />
-                                </BlockAdminTabLabel>
-                            ),
-                            content: (
-                                <BlockAdminComponentRoot
-                                    title={intl.formatMessage({ id: "pages.pages.page.edit.stage.title", defaultMessage: "Stage" })}
-                                >
-                                    {rootBlocksApi.stage.adminUI}
-                                </BlockAdminComponentRoot>
-                            ),
-                        },
-                        {
-                            key: "config",
-                            label: (
-                                <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
-                                </BlockAdminTabLabel>
-                            ),
-                            content: rootBlocksApi.seo.adminUI,
-                        },
-                    ]}
-                </BlockPreviewWithTabs>
-            </MainContent>
-            {dialogs}
-=======
             <ContentGenerationConfigProvider
                 seo={{
                     getRelevantContent: () => {
@@ -269,39 +178,39 @@ export const EditPage = ({ id }: Props) => {
                             {
                                 key: "content",
                                 label: (
-                                    <AdminTabLabel isValid={rootBlocksApi.content.isValid}>
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.content.isValid}>
                                         <FormattedMessage id="generic.blocks" defaultMessage="Blocks" />
-                                    </AdminTabLabel>
+                                    </BlockAdminTabLabel>
                                 ),
                                 content: (
-                                    <AdminComponentRoot
+                                    <BlockAdminComponentRoot
                                         title={intl.formatMessage({ id: "pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
                                     >
                                         {rootBlocksApi.content.adminUI}
-                                    </AdminComponentRoot>
+                                    </BlockAdminComponentRoot>
                                 ),
                             },
                             {
                                 key: "stage",
                                 label: (
-                                    <AdminTabLabel isValid={rootBlocksApi.stage.isValid}>
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.stage.isValid}>
                                         <FormattedMessage id="pages.page.edit.stage" defaultMessage="Stage" />
-                                    </AdminTabLabel>
+                                    </BlockAdminTabLabel>
                                 ),
                                 content: (
-                                    <AdminComponentRoot
+                                    <BlockAdminComponentRoot
                                         title={intl.formatMessage({ id: "pages.pages.page.edit.stage.title", defaultMessage: "Stage" })}
                                     >
                                         {rootBlocksApi.stage.adminUI}
-                                    </AdminComponentRoot>
+                                    </BlockAdminComponentRoot>
                                 ),
                             },
                             {
                                 key: "config",
                                 label: (
-                                    <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
                                         <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
-                                    </AdminTabLabel>
+                                    </BlockAdminTabLabel>
                                 ),
                                 content: rootBlocksApi.seo.adminUI,
                             },
@@ -310,7 +219,6 @@ export const EditPage = ({ id }: Props) => {
                 </MainContent>
                 {dialogs}
             </ContentGenerationConfigProvider>
->>>>>>> main
         </AzureAiTranslatorProvider>
     );
 };

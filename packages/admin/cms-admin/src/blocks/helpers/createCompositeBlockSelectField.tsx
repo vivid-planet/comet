@@ -1,13 +1,8 @@
 import { SelectField, type SelectFieldOption, type SelectFieldProps } from "@comet/admin";
 
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/createCompositeBlockSelectField.tsx
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
+import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
-=======
-import { BlocksFinalForm } from "../../form/BlocksFinalForm";
-import { BlockMethods } from "../types";
-import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/createCompositeBlockSelectField.tsx
 
 interface Options<T extends string | number> extends Partial<SelectFieldProps<T>> {
     defaultValue: T;

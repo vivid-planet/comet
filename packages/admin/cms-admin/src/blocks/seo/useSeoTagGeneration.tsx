@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentGenerationConfig } from "../../documents/ContentGenerationConfigContext";
 import { useLocale } from "../../locale/useLocale";
-import { GQLGenerateSeoTagsMutation, GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
+import { type GQLGenerateSeoTagsMutation, type GQLGenerateSeoTagsMutationVariables } from "./useSeoTagGeneration.generated";
 
 export function useSeoTagGeneration() {
     const contentGenerationConfig = useContentGenerationConfig();
@@ -115,7 +115,7 @@ export function useSeoTagGeneration() {
     return generateSeoTag;
 }
 
-export const generateSeoTagsMutation = gql`
+const generateSeoTagsMutation = gql`
     mutation GenerateSeoTags($content: String!, $language: String!) {
         generateSeoTags(content: $content, language: $language) {
             htmlTitle

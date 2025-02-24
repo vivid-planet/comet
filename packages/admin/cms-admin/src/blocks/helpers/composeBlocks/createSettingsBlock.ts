@@ -1,10 +1,5 @@
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/composeBlocks/createSettingsBlock.ts
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
-import { type AnonymousBlockInterface, type BlockAdminComponent } from "../../types";
-=======
-import { AnonymousBlockInterface, BlockAdminComponent, BlockMethods } from "../../types";
-import { createBlockSkeleton } from "../createBlockSkeleton";
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/composeBlocks/createSettingsBlock.ts
+import { type AnonymousBlockInterface, type BlockAdminComponent, type BlockMethods } from "../../types";
 
 interface Options<State> {
     defaultValues: State;

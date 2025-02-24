@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-=======
-import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
->>>>>>> main
 import { Injectable } from "@nestjs/common";
 
-import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../blocks/block";
+import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
 import { DamFileDownloadLinkBlockData, OpenFileTypeMethod } from "./dam-file-download-link.block";
@@ -29,11 +25,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
-<<<<<<< HEAD
-        const ret: TraversableTransformBlockResponse = {
-=======
         const ret: TransformResponse = {
->>>>>>> main
             openFileType: block.openFileType,
         };
 
@@ -47,20 +39,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
             const retFile: Omit<File, "fileUrl"> = {
                 id: file.id,
                 name: file.name,
-<<<<<<< HEAD
-                fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
                 size: file.size,
-                scope: file.scope,
-            };
-        } else if (file && block.openFileType === "Download") {
-            ret.file = {
-                id: file.id,
-                name: file.name,
-                fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
-                size: file.size,
-=======
-                size: Number(file.size),
->>>>>>> main
                 scope: file.scope,
                 altText: file.altText,
                 title: file.title,

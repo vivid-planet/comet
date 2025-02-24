@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { type GetMuiComponentTheme } from "./getComponentsTheme";
-=======
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { GetMuiComponentTheme } from "./getComponentsTheme";
->>>>>>> main
+import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = (component, { spacing }) => ({
     ...component,

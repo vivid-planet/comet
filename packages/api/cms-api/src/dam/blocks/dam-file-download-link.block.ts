@@ -6,7 +6,7 @@ import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { DamFileDownloadLinkBlockTransformerService } from "./dam-file-download-link-block-transformer.service";
 
-enum OpenFileTypeMethod {
+export enum OpenFileTypeMethod {
     NewTab = "NewTab",
     Download = "Download",
 }

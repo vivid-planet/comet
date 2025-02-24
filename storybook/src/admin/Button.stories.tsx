@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 import { Button, type ButtonProps } from "@comet/admin";
-import { Add, Favorite, Wrench } from "@comet/admin-icons";
-import { Box, Stack } from "@mui/material";
-import { type ReactNode } from "react";
-=======
-import { Button, ButtonProps } from "@comet/admin";
 import { Add, ArrowRight, Favorite, Wrench } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
-import { ReactNode } from "react";
->>>>>>> main
+import { type ReactNode } from "react";
 
 export default {
     title: "@comet/admin/Button",

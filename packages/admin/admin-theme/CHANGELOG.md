@@ -4,9 +4,9 @@
 
 ### Patch Changes
 
--   9b190db59: Fix spacing for `ListItemIcon` and `ListItemAvatar` to align with Comet DXP design
--   84e063642: Fix dialog header height for dialogs with no title
-    -   @comet/admin-icons@7.14.0
+- 9b190db59: Fix spacing for `ListItemIcon` and `ListItemAvatar` to align with Comet DXP design
+- 84e063642: Fix dialog header height for dialogs with no title
+    - @comet/admin-icons@7.14.0
 
 ## 7.13.0
 

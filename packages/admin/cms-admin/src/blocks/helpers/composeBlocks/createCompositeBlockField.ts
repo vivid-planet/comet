@@ -1,9 +1,4 @@
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/composeBlocks/createCompositeBlockField.ts
-import { type AnonymousBlockInterface, type BlockAdminComponent } from "../../types";
-=======
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { AnonymousBlockInterface, BlockAdminComponent, BlockMethods } from "../../types";
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/composeBlocks/createCompositeSetting.ts
+import { type AnonymousBlockInterface, type BlockAdminComponent, type BlockMethods } from "../../types";
 import { createSettingsAnonymousBlock } from "./createSettingsBlock";
 
 interface Options<State> {

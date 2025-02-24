@@ -1,26 +1,16 @@
 import { SwitchField, type SwitchFieldProps } from "@comet/admin";
 
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/createCompositeBlockSwitchField.tsx
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
+import { type BlockMethods } from "../types";
 import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
-=======
-import { BlocksFinalForm } from "../../form/BlocksFinalForm";
-import { BlockMethods } from "../types";
-import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/createCompositeBlockSwitchField.tsx
 
 interface Options extends Partial<SwitchFieldProps> {
     defaultValue?: boolean;
     extractTextContents?: BlockMethods["extractTextContents"];
 }
 
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/helpers/createCompositeBlockSwitchField.tsx
-export function createCompositeBlockSwitchField({ defaultValue = false, fullWidth = true, ...fieldProps }: Options) {
-    return createCompositeBlockField<boolean>({
-=======
 export function createCompositeBlockSwitchField({ defaultValue = false, fullWidth = true, extractTextContents, ...fieldProps }: Options) {
-    return createCompositeSetting<boolean>({
->>>>>>> main:packages/admin/blocks-admin/src/blocks/helpers/createCompositeBlockSwitchField.tsx
+    return createCompositeBlockField<boolean>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }> onSubmit={({ value }) => updateState(value)} initialValues={{ value: state }}>

@@ -34,18 +34,10 @@
         "usehooks-ts": "^3.1.1"
     },
     "devDependencies": {
-<<<<<<< HEAD
-        "@comet/cli": "workspace:^7.13.0",
-        "@comet/eslint-config": "workspace:^7.13.0",
-        "@types/draft-js": "^0.11.18",
-        "@types/jest": "^29.5.14",
-=======
         "@comet/cli": "workspace:^7.14.0",
         "@comet/eslint-config": "workspace:^7.14.0",
-        "@gitbeaker/node": "^34.0.0",
-        "@types/draft-js": "^0.11.10",
-        "@types/jest": "^29.5.0",
->>>>>>> main
+        "@types/draft-js": "^0.11.18",
+        "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
@@ -56,7 +48,7 @@
         "jest-junit": "^16.0.0",
         "next": "^14.2.24",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.5.1",
+        "prettier": "^3.5.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "styled-components": "^6.1.15",
