@@ -10,7 +10,6 @@ import {
     CometConfigProvider,
     createDamFileDependency,
     CurrentUserProvider,
-    DependenciesConfigProvider,
     LocaleProvider,
     MasterMenuRoutes,
     SitePreview,
@@ -78,6 +77,14 @@ export function App() {
                 },
             }}
             imgproxy={config.imgproxy}
+            dependencies={{
+                entityDependencyMap: {
+                    Page,
+                    Link,
+                    News: NewsDependency,
+                    DamFile: createDamFileDependency(),
+                },
+            }}
         >
             <ApolloProvider client={apolloClient}>
                 <BuildInformationProvider value={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}>
@@ -102,74 +109,65 @@ export function App() {
                             },
                         }}
                     >
-                        <DependenciesConfigProvider
-                            entityDependencyMap={{
-                                Page,
-                                Link,
-                                News: NewsDependency,
-                                DamFile: createDamFileDependency(),
-                            }}
-                        >
-                            <IntlProvider locale="en" messages={getMessages()}>
-                                <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
-                                    <BlocksConfigProvider
-                                        isBlockSupported={(block, scope) => {
-                                            if (scope.domain === "main") {
-                                                return true;
-                                            } else {
-                                                return (
-                                                    block.name !== NewsDetailBlock.name &&
-                                                    block.name !== NewsListBlock.name &&
-                                                    block.name !== NewsLinkBlock.name
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        <MuiThemeProvider theme={theme}>
-                                            <DndProvider options={HTML5toTouch}>
-                                                <SnackbarProvider>
-                                                    <CmsBlockContextProvider>
-                                                        <ErrorDialogHandler />
-                                                        <CurrentUserProvider>
-                                                            <RouterBrowserRouter>
-                                                                <GlobalStyle />
-                                                                <ContentScopeProvider>
-                                                                    {({ match }) => (
-                                                                        <Switch>
-                                                                            <Route
-                                                                                path={`${match.path}/preview`}
-                                                                                render={(props) => (
-                                                                                    <SitePreview
-                                                                                        resolvePath={(path: string, scope) => {
-                                                                                            return `/${scope.language}${path}`;
-                                                                                        }}
-                                                                                        {...props}
-                                                                                    />
-                                                                                )}
-                                                                            />
-                                                                            <Route
-                                                                                render={() => (
-                                                                                    <MasterLayout
-                                                                                        headerComponent={MasterHeader}
-                                                                                        menuComponent={AppMasterMenu}
-                                                                                    >
-                                                                                        <MasterMenuRoutes menu={masterMenuData} />
-                                                                                    </MasterLayout>
-                                                                                )}
-                                                                            />
-                                                                        </Switch>
-                                                                    )}
-                                                                </ContentScopeProvider>
-                                                            </RouterBrowserRouter>
-                                                        </CurrentUserProvider>
-                                                    </CmsBlockContextProvider>
-                                                </SnackbarProvider>
-                                            </DndProvider>
-                                        </MuiThemeProvider>
-                                    </BlocksConfigProvider>
-                                </LocaleProvider>
-                            </IntlProvider>
-                        </DependenciesConfigProvider>
+                        <IntlProvider locale="en" messages={getMessages()}>
+                            <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
+                                <BlocksConfigProvider
+                                    isBlockSupported={(block, scope) => {
+                                        if (scope.domain === "main") {
+                                            return true;
+                                        } else {
+                                            return (
+                                                block.name !== NewsDetailBlock.name &&
+                                                block.name !== NewsListBlock.name &&
+                                                block.name !== NewsLinkBlock.name
+                                            );
+                                        }
+                                    }}
+                                >
+                                    <MuiThemeProvider theme={theme}>
+                                        <DndProvider options={HTML5toTouch}>
+                                            <SnackbarProvider>
+                                                <CmsBlockContextProvider>
+                                                    <ErrorDialogHandler />
+                                                    <CurrentUserProvider>
+                                                        <RouterBrowserRouter>
+                                                            <GlobalStyle />
+                                                            <ContentScopeProvider>
+                                                                {({ match }) => (
+                                                                    <Switch>
+                                                                        <Route
+                                                                            path={`${match.path}/preview`}
+                                                                            render={(props) => (
+                                                                                <SitePreview
+                                                                                    resolvePath={(path: string, scope) => {
+                                                                                        return `/${scope.language}${path}`;
+                                                                                    }}
+                                                                                    {...props}
+                                                                                />
+                                                                            )}
+                                                                        />
+                                                                        <Route
+                                                                            render={() => (
+                                                                                <MasterLayout
+                                                                                    headerComponent={MasterHeader}
+                                                                                    menuComponent={AppMasterMenu}
+                                                                                >
+                                                                                    <MasterMenuRoutes menu={masterMenuData} />
+                                                                                </MasterLayout>
+                                                                            )}
+                                                                        />
+                                                                    </Switch>
+                                                                )}
+                                                            </ContentScopeProvider>
+                                                        </RouterBrowserRouter>
+                                                    </CurrentUserProvider>
+                                                </CmsBlockContextProvider>
+                                            </SnackbarProvider>
+                                        </DndProvider>
+                                    </MuiThemeProvider>
+                                </BlocksConfigProvider>
+                            </LocaleProvider>
+                        </IntlProvider>
                     </SitesConfigProvider>
                 </BuildInformationProvider>
             </ApolloProvider>

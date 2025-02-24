@@ -9,7 +9,7 @@ import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
 import { type GQLDependency } from "../graphql.generated";
-import { useDependenciesConfig } from "./DependenciesConfig";
+import { useDependenciesConfig } from "./dependenciesConfig";
 import * as sc from "./DependencyList.sc";
 import { type DependencyInterface } from "./types";
 
@@ -44,7 +44,7 @@ const pageSize = 10;
 
 export const DependencyList = ({ query, variables }: DependencyListProps) => {
     const intl = useIntl();
-    const entityDependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
     const history = useHistory();

@@ -1,6 +1,7 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { type DamConfig } from "../dam/config/damConfig";
+import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type ImgproxyConfig } from "../imgproxy/imgproxyConfig";
 import { type PageTreeConfig } from "../pages/pageTreeConfig";
 
@@ -11,6 +12,7 @@ export interface CometConfig {
     pageTree?: PageTreeConfig;
     dam?: DamConfig;
     imgproxy?: ImgproxyConfig;
+    dependencies?: DependenciesConfig;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);

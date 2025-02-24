@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 
 import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { type CmsBlockContext } from "./CmsBlockContextProvider";
@@ -125,9 +125,9 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         const isInPaper = useBlockAdminComponentPaper();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
+        const { entityDependencyMap } = useDependenciesConfig();
 
-        const showMenu = Boolean(dependencyMap["DamFile"]);
+        const showMenu = Boolean(entityDependencyMap["DamFile"]);
 
         const handleMenuClose = () => {
             setAnchorEl(null);
@@ -173,12 +173,15 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                 </BlockAdminComponentButton>
                                 {showMenu && (
                                     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                        {dependencyMap["DamFile"] && state.damFile?.id && (
+                                        {entityDependencyMap["DamFile"] && state.damFile?.id && (
                                             <MenuItem
                                                 onClick={async () => {
-                                                    // id is checked three lines above
-                                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                                    const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                                    const path = await entityDependencyMap["DamFile"].resolvePath({
+                                                        apolloClient,
+                                                        // id is checked three lines above
+                                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                        id: state.damFile!.id,
+                                                    });
                                                     const url = contentScope.match.url + path;
                                                     window.open(url, "_blank");
                                                 }}
