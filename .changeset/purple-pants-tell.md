@@ -12,7 +12,7 @@ import { BlocksConfigProvider } from "@comet/cms-admin";
 export function App() {
     return (
         <BlocksConfigProvider
-            supportsBlock={(name, scope) => {
+            isBlockSupported={(name, scope) => {
                 if (scope.domain === "specific-customer") {
                     return true;
                 } else {

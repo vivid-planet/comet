@@ -4,7 +4,7 @@ title: Scope-specific blocks
 
 Certain blocks may only be available in specific content scopes.
 For instance, a special teaser block may only be available for a specific customer.
-Scope-specific blocks can be achieved by using the `supportsBlock` option of the `BlocksConfigProvider`:
+Scope-specific blocks can be achieved by using the `isBlockSupported` option of the `BlocksConfigProvider`:
 
 ```tsx title="App.tsx"
 import { BlocksConfigProvider } from "@comet/cms-admin";
@@ -12,7 +12,7 @@ import { BlocksConfigProvider } from "@comet/cms-admin";
 export function App() {
     return (
         <BlocksConfigProvider
-            supportsBlock={(name, scope) => {
+            isBlockSupported={(name, scope) => {
                 if (scope.domain === "specific-customer") {
                     return true;
                 } else {
@@ -27,7 +27,7 @@ export function App() {
 }
 ```
 
-The `supportsBlock` function receives the block name and the current scope as arguments.
+The `isBlockSupported` function receives the block name and the current scope as arguments.
 It should return `true` if the block is supported in the current content scope and `false` otherwise.
 An unsupported block will not be available in the BlocksBlock and OneOfBlock.
 

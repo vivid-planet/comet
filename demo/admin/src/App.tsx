@@ -105,7 +105,7 @@ export function App() {
                                 <IntlProvider locale="en" messages={getMessages()}>
                                     <LocaleProvider resolveLocaleForScope={(scope) => scope.domain}>
                                         <BlocksConfigProvider
-                                            supportsBlock={(name, scope) => {
+                                            isBlockSupported={(name, scope) => {
                                                 if (scope.domain === "main") {
                                                     return true;
                                                 } else {

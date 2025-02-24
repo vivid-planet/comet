@@ -474,15 +474,15 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
             );
 
             const { scope } = useContentScope();
-            const { supportsBlock } = useBlocksConfig();
+            const { isBlockSupported } = useBlocksConfig();
 
             const filteredSupportedBlocks = useMemo(() => {
-                if (supportsBlock) {
-                    return Object.fromEntries(Object.entries(supportedBlocks).filter(([, block]) => supportsBlock(block.name, scope)));
+                if (isBlockSupported) {
+                    return Object.fromEntries(Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block.name, scope)));
                 } else {
                     return supportedBlocks;
                 }
-            }, [scope, supportsBlock]);
+            }, [scope, isBlockSupported]);
 
             const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(filteredSupportedBlocks) });
 

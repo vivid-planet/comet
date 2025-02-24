@@ -4,13 +4,13 @@ import { type ContentScopeInterface } from "../../contentScope/Provider";
 
 export type BlocksConfig = {
     /**
-     * Check if a block is allowed in the current scope.
+     * Check if a block is supported in the current scope.
      *
      * @param {string} name The name of the block.
      * @param scope The current content scope.
-     * @returns {boolean} True if the block is allowed in the current scope.
+     * @returns {boolean} True if the block is supported in the current scope.
      */
-    supportsBlock?: (name: string, scope: ContentScopeInterface) => boolean;
+    isBlockSupported?: (name: string, scope: ContentScopeInterface) => boolean;
 };
 
 const BlocksConfigContext = createContext<BlocksConfig>({});

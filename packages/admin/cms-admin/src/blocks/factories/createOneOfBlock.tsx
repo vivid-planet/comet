@@ -271,14 +271,14 @@ export const createOneOfBlock = <T extends boolean = boolean>(
             const isInPaper = useBlockAdminComponentPaper();
 
             const { scope } = useContentScope();
-            const { supportsBlock } = useBlocksConfig();
+            const { isBlockSupported } = useBlocksConfig();
 
             const options = useMemo(() => {
                 let filteredSupportedBlocks;
 
-                if (supportsBlock) {
+                if (isBlockSupported) {
                     filteredSupportedBlocks = Object.fromEntries(
-                        Object.entries(supportedBlocks).filter(([, block]) => supportsBlock(block.name, scope)),
+                        Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block.name, scope)),
                     );
                 } else {
                     filteredSupportedBlocks = supportedBlocks;
@@ -296,7 +296,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
                 });
 
                 return options;
-            }, [scope, supportsBlock]);
+            }, [scope, isBlockSupported]);
 
             const handleBlockSelect = useCallback(
                 (blockType: string) => {
