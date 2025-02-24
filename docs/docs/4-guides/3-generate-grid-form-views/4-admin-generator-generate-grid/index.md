@@ -26,7 +26,6 @@ export const CustomerGrid: GridConfig<GQLCustomer> = {
 The `@comet/cms-admin` has types available for all the different components that can be generated. The `GridConfig` type is used to define the configuration of the DataGrid. The `GQLCustomer` got created in the section before, with the crud generator. The `GQLCustomer`
 type is the GraphQL type that will be used to guarantee type safety. The `columns` array defines the columns of the DataGrid. Each column has a `type`, `name` and other properties.
 
-This configuration is one of the most simplified once and can fore sure be extended with more options.
 
 ## Run Admin Generator
 

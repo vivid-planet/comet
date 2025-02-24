@@ -41,7 +41,6 @@ export const CustomerForm: FormConfig<GQLCustomer> = {
 };
 ```
 
-This configuration is one of the most simplified once and can fore sure be extended with more options.
 
 ## Run Admin Generator
 
