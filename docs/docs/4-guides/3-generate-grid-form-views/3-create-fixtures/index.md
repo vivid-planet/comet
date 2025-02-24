@@ -84,7 +84,8 @@ export class FixturesConsole {
 Everything should be set up now. To execute the fixtures, run the following command:
 
 ```bash
-npm run --prefix api fixtures
+cd api
+npm run fixtures
 ```
 
 ## Verify Fixtures
