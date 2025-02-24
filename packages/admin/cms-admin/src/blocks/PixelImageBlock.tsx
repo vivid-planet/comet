@@ -8,6 +8,7 @@ import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
@@ -22,7 +23,6 @@ import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { BlockCategory, type BlockDependency, type BlockInterface, type BlockPreviewContext } from "./types";
-import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
 
@@ -64,7 +64,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
+        urlTemplate: createPreviewUrl(state, previewCtx.apiUrl),
         adminMeta: { route: previewCtx.parentUrl },
     }),
 
@@ -153,7 +153,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     AdminComponent: ({ state, updateState }) => {
         const [open, setOpen] = useState(false);
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-        const context = useCmsBlockContext();
+        const { apiUrl } = useCometConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
@@ -175,7 +175,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             setAnchorEl(null);
         };
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl, { width: 320, height: 320 });
+        const previewUrl = createPreviewUrl(state, apiUrl, { width: 320, height: 320 });
 
         return (
             <SelectPreviewComponent>

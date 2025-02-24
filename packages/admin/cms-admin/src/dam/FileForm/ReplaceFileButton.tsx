@@ -7,8 +7,10 @@ import { useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
+import { createHttpClient } from "../../http/createHttpClient";
+import { useDamConfig } from "../config/damConfig";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import { type DamFileDetails } from "./EditFile";
 
@@ -18,10 +20,11 @@ interface ReplaceFileButtonProps {
 
 export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
-    const cmsBlockContext = useCmsBlockContext();
+    const { apiUrl } = useCometConfig();
+    const damConfig = useDamConfig();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const maxFileSizeInMegabytes = cmsBlockContext.damConfig.maxFileSize;
+    const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
     const cancelUpload = useRef<CancelTokenSource>(axios.CancelToken.source());
     const errorDialog = useErrorDialog();
@@ -47,7 +50,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
             try {
                 setReplaceLoading(true);
                 const response = await replaceById({
-                    apiClient: cmsBlockContext.damConfig.apiClient,
+                    apiClient: createHttpClient(apiUrl),
                     data: { file: acceptedFiles[0], fileId: file.id },
                     cancelToken: cancelUpload.current.token,
                 });

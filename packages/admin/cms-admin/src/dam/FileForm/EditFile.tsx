@@ -27,7 +27,7 @@ import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
