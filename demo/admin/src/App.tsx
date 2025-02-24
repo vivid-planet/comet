@@ -52,7 +52,16 @@ const apiClient = createHttpClient(config.apiUrl);
 
 export function App() {
     return (
-        <CometConfigProvider apiUrl={config.apiUrl} graphQLApiUrl={`${config.apiUrl}/graphql`} adminUrl={config.adminUrl}>
+        <CometConfigProvider
+            apiUrl={config.apiUrl}
+            graphQLApiUrl={`${config.apiUrl}/graphql`}
+            adminUrl={config.adminUrl}
+            pageTree={{
+                categories: pageTreeCategories,
+                documentTypes: pageTreeDocumentTypes,
+                additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
+            }}
+        >
             <ApolloProvider client={apolloClient}>
                 <BuildInformationProvider value={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}>
                     <SitesConfigProvider
@@ -112,9 +121,6 @@ export function App() {
                                                             maxSrcResolution: config.imgproxy.maxSrcResolution,
                                                             allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
                                                         }}
-                                                        pageTreeCategories={pageTreeCategories}
-                                                        pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                     >
                                                         <ErrorDialogHandler />
                                                         <CurrentUserProvider>

@@ -1,9 +1,12 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
+import { type PageTreeConfig } from "../pages/pageTreeConfig";
+
 export interface CometConfig {
     apiUrl: string;
     graphQLApiUrl: string;
     adminUrl: string;
+    pageTree?: PageTreeConfig;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
