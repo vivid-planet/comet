@@ -34,6 +34,9 @@ import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
 import { getMessages } from "./lang";
+import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
+import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
+import { NewsListBlock } from "./news/blocks/NewsListBlock";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
 import { pageTreeCategories } from "./pageTree/pageTreeCategories";
 
@@ -106,7 +109,9 @@ export function App() {
                                                 if (scope.domain === "main") {
                                                     return true;
                                                 } else {
-                                                    return name !== "NewsDetail" && name !== "NewsList" && name !== "NewsLink";
+                                                    return (
+                                                        name !== NewsDetailBlock.name && name !== NewsListBlock.name && name !== NewsLinkBlock.name
+                                                    );
                                                 }
                                             }}
                                         >

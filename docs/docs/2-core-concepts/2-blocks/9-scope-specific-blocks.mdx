@@ -17,7 +17,7 @@ export function App() {
                     return true;
                 } else {
                     // Note: this is the block name defined in the BlockInterface
-                    return name !== "MySpecialTeaser";
+                    return name !== MySpecialTeaserBlock.name;
                 }
             }}
         >
