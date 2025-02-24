@@ -8,7 +8,7 @@ The API Generator can be used to generate the usual CRUD operations in GraphQL f
 
 ## Installation
 
-The API Generator is inside the `@comet/api-generator package`.
+The API Generator is inside the `@comet/api-generator` package.
 
 ```bash
 npm install --dev @comet/api-generator
