@@ -114,7 +114,7 @@
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.5.2",
         "reflect-metadata": "^0.2.2",
-        "rxjs": "^7.8.1",
+        "rxjs": "^7.8.2",
         "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",
         "typescript": "^5.7.3"
