@@ -1,4 +1,4 @@
-import { type CrudSingleGeneratorOptions, hasFieldFeature } from "@comet/cms-api";
+import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
@@ -21,7 +21,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
         const blockProps = metadata.props.filter((prop) => {
-            return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
+            return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
 
         const serviceOut = `import { ObjectQuery } from "@mikro-orm/postgresql";

@@ -1,4 +1,4 @@
-import { hasFieldFeature } from "@comet/cms-api";
+import { hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
@@ -59,7 +59,7 @@ export async function generateCrudInput(
             return !prop.embedded;
         })
         .filter((prop) => {
-            return hasFieldFeature(metadata.class, prop.name, "input");
+            return hasCrudFieldFeature(metadata.class, prop.name, "input");
         })
         .filter((prop) => {
             //filter out props that are dedicatedResolverArgProps

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasFieldFeature } from "@comet/cms-api";
+import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -16,7 +16,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const dedicatedResolverArgProps = metadata.props.filter((prop) => {
-        if (hasFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
+        if (hasCrudFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
             if (prop.kind == "m:1") {
                 return true;
             } else {
@@ -58,10 +58,10 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
 
     const crudFilterProps = metadata.props.filter(
         (prop) =>
-            hasFieldFeature(metadata.class, prop.name, "filter") &&
+            hasCrudFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
             prop.name != "position" &&
-            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole embeddable has filter disabled
+            (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole embeddable has filter disabled
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
@@ -81,9 +81,9 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const hasFilterArg = crudFilterProps.length > 0;
     const crudSortProps = metadata.props.filter(
         (prop) =>
-            hasFieldFeature(metadata.class, prop.name, "sort") &&
+            hasCrudFieldFeature(metadata.class, prop.name, "sort") &&
             !prop.name.startsWith("scope_") &&
-            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
+            (!prop.embedded || hasCrudFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
             (prop.type === "string" ||
                 prop.type === "text" ||
                 prop.type === "DecimalType" ||
@@ -119,7 +119,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
     const blockProps = metadata.props.filter((prop) => {
-        return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
+        return hasCrudFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
     });
 
     return {
@@ -590,7 +590,7 @@ function generateInputHandling(
     const relationOneToOneProps = props.filter((prop) => prop.kind === "1:1");
 
     const inputRelationManyToOneProps = relationManyToOneProps
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "input"))
         .filter((prop) => {
             //filter out props that are dedicatedResolverArgProp
             return !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name);
@@ -609,7 +609,7 @@ function generateInputHandling(
         });
 
     const inputRelationOneToOneProps = relationOneToOneProps
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
@@ -624,7 +624,7 @@ function generateInputHandling(
             };
         });
     const inputRelationToManyProps = [...relationOneToManyProps, ...relationManyToManyProps]
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
@@ -819,13 +819,13 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     const relationOneToManyProps = metadata.props.filter((prop) => prop.kind === "1:m");
     const relationManyToManyProps = metadata.props.filter((prop) => prop.kind === "m:n");
     const relationOneToOneProps = metadata.props.filter((prop) => prop.kind === "1:1");
-    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
     for (const prop of metadata.props) {
         if (
-            !hasFieldFeature(metadata.class, prop.name, "resolveField") &&
+            !hasCrudFieldFeature(metadata.class, prop.name, "resolveField") &&
             !relationManyToOneProps.includes(prop) &&
             !relationOneToManyProps.includes(prop) &&
             !relationManyToManyProps.includes(prop) &&
@@ -838,7 +838,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     }
 
     const resolveFieldBlockProps = metadata.props.filter((prop) => {
-        return hasFieldFeature(metadata.class, prop.name, "resolveField") && prop.type === "RootBlockType";
+        return hasCrudFieldFeature(metadata.class, prop.name, "resolveField") && prop.type === "RootBlockType";
     });
 
     const hasOutputRelations =
@@ -949,10 +949,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const relationOneToManyProps = metadata.props.filter((prop) => prop.kind === "1:m");
     const relationManyToManyProps = metadata.props.filter((prop) => prop.kind === "m:n");
     const relationOneToOneProps = metadata.props.filter((prop) => prop.kind === "1:1");
-    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
-    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const imports: Imports = [];
     const injectRepositories = new Array<EntityMetadata<any>>();
