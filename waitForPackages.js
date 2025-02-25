@@ -4,7 +4,6 @@ const packageFolderMapping = {
     "@comet/admin-date-time": "packages/admin/admin-date-time",
     "@comet/admin-icons": "packages/admin/admin-icons",
     "@comet/admin-rte": "packages/admin/admin-rte",
-    "@comet/admin-theme": "packages/admin/admin-theme",
     "@comet/cms-admin": "packages/admin/cms-admin",
     "@comet/cms-api": "packages/api/cms-api",
     "@comet/cms-site": "packages/site/cms-site",
