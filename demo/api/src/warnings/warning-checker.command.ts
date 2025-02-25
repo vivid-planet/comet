@@ -96,8 +96,7 @@ export class WarningCheckerCommand extends CommandRunner {
         await this.entityManager.flush();
 
         // remove all Block-Warnings that are not present anymore
-        const bufferTime = startDate.setSeconds(startDate.getSeconds() - 1); // Create a buffer time by subtracting 1 second from the startDate to avoid deleting records inserted in the same second
-        await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: new Date(bufferTime) } });
+        await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: startDate } });
     }
 
     // Group root block data by tableName and className to reduce database calls.
