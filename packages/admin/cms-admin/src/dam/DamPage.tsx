@@ -3,8 +3,8 @@ import { type ReactNode } from "react";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { type ContentScopeInterface, useContentScope } from "../contentScope/Provider";
+import { useDamConfig } from "./config/damConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
-import { useDamConfig } from "./config/useDamConfig";
 import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 

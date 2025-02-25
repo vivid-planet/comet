@@ -8,7 +8,7 @@ import { useCallback } from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";

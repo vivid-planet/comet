@@ -7,9 +7,10 @@ import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { type CmsBlockContext } from "./CmsBlockContextProvider";
@@ -20,7 +21,6 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { type GQLSvgImageBlockDamFileQuery, type GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
 import { BlockCategory, type BlockDependency, type BlockInterface, type BlockPreviewContext } from "./types";
-import { useCmsBlockContext } from "./useCmsBlockContext";
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
@@ -46,7 +46,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
+        urlTemplate: createPreviewUrl(state, previewCtx.apiUrl),
         adminMeta: { route: previewCtx.parentUrl },
     }),
 
@@ -121,14 +121,14 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     AdminComponent: ({ state, updateState }) => {
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-        const context = useCmsBlockContext();
+        const { apiUrl } = useCometConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
+        const { entityDependencyMap } = useDependenciesConfig();
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl);
-        const showMenu = Boolean(dependencyMap["DamFile"]);
+        const previewUrl = createPreviewUrl(state, apiUrl);
+        const showMenu = Boolean(entityDependencyMap["DamFile"]);
 
         const handleMenuClose = () => {
             setAnchorEl(null);
@@ -169,12 +169,12 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                         </BlockAdminComponentButton>
                         {showMenu && (
                             <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                {dependencyMap["DamFile"] && state.damFile?.id && (
+                                {entityDependencyMap["DamFile"] && state.damFile?.id && (
                                     <MenuItem
                                         onClick={async () => {
                                             // id is checked three lines above
                                             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                            const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                            const path = await entityDependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
                                             const url = contentScope.match.url + path;
                                             window.open(url, "_blank");
                                         }}
