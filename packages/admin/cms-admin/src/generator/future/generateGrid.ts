@@ -736,11 +736,9 @@ export function generateGrid(
                                     </>
                                 )`
                             : undefined,
-                        headerName: !column.headerInfoTooltip
-                            ? `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                                  column.headerName || camelCaseToHumanReadable(column.name)
-                              }" })`
-                            : undefined,
+                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
+                            column.headerName || camelCaseToHumanReadable(column.name)
+                        }" })`,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: !column.filterOperators && !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
