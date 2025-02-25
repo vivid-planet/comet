@@ -468,7 +468,14 @@ importers:
         version: 11.0.2
       next:
         specifier: ^14.2.24
+<<<<<<< HEAD
         version: 14.2.24(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+=======
+        version: 14.2.24(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
+      pure-react-carousel:
+        specifier: ^1.0.0
+        version: 1.30.1(react-dom@18.3.1)(react@18.3.1)
+>>>>>>> main
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -571,7 +578,14 @@ importers:
         version: 2.12.6(graphql@15.10.1)
       next:
         specifier: ^14.2.24
+<<<<<<< HEAD
         version: 14.2.24(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+=======
+        version: 14.2.24(@babel/core@7.22.11)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
+      pure-react-carousel:
+        specifier: ^1.0.0
+        version: 1.30.1(react-dom@18.3.1)(react@18.3.1)
+>>>>>>> main
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2132,10 +2146,17 @@ importers:
         version: 16.0.0
       next:
         specifier: ^14.2.24
+<<<<<<< HEAD
         version: 14.2.24(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
+=======
+        version: 14.2.24(@babel/core@7.22.11)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
+      npm-run-all:
+        specifier: ^4.1.5
+        version: 4.1.5
+>>>>>>> main
       prettier:
         specifier: ^3.5.2
         version: 3.5.2
@@ -5677,61 +5698,101 @@ packages:
   '@next/bundle-analyzer@14.2.24':
     resolution: {integrity: sha512-Dtu4mPkPqmcm81MPlSS2mv+rHf3rdp6S6gYDasH9Pzpdgo5SOvs4hxPiwfxYH7J9a+xkjvvtJ9b+LGw2zcon7w==}
 
+<<<<<<< HEAD
   '@next/env@14.2.24':
+=======
+  /@next/env@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-LAm0Is2KHTNT6IT16lxT+suD0u+VVfYNQqM+EJTKuFRRuY2z+zj01kueWXPCxbMBDt0B5vONYzabHGUNbZYAhA==}
 
   '@next/eslint-plugin-next@15.1.7':
     resolution: {integrity: sha512-kRP7RjSxfTO13NE317ek3mSGzoZlI33nc/i5hs1KaWpK+egs85xg0DJ4p32QEiHnR0mVjuUfhRIun7awqfL7pQ==}
 
+<<<<<<< HEAD
   '@next/swc-darwin-arm64@14.2.24':
+=======
+  /@next/swc-darwin-arm64@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-7Tdi13aojnAZGpapVU6meVSpNzgrFwZ8joDcNS8cJVNuP3zqqrLqeory9Xec5TJZR/stsGJdfwo8KeyloT3+rQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
+<<<<<<< HEAD
   '@next/swc-darwin-x64@14.2.24':
+=======
+  /@next/swc-darwin-x64@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-lXR2WQqUtu69l5JMdTwSvQUkdqAhEWOqJEYUQ21QczQsAlNOW2kWZCucA6b3EXmPbcvmHB1kSZDua/713d52xg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
+<<<<<<< HEAD
   '@next/swc-linux-arm64-gnu@14.2.24':
+=======
+  /@next/swc-linux-arm64-gnu@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-nxvJgWOpSNmzidYvvGDfXwxkijb6hL9+cjZx1PVG6urr2h2jUqBALkKjT7kpfurRWicK6hFOvarmaWsINT1hnA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
+<<<<<<< HEAD
   '@next/swc-linux-arm64-musl@14.2.24':
+=======
+  /@next/swc-linux-arm64-musl@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-PaBgOPhqa4Abxa3y/P92F3kklNPsiFjcjldQGT7kFmiY5nuFn8ClBEoX8GIpqU1ODP2y8P6hio6vTomx2Vy0UQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
+<<<<<<< HEAD
   '@next/swc-linux-x64-gnu@14.2.24':
+=======
+  /@next/swc-linux-x64-gnu@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-vEbyadiRI7GOr94hd2AB15LFVgcJZQWu7Cdi9cWjCMeCiUsHWA0U5BkGPuoYRnTxTn0HacuMb9NeAmStfBCLoQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
+<<<<<<< HEAD
   '@next/swc-linux-x64-musl@14.2.24':
+=======
+  /@next/swc-linux-x64-musl@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-df0FC9ptaYsd8nQCINCzFtDWtko8PNRTAU0/+d7hy47E0oC17tI54U/0NdGk7l/76jz1J377dvRjmt6IUdkpzQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
+<<<<<<< HEAD
   '@next/swc-win32-arm64-msvc@14.2.24':
+=======
+  /@next/swc-win32-arm64-msvc@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-ZEntbLjeYAJ286eAqbxpZHhDFYpYjArotQ+/TW9j7UROh0DUmX7wYDGtsTPpfCV8V+UoqHBPU7q9D4nDNH014Q==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
+<<<<<<< HEAD
   '@next/swc-win32-ia32-msvc@14.2.24':
+=======
+  /@next/swc-win32-ia32-msvc@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-9KuS+XUXM3T6v7leeWU0erpJ6NsFIwiTFD5nzNg8J5uo/DMIPvCp3L1Ao5HjbHX0gkWPB1VrKoo/Il4F0cGK2Q==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
+<<<<<<< HEAD
   '@next/swc-win32-x64-msvc@14.2.24':
+=======
+  /@next/swc-win32-x64-msvc@14.2.24:
+>>>>>>> main
     resolution: {integrity: sha512-cXcJ2+x0fXQ2CntaE00d7uUH+u1Bfp/E0HsNQH79YiLaZE5Rbm7dZzyAYccn3uICM7mw+DxoMqEfGXZtF4Fgaw==}
     engines: {node: '>= 10'}
     cpu: [x64]
@@ -31234,9 +31295,37 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+<<<<<<< HEAD
   next@14.2.24(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.24
+=======
+  /next-line@1.1.0:
+    resolution: {integrity: sha512-+I10J3wKNoKddNxn0CNpoZ3eTZuqxjNM3b1GImVx22+ePI+Y15P8g/j3WsbP0fhzzrFzrtjOAoq5NCCucswXOQ==}
+    dev: false
+
+  /next@14.2.24(@babel/core@7.22.11)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-En8VEexSJ0Py2FfVnRRh8gtERwDRaJGNvsvad47ShkC2Yi8AXQPXEA2vKoDJlGFSj5WE5SyF21zNi4M5gyi+SQ==}
+    engines: {node: '>=18.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      '@playwright/test': ^1.41.2
+      '@types/react': ^18.0.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@playwright/test':
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 14.2.24
+      '@opentelemetry/api': 1.9.0
+>>>>>>> main
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
       caniuse-lite: 1.0.30001690
@@ -31255,7 +31344,54 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.24
       '@next/swc-win32-ia32-msvc': 14.2.24
       '@next/swc-win32-x64-msvc': 14.2.24
+<<<<<<< HEAD
       '@opentelemetry/api': 1.9.0
+=======
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
+  /next@14.2.24(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-En8VEexSJ0Py2FfVnRRh8gtERwDRaJGNvsvad47ShkC2Yi8AXQPXEA2vKoDJlGFSj5WE5SyF21zNi4M5gyi+SQ==}
+    engines: {node: '>=18.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      '@playwright/test': ^1.41.2
+      '@types/react': ^18.0.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@playwright/test':
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 14.2.24
+      '@opentelemetry/api': 1.9.0
+      '@swc/helpers': 0.5.5
+      '@types/react': 18.3.18
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001680
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.26.0)(react@18.3.1)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.2.24
+      '@next/swc-darwin-x64': 14.2.24
+      '@next/swc-linux-arm64-gnu': 14.2.24
+      '@next/swc-linux-arm64-musl': 14.2.24
+      '@next/swc-linux-x64-gnu': 14.2.24
+      '@next/swc-linux-x64-musl': 14.2.24
+      '@next/swc-win32-arm64-msvc': 14.2.24
+      '@next/swc-win32-ia32-msvc': 14.2.24
+      '@next/swc-win32-x64-msvc': 14.2.24
+>>>>>>> main
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
