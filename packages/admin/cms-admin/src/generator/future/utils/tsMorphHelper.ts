@@ -190,7 +190,7 @@ function astExpressionToJson(node: Expression, path: string): any {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function exportedDeclarationToJson(node: ExportedDeclarations): any {
+function exportedDeclarationToJson(node: ExportedDeclarations): any {
     if (node.getKind() == SyntaxKind.VariableDeclaration) {
         const variableDeclaration = node as VariableDeclaration;
         const initializer = variableDeclaration.getInitializer();
