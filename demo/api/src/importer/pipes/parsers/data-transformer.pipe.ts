@@ -1,5 +1,5 @@
 import { LoggerService } from "@nestjs/common";
-import { CsvColumnMetadata } from "@src/importer/decorators/csv-column.decorator";
+import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
 import { FieldTransformerData } from "@src/importer/decorators/field-transformer.decorator";
 import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
 import {
@@ -14,6 +14,7 @@ import {
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { parse, parseISO } from "date-fns";
+import jp from "jsonpath";
 import { Transform, TransformCallback } from "stream";
 
 import { ImporterPipe, PipeData, ValidationError } from "../importer-pipe.type";
@@ -21,82 +22,101 @@ import { ImporterPipe, PipeData, ValidationError } from "../importer-pipe.type";
 type ValidateAndTransformValueProperties = {
     value: string;
     propertyMetadata: TargetEntityProperty;
-    field: CsvColumnMetadata;
+    field: ImportFieldMetadata;
 };
 
 type DataTransformOptions = {
-    fields: CsvColumnMetadata[];
+    fields: ImportFieldMetadata[];
     targetEntityProperties: TargetEntityProperties;
     entityDateFormatString?: string;
     fieldTransformers?: FieldTransformerData[];
 };
+type PipeDataAndErrors = {
+    data: PipeData;
+    errors: ValidationError[];
+};
 
-type PossibleValueTypes = string | number | boolean | Date | undefined | null;
+type PossibleValueTypes = string | number | boolean | Date | undefined | null | object;
 
-export class CsvDataTransformerPipe implements ImporterPipe {
-    constructor(private readonly options: DataTransformOptions, private readonly entity: ImporterEntityClass) {
+export class DataTransformerPipe implements ImporterPipe {
+    private readonly options: DataTransformOptions;
+
+    constructor(options: DataTransformOptions, private readonly entity: ImporterEntityClass) {
         this.options = options;
     }
 
-    getPipe(logger: LoggerService) {
-        return new CsvDataTransformer(this.options, logger, this.entity);
+    getPipe(runLogger: LoggerService) {
+        return new DataTransformer(this.options, runLogger, this.entity);
     }
 }
 
 type ParserPipeData = Record<string, string>;
 
-export class CsvDataTransformer extends Transform {
+export class DataTransformer extends Transform {
     constructor(
         private readonly options: DataTransformOptions,
         private readonly logger: LoggerService,
         private readonly entity: ImporterEntityClass,
     ) {
         super({ writableObjectMode: true, objectMode: true });
+        this.logger = logger;
+        this.options = options;
     }
 
     async _transform(inputData: ParserPipeData, encoding: BufferEncoding, callback: TransformCallback) {
         try {
-            const transformedDataAndMetadata = this.transformData(inputData);
-            const { data, errors } = await this.convertToInstanceAndValidate(transformedDataAndMetadata);
-            if (errors.length) {
-                this.logger.error(`Validation Errors: ${JSON.stringify(errors)}`);
+            const transformedDataAndErrors = this.transformData(inputData);
+            if (transformedDataAndErrors.errors.length > 0) {
+                transformedDataAndErrors.errors.forEach((error) => {
+                    this.logger.error(`Transformation Error: ${JSON.stringify(error)}`);
+                });
+                this.push(null);
+                return callback(new Error("Too many transformation errors"));
+            }
+            const { data, errors } = await this.convertToInstanceAndValidate(transformedDataAndErrors.data);
+            if (errors.length > 0) {
+                errors.forEach((error) => {
+                    this.logger.error(`Validation Errors: ${JSON.stringify(error)}`);
+                });
+                this.push(null);
+                return callback(new Error("Too many validation errors"));
             }
             this.push(data);
             // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            this.logger.error(`Error parsing Data: ${err}`);
+            this.logger.error(`Error transforming Data: ${err}`);
             this.emit("error", err);
-            return callback(null, err);
+            return callback(err);
         }
 
         callback();
     }
 
-    async convertToInstanceAndValidate(data: PipeData): Promise<{ data: PipeData; errors: ValidationError[] }> {
-        const instance = plainToInstance(this.entity, data) as PipeData;
+    async convertToInstanceAndValidate(data: PipeData): Promise<PipeDataAndErrors> {
+        const instance = plainToInstance(this.entity, data) as Record<string, unknown>;
         const classValidationErrors = await validate(instance);
-        const validationErrors = classValidationErrors.map((error) => {
+        const errors = classValidationErrors.map((error) => {
             const constraints = error.constraints || {};
             const errorMessage = Object.keys(constraints)
                 .map((constraintKey) => constraints[constraintKey])
                 .join(". ");
             return { ...error, errorMessage };
         });
-        const errors = [...validationErrors];
 
         return { data: instance, errors };
     }
 
-    transformData(inputData: ParserPipeData): PipeData {
+    transformData(inputData: ParserPipeData): PipeDataAndErrors {
         const { fieldTransformers, targetEntityProperties } = this.options;
         const outputData: Record<string, unknown> = {};
         const manualValidationErrors: ValidationError[] = [];
-
         for (const field of this.options.fields) {
             const propertyName = field.key;
             const propertyMetadata = targetEntityProperties[propertyName];
-            let value: string = inputData[propertyName];
+            const fieldPath = field.fieldPath;
 
+            const values = jp.query(inputData, fieldPath);
+            let value: string = values.length > 0 ? values[0] : undefined;
             if (value !== undefined) {
                 if (fieldTransformers) {
                     const possibleFieldTransformer = fieldTransformers.find((parser) => parser.key === propertyName);
@@ -112,15 +132,13 @@ export class CsvDataTransformer extends Transform {
             } else if (!isNullable(propertyMetadata)) {
                 manualValidationErrors.push({
                     property: field.key,
-                    name: `${field.csvColumnName}`.toUpperCase(),
+                    name: `${field.fieldPath}`.toUpperCase(),
                     errorMessage: "Non-nullable field is empty",
                     value,
                 });
             }
         }
-
-        return outputData;
-        // return { data: outputData, metadata: { ...inputData.metadata } }; //, errors: manualValidationErrors } };
+        return { data: outputData, errors: manualValidationErrors };
     }
 
     validateAndTransformValue({ value, propertyMetadata, field }: ValidateAndTransformValueProperties): {
@@ -128,20 +146,14 @@ export class CsvDataTransformer extends Transform {
         error?: ValidationError;
     } {
         let transformedValue: PossibleValueTypes = value;
-        const valueMappingHasEmptyString =
-            field.valueMapping &&
-            Object.keys(field.valueMapping).find((key: string) => {
-                return key === "";
-            }) !== undefined;
-        // Skip empty values if valueMapping contains a value for an empty string key for CSV
-        if (transformedValue === "" && !valueMappingHasEmptyString) {
+        if (transformedValue === "") {
             if (isNullable(propertyMetadata)) {
                 transformedValue = null;
             } else {
                 return {
                     error: {
                         property: field.key,
-                        name: `${field.csvColumnName}`.toUpperCase(),
+                        name: `${field.fieldPath}`.toUpperCase(),
                         errorMessage: "Non-nullable field is empty",
                         value,
                     },
@@ -155,7 +167,7 @@ export class CsvDataTransformer extends Transform {
                 return {
                     error: {
                         property: field.key,
-                        name: `${field.csvColumnName}`.toUpperCase(),
+                        name: `${field.fieldPath}`.toUpperCase(),
                         errorMessage: "Integer field is NaN",
                         value,
                     },
@@ -167,7 +179,7 @@ export class CsvDataTransformer extends Transform {
                 return {
                     error: {
                         property: field.key,
-                        name: `${field.csvColumnName}`.toUpperCase(),
+                        name: `${field.fieldPath}`.toUpperCase(),
                         errorMessage: "Float field is NaN",
                         value,
                     },
@@ -177,8 +189,6 @@ export class CsvDataTransformer extends Transform {
             let date: Date;
             if (field.dateFormatString) {
                 date = parse(transformedValue, field.dateFormatString, new Date());
-            } else if (this.options.entityDateFormatString) {
-                date = parse(transformedValue, this.options.entityDateFormatString, new Date());
             } else {
                 date = parseISO(transformedValue);
             }
@@ -186,7 +196,7 @@ export class CsvDataTransformer extends Transform {
                 return {
                     error: {
                         property: field.key,
-                        name: `${field.csvColumnName}`.toUpperCase(),
+                        name: `${field.fieldPath}`.toUpperCase(),
                         errorMessage: `Invalid Date: ${transformedValue}`,
                         value: transformedValue,
                     },
@@ -194,7 +204,6 @@ export class CsvDataTransformer extends Transform {
             }
             transformedValue = date;
         }
-
         return { data: transformedValue };
     }
 }

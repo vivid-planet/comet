@@ -1,6 +1,6 @@
 import * as csv from "@fast-csv/parse";
 import { HeaderArray, ParserOptionsArgs } from "@fast-csv/parse";
-import { CsvColumnMetadata } from "@src/importer/decorators/csv-column.decorator";
+import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
 
 import { ImporterPipe } from "../importer-pipe.type";
 
@@ -9,7 +9,7 @@ export type ParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: Bu
 export class CsvParsePipe implements ImporterPipe {
     private readonly parserOptions: ParserOptions;
 
-    constructor(parserOptions: ParserOptions, csvColumns: CsvColumnMetadata[]) {
+    constructor(parserOptions: ParserOptions, csvColumns: ImportFieldMetadata[]) {
         this.parserOptions = this.getParserOption(parserOptions, csvColumns);
     }
 
@@ -17,10 +17,10 @@ export class CsvParsePipe implements ImporterPipe {
         return csv.parse(this.parserOptions);
     }
 
-    private getParserOption(jobRunParserOptions: ParserOptions, csvColumns: CsvColumnMetadata[]) {
+    private getParserOption(jobRunParserOptions: ParserOptions, csvColumns: ImportFieldMetadata[]) {
         //check entity metadata for csv headers
-        const entityHasOnlyNumericCsvColumnNames = csvColumns.reduce((acc, column) => (typeof column.csvColumnName === "number" ? true : acc), false);
-        const entityHasOnlyStringCsvColumnNames = csvColumns.reduce((acc, column) => (typeof column.csvColumnName === "string" ? true : acc), false);
+        const entityHasOnlyNumericCsvColumnNames = csvColumns.reduce((acc, column) => (typeof column.fieldPath === "number" ? true : acc), false);
+        const entityHasOnlyStringCsvColumnNames = csvColumns.reduce((acc, column) => (typeof column.fieldPath === "string" ? true : acc), false);
         if (entityHasOnlyNumericCsvColumnNames && entityHasOnlyStringCsvColumnNames) {
             throw new Error(`Error importing: CSV column names must be either all property names or all indices`);
         }
@@ -43,7 +43,7 @@ export class CsvParsePipe implements ImporterPipe {
                                   return;
                               }
 
-                              const csvColumn = csvColumns.find((column) => (column.csvColumnName as string).toLowerCase() === header.toLowerCase());
+                              const csvColumn = csvColumns.find((column) => (column.fieldName as string).toLowerCase() === header.toLowerCase());
 
                               if (!csvColumn) {
                                   // There is no csvColumnName for this column. Will be ignored.

@@ -4,33 +4,34 @@ export interface ParsingOptions {
     valueMapping?: ValueMapping;
     dateFormatString?: string;
 }
-export interface CsvColumnMetadata extends ParsingOptions {
+export interface ImportFieldMetadata extends ParsingOptions {
     key: string;
-    csvColumnName: string | number;
+    fieldPath: string;
+    fieldName: string | number;
 }
 export interface ValueMapping {
     [key: string]: boolean | string;
 }
-const metadataKey = "csvColumns";
+const metadataKey = "fields";
 /**
  * Decorator to define a CSV column for an entity property. It defines the mapping between csv column and entity property.
- * @param {string} csvColumnName The name/header of the column in the csv file.
+ * @param {string} fieldName The name/header of the column in the csv file.
  * @param {ParsingOptions} parsingOptions - {@link ParsingOptions} Parsing options for the CSV column.
  * -------------------
  * *ParsingOptions:*
  * @property {{@link valueMapping}} valueMapping - A map defining boolean value representations
  * @property {string} dateFormatString - date-fns format string for parsing this column
  */
-export const CsvColumn = (csvColumnName: string | number, parsingOptions: Partial<ParsingOptions> = {}) => {
+export const CsvColumn = (fieldName: string | number, parsingOptions: Partial<ParsingOptions> = {}) => {
     const { valueMapping, dateFormatString } = parsingOptions;
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     return function (target: any, key: string) {
-        const csvColumns =
+        const fields =
             Reflect.getOwnMetadata(metadataKey, target.constructor) || (Reflect.getMetadata(metadataKey, target.constructor) || []).slice(0);
-        csvColumns.push({ key, csvColumnName, valueMapping, dateFormatString });
-        Reflect.defineMetadata(metadataKey, csvColumns, target.constructor);
+        fields.push({ key, fieldPath: key, fieldName, valueMapping, dateFormatString });
+        Reflect.defineMetadata(metadataKey, fields, target.constructor);
     };
 };
-export const getCsvColumns = (entity: ImporterEntityClass) => {
-    return Reflect.getOwnMetadata(metadataKey, entity) as CsvColumnMetadata[];
+export const getFields = (entity: ImporterEntityClass) => {
+    return Reflect.getOwnMetadata(metadataKey, entity) as ImportFieldMetadata[];
 };

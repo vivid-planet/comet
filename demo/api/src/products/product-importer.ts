@@ -34,10 +34,11 @@ export class ProductImporter {
         const dataStream = this.dataStream;
         if (dataStream) {
             return new Promise((resolve, reject) => {
-                return pipeline([dataStream.dataStream, ...this.transformPipes], (err) => {
+                return pipeline([dataStream.dataStream, ...this.transformPipes], (error) => {
                     this.transformPipes.map((stream) => stream.end());
-                    if (err) {
-                        reject(err);
+                    if (error) {
+                        this.logger.error(error);
+                        reject(error);
                     } else {
                         this.logger.log("DataStream piped successfully");
                         resolve(true);
