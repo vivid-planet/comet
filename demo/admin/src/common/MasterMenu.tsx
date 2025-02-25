@@ -24,11 +24,11 @@ import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
-import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
-import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
+import { CreateCapProductPage } from "@src/products/future/CreateCapProductPage";
+import { ManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
-import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
-import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
+import { ProductsPage } from "@src/products/future/ProductsPage";
+import { ProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import { type ContentScope } from "@src/site-configs";
@@ -211,47 +211,47 @@ export const masterMenuData: MasterMenuData = [
         items: [
             {
                 type: "collapsible",
-                primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
+                primary: <FormattedMessage id="menu.generator" defaultMessage="Generator" />,
                 icon: <Snips />,
                 items: [
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
                         route: {
-                            path: "/products-future",
-                            component: FutureProductsPage,
+                            path: "/products",
+                            component: ProductsPage,
                         },
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.createCapProductFuture" defaultMessage="Create Cap Product Future" />,
+                        primary: <FormattedMessage id="menu.createCapProduct" defaultMessage="Create Cap Product" />,
                         route: {
-                            path: "/create-cap-product-future",
-                            component: FutureCreateCapProductPage,
+                            path: "/create-cap-product",
+                            component: CreateCapProductPage,
                         },
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Manufacturers Future" />,
+                        primary: <FormattedMessage id="menu.manufacturers" defaultMessage="Manufacturers" />,
                         route: {
-                            path: "/manufacturers-future",
-                            component: FutureManufacturersPage,
+                            path: "/manufacturers",
+                            component: ManufacturersPage,
                         },
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products with low price Future" />,
+                        primary: <FormattedMessage id="menu.products" defaultMessage="Products with low price" />,
                         route: {
-                            path: "/products-with-low-price-future",
-                            component: FutureProductsWithLowPricePage,
+                            path: "/products-with-low-price",
+                            component: ProductsWithLowPricePage,
                         },
                     },
                     {
                         type: "route",
                         primary: <FormattedMessage id="menu.combinationFieldsTest" defaultMessage="Combination Fields Test" />,
-                        secondary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        secondary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
                         route: {
-                            path: "/combination-fields-test-products-future",
+                            path: "/combination-fields-test-products",
                             component: CombinationFieldsTestProductsPage,
                         },
                     },
