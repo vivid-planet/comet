@@ -9,9 +9,7 @@ export interface BaseImportInterface {
     deletedAt?: Date;
 }
 
-export interface ImporterEntityClass extends Constructor {
-    dateFormatString?: string;
-}
+export type ImporterEntityClass = Constructor;
 
 @ObjectType({ isAbstract: true, description: "Base import entity" })
 @Entity({ abstract: true })
@@ -42,5 +40,4 @@ export abstract class BaseTargetEntity<Entity extends object, Primary extends ke
         nullable: true,
     })
     deletedAt?: Date;
-    static dateFormatString?: string;
 }
