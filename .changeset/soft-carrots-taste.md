@@ -3,4 +3,4 @@
 "@comet/admin": patch
 ---
 
-Add styling of `Button` variants to align with Comet DXP design
+Adapt styling of `Button` variants to align with Comet DXP design
