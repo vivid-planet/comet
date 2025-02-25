@@ -182,7 +182,6 @@ export type GeneratorReturn = { code: string; gqlDocuments: GQLDocumentConfigMap
 
 /**
  * @experimental
- * @param filePattern
  */
 async function runGenerate(filePattern = "src/**/*.cometGen.ts") {
     const schema = await loadSchema("./schema.gql", {
