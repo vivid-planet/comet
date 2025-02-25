@@ -196,7 +196,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return { ...replacedFile, fileUrl };
         }
 
-        @Get(`/preview/:contentHash?/${fileUrl}`)
+        @Get(`/preview{/:contentHash}/${fileUrl}`)
         async previewFileUrl(
             @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
@@ -220,7 +220,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
-        @Get(`/download/preview/:contentHash?/${fileUrl}`)
+        @Get(`/download/preview{/:contentHash}/${fileUrl}`)
         async previewDownloadFile(
             @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
@@ -246,7 +246,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/download/:hash/:contentHash?/${fileUrl}`)
+        @Get(`/download/:hash{/:contentHash}/${fileUrl}`)
         async downloadFile(
             @Param() { hash, contentHash, ...params }: HashFileParams,
             @Res() res: Response,
@@ -271,7 +271,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/:hash/:contentHash?/${fileUrl}`)
+        @Get(`/:hash{/:contentHash}/${fileUrl}`)
         async hashedFileUrl(
             @Param() { hash, contentHash, ...params }: HashFileParams,
             @Res() res: Response,
