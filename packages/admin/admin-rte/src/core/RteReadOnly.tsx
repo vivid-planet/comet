@@ -1,14 +1,14 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { Editor as DraftJsEditor, EditorState } from "draft-js";
+import { Editor as DraftJsEditor, type EditorState } from "draft-js";
 import { useRef } from "react";
 
 import defaultBlocktypeMap, { cleanBlockTypeMap, mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import { styleMap } from "./Rte";
-import { IBlocktypeMap as IBlocktypeMap, ICustomBlockTypeMap_Deprecated } from "./types";
+import { type IBlocktypeMap as IBlocktypeMap, type ICustomBlockTypeMap_Deprecated } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
-export interface IRteReadOnlyOptions {
+interface IRteReadOnlyOptions {
     blocktypeMap: IBlocktypeMap;
     /**
      * @deprecated use `blocktypeMap` instead

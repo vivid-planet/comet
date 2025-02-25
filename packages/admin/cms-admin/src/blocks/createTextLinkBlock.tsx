@@ -1,27 +1,27 @@
 import { Field, FinalFormInput, messages } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    composeBlocks,
-    createBlockSkeleton,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
-import * as React from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
+import { type TextLinkBlockData, type TextLinkBlockInput } from "../blocks.generated";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
+import { BlockCategory, type BlockInterface, type BlockState } from "./types";
 
 interface CreateTextLinkBlockOptions {
     name?: string;
+    displayName?: ReactNode;
     link: BlockInterface;
 }
 
-export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: CreateTextLinkBlockOptions): BlockInterface {
+export function createTextLinkBlock(
+    { link: LinkBlock, name = "TextLink", displayName = <FormattedMessage {...messages.link} /> }: CreateTextLinkBlockOptions,
+    override?: (block: BlockInterface) => BlockInterface,
+): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
 
     const block = withAdditionalBlockAttributes<Pick<TextLinkBlockData, "text">>({
@@ -34,7 +34,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
 
         name,
 
-        displayName: <FormattedMessage {...messages.link} />,
+        displayName,
 
         category: BlockCategory.Navigation,
 
@@ -44,7 +44,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
             const { link } = composedApi.adminComponents({ state, updateState: decomposeUpdateStateAction(updateState, ["link"]) });
 
             return (
-                <AdminComponentPaper disablePadding>
+                <BlockAdminComponentPaper disablePadding>
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
                             onSubmit={({ text }) => {
@@ -56,7 +56,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
                         </BlocksFinalForm>
                     </Box>
                     {link}
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             );
         },
 
@@ -64,6 +64,10 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
 
         dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
     };
+
+    if (override) {
+        return override(TextLinkBlock);
+    }
 
     return TextLinkBlock;
 }

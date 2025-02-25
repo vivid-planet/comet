@@ -1,8 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { filterByFragment, FinalForm, type FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -13,15 +13,15 @@ import {
     updateProductTagMutation,
 } from "./ProductTagForm.gql";
 import {
-    GQLCheckForChangesProductTagQuery,
-    GQLCheckForChangesProductTagQueryVariables,
-    GQLProductTagFormCreateProductTagMutation,
-    GQLProductTagFormCreateProductTagMutationVariables,
-    GQLProductTagFormFragment,
-    GQLProductTagFormUpdateProductTagMutation,
-    GQLProductTagFormUpdateProductTagMutationVariables,
-    GQLProductTagQuery,
-    GQLProductTagQueryVariables,
+    type GQLCheckForChangesProductTagQuery,
+    type GQLCheckForChangesProductTagQueryVariables,
+    type GQLProductTagFormCreateProductTagMutation,
+    type GQLProductTagFormCreateProductTagMutationVariables,
+    type GQLProductTagFormFragment,
+    type GQLProductTagFormUpdateProductTagMutation,
+    type GQLProductTagFormUpdateProductTagMutationVariables,
+    type GQLProductTagQuery,
+    type GQLProductTagQueryVariables,
 } from "./ProductTagForm.gql.generated";
 
 interface FormProps {
@@ -95,7 +95,7 @@ function ProductTagForm({ id }: FormProps) {
     };
 
     if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
     }
 
     if (loading) {

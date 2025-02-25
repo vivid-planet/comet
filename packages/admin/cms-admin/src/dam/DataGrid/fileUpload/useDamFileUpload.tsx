@@ -1,20 +1,26 @@
 import { useApolloClient } from "@apollo/client";
-import axios, { AxiosError, CancelTokenSource } from "axios";
-import * as mimedb from "mime-db";
-import * as React from "react";
-import { Accept, FileRejection } from "react-dropzone";
+import axios, { type AxiosError, type CancelTokenSource } from "axios";
+import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { type Accept, type FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
-import { upload } from "../../../form/file/upload";
+import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
+import { type GQLLicenseInput } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
-import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
+import {
+    type DuplicateAction,
+    type FilenameData,
+    useManualDuplicatedFilenamesHandler,
+} from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
+import { convertMimetypesToDropzoneAccept } from "./fileUpload.utils";
+import { type NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
+    FilenameTooLongError,
     FileSizeError,
     MaxResolutionError,
     MissingFileExtensionError,
@@ -24,17 +30,21 @@ import {
 import { ProgressDialog } from "./ProgressDialog";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import {
-    GQLDamFolderByNameAndParentIdQuery,
-    GQLDamFolderByNameAndParentIdQueryVariables,
-    GQLDamFolderForFolderUploadMutation,
-    GQLDamFolderForFolderUploadMutationVariables,
+    type GQLDamFolderByNameAndParentIdQuery,
+    type GQLDamFolderByNameAndParentIdQueryVariables,
+    type GQLDamFolderForFolderUploadMutation,
+    type GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-interface FileWithPath extends File {
+export interface FileWithDamUploadMetadata extends File {
     path?: string;
+    license?: GQLLicenseInput;
+    title?: string;
+    altText?: string;
+    importSource?: ImportSource;
 }
 
-export interface FileWithFolderPath extends FileWithPath {
+export interface FileWithFolderPath extends FileWithDamUploadMetadata {
     folderPath?: string;
 }
 
@@ -43,7 +53,7 @@ interface UploadDamFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithPath[];
+    acceptedFiles: FileWithDamUploadMetadata[];
     fileRejections: FileRejection[];
 }
 
@@ -51,6 +61,9 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 
 interface UploadFilesOptions {
     folderId?: string;
+    /**
+     * @deprecated Set `importSource` directly on the file
+     */
     importSource?: ImportSource;
 }
 
@@ -61,7 +74,7 @@ export interface FileUploadApi {
     ) => Promise<{ hasError: boolean; rejectedFiles: RejectedFile[]; uploadedItems: NewlyUploadedItem[] }>;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;
-    dialogs: React.ReactNode;
+    dialogs: ReactNode;
     dropzoneConfig: {
         accept: Accept;
         multiple: boolean;
@@ -72,22 +85,23 @@ export interface FileUploadApi {
 
 export interface FileUploadValidationError {
     file: Pick<FileWithFolderPath, "name" | "path">;
-    message: React.ReactNode;
+    message: ReactNode;
 }
 
 interface RejectedFile {
     file: File;
 }
 
-const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
         let harmonizedPath: string | undefined;
-        // when files are uploaded via input field, the path does not have a "/" prefix
-        // when files are uploaded via drag and drop, the path does have a "/" prefix
-        // if the path has a "/" prefix, this prefix is removed => path is harmonized
-        if (file.path?.startsWith("/")) {
+        // when a file is uploaded, the file path is prefixed with "./"
+        // when a folder is uploaded via drag and drop, the file paths are prefixed with "/"
+        // when a folder is uploaded via input field, the file paths don't have any prefix
+        if (file.path?.startsWith("./") || file.path?.startsWith("/")) {
+            // if the path has a "./" or "/" prefix, this prefix is removed => path is harmonized
             harmonizedPath = file.path?.split("/").splice(1).join("/");
         } else {
             harmonizedPath = file.path;
@@ -102,6 +116,10 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
         const buffer = await file.arrayBuffer();
         const newFile: FileWithFolderPath = new File([buffer], file.name, { lastModified: file.lastModified, type: file.type });
         newFile.path = file.path;
+        newFile.license = file.license;
+        newFile.title = file.title;
+        newFile.altText = file.altText;
+        newFile.importSource = file.importSource;
 
         const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
         newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
@@ -119,44 +137,26 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     const scope = useDamScope();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-    const accept: Accept = React.useMemo(() => {
-        const acceptObj: Accept = {};
-        const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
-
-        acceptedMimetypes.forEach((mimetype) => {
-            let extensions: readonly string[] | undefined;
-            if (mimetype === "application/x-zip-compressed") {
-                // zip files in Windows, not supported by mime-db
-                // see https://github.com/jshttp/mime-db/issues/245
-                extensions = ["zip"];
-            } else {
-                extensions = mimedb[mimetype]?.extensions;
-            }
-
-            if (extensions) {
-                acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
-            }
-        });
-
-        return acceptObj;
+    const accept: Accept = useMemo(() => {
+        return convertMimetypesToDropzoneAccept(options.acceptedMimetypes ?? allAcceptedMimeTypes);
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
     const { newlyUploadedItems, addNewlyUploadedItems } = useFileUploadContext();
 
-    const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
-    const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
-    const [errorDialogOpen, setErrorDialogOpen] = React.useState<boolean>(false);
-    const [totalSizes, setTotalSizes] = React.useState<{ [key: string]: number }>({});
-    const [uploadedSizes, setUploadedSizes] = React.useState<{ [key: string]: number }>({});
+    const [progressDialogOpen, setProgressDialogOpen] = useState<boolean>(false);
+    const [validationErrors, setValidationErrors] = useState<FileUploadValidationError[] | undefined>();
+    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [totalSizes, setTotalSizes] = useState<{ [key: string]: number }>({});
+    const [uploadedSizes, setUploadedSizes] = useState<{ [key: string]: number }>({});
 
     const totalSize = Object.values(totalSizes).length > 0 ? Object.values(totalSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
     const uploadedSize = Object.values(uploadedSizes).length > 0 ? Object.values(uploadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
 
     const maxFileSizeInMegabytes = context.damConfig.maxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
-    const cancelUpload = React.useRef<CancelTokenSource>();
+    const cancelUpload = useRef<CancelTokenSource>();
 
-    const addValidationError = (file: FileWithFolderPath, newError: React.ReactNode) => {
+    const addValidationError = (file: FileWithFolderPath, newError: ReactNode) => {
         setValidationErrors((prevErrors) => {
             const existingErrors = prevErrors ?? [];
             return [...existingErrors, { file, message: newError }];
@@ -167,7 +167,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         setUploadedSizes((prev) => ({ ...prev, [path]: value }));
     };
 
-    const generateValidationErrorsForRejectedFiles = React.useCallback(
+    const generateValidationErrorsForRejectedFiles = useCallback(
         (fileRejections: FileRejection[]) => {
             for (const fileRejection of fileRejections) {
                 if (fileRejection.file.size > maxFileSizeInBytes) {
@@ -183,7 +183,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [accept, maxFileSizeInBytes],
     );
 
-    const lookupDamFolder = React.useCallback(
+    const lookupDamFolder = useCallback(
         async (folderName: string, parentId?: string) => {
             const { data } = await client.query<GQLDamFolderByNameAndParentIdQuery, GQLDamFolderByNameAndParentIdQueryVariables>({
                 query: damFolderByNameAndParentId,
@@ -200,7 +200,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [client, scope],
     );
 
-    const createDamFolder = React.useCallback(
+    const createDamFolder = useCallback(
         async (folderName: string, parentId?: string) => {
             const { data } = await client.mutate<GQLDamFolderForFolderUploadMutation, GQLDamFolderForFolderUploadMutationVariables>({
                 mutation: createDamFolderForFolderUpload,
@@ -220,7 +220,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [client, scope],
     );
 
-    const createInitialFolderIdMap = React.useCallback(
+    const createInitialFolderIdMap = useCallback(
         async (files: FileWithFolderPath[], currFolderId?: string) => {
             const folderIdMap = new Map<string, string>();
             const lookupCache = new Map<string, string | undefined>();
@@ -274,7 +274,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [lookupDamFolder],
     );
 
-    const createFoldersIfNecessary = React.useCallback(
+    const createFoldersIfNecessary = useCallback(
         async (externalFolderIdMap: Map<string, string>, file: FileWithFolderPath, currFolderId?: string) => {
             const newlyCreatedFolderIds: Array<{ id: string; parentId?: string }> = [];
             const folderIdMap = new Map(externalFolderIdMap);
@@ -324,14 +324,14 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         return filesToUpload;
     };
 
-    const handleDuplicatedFilenames = React.useCallback(
+    const handleDuplicatedFilenames = useCallback(
         async (
             filesWithFolderPaths: FileWithFolderPath[],
             currentFolderId: string | undefined,
             folderIdMap: Map<string, string>,
-        ): Promise<FileWithFolderPath[]> => {
+        ): Promise<{ filesToUpload: FileWithFolderPath[]; duplicateAction: DuplicateAction }> => {
             if (manualDuplicatedFilenamesHandler === undefined) {
-                return filesWithFolderPaths;
+                return { filesToUpload: filesWithFolderPaths, duplicateAction: "skip" };
             }
 
             const filesInNewDir: FileWithFolderPath[] = [];
@@ -350,17 +350,17 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                 }
             }
 
-            const revisedFilenameDataList = await manualDuplicatedFilenamesHandler?.letUserHandleDuplicates(
+            const userSelection = await manualDuplicatedFilenamesHandler?.letUserHandleDuplicates(
                 filesInExistingDir.map((file) => ({
                     name: file.name,
                     folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId,
                 })),
             );
 
-            const filesToUpload = mapFilenameDataToFiles(revisedFilenameDataList, filesWithFolderPaths, currentFolderId, folderIdMap);
+            const filesToUpload = mapFilenameDataToFiles(userSelection.filenames, filesWithFolderPaths, currentFolderId, folderIdMap);
 
             filesToUpload.push(...filesInNewDir);
-            return filesToUpload;
+            return { filesToUpload, duplicateAction: userSelection.duplicateAction };
         },
         [manualDuplicatedFilenamesHandler],
     );
@@ -393,7 +393,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
             }
             setTotalSizes(fileSizes);
 
-            const filesToUpload = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
+            const { filesToUpload, duplicateAction } = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
 
             cancelUpload.current = axios.CancelToken.source();
             for (const file of filesToUpload) {
@@ -410,22 +410,27 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                 const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
                 try {
-                    const response: { data: { id: string } } = await upload(
-                        context.damConfig.apiClient,
-                        {
-                            file,
-                            folderId: targetFolderId,
-                            scope,
-                            importSourceId: importSource?.importSourceId,
-                            importSourceType: importSource?.importSourceType,
-                        },
-                        cancelUpload.current.token,
-                        {
-                            onUploadProgress: (progressEvent: ProgressEvent) => {
-                                updateLoadedSize(file.path ?? "", progressEvent.loaded);
-                            },
-                        },
-                    );
+                    const uploadConfig = {
+                        file,
+                        folderId: targetFolderId,
+                        scope,
+                        importSourceId: importSource?.importSourceId,
+                        importSourceType: importSource?.importSourceType,
+                    };
+
+                    const onUploadProgress = (progressEvent: ProgressEvent) => {
+                        updateLoadedSize(file.path ?? "", progressEvent.loaded);
+                    };
+
+                    const uploadParams = {
+                        apiClient: context.damConfig.apiClient,
+                        data: uploadConfig,
+                        cancelToken: cancelUpload.current.token,
+                        options: { onUploadProgress },
+                    };
+
+                    const response: { data: { id: string } } =
+                        duplicateAction === "replace" ? await replaceByFilenameAndFolder(uploadParams) : await upload(uploadParams);
 
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
@@ -444,10 +449,12 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                             addValidationError(file, <MissingFileExtensionError />);
                         } else if (message.includes("File type and extension mismatch")) {
                             addValidationError(file, <FileExtensionTypeMismatchError extension={extension} mimetype={file.type} />);
+                        } else if (message.includes("Filename is too long")) {
+                            addValidationError(file, <FilenameTooLongError />);
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response?.data.message === "Rejected File Upload: SVG must not contain JavaScript") {
+                    } else if (typedErr.response?.data.message.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
                     } else if (typedErr.response === undefined && typedErr.request) {
                         addValidationError(file, <NetworkError />);

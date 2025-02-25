@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 

@@ -1,11 +1,11 @@
-import { DocumentNode } from "graphql";
-import * as React from "react";
+import { type DocumentNode } from "graphql";
+import { createContext, type ReactNode } from "react";
 
-import { DocumentInterface, DocumentType } from "../../documents/types";
-import { TreeMap } from "./treemap/TreeMapUtils";
-import { GQLPageTreePageFragment } from "./usePageTree";
+import { type DocumentInterface, type DocumentType } from "../../documents/types";
+import { type TreeMap } from "./treemap/TreeMapUtils";
+import { type GQLPageTreePageFragment } from "./usePageTree";
 
-export type AllCategories = Array<{ category: string; label: React.ReactNode }>;
+export type AllCategories = Array<{ category: string; label: ReactNode }>;
 
 export interface PageTreeContext {
     allCategories: AllCategories;
@@ -16,4 +16,4 @@ export interface PageTreeContext {
     query: DocumentNode;
 }
 
-export const PageTreeContext = React.createContext<PageTreeContext | undefined>(undefined);
+export const PageTreeContext = createContext<PageTreeContext | undefined>(undefined);

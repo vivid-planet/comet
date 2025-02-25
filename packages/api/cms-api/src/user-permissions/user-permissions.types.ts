@@ -1,11 +1,10 @@
-import { ModuleMetadata, Type } from "@nestjs/common";
-import { JwtPayload } from "jsonwebtoken";
+import { type ModuleMetadata, type Type } from "@nestjs/common";
 
-import { CurrentUser } from "./dto/current-user";
-import { FindUsersArgs } from "./dto/paginated-user-list";
-import { UserPermission } from "./entities/user-permission.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
-import { User } from "./interfaces/user";
+import { type CurrentUser } from "./dto/current-user";
+import { type FindUsersArgs } from "./dto/paginated-user-list";
+import { type UserPermission } from "./entities/user-permission.entity";
+import { type ContentScope } from "./interfaces/content-scope.interface";
+import { type User } from "./interfaces/user";
 
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
@@ -26,14 +25,13 @@ export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentSc
 
 export interface AccessControlServiceInterface {
     isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
-    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
+    getPermissionsForUser?: (user: User, availablePermissions: string[]) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
 export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
-    createUserFromIdToken?: (idToken: JwtPayload) => Promise<User> | User;
 }
 
 export interface UserPermissionsOptions {

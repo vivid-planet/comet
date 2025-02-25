@@ -1,9 +1,9 @@
-import { ButtonBase, ButtonBaseProps, ComponentsOverrides, Theme, Typography } from "@mui/material";
+import { type ButtonBase, type ButtonBaseProps, type ComponentsOverrides, type Theme, type Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { AppHeaderButtonClassKey, Content, EndIcon, Root, StartIcon, Text } from "./AppHeaderButton.styles";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type AppHeaderButtonClassKey, Content, EndIcon, Root, StartIcon, Text } from "./AppHeaderButton.styles";
 
 export interface AppHeaderButtonProps
     extends ButtonBaseProps,

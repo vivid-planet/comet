@@ -1,21 +1,26 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import React from "react";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
-    GQLAvailablePermissionsQuery,
-    GQLAvailablePermissionsQueryVariables,
-    GQLCreateUserPermissionMutation,
-    GQLCreateUserPermissionMutationVariables,
-    GQLPermissionQuery,
-    GQLPermissionQueryVariables,
-    GQLUpdateUserPermissionMutation,
-    GQLUpdateUserPermissionMutationVariables,
-    GQLUserPermissionDialogFragment,
+    type GQLAvailablePermissionsQuery,
+    type GQLAvailablePermissionsQueryVariables,
+    type GQLCreateUserPermissionMutation,
+    type GQLCreateUserPermissionMutationVariables,
+    type GQLPermissionQuery,
+    type GQLPermissionQueryVariables,
+    type GQLUpdateUserPermissionMutation,
+    type GQLUpdateUserPermissionMutationVariables,
+    type GQLUserPermissionDialogFragment,
     namedOperations,
 } from "./PermissionDialog.generated";
 
@@ -24,7 +29,7 @@ interface FormProps {
     permissionId: string | "add";
     handleDialogClose: () => void;
 }
-export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
+export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: FormProps) => {
     const client = useApolloClient();
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data
@@ -82,13 +87,11 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
     const { data: availablePermissionsData, error: availablePermissionsError } = useQuery<
         GQLAvailablePermissionsQuery,
         GQLAvailablePermissionsQueryVariables
-    >(
-        gql`
-            query AvailablePermissions {
-                availablePermissions: userPermissionsAvailablePermissions
-            }
-        `,
-    );
+    >(gql`
+        query AvailablePermissions {
+            availablePermissions: userPermissionsAvailablePermissions
+        }
+    `);
 
     if (error) {
         throw new Error(error.message);

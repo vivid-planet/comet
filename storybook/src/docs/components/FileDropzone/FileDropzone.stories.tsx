@@ -1,19 +1,24 @@
 import { FileDropzone } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import { type Meta } from "@storybook/react";
 
-storiesOf("stories/components/FileDropzone", module)
-    .addDecorator((story) => (
-        <Card>
-            <CardContent>
-                <Stack gap={4} direction="row">
-                    {story()}
-                </Stack>
-            </CardContent>
-        </Card>
-    ))
-    .add("Default", () => {
+export default {
+    title: "Docs/Components/FileDropzone",
+    decorators: [
+        (story) => (
+            <Card>
+                <CardContent>
+                    <Stack gap={4} direction="row">
+                        {story()}
+                    </Stack>
+                </CardContent>
+            </Card>
+        ),
+    ],
+} as Meta<typeof FileDropzone>;
+
+export const Default = {
+    render: () => {
         return (
             <FileDropzone
                 onDrop={(acceptedFiles, fileRejections) => {
@@ -21,8 +26,11 @@ storiesOf("stories/components/FileDropzone", module)
                 }}
             />
         );
-    })
-    .add("Disabled and error states", () => {
+    },
+};
+
+export const DisabledAndErrorStates = {
+    render: () => {
         return (
             <>
                 <FileDropzone
@@ -39,4 +47,6 @@ storiesOf("stories/components/FileDropzone", module)
                 />
             </>
         );
-    });
+    },
+    name: "Disabled and error states",
+};

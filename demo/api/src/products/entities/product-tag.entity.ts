@@ -1,5 +1,5 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, ManyToMany, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, ManyToMany, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
@@ -9,7 +9,7 @@ import { ProductToTag } from "./product-to-tag.entity";
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
-export class ProductTag extends BaseEntity<ProductTag, "id"> {
+export class ProductTag extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

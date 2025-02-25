@@ -1,7 +1,7 @@
 import { DeviceDesktop, DevicePhone, DeviceResponsive, DeviceTablet } from "@comet/admin-icons";
 import { ToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { type MouseEvent } from "react";
 
 import { Device } from "./Device";
 import { ToggleButton } from "./ToggleButton";
@@ -11,8 +11,8 @@ interface Props {
     onChange: (device: Device) => void;
 }
 
-function DeviceToggle({ device, onChange }: Props): React.ReactElement {
-    const handleDeviceChange = (event: React.MouseEvent<HTMLElement>, newDevice: Device | null) => {
+function DeviceToggle({ device, onChange }: Props) {
+    const handleDeviceChange = (event: MouseEvent<HTMLElement>, newDevice: Device | null) => {
         if (newDevice === null) {
             // Disable deselection
             return;

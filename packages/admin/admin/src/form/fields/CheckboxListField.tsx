@@ -1,11 +1,12 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
-import { Field, FieldProps } from "../Field";
+import { Field, type FieldProps } from "../Field";
 
 type CheckboxListFieldOption<Value extends string> = {
     label: ReactNode;
     value: Value;
+    disabled?: boolean;
 };
 
 export type CheckboxListFieldProps<Value extends string> = FieldProps<[Value], HTMLInputElement> & {
@@ -23,7 +24,9 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
                             key={option.value}
                             label={option.label}
                             value={option.value}
+                            disabled={option.disabled}
                             name={name}
+                            checked={value.includes(option.value)}
                             onChange={(_, checked) => {
                                 if (checked) {
                                     onChange([...value, option.value]);

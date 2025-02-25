@@ -1,8 +1,7 @@
 import { Music } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
-import { DamFileDetails } from "../EditFile";
+import { type DamFileDetails } from "../EditFile";
 
 const AudioPreviewWrapper = styled("div")`
     width: 100%;
@@ -48,7 +47,7 @@ interface AudioPreviewProps {
     file: DamFileDetails;
 }
 
-export const AudioPreview = ({ file }: AudioPreviewProps): React.ReactElement => {
+export const AudioPreview = ({ file }: AudioPreviewProps) => {
     return (
         <AudioPreviewWrapper>
             <MusicIconContainer>

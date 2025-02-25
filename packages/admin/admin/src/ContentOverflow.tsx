@@ -1,21 +1,22 @@
 import { Close, Maximize } from "@comet/admin-icons";
 import {
     ButtonBase,
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
+    // eslint-disable-next-line no-restricted-imports
     Dialog as MuiDialog,
     DialogContent as MuiDialogContent,
     DialogTitle as MuiDialogTitle,
     IconButton,
     Paper,
-    Theme,
+    type Theme,
     useThemeProps,
 } from "@mui/material";
-import { PropsWithChildren, ReactNode, useState } from "react";
+import { type PropsWithChildren, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "./helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 
 export type ContentOverflowClassKey =
     | "root"
@@ -150,29 +151,25 @@ const Dialog = createComponentSlot(MuiDialog)<ContentOverflowClassKey>({
 const DialogPaper = createComponentSlot(Paper)<ContentOverflowClassKey>({
     componentName: "ContentOverflow",
     slotName: "dialogPaper",
-})(
-    css`
-        overflow: hidden;
+})(css`
+    overflow: hidden;
 
-        // TODO: Consider a generic solution for height and max-height in dialogs.
-        height: calc(100vh - 100px);
+    // TODO: Consider a generic solution for height and max-height in dialogs.
+    height: calc(100vh - 100px);
 
-        && {
-            max-height: 600px;
-        }
-    `,
-);
+    && {
+        max-height: 600px;
+    }
+`);
 
 const DialogTitle = createComponentSlot(MuiDialogTitle)<ContentOverflowClassKey>({
     componentName: "ContentOverflow",
     slotName: "dialogTitle",
-})(
-    css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    `,
-);
+})(css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`);
 
 const CloseDialogButton = createComponentSlot(IconButton)<ContentOverflowClassKey>({
     componentName: "ContentOverflow",

@@ -1,5 +1,5 @@
 import { Warning } from "@comet/admin-icons";
-import { Button, DialogContent, Theme } from "@mui/material";
+import { DialogContent, type Theme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const ConfirmDialogContent = styled(DialogContent)`
@@ -31,12 +31,4 @@ export const WarningHeading = styled("h3")`
 
 export const WarningText = styled("p")`
     margin: 5px 0 0;
-`;
-
-export const ActionButton = styled(Button)`
-    font-weight: normal;
-`;
-
-export const DeleteButton = styled(ActionButton)`
-    text-transform: uppercase;
 `;

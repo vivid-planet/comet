@@ -1,8 +1,8 @@
-import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

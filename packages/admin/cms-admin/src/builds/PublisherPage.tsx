@@ -1,15 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
-import { Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
-import { GQLBuildsQuery } from "./PublisherPage.generated";
+import { type GQLBuildsQuery } from "./PublisherPage.generated";
 
 const buildsQuery = gql`
     query Builds {
@@ -30,11 +29,14 @@ const DataGridContainer = styled("div")`
     height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
 `;
 
-export function PublisherPage(): React.ReactElement {
+export function PublisherPage() {
     const intl = useIntl();
 
-    const { data, loading, error } = useQuery<GQLBuildsQuery, undefined>(buildsQuery);
+    const { data, loading, error } = useQuery<GQLBuildsQuery>(buildsQuery);
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.builds ?? [];
 
     return (
@@ -43,7 +45,7 @@ export function PublisherPage(): React.ReactElement {
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
                 </ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <PublishButton />
                 </ToolbarActions>
@@ -53,7 +55,6 @@ export function PublisherPage(): React.ReactElement {
                 <DataGrid
                     rows={rows}
                     loading={loading}
-                    error={error}
                     columns={[
                         {
                             field: "name",
@@ -66,10 +67,10 @@ export function PublisherPage(): React.ReactElement {
                         {
                             field: "runtime",
                             headerName: intl.formatMessage({ id: "comet.pages.publisher.runtime", defaultMessage: "Runtime" }),
-                            valueGetter: (params) => {
+                            valueGetter: (params, row) => {
                                 return {
-                                    startTime: params.row.startTime,
-                                    completionTime: params.row.completionTime,
+                                    startTime: row.startTime,
+                                    completionTime: row.completionTime,
                                 };
                             },
                             renderCell: (params) => {

@@ -1,7 +1,17 @@
-import { createRichTextBlock, createTextLinkBlock, ExternalLinkBlock, getBlocksMeta } from "@comet/blocks-api";
 import { promises as fs } from "fs";
 
-import { createLinkBlock, createSeoBlock, createTextImageBlock, EmailLinkBlock, InternalLinkBlock, PhoneLinkBlock } from "./src";
+import {
+    createLinkBlock,
+    createRichTextBlock,
+    createSeoBlock,
+    createTextImageBlock,
+    createTextLinkBlock,
+    EmailLinkBlock,
+    ExternalLinkBlock,
+    getBlocksMeta,
+    InternalLinkBlock,
+    PhoneLinkBlock,
+} from "./src";
 
 async function generateBlockMeta(): Promise<void> {
     console.info("Generating block-meta.json...");
