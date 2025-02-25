@@ -66,6 +66,10 @@
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@sentry/node"]
         },
+        "packages/api-generator": {
+            "entry": ["./src/apiGenerator.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "packages/cms-site": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
