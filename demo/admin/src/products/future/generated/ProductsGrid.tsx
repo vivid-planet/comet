@@ -56,14 +56,14 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        title
-        price
-        type
         category {
             title
         }
-        inStock
+        title
         description
+        price
+        inStock
+        type
         availableSince
         createdAt
         manufacturer {

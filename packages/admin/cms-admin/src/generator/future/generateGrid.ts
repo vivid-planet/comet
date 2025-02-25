@@ -24,6 +24,7 @@ import {
     type GridColumnConfig,
     type GridConfig,
     type StaticSelectLabelCellContent,
+    type VirtualGridColumnConfig,
 } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { convertConfigImport } from "./utils/convertConfigImport";
@@ -324,7 +325,9 @@ export function generateGrid(
     const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
     const gridColumnFields = (
-        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<any> | GridCombinationColumnConfig<string>>
+        config.columns.filter((column) => column.type !== "actions") as Array<
+            GridColumnConfig<any> | GridCombinationColumnConfig<string> | VirtualGridColumnConfig<any>
+        >
     ).map((column) => {
         const type = column.type;
         const name = String(column.name);
@@ -336,7 +339,7 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         let filterOperators: string | undefined;
-        if (column.type != "combination" && column.filterOperators) {
+        if (column.type != "combination" && column.type != "virtual" && column.filterOperators) {
             const configFilterOperators = column.filterOperators as any; // TODO: improve typing, generator runtime vs. config mismatch
             if (configFilterOperators.import) {
                 imports.push(convertConfigImport(configFilterOperators));
@@ -435,12 +438,19 @@ export function generateGrid(
                 pinned: column.pinned,
                 disableExport: column.disableExport,
             };
+        } else if (type == "virtual") {
+            //noop
         } else if (type == "combination") {
             renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         if (
-            (column.type == "text" || column.type == "number" || column.type == "boolean" || column.type == "date" || column.type == "dateTime") &&
+            (column.type == "text" ||
+                column.type == "number" ||
+                column.type == "boolean" ||
+                column.type == "date" ||
+                column.type == "dateTime" ||
+                column.type == "virtual") &&
             column.renderCell
         ) {
             if ("code" in column.renderCell) {
