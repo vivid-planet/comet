@@ -14,7 +14,9 @@ export const OptionalDimensions = function () {
 
     const values: ContentScopeValues<ContentScope> = [
         { organizationId: { value: "organization-1", label: "Organization 1" } },
+        { organizationId: { value: "organization-2", label: "Organization 2" } },
         { channelId: { value: "channel-1", label: "Channel 1" } },
+        { channelId: { value: "channel-2", label: "Channel 2" } },
     ];
 
     function PrintContentScope() {
@@ -24,22 +26,7 @@ export const OptionalDimensions = function () {
     }
 
     return (
-        <ContentScopeProvider
-            values={values}
-            defaultValue={{ organizationId: "organization-1" }}
-            location={{
-                createPath: () => ["/organization/:organizationId", "/channel/:channelId"],
-                createUrl: (scope) => {
-                    if (scope.organizationId) {
-                        return `/organization/${scope.organizationId}`;
-                    } else if (scope.channelId) {
-                        return `/channel/${scope.channelId}`;
-                    } else {
-                        throw new Error("Invalid scope");
-                    }
-                },
-            }}
-        >
+        <ContentScopeProvider values={values} defaultValue={{ organizationId: "organization-1" }}>
             {({ match }) => {
                 return (
                     <>
