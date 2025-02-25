@@ -1,13 +1,15 @@
-import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
-import { Add, Delete } from "@comet/admin-icons";
+import { Field, type FieldProps, FinalFormInput, FinalFormSelect, Loading, messages } from "@comet/admin";
+import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
-import { Field as ReactFinalFormField } from "react-final-form";
+import { useState } from "react";
+import { Field as ReactFinalFormField, useForm } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
+import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
 import { validateUrl } from "../validation/validateUrl";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -21,6 +23,7 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { type SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
 import { type BlockInterface, type BlockState } from "./types";
@@ -73,6 +76,8 @@ export function createSeoBlock(
             const priorityOptions = useSitemapPagePriorityFormOptions();
             const changeFrequencyOptions = useSitemapChangeFrequencyFormOptions();
 
+            const generateSeoTag = useSeoTagGeneration();
+
             return (
                 <div>
                     <BlocksFinalForm
@@ -121,22 +126,24 @@ export function createSeoBlock(
                                 <FormattedMessage id="comet.blocks.seo.meta.sectionTitle" defaultMessage="Meta Tags" />
                             </Typography>
 
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.html  Title",
                                     defaultMessage: "HTML Title",
                                 })}
                                 name="htmlTitle"
+                                generateSeoTag={generateSeoTag}
                                 component={FinalFormInput}
                                 fullWidth
                             />
 
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.metaDescription",
                                     defaultMessage: "Meta Description",
                                 })}
                                 name="metaDescription"
+                                generateSeoTag={generateSeoTag}
                                 multiline
                                 rows={3}
                                 rowsMax={5}
@@ -150,21 +157,23 @@ export function createSeoBlock(
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.openGraph.sectionTitle" defaultMessage="Open Graph" />
                             </Typography>
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.openGraphTitle",
                                     defaultMessage: "Title",
                                 })}
                                 name="openGraphTitle"
+                                generateSeoTag={generateSeoTag}
                                 component={FinalFormInput}
                                 fullWidth
                             />
-                            <Field
+                            <FieldWithContentGeneration
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.openGraphDescription",
                                     defaultMessage: "Description",
                                 })}
                                 name="openGraphDescription"
+                                generateSeoTag={generateSeoTag}
                                 multiline={true}
                                 rows={3}
                                 rowsMax={5}
@@ -333,6 +342,47 @@ export function createSeoBlock(
     }
 
     return SeoBlock;
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+interface FieldWithContentGenerationProps<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>
+    extends FieldProps<FieldValue, FieldElement> {
+    name: SeoTag;
+    generateSeoTag: (tag: SeoTag, currentValue: string | undefined) => Promise<string>;
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+function FieldWithContentGeneration<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
+    name,
+    generateSeoTag,
+    endAdornment: passedEndAdornment,
+    ...props
+}: FieldWithContentGenerationProps<FieldValue, FieldElement>) {
+    const contentGenerationConfig = useContentGenerationConfig();
+    const formApi = useForm();
+
+    const [loading, setLoading] = useState(false);
+
+    const endAdornment = contentGenerationConfig?.seo ? (
+        <>
+            {passedEndAdornment}
+            <IconButton
+                color="primary"
+                onClick={async () => {
+                    setLoading(true);
+                    const seoTag = await generateSeoTag(name, formApi.getFieldState(name)?.value);
+                    setLoading(false);
+                    formApi.change(name, seoTag);
+                }}
+            >
+                {loading ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+            </IconButton>
+        </>
+    ) : (
+        passedEndAdornment
+    );
+
+    return <Field name={name} endAdornment={endAdornment} {...props} />;
 }
 
 const AddButtonContent = styled("span")`
