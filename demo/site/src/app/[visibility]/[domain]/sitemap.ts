@@ -1,3 +1,5 @@
+import { createSiteUrl } from "@src/util/createSiteUrl";
+
 export const dynamic = "force-dynamic"; // don't generate at build time
 
 import { gql } from "@comet/cms-site";
@@ -40,7 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         const seoBlock = pageTreeNode.document.seo;
                         if (!seoBlock.noIndex) {
                             sitemap.push({
-                                url: `${siteConfig.url}/${language}${pageTreeNode.path}`,
+                                url: `${siteConfig.url}${createSiteUrl({
+                                    scope: {
+                                        language: language,
+                                    },
+                                    path: pageTreeNode.path,
+                                })}`,
                                 priority: Number(seoBlock.priority.replace("_", ".")),
                                 changeFrequency: seoBlock.changeFrequency,
                                 lastModified: pageTreeNode.document.updatedAt,
