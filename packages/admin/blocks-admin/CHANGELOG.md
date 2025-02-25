@@ -1,5 +1,15 @@
 # @comet/blocks-admin
 
+## 7.14.1
+
+### Patch Changes
+
+-   e056e8f3d: Change "Add column" button label in `createColumnsBlock` to "Add item"
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [6827982fe]
+    -   @comet/admin@7.14.1
+    -   @comet/admin-icons@7.14.1
+
 ## 7.14.0
 
 ### Minor Changes

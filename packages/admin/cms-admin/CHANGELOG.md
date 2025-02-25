@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 7.14.1
+
+### Patch Changes
+
+-   46ab330da: Adapt styling of the dashboard header to match the Comet DXP design
+-   Updated dependencies [e056e8f3d]
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [6827982fe]
+    -   @comet/blocks-admin@7.14.1
+    -   @comet/admin@7.14.1
+    -   @comet/admin-date-time@7.14.1
+    -   @comet/admin-icons@7.14.1
+    -   @comet/admin-rte@7.14.1
+    -   @comet/admin-theme@7.14.1
+
 ## 7.14.0
 
 ### Minor Changes
