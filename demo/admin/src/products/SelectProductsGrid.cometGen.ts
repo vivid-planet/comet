@@ -4,7 +4,7 @@ import { type GQLProduct } from "@src/graphql.generated";
 export const SelectProductsGrid: GridConfig<GQLProduct> = {
     type: "grid",
     gqlType: "Product",
-    fragmentName: "SelectProductsGridFuture",
+    fragmentName: "SelectProductsGrid",
     readOnly: true,
     selectionProps: "multiSelect",
     columns: [

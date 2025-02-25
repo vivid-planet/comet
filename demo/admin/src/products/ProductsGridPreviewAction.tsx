@@ -9,13 +9,12 @@ import {
     Typography,
 } from "@mui/material";
 import { type GridCellParams, type GridValidRowModel } from "@mui/x-data-grid-pro";
-import { type GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type GQLProductsGridFutureFragment } from "./generated/ProductsGrid.generated";
+import { type GQLProductsFormFragment } from "./generated/ProductsGrid.generated";
 
-type Props = GridCellParams<GridValidRowModel, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
+type Props = GridCellParams<GridValidRowModel, GQLProductsFormFragment>;
 
 export const ProductsGridPreviewAction = ({ row }: Props) => {
     const [showDetails, setShowDetails] = useState(false);

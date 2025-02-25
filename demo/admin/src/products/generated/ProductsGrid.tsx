@@ -47,13 +47,13 @@ import {
     type GQLCreateProductMutationVariables,
     type GQLDeleteProductMutation,
     type GQLDeleteProductMutationVariables,
-    type GQLProductsGridFutureFragment,
+    type GQLProductsFormFragment,
     type GQLProductsGridQuery,
     type GQLProductsGridQueryVariables,
 } from "./ProductsGrid.generated";
 
 const productsFragment = gql`
-    fragment ProductsGridFuture on Product {
+    fragment ProductsForm on Product {
         id
         title
         price
@@ -75,7 +75,7 @@ const productsQuery = gql`
     query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
         products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
-                ...ProductsGridFuture
+                ...ProductsForm
             }
             totalCount
         }
@@ -137,7 +137,7 @@ type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLProductsFormFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
@@ -160,7 +160,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
 
     const theme = useTheme();
 
-    const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductsFormFragment>[] = [
         {
             field: "overview",
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),

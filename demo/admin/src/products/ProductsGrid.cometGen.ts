@@ -6,7 +6,6 @@ const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
 export const ProductsGrid: GridConfig<GQLProduct> = {
     type: "grid",
     gqlType: "Product",
-    fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
     filterProp: true,
     toolbarActionProp: true,
     rowActionProp: true,

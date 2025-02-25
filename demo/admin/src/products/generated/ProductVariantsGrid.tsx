@@ -30,13 +30,13 @@ import {
     type GQLCreateProductVariantMutationVariables,
     type GQLDeleteProductVariantMutation,
     type GQLDeleteProductVariantMutationVariables,
-    type GQLProductVariantsGridFutureFragment,
+    type GQLProductVariantsFormFragment,
     type GQLProductVariantsGridQuery,
     type GQLProductVariantsGridQueryVariables,
 } from "./ProductVariantsGrid.generated";
 
 const productVariantsFragment = gql`
-    fragment ProductVariantsGridFuture on ProductVariant {
+    fragment ProductVariantsForm on ProductVariant {
         id
         name
         createdAt
@@ -54,7 +54,7 @@ const productVariantsQuery = gql`
     ) {
         productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
-                ...ProductVariantsGridFuture
+                ...ProductVariantsForm
             }
             totalCount
         }
@@ -88,7 +88,7 @@ function ProductVariantsGridToolbar() {
             <FillSpace />
             <ToolbarActions>
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />
+                    <FormattedMessage id="productVariant.productVariantsForm.newEntry" defaultMessage="New Product Variant" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
@@ -109,7 +109,7 @@ export function ProductVariantsGrid({ product }: Props) {
         ...usePersistentColumnState("ProductVariantsGrid"),
     };
 
-    const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductVariantsFormFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             ...dataGridDateColumn,

@@ -4,7 +4,6 @@ import { type GQLManufacturer } from "@src/graphql.generated";
 export const ManufacturersGrid: GridConfig<GQLManufacturer> = {
     type: "grid",
     gqlType: "Manufacturer",
-    fragmentName: "ManufacturersGridFuture", // configurable as it must be unique across project
     queryParamsPrefix: "manufacturers",
     newEntryText: "Add Manufacturer",
     columns: [
