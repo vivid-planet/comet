@@ -19,3 +19,4 @@ subpage
 typesafe
 exif
 brevo
+Traefik
