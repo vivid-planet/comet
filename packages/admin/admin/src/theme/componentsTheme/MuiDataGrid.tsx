@@ -14,8 +14,9 @@ import {
     type TextFieldProps,
 } from "@mui/material";
 import { type Spacing } from "@mui/system";
-import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
+import { getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
+import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
@@ -50,7 +51,21 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ...component?.defaultProps?.slots,
         },
         localeText: {
-            noRowsLabel: GRID_DEFAULT_LOCALE_TEXT.noResultsOverlayLabel,
+            MuiTablePagination: {
+                labelDisplayedRows: ({ from, to, count }) => (
+                    <FormattedMessage
+                        id="dataGrid.pagination.labelDisplayedRows"
+                        defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
+                        values={{
+                            from: <FormattedNumber value={from} />,
+                            to: <FormattedNumber value={to} />,
+                            formattedCount: <FormattedNumber value={count} />,
+                            count,
+                        }}
+                    />
+                ),
+                ...component?.defaultProps?.localeText?.MuiTablePagination,
+            },
             ...component?.defaultProps?.localeText,
         },
     },
