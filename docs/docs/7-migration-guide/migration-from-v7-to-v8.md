@@ -220,7 +220,7 @@ npx @comet/upgrade v8/update-class-validator.ts
 {
     "dependencies": {
 -       "@sentry/node": "^7.0.0",
-+       "@sentry/node": "^8.0.0",
++       "@sentry/node": "^9.0.0",
     },
 }
 ```
@@ -233,6 +233,11 @@ npx @comet/upgrade v8/update-class-validator.ts
 -   app.use(Sentry.Handlers.errorHandler());
 +   Sentry.setupExpressErrorHandler(app);
 ```
+
+None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
+
+- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
+- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
 
 ### NestJS peer dependencies
 
