@@ -24,7 +24,7 @@
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
-        "test": "jest",
+        "test": "jest --passWithNoTests",
         "test:watch": "jest --watch"
     },
     "dependencies": {

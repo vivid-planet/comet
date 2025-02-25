@@ -1,5 +1,4 @@
 module.exports = {
-    setupFilesAfterEnv: ["./jest-setup-file.ts"],
     reporters: ["default"],
     testEnvironment: "node",
     transform: {
