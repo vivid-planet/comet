@@ -1,5 +1,42 @@
 # @comet/cms-api
 
+## 7.14.0
+
+### Minor Changes
+
+- 99ff0357b: Pass available permissions to `AccessControlService.getPermissionsForUser`
+- a84d88cf9: Ignore filters in `@AffectedEntity` check
+
+    When using the `@AffectedEntity` decorator we possibly also want to check entities which are filtered by default. Since we don't know how the entity is handled in the resolver we ignore the filters completely.
+
+- 3c47c089e: Allow passing a language to `generateAltText` and `generateImageTitle`
+- bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    - HTML title
+    - Meta description
+    - Open Graph title
+    - Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+- 7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    - if the state is a string: the string itself
+    - otherwise: an empty array
+
+### Patch Changes
+
+- 0233d486b: Export `FileUploadInput`
+- 7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+- Updated dependencies [7e7a4aae1]
+    - @comet/blocks-api@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
