@@ -41,7 +41,7 @@ import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
-import { ManufacturerFilterOperator } from "./ManufacturerFilter";
+import { ManufacturerFilterOperators } from "./ManufacturerFilter";
 import {
     type GQLCreateProductMutation,
     type GQLCreateProductMutationVariables,
@@ -302,7 +302,7 @@ export function ProductsGrid() {
             headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
             sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
-            filterOperators: [ManufacturerFilterOperator],
+            filterOperators: ManufacturerFilterOperators,
             disableExport: true,
         },
         {

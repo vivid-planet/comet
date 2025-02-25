@@ -23,14 +23,12 @@ import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
-import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
-import { CreateCapProductPage } from "@src/products/future/CreateCapProductPage";
-import { ManufacturersPage } from "@src/products/future/ManufacturersPage";
-import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
-import { ProductsPage } from "@src/products/future/ProductsPage";
-import { ProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
-import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
-import ProductsHandmadePage from "@src/products/ProductsPage";
+import { CombinationFieldsTestProductsPage } from "@src/products/CombinationFieldsTestProductsPage";
+import { CreateCapProductPage } from "@src/products/CreateCapProductPage";
+import { ManufacturersPage as ManufacturersHandmadePage, ManufacturersPage } from "@src/products/ManufacturersPage";
+import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
+import { ProductsPage } from "@src/products/ProductsPage";
+import { ProductsWithLowPricePage } from "@src/products/ProductsWithLowPricePage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
@@ -262,14 +260,6 @@ export const masterMenuData: MasterMenuData = [
                 primary: <FormattedMessage id="menu.handmade" defaultMessage="Handmade" />,
                 icon: <Snips />,
                 items: [
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productsHandmade" defaultMessage="Products Handmade" />,
-                        route: {
-                            path: "/products-handmade",
-                            component: ProductsHandmadePage,
-                        },
-                    },
                     {
                         type: "route",
                         primary: <FormattedMessage id="menu.manufacturersHandmade" defaultMessage="Manufacturers Handmade" />,

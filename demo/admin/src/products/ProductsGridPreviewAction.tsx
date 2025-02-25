@@ -9,10 +9,11 @@ import {
     Typography,
 } from "@mui/material";
 import { type GridCellParams, type GridValidRowModel } from "@mui/x-data-grid-pro";
-import { type GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
 import { type GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
+
+import { type GQLProductsGridFutureFragment } from "./generated/ProductsGrid.generated";
 
 type Props = GridCellParams<GridValidRowModel, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
 

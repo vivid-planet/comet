@@ -6,7 +6,7 @@ import {
     type GQLSetProductCategoryMutation,
     type GQLSetProductCategoryMutationVariables,
 } from "@src/products/future/AssignProductsGrid.generated";
-import { ProductsGrid as SelectProductsGrid } from "@src/products/future/generated/SelectProductsGrid";
+import { ProductsGrid as SelectProductsGrid } from "@src/products/generated/SelectProductsGrid";
 import isEqual from "lodash.isequal";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";

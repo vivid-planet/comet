@@ -106,7 +106,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         },
         {
             type: "actions",
-            component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
+            component: { name: "ProductsGridPreviewAction", import: "../ProductsGridPreviewAction" },
         },
     ],
 };
