@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 7.14.1
+
+### Patch Changes
+
+-   e6f9641db: Add fallback values for users created via ID token
+    -   @comet/blocks-api@7.14.1
+
 ## 7.14.0
 
 ### Minor Changes
