@@ -96,11 +96,11 @@ export const SearchInput = ({
                         <Typography variant="body2" sx={{ marginRight: 2 }}>
                             {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
                         </Typography>
-                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="medium">
-                            <ChevronUp color="secondary" />
+                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="medium" color="secondary">
+                            <ChevronUp />
                         </IconButton>
-                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="medium">
-                            <ChevronDown color="secondary" />
+                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="medium" color="secondary">
+                            <ChevronDown />
                         </IconButton>
                         <IconButton onClick={handleClearClick} size="medium">
                             <Clear />
