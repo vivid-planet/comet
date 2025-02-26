@@ -4,7 +4,7 @@
 
 Merge `@comet/admin-theme` into `@comet/admin`
 
-The following exports have been moved from `@comet/admin-theme` to `@comet/admin`: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
+This affects the following exports: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
 
 `@mui/utils` has been added as a peer dependency.
 
