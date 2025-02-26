@@ -43,7 +43,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             "&:focus": {
-                border: `2px solid ${palette.primary.dark}`,
+                outline: `2px solid ${palette.primary.dark}`,
             },
 
             ...(ownerState.color === "info" && {
@@ -77,7 +77,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
 
             "&:focus": {
                 backgroundColor: palette.primary.main,
-                border: `2px solid  ${palette.primary.dark}`,
+                outline: `2px solid  ${palette.primary.dark}`,
             },
         },
         containedSecondary: {
@@ -90,7 +90,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             "&:focus": {
-                border: `2px solid  ${palette.primary.dark}`,
+                outline: `2px solid  ${palette.primary.dark}`,
             },
         },
         containedSuccess: {
@@ -99,7 +99,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             "&:focus": {
-                border: `2px solid  ${palette.success.dark}`,
+                outline: `2px solid  ${palette.success.dark}`,
             },
         },
         outlined: {
@@ -134,7 +134,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             "&:focus": {
-                border: `2px solid ${palette.error.main} `,
+                outline: `2px solid ${palette.error.main} `,
             },
         },
         startIcon: {
