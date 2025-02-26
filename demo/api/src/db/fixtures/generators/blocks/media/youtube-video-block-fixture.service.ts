@@ -10,7 +10,7 @@ export class YouTubeVideoBlockFixtureService {
     constructor(private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof YouTubeVideoBlock>> {
-        const identifier = ["Ye8Oih0oxWs", "erpaPEGn7X0"];
+        const identifier = ["dQw4w9WgXcQ"];
         const autoplay = faker.datatype.boolean();
 
         return {

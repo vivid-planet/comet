@@ -10,7 +10,7 @@ export class VimeoVideoBlockFixtureService {
     constructor(private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService) {}
 
     async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof VimeoVideoBlock>> {
-        const identifier = ["Ye8Oih0oxWs", "erpaPEGn7X0"];
+        const identifier = ["76979871"];
         const autoplay = faker.datatype.boolean();
 
         return {
