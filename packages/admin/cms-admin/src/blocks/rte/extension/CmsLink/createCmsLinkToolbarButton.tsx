@@ -134,7 +134,11 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                 <StyledDialogActions>
                     <CancelButton onClick={handleClose} />
                     <ButtonContainer>
-                        {linkEntity && <DeleteButton onClick={handleRemove} />}
+                        {linkEntity && (
+                            <DeleteButton onClick={handleRemove}>
+                                <FormattedMessage id="comet.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
+                            </DeleteButton>
+                        )}
                         <OkayButton onClick={handleUpdate} />
                     </ButtonContainer>
                 </StyledDialogActions>
