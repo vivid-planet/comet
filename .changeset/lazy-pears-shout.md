@@ -2,7 +2,7 @@
 "@comet/admin": major
 ---
 
-Remove the `@comet/admin-theme` package and move all of its exports into `@comet/admin`
+Merge `@comet/admin-theme` into `@comet/admin`
 
 This includes the following values and functions: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
 
