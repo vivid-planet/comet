@@ -13,7 +13,7 @@ export type ImporterEntityClass = Constructor;
 
 @ObjectType({ isAbstract: true, description: "Base import entity" })
 @Entity({ abstract: true })
-export abstract class BaseTargetEntity<Entity extends object, Primary extends keyof Entity>
+export abstract class BaseImportTargetEntity<Entity extends object, Primary extends keyof Entity>
     extends BaseEntity<Entity, Primary>
     implements BaseImportInterface
 {

@@ -5,7 +5,7 @@ import { Field, InputType, Int, ObjectType, registerEnumType } from "@nestjs/gra
 import { CsvColumn } from "@src/importer/decorators/csv-column.decorator";
 import { FieldTransformer } from "@src/importer/decorators/field-transformer.decorator";
 import { TargetEntity } from "@src/importer/decorators/target-entity.decorator";
-import { BaseTargetEntity } from "@src/importer/entities/base-target.entity";
+import { BaseImportTargetEntity } from "@src/importer/entities/base-import-target.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
@@ -70,7 +70,7 @@ export class ProductPriceRange {
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @TargetEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseTargetEntity<Product, "id"> {
+export class Product extends BaseImportTargetEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @Property()

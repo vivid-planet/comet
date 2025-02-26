@@ -1,6 +1,6 @@
 import { FilterQuery } from "@mikro-orm/core";
 
-import { ImporterEntityClass } from "../entities/base-target.entity";
+import { ImporterEntityClass } from "../entities/base-import-target.entity";
 import { PipeData } from "../pipes/importer-pipe.type";
 
 export type PreProcessor = (inputData: PipeData) => Record<string, unknown>;

@@ -1,7 +1,7 @@
 import { EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
 import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
-import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
+import { ImporterEntityClass } from "@src/importer/entities/base-import-target.entity";
 import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Transform } from "stream";
 

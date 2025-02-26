@@ -1,7 +1,7 @@
 import { LoggerService } from "@nestjs/common";
 import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
 import { FieldTransformerData } from "@src/importer/decorators/field-transformer.decorator";
-import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
+import { ImporterEntityClass } from "@src/importer/entities/base-import-target.entity";
 import {
     columnIsBoolean,
     columnIsDate,

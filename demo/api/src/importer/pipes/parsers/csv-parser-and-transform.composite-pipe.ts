@@ -2,7 +2,7 @@ import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
 import { getFields, ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
 import { FieldTransformerData, getFieldTransformers } from "@src/importer/decorators/field-transformer.decorator";
-import { ImporterEntityClass } from "@src/importer/entities/base-target.entity";
+import { ImporterEntityClass } from "@src/importer/entities/base-import-target.entity";
 import { getEntityProperties, TargetEntityProperties } from "@src/importer/entities/target-entity.utils";
 import { Transform } from "stream";
 

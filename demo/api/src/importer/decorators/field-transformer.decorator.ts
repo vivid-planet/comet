@@ -1,4 +1,4 @@
-import { ImporterEntityClass } from "../entities/base-target.entity";
+import { ImporterEntityClass } from "../entities/base-import-target.entity";
 
 export interface FieldTransformerData {
     key: string;
