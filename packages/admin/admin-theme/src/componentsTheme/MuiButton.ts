@@ -40,7 +40,6 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
 
             "&:hover": {
                 color: palette.primary.main,
-                backgroundColor: "transparent",
             },
 
             "&:focus": {
