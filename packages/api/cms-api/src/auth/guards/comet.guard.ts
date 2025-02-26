@@ -2,10 +2,12 @@ import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedExceptio
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
+import { SystemUser } from "src/user-permissions/user-permissions.types";
 
 import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { User } from "../../user-permissions/interfaces/user";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
-import { AuthServiceInterface } from "../util/auth-service.interface";
+import { AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
 @Injectable()
 export class CometAuthGuard implements CanActivate {
@@ -15,7 +17,7 @@ export class CometAuthGuard implements CanActivate {
         @Inject("COMET_AUTH_SERVICES") private readonly authServices: AuthServiceInterface[],
     ) {}
 
-    private getRequest(context: ExecutionContext): Request & { user: CurrentUser } {
+    private getRequest(context: ExecutionContext): Request & { user: CurrentUser | SystemUser } {
         return context.getType().toString() === "graphql"
             ? GqlExecutionContext.create(context).getContext().req
             : context.switchToHttp().getRequest();
@@ -34,21 +36,28 @@ export class CometAuthGuard implements CanActivate {
             return true;
         }
 
-        let user = await this.getAuthenticatedUser(request);
-        if (!user) return false;
+        const result = await this.getAuthenticatedUser(request);
+        if (!result) return false;
+        if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);
 
-        if (typeof user === "string") {
-            const userId = user;
-            const userService = this.service.getUserService();
-            if (!userService) throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
-            try {
-                user = await userService.getUser(userId); // TODO Cache this call
-            } catch (e) {
-                throw new UnauthorizedException(`Could not get user from UserService: ${userId} - ${(e as Error).message}`);
+        if ("systemUser" in result) {
+            request["user"] = result.systemUser;
+        } else {
+            let user: User;
+            if ("userId" in result) {
+                const userId = result.userId;
+                const userService = this.service.getUserService();
+                if (!userService) throw new UnauthorizedException(`User authenticated by ID but no user service given: ${userId}`);
+                try {
+                    user = await userService.getUser(userId); // TODO Cache this call
+                } catch (e) {
+                    throw new UnauthorizedException(`Could not get user from UserService: ${userId} - ${(e as Error).message}`);
+                }
+            } else {
+                user = result.user;
             }
+            request["user"] = await this.service.createCurrentUser(user);
         }
-
-        request["user"] = await this.service.createCurrentUser(user);
 
         return true;
     }
@@ -56,7 +65,7 @@ export class CometAuthGuard implements CanActivate {
     private async getAuthenticatedUser(request: Request) {
         for (const authService of this.authServices) {
             const user = await authService.authenticateUser(request);
-            if (user) return user;
+            if (user && user !== SKIP_AUTH_SERVICE) return user;
         }
     }
 
