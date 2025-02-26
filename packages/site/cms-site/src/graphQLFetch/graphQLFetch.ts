@@ -20,6 +20,7 @@ export function convertPreviewDataToHeaders(previewData?: SitePreviewData) {
     // authentication is required when this header is used
     if (includeInvisibleContentHeaderEntries.length > 0) {
         headers["x-include-invisible-content"] = includeInvisibleContentHeaderEntries.join(",");
+        headers["x-preview-dam-urls"] = "1";
     }
     return headers;
 }

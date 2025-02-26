@@ -29,6 +29,7 @@ export function createGraphQLFetch() {
             },
             headers: {
                 authorization: `Basic ${Buffer.from(`system-user:${process.env.BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                "x-relative-dam-urls": "1",
                 ...convertPreviewDataToHeaders(previewData),
             },
         }),

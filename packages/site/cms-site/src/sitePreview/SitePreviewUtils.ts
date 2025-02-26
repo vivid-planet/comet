@@ -7,6 +7,7 @@ export type SitePreviewData = {
     includeInvisible: boolean;
 };
 export type SitePreviewParams = {
+    userId: string;
     scope: Scope;
     path: string;
     previewData?: SitePreviewData;
