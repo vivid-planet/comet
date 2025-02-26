@@ -196,14 +196,17 @@ export function generateGrid(
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
     const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
+    const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
     const hasCreateMutation = !!createMutationType;
+    const hasUpdateMutation = !!updateMutationType;
 
     const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
     const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
+    const allowRowReordering = typeof config.rowReordering !== "undefined" && config.rowReordering && hasUpdateMutation;
 
     const forwardRowAction = allowEditing && config.rowActionProp;
 
@@ -224,7 +227,7 @@ export function generateGrid(
     const renderToolbar = config.toolbar ?? true;
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    const hasFilter = !!filterArg && renderToolbar;
+    const hasFilter = !!filterArg && renderToolbar && !allowRowReordering;
     let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
@@ -275,9 +278,12 @@ export function generateGrid(
             | undefined;
         if (!sortInputEnum) throw new Error("Can't find sortInputEnum");
         sortFields = sortInputEnum.enumValues.map((v) => v.name.replace(/_/g, "."));
+        if (allowRowReordering && !sortFields.includes("position")) {
+            throw new Error("Sort argument must include 'position' field for row reordering");
+        }
     }
 
-    const hasSearch = gridQueryType.args.some((arg) => arg.name === "search");
+    const hasSearch = gridQueryType.args.some((arg) => arg.name === "search") && !allowRowReordering;
     const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
@@ -570,7 +576,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -578,6 +584,8 @@ export function generateGrid(
         GQL${fragmentName}Fragment,
         GQLCreate${gqlType}Mutation,
         GQLCreate${gqlType}MutationVariables,
+        GQLUpdate${gqlType}PositionMutation,
+        GQLUpdate${gqlType}PositionMutationVariables,
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
@@ -623,6 +631,21 @@ export function generateGrid(
         \${${instanceGqlTypePlural}Fragment}
     \`;
 
+
+
+    ${
+        allowRowReordering
+            ? `const update${gqlType}PositionMutation = gql\`
+                mutation Update${gqlType}Position($id: ID!, ${[...[`$input: ${gqlType}UpdateInput!`]]}) {
+                    update${gqlType}(id: $id, input: $input) {
+                        id
+                        position
+                        updatedAt
+                    }
+                }
+            \`;`
+            : ""
+    }
 
     ${
         allowDeleting
@@ -690,6 +713,20 @@ export function generateGrid(
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
+        ${
+            allowRowReordering
+                ? `
+        const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
+            await client.mutate<GQLUpdate${gqlType}PositionMutation, GQLUpdate${gqlType}PositionMutationVariables>({
+                mutation: update${gqlType}PositionMutation,
+                variables: { id, input: { position: targetIndex + 1 } },
+                awaitRefetchQueries: true,
+                refetchQueries: [${instanceGqlTypePlural}Query]
+            });
+        };`
+                : ""
+        }
+
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
@@ -742,8 +779,8 @@ export function generateGrid(
                               }" })`
                             : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
-                        filterable: !column.filterOperators && !filterFields.includes(column.name) ? `false` : undefined,
-                        sortable: !sortFields.includes(column.name) ? `false` : undefined,
+                        filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
+                        sortable: !sortFields.includes(column.name) || allowRowReordering ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueFormatter: column.valueFormatter,
                         valueOptions: column.valueOptions,
@@ -888,11 +925,14 @@ export function generateGrid(
                             : []
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
-                    ...[
-                        `offset: dataGridProps.page * dataGridProps.pageSize`,
-                        `limit: dataGridProps.pageSize`,
-                        `sort: muiGridSortToGql(dataGridProps.sortModel)`,
-                    ],
+                    ...(!allowRowReordering
+                        ? [
+                              `offset: dataGridProps.page * dataGridProps.pageSize`,
+                              `limit: dataGridProps.pageSize`,
+                              `sort: muiGridSortToGql(dataGridProps.sortModel)`,
+                          ]
+                        : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
+                          [`offset: 0`, `limit: 100`, `sort: { field: "position", direction: "ASC" }`]),
                 ].join(", ")}
             },
         });
@@ -916,6 +956,13 @@ export function generateGrid(
                                 Toolbar: ${gridToolbarComponentName},
                             }}
                             ${getDataGridComponentsProps(forwardToolbarAction, config.excelExport)}`
+                        : ""
+                }
+                ${
+                    allowRowReordering
+                        ? `rowReordering
+                           onRowOrderChange={handleRowOrderChange}
+                           hideFooterPagination`
                         : ""
                 }
             />
