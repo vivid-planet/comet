@@ -183,6 +183,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     rowActionProp?: boolean;
     selectionProps?: "multiSelect" | "singleSelect";
     rowReordering?: boolean;
+    rowReorderingOnDragField?: UsableFields<T>;
 };
 
 export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | TabsConfig<T>;

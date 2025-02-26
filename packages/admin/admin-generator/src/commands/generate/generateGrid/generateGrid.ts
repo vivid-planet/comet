@@ -221,6 +221,16 @@ export function generateGrid(
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
     const allowRowReordering = typeof config.rowReordering !== "undefined" && config.rowReordering && hasUpdateMutation;
 
+    const hasRowReorderingOnDragField =
+        allowRowReordering && typeof config.rowReorderingOnDragField !== "undefined" && !!config.rowReorderingOnDragField;
+
+    if (
+        hasRowReorderingOnDragField &&
+        !config.columns.find((column) => column.type !== "actions" && column?.name === config.rowReorderingOnDragField)
+    ) {
+        throw new Error(`rowReorderingOnDragField '${config.rowReorderingOnDragField}' must exist in columns`);
+    }
+
     const forwardRowAction = allowEditing && config.rowActionProp;
 
     const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
@@ -956,7 +966,14 @@ export function generateGrid(
         });
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
-        const rows = data?.${gridQuery}.nodes ?? [];
+        const rows = ${
+            !hasRowReorderingOnDragField
+                ? `data?.${gridQuery}.nodes`
+                : `data?.${gridQuery}.nodes.map((node) => ({
+            ...node,
+            __reorder__: node.${config.rowReorderingOnDragField},
+        }))`
+        } ?? [];
 
         ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery)}
 

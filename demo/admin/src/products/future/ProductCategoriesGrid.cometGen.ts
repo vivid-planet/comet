@@ -7,6 +7,7 @@ export const ProductCategoriesGrid: GridConfig<GQLProductCategory> = {
     fragmentName: "ProductCategoriesGridFuture",
     queryParamsPrefix: "productCategories",
     rowReordering: true,
+    rowReorderingOnDragField: "title",
     columns: [
         {
             type: "text",
