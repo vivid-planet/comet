@@ -5,7 +5,6 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     BlocksConfigProvider,
-    BuildInformationProvider,
     CmsBlockContextProvider,
     CometConfigProvider,
     createDamFileDependency,
@@ -103,69 +102,63 @@ export function App() {
                     };
                 },
             }}
+            buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
         >
             <ApolloProvider client={apolloClient}>
-                <BuildInformationProvider value={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}>
-                    <IntlProvider locale="en" messages={getMessages()}>
-                        <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
-                            <BlocksConfigProvider
-                                isBlockSupported={(block, scope) => {
-                                    if (scope.domain === "main") {
-                                        return true;
-                                    } else {
-                                        return (
-                                            block.name !== NewsDetailBlock.name &&
-                                            block.name !== NewsListBlock.name &&
-                                            block.name !== NewsLinkBlock.name
-                                        );
-                                    }
-                                }}
-                            >
-                                <MuiThemeProvider theme={theme}>
-                                    <DndProvider options={HTML5toTouch}>
-                                        <SnackbarProvider>
-                                            <CmsBlockContextProvider>
-                                                <ErrorDialogHandler />
-                                                <CurrentUserProvider>
-                                                    <RouterBrowserRouter>
-                                                        <GlobalStyle />
-                                                        <ContentScopeProvider>
-                                                            {({ match }) => (
-                                                                <Switch>
-                                                                    <Route
-                                                                        path={`${match.path}/preview`}
-                                                                        render={(props) => (
-                                                                            <SitePreview
-                                                                                resolvePath={(path: string, scope) => {
-                                                                                    return `/${scope.language}${path}`;
-                                                                                }}
-                                                                                {...props}
-                                                                            />
-                                                                        )}
-                                                                    />
-                                                                    <Route
-                                                                        render={() => (
-                                                                            <MasterLayout
-                                                                                headerComponent={MasterHeader}
-                                                                                menuComponent={AppMasterMenu}
-                                                                            >
-                                                                                <MasterMenuRoutes menu={masterMenuData} />
-                                                                            </MasterLayout>
-                                                                        )}
-                                                                    />
-                                                                </Switch>
-                                                            )}
-                                                        </ContentScopeProvider>
-                                                    </RouterBrowserRouter>
-                                                </CurrentUserProvider>
-                                            </CmsBlockContextProvider>
-                                        </SnackbarProvider>
-                                    </DndProvider>
-                                </MuiThemeProvider>
-                            </BlocksConfigProvider>
-                        </LocaleProvider>
-                    </IntlProvider>
-                </BuildInformationProvider>
+                <IntlProvider locale="en" messages={getMessages()}>
+                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
+                        <BlocksConfigProvider
+                            isBlockSupported={(block, scope) => {
+                                if (scope.domain === "main") {
+                                    return true;
+                                } else {
+                                    return (
+                                        block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name
+                                    );
+                                }
+                            }}
+                        >
+                            <MuiThemeProvider theme={theme}>
+                                <DndProvider options={HTML5toTouch}>
+                                    <SnackbarProvider>
+                                        <CmsBlockContextProvider>
+                                            <ErrorDialogHandler />
+                                            <CurrentUserProvider>
+                                                <RouterBrowserRouter>
+                                                    <GlobalStyle />
+                                                    <ContentScopeProvider>
+                                                        {({ match }) => (
+                                                            <Switch>
+                                                                <Route
+                                                                    path={`${match.path}/preview`}
+                                                                    render={(props) => (
+                                                                        <SitePreview
+                                                                            resolvePath={(path: string, scope) => {
+                                                                                return `/${scope.language}${path}`;
+                                                                            }}
+                                                                            {...props}
+                                                                        />
+                                                                    )}
+                                                                />
+                                                                <Route
+                                                                    render={() => (
+                                                                        <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                            <MasterMenuRoutes menu={masterMenuData} />
+                                                                        </MasterLayout>
+                                                                    )}
+                                                                />
+                                                            </Switch>
+                                                        )}
+                                                    </ContentScopeProvider>
+                                                </RouterBrowserRouter>
+                                            </CurrentUserProvider>
+                                        </CmsBlockContextProvider>
+                                    </SnackbarProvider>
+                                </DndProvider>
+                            </MuiThemeProvider>
+                        </BlocksConfigProvider>
+                    </LocaleProvider>
+                </IntlProvider>
             </ApolloProvider>
         </CometConfigProvider>
     );

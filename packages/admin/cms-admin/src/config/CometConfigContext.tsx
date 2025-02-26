@@ -1,5 +1,6 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
+import { type BuildInformation } from "../common/header/about/build-information/buildInformation";
 import { type DamConfig } from "../dam/config/damConfig";
 import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type ImgproxyConfig } from "../imgproxy/imgproxyConfig";
@@ -15,6 +16,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     imgproxy?: ImgproxyConfig;
     dependencies?: DependenciesConfig;
     siteConfigs?: SiteConfigsConfig<SiteConfigs>;
+    buildInformation?: BuildInformation;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
