@@ -1,7 +1,7 @@
 import { Save } from "@comet/admin-icons";
 import { FormattedMessage } from "react-intl";
 
-import { FeedbackButton, FeedbackButtonProps } from "../common/buttons/feedback/FeedbackButton";
+import { FeedbackButton, type FeedbackButtonProps } from "../common/buttons/feedback/FeedbackButton";
 import { messages } from "../messages";
 import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
 
