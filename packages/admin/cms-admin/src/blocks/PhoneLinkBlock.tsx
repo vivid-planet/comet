@@ -43,4 +43,8 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
     previewContent: (state) => {
         return state.phone ? [{ type: "text", content: state.phone }] : [];
     },
+
+    extractTextContents: (state) => {
+        return state.phone ? [state.phone] : [];
+    },
 };

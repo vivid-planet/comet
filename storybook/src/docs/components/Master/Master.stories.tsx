@@ -4,9 +4,9 @@ import {
     AppHeaderMenuButton,
     FillSpace,
     MainContent,
+    MainNavigation,
+    MainNavigationItem,
     MasterLayout,
-    Menu,
-    MenuItem,
     RouterBrowserRouter,
     Toolbar,
     ToolbarTitleItem,
@@ -32,9 +32,9 @@ export const Master = {
 
         function MasterMenu() {
             return (
-                <Menu>
-                    <MenuItem primary="Menu button" icon={<Dashboard />} />
-                </Menu>
+                <MainNavigation>
+                    <MainNavigationItem primary="Menu button" icon={<Dashboard />} />
+                </MainNavigation>
             );
         }
 

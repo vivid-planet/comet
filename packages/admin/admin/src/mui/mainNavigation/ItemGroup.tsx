@@ -5,18 +5,18 @@ import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 import { Tooltip as CommonTooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { type MenuChild, type MenuCollapsibleItemProps } from "./CollapsibleItem";
-import { type MenuItemProps } from "./Item";
-import { type MenuItemRouterLinkProps } from "./ItemRouterLink";
+import { type MainNavigationChild, type MainNavigationCollapsibleItemProps } from "./CollapsibleItem";
+import { type MainNavigationItemProps } from "./Item";
+import { type MainNavigationItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuItemGroupClassKey = "root" | "open" | "tooltip" | "titleContainer" | "title" | "shortTitle";
+export type MainNavigationItemGroupClassKey = "root" | "open" | "tooltip" | "titleContainer" | "title" | "shortTitle";
 
 type OwnerState = {
     open: boolean;
 };
 
-const Root = createComponentSlot("div")<MenuItemGroupClassKey, OwnerState>({
-    componentName: "MenuItemGroup",
+const Root = createComponentSlot("div")<MainNavigationItemGroupClassKey, OwnerState>({
+    componentName: "MainNavigationItemGroup",
     slotName: "root",
     classesResolver: (ownerState) => {
         return [ownerState.open && "open"];
@@ -27,13 +27,13 @@ const Root = createComponentSlot("div")<MenuItemGroupClassKey, OwnerState>({
     `,
 );
 
-const Tooltip = createComponentSlot(CommonTooltip)<MenuItemGroupClassKey>({
-    componentName: "MenuItemGroup",
+const Tooltip = createComponentSlot(CommonTooltip)<MainNavigationItemGroupClassKey>({
+    componentName: "MainNavigationItemGroup",
     slotName: "tooltip",
 })();
 
-const TitleContainer = createComponentSlot("div")<MenuItemGroupClassKey, OwnerState>({
-    componentName: "MenuItemGroup",
+const TitleContainer = createComponentSlot("div")<MainNavigationItemGroupClassKey, OwnerState>({
+    componentName: "MainNavigationItemGroup",
     slotName: "titleContainer",
 })(
     ({ theme, ownerState }) => css`
@@ -52,8 +52,8 @@ const TitleContainer = createComponentSlot("div")<MenuItemGroupClassKey, OwnerSt
     `,
 );
 
-const Title = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerState>({
-    componentName: "MenuItemGroup",
+const Title = createComponentSlot(Typography)<MainNavigationItemGroupClassKey, OwnerState>({
+    componentName: "MainNavigationItemGroup",
     slotName: "title",
 })(
     ({ theme, ownerState }) => css`
@@ -69,8 +69,8 @@ const Title = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerState>
     `,
 );
 
-const ShortTitle = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerState>({
-    componentName: "MenuItemGroup",
+const ShortTitle = createComponentSlot(Typography)<MainNavigationItemGroupClassKey, OwnerState>({
+    componentName: "MainNavigationItemGroup",
     slotName: "shortTitle",
 })(
     ({ theme, ownerState }) => css`
@@ -88,7 +88,7 @@ const ShortTitle = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerS
     `,
 );
 
-export interface MenuItemGroupProps
+export interface MainNavigationItemGroupProps
     extends ThemedComponentBaseProps<{
         root: "div";
         tooltip: typeof CommonTooltip;
@@ -103,10 +103,10 @@ export interface MenuItemGroupProps
     isMenuOpen?: boolean;
 }
 
-export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
+export const MainNavigationItemGroup = (inProps: MainNavigationItemGroupProps) => {
     const { title, shortTitle, helperIcon, children, isMenuOpen, slotProps, ...restProps } = useThemeProps({
         props: inProps,
-        name: "CometAdminMenuItemGroup",
+        name: "CometAdminMainNavigationItemGroup",
     });
 
     const intl = useIntl();
@@ -141,8 +141,8 @@ export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
 
     const childElements = useMemo(
         () =>
-            Children.map(children, (child: MenuChild) => {
-                return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            Children.map(children, (child: MainNavigationChild) => {
+                return cloneElement<MainNavigationCollapsibleItemProps | MainNavigationItemRouterLinkProps | MainNavigationItemProps>(child, {
                     isMenuOpen,
                 });
             }),
@@ -176,17 +176,17 @@ export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMenuItemGroup: MenuItemGroupProps;
+        CometAdminMainNavigationItemGroup: MainNavigationItemGroupProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminMenuItemGroup: MenuItemGroupClassKey;
+        CometAdminMainNavigationItemGroup: MainNavigationItemGroupClassKey;
     }
 
     interface Components {
-        CometAdminMenuItemGroup?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuItemGroup"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItemGroup"];
+        CometAdminMainNavigationItemGroup?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMainNavigationItemGroup"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainNavigationItemGroup"];
         };
     }
 }

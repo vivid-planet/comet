@@ -98,4 +98,13 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, State, VimeoVi
     },
 
     previewContent: (state) => [{ type: "text", content: state.vimeoIdentifier }],
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.previewImage.damFile?.altText) contents.push(state.previewImage.damFile.altText);
+        if (state.previewImage.damFile?.title) contents.push(state.previewImage.damFile.title);
+
+        return contents;
+    },
 };

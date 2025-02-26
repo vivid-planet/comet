@@ -1,6 +1,6 @@
 {
     "name": "@comet/cli",
-    "version": "7.13.0",
+    "version": "7.14.0",
     "repository": {
         "directory": "packages/cli",
         "type": "git",
@@ -27,11 +27,11 @@
     },
     "dependencies": {
         "commander": "^9.5.0",
-        "prettier": "^3.5.1"
+        "prettier": "^3.5.2"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:^7.13.0",
-        "@types/node": "^22.13.4",
+        "@comet/eslint-config": "workspace:^7.14.0",
+        "@types/node": "^22.13.5",
         "eslint": "^9.20.1",
         "npm-run-all2": "^5.0.2",
         "rimraf": "^6.0.1",
