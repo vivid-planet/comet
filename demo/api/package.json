@@ -18,8 +18,6 @@
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
         "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
         "mikro-orm": "mikro-orm",
-        "mikro-orm:drop": "mikro-orm schema:drop -r",
-        "mikro-orm:migration:generate": "mikro-orm migration:create",
         "start": "$npm_execpath prebuild && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
         "start:dev": "run-p dev:*",
         "dev:nest": "$npm_execpath prebuild && $npm_execpath db:migrate && $npm_execpath console createBlockIndexViews && NODE_OPTIONS='--max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
