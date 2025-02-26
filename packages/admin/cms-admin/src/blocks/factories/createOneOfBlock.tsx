@@ -278,7 +278,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
 
                 if (isBlockSupported) {
                     filteredSupportedBlocks = Object.fromEntries(
-                        Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block.name, scope)),
+                        Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block, scope)),
                     );
                 } else {
                     filteredSupportedBlocks = supportedBlocks;

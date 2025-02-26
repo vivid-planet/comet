@@ -105,12 +105,14 @@ export function App() {
                                 <IntlProvider locale="en" messages={getMessages()}>
                                     <LocaleProvider resolveLocaleForScope={(scope) => scope.domain}>
                                         <BlocksConfigProvider
-                                            isBlockSupported={(name, scope) => {
+                                            isBlockSupported={(block, scope) => {
                                                 if (scope.domain === "main") {
                                                     return true;
                                                 } else {
                                                     return (
-                                                        name !== NewsDetailBlock.name && name !== NewsListBlock.name && name !== NewsLinkBlock.name
+                                                        block.name !== NewsDetailBlock.name &&
+                                                        block.name !== NewsListBlock.name &&
+                                                        block.name !== NewsLinkBlock.name
                                                     );
                                                 }
                                             }}

@@ -478,7 +478,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             const filteredSupportedBlocks = useMemo(() => {
                 if (isBlockSupported) {
-                    return Object.fromEntries(Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block.name, scope)));
+                    return Object.fromEntries(Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block, scope)));
                 } else {
                     return supportedBlocks;
                 }

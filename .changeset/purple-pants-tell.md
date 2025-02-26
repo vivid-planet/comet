@@ -12,12 +12,11 @@ import { BlocksConfigProvider } from "@comet/cms-admin";
 export function App() {
     return (
         <BlocksConfigProvider
-            isBlockSupported={(name, scope) => {
+            isBlockSupported={(block, scope) => {
                 if (scope.domain === "specific-customer") {
                     return true;
                 } else {
-                    // Note: this is the block name defined in the BlockInterface
-                    return name !== MySpecialTeaserBlock.name;
+                    return block.name !== MySpecialTeaserBlock.name;
                 }
             }}
         >

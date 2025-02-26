@@ -12,12 +12,11 @@ import { BlocksConfigProvider } from "@comet/cms-admin";
 export function App() {
     return (
         <BlocksConfigProvider
-            isBlockSupported={(name, scope) => {
+            isBlockSupported={(block, scope) => {
                 if (scope.domain === "specific-customer") {
                     return true;
                 } else {
-                    // Note: this is the block name defined in the BlockInterface
-                    return name !== MySpecialTeaserBlock.name;
+                    return block.name !== MySpecialTeaserBlock.name;
                 }
             }}
         >
@@ -27,7 +26,7 @@ export function App() {
 }
 ```
 
-The `isBlockSupported` function receives the block name and the current scope as arguments.
+The `isBlockSupported` function receives the block and the current scope as arguments.
 It should return `true` if the block is supported in the current content scope and `false` otherwise.
 An unsupported block will not be available in the BlocksBlock and OneOfBlock.
 
