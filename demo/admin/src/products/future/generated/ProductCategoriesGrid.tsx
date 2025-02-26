@@ -185,7 +185,11 @@ export function ProductCategoriesGrid(): React.ReactElement {
     });
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
     if (error) throw error;
-    const rows = data?.productCategories.nodes ?? [];
+    const rows =
+        data?.productCategories.nodes.map((node) => ({
+            ...node,
+            __reorder__: node.title,
+        })) ?? [];
 
     return (
         <DataGridPro

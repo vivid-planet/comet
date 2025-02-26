@@ -171,6 +171,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     rowActionProp?: boolean;
     selectionProps?: "multiSelect" | "singleSelect";
     rowReordering?: boolean;
+    rowReorderingOnDragField?: UsableFields<T>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
