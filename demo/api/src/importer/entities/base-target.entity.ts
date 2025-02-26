@@ -22,21 +22,21 @@ export abstract class BaseTargetEntity<Entity extends object, Primary extends ke
     id: string = v4();
     @Field(() => Date, { nullable: true })
     @Property({
-        columnType: "timestamp with time zone",
+        type: "timestamp with time zone",
         nullable: true,
         onCreate: () => new Date(),
     })
     createdAt?: Date;
     @Field(() => Date, { nullable: true })
     @Property({
-        columnType: "timestamp with time zone",
+        type: "timestamp with time zone",
         nullable: true,
         onUpdate: () => new Date(),
     })
     updatedAt?: Date;
     @Field(() => Date, { nullable: true })
     @Property({
-        columnType: "timestamp with time zone",
+        type: "timestamp with time zone",
         nullable: true,
     })
     deletedAt?: Date;
