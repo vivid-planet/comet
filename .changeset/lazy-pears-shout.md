@@ -6,15 +6,11 @@ Merge `@comet/admin-theme` into `@comet/admin`
 
 This affects the following exports: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
 
-`@mui/utils` has been added as a peer dependency.
-
 **Migrating your project**
 
 1. Remove the `@comet/admin-theme` dependency from your project
 
-2. Add the `@mui/utils` dependency to your project
-
-3. Change all imports from `@comet/admin-theme` to `@comet/admin`
+2. Change all imports from `@comet/admin-theme` to `@comet/admin`
 
 ```diff
 -import { createCometTheme } from "@comet/admin-theme";
@@ -23,7 +19,7 @@ This affects the following exports: `breakpointsOptions`, `breakpointValues`, `c
  const theme = createCometTheme();
 ```
 
-4. Remove the no longer required type overrides that were previously required for the custom `Typography` variants, typically located in `admin/src/vendors.d.ts`
+3. Remove the no longer required type overrides that were previously required for the custom `Typography` variants, typically located in `admin/src/vendors.d.ts`
 
 ```diff
 -/// <reference types="@comet/admin-theme" />
