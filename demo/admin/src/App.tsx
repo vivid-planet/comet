@@ -20,10 +20,10 @@ import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { ConfigProvider, createConfig } from "@src/config";
 import { ContentScope } from "@src/site-configs";
-import { getTheme } from "@src/theme";
+import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
-import { FormattedMessage, IntlContext, IntlProvider } from "react-intl";
+import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
 
 import { ContentScopeProvider } from "./common/ContentScopeProvider";
@@ -97,64 +97,60 @@ export function App() {
                                 }}
                             >
                                 <IntlProvider locale="en" messages={getMessages()}>
-                                    <IntlContext.Consumer>
-                                        {(intl) => (
-                                            <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
-                                                <MuiThemeProvider theme={getTheme(intl)}>
-                                                    <DndProvider options={HTML5toTouch}>
-                                                        <SnackbarProvider>
-                                                            <CmsBlockContextProvider
-                                                                damConfig={{
-                                                                    apiUrl: config.apiUrl,
-                                                                    apiClient,
-                                                                    maxFileSize: config.dam.uploadsMaxFileSize,
-                                                                    maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                                    allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
-                                                                }}
-                                                                pageTreeCategories={pageTreeCategories}
-                                                                pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                                additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                            >
-                                                                <ErrorDialogHandler />
-                                                                <CurrentUserProvider>
-                                                                    <RouterBrowserRouter>
-                                                                        <GlobalStyle />
-                                                                        <ContentScopeProvider>
-                                                                            {({ match }) => (
-                                                                                <Switch>
-                                                                                    <Route
-                                                                                        path={`${match.path}/preview`}
-                                                                                        render={(props) => (
-                                                                                            <SitePreview
-                                                                                                resolvePath={(path: string, scope) => {
-                                                                                                    return `/${scope.language}${path}`;
-                                                                                                }}
-                                                                                                {...props}
-                                                                                            />
-                                                                                        )}
+                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
+                                        <MuiThemeProvider theme={theme}>
+                                            <DndProvider options={HTML5toTouch}>
+                                                <SnackbarProvider>
+                                                    <CmsBlockContextProvider
+                                                        damConfig={{
+                                                            apiUrl: config.apiUrl,
+                                                            apiClient,
+                                                            maxFileSize: config.dam.uploadsMaxFileSize,
+                                                            maxSrcResolution: config.imgproxy.maxSrcResolution,
+                                                            allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
+                                                        }}
+                                                        pageTreeCategories={pageTreeCategories}
+                                                        pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
+                                                    >
+                                                        <ErrorDialogHandler />
+                                                        <CurrentUserProvider>
+                                                            <RouterBrowserRouter>
+                                                                <GlobalStyle />
+                                                                <ContentScopeProvider>
+                                                                    {({ match }) => (
+                                                                        <Switch>
+                                                                            <Route
+                                                                                path={`${match.path}/preview`}
+                                                                                render={(props) => (
+                                                                                    <SitePreview
+                                                                                        resolvePath={(path: string, scope) => {
+                                                                                            return `/${scope.language}${path}`;
+                                                                                        }}
+                                                                                        {...props}
                                                                                     />
-                                                                                    <Route
-                                                                                        render={() => (
-                                                                                            <MasterLayout
-                                                                                                headerComponent={MasterHeader}
-                                                                                                menuComponent={AppMasterMenu}
-                                                                                            >
-                                                                                                <MasterMenuRoutes menu={masterMenuData} />
-                                                                                            </MasterLayout>
-                                                                                        )}
-                                                                                    />
-                                                                                </Switch>
-                                                                            )}
-                                                                        </ContentScopeProvider>
-                                                                    </RouterBrowserRouter>
-                                                                </CurrentUserProvider>
-                                                            </CmsBlockContextProvider>
-                                                        </SnackbarProvider>
-                                                    </DndProvider>
-                                                </MuiThemeProvider>
-                                            </LocaleProvider>
-                                        )}
-                                    </IntlContext.Consumer>
+                                                                                )}
+                                                                            />
+                                                                            <Route
+                                                                                render={() => (
+                                                                                    <MasterLayout
+                                                                                        headerComponent={MasterHeader}
+                                                                                        menuComponent={AppMasterMenu}
+                                                                                    >
+                                                                                        <MasterMenuRoutes menu={masterMenuData} />
+                                                                                    </MasterLayout>
+                                                                                )}
+                                                                            />
+                                                                        </Switch>
+                                                                    )}
+                                                                </ContentScopeProvider>
+                                                            </RouterBrowserRouter>
+                                                        </CurrentUserProvider>
+                                                    </CmsBlockContextProvider>
+                                                </SnackbarProvider>
+                                            </DndProvider>
+                                        </MuiThemeProvider>
+                                    </LocaleProvider>
                                 </IntlProvider>
                             </DependenciesConfigProvider>
                         </DamConfigProvider>

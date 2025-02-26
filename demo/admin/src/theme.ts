@@ -2,24 +2,15 @@ import { DataGridPanel } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
 import type {} from "@mui/lab/themeAugmentation";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import { IntlShape } from "react-intl";
 
-export const getTheme = (intl: IntlShape) =>
-    createCometTheme({
-        components: {
-            MuiDataGrid: {
-                defaultProps: {
-                    localeText: {
-                        filterPanelColumns: intl.formatMessage({ id: "dataGrid.filterPanelColumns", defaultMessage: "Column" }),
-                        columnsPanelTextFieldPlaceholder: intl.formatMessage({
-                            id: "dataGrid.columnsPanelTextFieldPlaceholder",
-                            defaultMessage: "Find column...",
-                        }),
-                    },
-                    components: {
-                        Panel: DataGridPanel,
-                    },
+export const theme = createCometTheme({
+    components: {
+        MuiDataGrid: {
+            defaultProps: {
+                components: {
+                    Panel: DataGridPanel,
                 },
             },
         },
-    });
+    },
+});
