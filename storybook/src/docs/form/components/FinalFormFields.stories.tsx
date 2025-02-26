@@ -246,19 +246,15 @@ export const _FinalFormSwitch = {
                     alert(JSON.stringify(values, null, 4));
                 }}
             >
-                {({ values }) => (
-                    <>
-                        <SwitchField name="switch" fieldLabel="FinalFormSwitch" label={(checked) => (checked ? "On" : "Off")} fullWidth />
-                        <SwitchField
-                            name="switchDisabled"
-                            fieldLabel="FinalFormSwitch disabled"
-                            label={(checked) => (checked ? "On" : "Off")}
-                            fullWidth
-                            disabled
-                        />
-                        <Button type="submit">Submit</Button>
-                    </>
-                )}
+                <SwitchField name="switch" fieldLabel="FinalFormSwitch" label={(checked) => (checked ? "On" : "Off")} fullWidth />
+                <SwitchField
+                    name="switchDisabled"
+                    fieldLabel="FinalFormSwitch disabled"
+                    label={(checked) => (checked ? "On" : "Off")}
+                    fullWidth
+                    disabled
+                />
+                <Button type="submit">Submit</Button>
             </FinalForm>
         );
     },
