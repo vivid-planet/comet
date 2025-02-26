@@ -7,7 +7,7 @@ import { useDebounceCallback } from "usehooks-ts";
 
 import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
-import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement } from "./utils";
+import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
 export type PreviewElement = {
     element: HTMLElement;
@@ -148,6 +148,18 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             };
         }
     }, [recalculatePreviewElementsData]);
+
+    useEffect(() => {
+        previewElements.forEach((previewElement) => {
+            previewElement.element.addEventListener(PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT, recalculatePreviewElementsData);
+        });
+
+        return () => {
+            previewElements.forEach((previewElement) => {
+                previewElement.element.removeEventListener(PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT, recalculatePreviewElementsData);
+            });
+        };
+    }, [previewElements, recalculatePreviewElementsData]);
 
     const sendMessage = useCallback((message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
