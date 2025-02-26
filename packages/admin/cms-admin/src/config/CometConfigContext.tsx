@@ -4,8 +4,9 @@ import { type DamConfig } from "../dam/config/damConfig";
 import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type ImgproxyConfig } from "../imgproxy/imgproxyConfig";
 import { type PageTreeConfig } from "../pages/pageTreeConfig";
+import { type SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
 
-export interface CometConfig {
+export interface CometConfig<SiteConfigs = unknown> {
     apiUrl: string;
     graphQLApiUrl: string;
     adminUrl: string;
@@ -13,15 +14,16 @@ export interface CometConfig {
     dam?: DamConfig;
     imgproxy?: ImgproxyConfig;
     dependencies?: DependenciesConfig;
+    siteConfigs?: SiteConfigsConfig<SiteConfigs>;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
 
-export function CometConfigProvider({ children, ...config }: PropsWithChildren<CometConfig>) {
-    return <CometConfigContext.Provider value={config}>{children}</CometConfigContext.Provider>;
+export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config }: PropsWithChildren<CometConfig<SiteConfigs>>) {
+    return <CometConfigContext.Provider value={config as CometConfig<unknown>}>{children}</CometConfigContext.Provider>;
 }
 
-export function useCometConfig() {
+export function useCometConfig<SiteConfigs = unknown>() {
     const context = useContext(CometConfigContext);
 
     if (!context) {
@@ -30,5 +32,5 @@ export function useCometConfig() {
         );
     }
 
-    return context;
+    return context as CometConfig<SiteConfigs>;
 }

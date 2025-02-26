@@ -24,7 +24,7 @@ import { type ContentScopeInterface, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
-import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { type EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";

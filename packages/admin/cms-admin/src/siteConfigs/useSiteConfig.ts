@@ -1,9 +1,9 @@
 import { type ContentScopeInterface } from "../contentScope/Provider";
-import { type SiteConfig } from "./SitesConfigContext";
-import { useSitesConfig } from "./useSitesConfig";
+import { type SiteConfig } from "./siteConfigsConfig";
+import { useSiteConfigs } from "./useSiteConfigs";
 
 export function useSiteConfig({ scope }: { scope: ContentScopeInterface }): SiteConfig {
-    const context = useSitesConfig();
+    const context = useSiteConfigs();
     const siteConfig = context.resolveSiteConfigForScope(context.configs, scope);
     return {
         ...siteConfig,
