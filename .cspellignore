@@ -1,9 +1,10 @@
-NestJS
-Embeddables
 Aktuelles
 Betrieb
 blockname
+brevo
 codemods
+Embeddables
+exif
 GraphQLJSONObject
 imgproxy
 Logische
@@ -16,7 +17,5 @@ prebuild
 rgba
 subcomponent
 subpage
-typesafe
-exif
-brevo
 Traefik
+typesafe
