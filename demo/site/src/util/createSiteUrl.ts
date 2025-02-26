@@ -23,9 +23,11 @@ type CreateSiteUrlOptions = {
  * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
  */
 export const createSiteUrl = ({ path, scope, anchor }: CreateSiteUrlOptions) => {
-    let anchorPostfix = "";
+    let url = `/${scope.language}${path}`;
+
     if (anchor) {
-        anchorPostfix = `#${anchor}`;
+        url += `#${anchor}`;
     }
-    return `/${scope.language}${path}${anchorPostfix}`;
+
+    return url;
 };
