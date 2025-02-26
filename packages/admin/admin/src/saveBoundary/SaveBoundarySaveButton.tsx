@@ -5,9 +5,9 @@ import { FeedbackButton, FeedbackButtonProps } from "../common/buttons/feedback/
 import { messages } from "../messages";
 import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
 
-type Props = Omit<FeedbackButtonProps, "disabled" | "loading" | "hasErrors" | "onClick">;
+type Props = Omit<FeedbackButtonProps, "loading" | "hasErrors" | "onClick">;
 
-export function SaveBoundarySaveButton(props: Props) {
+export function SaveBoundarySaveButton({ disabled, ...restProps }: Props) {
     const saveBoundaryState = useSavable();
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryState || !saveBoundaryApi) throw new Error("SaveBoundarySaveButton must be inside SaveBoundary");
@@ -15,13 +15,13 @@ export function SaveBoundarySaveButton(props: Props) {
     return (
         <FeedbackButton
             startIcon={<Save />}
-            disabled={!saveBoundaryState.hasChanges}
+            disabled={disabled || !saveBoundaryState.hasChanges}
             loading={saveBoundaryState.saving}
             hasErrors={saveBoundaryState.hasErrors}
             onClick={async () => {
                 await saveBoundaryApi.save();
             }}
-            {...props}
+            {...restProps}
         >
             <FormattedMessage {...messages.save} />
         </FeedbackButton>
