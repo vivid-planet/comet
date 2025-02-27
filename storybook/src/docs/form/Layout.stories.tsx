@@ -1,10 +1,7 @@
 import {
     CancelButton,
-<<<<<<< HEAD
-    createCometTheme,
-=======
     CheckboxField,
->>>>>>> main
+    createCometTheme,
     Field,
     FieldContainer,
     FinalFormInput,

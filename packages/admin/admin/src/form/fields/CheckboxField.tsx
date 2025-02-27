@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import { FormControlLabel, type FormControlLabelProps } from "@mui/material";
-=======
-import { FormControlLabel, FormControlLabelProps } from "@mui/material";
-import { ReactNode } from "react";
->>>>>>> main
+import { type ReactNode } from "react";
 
 import { FinalFormCheckbox, type FinalFormCheckboxProps } from "../Checkbox";
 import { Field, type FieldProps } from "../Field";

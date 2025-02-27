@@ -5,12 +5,7 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormInput,
-<<<<<<< HEAD
     type FinalFormSubmitEvent,
-    FinalFormSwitch,
-=======
-    FinalFormSubmitEvent,
->>>>>>> main
     Loading,
     messages,
     SwitchField,
@@ -19,13 +14,8 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-<<<<<<< HEAD
-import { Collapse, Divider, FormControlLabel } from "@mui/material";
-import { type FormApi } from "final-form";
-=======
 import { Collapse, Divider } from "@mui/material";
-import { FormApi } from "final-form";
->>>>>>> main
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";

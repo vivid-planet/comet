@@ -76,38 +76,8 @@ export const _DataGridToolbar = {
                 autoHeight
                 columns={columns}
                 rows={data}
-<<<<<<< HEAD
                 slots={{
-                    toolbar: () => (
-                        <DataGridToolbar>
-                            <ToolbarItem>
-                                <GridToolbarQuickFilter />
-                            </ToolbarItem>
-                            <ToolbarItem>
-                                <GridFilterButton />
-                            </ToolbarItem>
-                            <ToolbarItem>
-                                <GridColumnsButton />
-                            </ToolbarItem>
-                            <FillSpace />
-                            <ToolbarActions>
-                                <Button
-                                    startIcon={<AddIcon />}
-                                    component={StackLink}
-                                    pageName="add"
-                                    payload="add"
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Add person
-                                </Button>
-                            </ToolbarActions>
-                        </DataGridToolbar>
-                    ),
-=======
-                components={{
-                    Toolbar,
->>>>>>> main
+                    toolbar: Toolbar,
                 }}
             />
         );

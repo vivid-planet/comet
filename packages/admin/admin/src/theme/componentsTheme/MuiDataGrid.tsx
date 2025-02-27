@@ -1,18 +1,14 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
 import {
     buttonBaseClasses,
-<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
-    buttonClasses,
-    formControlClasses,
-=======
     getSwitchUtilityClass,
->>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
     iconButtonClasses,
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
     svgIconClasses,
     type SvgIconProps,
+    switchClasses,
     TextField,
     type TextFieldProps,
 } from "@mui/material";
@@ -43,13 +39,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     ...component,
     defaultProps: {
         ...component?.defaultProps,
-<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
         disableRowSelectionOnClick: true,
         slots: {
-            /* @TODO: add FilterPanelAddIcon to display Comet Add Icon once MUI Datagrid is updated to v6 or higher  */
-=======
-        components: {
->>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
             FilterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
@@ -61,11 +52,11 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             ...component?.defaultProps?.slots,
         },
-        componentsProps: {
-            ...component?.defaultProps?.componentsProps,
+        slotProps: {
+            ...component?.defaultProps?.slotProps,
             baseButton: {
                 color: "info",
-                ...component?.defaultProps?.componentsProps?.baseButton,
+                ...component?.defaultProps?.slotProps?.baseButton,
             },
         },
         localeText: {
@@ -89,19 +80,14 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 },
             },
         },
-<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
-        columnHeader: ({ ownerState }) => ({
-            /* !important is required to override inline styles */
-            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
-=======
         panelHeader: {
             padding: `4px 4px ${spacing(1)} 4px`,
             borderBottom: `1px solid ${palette.divider}`,
         },
-        columnsPanel: {
+        columnsManagement: {
             padding: 0,
         },
-        columnsPanelRow: {
+        columnsManagementRow: {
             marginBottom: spacing(2),
 
             "&:last-child": {
@@ -122,8 +108,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 transform: "translateX(20px)",
             },
         },
-        columnHeader: {
->>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
+        columnHeader: ({ ownerState }) => ({
+            /* !important is required to override inline styles */
+            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
             "&:focus": {
                 outline: "none",
             },
@@ -177,16 +164,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             marginRight: "10px",
         },
         panelContent: {
-<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
-            padding: spacing(1, 0),
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
-                display: "flex",
-            },
-            ["@media (max-width: 900px)"]: {
-                maxHeight: "none",
-                padding: 0,
-            },
-=======
             padding: spacing(4),
         },
         paper: {
@@ -195,7 +172,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             borderRadius: 4,
             maxHeight: "none",
             flexDirection: "column",
->>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
         },
         filterForm: {
             flexDirection: "row",
@@ -219,7 +195,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 },
             },
 
-            [`&:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+            [`&:first-child .${gridClasses.filterFormOperatorInput}`]: {
                 // The first "Operator"-select is fully hidden by default when there is only one filter.
                 // Setting `display: block` makes sure it takes up it's space as if it were visible to prevent the alignment from breaking.
                 // Even though `display: block` is set now, it's still not visible, due to it's default styling of `visibility: hidden`.
@@ -232,24 +208,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 fontSize: 14,
                 fontWeight: 600,
             },
-<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
-            [`.${inputClasses.root}`]: {
-                marginTop: 0,
-            },
-            [`& .${inputAdornmentClasses.root}`]: {
-                padding: spacing(0, 1, 0, 0),
-            },
-        },
-        filterFormLogicOperatorInput: {
-            ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 1),
-                width: "27.2%",
-=======
 
             [`.${nativeSelectClasses.select}`]: {
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
->>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
             },
         },
         filterFormDeleteIcon: {
@@ -268,7 +230,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 height: "100%",
             },
         },
-        filterFormLinkOperatorInput: {
+        filterFormLogicOperatorInput: {
             width: filterOperatorInputWidth,
             marginRight: 0,
 

@@ -1,5 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { SvgImageBlock } from "@comet/cms-api";
+import { ExtractBlockInputFactoryProps, SvgImageBlock } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
 import { ImageFixtureService } from "../../image-fixture.service";

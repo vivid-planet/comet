@@ -3,27 +3,27 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     ToolbarActions,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { useTheme } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { DataGridPro, type GridRenderCellParams, type GridRowOrderChangeParams, type GridToolbarProps } from "@mui/x-data-grid-pro";
+import { type ReactNode } from "react";
 import { useIntl } from "react-intl";
 
 import {
-    GQLCreateProductCategoryMutation,
-    GQLCreateProductCategoryMutationVariables,
-    GQLDeleteProductCategoryMutation,
-    GQLDeleteProductCategoryMutationVariables,
-    GQLProductCategoriesGridQuery,
-    GQLProductCategoriesGridQueryVariables,
-    GQLProductCategoryGridFutureFragment,
-    GQLUpdateProductCategoryPositionMutation,
-    GQLUpdateProductCategoryPositionMutationVariables,
+    type GQLCreateProductCategoryMutation,
+    type GQLCreateProductCategoryMutationVariables,
+    type GQLDeleteProductCategoryMutation,
+    type GQLDeleteProductCategoryMutationVariables,
+    type GQLProductCategoriesGridQuery,
+    type GQLProductCategoriesGridQueryVariables,
+    type GQLProductCategoryGridFutureFragment,
+    type GQLUpdateProductCategoryPositionMutation,
+    type GQLUpdateProductCategoryPositionMutationVariables,
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
@@ -71,7 +71,11 @@ const updateProductCategoryPositionMutation = gql`
     }
 `;
 
-function ProductCategoriesGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ProductCategoriesGridToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
+function ProductCategoriesGridToolbar({ toolbarAction }: ProductCategoriesGridToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarActions>{toolbarAction}</ToolbarActions>
@@ -80,13 +84,13 @@ function ProductCategoriesGridToolbar({ toolbarAction }: { toolbarAction?: React
 }
 
 type Props = {
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductCategoryGridFutureFragment, any>) => React.ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLProductCategoryGridFutureFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
-export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
+export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
@@ -186,16 +190,16 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductCategoriesGridToolbar,
+            slots={{
+                toolbar: ProductCategoriesGridToolbar,
             }}
-            componentsProps={{
-                toolbar: { toolbarAction },
+            slotProps={{
+                toolbar: { toolbarAction } as ProductCategoriesGridToolbarProps,
             }}
             rowReordering
             onRowOrderChange={handleRowOrderChange}

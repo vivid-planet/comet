@@ -1,18 +1,13 @@
-<<<<<<< HEAD
-import { createCometTheme } from "@comet/admin";
-=======
-import { DataGridPanel } from "@comet/admin";
-import { createCometTheme } from "@comet/admin-theme";
-import type {} from "@mui/lab/themeAugmentation";
+import { createCometTheme, DataGridPanel } from "@comet/admin";
 import type {} from "@mui/x-data-grid/themeAugmentation";
->>>>>>> main
 
 export const theme = createCometTheme({
     components: {
         MuiDataGrid: {
             defaultProps: {
-                components: {
-                    Panel: DataGridPanel,
+                slots: {
+                    // @ts-expect-error @jamesricky fix this please
+                    panel: DataGridPanel,
                 },
             },
         },

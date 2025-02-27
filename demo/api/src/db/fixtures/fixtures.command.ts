@@ -1,13 +1,8 @@
 import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
-<<<<<<< HEAD:demo/api/src/db/fixtures/fixtures.command.ts
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
-import { Inject } from "@nestjs/common";
-=======
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Inject, Injectable, Logger } from "@nestjs/common";
->>>>>>> main:demo/api/src/db/fixtures/fixtures.console.ts
+import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
@@ -17,13 +12,8 @@ import { PageInput } from "@src/documents/pages/dto/page.input";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
-<<<<<<< HEAD:demo/api/src/db/fixtures/fixtures.command.ts
-import { Command, CommandRunner } from "nest-commander";
-=======
 import { MultiBar, Options, Presets } from "cli-progress";
-import faker from "faker";
-import { Command, Console } from "nestjs-console";
->>>>>>> main:demo/api/src/db/fixtures/fixtures.console.ts
+import { Command, CommandRunner } from "nest-commander";
 import slugify from "slugify";
 
 import { DocumentGeneratorService } from "./generators/document-generator.service";
@@ -51,19 +41,18 @@ const getDefaultPageInput = (): PageInput => {
     return pageInput;
 };
 
-<<<<<<< HEAD:demo/api/src/db/fixtures/fixtures.command.ts
 @Command({
     name: "fixtures",
     description: "Create fixtures with faker.js",
 })
 export class FixturesCommand extends CommandRunner {
-=======
-@Injectable()
-@Console()
-export class FixturesConsole {
-    private readonly logger = new Logger(FixturesConsole.name);
+    private readonly logger = new Logger(FixturesCommand.name);
 
->>>>>>> main:demo/api/src/db/fixtures/fixtures.console.ts
+    barOptions: Options = {
+        format: `{bar} {percentage}% | {value}/{total} {title} | ETA: {eta_formatted} | Duration: {duration_formatted}`,
+        noTTYOutput: true,
+    };
+
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
@@ -71,15 +60,6 @@ export class FixturesConsole {
         private readonly dependenciesService: DependenciesService,
         private readonly entityManager: EntityManager,
         private readonly productsFixtureService: ProductsFixtureService,
-<<<<<<< HEAD:demo/api/src/db/fixtures/fixtures.command.ts
-    ) {
-        super();
-    }
-
-    @CreateRequestContext()
-    async run(): Promise<void> {
-        const pageTreeNodes: PageTreeNodesFixtures = {};
-=======
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
@@ -88,20 +68,12 @@ export class FixturesConsole {
         private readonly pageTreeService: PageTreeService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
-    ) {}
+    ) {
+        super();
+    }
 
-    barOptions: Options = {
-        format: `{bar} {percentage}% | {value}/{total} {title} | ETA: {eta_formatted} | Duration: {duration_formatted}`,
-        noTTYOutput: true,
-    };
-
-    @Command({
-        command: "fixtures",
-        description: "Create fixtures with faker.js",
-    })
     @CreateRequestContext()
-    async execute(): Promise<void> {
->>>>>>> main:demo/api/src/db/fixtures/fixtures.console.ts
+    async run(): Promise<void> {
         // ensure repeatable runs
         faker.seed(123456);
 

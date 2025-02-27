@@ -2,12 +2,8 @@ import { DependenciesModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
-<<<<<<< HEAD
-import { FixturesCommand } from "@src/db/fixtures/fixtures.command";
-=======
 import { DamFile } from "@src/dam/entities/dam-file.entity";
-import { FixturesConsole } from "@src/db/fixtures/fixtures.console";
->>>>>>> main
+import { FixturesCommand } from "@src/db/fixtures/fixtures.command";
 import { Link } from "@src/documents/links/entities/link.entity";
 import { LinksModule } from "@src/documents/links/links.module";
 import { Page } from "@src/documents/pages/entities/page.entity";
@@ -59,23 +55,9 @@ import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
 @Module({
-<<<<<<< HEAD
-    imports: [ConfigModule, PagesModule, LinksModule, DependenciesModule, MikroOrmModule.forFeature([Page, Link, Product, Manufacturer])],
+    imports: [ConfigModule, PagesModule, LinksModule, DependenciesModule, MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer])],
     providers: [
         FixturesCommand,
-        ManyImagesTestPageFixtureService,
-        ImageFileFixtureService,
-        SvgImageFileFixtureService,
-=======
-    imports: [
-        ConfigModule,
-        ConsoleModule,
-        PagesModule,
-        LinksModule,
-        DependenciesModule,
-        MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer]),
-    ],
-    providers: [
         AccordionBlockFixtureService,
         AnchorBlockFixtureService,
         BasicStageBlockFixtureService,
@@ -87,9 +69,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         DamImageBlockFixtureService,
         DamVideoBlockFixtureService,
         DocumentGeneratorService,
->>>>>>> main
         FileUploadsFixtureService,
-        FixturesConsole,
         FullWidthImageBlockFixtureService,
         HeadingBlockFixtureService,
         ImageFileFixtureService,

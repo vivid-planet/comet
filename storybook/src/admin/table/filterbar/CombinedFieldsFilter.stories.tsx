@@ -8,13 +8,8 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-<<<<<<< HEAD
 import { faker } from "@faker-js/faker";
-import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-=======
 import { Box, Divider, Typography } from "@mui/material";
-import faker from "faker";
->>>>>>> main
 
 interface IFilterValues {
     expressDelivery: boolean;

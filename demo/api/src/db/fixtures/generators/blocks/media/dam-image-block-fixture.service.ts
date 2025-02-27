@@ -1,5 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+import { DamImageBlock, ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 

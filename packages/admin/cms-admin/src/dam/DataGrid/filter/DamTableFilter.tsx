@@ -3,15 +3,9 @@ import {
     FilterBar,
     FilterBarPopoverFilter,
     FinalFormSearchTextField,
-<<<<<<< HEAD
-    FinalFormSwitch,
     type IFilterApi,
     type ISortInformation,
-=======
-    IFilterApi,
-    ISortInformation,
     SwitchField,
->>>>>>> main
     TableFilterFinalForm,
 } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";

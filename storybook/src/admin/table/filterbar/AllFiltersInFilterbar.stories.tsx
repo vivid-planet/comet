@@ -11,14 +11,8 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-<<<<<<< HEAD
 import { faker } from "@faker-js/faker";
-import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-=======
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Box, Divider, Typography } from "@mui/material";
-import faker from "faker";
->>>>>>> main
 
 interface ColorFilterFieldProps {
     colors: string[];
