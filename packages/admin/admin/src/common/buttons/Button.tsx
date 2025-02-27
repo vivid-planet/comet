@@ -78,6 +78,7 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
         startIcon,
         endIcon,
         children,
+
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminButton" });
 
@@ -107,14 +108,16 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
         return (
             <MobileTooltip title={children} {...slotProps?.mobileTooltip}>
                 <span>
-                    <Root {...commonButtonProps}>{mobileIconNode}</Root>
+                    <Root disableFocusRipple disableTouchRipple {...commonButtonProps}>
+                        {mobileIconNode}
+                    </Root>
                 </span>
             </MobileTooltip>
         );
     }
 
     return (
-        <Root startIcon={startIcon} endIcon={endIcon} {...commonButtonProps}>
+        <Root disableFocusRipple disableTouchRipple startIcon={startIcon} endIcon={endIcon} {...commonButtonProps}>
             {children}
         </Root>
     );
