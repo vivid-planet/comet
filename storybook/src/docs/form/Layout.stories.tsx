@@ -1,9 +1,12 @@
 import {
     CancelButton,
+<<<<<<< HEAD
     createCometTheme,
+=======
+    CheckboxField,
+>>>>>>> main
     Field,
     FieldContainer,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRadio,
     FinalFormSelect,
@@ -104,9 +107,7 @@ export const FieldsInSidebar = {
                                         fullWidth
                                         component={FinalFormInput}
                                     />
-                                    <Field name="checkbox" type="checkbox" fullWidth>
-                                        {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                                    </Field>
+                                    <CheckboxField name="checkbox" label="Checkbox" fullWidth />
                                     <FieldContainer label="Radio" fullWidth>
                                         <>
                                             {flavourOptions.map(({ value, label }) => (
@@ -165,9 +166,7 @@ export const FieldsInDialog = {
                                             fullWidth
                                             component={FinalFormInput}
                                         />
-                                        <Field name="checkbox" type="checkbox" fullWidth>
-                                            {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                                        </Field>
+                                        <CheckboxField name="checkbox" label="Checkbox" fullWidth />
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
@@ -324,9 +323,7 @@ export const HorizontalFields = {
                                         ))}
                                     </>
                                 </FieldContainer>
-                                <Field name="checkbox" type="checkbox" label="Checkbox">
-                                    {(props) => <FormControlLabel label="" control={<FinalFormCheckbox {...props} />} />}
-                                </Field>
+                                <CheckboxField name="checkbox" fieldLabel="Checkbox" fullWidth />
                             </form>
                         )}
                     />

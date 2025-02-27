@@ -392,10 +392,7 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                             <LargeAddButtonContent>
                                                                 <LargeAddButtonIcon />
                                                                 <Typography>
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.columns.addColumn"
-                                                                        defaultMessage="Add column"
-                                                                    />
+                                                                    <FormattedMessage id="comet.blocks.columns.addItem" defaultMessage="Add item" />
                                                                 </Typography>
                                                             </LargeAddButtonContent>
                                                         </BlockAdminComponentButton>
@@ -410,8 +407,13 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                                 size="large"
                                                                 startIcon={<Add />}
                                                             >
+<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/factories/createColumnsBlock.tsx
                                                                 <FormattedMessage id="comet.blocks.columns.addColumn" defaultMessage="Add column" />
                                                             </BlockAdminComponentButton>
+=======
+                                                                <FormattedMessage id="comet.blocks.columns.addItem" defaultMessage="Add item" />
+                                                            </AdminComponentButton>
+>>>>>>> main:packages/admin/blocks-admin/src/blocks/factories/createColumnsBlock.tsx
                                                         </AdminComponentStickyFooter>
                                                     )}
                                                 </SelectPreviewComponent>

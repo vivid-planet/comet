@@ -1,6 +1,10 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
+<<<<<<< HEAD
 import { createCometTheme, MainContent, MuiThemeProvider } from "@comet/admin";
+=======
+import { DataGridPanel, MainContent, MuiThemeProvider } from "@comet/admin";
+>>>>>>> main
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
@@ -72,7 +76,20 @@ const preview: Preview = {
     decorators: [
         (Story, context) => {
             const { theme: selectedTheme, locale: selectedLocale } = context.args;
-            const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
+            const theme =
+                selectedTheme === themeOptions.defaultMui
+                    ? createMuiTheme()
+                    : createCometTheme({
+                          components: {
+                              MuiDataGrid: {
+                                  defaultProps: {
+                                      components: {
+                                          Panel: DataGridPanel,
+                                      },
+                                  },
+                              },
+                          },
+                      });
 
             return (
                 <MuiThemeProvider theme={theme}>

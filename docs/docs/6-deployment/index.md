@@ -42,4 +42,4 @@ Serverless container platforms are a good option for those who want to deploy Co
 
 #### Docker Compose
 
-For those with budget constraints, Docker Compose can be a viable option for deploying Comet applications.
+For those with budget constraints, [Docker Compose](https://docs.docker.com/compose/) can be a viable option for deploying Comet applications. An example deployment can be found [here](https://github.com/vivid-planet/comet-starter/tree/main/.docker-compose). The deployment only requires Docker to be installed on a server and leverages the power of [Traefik](https://doc.traefik.io/traefik/) to manage the ingress traffic (including SSL certificates).

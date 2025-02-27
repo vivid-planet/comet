@@ -33,6 +33,10 @@
         "graphql-request": "^3.7.0",
         "graphql-tag": "^2.12.6",
         "next": "^14.2.24",
+<<<<<<< HEAD
+=======
+        "pure-react-carousel": "^1.0.0",
+>>>>>>> main
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-intl": "^6.8.9",

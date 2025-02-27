@@ -7,7 +7,7 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-c
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
 
-const ColumnsContentBlock = createBlocksBlock(
+export const ColumnsContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
             accordion: AccordionBlock,
@@ -20,9 +20,7 @@ const ColumnsContentBlock = createBlocksBlock(
             mediaGallery: MediaGalleryBlock,
         },
     },
-    {
-        name: "ColumnsContent",
-    },
+    { name: "ColumnsContent" },
 );
 
 export const ColumnsBlock = ColumnsBlockFactory.create(

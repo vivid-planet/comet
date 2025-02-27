@@ -1,10 +1,16 @@
+<<<<<<< HEAD
 import { FormControlLabel, type FormControlLabelProps } from "@mui/material";
+=======
+import { FormControlLabel, FormControlLabelProps } from "@mui/material";
+import { ReactNode } from "react";
+>>>>>>> main
 
 import { Field, type FieldProps } from "../Field";
 import { FinalFormSwitch, type FinalFormSwitchProps } from "../Switch";
 
 export interface SwitchFieldProps extends FieldProps<string, HTMLInputElement> {
-    fieldLabel?: string;
+    fieldLabel?: ReactNode;
+    label?: ReactNode | ((checked?: boolean) => ReactNode);
     componentsProps?: {
         formControlLabel?: FormControlLabelProps;
         finalFormSwitch?: FinalFormSwitchProps;
@@ -16,7 +22,11 @@ export const SwitchField = ({ fieldLabel, label, componentsProps = {}, ...restPr
     return (
         <Field type="checkbox" label={fieldLabel} {...restProps}>
             {(props) => (
-                <FormControlLabel label={label} control={<FinalFormSwitch {...props} {...finalFormSwitchProps} />} {...formControlLabelProps} />
+                <FormControlLabel
+                    label={typeof label === "function" ? label(props.input.checked) : label}
+                    control={<FinalFormSwitch {...props} {...finalFormSwitchProps} />}
+                    {...formControlLabelProps}
+                />
             )}
         </Field>
     );

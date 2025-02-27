@@ -30,6 +30,7 @@
         "@opentelemetry/sdk-node": "^0.53.0",
         "cache-manager": "^5.7.6",
         "filesize": "^10.1.6",
+<<<<<<< HEAD
         "graphql": "^15.10.1",
         "ioredis": "^5.5.0",
         "lru-cache": "^11.0.2",
@@ -37,6 +38,20 @@
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-intl": "^6.8.9",
+=======
+        "fs-extra": "^9.0.0",
+        "graphql": "^15.0.0",
+        "graphql-tag": "^2.12.6",
+        "ioredis": "^5.4.1",
+        "lru-cache": "^11.0.1",
+        "next": "^14.2.24",
+        "pure-react-carousel": "^1.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-intl": "^6.0.0",
+        "react-is": "^17.0.2",
+        "react-select": "^5.8.0",
+>>>>>>> main
         "redraft": "^0.10.2",
         "styled-components": "^6.1.15",
         "swiper": "^11.2.4"

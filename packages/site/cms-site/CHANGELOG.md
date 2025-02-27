@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.15.0
+
+### Patch Changes
+
+-   75fb1d0d4: Fix block preview not rendering before user interaction
+
 ## 7.14.0
 
 ### Minor Changes

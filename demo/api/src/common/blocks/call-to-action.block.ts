@@ -13,7 +13,7 @@ import { IsEnum } from "class-validator";
 
 import { TextLinkBlock } from "./text-link.block";
 
-enum Variant {
+export enum Variant {
     Contained = "Contained",
     Outlined = "Outlined",
     Text = "Text",
