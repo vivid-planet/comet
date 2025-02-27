@@ -91,7 +91,7 @@ module.exports = {
         // api-generator
         {
             name: "api-generator",
-            script: "pnpm --filter @comet/cms-api run generate-block-meta:watch",
+            script: "pnpm --filter @comet/api-generator run dev",
             group: ["cms-api", "cms"],
             waitOn: waitOnPackages("@comet/cms-api"),
         },
