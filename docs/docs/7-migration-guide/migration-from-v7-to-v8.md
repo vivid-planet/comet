@@ -144,7 +144,19 @@ The MikroORM peer dependency has been bumped to v6.
 
     :::
 
-2.  Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+2. @mikro-orm/cli peer dependency removed. 
+
+Peer Dependency @miro-orm/cli has been removed.
+
+ ```diff title=api/package.json
+    {
+        "dependencies": {
+    -   "@mikro-orm/cli": "^5.9.8",
+        },
+    }
+```
+    
+3. Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
 
     :::note Codemods available
 
