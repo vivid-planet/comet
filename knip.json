@@ -57,7 +57,7 @@
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/admin-generator": {
+        "packages/admin/admin-generator": {
             "entry": ["./src/adminGenerator.ts", "./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
