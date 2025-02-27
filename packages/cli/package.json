@@ -27,7 +27,8 @@
     },
     "dependencies": {
         "commander": "^9.5.0",
-        "prettier": "^3.5.2"
+        "prettier": "^3.5.2",
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:^7.14.0",
@@ -35,11 +36,7 @@
         "eslint": "^9.20.1",
         "npm-run-all2": "^5.0.2",
         "rimraf": "^6.0.1",
-        "ts-node": "^10.9.2",
         "typescript": "^5.7.3"
-    },
-    "peerDependencies": {
-        "ts-node": "^10.9.1"
     },
     "publishConfig": {
         "access": "public",
