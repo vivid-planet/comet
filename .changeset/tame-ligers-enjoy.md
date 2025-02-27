@@ -3,4 +3,6 @@
 "@comet/cms-api": major
 ---
 
-Api generator is now in separated `@comet/api-generator` package and can be run with the same command as before `comet-api-generator` command.
+Move API Generator into separate `@comet/api-generator` package
+
+It can be run with the same `comet-api-generator` command as before.
