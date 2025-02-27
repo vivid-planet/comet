@@ -1165,27 +1165,12 @@ importers:
 
   packages/admin/admin-generator:
     dependencies:
-      '@comet/admin':
-        specifier: workspace:*
-        version: link:../admin
-      '@comet/admin-icons':
-        specifier: workspace:*
-        version: link:../admin-icons
-      '@comet/cms-admin':
-        specifier: workspace:*
-        version: link:../cms-admin
       '@graphql-tools/graphql-file-loader':
         specifier: ^7.5.17
         version: 7.5.17(graphql@16.10.0)
       '@graphql-tools/load':
         specifier: ^7.8.14
         version: 7.8.14(graphql@16.10.0)
-      '@mui/material':
-        specifier: ^6.4.5
-        version: 6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/x-data-grid':
-        specifier: ^7.27.0
-        version: 7.27.1(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@mui/material@6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1201,19 +1186,25 @@ importers:
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
-      prettier:
-        specifier: ^3.5.0
-        version: 3.5.2
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.0.1
     devDependencies:
+      '@comet/admin':
+        specifier: workspace:*
+        version: link:../admin
+      '@comet/admin-icons':
+        specifier: workspace:*
+        version: link:../admin-icons
+      '@comet/cms-admin':
+        specifier: workspace:*
+        version: link:../cms-admin
       '@comet/eslint-config':
-        specifier: workspace:^7.13.0
+        specifier: workspace:*
         version: link:../../eslint-config
+      '@mui/material':
+        specifier: ^6.4.5
+        version: 6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/x-data-grid':
+        specifier: ^7.27.0
+        version: 7.27.1(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@mui/material@6.4.5(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@6.4.3(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -1233,7 +1224,7 @@ importers:
         specifier: ^9.20.1
         version: 9.20.1(jiti@2.4.2)
       graphql:
-        specifier: ^16.9.0
+        specifier: ^16.10.0
         version: 16.10.0
       jest:
         specifier: ^29.7.0
@@ -1241,9 +1232,18 @@ importers:
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
+      prettier:
+        specifier: ^3.5.1
+        version: 3.5.2
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
       react-intl:
         specifier: ^6.8.9
         version: 6.8.9(react@18.3.1)(typescript@4.9.5)
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
       ts-jest:
         specifier: ^29.2.5
         version: 29.2.6(@babel/core@7.26.9)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.9))(jest@29.7.0(@types/node@22.13.5)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.11(@swc/helpers@0.5.5))(@types/node@22.13.5)(typescript@4.9.5)))(typescript@4.9.5)
