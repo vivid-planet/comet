@@ -44,6 +44,20 @@ function common<InputApi, State, OutputApi>(): Omit<
         previewContent: () => [],
         replaceDependenciesInOutput: (output) => output,
         resolveDependencyPath: () => "",
+        extractTextContents: function (state) {
+            if (typeof state === "string") {
+                return [state];
+            }
+
+            if (process.env.NODE_ENV === "development") {
+                console.warn(
+                    "extractTextContents not implemented for block. The SEO text generation will not consider this block. This might be a mistake since the state is not plain text: ",
+                    state,
+                );
+            }
+
+            return [];
+        },
     };
 }
 

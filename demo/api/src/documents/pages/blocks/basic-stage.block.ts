@@ -15,7 +15,7 @@ import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsInt, Max, Min } from "class-validator";
 
-enum Alignment {
+export enum Alignment {
     left = "left",
     center = "center",
 }

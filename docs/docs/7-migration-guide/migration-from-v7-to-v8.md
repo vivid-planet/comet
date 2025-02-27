@@ -15,7 +15,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 - Upgrade MUI packages to v6
 - Run MUI codemods
 - Upgrade MUI X packages to v6
-- Upgrade NestJS packages to v10
+- Upgrade NestJS packages to v11
 - Upgrade Prettier to v3
 - Remove all passport-related dependencies (we don't use passport anymore)
 - Add @nestjs/jwt dependency
@@ -28,9 +28,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 #### NestJS
 
-The NestJS peer dependency has been bumped to v10.
+The NestJS peer dependency has been bumped to v11.
 
-1.  Upgrade all your dependencies to support NestJS v10:
+1.  Upgrade all your dependencies to support NestJS v11:
 
     ```diff title=api/package.json
     {
@@ -43,24 +43,28 @@ The NestJS peer dependency has been bumped to v10.
     -       "@nestjs/graphql": "^10.0.0",
     -       "@nestjs/passport": "^9.0.0",
     -       "@nestjs/platform-express": "^9.0.0",
-    +       "@nestjs/apollo": "^12.0.0",
-    +       "@nestjs/common": "^10.0.0",
-    +       "@nestjs/core": "^10.0.0",
-    +       "@nestjs/graphql": "^12.0.0",
-    +       "@nestjs/passport": "^10.0.0",
-    +       "@nestjs/platform-express": "^10.0.0",
+    +       "@nestjs/apollo": "^13.0.0",
+    +       "@nestjs/common": "^11.0.0",
+    +       "@nestjs/core": "^11.0.0",
+    +       "@nestjs/graphql": "^13.0.0",
+    +       "@nestjs/passport": "^11.0.0",
+    +       "@nestjs/platform-express": "^11.0.0",
     -       "apollo-server-core": "^3.0.0",
     -       "apollo-server-express": "^3.0.0",
+    -       "express": "^4.0.0",
+    +       "express": "^5.0.0",
     -       "graphql": "^15.0.0",
-    +       "graphql": "^16.6.0",
+    +       "graphql": "^16.10.0",
         },
         "devDependencies": {
     -       "@nestjs/cli": "^9.0.0",
     -       "@nestjs/schematics": "^9.0.0",
     -       "@nestjs/testing": "^9.0.0",
-    +       "@nestjs/cli": "^10.0.0",
-    +       "@nestjs/schematics": "^10.0.0",
-    +       "@nestjs/testing": "^10.0.0"
+    +       "@nestjs/cli": "^11.0.0",
+    +       "@nestjs/schematics": "^11.0.0",
+    +       "@nestjs/testing": "^11.0.0",
+    -       "@types/express": "^4.0.0",
+    +       "@types/express": "^5.0.0",
         }
     }
     ```
@@ -107,6 +111,9 @@ The NestJS peer dependency has been bumped to v10.
     ```
 
     :::
+
+3.  You may need to update some of your routes to support Express v5.
+    See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
 
 #### MikroORM
 
@@ -213,7 +220,7 @@ npx @comet/upgrade v8/update-class-validator.ts
 {
     "dependencies": {
 -       "@sentry/node": "^7.0.0",
-+       "@sentry/node": "^8.0.0",
++       "@sentry/node": "^9.0.0",
     },
 }
 ```
@@ -226,6 +233,11 @@ npx @comet/upgrade v8/update-class-validator.ts
 -   app.use(Sentry.Handlers.errorHandler());
 +   Sentry.setupExpressErrorHandler(app);
 ```
+
+None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
+
+- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
+- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
 
 ### NestJS peer dependencies
 
@@ -778,6 +790,17 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + <DataGrid /* other props */ >
 ```
 
+### Remove @comet/admin-theme
+
+The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the imports accordingly:
+
+```diff
+- import { createCometTheme } from "@comet/admin-theme";
++ import { createCometTheme } from "@comet/admin";
+
+  const theme = createCometTheme();
+```
+
 ### Remove @comet/admin-react-select
 
 ```diff
@@ -971,3 +994,39 @@ Run ESLint with the --fix option to automatically update imports:
 ```bash
 npm run lint:eslint --fix
 ```
+
+### Add new package @comet/api-generator
+
+The API Generator has been moved into a separate package `@comet/api-generator`.
+
+```diff title="api/package.json"
+devDependencies: {
++  "@comet/api-generator": "^8.0.0",
+}
+```
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
+    ```
+
+:::
+
+### Add new package @comet/admin-generator
+
+The Admin Generator has been moved into a separate package `@comet/admin-generator`.
+
+```diff title="admin/package.json"
+devDependencies: {
++  "@comet/admin-generator": "^8.0.0",
+}
+```
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
+    ```
+
+:::

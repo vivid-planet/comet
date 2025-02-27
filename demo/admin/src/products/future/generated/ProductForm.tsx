@@ -190,7 +190,7 @@ export function ProductForm({ id }: FormProps) {
                     {saveConflict.dialogs}
                     <>
                         <FieldSet
-                            initiallyExpanded
+                            initiallyExpanded={true}
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
                             supportText={
                                 mode === "edit" && (

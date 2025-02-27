@@ -134,6 +134,7 @@ export const LayoutBlock = createCompositeBlock(
                             <Field name="layout" component={FinalFormLayoutSelect} layouts={layoutOptions} fullWidth />
                         </BlocksFinalForm>
                     ),
+                    extractTextContents: () => [],
                 }),
                 title: <FormattedMessage id="layoutBlock.layout" defaultMessage="Layout" />,
             },

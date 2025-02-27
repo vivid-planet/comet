@@ -653,15 +653,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "RichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -697,15 +697,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "RichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -746,6 +746,16 @@
                         {
                             "name": "scope",
                             "kind": "Json",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
                             "nullable": true
                         }
                     ]

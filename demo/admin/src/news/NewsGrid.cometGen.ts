@@ -1,4 +1,5 @@
-import { DamImageBlock, type future_GridConfig as GridConfig } from "@comet/cms-admin";
+import { type GridConfig } from "@comet/admin-generator";
+import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLNews } from "@src/graphql.generated";
 
 import { NewsContentBlock } from "./blocks/NewsContentBlock";

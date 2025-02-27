@@ -12,6 +12,7 @@ export { BlockAdminTabs } from "./blocks/common/BlockAdminTabs";
 export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
+export { type BlocksConfig, BlocksConfigProvider, useBlocksConfig } from "./blocks/config/BlocksConfigContext";
 export { BlockContextProvider } from "./blocks/context/BlockContextProvider";
 export { useBlockContext } from "./blocks/context/useBlockContext";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
@@ -154,6 +155,7 @@ export { createDocumentDependencyMethods } from "./dependencies/createDocumentDe
 export { DependenciesConfigProvider, useDependenciesConfig } from "./dependencies/DependenciesConfig";
 export { DependencyList } from "./dependencies/DependencyList";
 export { DependencyInterface } from "./dependencies/types";
+export { ContentGenerationConfig, ContentGenerationConfigProvider, useContentGenerationConfig } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
@@ -171,14 +173,6 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
-export type {
-    FormConfig as future_FormConfig,
-    FormFieldConfig as future_FormFieldConfig,
-    GeneratorConfig as future_GeneratorConfig,
-    GridColumnConfig as future_GridColumnConfig,
-    GridConfig as future_GridConfig,
-} from "./generator/future/generator";
-export { CrudGeneratorConfig } from "./generator/types";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";

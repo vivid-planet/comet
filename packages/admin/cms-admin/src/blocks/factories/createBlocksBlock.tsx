@@ -20,11 +20,13 @@ import {
     type SetStateAction,
     useCallback,
     useEffect,
+    useMemo,
     useState,
 } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { CannotPasteBlockDialog } from "../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../clipboard/useBlockClipboard";
 import { AddBlockDrawer } from "../common/AddBlockDrawer";
@@ -34,6 +36,7 @@ import { BlockAdminComponentButton } from "../common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
+import { useBlocksConfig } from "../config/BlocksConfigContext";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
@@ -470,7 +473,18 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 [updateState],
             );
 
-            const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(supportedBlocks) });
+            const { scope } = useContentScope();
+            const { isBlockSupported } = useBlocksConfig();
+
+            const filteredSupportedBlocks = useMemo(() => {
+                if (isBlockSupported) {
+                    return Object.fromEntries(Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block, scope)));
+                } else {
+                    return supportedBlocks;
+                }
+            }, [scope, isBlockSupported]);
+
+            const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(filteredSupportedBlocks) });
 
             const pasteBlock = async (insertAt: number) => {
                 const response = await getClipboardContent();
@@ -792,7 +806,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                             <AddBlockDrawer
                                                 open={showAddBlockDrawer}
                                                 onClose={handleCloseAddBlockDrawer}
-                                                blocks={supportedBlocks}
+                                                blocks={filteredSupportedBlocks}
                                                 onAddNewBlock={(type, addAndEdit) => {
                                                     const key = addNewBlock(type, beforeIndex);
 
@@ -882,6 +896,22 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/blocks/${childPath}`;
+        },
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            return state.blocks.reduce<string[]>((content, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+
+                if (!child.visible && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
+            }, []);
         },
     };
 

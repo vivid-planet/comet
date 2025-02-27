@@ -1,5 +1,41 @@
 # @comet/cms-site
 
+## 8.0.0-beta.0
+
+### Major Changes
+
+- eb65ef1: Remove unused GraphQL client/fetch from site preview handlers
+
+    The client/fetch was passed as the last argument for `sitePreviewRoute` and `legacyPagesRouterSitePreviewApiHandler`.
+    Remove the argument from the respective function calls or use the provided upgrade script (https://github.com/vivid-planet/comet-upgrade/pull/33)
+
+### Patch Changes
+
+- b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+- b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+
+## 7.15.0
+
+### Patch Changes
+
+- 75fb1d0d4: Fix block preview not rendering before user interaction
+
+## 7.14.0
+
+### Minor Changes
+
+- 6163b83a4: Play/pause auto-play videos depending on their visibility
+
+    Start videos in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock` when the block is in or enters the viewport.
+    Pause them when the block is leaving the viewport.
+
+- d07a6da51: Add comment explaining why we omit the `alt`-prop in `PixelImageBlock`
+
+### Patch Changes
+
+- 6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
+- 8e648a757: Set alt attribute to empty string as default in `SvgImageBlock`
+
 ## 7.13.0
 
 ### Minor Changes
