@@ -124,10 +124,12 @@ The MikroORM peer dependency has been bumped to v6.
     ```diff title=api/package.json
     {
         "dependencies": {
+    -   "@mikro-orm/cli": "^5.9.8",
     -   "@mikro-orm/core": "^5.9.8",
     -   "@mikro-orm/migrations": "^5.9.8",
     -   "@mikro-orm/nestjs": "^5.2.3",
     -   "@mikro-orm/postgresql": "^5.9.8",
+    +   "@mikro-orm/cli": "^6.4.0",
     +   "@mikro-orm/core": "^6.4.0",
     +   "@mikro-orm/migrations": "^6.4.0",
     +   "@mikro-orm/nestjs": "^6.0.2",
@@ -144,19 +146,7 @@ The MikroORM peer dependency has been bumped to v6.
 
     :::
 
-2.  @mikro-orm/cli peer dependency removed.
-
-Peer Dependency @miro-orm/cli has been removed.
-
-```diff title=api/package.json
-   {
-       "dependencies": {
-   -   "@mikro-orm/cli": "^5.9.8",
-       },
-   }
-```
-
-3. Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+2.  Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
 
     :::note Codemods available
 
