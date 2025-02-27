@@ -1,97 +1,112 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { TeaserItemBlockData } from "@src/blocks.generated";
-import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { MediaBlock } from "@src/common/blocks/MediaBlock";
-import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import { Typography } from "@src/common/components/Typography";
-import { SvgUse } from "@src/common/helpers/SvgUse";
-import { Renderers } from "redraft";
+import { PixelImageBlock, PropsWithData, withPreview } from "@comet/cms-site";
+import { PixelImageBlockData, TeaserItemBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 
-const descriptionRenderers: Renderers = {
-    inline: defaultRichTextInlineStyleMap,
-};
-
 export const TeaserItemBlock = withPreview(
-    ({ data: { media, title, description, link } }: PropsWithData<TeaserItemBlockData>) => (
-        <Link data={link.link}>
-            <MediaMobile>
-                <MediaBlock data={media} aspectRatio="1x1" sizes="20vw" />
-            </MediaMobile>
-            <MediaDesktop>
-                <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
-            </MediaDesktop>
-            <ContentContainer>
-                <TitleTypography variant="h350">{title}</TitleTypography>
-                <Typography variant="p200">
-                    <RichTextBlock data={description} renderers={descriptionRenderers} />
-                </Typography>
-                <TextLinkContainer>
-                    <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
-                    <LinkText>{link.text}</LinkText>
-                </TextLinkContainer>
-            </ContentContainer>
-        </Link>
-    ),
+    ({ data: { media } }: PropsWithData<TeaserItemBlockData>) => {
+        // @ts-expect-error Only used for debugging
+        if (media.block?.type !== "image" || media.block.props.activeType !== "pixelImage") {
+            return <pre>Use a pixel image</pre>;
+        }
+
+        // @ts-expect-error Only used for debugging
+        const pixelImageBlockData: PixelImageBlockData = media.block.props.block.props;
+
+        return (
+            <div>
+                <Root>
+                    <div>
+                        <Title>Fixed width / 16x9</Title>
+                        <ItemWrapper>
+                            <FixedWidth16x9Wrapper>
+                                <PixelImageBlock data={pixelImageBlockData} aspectRatio="16x9" />
+                            </FixedWidth16x9Wrapper>
+                            {rightTextContent}
+                        </ItemWrapper>
+                    </div>
+                    <div>
+                        <Title>Fixed width / automatic aspect ratio</Title>
+                        <ItemWrapper>
+                            <FixedWidthAutoAspectRatioWrapper>
+                                <PixelImageBlock data={pixelImageBlockData} aspectRatio="inherit" />
+                            </FixedWidthAutoAspectRatioWrapper>
+                            {rightTextContent}
+                        </ItemWrapper>
+                    </div>
+                    <div>
+                        <Title>Fixed width, auto height</Title>
+                        <ItemWrapper>
+                            <FixedWidthAutoHeightWrapper>
+                                <PixelImageBlock data={pixelImageBlockData} aspectRatio="inherit" />
+                            </FixedWidthAutoHeightWrapper>
+                            {rightTextContent}
+                        </ItemWrapper>
+                    </div>
+                    <div>
+                        <Title>Fixed height, auto width</Title>
+                        <ItemWrapper>
+                            <FixedHeightAutoWidthWrapper>
+                                <PixelImageBlock data={pixelImageBlockData} aspectRatio="inherit" />
+                            </FixedHeightAutoWidthWrapper>
+                            {rightTextContent}
+                        </ItemWrapper>
+                    </div>
+                    {bottomTextContent}
+                </Root>
+            </div>
+        );
+    },
     { label: "Teaser Item" },
 );
 
-const Link = styled(LinkBlock)`
-    text-decoration: none;
-    cursor: pointer;
+const TextWrapper = styled.p`
+    background-color: #f0f0f0;
+`;
+
+const rightTextContent = <TextWrapper>Text to the right of an image to check for layout shift.</TextWrapper>;
+const bottomTextContent = <TextWrapper>Text to the bottom of an image to check for layout shift.</TextWrapper>;
+
+const Root = styled.div`
     display: flex;
-    flex: 1;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 350px;
+`;
+
+const ItemWrapper = styled.div`
+    display: flex;
     flex-direction: row;
-    gap: ${({ theme }) => theme.spacing.S300};
-    color: ${({ theme }) => theme.palette.text.primary};
-
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-        flex: unset;
-        gap: ${({ theme }) => theme.spacing.S400};
-        flex-direction: column;
-    }
+    gap: 10px;
+    align-items: flex-start;
 `;
 
-const MediaMobile = styled.div`
-    flex: 1;
-
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
-        display: none;
-    }
-`;
-
-const MediaDesktop = styled.div`
-    flex: 1;
-    display: none;
-
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
-        display: block;
-    }
-`;
-
-const ContentContainer = styled.div`
-    flex: 2;
-`;
-
-const TitleTypography = styled(Typography)`
-    margin-bottom: ${({ theme }) => theme.spacing.S100};
-`;
-
-const TextLinkContainer = styled.div`
-    margin-top: ${({ theme }) => theme.spacing.S300};
-    display: flex;
-    align-items: center;
-    gap: ${({ theme }) => theme.spacing.S200};
-    color: ${({ theme }) => theme.palette.primary.main};
-    transition: color 0.3s ease-in-out;
-
-    &:hover {
-        color: ${({ theme }) => theme.palette.primary.dark};
-    }
-`;
-
-const LinkText = styled.span`
-    font-family: ${({ theme }) => theme.fontFamily};
+const Title = styled.pre`
     font-size: 16px;
     font-weight: 700;
+    margin-bottom: 15px;
+`;
+
+const FixedWidth16x9Wrapper = styled.div`
+    position: relative;
+    width: 200px;
+    flex-shrink: 0;
+`;
+
+const FixedWidthAutoAspectRatioWrapper = styled.div`
+    position: relative;
+    width: 200px;
+    flex-shrink: 0;
+`;
+
+const FixedWidthAutoHeightWrapper = styled.span`
+    position: relative;
+    width: 200px;
+    height: auto;
+    flex-shrink: 0;
+`;
+
+const FixedHeightAutoWidthWrapper = styled.span`
+    position: relative;
+    width: auto;
+    height: 200px;
 `;

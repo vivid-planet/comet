@@ -96,4 +96,5 @@ const ImageContainer = styled.div<{ $aspectRatio: number }>`
     position: relative;
     width: 100%;
     aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
+    outline: 2px solid magenta; // Used for debugging
 `;
