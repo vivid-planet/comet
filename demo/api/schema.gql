@@ -1616,12 +1616,22 @@ input WarningInput {
   message: String!
   type: String!
   severity: WarningSeverity!
+  dependencyInfo: WarningDependencyInfoInput!
   status: WarningStatus! = open
+}
+
+input WarningDependencyInfoInput {
+  rootEntityName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
+  targetId: String!
+  jsonPath: String!
 }
 
 input WarningUpdateInput {
   message: String
   type: String
   severity: WarningSeverity
+  dependencyInfo: WarningDependencyInfoInput
   status: WarningStatus
 }
