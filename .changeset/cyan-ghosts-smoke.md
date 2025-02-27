@@ -1,5 +1,5 @@
 ---
-"@comet/admin-theme": major
+"@comet/admin": major
 ---
 
 Prevent the selection of DataGrid rows by clicking on them

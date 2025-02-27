@@ -53,8 +53,6 @@ if (ExecutionEnvironment.canUseDOM) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const cometAdminColorPickerImports = require("@comet/admin-color-picker");
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const cometAdminThemeImports = require("@comet/admin-theme");
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Card, CardContent, FormControlLabel, Grid, Chip, IconButton, Typography, Box } = require("@mui/material");
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Form } = require("react-final-form");
@@ -83,10 +81,6 @@ if (ExecutionEnvironment.canUseDOM) {
         {
             name: "@comet/admin-color-picker",
             imports: cometAdminColorPickerImports,
-        },
-        {
-            name: "@comet/admin-theme",
-            imports: cometAdminThemeImports,
         },
         {
             name: "@mui/material",

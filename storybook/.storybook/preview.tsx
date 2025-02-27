@@ -1,8 +1,7 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { MainContent, MuiThemeProvider } from "@comet/admin";
+import { createCometTheme, MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
-import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
 import { type Locale as DateFnsLocale } from "date-fns";
