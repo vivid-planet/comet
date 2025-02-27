@@ -730,7 +730,6 @@ export function generateGrid(
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
-
         ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
