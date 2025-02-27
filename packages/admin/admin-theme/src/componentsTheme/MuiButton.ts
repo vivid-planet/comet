@@ -17,6 +17,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             letterSpacing: 0,
             textTransform: "none",
             fontWeight: 250,
+            maxWidth: "100%",
 
             [`&.${buttonClasses.textSizeSmall}`]: {
                 fontSize: 14,
@@ -63,6 +64,11 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             [`&.${buttonClasses.disabled}`]: {
                 backgroundColor: palette.grey[100],
                 color: palette.grey[300],
+            },
+
+            "&:focus": {
+                border: "none",
+                outlineOffset: 0,
             },
         },
         containedPrimary: {
@@ -117,8 +123,9 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             ":focus": {
-                borderWidth: "2px",
-                borderColor: palette.primary.dark,
+                border: "none",
+                outline: `2px solid ${palette.primary.dark} `,
+                outlineOffset: 0,
             },
         },
         outlinedError: {
