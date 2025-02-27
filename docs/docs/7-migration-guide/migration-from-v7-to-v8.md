@@ -124,12 +124,10 @@ The MikroORM peer dependency has been bumped to v6.
     ```diff title=api/package.json
     {
         "dependencies": {
-    -   "@mikro-orm/cli": "^5.9.8",
     -   "@mikro-orm/core": "^5.9.8",
     -   "@mikro-orm/migrations": "^5.9.8",
     -   "@mikro-orm/nestjs": "^5.2.3",
     -   "@mikro-orm/postgresql": "^5.9.8",
-    +   "@mikro-orm/cli": "^6.4.0",
     +   "@mikro-orm/core": "^6.4.0",
     +   "@mikro-orm/migrations": "^6.4.0",
     +   "@mikro-orm/nestjs": "^6.0.2",
