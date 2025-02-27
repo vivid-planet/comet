@@ -225,7 +225,7 @@ export function generateGrid(
     if (allowRowReordering && updateInputArg) {
         const inputType = findInputObjectType(updateInputArg, gqlIntrospection);
         if (!inputType) throw new Error("Can't find update input type");
-        if (inputType.inputFields?.find((field) => field.name === "position")) {
+        if (!inputType.inputFields?.find((field) => field.name === "position")) {
             throw new Error("Position field is needed when using 'rowReordering'");
         }
     }
@@ -750,7 +750,7 @@ export function generateGrid(
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
 
-        ${generateHandleRowOrderChange(allowRowReordering, gqlType, gqlTypePlural)}
+        ${generateHandleRowOrderChange(allowRowReordering, gqlType, instanceGqlTypePlural)}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -1057,7 +1057,7 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
     });`;
 };
 
-const generateHandleRowOrderChange = (allowRowReordering: boolean, gqlType: string, gqlTypePlural: string) => {
+const generateHandleRowOrderChange = (allowRowReordering: boolean, gqlType: string, instanceGqlTypePlural: string) => {
     if (!allowRowReordering) {
         return "";
     }
@@ -1066,7 +1066,7 @@ const generateHandleRowOrderChange = (allowRowReordering: boolean, gqlType: stri
             mutation: update${gqlType}PositionMutation,
             variables: { id, input: { position: targetIndex + 1 } },
             awaitRefetchQueries: true,
-            refetchQueries: [${gqlTypePlural}Query]
+            refetchQueries: [${instanceGqlTypePlural}Query]
         });
     };`;
 };
