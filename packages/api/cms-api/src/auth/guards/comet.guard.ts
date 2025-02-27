@@ -36,7 +36,7 @@ export class CometAuthGuard implements CanActivate {
             return true;
         }
 
-        const result = await this.getAuthenticatedUser(request);
+        const result = await this.getAuthenticatedUserResult(request);
         if (!result) return false;
         if ("authenticationError" in result) throw new UnauthorizedException(result.authenticationError);
 
@@ -62,10 +62,10 @@ export class CometAuthGuard implements CanActivate {
         return true;
     }
 
-    private async getAuthenticatedUser(request: Request) {
+    private async getAuthenticatedUserResult(request: Request) {
         for (const authService of this.authServices) {
-            const user = await authService.authenticateUser(request);
-            if (user && user !== SKIP_AUTH_SERVICE) return user;
+            const result = await authService.authenticateUser(request);
+            if (result && result !== SKIP_AUTH_SERVICE) return result;
         }
     }
 
