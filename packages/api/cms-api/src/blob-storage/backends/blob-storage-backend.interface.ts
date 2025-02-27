@@ -4,12 +4,12 @@ export type StorageMetaData = {
     size: number;
     etag?: string;
     lastModified?: Date;
-    headers: Record<string, string>;
+    contentType: string;
 };
 
 export type CreateFileOptions = {
     size: number;
-    headers: StorageMetaData["headers"];
+    contentType: string;
 };
 
 export interface BlobStorageBackendInterface {

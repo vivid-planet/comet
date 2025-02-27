@@ -79,17 +79,12 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         folderName: string,
         fileName: string,
         data: NodeJS.ReadableStream | Buffer | string,
-        { headers, size }: CreateFileOptions,
+        { contentType, size }: CreateFileOptions,
     ): Promise<void> {
-        const metadata = {
-            headers: JSON.stringify(headers),
-        };
-
         const input: AWS.PutObjectCommandInput = {
             ...this.getCommandInput(folderName, fileName),
-            ContentType: headers["content-type"],
+            ContentType: contentType,
             ContentLength: size,
-            Metadata: metadata,
         };
 
         if (typeof data === "string") {
@@ -133,7 +128,8 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
             size: response.ContentLength!,
             etag: response.ETag,
             lastModified: response.LastModified,
-            headers: response.Metadata?.headers ? JSON.parse(response.Metadata.headers) : {},
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            contentType: response.ContentType!,
         };
     }
 
