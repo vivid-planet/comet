@@ -994,3 +994,21 @@ Run ESLint with the --fix option to automatically update imports:
 ```bash
 npm run lint:eslint --fix
 ```
+
+### Add new package @comet/api-generator
+
+The API Generator has been moved into a separate package `@comet/api-generator`.
+
+```diff title="api/package.json"
+devDependencies: {
++  "@comet/api-generator": "^8.0.0",
+}
+```
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
+    ```
+
+:::

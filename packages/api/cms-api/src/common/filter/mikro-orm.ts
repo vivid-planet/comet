@@ -1,6 +1,6 @@
 import { type EntityMetadata, type EntityRepository, type FilterQuery, type ObjectQuery } from "@mikro-orm/postgresql";
 
-import { getCrudSearchFieldsFromMetadata } from "../../generator/utils/search-fields-from-metadata";
+import { getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
