@@ -113,9 +113,9 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             borderStyle: "solid",
             borderColor: palette.grey[100],
             paddingTop: 11,
-            paddingRight: 15,
+            paddingRight: 14,
             paddingBottom: 11,
-            paddingLeft: 15,
+            paddingLeft: 14,
             borderRadius: 4,
 
             ":hover": {
@@ -123,9 +123,11 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             ":focus": {
-                border: "none",
-                outline: `2px solid ${palette.primary.dark} `,
-                outlineOffset: 0,
+                paddingTop: 10,
+                paddingRight: 13,
+                paddingBottom: 10,
+                paddingLeft: 13,
+                border: `2px solid ${palette.primary.dark} `,
             },
         },
         outlinedError: {
@@ -140,7 +142,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             "&:focus": {
-                outline: `2px solid ${palette.error.main} `,
+                border: `2px solid ${palette.error.main} `,
             },
         },
         startIcon: {
