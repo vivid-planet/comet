@@ -1,6 +1,6 @@
 {
     "mode": "pre",
-    "tag": "next",
+    "tag": "beta",
     "initialVersions": {
         "comet-demo-admin": "1.0.0",
         "comet-demo-admin-server": "1.0.0",
