@@ -52,7 +52,6 @@ type SvgNode =
 const disallowedSvgTags = [
     "script", // can lead to XSS
     "foreignObject", // can embed non-SVG content
-    "use", // can load external resources
     "image", // can load external resources
     "animate", // can modify attributes; resource exhaustion
     "animateMotion", // can modify attributes; resource exhaustion

@@ -431,11 +431,11 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
                     errorOccurred = true;
-                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
+                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number } | string>;
 
-                    if (typedErr.response?.data.error === "CometImageResolutionException") {
+                    if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
                         addValidationError(file, <MaxResolutionError maxResolution={context.damConfig.maxSrcResolution} />);
-                    } else if (typedErr.response?.data.error === "CometValidationException") {
+                    } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
                         const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
 
@@ -450,7 +450,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response?.data.message.includes("SVG contains forbidden content")) {
+                    } else if (hasStringErrorData(typedErr) && typedErr.response?.data.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
                     } else if (typedErr.response === undefined && typedErr.request) {
                         addValidationError(file, <NetworkError />);
@@ -502,4 +502,14 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         },
         newlyUploadedItems,
     };
+};
+
+const hasObjectErrorData = (
+    err: AxiosError<{ error: string; message: string; statusCode: number } | string>,
+): err is AxiosError<{ error: string; message: string; statusCode: number }> => {
+    return typeof err.response?.data === "object" && err.response?.data.error !== undefined;
+};
+
+const hasStringErrorData = (err: AxiosError<{ error: string; message: string; statusCode: number } | string>): err is AxiosError<string> => {
+    return typeof err.response?.data === "string";
 };
