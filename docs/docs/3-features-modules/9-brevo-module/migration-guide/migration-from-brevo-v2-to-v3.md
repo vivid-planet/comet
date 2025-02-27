@@ -88,7 +88,7 @@ BrevoModule.register({
 -       doubleOptInTemplateId: config.brevo.doubleOptInTemplateId,
         //...
     },
-    //..
+    //...
 })
 ```
 
@@ -113,6 +113,18 @@ Instead define them in the `BrevoConfigProvider` once:
 >
     {children}
 </BrevoConfigProvider>
+```
+
+### Remove `email` and `allowedRedirectUrl` from `brevoContactsPageAttributesConfig`
+
+```diff
+//...
+  input2State: (values?: AdditionalFormConfigInputProps) => {
+-       email: string;
+-       redirectionUrl: string;
+        attributes: //...
+    };
+//...
 ```
 
 ## Site
