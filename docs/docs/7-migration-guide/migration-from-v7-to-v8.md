@@ -790,6 +790,17 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + <DataGrid /* other props */ >
 ```
 
+### Remove @comet/admin-theme
+
+The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the imports accordingly:
+
+```diff
+- import { createCometTheme } from "@comet/admin-theme";
++ import { createCometTheme } from "@comet/admin";
+
+  const theme = createCometTheme();
+```
+
 ### Remove @comet/admin-react-select
 
 ```diff

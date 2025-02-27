@@ -317,6 +317,12 @@ export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 export { RouterTab, RouterTabs, RouterTabsClassKey } from "./tabs/RouterTabs";
 export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+export { breakpointsOptions, breakpointValues } from "./theme/breakpointsOptions";
+export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette, warningPalette } from "./theme/colors";
+export { createCometTheme } from "./theme/createCometTheme";
+export { paletteOptions } from "./theme/paletteOptions";
+export { shadows } from "./theme/shadows";
+export { createTypographyOptions } from "./theme/typographyOptions";
 export { BaseTranslationDialog } from "./translator/BaseTranslationDialog";
 export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
 export { useContentTranslationService } from "./translator/useContentTranslationService";

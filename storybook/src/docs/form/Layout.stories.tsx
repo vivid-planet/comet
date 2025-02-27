@@ -1,5 +1,6 @@
 import {
     CancelButton,
+    createCometTheme,
     Field,
     FieldContainer,
     FinalFormCheckbox,
@@ -9,7 +10,6 @@ import {
     FormSection,
     OkayButton,
 } from "@comet/admin";
-import { createCometTheme } from "@comet/admin-theme";
 import {
     Button,
     // eslint-disable-next-line no-restricted-imports

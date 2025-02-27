@@ -1,6 +1,5 @@
-import { ContentOverflow, MuiThemeProvider } from "@comet/admin";
+import { ContentOverflow, createCometTheme, MuiThemeProvider } from "@comet/admin";
 import { Preview } from "@comet/admin-icons";
-import { createCometTheme } from "@comet/admin-theme";
 import { Typography } from "@mui/material";
 
 function Story() {
