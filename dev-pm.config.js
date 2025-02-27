@@ -45,6 +45,14 @@ module.exports = {
             group: ["comet-admin"],
         },
 
+        // admin-generator
+        {
+            name: "admin-generator",
+            script: "pnpm --filter @comet/admin-generator run dev",
+            group: ["cms-admin"],
+            waitOn: waitOnPackages("@comet/cms-admin"),
+        },
+
         // group cms-admin
         {
             name: "cms-admin",
@@ -106,10 +114,7 @@ module.exports = {
             name: "demo-admin",
             script: "pnpm --filter comet-demo-admin run start",
             group: ["demo-admin", "demo"],
-            waitOn: [
-                ...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin"),
-                "tcp:$API_PORT",
-            ],
+            waitOn: [...waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte", "@comet/cms-admin"), "tcp:$API_PORT"],
         },
         {
             name: "demo-admin-codegen",

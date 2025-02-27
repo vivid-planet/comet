@@ -57,6 +57,10 @@
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/admin/admin-generator": {
+            "entry": ["./src/adminGenerator.ts", "./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "packages/api/cms-api": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./src/**/migrations/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"],

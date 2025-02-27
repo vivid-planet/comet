@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts && comet-admin-generator future-generate",
+        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate",
         "build": "run-s intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"npm run generate-block-types\"",
@@ -56,6 +56,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.26.9",
+        "@comet/admin-generator": "workspace:*",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@formatjs/cli": "^6.6.1",
