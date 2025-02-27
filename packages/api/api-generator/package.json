@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "7.13.0",
+    "version": "7.14.0",
     "repository": {
         "directory": "packages/api/api-generator",
         "type": "git",
