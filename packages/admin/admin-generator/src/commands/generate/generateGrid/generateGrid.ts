@@ -669,8 +669,6 @@ export function generateGrid(
         \${${instanceGqlTypePlural}Fragment}
     \`;
 
-
-
     ${
         allowRowReordering
             ? `const update${gqlType}PositionMutation = gql\`
@@ -751,19 +749,8 @@ export function generateGrid(
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
-        ${
-            allowRowReordering
-                ? `
-        const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
-            await client.mutate<GQLUpdate${gqlType}PositionMutation, GQLUpdate${gqlType}PositionMutationVariables>({
-                mutation: update${gqlType}PositionMutation,
-                variables: { id, input: { position: targetIndex + 1 } },
-                awaitRefetchQueries: true,
-                refetchQueries: [${instanceGqlTypePlural}Query]
-            });
-        };`
-                : ""
-        }
+
+        ${generateHandleRowOrderChange(allowRowReordering, gqlType, gqlTypePlural)}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -1068,4 +1055,18 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
             fileName: "${gqlTypePlural}",
         },
     });`;
+};
+
+const generateHandleRowOrderChange = (allowRowReordering: boolean, gqlType: string, gqlTypePlural: string) => {
+    if (!allowRowReordering) {
+        return "";
+    }
+    return `const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
+        await client.mutate<GQLUpdate${gqlType}PositionMutation, GQLUpdate${gqlType}PositionMutationVariables>({
+            mutation: update${gqlType}PositionMutation,
+            variables: { id, input: { position: targetIndex + 1 } },
+            awaitRefetchQueries: true,
+            refetchQueries: [${gqlTypePlural}Query]
+        });
+    };`;
 };
