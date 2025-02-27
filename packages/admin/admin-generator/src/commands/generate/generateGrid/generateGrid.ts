@@ -221,6 +221,15 @@ export function generateGrid(
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
     const allowRowReordering = typeof config.rowReordering !== "undefined" && config.rowReordering && hasUpdateMutation;
 
+    const updateInputArg = updateMutationType?.args.find((arg) => arg.name === "input");
+    if (allowRowReordering && updateInputArg) {
+        const inputType = findInputObjectType(updateInputArg, gqlIntrospection);
+        if (!inputType) throw new Error("Can't find update input type");
+        if (inputType.inputFields?.find((field) => field.name === "position")) {
+            throw new Error("Position field is needed when using 'rowReordering'");
+        }
+    }
+
     const hasRowReorderingOnDragField =
         allowRowReordering && typeof config.rowReorderingOnDragField !== "undefined" && !!config.rowReorderingOnDragField;
 
