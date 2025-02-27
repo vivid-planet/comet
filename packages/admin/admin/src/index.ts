@@ -49,6 +49,7 @@ export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "
 export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuContext, CrudMoreActionsMenuItem, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { DataGridPanel, DataGridPanelClassKey, DataGridPanelProps } from "./dataGrid/DataGridPanel";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridColDef } from "./dataGrid/GridColDef";
