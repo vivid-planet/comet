@@ -6,6 +6,7 @@ import {
     createEnumsFilter,
     DateFilter,
     DateTimeFilter,
+    IsUndefinable,
     ManyToManyFilter,
     ManyToOneFilter,
     NumberFilter,
@@ -14,7 +15,7 @@ import {
 } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { ValidateNested } from "class-validator";
 
 import { ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
@@ -30,139 +31,139 @@ class ProductTypeEnumsFilter extends createEnumsFilter(ProductType) {}
 export class ProductFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => StringFilter)
     title?: StringFilter;
 
     @Field(() => ProductStatusEnumFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ProductStatusEnumFilter)
     status?: ProductStatusEnumFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => StringFilter)
     slug?: StringFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => StringFilter)
     description?: StringFilter;
 
     @Field(() => ProductTypeEnumFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ProductTypeEnumFilter)
     type?: ProductTypeEnumFilter;
 
     @Field(() => ProductTypeEnumsFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ProductTypeEnumsFilter)
     additionalTypes?: ProductTypeEnumsFilter;
 
     @Field(() => NumberFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => NumberFilter)
     price?: NumberFilter;
 
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => BooleanFilter)
     inStock?: BooleanFilter;
 
     @Field(() => NumberFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => NumberFilter)
     soldCount?: NumberFilter;
 
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => DateFilter)
     availableSince?: DateFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => DateTimeFilter)
     lastCheckedAt?: DateTimeFilter;
 
     @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => OneToManyFilter)
     colors?: OneToManyFilter;
 
     @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => OneToManyFilter)
     variants?: OneToManyFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ManyToOneFilter)
     category?: ManyToOneFilter;
 
     @Field(() => ManyToManyFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ManyToManyFilter)
     tags?: ManyToManyFilter;
 
     @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => OneToManyFilter)
     tagsWithStatus?: OneToManyFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => DateTimeFilter)
     createdAt?: DateTimeFilter;
 
     @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => DateTimeFilter)
     updatedAt?: DateTimeFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ManyToOneFilter)
     manufacturer?: ManyToOneFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ManyToOneFilter)
     priceList?: ManyToOneFilter;
 
     @Field(() => ManyToManyFilter, { nullable: true })
     @ValidateNested()
-    @IsOptional()
+    @IsUndefinable()
     @Type(() => ManyToManyFilter)
     datasheets?: ManyToManyFilter;
 
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)
     @ValidateNested({ each: true })
-    @IsOptional()
+    @IsUndefinable()
     and?: ProductFilter[];
 
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)
     @ValidateNested({ each: true })
-    @IsOptional()
+    @IsUndefinable()
     or?: ProductFilter[];
 }

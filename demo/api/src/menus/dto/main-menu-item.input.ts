@@ -1,15 +1,15 @@
 import { BlockInputInterface } from "@comet/blocks-api";
-import { RootBlockInputScalar } from "@comet/cms-api";
+import { IsUndefinable, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { Transform } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { ValidateNested } from "class-validator";
 
 @InputType()
 export class MainMenuItemInput {
     @Field(() => RootBlockInputScalar(RichTextBlock), { nullable: true })
-    @IsOptional()
+    @IsUndefinable()
     @Transform(({ value }) => RichTextBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
-    content: BlockInputInterface | null;
+    content?: BlockInputInterface;
 }

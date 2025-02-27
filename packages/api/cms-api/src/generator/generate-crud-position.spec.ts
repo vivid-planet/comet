@@ -80,7 +80,7 @@ describe("GenerateCrudPosition", () => {
             expect(structure.properties?.[0].name).toBe("position");
             expect(structure.properties?.[0].type).toBe("number");
             expect(structure.properties?.[0].decorators?.map((decorator) => decorator.name)).toContain("IsInt");
-            expect(structure.properties?.[0].decorators?.map((decorator) => decorator.name)).toContain("IsOptional");
+            expect(structure.properties?.[0].decorators?.map((decorator) => decorator.name)).toContain("IsUndefinable");
 
             const fieldDecorator = structure.properties?.[0].decorators?.find((i) => i.name === "Field");
             expect(fieldDecorator).not.toBeUndefined();

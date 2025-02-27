@@ -1,7 +1,7 @@
-import { BlobStorageConfig } from "@comet/cms-api";
+import { BlobStorageConfig, IsUndefinable } from "@comet/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsInt, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -11,7 +11,7 @@ export class EnvironmentVariables {
     @IsString()
     POSTGRESQL_HOST: string;
 
-    @IsOptional()
+    @IsUndefinable()
     @IsBoolean()
     @Transform(({ value }) => value === "true")
     POSTGRESQL_USE_SSL: boolean;
@@ -23,7 +23,7 @@ export class EnvironmentVariables {
     @IsString()
     POSTGRESQL_DB: string;
 
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     POSTGRESQL_USER?: string;
 
@@ -128,7 +128,7 @@ export class EnvironmentVariables {
     @IsString()
     AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID?: string;
 
-    @IsOptional()
+    @IsUndefinable()
     @IsUrl()
     SENTRY_DSN?: string;
 

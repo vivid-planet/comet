@@ -1,5 +1,6 @@
 import { BlockData, BlockField, BlockIndexData, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsUndefinable } from "@comet/cms-api";
+import { IsUUID } from "class-validator";
 
 class NewsDetailBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -24,7 +25,7 @@ class NewsDetailBlockData extends BlockData {
 class NewsDetailBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     @IsUUID()
-    @IsOptional()
+    @IsUndefinable()
     id?: string;
 
     transformToBlockData(): NewsDetailBlockData {
