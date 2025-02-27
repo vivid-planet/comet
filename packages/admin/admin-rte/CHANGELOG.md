@@ -1,5 +1,45 @@
 # @comet/admin-rte
 
+## 8.0.0-beta.0
+
+### Major Changes
+
+- 04e308a: Upgrade to MUI v6
+
+    This only causes minimal breaking changes, see the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) for details.
+
+    It is recommended to run the following codemods in your application:
+
+    ```sh
+    npx @mui/codemod@latest v6.0.0/list-item-button-prop admin/src
+    npx @mui/codemod@latest v6.0.0/styled admin/src
+    npx @mui/codemod@latest v6.0.0/sx-prop admin/src
+    npx @mui/codemod@latest v6.0.0/theme-v6 admin/src/theme.ts
+    ```
+
+### Minor Changes
+
+- 682a674: Add support for React 18
+
+### Patch Changes
+
+- Updated dependencies [7ce585d]
+- Updated dependencies [f7429bd]
+- Updated dependencies [b374300]
+- Updated dependencies [717ede6]
+- Updated dependencies [de6d677]
+- Updated dependencies [04e308a]
+- Updated dependencies [400dd1e]
+- Updated dependencies [a8c737b]
+- Updated dependencies [b8817b8]
+- Updated dependencies [eeb21ce]
+- Updated dependencies [cfa2f85]
+- Updated dependencies [c5d9a47]
+- Updated dependencies [4828880]
+- Updated dependencies [682a674]
+    - @comet/admin@8.0.0-beta.0
+    - @comet/admin-icons@8.0.0-beta.0
+
 ## 7.15.0
 
 ### Patch Changes
