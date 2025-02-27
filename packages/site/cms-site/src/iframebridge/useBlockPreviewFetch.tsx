@@ -22,6 +22,7 @@ export function useBlockPreviewFetch(apiUrl?: string | undefined) {
 
     useEffect(() => {
         if (graphQLApiUrl) {
+            // We need to use an updater function here because createBlockPreviewFetch's return value would otherwise be incorrectly treated as an updater function.
             setGraphQLFetch(() => createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible));
         }
     }, [showOnlyVisible, graphQLApiUrl]);
