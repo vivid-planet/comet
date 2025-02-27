@@ -78,12 +78,14 @@ A custom database migration must be created in the project to add individual `sc
 //...
 ```
 
-### Remove `allowedRedirectionUrl` from the Brevo module configuration
+### Remove environment variables from the Brevo module configuration
 
 ```diff
 BrevoModule.register({
     brevo: {
--       allowedRedirectionUrl: config.brevo.allowedRedirectionUrl,
+-       allowedRedirectUrl: config.brevo.allowedRedirectUrl,
+-       sender: { name: config.brevo.sender.name, email: config.brevo.sender.email },
+-       doubleOptInTemplateId: config.brevo.doubleOptInTemplateId,
         //...
     },
     //..
