@@ -12,11 +12,12 @@ import {
     type GridSortDirection,
     type GridValidRowModel,
 } from "@mui/x-data-grid";
+import { type FieldValidator } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import { type ComponentType, type ReactNode } from "react";
+import { type ComponentType } from "react";
 
 import { type BlockInterface } from "../../blocks/types";
 import { type FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
@@ -83,7 +84,7 @@ export type FormFieldConfig<T> = (
     label?: string;
     required?: boolean;
     virtual?: boolean;
-    validate?: (value: unknown) => ReactNode | undefined;
+    validate?: FieldValidator<unknown>;
     helperText?: string;
     readOnly?: boolean;
 };
