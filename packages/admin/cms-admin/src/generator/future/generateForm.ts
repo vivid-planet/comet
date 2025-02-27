@@ -13,6 +13,7 @@ import {
 import { convertConfigImport } from "./utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
+import { isGeneratorConfigImport } from "./utils/runtimeTypeGuards";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
@@ -111,9 +112,8 @@ export function generateForm(
             return field;
         });
     rootBlockFields.forEach((field) => {
-        if ("import" in field.block) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            imports.push(convertConfigImport(field.block as any)); // TODO: improve typing, generator runtime vs. config mismatch
+        if (isGeneratorConfigImport(field.block)) {
+            imports.push(convertConfigImport(field.block));
         }
     });
 

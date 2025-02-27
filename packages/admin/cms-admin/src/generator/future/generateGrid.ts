@@ -31,6 +31,7 @@ import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, type Imports } from "./utils/generateImportsCode";
+import { isGeneratorConfigCode, isGeneratorConfigImport } from "./utils/runtimeTypeGuards";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -192,13 +193,17 @@ export function generateGrid(
     rootBlockColumns.forEach((field) => {
         if (rootBlocks[String(field.name)]) {
             // update rootBlocks if they are also used in columns
-            const block = field.block as any; // TODO: improve typing, generator runtime vs. config mismatch
-            rootBlocks[String(field.name)].import = block.import;
-            rootBlocks[String(field.name)].name = block.name;
+            const block = field.block;
+            if (isGeneratorConfigImport(block)) {
+                rootBlocks[String(field.name)].import = block.import;
+                rootBlocks[String(field.name)].name = block.name;
+            }
         }
     });
     Object.values(rootBlocks).forEach((block) => {
-        imports.push(convertConfigImport(block as any)); // TODO: improve typing, generator runtime vs. config mismatch
+        if (isGeneratorConfigImport(block)) {
+            imports.push(convertConfigImport(block));
+        }
     });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
@@ -318,7 +323,10 @@ export function generateGrid(
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
     if (actionsColumnComponent) {
-        imports.push(convertConfigImport(actionsColumnComponent as any)); // TODO: improve typing, generator runtime vs. config mismatch
+        if (!isGeneratorConfigImport(actionsColumnComponent)) {
+            throw new Error("Unsupported actionsColumnComponent, only imports are supported");
+        }
+        imports.push(convertConfigImport(actionsColumnComponent));
     }
 
     const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
@@ -337,13 +345,12 @@ export function generateGrid(
 
         let filterOperators: string | undefined;
         if (column.type != "combination" && column.filterOperators) {
-            const configFilterOperators = column.filterOperators as any; // TODO: improve typing, generator runtime vs. config mismatch
-            if (configFilterOperators.import) {
-                imports.push(convertConfigImport(configFilterOperators));
+            if (isGeneratorConfigImport(column.filterOperators)) {
+                imports.push(convertConfigImport(column.filterOperators));
+                filterOperators = column.filterOperators.name;
             } else {
                 throw new Error("Unsupported filterOperators, only imports are supported for now");
             }
-            filterOperators = configFilterOperators.name;
         }
 
         if (type == "dateTime") {
@@ -374,8 +381,8 @@ export function generateGrid(
                     if (typeof value.label.icon === "string") {
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
-                        if ("import" in value.label.icon) {
-                            imports.push(convertConfigImport(value.label.icon as any)); // TODO: improve typing, generator runtime vs. config mismatch
+                        if (isGeneratorConfigImport(value.label.icon)) {
+                            imports.push(convertConfigImport(value.label.icon));
                         } else {
                             iconsToImport.push(value.label.icon.name);
                         }
@@ -443,13 +450,9 @@ export function generateGrid(
             (column.type == "text" || column.type == "number" || column.type == "boolean" || column.type == "date" || column.type == "dateTime") &&
             column.renderCell
         ) {
-            if ("code" in column.renderCell) {
-                renderCell = column.renderCell.code as string;
-                if ("imports" in column.renderCell) {
-                    // TODO: improve typing, generator runtime vs. config mismatch
-                    const renderCellImports = (column.renderCell as any).imports;
-                    imports.push(...renderCellImports.map((imprt: any) => convertConfigImport(imprt)));
-                }
+            if (isGeneratorConfigCode(column.renderCell)) {
+                renderCell = column.renderCell.code;
+                imports.push(...column.renderCell.imports.map((imprt: any) => convertConfigImport(imprt)));
             } else {
                 throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
             }
