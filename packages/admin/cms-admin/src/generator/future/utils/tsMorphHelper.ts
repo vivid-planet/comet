@@ -51,7 +51,7 @@ const supportedInlineCodePaths = [
 ];
 
 export function configsFromSourceFile(sourceFile: SourceFile) {
-    const configs: Record<string, GeneratorConfig> = {}; //TODO GeneratorConfig is not fully correct (runtime vs config mismatch)
+    const configs: Record<string, GeneratorConfig> = {}; //GeneratorConfig is not fully correct (runtime vs config mismatch), we work around that using type guards
     for (const [name, declarations] of Array.from(sourceFile.getExportedDeclarations().entries())) {
         //console.log(name);
         if (declarations.length != 1) {
