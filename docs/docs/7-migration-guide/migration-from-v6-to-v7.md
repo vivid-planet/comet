@@ -236,7 +236,7 @@ DamModule.register({
 })
 ```
 
-#### How to migrate (only required if CDN is used):
+#### How to migrate (only required if CDN is used with `DAM_CDN_ORIGIN_HEADER`):
 
 Remove the following env vars from the API
 
@@ -288,26 +288,7 @@ If you want to enable the origin check:
     + }
     ```
 
-3. Adjust `site/server.js`
-
-```diff
-// site/server.js
-
-- const cdnEnabled = process.env.CDN_ENABLED === "true";
-- const disableCdnOriginHeaderCheck = process.env.DISABLE_CDN_ORIGIN_HEADER_CHECK === "true";
-- const cdnOriginHeader = process.env.CDN_ORIGIN_HEADER;
-+ const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
-
-// ...
-
-- if (cdnEnabled && !disableCdnOriginHeaderCheck) {
--    const incomingCdnOriginHeader = req.headers["x-cdn-origin-check"];
--    if (cdnOriginHeader !== incomingCdnOriginHeader) {
-+ if (cdnOriginCheckSecret) {
-+    if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
-```
-
-4. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+3. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
 
 ### API Generator: Remove support for `visible` boolean, use `status` enum instead
 
@@ -1078,6 +1059,25 @@ const nextConfig = {
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
+```
+
+### Adjust CDN config in `site/server.js`
+
+```diff
+// site/server.js
+
+- const cdnEnabled = process.env.CDN_ENABLED === "true";
+- const disableCdnOriginHeaderCheck = process.env.DISABLE_CDN_ORIGIN_HEADER_CHECK === "true";
+- const cdnOriginHeader = process.env.CDN_ORIGIN_HEADER;
++ const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
+
+// ...
+
+- if (cdnEnabled && !disableCdnOriginHeaderCheck) {
+-    const incomingCdnOriginHeader = req.headers["x-cdn-origin-check"];
+-    if (cdnOriginHeader !== incomingCdnOriginHeader) {
++ if (cdnOriginCheckSecret) {
++    if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
 ```
 
 ### Add a custom `InternalLinkBlock`

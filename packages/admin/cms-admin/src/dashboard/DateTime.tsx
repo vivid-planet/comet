@@ -29,18 +29,34 @@ export const DateTime = () => {
 
 const Root = styled("div")`
     position: absolute;
-    top: ${({ theme }) => theme.spacing(4)};
-    right: ${({ theme }) => theme.spacing(8)};
-    font-weight: 200;
+    top: 16px;
+    right: ${({ theme }) => theme.spacing(4)};
     text-align: right;
+
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        top: ${({ theme }) => theme.spacing(4)};
+        right: ${({ theme }) => theme.spacing(8)};
+    }
 `;
 
 const DateContainer = styled("div")`
-    font-size: 33px;
-    line-height: 39px;
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: 150;
+
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        font-size: 33px;
+        line-height: 39px;
+    }
 `;
 
 const TimeContainer = styled("div")`
-    font-size: 55px;
-    line-height: 64px;
+    font-size: 36px;
+    line-height: 42px;
+    font-weight: 170;
+
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        font-size: 55px;
+        line-height: 64px;
+    }
 `;

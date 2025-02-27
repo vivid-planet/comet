@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "7.14.0",
+    "version": "7.15.0",
     "repository": {
         "directory": "packages/eslint-config",
         "type": "git",
@@ -30,8 +30,8 @@
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
         "@eslint/js": "^9.21.0",
-        "@next/eslint-plugin-next": "^15.1.7",
-        "eslint-config-next": "^15.1.7",
+        "@next/eslint-plugin-next": "^15.2.0",
+        "eslint-config-next": "^15.2.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-formatjs": "^5.2.14",
         "eslint-plugin-jsonc": "^2.19.1",
