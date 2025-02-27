@@ -11,6 +11,7 @@ export { SeoBlock } from "./blocks/factories/SeoBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
 export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
+export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
