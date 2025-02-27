@@ -5,15 +5,20 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, CommandRunner } from "nest-commander";
-import { v5 } from "uuid";
 
 import { Warning } from "./entities/warning.entity";
-import { WarningSeverity } from "./entities/warning-severity.enum";
+import { WarningService } from "./warning.service";
 
 interface RootBlockEntityData {
+    primaryKey: string;
     tableName: string;
     className: string;
     rootBlockData: Array<{ block: Block; column: string }>;
+}
+
+interface RootBlockData {
+    id: string;
+    [key: string]: BlockData | string;
 }
 
 @Injectable()
@@ -27,6 +32,7 @@ export class WarningCheckerCommand extends CommandRunner {
         private readonly discoverService: DiscoverService,
         private readonly entityManager: EntityManager,
         @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
+        private readonly warningService: WarningService,
     ) {
         super();
     }
@@ -42,19 +48,19 @@ export class WarningCheckerCommand extends CommandRunner {
             const queryBuilderLimit = 100;
             const baseQueryBuilder = this.entityManager.createQueryBuilder(className);
             baseQueryBuilder
-                .select(["id", ...rootBlockData.map(({ column }) => column)])
+                .select([`${data.primaryKey} as id`, ...rootBlockData.map(({ column }) => column)])
                 .from(tableName)
                 .limit(queryBuilderLimit);
-            let rootBlocks: Array<{ [key: string]: BlockData }> = [];
+            let rootBlocks: RootBlockData[] = [];
             let offset = 0;
 
             do {
                 const queryBuilder = baseQueryBuilder.clone();
                 queryBuilder.offset(offset);
-                rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockData }>;
-
+                rootBlocks = (await queryBuilder.getResult()) as RootBlockData[];
                 for (const { column, block } of rootBlockData) {
                     for (const rootBlock of rootBlocks) {
+                        if (typeof rootBlock[column] === "string") continue;
                         const blockData = rootBlock[column];
 
                         const flatBlocks = new FlatBlocks(blockData, {
@@ -67,23 +73,16 @@ export class WarningCheckerCommand extends CommandRunner {
 
                             if (warnings.length > 0) {
                                 for (const warning of warnings) {
-                                    const type = "Block";
-                                    const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
-                                    const id = v5(`${tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
-                                    // TODO: (in the next PRs) add blockInfos/metadata
-
-                                    await this.entityManager.upsert(
-                                        Warning,
-                                        {
-                                            createdAt: new Date(),
-                                            updatedAt: new Date(),
-                                            id,
-                                            type,
-                                            message: warning.message,
-                                            severity: WarningSeverity[warning.severity],
+                                    this.warningService.saveWarning({
+                                        warning,
+                                        dependencyInfo: {
+                                            rootEntityName: tableName,
+                                            rootColumnName: column,
+                                            rootPrimaryKey: data.primaryKey,
+                                            targetId: rootBlock.id,
+                                            jsonPath: node.pathToString(),
                                         },
-                                        { onConflictExcludeFields: ["createdAt"] },
-                                    );
+                                    });
                                 }
                             }
                         }
@@ -105,7 +104,7 @@ export class WarningCheckerCommand extends CommandRunner {
         const rootBlockEntityData = new Map<string, RootBlockEntityData>();
 
         for (const {
-            metadata: { tableName, className },
+            metadata: { tableName, className, primaryKeys },
             block,
             column,
         } of this.discoverService.discoverRootBlocks()) {
@@ -116,6 +115,7 @@ export class WarningCheckerCommand extends CommandRunner {
                     tableName,
                     className,
                     rootBlockData: [],
+                    primaryKey: primaryKeys[0],
                 });
             }
 

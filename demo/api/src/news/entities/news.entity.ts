@@ -6,7 +6,6 @@ import {
     EntityInfo,
     RootBlock,
     RootBlockDataScalar,
-    RootBlockEntity,
     RootBlockType,
 } from "@comet/cms-api";
 import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
@@ -48,7 +47,6 @@ export class NewsContentScope {
 }
 
 @EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
-@RootBlockEntity()
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
