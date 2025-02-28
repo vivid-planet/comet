@@ -15,7 +15,7 @@ export function handleChildProcess(child: ChildProcessWithoutNullStreams): Promi
         });
 
         child.on("close", (code) => {
-            if (errorOutput.length > 0) {
+            if (code !== 0) {
                 reject(errorOutput);
             } else {
                 resolve(scriptOutput);
