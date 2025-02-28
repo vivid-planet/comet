@@ -1,13 +1,17 @@
 import { Stack } from "@comet/admin";
-import { useIntl } from "react-intl";
+import { type MessageDescriptor, useIntl } from "react-intl";
 
 import { WarningsGrid } from "./WarningsGrid";
 
-export function WarningsPage() {
+interface WarningsPageProps {
+    warningMessages?: Record<string, MessageDescriptor>;
+}
+
+export function WarningsPage({ warningMessages }: WarningsPageProps) {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "warnings.warnings", defaultMessage: "Warnings" })}>
-            <WarningsGrid />
+            <WarningsGrid warningMessages={warningMessages} />
         </Stack>
     );
 }
