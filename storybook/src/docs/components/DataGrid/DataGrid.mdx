@@ -137,7 +137,7 @@ Comet Admin comes with three helpers that convert MUI DataGrid state to standard
 
 Typical Usage Example:
 
-```
+```ts
 const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 const sortModel = dataGridProps.sortModel;
 const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
@@ -147,5 +147,4 @@ const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQ
         sort: muiGridSortToGql(sortModel),
     },
 });
-
 ```
