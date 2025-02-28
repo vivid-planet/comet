@@ -66,11 +66,13 @@ export const UseDataGridRemote = {
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                ...dataGridDateTimeColumn,
+                flex: 1,
             },
         ];
 
@@ -123,11 +125,13 @@ export const UseDataGridRemoteInitialSort = {
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                ...dataGridDateTimeColumn,
+                flex: 1,
             },
         ];
 
@@ -397,11 +401,13 @@ export const UseDataGridExcelExport = {
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                ...dataGridDateTimeColumn,
+                flex: 1,
             },
         ];
 
