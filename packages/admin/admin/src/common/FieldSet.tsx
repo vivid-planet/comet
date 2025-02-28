@@ -117,7 +117,7 @@ const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey, Owner
         display: flex;
         flex-direction: row-reverse;
         padding: 0 10px;
-        height: 80px;
+        height: 60px;
 
         ${!ownerState.collapsible &&
         css`
@@ -126,6 +126,7 @@ const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey, Owner
 
         ${theme.breakpoints.up("sm")} {
             padding: 0 20px;
+            height: 80px;
         }
     `,
 );
