@@ -1507,9 +1507,6 @@ importers:
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
-      ts-morph:
-        specifier: ^25.0.1
-        version: 25.0.1
       use-debounce:
         specifier: ^10.0.4
         version: 10.0.4(react@18.3.1)
