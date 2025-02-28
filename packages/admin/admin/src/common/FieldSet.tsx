@@ -43,6 +43,7 @@ export type FieldSetClassKey =
 type OwnerState = {
     disablePadding: boolean;
     hiddenSummary: boolean;
+    collapsible: boolean;
 };
 
 export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
@@ -66,6 +67,7 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
     const ownerState: OwnerState = {
         disablePadding,
         hiddenSummary: !title,
+        collapsible,
     };
 
     return (
@@ -83,7 +85,7 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
             {...restProps}
         >
             {!ownerState.hiddenSummary && (
-                <Summary expandIcon={collapsible && <ChevronRight />} {...slotProps?.summary}>
+                <Summary expandIcon={collapsible ? <ChevronRight /> : undefined} ownerState={ownerState} {...slotProps?.summary}>
                     <HeaderColumn {...slotProps?.headerColumn}>
                         <Title {...slotProps?.title}>{title}</Title>
                         <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
@@ -107,15 +109,20 @@ const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey, OwnerState>({
     },
 })();
 
-const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
+const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey, OwnerState>({
     componentName: "FieldSet",
     slotName: "summary",
 })(
-    ({ theme }) => css`
+    ({ theme, ownerState }) => css`
         display: flex;
         flex-direction: row-reverse;
         padding: 0 10px;
         height: 80px;
+
+        ${!ownerState.collapsible &&
+        css`
+            cursor: default !important;
+        `}
 
         ${theme.breakpoints.up("sm")} {
             padding: 0 20px;
