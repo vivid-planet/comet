@@ -16,8 +16,9 @@ import { WarningSolid } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { type GQLWarningSeverity } from "@src/graphql.generated";
-import { useIntl } from "react-intl";
+import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
 
+import { warningMessages as cometWarningMessages } from "./warningMessages";
 import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
 
 const warningsFragment = gql`
@@ -57,7 +58,11 @@ function WarningsGridToolbar() {
     );
 }
 
-export function WarningsGrid() {
+interface WarningsGridProps {
+    warningMessages?: Record<string, MessageDescriptor>;
+}
+
+export function WarningsGrid({ warningMessages: projectWarningMessages }: WarningsGridProps) {
     const intl = useIntl();
     const dataGridProps = {
         ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
@@ -106,6 +111,17 @@ export function WarningsGrid() {
             field: "message",
             headerName: intl.formatMessage({ id: "warning.message", defaultMessage: "Message" }),
             flex: 1,
+            renderCell: (params) => {
+                const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
+                const warning = warningMessages[params.value as keyof typeof warningMessages];
+
+                if (warning) {
+                    return <FormattedMessage {...warning} />;
+                } else {
+                    console.error(`Missing warning message for "${params.value}". Custom warning messages can be passed to WarningsPage component.`);
+                    return params.value;
+                }
+            },
         },
         {
             field: "status",
