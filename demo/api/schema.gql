@@ -1210,8 +1210,6 @@ input ManufacturerCountryFilter {
 }
 
 input WarningFilter {
-  createdAt: DateTimeFilter
-  updatedAt: DateTimeFilter
   message: StringFilter
   type: StringFilter
   severity: WarningSeverityEnumFilter
@@ -1238,8 +1236,6 @@ input WarningSort {
 }
 
 enum WarningSortField {
-  createdAt
-  updatedAt
   message
   type
   severity
@@ -1622,10 +1618,10 @@ input WarningInput {
 
 input WarningDependencyInfoInput {
   rootEntityName: String!
-  rootColumnName: String!
-  rootPrimaryKey: String!
+  rootColumnName: String
+  rootPrimaryKey: String
   targetId: String!
-  jsonPath: String!
+  jsonPath: String
 }
 
 input WarningUpdateInput {
