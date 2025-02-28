@@ -1,39 +1,24 @@
-import { type CrudGeneratorOptions, type CrudSingleGeneratorOptions } from "@comet/cms-api";
-import { CLIHelper } from "@mikro-orm/cli";
-import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { Command } from "commander";
 
-import { generateCrud } from "./generateCrud/generate-crud";
-import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
-import { writeGeneratedFiles } from "./utils/write-generated-files";
+import { generateFiles } from "./generateFiles/generateFiles";
+import { watchMode } from "./watchMode/watchMode";
 
-export const generateCommand = new Command("generate").action(async (options) => {
-    const orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });
+type GenerateOptions = {
+    watch: boolean;
+    file?: string;
+};
 
-    const entities = orm.em.getMetadata().getAll();
-    LazyMetadataStorage.load();
+export const generateCommand = new Command("generate")
+    .action(async (options: GenerateOptions) => {
+        if (options.watch) {
+            await generateFiles();
+            console.log("API generator in watch mode ...");
 
-    for (const name in entities) {
-        const entity = entities[name];
-        if (!entity.class) {
-            // Ignore e.g. relation entities that don't have a class
-            continue;
+            await watchMode();
+        } else {
+            console.log(`API generator in ${options.file ? "file mode" : "all mode"}...`);
+            generateFiles(options.file);
         }
-        {
-            const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
-            if (generatorOptions) {
-                const files = await generateCrud(generatorOptions, entity);
-                await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
-            }
-        }
-        {
-            const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as CrudSingleGeneratorOptions | undefined;
-            if (generatorOptions) {
-                const files = await generateCrudSingle(generatorOptions, entity);
-                await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
-            }
-        }
-    }
-
-    await orm.close(true);
-});
+    })
+    .option("-f, --file <file>", "path to entity file")
+    .option("--watch", "Watch for changes");
