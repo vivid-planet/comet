@@ -1,6 +1,6 @@
-import { SplitButton } from "@comet/admin";
+import { Button, SplitButton } from "@comet/admin";
 import { Home } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useState } from "react";
 
 export default {
@@ -210,7 +210,6 @@ export const VariantChange = {
         return (
             <SplitButton color="primary">
                 <Button
-                    variant="contained"
                     onClick={() => {
                         alert("primary clicked");
                     }}
@@ -226,7 +225,7 @@ export const VariantChange = {
                     Secondary Action
                 </Button>
                 <Button
-                    variant="text"
+                    variant="textDark"
                     onClick={() => {
                         alert("tertiary clicked");
                     }}
@@ -255,9 +254,7 @@ export const CustomComponent = {
                                 <Home /> Home
                             </Typography>
                         </div>
-                        <Button variant="contained" color="primary">
-                            Primary Action
-                        </Button>
+                        <Button>Primary Action</Button>
                     </SplitButton>
                 </div>
                 <div>
@@ -272,9 +269,7 @@ export const CustomComponent = {
                                 <Home /> Home
                             </Typography>
                         </div>
-                        <Button variant="contained" color="primary">
-                            Primary Action
-                        </Button>
+                        <Button>Primary Action</Button>
                     </SplitButton>
                 </div>
             </div>

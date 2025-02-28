@@ -1,10 +1,11 @@
 import { Check, Reset } from "@comet/admin-icons";
-import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
+import { ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { ComponentType, MouseEvent, PropsWithChildren, useState } from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { Button, ButtonProps } from "../../../common/buttons/Button";
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
@@ -166,7 +167,7 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
                                     <ButtonsContainer {...slotProps?.buttonsContainer}>
                                         <Button
                                             type="reset"
-                                            variant="text"
+                                            variant="textDark"
                                             onClick={() => {
                                                 form.getRegisteredFields().map((name) => {
                                                     outerForm.change(name, undefined);
@@ -183,8 +184,6 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
 
                                         <Button
                                             type="submit"
-                                            color="primary"
-                                            variant="contained"
                                             onClick={() => {
                                                 handleSubmit();
                                                 setAnchorEl(null);

@@ -1,9 +1,10 @@
 import { Error, Select } from "@comet/admin-icons";
-import { Box, Button, ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
+import { Box, ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../../common/buttons/Button";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
@@ -104,14 +105,7 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
                     </Dropzone>
                 )}
                 {!hideButton && (
-                    <SelectFileButton
-                        tabIndex={-1}
-                        disabled={disabled}
-                        variant="contained"
-                        color="secondary"
-                        startIcon={selectIcon}
-                        {...slotProps?.selectFileButton}
-                    >
+                    <SelectFileButton tabIndex={-1} disabled={disabled} variant="secondary" startIcon={selectIcon} {...slotProps?.selectFileButton}>
                         {buttonText}
                     </SelectFileButton>
                 )}

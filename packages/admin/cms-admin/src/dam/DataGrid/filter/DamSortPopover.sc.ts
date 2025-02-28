@@ -1,4 +1,5 @@
-import { Button, Popover } from "@mui/material";
+import { Button } from "@comet/admin";
+import { Popover } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 interface WrapperProps {

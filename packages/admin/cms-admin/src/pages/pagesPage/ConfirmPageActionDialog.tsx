@@ -1,6 +1,6 @@
-import { CancelButton } from "@comet/admin";
+import { Button, CancelButton } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -70,8 +70,6 @@ export const ConfirmPageActionDialog = ({ open, onCloseDialog, action, selectedP
             <DialogActions>
                 <CancelButton onClick={() => onCloseDialog(false)} />
                 <Button
-                    variant="contained"
-                    color="primary"
                     onClick={() => {
                         onCloseDialog(true);
                     }}
