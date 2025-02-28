@@ -81,6 +81,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                             rootPrimaryKey: data.primaryKey,
                                             targetId: rootBlock.id,
                                             jsonPath: node.pathToString(),
+                                            graphqlObjectType: tableName,
                                         },
                                     });
                                 }

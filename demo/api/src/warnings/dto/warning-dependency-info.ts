@@ -23,4 +23,8 @@ export class WarningDependencyInfo {
     @Property()
     @Field()
     jsonPath: string;
+
+    @Property()
+    @Field()
+    graphqlObjectType: string; // do i need this??
 }

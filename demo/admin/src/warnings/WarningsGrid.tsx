@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     dataGridDateTimeColumn,
     DataGridToolbar,
@@ -12,11 +12,14 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { WarningSolid } from "@comet/admin-icons";
-import { Chip } from "@mui/material";
+import { ArrowRight, OpenNewTab, WarningSolid } from "@comet/admin-icons";
+import { type DependencyInterface, useDependenciesConfig } from "@comet/cms-admin";
+import { Chip, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { useContentScope } from "@src/common/ContentScopeProvider";
 import { type GQLWarningSeverity } from "@src/graphql.generated";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useHistory } from "react-router";
 
 import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
 
@@ -29,6 +32,12 @@ const warningsFragment = gql`
         type
         severity
         status
+        dependencyInfo {
+            rootColumnName
+            targetId
+            graphqlObjectType
+            jsonPath
+        }
     }
 `;
 
@@ -63,6 +72,10 @@ export function WarningsGrid() {
         ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
         ...usePersistentColumnState("WarningsGrid"),
     };
+    const history = useHistory();
+    const entityDependencyMap = useDependenciesConfig();
+    const apolloClient = useApolloClient();
+    const contentScope = useContentScope();
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -117,6 +130,55 @@ export function WarningsGrid() {
                 { value: "ignored", label: intl.formatMessage({ id: "warning.status.ignored", defaultMessage: "Ignored" }) },
             ],
             width: 150,
+        },
+        {
+            field: "actions",
+            headerName: "",
+            sortable: false,
+            renderCell: ({ row }) => {
+                const dependencyObject = entityDependencyMap[row.dependencyInfo.graphqlObjectType] as DependencyInterface | undefined;
+
+                if (dependencyObject === undefined) {
+                    if (process.env.NODE_ENV === "development") {
+                        console.warn(
+                            `Cannot load URL because no implementation of DependencyInterface for ${row.dependencyInfo.graphqlObjectType} was provided via the DependenciesConfig`,
+                        );
+                    }
+                    return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
+                }
+
+                const loadUrl = async () => {
+                    const path = await dependencyObject.resolvePath({
+                        rootColumnName: row.dependencyInfo.rootColumnName,
+                        jsonPath: row.dependencyInfo.jsonPath,
+                        apolloClient,
+                        id: row.dependencyInfo.targetId,
+                    });
+                    return contentScope.match.url + path;
+                };
+
+                return (
+                    <div style={{ display: "flex" }}>
+                        <IconButton
+                            onClick={async () => {
+                                const url = await loadUrl();
+                                window.open(url, "_blank");
+                            }}
+                        >
+                            <OpenNewTab />
+                        </IconButton>
+                        <IconButton
+                            onClick={async () => {
+                                const url = await loadUrl();
+
+                                history.push(url);
+                            }}
+                        >
+                            <ArrowRight />
+                        </IconButton>
+                    </div>
+                );
+            },
         },
     ];
 

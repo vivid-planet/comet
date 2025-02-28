@@ -58,6 +58,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                         targetId: args.entity.id,
                         rootPrimaryKey: args.meta.primaryKeys[0],
                         jsonPath: node.pathToString(),
+                        graphqlObjectType: entity.name,
                     });
                 }
             }
