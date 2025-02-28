@@ -79,6 +79,21 @@ Typical Usage Example:
 
 <Canvas of={DataGridStories.UseDataGridExcelExport} />
 
+## Column definitions
+
+Use the existing column-type helpers to make sure columns of certain types are rendered consistently.
+
+```ts
+import { GridColDef, dataGridDateColumn, dataGridDateTimeColumn } from "@comet/admin";
+
+const columns: GridColDef[] = [
+    { ...dataGridDateColumn, field: "createdAt" },
+    { ...dataGridDateTimeColumn, field: "updatedAt" },
+];
+```
+
+<Canvas of={DataGridStories.GridColumnTypes} />
+
 ## Responsive column visibility
 
 When using DataGrid Pro/Premium with `usePersistentColumnState`, you can change the columns' visibility depending on the screen size.
