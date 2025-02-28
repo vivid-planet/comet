@@ -68,6 +68,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
         ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
         ...usePersistentColumnState("WarningsGrid"),
     };
+    const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -112,7 +113,6 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             headerName: intl.formatMessage({ id: "warning.message", defaultMessage: "Message" }),
             flex: 1,
             renderCell: (params) => {
-                const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
                 const warning = warningMessages[params.value as keyof typeof warningMessages];
 
                 if (warning) {
