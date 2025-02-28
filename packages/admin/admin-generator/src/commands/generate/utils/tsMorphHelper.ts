@@ -34,9 +34,9 @@ const supportedImportPaths = [
     // TODO implement in generator "[type=grid].columns.renderCell",
 
     //support in up to 5 levels of nested fields (eg. fieldSet)
-    ...Array.from(Array(5).keys()).map((i) => `[type=grid]${".fields".repeat(i + 1)}.validate`),
-    ...Array.from(Array(5).keys()).map((i) => `[type=grid]${".fields".repeat(i + 1)}.block`),
-    ...Array.from(Array(5).keys()).map((i) => `[type=grid]${".fields".repeat(i + 1)}.component`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.block`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.component`),
 ];
 const supportedInlineCodePaths = [
     // TODO implement in generator "[type=grid].columns.filterOperators",
