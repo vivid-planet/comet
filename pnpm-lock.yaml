@@ -1693,10 +1693,10 @@ importers:
         specifier: workspace:*
         version: link:../../eslint-config
       '@mikro-orm/cli':
-        specifier: ^6.4.5
+        specifier: ^6.4.7
         version: 6.4.7
       '@mikro-orm/postgresql':
-        specifier: ^6.4.5
+        specifier: ^6.4.7
         version: 6.4.7(@mikro-orm/core@6.4.7)
       '@nestjs/graphql':
         specifier: ^13.0.3
