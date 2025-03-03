@@ -1,5 +1,31 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.0
+
+### Major Changes
+
+- ceaf99d: Bump ESLint peer dependency to v9
+- 4d0d820: Prevent `@mui/material` tooltip imports
+
+    Tooltips used in Comet DXP applications should match the Comet CI.
+    Use tooltips from `@comet/admin` instead.
+
+- c6d87a2: Bump Prettier peer dependency to v3
+- 9509f97: Enable rule to restrict barrel React imports
+
+    Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+    Use individual named imports instead, e.g, `import { useState } from "react"`.
+
+### Minor Changes
+
+- a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
+
+## 7.15.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.15.0
+
 ## 7.14.0
 
 ### Patch Changes

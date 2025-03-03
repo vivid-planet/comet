@@ -1012,3 +1012,21 @@ devDependencies: {
     ```
 
 :::
+
+### Add new package @comet/admin-generator
+
+The Admin Generator has been moved into a separate package `@comet/admin-generator`.
+
+```diff title="admin/package.json"
+devDependencies: {
++  "@comet/admin-generator": "^8.0.0",
+}
+```
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
+    ```
+
+:::

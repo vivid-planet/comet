@@ -1,5 +1,117 @@
 # @comet/cms-api
 
+## 8.0.0-beta.0
+
+### Major Changes
+
+- 04b8692: Add `class-transformer`, `reflect-metadata`, and `rxjs` as peer dependencies
+
+    To upgrade, install the latest versions of the packages in your project.
+
+- 3562a94: Bump MikroORM peer dependency to v6
+
+    Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+
+- abbe4af: Bump NestJS peer dependency to v11
+
+    Follow the official [migration guide](https://docs.nestjs.com/migration-guide) to upgrade.
+
+- bc5f831: Merge `@comet/blocks-api` into `@comet/cms-api`
+
+    The dedicated `@comet/blocks-api` package was originally introduced to support projects without CMS parts.
+    It turned out that this is never the case, so the separation doesn't make sense anymore.
+    Therefore, the `@comet/blocks-api` is merged into this package.
+
+    **Breaking changes**
+
+    - The `@comet/blocks-api` package doesn't exist anymore
+    - The `getFieldKeys` function has been removed from the public API
+    - Multiple exports that were too generic have been renamed
+        - `getMostSignificantPreviewImageUrlTemplate` -> `getMostSignificantPreviewImageUrlTemplateFromBlock`
+        - `getPreviewImageUrlTemplates` -> `getPreviewImageUrlTemplatesFromBlock`
+        - `getSearchText` -> `getSearchTextFromBlock`
+        - `inputToData` -> `blockInputToData`
+        - `TransformResponse` -> `TransformBlockResponse`
+        - `TransformResponseArray` -> `TransformBlockResponseArray`
+        - `transformToSave` -> `transformToBlockSave`
+        - `transformToSaveIndex` -> `transformToBlockSaveIndex`
+        - `TraversableTransformResponse` -> `TraversableTransformBlockResponse`
+        - `TraversableTransformResponseArray` -> `TraversableTransformBlockResponseArray`
+        - `typesafeMigrationPipe` -> `typeSafeBlockMigrationPipe`
+
+    **How to upgrade**
+
+    To upgrade, perform the following changes:
+
+    1. Uninstall the `@comet/blocks-api` package
+    2. Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+    3. Remove usages of `getFieldKeys` (probably none)
+    4. Update imports that have been renamed
+
+- e8f4b07: Bump class-validator peer dependency to v0.14.0
+
+    To upgrade, install class-validator v0.14.10 or later.
+
+- 9cb98ee: PageTreeModule: sitePreviewSecret now is mandatory
+- a567f60: `createAuthResolver` does not support the `currentUser` config option anymore
+- 0d210fe: Replace passport with auth services
+
+    See the migration guide to upgrade.
+
+- 4c48918: Bump `@sentry/node` peer dependency to v8
+- 678bb0b: Move API Generator into separate `@comet/api-generator` package
+
+    It can be run with the same `comet-api-generator` command as before.
+
+- 8552e1b: Remove `createUserFromIdToken` from `UserPermissionsUserServiceInterface`
+
+    `createUserFromRequest` (available since Comet v7.6.0) should be used instead.
+
+- 52b0410: Replace nestjs-console with nest-commander
+
+    The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
+    We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
+
+    To upgrade, perform the following steps:
+
+    1. Uninstall `nestjs-console`
+    2. Install `nest-commander` and `@types/inquirer`
+    3. Update `api/src/console.ts` to use `nest-commander`
+    4. Update your commands to the new `nest-commander` syntax
+
+    See the migration guide for more information.
+
+### Patch Changes
+
+- b8817b8: Add `BlocksBlockInputInterface` to the public API
+- cf1a829: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    - `video/avi` doesn't actually exist
+    - `image/psd` doesn't exist / is non-standard
+    - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+      instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+- 58a99bb: Fix input validation for missing child blocks
+- 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
+- f20ec6c: Make class-validator a peer dependency
+
+## 7.15.0
+
+### Patch Changes
+
+- 83b8111d6: Allow `use` tag in SVG again
+
+    `use` can be used to define paths once in a SVG and then integrating them multiple times via anchor links: `<use xlink:href="#path-id" />`. This should not be prohibited.
+
+    It's still not possible to use `use` to reference external files, since we still prohibit `href` and `xlink:href` attributes starting with `http://`, `https://` and `javascript:`.
+
+- e6f9641db: Add fallback values for users created via ID token
+    - @comet/blocks-api@7.15.0
+
 ## 7.14.0
 
 ### Minor Changes

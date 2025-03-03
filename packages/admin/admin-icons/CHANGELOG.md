@@ -1,5 +1,28 @@
 # @comet/admin-icons
 
+## 8.0.0-beta.0
+
+### Major Changes
+
+- 04e308a: Upgrade to MUI v6
+
+    This only causes minimal breaking changes, see the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) for details.
+
+    It is recommended to run the following codemods in your application:
+
+    ```sh
+    npx @mui/codemod@latest v6.0.0/list-item-button-prop admin/src
+    npx @mui/codemod@latest v6.0.0/styled admin/src
+    npx @mui/codemod@latest v6.0.0/sx-prop admin/src
+    npx @mui/codemod@latest v6.0.0/theme-v6 admin/src/theme.ts
+    ```
+
+### Minor Changes
+
+- 682a674: Add support for React 18
+
+## 7.15.0
+
 ## 7.14.0
 
 ## 7.13.0
