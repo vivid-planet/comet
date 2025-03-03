@@ -127,7 +127,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 paddingRight: 13,
                 paddingBottom: 10,
                 paddingLeft: 13,
-                border: `2px solid ${palette.primary.dark} `,
+                border: `2px solid ${palette.primary.dark}`,
             },
         },
         outlinedError: {
