@@ -1,5 +1,6 @@
 import { PropsWithData } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
@@ -11,7 +12,11 @@ function NewsLinkBlock({ data: { news }, children, title, className }: PropsWith
     }
 
     return (
-        <Link href={`/${news.scope.language}/news/${news.slug}`} title={title} className={className}>
+        <Link
+            href={createUrlObjectWithScope({ path: `/news/${news.slug}`, scope: { language: news.scope.language } })}
+            title={title}
+            className={className}
+        >
             {children}
         </Link>
     );

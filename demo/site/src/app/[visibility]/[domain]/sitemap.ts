@@ -1,4 +1,8 @@
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
+
 export const dynamic = "force-dynamic"; // don't generate at build time
+
+import url from "node:url";
 
 import { gql } from "@comet/cms-site";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -39,8 +43,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     if (path && pageTreeNode.document?.__typename === "Page") {
                         const seoBlock = pageTreeNode.document.seo;
                         if (!seoBlock.noIndex) {
+                            const urlWithScope = createUrlObjectWithScope({
+                                path: pageTreeNode.path,
+                                scope: {
+                                    language: language,
+                                },
+                            });
+
                             sitemap.push({
-                                url: `${siteConfig.url}/${language}${pageTreeNode.path}`,
+                                url: `${siteConfig.url}${url.format(urlWithScope)}`,
                                 priority: Number(seoBlock.priority.replace("_", ".")),
                                 changeFrequency: seoBlock.changeFrequency,
                                 lastModified: pageTreeNode.document.updatedAt,

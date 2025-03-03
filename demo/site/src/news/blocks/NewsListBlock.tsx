@@ -1,5 +1,6 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { NewsListBlockData } from "@src/blocks.generated";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 import Link from "next/link";
 
 import { LoadedData } from "./NewsListBlock.loader";
@@ -14,7 +15,16 @@ export const NewsListBlock = withPreview(
             <ol>
                 {newsList.map((news) => (
                     <li key={news.id}>
-                        <Link href={`/${news.scope.language}/news/${news.slug}`}>{news.title}</Link>
+                        <Link
+                            href={createUrlObjectWithScope({
+                                path: `/news/${news.slug}`,
+                                scope: {
+                                    language: news.scope.language,
+                                },
+                            })}
+                        >
+                            {news.title}
+                        </Link>
                     </li>
                 ))}
             </ol>
