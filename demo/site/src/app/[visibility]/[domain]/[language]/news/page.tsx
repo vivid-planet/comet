@@ -13,6 +13,5 @@ export type PageParams = {
 
 export default async function NewsIndexPage({ params: { domain, language, visibility } }: { params: PageParams }) {
     setVisibilityParam(visibility);
-    const limit = 2;
-    return <NewsPage initialData={await fetchNewsList({ scope: { domain, language }, limit })} limit={limit} />;
+    return <NewsPage initialData={await fetchNewsList({ scope: { domain, language }, limit: 2 })} />;
 }

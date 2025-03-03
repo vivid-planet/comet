@@ -33,7 +33,7 @@ export async function fetchNewsList(params: NewsListParams) {
         `,
         {
             scope: params.scope,
-            sort: [{ field: "createdAt", direction: "DESC" }],
+            sort: [{ field: "date", direction: "DESC" }],
             offset: params.offset || 0,
             limit: params.limit,
         },

@@ -1,63 +1,62 @@
 "use client";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
-import { fetcher } from "@src/util/Fetcher";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
-import useSWR from "swr";
 
 import { GQLNewsIndexPageQuery } from "./NewsPage.loader.generated";
 
-type News = GQLNewsIndexPageQuery["newsList"];
-
-export function NewsPage({ initialData, limit }: { initialData: News; limit: number }) {
-    const [pages, setPages] = useState<number[]>([]); // Contains array of offsets
+export function NewsPage({ initialData }: { initialData: GQLNewsIndexPageQuery["newsList"] }) {
+    const newsApiUrl = `${usePathname()}/api`;
+    const [newsList, setNewsList] = useState(initialData.nodes);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     return (
         <>
             <h1>News</h1>
             <CardList>
-                <NewsList news={initialData.nodes} />
-                {pages.map((offset) => (
-                    <NewsListPaged key={offset} offset={offset} limit={limit} />
+                {newsList.map((news) => (
+                    <Card key={news.id} href={`news/${news.slug}`}>
+                        <DamImageBlock data={news.image} aspectRatio="4x3" />
+                        <h2>{news.title}</h2>
+                        {/* <p><FormattedDate value={news.createdAt} /></p> */}
+                    </Card>
                 ))}
             </CardList>
             <div>
-                {initialData.totalCount > (pages.at(-1) || 0) * limit && (
+                {initialData.totalCount > newsList.length && (
                     <button
+                        disabled={isLoading}
                         onClick={async () => {
-                            setPages([...pages, (pages.length + 1) * limit]);
+                            setIsLoading(true);
+                            setError(null);
+                            try {
+                                const response = await fetch(
+                                    `${newsApiUrl}?${new URLSearchParams({
+                                        offset: `${newsList.length}`,
+                                        limit: "2",
+                                    })}`,
+                                );
+                                setIsLoading(false);
+
+                                if (response.ok) {
+                                    setNewsList([...newsList, ...(await response.json()).nodes]);
+                                } else if (response.status === 400) {
+                                    setError((await response.json()).message);
+                                }
+                            } catch (e) {
+                                setError(e.message);
+                            }
                         }}
                     >
                         Load more
                     </button>
                 )}
+                {isLoading && <div>Loading</div>}
+                {error && <div>Error: {error}</div>}
             </div>
-        </>
-    );
-}
-
-function NewsListPaged({ offset, limit }: { offset: number; limit: number }) {
-    const { data, isLoading, error } = useSWR<News>({ url: `${usePathname()}/api`, params: { offset, limit } }, { fetcher });
-
-    if (error) return <div>{error.toString()}</div>;
-    if (isLoading) return <div>Loading...</div>;
-    if (!data || data.nodes.length === 0) return <div>No News found</div>;
-
-    return <NewsList news={data.nodes} />;
-}
-
-function NewsList({ news }: { news: News["nodes"] }) {
-    return (
-        <>
-            {news.map((news) => (
-                <Card key={news.id} href={`news/${news.slug}`}>
-                    <DamImageBlock data={news.image} aspectRatio="4x3" />
-                    <h2>{news.title}</h2>
-                    {/* <p><FormattedDate value={news.createdAt} /></p> */}
-                </Card>
-            ))}
         </>
     );
 }
