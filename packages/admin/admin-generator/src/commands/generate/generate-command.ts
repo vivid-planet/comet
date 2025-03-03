@@ -133,13 +133,16 @@ export type StaticSelectLabelCellContent = {
     icon?: Icon;
 };
 
+export type StaticSelectValueConfig = { value: string; label: string | StaticSelectLabelCellContent } | string;
+export type StaticSelectValuesConfig = Array<StaticSelectValueConfig>;
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
+    | { type: "staticSelect"; values?: StaticSelectValuesConfig }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
 
