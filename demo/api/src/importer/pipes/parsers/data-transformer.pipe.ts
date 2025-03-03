@@ -28,7 +28,6 @@ type ValidateAndTransformValueProperties = {
 type DataTransformOptions = {
     fields: ImportFieldMetadata[];
     targetEntityProperties: TargetEntityProperties;
-    entityDateFormatString?: string;
     fieldTransformers?: FieldTransformerData[];
 };
 type PipeDataAndErrors = {

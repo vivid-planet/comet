@@ -13,7 +13,6 @@ import { DataTransformerPipe } from "./data-transformer.pipe";
 export class CsvParseAndTransformPipes implements CompositeImporterPipe {
     private readonly targetEntityProperties: TargetEntityProperties;
     private readonly fieldTransformers: FieldTransformerData[];
-    private readonly dateFormatString: string;
     private readonly fields: ImportFieldMetadata[];
 
     constructor(private readonly targetEntity: ImporterEntityClass, em: EntityManager<IDatabaseDriver<Connection>>) {
@@ -28,7 +27,6 @@ export class CsvParseAndTransformPipes implements CompositeImporterPipe {
             {
                 fields: this.fields,
                 targetEntityProperties: this.targetEntityProperties,
-                entityDateFormatString: this.dateFormatString,
                 fieldTransformers: this.fieldTransformers,
             },
             this.targetEntity,
