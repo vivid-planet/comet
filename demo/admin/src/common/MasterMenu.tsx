@@ -25,7 +25,7 @@ import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
-import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
+import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/generated/ManufacturersPage";
 import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
