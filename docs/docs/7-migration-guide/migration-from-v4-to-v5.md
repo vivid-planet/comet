@@ -126,7 +126,7 @@ Uses of `PartialType` from `@nestjs/mapped-types` should be replaced with `Parti
 Add the following command to the `package.json` of your admin app:
 
 ```diff
-+ "admin-generator": "rimraf -g 'src/**/generated' && comet-admin-generator generate crud-generator-config.ts",
++ "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts",
 ```
 
 ### Documents (DocumentInterface)
