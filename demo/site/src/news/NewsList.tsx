@@ -1,6 +1,6 @@
 "use client";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
-import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 import Link from "next/link";
 import styled from "styled-components";
 

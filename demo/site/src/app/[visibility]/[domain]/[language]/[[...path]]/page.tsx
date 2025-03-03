@@ -7,7 +7,7 @@ import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } 
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { VisibilityParam } from "@src/middleware/domainRewrite";
-import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { setVisibilityParam } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";

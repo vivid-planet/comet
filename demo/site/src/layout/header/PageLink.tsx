@@ -1,6 +1,6 @@
 "use client";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";

@@ -1,5 +1,5 @@
 "use client";
-import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 import { Fragment } from "react";
 
 import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";

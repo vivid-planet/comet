@@ -1,4 +1,4 @@
-import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createUrlObjectWithScope";
 
 export const dynamic = "force-dynamic"; // don't generate at build time
 
