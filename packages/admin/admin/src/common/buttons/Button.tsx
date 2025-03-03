@@ -97,6 +97,8 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
     };
 
     const commonButtonProps = {
+        disableFocusRipple: true,
+        disableTouchRipple: true,
         ...variantToMuiProps[variant],
         ...restProps,
         ownerState,
@@ -108,16 +110,14 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
         return (
             <MobileTooltip title={children} {...slotProps?.mobileTooltip}>
                 <span>
-                    <Root disableFocusRipple disableTouchRipple {...commonButtonProps}>
-                        {mobileIconNode}
-                    </Root>
+                    <Root {...commonButtonProps}>{mobileIconNode}</Root>
                 </span>
             </MobileTooltip>
         );
     }
 
     return (
-        <Root disableFocusRipple disableTouchRipple startIcon={startIcon} endIcon={endIcon} {...commonButtonProps}>
+        <Root startIcon={startIcon} endIcon={endIcon} {...commonButtonProps}>
             {children}
         </Root>
     );
