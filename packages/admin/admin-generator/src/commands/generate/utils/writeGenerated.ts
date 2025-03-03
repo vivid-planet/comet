@@ -12,6 +12,10 @@ export async function writeGenerated(filePath: string, contents: string): Promis
         cwd: process.cwd(),
         fix: true,
     });
+
+    // Write not linted generated code into file. This is necessary to avoid linting errors like: Parsing error: file/path/file.tsx was not found by the project service.
+    await fs.writeFile(filePath, contents);
+
     const lintResult = await eslint.lintText(header + contents, {
         filePath,
     });
