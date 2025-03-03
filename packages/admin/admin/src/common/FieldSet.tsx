@@ -85,9 +85,11 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
             {...restProps}
         >
             {!ownerState.hiddenSummary && (
-                <Summary expandIcon={collapsible ? <ChevronRight /> : undefined} ownerState={ownerState} {...slotProps?.summary}>
+                <Summary expandIcon={collapsible ? <ChevronRight /> : undefined} disabled={!collapsible} {...slotProps?.summary}>
                     <HeaderColumn {...slotProps?.headerColumn}>
-                        <Title {...slotProps?.title}>{title}</Title>
+                        <Title ownerState={ownerState} {...slotProps?.title}>
+                            {title}
+                        </Title>
                         <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
                     </HeaderColumn>
                     <Placeholder {...slotProps?.placeholder} />
@@ -109,7 +111,7 @@ const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey, OwnerState>({
     },
 })();
 
-const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey, OwnerState>({
+const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "summary",
 })(
@@ -118,11 +120,6 @@ const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey, Owner
         flex-direction: row-reverse;
         padding: 0 10px;
         height: 60px;
-
-        ${!ownerState.collapsible &&
-        css`
-            cursor: default !important;
-        `}
 
         ${theme.breakpoints.up("sm")} {
             padding: 0 20px;
@@ -148,18 +145,24 @@ const HeaderColumn = createComponentSlot("div")<FieldSetClassKey>({
     `,
 );
 
-const Title = createComponentSlot("div")<FieldSetClassKey>({
+const Title = createComponentSlot("div")<FieldSetClassKey, OwnerState>({
     componentName: "FieldSet",
     slotName: "title",
 })(
-    ({ theme }) => css`
-        display: flex;
-        align-items: center;
-        font-weight: ${theme.typography.fontWeightMedium};
-        font-size: 16px;
-        text-transform: uppercase;
-        color: ${theme.palette.text.primary};
-    `,
+    ({ theme, ownerState }) =>
+        css`
+            display: flex;
+            align-items: center;
+            font-weight: ${theme.typography.fontWeightMedium};
+            font-size: 16px;
+            text-transform: uppercase;
+            color: ${theme.palette.text.primary};
+
+            ${!ownerState.collapsible &&
+            css`
+                opacity: 1;
+            `}
+        `,
 );
 
 const SupportText = createComponentSlot("div")<FieldSetClassKey>({
