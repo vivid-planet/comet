@@ -70,10 +70,12 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     );
 }
 
-export const ManufacturerFilterOperator: GridFilterOperator = {
-    value: "equals",
-    getApplyFilterFn: (filterItem) => {
-        throw new Error("not implemented, we filter server side");
+export const ManufacturerFilterOperators: GridFilterOperator[] = [
+    {
+        value: "equals",
+        getApplyFilterFn: (filterItem) => {
+            throw new Error("not implemented, we filter server side");
+        },
+        InputComponent: ManufacturerFilter,
     },
-    InputComponent: ManufacturerFilter,
-};
+];

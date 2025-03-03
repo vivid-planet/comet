@@ -23,7 +23,7 @@ import { type ReactNode } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
-    type GQLCombinationFieldsTestProductsGridFutureFragment,
+    type GQLCombinationFieldsTestProductsFragment,
     type GQLCreateProductMutation,
     type GQLCreateProductMutationVariables,
     type GQLDeleteProductMutation,
@@ -33,7 +33,7 @@ import {
 } from "./CombinationFieldsTestProductsGrid.generated";
 
 const productsFragment = gql`
-    fragment CombinationFieldsTestProductsGridFuture on Product {
+    fragment CombinationFieldsTestProducts on Product {
         id
         title
         category {
@@ -49,7 +49,7 @@ const productsQuery = gql`
     query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
         products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
-                ...CombinationFieldsTestProductsGridFuture
+                ...CombinationFieldsTestProducts
             }
             totalCount
         }
@@ -92,7 +92,7 @@ function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps)
 type Props = {
     toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
@@ -101,7 +101,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
-    const columns: GridColDef<GQLCombinationFieldsTestProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLCombinationFieldsTestProductsFragment>[] = [
         {
             field: "titleAndCategory",
             headerName: intl.formatMessage({ id: "product.titleAndCategory", defaultMessage: "Title and Category" }),

@@ -29,13 +29,13 @@ import {
     type GQLCreateManufacturerMutationVariables,
     type GQLDeleteManufacturerMutation,
     type GQLDeleteManufacturerMutationVariables,
-    type GQLManufacturersGridFutureFragment,
+    type GQLManufacturersFormFragment,
     type GQLManufacturersGridQuery,
     type GQLManufacturersGridQueryVariables,
 } from "./ManufacturersGrid.generated";
 
 const manufacturersFragment = gql`
-    fragment ManufacturersGridFuture on Manufacturer {
+    fragment ManufacturersForm on Manufacturer {
         id
         name
         address {
@@ -61,7 +61,7 @@ const manufacturersQuery = gql`
     query ManufacturersGrid($offset: Int!, $limit: Int!, $sort: [ManufacturerSort!], $search: String, $filter: ManufacturerFilter) {
         manufacturers(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
-                ...ManufacturersGridFuture
+                ...ManufacturersForm
             }
             totalCount
         }
@@ -95,7 +95,7 @@ function ManufacturersGridToolbar() {
             <FillSpace />
             <ToolbarActions>
                 <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
+                    <FormattedMessage id="manufacturer.manufacturersForm.newEntry" defaultMessage="Add Manufacturer" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
@@ -112,7 +112,7 @@ export function ManufacturersGrid() {
         ...usePersistentColumnState("ManufacturersGrid"),
     };
 
-    const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
+    const columns: GridColDef<GQLManufacturersFormFragment>[] = [
         {
             field: "id",
             headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),

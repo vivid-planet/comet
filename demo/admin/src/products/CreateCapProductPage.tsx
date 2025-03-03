@@ -10,8 +10,9 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { CreateCapProductForm } from "@src/products/future/generated/CreateCapProductForm";
 import { useIntl } from "react-intl";
+
+import { CreateCapProductForm } from "./generated/CreateCapProductForm";
 
 export function CreateCapProductPage() {
     const intl = useIntl();

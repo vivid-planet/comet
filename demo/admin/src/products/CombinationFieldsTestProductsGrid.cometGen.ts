@@ -4,7 +4,7 @@ import { type GQLProduct } from "@src/graphql.generated";
 export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
     type: "grid",
     gqlType: "Product",
-    fragmentName: "CombinationFieldsTestProductsGridFuture",
+    fragmentName: "CombinationFieldsTestProducts",
     toolbarActionProp: true,
     rowActionProp: true,
     columns: [

@@ -19,14 +19,10 @@ import {
 import { DataGridPro, type DataGridProProps, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useIntl } from "react-intl";
 
-import {
-    type GQLProductsGridQuery,
-    type GQLProductsGridQueryVariables,
-    type GQLSelectProductsGridFutureFragment,
-} from "./SelectProductsGrid.generated";
+import { type GQLProductsGridQuery, type GQLProductsGridQueryVariables, type GQLSelectProductsGridFragment } from "./SelectProductsGrid.generated";
 
 const productsFragment = gql`
-    fragment SelectProductsGridFuture on Product {
+    fragment SelectProductsGrid on Product {
         id
         title
         description
@@ -41,7 +37,7 @@ const productsQuery = gql`
     query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
         products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
-                ...SelectProductsGridFuture
+                ...SelectProductsGrid
             }
             totalCount
         }
@@ -79,7 +75,7 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
         keepNonExistentRowsSelected: true,
     };
 
-    const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = [
+    const columns: GridColDef<GQLSelectProductsGridFragment>[] = [
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, minWidth: 200, maxWidth: 250 },
         {
             field: "description",
