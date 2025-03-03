@@ -11,6 +11,7 @@ import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 
+import { generateCrudPage } from "./generateCrudPage/generateCrudPage";
 import { generateForm } from "./generateForm/generateForm";
 import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { generateGrid } from "./generateGrid/generateGrid";
@@ -173,8 +174,28 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
+type CrudPageGridConfig = {
+    import: ImportReference;
+};
+
+export type CrudPageFormConfig = {
+    import: ImportReference;
+    variant?: "fullPage" | "dialog";
+    pageTitle?: string;
+};
+
+export type CrudPageConfig<T extends { __typename?: string }> = {
+    type: "crudPage";
+    topLevelTitle?: string;
+    gqlType: T["__typename"];
+    grid: CrudPageGridConfig;
+    forms?: CrudPageFormConfig;
+    addForm?: Partial<CrudPageFormConfig>;
+    editForm?: Partial<CrudPageFormConfig>;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
+export type GeneratorConfig = FormConfig<any> | GridConfig<any> | CrudPageConfig<any> | TabsConfig;
 
 type GQLDocumentConfig = { document: string; export: boolean };
 export type GQLDocumentConfigMap = Record<string, GQLDocumentConfig>;
@@ -210,6 +231,9 @@ async function runGenerate(filePattern = "src/**/*.cometGen.ts") {
                 generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
             } else if (config.type == "grid") {
                 generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+            } else if (config.type == "crudPage") {
+                // TODO: Add missing values like above: { exportName, gqlIntrospection, baseOutputFilename, targetDirectory }
+                generated = generateCrudPage(config);
             } else {
                 throw new Error(`Unknown config type: ${config.type}`);
             }
