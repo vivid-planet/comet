@@ -82,7 +82,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
 
             "&:focus": {
                 backgroundColor: palette.primary.main,
-                outline: `2px solid  ${palette.primary.dark}`,
+                outline: `2px solid ${palette.primary.dark}`,
             },
         },
         containedSecondary: {
