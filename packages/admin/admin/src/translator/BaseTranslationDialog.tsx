@@ -45,7 +45,7 @@ export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) 
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>
+                <Button variant="textDark" onClick={onClose}>
                     <FormattedMessage {...messages.cancel} />
                 </Button>
                 <Button

@@ -27,6 +27,7 @@ export function StackBackButton(inProps: StackBackButtonProps) {
                         disabled={stackApi?.breadCrumbs == null || stackApi?.breadCrumbs.length <= 1}
                         onClick={stackApi?.goBack}
                         startIcon={startIcon}
+                        variant="textDark"
                         {...restProps}
                     >
                         <FormattedMessage {...messages.back} />

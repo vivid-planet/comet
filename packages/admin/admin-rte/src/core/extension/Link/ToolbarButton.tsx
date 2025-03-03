@@ -113,7 +113,7 @@ function LinkDialog(props: {
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} startIcon={<Close />}>
+                <Button onClick={handleClose} variant="outlined" startIcon={<Close />}>
                     {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                     <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                 </Button>

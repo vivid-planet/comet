@@ -77,7 +77,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     return (
         <>
             <Button
-                sx={{ color: "white" }}
+                variant="textLight"
                 startIcon={replaceLoading ? <ThreeDotSaving /> : <Upload />}
                 onClick={() => {
                     // Trigger file input with button click

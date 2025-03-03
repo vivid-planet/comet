@@ -197,6 +197,7 @@ const MoveDamItemDialogInner = ({
             </DialogContent>
             <DialogActions>
                 <Button
+                    variant="outlined"
                     startIcon={<Reset />}
                     onClick={() => {
                         setSelectedId(undefined);

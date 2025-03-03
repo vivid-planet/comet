@@ -1,10 +1,11 @@
 import "react-image-crop/dist/ReactCrop.css";
 
 import { useApolloClient } from "@apollo/client";
-import { Button, CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
 import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
+    Button,
     Dialog,
     DialogActions,
     DialogContent as MuiDialogContent,

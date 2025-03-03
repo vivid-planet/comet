@@ -1,6 +1,6 @@
-import { Button, SplitButton } from "@comet/admin";
+import { SplitButton } from "@comet/admin";
 import { Home } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default {
@@ -10,7 +10,7 @@ export default {
 export const Uncontrolled = {
     render: () => {
         return (
-            <SplitButton variant="contained" color="primary">
+            <SplitButton>
                 <Button
                     onClick={() => {
                         alert("primary clicked");
@@ -35,8 +35,6 @@ export const Controlled = {
         const [selectedIndex, setSelectedIndex] = useState(1);
         return (
             <SplitButton
-                variant="contained"
-                color="secondary"
                 selectedIndex={selectedIndex}
                 onSelectIndex={(index: number) => {
                     setSelectedIndex(index);
@@ -210,6 +208,7 @@ export const VariantChange = {
         return (
             <SplitButton color="primary">
                 <Button
+                    variant="contained"
                     onClick={() => {
                         alert("primary clicked");
                     }}
@@ -225,7 +224,7 @@ export const VariantChange = {
                     Secondary Action
                 </Button>
                 <Button
-                    variant="textDark"
+                    variant="text"
                     onClick={() => {
                         alert("tertiary clicked");
                     }}
@@ -254,7 +253,9 @@ export const CustomComponent = {
                                 <Home /> Home
                             </Typography>
                         </div>
-                        <Button>Primary Action</Button>
+                        <Button variant="contained" color="primary">
+                            Primary Action
+                        </Button>
                     </SplitButton>
                 </div>
                 <div>
@@ -269,7 +270,9 @@ export const CustomComponent = {
                                 <Home /> Home
                             </Typography>
                         </div>
-                        <Button>Primary Action</Button>
+                        <Button variant="contained" color="primary">
+                            Primary Action
+                        </Button>
                     </SplitButton>
                 </div>
             </div>

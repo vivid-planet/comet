@@ -10,7 +10,6 @@ export const Wrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$a
     width: fit-content;
     position: relative;
     border-radius: 2px;
-    border: 1px solid ${({ theme, $active }) => ($active ? theme.palette.grey[400] : theme.palette.grey[100])};
 `;
 
 export const SortByButton = styled(Button)`
@@ -23,10 +22,6 @@ export const SortByButton = styled(Button)`
 
     & [class*="muisvgicon-root"] {
         font-size: 12px;
-    }
-
-    &:hover {
-        background: initial;
     }
 `;
 

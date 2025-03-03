@@ -23,7 +23,7 @@ export function CancelButton(inProps: CancelButtonProps) {
     } = useThemeProps({ props: inProps, name: "CometAdminCancelButton" });
 
     return (
-        <Root color="info" startIcon={startIcon} {...restProps}>
+        <Root variant="textDark" startIcon={startIcon} {...restProps}>
             {children}
         </Root>
     );

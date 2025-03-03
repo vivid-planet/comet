@@ -34,7 +34,7 @@ export function ProgressDialog(props: { title: ReactNode; progress: number | und
                     </DialogContent>
                     {props.onCancel && (
                         <DialogActions>
-                            <Button onClick={props.onCancel}>
+                            <Button onClick={props.onCancel} variant="textDark">
                                 <FormattedMessage {...messages.cancel} />
                             </Button>
                         </DialogActions>
