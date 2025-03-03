@@ -1,7 +1,7 @@
 "use client";
 import { PropsWithData } from "@comet/cms-site";
 import { InternalLinkBlockData } from "@src/blocks.generated";
-import { createSiteUrl } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
@@ -9,6 +9,25 @@ interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<Interna
     title?: string;
     className?: string;
 }
+
+interface CreateInternalLinkOptions {
+    targetPage: Required<InternalLinkBlockData>["targetPage"];
+    targetPageAnchor: InternalLinkBlockProps["data"]["targetPageAnchor"];
+}
+
+const createInternalLink = ({ targetPage, targetPageAnchor }: CreateInternalLinkOptions) => {
+    const scopedUrlObject = createUrlObjectWithScope({
+        path: targetPage.path,
+        scope: {
+            language: (targetPage.scope as Record<string, string>).language,
+        },
+    });
+
+    return {
+        ...scopedUrlObject,
+        hash: targetPageAnchor,
+    };
+};
 
 export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title, className }: InternalLinkBlockProps) {
     if (!targetPage) {
@@ -20,17 +39,7 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
     }
 
     return (
-        <Link
-            href={createSiteUrl({
-                scope: {
-                    language: (targetPage.scope as Record<string, string>).language,
-                },
-                path: targetPage.path,
-                anchor: targetPageAnchor,
-            })}
-            title={title}
-            className={className}
-        >
+        <Link href={createInternalLink({ targetPage, targetPageAnchor: targetPageAnchor })} title={title} className={className}>
             {children}
         </Link>
     );

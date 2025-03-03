@@ -1,6 +1,6 @@
 "use client";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
-import { createSiteUrl } from "@src/util/createSiteUrl";
+import { createUrlObjectWithScope } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -14,11 +14,11 @@ export function NewsList({ newsList }: { newsList: GQLNewsListFragment }) {
                 {newsList.nodes.map((news) => (
                     <Card
                         key={news.id}
-                        href={createSiteUrl({
+                        href={createUrlObjectWithScope({
+                            path: `/news/${news.slug}`,
                             scope: {
                                 language: news.scope.language,
                             },
-                            path: `/news/${news.slug}`,
                         })}
                     >
                         <DamImageBlock data={news.image} aspectRatio="4x3" />

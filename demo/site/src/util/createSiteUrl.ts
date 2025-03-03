@@ -1,4 +1,6 @@
-type CreateSiteUrlOptions = {
+import type { UrlObject } from "url";
+
+type CreateUrlObjectWithScopeOptions = {
     /**
      * path with leading /
      *
@@ -9,25 +11,10 @@ type CreateSiteUrlOptions = {
     scope: {
         language: string;
     };
-
-    /**
-     * If provided, the anchor will be appended to the resulting URL
-     *
-     * Sample: "my-anchor"
-     */
-    anchor?: string;
 };
-/**
- * Creates a URL from the provided options.
- *
- * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
- */
-export const createSiteUrl = ({ path, scope, anchor }: CreateSiteUrlOptions) => {
-    let url = `/${scope.language}${path}`;
 
-    if (anchor) {
-        url += `#${anchor}`;
-    }
-
-    return url;
+export const createUrlObjectWithScope = ({ path, scope }: CreateUrlObjectWithScopeOptions): UrlObject => {
+    return {
+        pathname: `/${scope.language}${path}`,
+    };
 };
