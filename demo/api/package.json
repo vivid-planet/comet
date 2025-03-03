@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+        "api-generator": "rimraf -g 'src/**/generated' && comet-api-generator generate",
         "prebuild": "rimraf dist",
         "build": "nest build",
         "console": "NODE_OPTIONS='--max-old-space-size=256' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
@@ -80,6 +80,7 @@
         "eslint": "^9.22.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.5.3",
+        "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^3.15.0",
         "typescript": "^5.7.3"
