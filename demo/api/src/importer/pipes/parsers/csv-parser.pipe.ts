@@ -19,8 +19,8 @@ export class CsvParsePipe implements ImporterPipe {
 
     private getParserOption(jobRunParserOptions: ParserOptions, csvColumns: ImportFieldMetadata[]) {
         //check entity metadata for csv headers
-        const entityHasOnlyNumericCsvColumnNames = csvColumns.reduce((acc, column) => (typeof column.fieldPath === "number" ? true : acc), false);
-        const entityHasOnlyStringCsvColumnNames = csvColumns.reduce((acc, column) => (typeof column.fieldPath === "string" ? true : acc), false);
+        const entityHasOnlyNumericCsvColumnNames = csvColumns.every((column) => typeof column.fieldPath === "number");
+        const entityHasOnlyStringCsvColumnNames = csvColumns.every((column) => typeof column.fieldPath === "string");
         if (entityHasOnlyNumericCsvColumnNames && entityHasOnlyStringCsvColumnNames) {
             throw new Error(`Error importing: CSV column names must be either all property names or all indices`);
         }
