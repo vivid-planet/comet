@@ -409,7 +409,7 @@ export function generateGrid(
                         label,
                     );
                     return `{
-                        value: ${typeof value === "string" ? `"${value}"` : value},
+                        value: ${typeof value === "string" ? JSON.stringify(value) : value},
                         label: ${labelData.textLabel},
                         ${labelData.gridCellContent !== undefined ? `cellContent: ${labelData.gridCellContent},` : ""}
                     },`;
