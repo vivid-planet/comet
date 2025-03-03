@@ -3,7 +3,8 @@
 import { type Dispatch, type SetStateAction } from "react";
 
 import { BlockPreviewContent } from "../../common/blockRow/BlockPreviewContent";
-import { type BlockContext, type BlockDependency, type BlockInterface, type BlockMethods, type PreviewContent } from "../../types";
+import { type BlockContext } from "../../context/BlockContext";
+import { type BlockDependency, type BlockInterface, type BlockMethods, type PreviewContent } from "../../types";
 import { resolveNewState } from "../../utils";
 import { deduplicateBlockDependencies } from "../deduplicateBlockDependencies";
 import { isBlockInterface } from "../isBlockInterface";
@@ -37,7 +38,7 @@ export type ComposeBlocksApi<C extends CompositeBlocksConfig> = {
     api: {
         adminComponentProps: (props: { state: DataMapState<C>; updateState: Dispatch<SetStateAction<DataMapState<C>>> }) => AdminComponentPropsMap<C>;
         adminComponents: (props: { state: DataMapState<C>; updateState: Dispatch<SetStateAction<DataMapState<C>>> }) => AdminComponentsMap<C>;
-        previews: (state: DataMapState<C>, ctx?: BlockContext) => PreviewMap<C>;
+        previews: (state: DataMapState<C>, context: BlockContext) => PreviewMap<C>;
         childBlockCounts: (state: DataMapState<C>) => ChildBlockCountMap<C>;
         isValids: (state: DataMapState<C>) => IsValidMap<C>;
     };

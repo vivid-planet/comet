@@ -5,7 +5,6 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     BlocksConfigProvider,
-    CmsBlockContextProvider,
     CometConfigProvider,
     createDamFileDependency,
     CurrentUserProvider,
@@ -47,6 +46,12 @@ const GlobalStyle = () => (
 );
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
+
+declare module "@comet/cms-admin" {
+    interface BlockContext {
+        demo: boolean;
+    }
+}
 
 export function App() {
     return (
@@ -103,6 +108,7 @@ export function App() {
             }}
             buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
             contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
+            blocks={{ context: { demo: true } }}
         >
             <ApolloProvider client={apolloClient}>
                 <IntlProvider locale="en" messages={getMessages()}>
@@ -118,38 +124,36 @@ export function App() {
                         <MuiThemeProvider theme={theme}>
                             <DndProvider options={HTML5toTouch}>
                                 <SnackbarProvider>
-                                    <CmsBlockContextProvider>
-                                        <ErrorDialogHandler />
-                                        <CurrentUserProvider>
-                                            <RouterBrowserRouter>
-                                                <GlobalStyle />
-                                                <ContentScopeProvider>
-                                                    {({ match }) => (
-                                                        <Switch>
-                                                            <Route
-                                                                path={`${match.path}/preview`}
-                                                                render={(props) => (
-                                                                    <SitePreview
-                                                                        resolvePath={(path: string, scope) => {
-                                                                            return `/${scope.language}${path}`;
-                                                                        }}
-                                                                        {...props}
-                                                                    />
-                                                                )}
-                                                            />
-                                                            <Route
-                                                                render={() => (
-                                                                    <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                        <MasterMenuRoutes menu={masterMenuData} />
-                                                                    </MasterLayout>
-                                                                )}
-                                                            />
-                                                        </Switch>
-                                                    )}
-                                                </ContentScopeProvider>
-                                            </RouterBrowserRouter>
-                                        </CurrentUserProvider>
-                                    </CmsBlockContextProvider>
+                                    <ErrorDialogHandler />
+                                    <CurrentUserProvider>
+                                        <RouterBrowserRouter>
+                                            <GlobalStyle />
+                                            <ContentScopeProvider>
+                                                {({ match }) => (
+                                                    <Switch>
+                                                        <Route
+                                                            path={`${match.path}/preview`}
+                                                            render={(props) => (
+                                                                <SitePreview
+                                                                    resolvePath={(path: string, scope) => {
+                                                                        return `/${scope.language}${path}`;
+                                                                    }}
+                                                                    {...props}
+                                                                />
+                                                            )}
+                                                        />
+                                                        <Route
+                                                            render={() => (
+                                                                <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                    <MasterMenuRoutes menu={masterMenuData} />
+                                                                </MasterLayout>
+                                                            )}
+                                                        />
+                                                    </Switch>
+                                                )}
+                                            </ContentScopeProvider>
+                                        </RouterBrowserRouter>
+                                    </CurrentUserProvider>
                                 </SnackbarProvider>
                             </DndProvider>
                         </MuiThemeProvider>

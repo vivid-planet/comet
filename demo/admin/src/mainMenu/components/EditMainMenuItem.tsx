@@ -22,8 +22,8 @@ import {
     openSitePreviewWindow,
     resolveNewState,
     SplitPreview,
+    useBlockContext,
     useBlockPreview,
-    useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
 import { Box } from "@mui/material";
@@ -85,7 +85,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
     const { match: contentScopeMatch, scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
     const intl = useIntl();
-    const blockContext = useCmsBlockContext();
+    const blockContext = useBlockContext();
 
     useEffect(() => {
         setContent(item.content ? RichTextBlock.input2State(item.content) : null);

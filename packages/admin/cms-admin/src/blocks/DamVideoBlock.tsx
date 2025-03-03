@@ -11,7 +11,6 @@ import { useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
@@ -46,7 +45,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         showControls: state.showControls,
     }),
 
-    output2State: async (output, context: CmsBlockContext) => {
+    output2State: async (output, context) => {
         if (!output.damFileId) {
             return { previewImage: await PixelImageBlock.output2State(output.previewImage, context) };
         }

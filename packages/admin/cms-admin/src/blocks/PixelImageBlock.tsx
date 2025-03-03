@@ -14,7 +14,6 @@ import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -22,7 +21,7 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
-import { BlockCategory, type BlockDependency, type BlockInterface, type BlockPreviewContext } from "./types";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
 
@@ -62,10 +61,10 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.apiUrl),
-        adminMeta: { route: previewCtx.parentUrl },
+        urlTemplate: createPreviewUrl(state, previewContext.apiUrl),
+        adminMeta: { route: previewContext.parentUrl },
     }),
 
     state2Output: (v) => {
@@ -79,7 +78,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<ImageBlockState> => {
+    output2State: async (output, { apolloClient }): Promise<ImageBlockState> => {
         if (!output.damFileId) {
             return {};
         }
@@ -279,13 +278,13 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             </SelectPreviewComponent>
         );
     },
-    previewContent: (state, ctx) => {
-        if (!state.damFile || !state.damFile?.fileUrl || !ctx?.damConfig?.apiUrl) {
+    previewContent: (state, context) => {
+        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl) {
             return [];
         }
         const imageSize = { width: 320, height: 320 };
         return [
-            { type: "image", content: { src: createPreviewUrl(state, ctx.damConfig.apiUrl, imageSize), ...imageSize } },
+            { type: "image", content: { src: createPreviewUrl(state, context.apiUrl, imageSize), ...imageSize } },
             { type: "text", content: state.damFile.name },
         ];
     },

@@ -1,5 +1,4 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
-export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
 export { BlockAdminComponentButton } from "./blocks/common/BlockAdminComponentButton";
 export { BlockAdminComponentNestedButton } from "./blocks/common/BlockAdminComponentNestedButton";
 export { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "./blocks/common/BlockAdminComponentPaper";
@@ -13,6 +12,7 @@ export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewConten
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
 export { type BlocksConfig, BlocksConfigProvider, useBlocksConfig } from "./blocks/config/BlocksConfigContext";
+export { type BlockContext } from "./blocks/context/BlockContext";
 export { BlockContextProvider } from "./blocks/context/BlockContextProvider";
 export { useBlockContext } from "./blocks/context/useBlockContext";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
@@ -96,7 +96,6 @@ export type {
 } from "./blocks/types";
 export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";
-export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
 export { resolveNewState } from "./blocks/utils";
 export { parallelAsyncEvery } from "./blocks/utils/parallelAsyncEvery";
 export { isValidUrl } from "./blocks/validators/isValidUrl";
