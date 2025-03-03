@@ -81,7 +81,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             },
             visible: "down('md')",
             sortBy: ["title", "price", "type", "category", "inStock"],
-            disableExport: true, // TODO: Implement `valueFormatter` for type "combination"
+            disableExport: true,
         },
         {
             type: "text",

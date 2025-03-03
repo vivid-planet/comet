@@ -22,7 +22,6 @@ import { basename, dirname } from "path";
 import { type ComponentType } from "react";
 
 import { generateForm } from "./generateForm/generateForm";
-import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
@@ -168,7 +167,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
+    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;

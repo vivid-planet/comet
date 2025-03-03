@@ -27,7 +27,6 @@ import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { findRootBlocks } from "../utils/findRootBlocks";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
 import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
-import { getCombinationColumnRenderCell, type GridCombinationColumnConfig } from "./combinationColumn";
 import { findInputObjectType } from "./findInputObjectType";
 import { generateGqlFieldList } from "./generateGqlFieldList";
 import { generateGridToolbar } from "./generateGridToolbar";
@@ -333,9 +332,7 @@ export function generateGrid(
     const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
     const gridColumnFields = (
-        config.columns.filter((column) => column.type !== "actions") as Array<
-            GridColumnConfig<any> | GridCombinationColumnConfig<string> | VirtualGridColumnConfig<any>
-        >
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<any> | VirtualGridColumnConfig<any>>
     ).map((column) => {
         const type = column.type;
         const name = String(column.name);
@@ -347,7 +344,7 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         let filterOperators: string | undefined;
-        if (column.type != "combination" && column.type != "virtual" && column.filterOperators) {
+        if (column.type != "virtual" && column.filterOperators) {
             if (isGeneratorConfigImport(column.filterOperators)) {
                 imports.push(convertConfigImport(column.filterOperators));
                 filterOperators = column.filterOperators.name;
@@ -447,8 +444,6 @@ export function generateGrid(
             };
         } else if (type == "virtual") {
             //noop
-        } else if (type == "combination") {
-            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         if (
