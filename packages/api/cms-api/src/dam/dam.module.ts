@@ -19,6 +19,7 @@ import { createFolderEntity, FolderInterface } from "./files/entities/folder.ent
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { FileValidationService } from "./files/file-validation.service";
+import { FileWarningService } from "./files/file-warning.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
@@ -130,6 +131,7 @@ export class DamModule {
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
                 HasValidFilenameConstraint,
+                FileWarningService,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [
@@ -142,6 +144,7 @@ export class DamModule {
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,
+                FileWarningService,
             ],
         };
     }

@@ -93,6 +93,8 @@ export function App() {
                                     generateAltText: true,
                                     generateImageTitle: true,
                                 },
+                                requireLicense: true,
+                                enableLicenseFeature: true,
                             }}
                         >
                             <DependenciesConfigProvider
