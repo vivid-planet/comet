@@ -69,8 +69,8 @@ export class UserPermissionsService {
         if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
         return {
             id: idToken.sub,
-            name: idToken.name,
-            email: idToken.email,
+            name: idToken.name || "Unknown User",
+            email: idToken.email || "",
         };
     }
 
@@ -105,7 +105,7 @@ export class UserPermissionsService {
         });
         if (this.accessControlService.getPermissionsForUser) {
             if (user) {
-                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
+                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }

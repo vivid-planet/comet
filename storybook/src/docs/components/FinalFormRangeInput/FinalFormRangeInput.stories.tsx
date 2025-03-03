@@ -1,5 +1,4 @@
-import { Field, FinalFormRangeInput } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, Field, FinalFormRangeInput } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { Form } from "react-final-form";
 
@@ -21,8 +20,6 @@ export const Default = {
                             <h3 style={{ marginTop: 0 }}>Value</h3>
                             <pre>{JSON.stringify(values, undefined, 2)}</pre>
                             <Button
-                                variant="contained"
-                                color="primary"
                                 onClick={() => {
                                     form.reset();
                                 }}

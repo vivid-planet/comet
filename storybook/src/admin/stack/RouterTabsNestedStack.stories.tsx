@@ -1,5 +1,4 @@
-import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -20,11 +19,7 @@ export const RouterTabsWithNestedStack = {
                             <StackSwitch>
                                 <StackPage name="table">
                                     <StackSwitchApiContext.Consumer>
-                                        {(stackApi) => (
-                                            <Button color="primary" variant="contained" onClick={() => stackApi.activatePage("edit", "test")}>
-                                                Test
-                                            </Button>
-                                        )}
+                                        {(stackApi) => <Button onClick={() => stackApi.activatePage("edit", "test")}>Test</Button>}
                                     </StackSwitchApiContext.Consumer>
                                 </StackPage>
                                 <StackPage name="edit" title="Edit">

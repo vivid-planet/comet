@@ -2,8 +2,10 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
@@ -11,7 +13,6 @@ import {
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -19,7 +20,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -92,10 +93,10 @@ function ManufacturersGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>

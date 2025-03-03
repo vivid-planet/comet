@@ -1,5 +1,5 @@
-import { Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
+import { Button, Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
+import { Stack, Typography } from "@mui/material";
 
 interface FormValues {
     foo: string;
@@ -70,20 +70,19 @@ export const ShowErrorStrategies = {
                         <Typography variant="h3">Show-Error-Strategy: &quot;{strategy}&quot;</Typography>
                         <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
                         <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
-                        <Button variant="contained" color="primary" type="submit">
-                            Submit
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => {
-                                form.reset();
-                                form.resetFieldState("foo");
-                                form.resetFieldState("bar");
-                            }}
-                        >
-                            Reset form and field state
-                        </Button>
+                        <Stack direction="row" spacing={2}>
+                            <Button type="submit">Submit</Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => {
+                                    form.reset();
+                                    form.resetFieldState("foo");
+                                    form.resetFieldState("bar");
+                                }}
+                            >
+                                Reset form and field state
+                            </Button>
+                        </Stack>
                     </>
                 )}
             </FinalForm>

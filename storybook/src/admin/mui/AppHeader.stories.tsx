@@ -3,6 +3,7 @@ import {
     AppHeaderButton,
     AppHeaderDropdown,
     AppHeaderMenuButton,
+    Button,
     CometLogo,
     FillSpace,
     MainContent,
@@ -11,7 +12,7 @@ import {
     MenuItemRouterLink,
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
-import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
+import { Avatar, Box, Divider, MenuItem, MenuList } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -67,7 +68,7 @@ function MasterHeader() {
                 <Divider />
 
                 <Box padding={4}>
-                    <Button variant="contained" color="primary" startIcon={<Logout />} fullWidth>
+                    <Button startIcon={<Logout />} fullWidth>
                         Logout
                     </Button>
                 </Box>

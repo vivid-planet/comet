@@ -1,15 +1,14 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { AccordionContentBlockData, AccordionItemBlockData } from "@src/blocks.generated";
-import { useState } from "react";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
+import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
+import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
+import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
 import { Typography } from "../components/Typography";
-import { SvgUse } from "../helpers/SvgUse";
-import { RichTextBlock } from "./RichTextBlock";
-import { SpaceBlock } from "./SpaceBlock";
-import { StandaloneCallToActionListBlock } from "./StandaloneCallToActionListBlock";
-import { StandaloneHeadingBlock } from "./StandaloneHeadingBlock";
 
 const supportedBlocks: SupportedBlocks = {
     richtext: (props) => <RichTextBlock data={props} />,
@@ -25,12 +24,14 @@ const AccordionContentBlock = withPreview(
     { label: "Accordion Content" },
 );
 
-type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData>;
+type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData> & {
+    isExpanded: boolean;
+    onChange: () => void;
+};
 
 export const AccordionItemBlock = withPreview(
-    ({ data: { title, content, openByDefault } }: AccordionItemBlockProps) => {
+    ({ data: { title, content }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const intl = useIntl();
-        const [isExpanded, setIsExpanded] = useState<boolean>(openByDefault);
 
         const ariaLabelText = isExpanded
             ? intl.formatMessage({ id: "accordionBlock.ariaLabel.expanded", defaultMessage: "Collapse accordion item" })
@@ -38,14 +39,14 @@ export const AccordionItemBlock = withPreview(
 
         return (
             <>
-                <TitleWrapper onClick={() => setIsExpanded(!isExpanded)} aria-label={ariaLabelText}>
+                <TitleWrapper onClick={() => onChange()} aria-label={ariaLabelText}>
                     <Typography variant="h350">{title}</Typography>
                     <IconWrapper>
                         <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
                     </IconWrapper>
                 </TitleWrapper>
-                <ContentWrapper aria-hidden={!isExpanded}>
-                    <ContentWrapperInner $isExpanded={isExpanded}>
+                <ContentWrapper aria-hidden={!isExpanded} $isExpanded={isExpanded}>
+                    <ContentWrapperInner>
                         <AccordionContentBlock data={content} />
                     </ContentWrapperInner>
                 </ContentWrapper>
@@ -83,21 +84,20 @@ const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
     transition: transform 0.4s ease;
 `;
 
-const ContentWrapper = styled.div`
-    overflow: hidden;
-`;
-
-const ContentWrapperInner = styled.div<{ $isExpanded: boolean }>`
-    padding-bottom: ${({ theme }) => theme.spacing.S300};
-    margin-top: -100%;
-    opacity: 0;
-    transition: margin-top 0.8s ease-out 0.3s, opacity 0.3s linear;
+const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
+    position: relative;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s ease-out;
 
     ${({ $isExpanded }) =>
         $isExpanded &&
         css`
-            margin-top: 0;
-            opacity: 1;
-            transition: margin-top 0.5s ease-out, opacity 0.3s linear 0.4s;
+            grid-template-rows: 1fr;
+            padding-bottom: ${({ theme }) => theme.spacing.S300};
         `}
+`;
+
+const ContentWrapperInner = styled.div`
+    overflow: hidden;
 `;

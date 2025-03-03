@@ -2,9 +2,11 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
@@ -12,7 +14,6 @@ import {
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -20,7 +21,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -85,10 +86,10 @@ function ProductVariantsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>

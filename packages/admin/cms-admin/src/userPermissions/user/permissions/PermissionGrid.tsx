@@ -162,7 +162,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 rowCount={data?.permissions.length ?? 0}
                 loading={loading}
                 getRowHeight={() => "auto"}
-                sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
                 components={{
                     Toolbar: () => (
                         <GridToolbar>

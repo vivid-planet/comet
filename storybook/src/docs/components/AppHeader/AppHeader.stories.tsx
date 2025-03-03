@@ -1,6 +1,6 @@
-import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
+import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderMenuButton, Button, CometLogo, FillSpace } from "@comet/admin";
 import { Account, Language, Logout, Preview, Snips, SwitchUser, Wrench } from "@comet/admin-icons";
-import { Avatar, Box, Button, Divider, MenuItem, MenuList, Typography } from "@mui/material";
+import { Avatar, Box, Divider, MenuItem, MenuList, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default {
@@ -56,7 +56,7 @@ export const Basic = {
                     <Divider />
 
                     <Box padding={4}>
-                        <Button variant="contained" color="primary" startIcon={<Logout />} fullWidth>
+                        <Button startIcon={<Logout />} fullWidth>
                             Logout
                         </Button>
                     </Box>

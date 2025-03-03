@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
@@ -16,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
@@ -40,7 +41,7 @@ function ManufacturersGridToolbar() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>

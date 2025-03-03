@@ -1,5 +1,4 @@
-import { readClipboardText, writeClipboardText } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, readClipboardText, writeClipboardText } from "@comet/admin";
 
 export default {
     title: "Docs/Helper/Clipboard",
@@ -8,12 +7,12 @@ export default {
 export const Write = () => {
     return (
         <Button
-            variant="outlined"
+            variant="primary"
             onClick={async () => {
                 await writeClipboardText("Hello World");
             }}
         >
-            write clipboard
+            Write clipboard
         </Button>
     );
 };
@@ -21,13 +20,13 @@ export const Write = () => {
 export const Read = () => {
     return (
         <Button
-            variant="outlined"
+            variant="primary"
             onClick={async () => {
                 const text = await readClipboardText();
                 alert(text);
             }}
         >
-            read clipboard
+            Read clipboard
         </Button>
     );
 };

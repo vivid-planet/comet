@@ -1,6 +1,6 @@
-import { CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
+import { Button, CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { Button, DialogActions, DialogContent, DialogContentText, DialogProps } from "@mui/material";
+import { DialogActions, DialogContent, DialogContentText, DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
 
 type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";
@@ -115,9 +115,7 @@ function DefaultDialogContent() {
             </DialogContent>
             <DialogActions>
                 <CancelButton />
-                <Button startIcon={<Save />} variant="contained" color="primary">
-                    Save
-                </Button>
+                <Button startIcon={<Save />}>Save</Button>
             </DialogActions>
         </>
     );

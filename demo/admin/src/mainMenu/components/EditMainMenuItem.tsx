@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import {
+    Button,
     FillSpace,
     MainContent,
     messages,
@@ -13,7 +14,7 @@ import {
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/blocks-admin";
 import { ContentScopeIndicator, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
-import { Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
@@ -125,7 +126,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                 <FillSpace />
                 <ToolbarActions>
                     <Button
-                        color="info"
+                        variant="textDark"
                         startIcon={<Preview />}
                         onClick={() => {
                             openSitePreviewWindow(item.node.path, contentScopeMatch.url);
@@ -168,7 +169,8 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                                         }}
                                     />
                                     <HiddenInSubroute>
-                                        <Button startIcon={<Delete />} onClick={handleRemoveContentClick}>
+                                        <Box mb={4} />
+                                        <Button variant="destructive" startIcon={<Delete />} onClick={handleRemoveContentClick}>
                                             <FormattedMessage id="mainMenu.removeContent" defaultMessage="Remove content" />
                                         </Button>
                                     </HiddenInSubroute>

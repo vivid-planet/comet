@@ -2,6 +2,7 @@ import {
     AsyncAutocompleteField,
     AsyncSelectField,
     AutocompleteField,
+    Button,
     CheckboxField,
     CheckboxListField,
     Field,
@@ -18,7 +19,7 @@ import {
 } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
-import { Box, Button, Link, MenuItem } from "@mui/material";
+import { Box, Link, MenuItem } from "@mui/material";
 import { useMemo } from "react";
 import { Form } from "react-final-form";
 
@@ -103,7 +104,7 @@ export const AllFieldComponents = {
                                     variant={fieldVariant}
                                     fullWidth
                                 />
-                                <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
+                                <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} fieldLabel="Switch" variant={fieldVariant} />
                             </FieldSet>
                             <FieldSet title="Checkboxes">
                                 <FormSection title="Individual Checkboxes">
@@ -308,9 +309,7 @@ export const AllFieldComponents = {
                                 <ColorField name="rgbaColor" label="Color (rgba)" colorFormat="rgba" variant={fieldVariant} fullWidth />
                             </FieldSet>
                             <div>
-                                <Button color="primary" variant="contained" onClick={handleSubmit}>
-                                    Submit
-                                </Button>
+                                <Button onClick={handleSubmit}>Submit</Button>
                             </div>
                         </Box>
                         <pre>{JSON.stringify(values, undefined, 2)}</pre>

@@ -1,0 +1,18 @@
+export const dynamic = "error";
+
+import { VisibilityParam } from "@src/middleware/domainRewrite";
+import { NewsPage } from "@src/news/NewsPage";
+import { fetchNewsList } from "@src/news/NewsPage.loader";
+import { setVisibilityParam } from "@src/util/ServerContext";
+
+export type PageParams = {
+    domain: string;
+    language: string;
+    visibility: VisibilityParam;
+};
+
+export default async function NewsIndexPage({ params: { domain, language, visibility } }: { params: PageParams }) {
+    setVisibilityParam(visibility);
+    const limit = 2;
+    return <NewsPage initialData={await fetchNewsList({ scope: { domain, language }, limit })} limit={limit} />;
+}

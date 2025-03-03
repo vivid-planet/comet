@@ -22,11 +22,10 @@ interface CreateTextLinkBlockOptions {
     link: BlockInterface;
 }
 
-export function createTextLinkBlock({
-    link: LinkBlock,
-    name = "TextLink",
-    displayName = <FormattedMessage {...messages.link} />,
-}: CreateTextLinkBlockOptions): BlockInterface {
+export function createTextLinkBlock(
+    { link: LinkBlock, name = "TextLink", displayName = <FormattedMessage {...messages.link} /> }: CreateTextLinkBlockOptions,
+    override?: (block: BlockInterface) => BlockInterface,
+): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
 
     const block = withAdditionalBlockAttributes<Pick<TextLinkBlockData, "text">>({
@@ -52,8 +51,8 @@ export function createTextLinkBlock({
                 <AdminComponentPaper disablePadding>
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
-                            onSubmit={({ text }) => {
-                                updateState((prevState) => ({ ...prevState, text }));
+                            onSubmit={({ text }: { text: string | undefined }) => {
+                                updateState((prevState) => ({ ...prevState, text: text ?? "" }));
                             }}
                             initialValues={{ text: state.text }}
                         >
@@ -68,7 +67,24 @@ export function createTextLinkBlock({
         previewContent: (state) => [{ type: "text", content: state.text }],
 
         dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
+
+        extractTextContents: (state, options) => {
+            const content = [];
+
+            if (state.text) {
+                content.push(state.text);
+            }
+
+            const blockContent = block.extractTextContents?.(state, options) ?? [];
+            content.push(...blockContent);
+
+            return content;
+        },
     };
+
+    if (override) {
+        return override(TextLinkBlock);
+    }
 
     return TextLinkBlock;
 }

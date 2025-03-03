@@ -1,4 +1,5 @@
 import {
+    Button,
     FillSpace,
     MainContent,
     RouterTab,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -46,14 +47,7 @@ export function ProductsPage() {
                     <StackMainContent fullHeight>
                         <ProductsGrid
                             toolbarAction={
-                                <Button
-                                    startIcon={<AddIcon />}
-                                    component={StackLink}
-                                    pageName="add"
-                                    payload="add"
-                                    variant="contained"
-                                    color="primary"
-                                >
+                                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                                 </Button>
                             }

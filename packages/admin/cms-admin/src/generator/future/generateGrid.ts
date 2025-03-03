@@ -495,6 +495,20 @@ export function generateGrid(
         });
     }
 
+    if (config.selectionProps) {
+        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
+        props.push({
+            name: "selectionModel",
+            type: `DataGridProProps["selectionModel"]`,
+            optional: true,
+        });
+        props.push({
+            name: "onSelectionModelChange",
+            type: `DataGridProProps["onSelectionModelChange"]`,
+            optional: true,
+        });
+    }
+
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
@@ -528,6 +542,7 @@ export function generateGrid(
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
+        Button,
         CrudContextMenu,
         CrudMoreActionsMenu,
         DataGridToolbar,
@@ -544,7 +559,7 @@ export function generateGrid(
         muiGridSortToGql,
         StackLink,
         ToolbarActions,
-        ToolbarFillSpace,
+        FillSpace,
         ToolbarItem,
         Tooltip,
         useBufferedRowCount,
@@ -554,7 +569,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
+    import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
     import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -654,6 +669,8 @@ export function generateGrid(
                   instanceGqlType,
                   gqlType,
                   excelExport: config.excelExport,
+                  newEntryText: config.newEntryText,
+                  fragmentName,
               })
             : ""
     }
@@ -663,7 +680,13 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        config.selectionProps === "multiSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+            : config.selectionProps === "singleSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+            : ``
+    } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 

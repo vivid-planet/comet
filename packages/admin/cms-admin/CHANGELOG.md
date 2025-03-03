@@ -1,5 +1,160 @@
 # @comet/cms-admin
 
+## 7.15.0
+
+### Patch Changes
+
+-   46ab330da: Adapt styling of the dashboard header to match the Comet DXP design
+-   Updated dependencies [e056e8f3d]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [7d8c36e6c]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [6827982fe]
+-   Updated dependencies [7d8c36e6c]
+    -   @comet/blocks-admin@7.15.0
+    -   @comet/admin@7.15.0
+    -   @comet/admin-theme@7.15.0
+    -   @comet/admin-date-time@7.15.0
+    -   @comet/admin-icons@7.15.0
+    -   @comet/admin-rte@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   97cd0a3dd: User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+-   c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   Updated dependencies [6b75f20e4]
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+-   Updated dependencies [948e07bba]
+-   Updated dependencies [bb041f7a7]
+-   Updated dependencies [7f72e82fc]
+    -   @comet/admin@7.14.0
+    -   @comet/admin-theme@7.14.0
+    -   @comet/blocks-admin@7.14.0
+    -   @comet/admin-rte@7.14.0
+    -   @comet/admin-date-time@7.14.0
+    -   @comet/admin-icons@7.14.0
+
+## 7.13.0
+
+### Patch Changes
+
+-   f49370a9e: Improve SVG validation
+
+    Following tags are banned in SVGs:
+
+    -   script
+    -   \[new\] foreignObject
+    -   \[new\] use
+    -   \[new\] image
+    -   \[new\] animate
+    -   \[new\] animateMotion
+    -   \[new\] animateTransform
+    -   \[new\] set
+
+    Following attributes are banned:
+
+    -   Event handlers (`onload`, `onclick`, ...)
+    -   \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
+
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [5c06e4bee]
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [b918c810b]
+-   Updated dependencies [86c1d5996]
+    -   @comet/admin@7.13.0
+    -   @comet/blocks-admin@7.13.0
+    -   @comet/admin-rte@7.13.0
+    -   @comet/admin-date-time@7.13.0
+    -   @comet/admin-icons@7.13.0
+    -   @comet/admin-theme@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+### Patch Changes
+
+-   64173b513: Fix page tree node slug validation to prevent URL encoded characters
+-   0837c4c64: Hide the "Dependents" tab in the DAM for users without the permission `dependencies`
+-   cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    -   `video/avi` doesn't actually exist
+    -   `image/psd` doesn't exist / is non-standard
+    -   `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+        instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+-   cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+-   02dd20ac4: Export `useDamScope` hook
+
+    This allows accessing the DAM scope in the application. This might be necessary when developing integrations with a third-party DAM.
+
+-   954635630: Update default icon of `ContentScopeSelect` and fix mobile styling for `AppHeader` components
+
+    -   Update the default icon in `ContentScopeSelect` from `<Domain />` to `<Language />`
+    -   Fix mobile styling of `BuildEntry` and `ContentScopeSelect` and `UserHeaderItem`
+
+-   Updated dependencies [af51bb408]
+-   Updated dependencies [92b3255d2]
+-   Updated dependencies [47be4ebd3]
+-   Updated dependencies [86479e770]
+-   Updated dependencies [954635630]
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [4f6e6b011]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [ee597535a]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [7da81fa2e]
+-   Updated dependencies [3ddc2278b]
+-   Updated dependencies [af350d086]
+-   Updated dependencies [86479e770]
+-   Updated dependencies [0bb181a52]
+-   Updated dependencies [af51bb408]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-theme@7.12.0
+    -   @comet/blocks-admin@7.12.0
+    -   @comet/admin-date-time@7.12.0
+    -   @comet/admin-icons@7.12.0
+    -   @comet/admin-rte@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes

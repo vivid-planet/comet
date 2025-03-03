@@ -1,5 +1,4 @@
-import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
 import { useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

@@ -1,4 +1,4 @@
-import { gql, previewParams } from "@comet/cms-site";
+import { gql } from "@comet/cms-site";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 
@@ -11,7 +11,7 @@ export type NewsListParams = {
 };
 
 export async function fetchNewsList(params: NewsListParams) {
-    const graphqlFetch = createGraphQLFetch((await previewParams())?.previewData);
+    const graphqlFetch = createGraphQLFetch();
 
     const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
         gql`

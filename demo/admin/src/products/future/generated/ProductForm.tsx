@@ -22,7 +22,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
-import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
+import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -40,6 +40,7 @@ import React from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import { validateTitle } from "../validateTitle";
 import {
     GQLManufacturersSelectQuery,
@@ -189,7 +190,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                     {saveConflict.dialogs}
                     <>
                         <FieldSet
-                            initiallyExpanded
+                            initiallyExpanded={true}
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
                             supportText={
                                 mode === "edit" && (
@@ -312,7 +313,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
+                            <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>
@@ -357,6 +358,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <LocationIcon />
+                                    </InputAdornment>
+                                }
                                 loadOptions={async () => {
                                     const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
                                         query: gql`
@@ -402,6 +408,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     </InputAdornment>
                                 }
                             />
+                            <FutureProductNotice />
                             <Field
                                 name="image"
                                 isEqual={isEqual}

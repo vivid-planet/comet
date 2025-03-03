@@ -67,14 +67,19 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     allowEmpty?: T;
 }
 
-export const createOneOfBlock = <T extends boolean = boolean>({
-    supportedBlocks,
-    name,
-    displayName = "Switch",
-    category = BlockCategory.Other,
-    variant = "select",
-    allowEmpty: passedAllowEmpty,
-}: CreateOneOfBlockOptions<T>): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
+export const createOneOfBlock = <T extends boolean = boolean>(
+    {
+        supportedBlocks,
+        name,
+        displayName = "Switch",
+        category = BlockCategory.Other,
+        variant = "select",
+        allowEmpty: passedAllowEmpty,
+    }: CreateOneOfBlockOptions<T>,
+    override?: (
+        block: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
+    ) => BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
+): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
     // allowEmpty can't have a default type because it's typed by a generic
     const allowEmpty = (passedAllowEmpty ?? true) satisfies boolean;
 
@@ -440,7 +445,28 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                 return displayName;
             }
         },
+
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            const content = state.attachedBlocks.reduce<string[]>((content, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+
+                if (child.type !== state.activeType && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
+            }, []);
+            return content;
+        },
     };
+    if (override) {
+        return override(OneOfBlock);
+    }
     return OneOfBlock;
 };
 

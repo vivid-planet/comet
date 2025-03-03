@@ -2,6 +2,7 @@ import { IntrospectionQuery } from "graphql";
 
 import { FormConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
+import { generateComponentFormField } from "./generateComponentFormField";
 import { generateFormField } from "./generateFormField";
 import { generateFormLayout } from "./generateFormLayout";
 
@@ -27,7 +28,13 @@ export type GenerateFieldsReturn = GeneratorReturn & {
 export function findFieldByName(name: string, fields: FormConfig<any>["fields"]): FormConfig<any>["fields"][0] | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return fields.reduce<FormConfig<any>["fields"][0] | undefined>((acc, field) => {
-        return acc ? acc : field.name === name ? field : isFormLayoutConfig(field) ? findFieldByName(name, field.fields) : undefined;
+        return acc
+            ? acc
+            : "name" in field && field.name === name
+            ? field
+            : isFormLayoutConfig(field)
+            ? findFieldByName(name, field.fields)
+            : undefined;
     }, undefined);
 }
 
@@ -61,7 +68,12 @@ export function generateFields({
     const code = fields
         .map((field) => {
             let generated: GenerateFieldsReturn;
-            if (isFormFieldConfig(field)) {
+
+            if (field.type === "component") {
+                generated = generateComponentFormField({
+                    config: field,
+                });
+            } else if (isFormFieldConfig(field)) {
                 generated = generateFormField({
                     gqlIntrospection,
                     baseOutputFilename,

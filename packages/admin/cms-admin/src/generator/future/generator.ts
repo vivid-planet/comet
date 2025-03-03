@@ -39,29 +39,36 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
+type InputBaseFieldConfig = {
+    startAdornment?: Adornment;
+    endAdornment?: Adornment;
+};
+
+export type ComponentFormFieldConfig = { type: "component"; component: ImportReference };
+
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | {
+    | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
+    | ({ type: "number" } & InputBaseFieldConfig)
+    | ({
           type: "numberRange";
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
-      }
+      } & InputBaseFieldConfig)
     | { type: "boolean" }
-    | { type: "date" }
-    | { type: "dateTime" } // TODO add InputBaseFieldConfig once merged (!2645)
-    | {
+    | ({ type: "date" } & InputBaseFieldConfig)
+    | ({ type: "dateTime" } & InputBaseFieldConfig)
+    | ({
           type: "staticSelect";
           values?: Array<{ value: string; label: string } | string>;
           inputType?: "select" | "radio";
-      }
-    | {
+      } & Omit<InputBaseFieldConfig, "endAdornment">)
+    | ({
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
-      }
+      } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
@@ -73,8 +80,6 @@ export type FormFieldConfig<T> = (
     validate?: ImportReference;
     helperText?: string;
     readOnly?: boolean;
-    startAdornment?: Adornment;
-    endAdornment?: Adornment;
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
@@ -96,7 +101,7 @@ export type FormLayoutConfig<T> =
           supportText?: string; // can contain field-placeholder
           collapsible?: boolean; // default true
           initiallyExpanded?: boolean; // default false
-          fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T>)[];
+          fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T> | ComponentFormFieldConfig)[];
       }
     | OptionalNestedFieldsConfig<T>;
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -110,7 +115,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
-    fields: (FormFieldConfig<T> | FormLayoutConfig<T>)[];
+    fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
@@ -162,7 +167,9 @@ export type GridConfig<T extends { __typename?: string }> = {
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
+    newEntryText?: string;
     rowActionProp?: boolean;
+    selectionProps?: "multiSelect" | "singleSelect";
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

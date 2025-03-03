@@ -1,6 +1,6 @@
+import { Button } from "@comet/admin";
 import { ArrowRight, Reload } from "@comet/admin-icons";
-import { Button, Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
-import * as React from "react";
+import { Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
 
 export default {
     title: "@comet/admin/mui",
@@ -38,7 +38,7 @@ export const _Card = () => {
                     <CardHeader
                         title={<Typography>Card Header with Action (Button)</Typography>}
                         action={
-                            <Button variant="text" color="inherit" endIcon={<ArrowRight />}>
+                            <Button variant="textLight" endIcon={<ArrowRight />}>
                                 Show All
                             </Button>
                         }
@@ -58,7 +58,7 @@ export const _Card = () => {
                         title={<Typography>Card Header with Avatar (Icon) and Action (Button)</Typography>}
                         avatar={<Reload />}
                         action={
-                            <Button variant="text" color="inherit" endIcon={<ArrowRight />}>
+                            <Button variant="textLight" endIcon={<ArrowRight />}>
                                 Show All
                             </Button>
                         }

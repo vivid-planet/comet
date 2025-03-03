@@ -1,5 +1,5 @@
-import { Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
-import { Box, Button, Card, CardContent, SliderThumb, Typography } from "@mui/material";
+import { Button, Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
+import { Box, Card, CardContent, SliderThumb, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Form } from "react-final-form";
 
@@ -67,8 +67,6 @@ export const RangeInput = () => {
                                             sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
-                                            variant="contained"
-                                            color="primary"
                                             onClick={() => {
                                                 form.reset();
                                             }}
@@ -104,8 +102,6 @@ export const RangeInput = () => {
                                             sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
-                                            variant="contained"
-                                            color="primary"
                                             onClick={() => {
                                                 form.reset();
                                             }}
@@ -141,8 +137,6 @@ export const RangeInput = () => {
                                             sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
-                                            variant="contained"
-                                            color="primary"
                                             onClick={() => {
                                                 form.reset();
                                             }}

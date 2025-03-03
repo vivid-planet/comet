@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
@@ -16,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
@@ -42,7 +43,7 @@ function ProductCategoriesTableToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
                 </Button>
             </ToolbarItem>

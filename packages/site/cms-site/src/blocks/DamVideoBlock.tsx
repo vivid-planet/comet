@@ -1,11 +1,12 @@
 "use client";
 
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -32,6 +33,14 @@ export const DamVideoBlock = withPreview(
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
+
+        const videoRef = useRef<HTMLVideoElement>(null);
+
+        useIsElementInViewport(videoRef, (inView) => {
+            if (autoplay && videoRef.current) {
+                inView ? videoRef.current.play() : videoRef.current.pause();
+            }
+        });
 
         return (
             <>
@@ -62,6 +71,7 @@ export const DamVideoBlock = withPreview(
                         loop={loop}
                         playsInline
                         muted={autoplay}
+                        ref={videoRef}
                         $aspectRatio={aspectRatio.replace("x", " / ")}
                         $fill={fill}
                     >

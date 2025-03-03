@@ -1,5 +1,176 @@
 # @comet/admin
 
+## 7.15.0
+
+### Minor Changes
+
+-   a189d4ed9: Support dynamic values for the `label` prop of `SwitchField` depending on its `checked` state
+
+    ```tsx
+    <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} />
+    ```
+
+-   7d8c36e6c: Add the `DataGridPanel` component to replace MUIs default `Panel` used by `DataGrid` to match the Comet DXP design
+
+    It is recommended to add this component to your theme's `defaultProps` of `MuiDataGrid`.
+
+    Example theme configuration for `admin/src/theme.ts`:
+
+    ```ts
+    import { DataGridPanel } from "@comet/admin";
+    import { createCometTheme } from "@comet/admin-theme";
+    import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    export const theme = createCometTheme({
+        components: {
+            MuiDataGrid: {
+                defaultProps: {
+                    components: {
+                        Panel: DataGridPanel,
+                    },
+                },
+            },
+        },
+    });
+    ```
+
+-   a189d4ed9: Allow passing a `ReactNode` to `fieldLabel` of `CheckboxField` and `SwitchField`
+
+    This enables using `FormattedMessage` for the label.
+
+    ```tsx
+    <CheckboxField name="visible" fieldLabel={<FormattedMessage id="exampleForm.visible" defaultMessage="Visible" />} />
+    <SwitchField name="visible" fieldLabel={<FormattedMessage id="exampleForm.visible" defaultMessage="Visible" />} />
+    ```
+
+### Patch Changes
+
+-   faa54eb8e: Fix display of warnings for forms that use both form-level and field-level validation
+-   6827982fe: Preserve the default `Button` color when using the `sx` prop with the `textLight` or `textDark` variant
+-   Updated dependencies [7d8c36e6c]
+    -   @comet/admin-theme@7.15.0
+    -   @comet/admin-icons@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   6b75f20e4: Deprecate `density` prop of `DataGridToolbar`
+
+    The density setting of the surrounding Data Grid now controls the styling of the toolbar.
+
+### Patch Changes
+
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+    -   @comet/admin-theme@7.14.0
+    -   @comet/admin-icons@7.14.0
+
+## 7.13.0
+
+### Minor Changes
+
+-   bd562d325: Add `disableForcePromptRoute` option to `StackSwitch`
+
+    This can be useful when a navigation in a switch shouldn't trigger a prompt, e.g., when navigating inside a block.
+
+-   5c06e4bee: Reduce `MainContent` padding on mobile
+-   b918c810b: Add support for custom components to `CrudMoreActionsMenu`
+
+    **Example**
+
+    ```tsx
+    const CustomAction = () => (
+        <CrudMoreActionsMenuItem
+            onClick={() => {
+                // Perform action
+            }}
+        >
+            <ListItemIcon>
+                <Favorite />
+            </ListItemIcon>
+            Custom Action
+        </CrudMoreActionsMenuItem>
+    );
+
+    <CrudMoreActionsMenu overallActions={[<CustomAction key="custom-action" />]} />;
+    ```
+
+    **Note:** Use the `CrudMoreActionsMenuItem` component or `CrudMoreActionsMenuContext` to close the menu after clicking an item.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.13.0
+-   @comet/admin-theme@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   af51bb408: Make the width of `GridToolbarQuickFilter` responsive when used inside `DataGridToolbar`
+-   92b3255d2: Hide group title in `CrudMoreActionsMenu` when only one group is present
+-   e8003f9c7: Add a new `FillSpace` component to replace `ToolbarFillSpace` and `AppHeaderFillSpace`
+
+    `ToolbarFillSpace` and `AppHeaderFillSpace` are now deprecated.
+
+-   4f6e6b011: Deprecate `FinalFormRadio` and `FinalFormCheckbox`
+-   5583c9cff: Export `renderFinalFormChildren` helper
+-   7da81fa2e: Add a new `Button` component to replace `ToolbarActionButton` and MUI's `Button`
+
+    Compared to MUI's `Button` component, the `color` prop has been removed, and the `variant` prop now defines those variants, defined by the Comet design guidelines, `primary` is the default variant.
+
+    ```diff
+    -import { Button } from "@mui/material";
+    +import { Button } from "@comet/admin";
+
+     export const AllButtonVariants = () => (
+         <>
+    -        <Button variant="contained" color="primary">Primary</Button>
+    +        <Button>Primary</Button>
+    -        <Button variant="contained" color="secondary">Secondary</Button>
+    +        <Button variant="secondary">Secondary</Button>
+    -        <Button variant="outlined">Outlined</Button>
+    +        <Button variant="outlined">Outlined</Button>
+    -        <Button variant="outlined" color="error">Destructive</Button>
+    +        <Button variant="destructive">Destructive</Button>
+    -        <Button variant="contained" color="success">Success</Button>
+    +        <Button variant="success">Success</Button>
+    -        <Button variant="text" sx={{ color: "white" }}>Text Light</Button>
+    +        <Button variant="textLight">Text Light</Button>
+    -        <Button variant="text" sx={{ color: "black" }}>Text Dark</Button>
+    +        <Button variant="textDark">Text Dark</Button>
+         </>
+     );
+    ```
+
+    **Responsive behavior**
+
+    `ToolbarActionButton` is now deprecated.
+    Previously, `ToolbarActionButton` would hide its text content on mobile and add it with a tooltip instead.
+    This behavior can now be achieved by setting the `responsive` prop on the `Button` component.
+
+    ```diff
+    -import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
+    +import { Button } from "@comet/admin";
+     import { Favorite } from "@comet/admin-icons";
+
+     const Example = () => {
+    -    return <ToolbarActionButton startIcon={<Favorite />}>Hello</ToolbarActionButton>;
+    +    return <Button responsive startIcon={<Favorite />}>Hello</Button>;
+     };
+    ```
+
+### Patch Changes
+
+-   954635630: Fix mobile styling of `AppHeaderMenuButton`
+-   3ddc2278b: Adjust the spacings inside `Toolbar` and `DataGridToolbar` to match the Comet design
+-   0bb181a52: `usePersistentColumnState`: Prevent Data Grids with the same name to overwrite each others pinned and column-visibility states
+-   Updated dependencies [47be4ebd3]
+-   Updated dependencies [ee597535a]
+-   Updated dependencies [af51bb408]
+    -   @comet/admin-theme@7.12.0
+    -   @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes

@@ -1,5 +1,5 @@
-import { Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
+import { Stack as MuiStack } from "@mui/material";
 
 import { dndProviderDecorator } from "../../dnd.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -53,17 +53,19 @@ export const DnDOrder = {
                                             },
                                         ]}
                                     />
-                                    <Button
-                                        onClick={() => {
-                                            tableLocalChangesApi.submitLocalDataChanges();
-                                        }}
-                                    >
-                                        Submit
-                                    </Button>
-                                    {/* Link to test router prompt */}
-                                    <StackLink pageName="page-2" payload="any">
-                                        To page 2
-                                    </StackLink>
+                                    <MuiStack direction="row" gap={2} sx={{ mt: 2, alignItems: "center" }}>
+                                        <Button
+                                            onClick={() => {
+                                                tableLocalChangesApi.submitLocalDataChanges();
+                                            }}
+                                        >
+                                            Submit
+                                        </Button>
+                                        {/* Link to test router prompt */}
+                                        <StackLink pageName="page-2" payload="any">
+                                            To page 2
+                                        </StackLink>
+                                    </MuiStack>
                                 </>
                             )}
                         </TableLocalChanges>

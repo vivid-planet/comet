@@ -1,5 +1,4 @@
-import { Table } from "@comet/admin";
-import { Button } from "@mui/material";
+import { Button, Table } from "@comet/admin";
 import { useState } from "react";
 
 interface Person {
@@ -154,9 +153,7 @@ export const TableColumnVisibleProp = () => {
     return (
         <>
             <p>
-                <Button onClick={() => setIdVisible((visible) => !visible)} variant="contained" color="primary">
-                    Show ID Column
-                </Button>
+                <Button onClick={() => setIdVisible((visible) => !visible)}>Show ID Column</Button>
             </p>
             <Table
                 data={data}
