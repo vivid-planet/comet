@@ -142,7 +142,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
 
             "&:focus": {
-                border: `2px solid ${palette.error.main} `,
+                border: `2px solid ${palette.error.main}`,
             },
         },
         startIcon: {
