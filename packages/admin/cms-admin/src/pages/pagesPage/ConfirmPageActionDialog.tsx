@@ -1,5 +1,4 @@
-import { Button, CancelButton } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
+import { CancelButton, OkayButton } from "@comet/admin";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
@@ -69,15 +68,14 @@ export const ConfirmPageActionDialog = ({ open, onCloseDialog, action, selectedP
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={() => onCloseDialog(false)} />
-                <Button
+                <OkayButton
                     onClick={() => {
                         onCloseDialog(true);
                     }}
                     autoFocus={true}
-                    startIcon={<Delete />}
                 >
                     <FormattedMessage id="comet.pages.confirmDialog.confirm" defaultMessage="Confirm" />
-                </Button>
+                </OkayButton>
             </DialogActions>
         </Dialog>
     );
