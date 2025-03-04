@@ -47,12 +47,6 @@ const GlobalStyle = () => (
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 
-declare module "@comet/cms-admin" {
-    interface BlockContext {
-        demo: boolean;
-    }
-}
-
 export function App() {
     return (
         <CometConfigProvider
@@ -108,7 +102,6 @@ export function App() {
             }}
             buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
             contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
-            blocks={{ context: { demo: true } }}
         >
             <ApolloProvider client={apolloClient}>
                 <IntlProvider locale="en" messages={getMessages()}>
