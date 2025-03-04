@@ -97,9 +97,6 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 const positioning = getCombinedPositioningOfElements(childNodes);
 
                 const isRenderedOutsideOfViewportWidth = positioning.left > childrenWrapperWidth;
-                const spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport = positioning.left + positioning.width - childrenWrapperWidth;
-                const tooWideForPreviewViewportByPixels =
-                    spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport > 0 ? spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport : 0;
 
                 if (isRenderedOutsideOfViewportWidth) {
                     // TODO: Simply return `null` here after updating to typescript 5+
@@ -114,6 +111,10 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                         },
                     };
                 }
+
+                const spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport = positioning.left + positioning.width - childrenWrapperWidth;
+                const tooWideForPreviewViewportByPixels =
+                    spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport > 0 ? spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport : 0;
 
                 return {
                     adminRoute: previewElement.adminRoute,
