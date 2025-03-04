@@ -17,11 +17,11 @@ export class Warning extends BaseEntity {
     @Field(() => ID)
     id: string = uuid();
 
-    @Property({ type: "timestamp with time zone" })
+    @Property({ columnType: "timestamp with time zone" })
     @Field()
     createdAt: Date = new Date();
 
-    @Property({ onUpdate: () => new Date(), type: "timestamp with time zone" })
+    @Property({ onUpdate: () => new Date(), columnType: "timestamp with time zone" })
     @Field()
     updatedAt: Date = new Date();
 
