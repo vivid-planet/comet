@@ -115,7 +115,7 @@ const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "summary",
 })(
-    ({ theme, ownerState }) => css`
+    ({ theme }) => css`
         display: flex;
         flex-direction: row-reverse;
         padding: 0 10px;
