@@ -33,6 +33,7 @@ import { LinkBlockFixtureService } from "./generators/blocks/navigation/link-blo
 import { LinkListBlockFixtureService } from "./generators/blocks/navigation/link-list-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./generators/blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { TextLinkBlockFixtureService } from "./generators/blocks/navigation/text-link-block-fixture.service";
+import { SliderBlockFixtureService } from "./generators/blocks/slider-fixture.service";
 import { BasicStageBlockFixtureService } from "./generators/blocks/stage/basic-stage-block-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./generators/blocks/teaser/billboard-teaser-block-fixture.service";
 import { TeaserBlockFixtureService } from "./generators/blocks/teaser/teaser-block-fixture.service";
@@ -87,6 +88,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         ProductsFixtureService,
         RichTextBlockFixtureService,
         SeoBlockFixtureService,
+        SliderBlockFixtureService,
         SpaceBlockFixtureService,
         StageBlockFixtureService,
         SvgImageBlockFixtureService,
