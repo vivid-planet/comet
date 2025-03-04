@@ -60,8 +60,7 @@ export class WarningCheckerCommand extends CommandRunner {
                 rootBlocks = (await queryBuilder.getResult()) as RootBlockData[];
                 for (const { column, block } of rootBlockData) {
                     for (const rootBlock of rootBlocks) {
-                        if (typeof rootBlock[column] === "string") continue;
-                        const blockData = rootBlock[column];
+                        const blockData = rootBlock[column] as BlockData;
 
                         const flatBlocks = new FlatBlocks(blockData, {
                             name: block.name,
