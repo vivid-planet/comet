@@ -442,8 +442,6 @@ export function generateGrid(
                 pinned: column.pinned,
                 disableExport: column.disableExport,
             };
-        } else if (type == "virtual") {
-            //noop
         }
 
         if (
