@@ -29,6 +29,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             paddingRight: 15,
             paddingBottom: 12,
             paddingLeft: 15,
+            borderRadius: 4,
 
             [`& .${buttonClasses.startIcon}`]: {
                 marginRight: 5,
