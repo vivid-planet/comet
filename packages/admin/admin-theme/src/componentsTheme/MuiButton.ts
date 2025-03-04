@@ -54,6 +54,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
 
             "&:focus": {
                 outline: `2px solid ${palette.primary.dark}`,
+                outlineOffset: -2,
             },
 
             ...(ownerState.color === "info" && {
@@ -72,8 +73,8 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             borderRadius: 4,
 
             "&:focus": {
-                border: "none",
-                outlineOffset: 0,
+                outline: `2px solid ${palette.primary.dark}`,
+                outlineOffset: -2,
             },
         },
         containedPrimary: {
