@@ -663,6 +663,13 @@ Example:
 ></Tooltip>
 ```
 
+### Import `Button` from `@comet/admin` package
+
+```diff
+- import { Button } from "@mui/material";
++ import { Button } from "@comet/admin";
+```
+
 ### Import `Dialog` from `@comet/admin` package
 
 ```diff
