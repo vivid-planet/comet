@@ -12,7 +12,7 @@ export function createSitePreviewAuthService({ sitePreviewSecret }: SitePreviewA
     @Injectable()
     class SitePreviewAuthService implements AuthServiceInterface {
         async authenticateUser(request: Request): Promise<AuthenticateUserResult> {
-            if (typeof sitePreviewSecret !== "string" || sitePreviewSecret.length === 0) {
+            if (!sitePreviewSecret) {
                 throw new Error("secret must not be empty");
             }
 
