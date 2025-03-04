@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { Button, FillSpace, GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
-import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
+import { Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
@@ -171,8 +171,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                             <FillSpace />
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         setPermissionId("add");

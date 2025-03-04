@@ -1,6 +1,6 @@
-import { Field, FinalForm, FinalFormInput } from "@comet/admin";
+import { Button, Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Master } from "@comet/admin-icons";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useFormState } from "react-final-form";
 
@@ -25,7 +25,7 @@ const CustomButtons = () => {
     return (
         <StyledButton
             startIcon={<Master />}
-            variant="text"
+            variant="textDark"
             disabled={pristine || hasValidationErrors || submitting}
             onClick={handleCustomButtonClick}
         >
