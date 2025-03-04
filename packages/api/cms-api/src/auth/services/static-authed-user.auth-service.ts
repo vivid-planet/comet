@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { User } from "../../user-permissions/interfaces/user";
-import { AuthServiceInterface } from "../util/auth-service.interface";
+import { AuthenticateUserResult, AuthServiceInterface } from "../util/auth-service.interface";
 
 interface StaticUserAuthServiceConfig {
     staticUser: User | string;
@@ -10,8 +10,11 @@ interface StaticUserAuthServiceConfig {
 export function createStaticUserAuthService(config: StaticUserAuthServiceConfig) {
     @Injectable()
     class StaticUserAuthService implements AuthServiceInterface {
-        async authenticateUser() {
-            return config.staticUser;
+        authenticateUser(): AuthenticateUserResult {
+            if (typeof config.staticUser === "string") {
+                return { userId: config.staticUser };
+            }
+            return { user: config.staticUser };
         }
     }
     return StaticUserAuthService;

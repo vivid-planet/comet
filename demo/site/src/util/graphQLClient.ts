@@ -28,7 +28,8 @@ export function createGraphQLFetch() {
                 revalidate: 7.5 * 60,
             },
             headers: {
-                authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
+                authorization: `Basic ${Buffer.from(`system-user:${process.env.BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                "x-relative-dam-urls": "1",
                 ...convertPreviewDataToHeaders(previewData),
             },
         }),
