@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.0.0-beta.0",
+    "version": "8.0.0-beta.1",
     "repository": {
         "directory": "packages/api/api-generator",
         "type": "git",
@@ -49,7 +49,7 @@
         "prettier": "^3.5.3",
         "reflect-metadata": "^0.2.2",
         "rimraf": "^6.0.1",
-        "ts-jest": "^29.2.5",
+        "ts-jest": "^29.2.6",
         "typescript": "^5.7.3",
         "uuid": "^11.0.5"
     },
