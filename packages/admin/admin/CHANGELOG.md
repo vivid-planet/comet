@@ -1,5 +1,15 @@
 # @comet/admin
 
+## 8.0.0-beta.2
+
+### Minor Changes
+
+- 535476e: Format numbers in `DataGrid` pagination depending on the current locale
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes
