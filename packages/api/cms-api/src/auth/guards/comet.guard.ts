@@ -2,11 +2,11 @@ import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedExceptio
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
-import { SystemUser } from "src/user-permissions/user-permissions.types";
 
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { User } from "../../user-permissions/interfaces/user";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
+import { SystemUser } from "../../user-permissions/user-permissions.types";
 import { AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
 @Injectable()
