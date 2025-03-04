@@ -66,15 +66,29 @@ Environment variables containing Brevo configuration information can be removed 
 -   BREVO_DOUBLE_OPT_IN_TEMPLATE_ID
 -   BREVO_ALLOWED_REDIRECT_URL
 
-### Remove `allowedRedirectionUrl` from the Brevo module configuration
+### Add `scope` to `BrevoConfig`
+
+A custom database migration must be created in the project to add individual `scope` columns to `BrevoConfig`.
+
+```ts
+//...
+this.addSql(
+    `alter table "BrevoConfig" add column "scope_domain" text not null, add column "scope_language" text not null;`,
+);
+//...
+```
+
+### Remove environment variables from the Brevo module configuration
 
 ```diff
 BrevoModule.register({
     brevo: {
--       allowedRedirectionUrl: config.brevo.allowedRedirectionUrl,
+-       allowedRedirectUrl: config.brevo.allowedRedirectUrl,
+-       sender: { name: config.brevo.sender.name, email: config.brevo.sender.email },
+-       doubleOptInTemplateId: config.brevo.doubleOptInTemplateId,
         //...
     },
-    //..
+    //...
 })
 ```
 
@@ -99,6 +113,18 @@ Instead define them in the `BrevoConfigProvider` once:
 >
     {children}
 </BrevoConfigProvider>
+```
+
+### Remove `email` and `allowedRedirectUrl` from `brevoContactsPageAttributesConfig`
+
+```diff
+//...
+  input2State: (values?: AdditionalFormConfigInputProps) => {
+-     email: string;
+-     redirectionUrl: string;
+      attributes: //...
+  };
+//...
 ```
 
 ## Site
