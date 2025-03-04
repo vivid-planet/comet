@@ -15,40 +15,36 @@ SwiperCore.use([Navigation]);
 export const SliderBlock = withPreview(
     ({ data: { sliderList } }: SliderBlockProps) => {
         return (
-            <Slider>
-                <SwiperContainer>
-                    <Swiper
-                        modules={[Navigation]}
-                        slidesPerView={3}
-                        spaceBetween={20}
-                        longSwipesRatio={0.1}
-                        threshold={3}
-                        allowTouchMove
-                        watchOverflow
-                        autoHeight
-                    >
-                        {sliderList.blocks.map((block) => (
-                            <SwiperSlide key={block.key}>
-                                <SliderItemBlockRoot>
-                                    <MediaWrapper>
-                                        <MediaBlock data={block.props.media} fill aspectRatio="16x9" sizes="50vw" />
-                                    </MediaWrapper>
-                                    <RichTextBlock data={block.props.text} />
-                                </SliderItemBlockRoot>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </SwiperContainer>
-            </Slider>
+            <PageLayout>
+                <Slider>
+                    <SwiperContainer>
+                        <Swiper
+                            modules={[Navigation]}
+                            slidesPerView={3}
+                            spaceBetween={20}
+                            longSwipesRatio={0.1}
+                            threshold={3}
+                            allowTouchMove
+                            watchOverflow
+                            autoHeight
+                        >
+                            {sliderList.blocks.map((block) => (
+                                <SwiperSlide key={block.key}>
+                                    <SliderItemBlockRoot>
+                                        <MediaWrapper>
+                                            <MediaBlock data={block.props.media} fill aspectRatio="16x9" sizes="50vw" />
+                                        </MediaWrapper>
+                                        <RichTextBlock data={block.props.text} />
+                                    </SliderItemBlockRoot>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </SwiperContainer>
+                </Slider>
+            </PageLayout>
         );
     },
     { label: "Slider" },
-);
-
-export const PageContentSliderBlock = (props: SliderBlockProps) => (
-    <PageLayout>
-        <SliderBlock {...props} />
-    </PageLayout>
 );
 
 const Slider = styled.div`
