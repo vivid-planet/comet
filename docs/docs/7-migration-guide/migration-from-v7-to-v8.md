@@ -589,18 +589,17 @@ To upgrade, perform the following steps:
 
 ### Add `DialogContent` to `EditDialog`
 
-`DialogContent` was removed from `EditDialog`.
-
-To maintain the existing styling of EditDialog, such as for forms and text, manually wrap the content inside DialogContent. This ensures proper spacing.
-For grids or other elements that already handle their own spacing (e.g. DataGrid), adding DialogContent is unnecessary.
+The `DialogContent` inside `EditDialog` has been removed.
+To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent`. This ensures proper spacing.
+For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
 
 ```diff
     <EditDialog>
     //...
 +       <DialogContent>
-+          //...
++           //...
 +       </DialogContent>
-     // ...
+    // ...
     </EditDialog>
 ```
 
