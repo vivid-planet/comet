@@ -70,11 +70,11 @@ Environment variables containing Brevo configuration information can be removed 
 
 A custom database migration must be created in the project to add individual `scope` columns to `BrevoConfig`.
 
-```
+```ts
 //...
- this.addSql(
-            `alter table "BrevoConfig" add column "scope_domain" text not null, add column "scope_language" text not null;`,
-            );
+this.addSql(
+    `alter table "BrevoConfig" add column "scope_domain" text not null, add column "scope_language" text not null;`,
+);
 //...
 ```
 
