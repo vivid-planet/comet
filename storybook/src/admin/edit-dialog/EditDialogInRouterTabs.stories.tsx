@@ -13,7 +13,7 @@ import {
     ToolbarActions,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
+import { DialogContent, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -48,17 +48,19 @@ const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="name" label="Name" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="name" label="Name" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
