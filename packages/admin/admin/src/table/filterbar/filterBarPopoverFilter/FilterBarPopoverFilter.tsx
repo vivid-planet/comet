@@ -1,23 +1,20 @@
 import { Check, Reset } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
+import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { ComponentType, MouseEvent, PropsWithChildren, useState } from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { Button, ButtonProps } from "../../../common/buttons/Button";
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
-
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "buttonsContainer" | "popover";
-
 const Root = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "root",
@@ -30,27 +27,23 @@ const Root = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
         margin-right: 6px;
     `,
 );
-
 const FieldBarWrapper = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "fieldBarWrapper",
 })(css`
     position: relative;
 `);
-
 const PopoverContentContainer = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "popoverContentContainer",
 })(css`
     min-width: 300px;
-
     .CometAdminFormFieldContainer-root {
         box-sizing: border-box;
         padding: 20px;
         margin-bottom: 0;
     }
 `);
-
 const ButtonsContainer = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "buttonsContainer",
@@ -64,12 +57,10 @@ const ButtonsContainer = createComponentSlot("div")<FilterBarPopoverFilterClassK
         height: 60px;
     `,
 );
-
 const Popover = createComponentSlot(MuiPopover)<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "popover",
 })();
-
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
@@ -89,7 +80,6 @@ export interface FilterBarPopoverFilterProps
     resetButtonProps?: Partial<ButtonProps>;
     filterBarButtonProps?: Partial<FilterBarButtonProps>;
 }
-
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
@@ -105,15 +95,12 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFilterBarPopoverFilter" });
-
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
-
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
     return (
         <Root {...slotProps?.root} {...restProps}>
             <Form
@@ -167,13 +154,12 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
                                     <ButtonsContainer {...slotProps?.buttonsContainer}>
                                         <Button
                                             type="reset"
-                                            variant="textDark"
+                                            variant="text"
                                             onClick={() => {
                                                 form.getRegisteredFields().map((name) => {
                                                     outerForm.change(name, undefined);
                                                 });
                                                 form.reset();
-
                                                 setAnchorEl(null);
                                             }}
                                             startIcon={<Reset />}
@@ -184,6 +170,8 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
 
                                         <Button
                                             type="submit"
+                                            color="primary"
+                                            variant="contained"
                                             onClick={() => {
                                                 handleSubmit();
                                                 setAnchorEl(null);
@@ -204,16 +192,13 @@ export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopov
         </Root>
     );
 }
-
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterClassKey;
     }
-
     interface ComponentsPropsList {
         CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterProps;
     }
-
     interface Components {
         CometAdminFilterBarPopoverFilter?: {
             defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarPopoverFilter"]>;

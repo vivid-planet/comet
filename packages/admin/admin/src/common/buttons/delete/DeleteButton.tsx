@@ -1,15 +1,13 @@
 import { Delete } from "@comet/admin-icons";
-import { ComponentsOverrides } from "@mui/material";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { Button, ButtonClassKey, ButtonProps } from "../../../common/buttons/Button";
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 
 export type DeleteButtonClassKey = ButtonClassKey;
 export type DeleteButtonProps = ButtonProps;
-
 const Root = createComponentSlot(Button)<DeleteButtonClassKey>({
     componentName: "DeleteButton",
     slotName: "root",
@@ -22,30 +20,25 @@ const Root = createComponentSlot(Button)<DeleteButtonClassKey>({
         }
     `,
 );
-
 export function DeleteButton(inProps: DeleteButtonProps) {
     const {
         children = <FormattedMessage {...messages.delete} />,
         startIcon = <Delete />,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminDeleteButton" });
-
     return (
         <Root startIcon={startIcon} {...restProps}>
             {children}
         </Root>
     );
 }
-
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminDeleteButton: DeleteButtonClassKey;
     }
-
     interface ComponentsPropsList {
         CometAdminDeleteButton: DeleteButtonProps;
     }
-
     interface Components {
         CometAdminDeleteButton?: {
             defaultProps?: Partial<ComponentsPropsList["CometAdminDeleteButton"]>;

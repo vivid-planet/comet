@@ -1,8 +1,8 @@
 import { Check } from "@comet/admin-icons";
+import { Button, ButtonClassKey, ButtonProps } from "@mui/material";
 import { ComponentsOverrides, Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { Button, ButtonClassKey, ButtonProps } from "../../../common/buttons/Button";
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 
@@ -18,12 +18,13 @@ export function OkayButton(inProps: OkayButtonProps) {
     const {
         children = <FormattedMessage {...messages.ok} />,
         startIcon = <Check />,
-        variant = "primary",
+        color = "primary",
+        variant = "contained",
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminOkayButton" });
 
     return (
-        <Root startIcon={startIcon} variant={variant} {...restProps}>
+        <Root startIcon={startIcon} color={color} variant={variant} {...restProps}>
             {children}
         </Root>
     );

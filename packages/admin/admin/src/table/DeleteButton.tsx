@@ -1,6 +1,7 @@
 import { PureQueryOptions } from "@apollo/client";
 import { Delete } from "@comet/admin-icons";
-import { Button, ButtonProps, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Component, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

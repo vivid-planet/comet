@@ -1,9 +1,8 @@
 import { ArrowLeft } from "@comet/admin-icons";
-import { ButtonClassKey, ComponentsOverrides } from "@mui/material";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { Button, ButtonProps } from "../../common/buttons/Button";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { messages } from "../../messages";
 import { StackApiContext } from "../Api";
@@ -27,7 +26,6 @@ export function StackBackButton(inProps: StackBackButtonProps) {
                         disabled={stackApi?.breadCrumbs == null || stackApi?.breadCrumbs.length <= 1}
                         onClick={stackApi?.goBack}
                         startIcon={startIcon}
-                        variant="textDark"
                         {...restProps}
                     >
                         <FormattedMessage {...messages.back} />
