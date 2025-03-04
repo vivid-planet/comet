@@ -1,5 +1,6 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
+import { type BlocksConfig, BlocksConfigProvider } from "../blocks/config/BlocksConfigContext";
 import { type BlockContext } from "../blocks/context/BlockContext";
 import { BlockContextProvider } from "../blocks/context/BlockContextProvider";
 import { type BuildInformation } from "../common/header/about/build-information/buildInformation";
@@ -21,7 +22,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     siteConfigs?: SiteConfigsConfig<SiteConfigs>;
     buildInformation?: BuildInformation;
     contentLanguage?: ContentLanguageConfig;
-    blocks?: {
+    blocks?: BlocksConfig & {
         context?: Omit<BlockContext, "apiUrl" | "apolloClient">;
     };
 }
@@ -29,9 +30,13 @@ export interface CometConfig<SiteConfigs = unknown> {
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);
 
 export function CometConfigProvider<SiteConfigs = unknown>({ children, ...config }: PropsWithChildren<CometConfig<SiteConfigs>>) {
+    const { context: blockContext = {}, ...blocksConfig } = config.blocks ?? {};
+
     return (
         <CometConfigContext.Provider value={config as CometConfig<unknown>}>
-            <BlockContextProvider value={config.blocks?.context ?? {}}>{children}</BlockContextProvider>
+            <BlockContextProvider value={blockContext}>
+                <BlocksConfigProvider {...blocksConfig}>{children}</BlocksConfigProvider>
+            </BlockContextProvider>
         </CometConfigContext.Provider>
     );
 }

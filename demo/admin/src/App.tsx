@@ -3,14 +3,7 @@ import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import {
-    BlocksConfigProvider,
-    CometConfigProvider,
-    createDamFileDependency,
-    CurrentUserProvider,
-    MasterMenuRoutes,
-    SitePreview,
-} from "@comet/cms-admin";
+import { CometConfigProvider, createDamFileDependency, CurrentUserProvider, MasterMenuRoutes, SitePreview } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
@@ -102,55 +95,54 @@ export function App() {
             }}
             buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
             contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
+            blocks={{
+                isBlockSupported: (block, scope) => {
+                    if (scope.domain === "main") {
+                        return true;
+                    } else {
+                        return block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name;
+                    }
+                },
+            }}
         >
             <ApolloProvider client={apolloClient}>
                 <IntlProvider locale="en" messages={getMessages()}>
-                    <BlocksConfigProvider
-                        isBlockSupported={(block, scope) => {
-                            if (scope.domain === "main") {
-                                return true;
-                            } else {
-                                return block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name;
-                            }
-                        }}
-                    >
-                        <MuiThemeProvider theme={theme}>
-                            <DndProvider options={HTML5toTouch}>
-                                <SnackbarProvider>
-                                    <ErrorDialogHandler />
-                                    <CurrentUserProvider>
-                                        <RouterBrowserRouter>
-                                            <GlobalStyle />
-                                            <ContentScopeProvider>
-                                                {({ match }) => (
-                                                    <Switch>
-                                                        <Route
-                                                            path={`${match.path}/preview`}
-                                                            render={(props) => (
-                                                                <SitePreview
-                                                                    resolvePath={(path: string, scope) => {
-                                                                        return `/${scope.language}${path}`;
-                                                                    }}
-                                                                    {...props}
-                                                                />
-                                                            )}
-                                                        />
-                                                        <Route
-                                                            render={() => (
-                                                                <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                    <MasterMenuRoutes menu={masterMenuData} />
-                                                                </MasterLayout>
-                                                            )}
-                                                        />
-                                                    </Switch>
-                                                )}
-                                            </ContentScopeProvider>
-                                        </RouterBrowserRouter>
-                                    </CurrentUserProvider>
-                                </SnackbarProvider>
-                            </DndProvider>
-                        </MuiThemeProvider>
-                    </BlocksConfigProvider>
+                    <MuiThemeProvider theme={theme}>
+                        <DndProvider options={HTML5toTouch}>
+                            <SnackbarProvider>
+                                <ErrorDialogHandler />
+                                <CurrentUserProvider>
+                                    <RouterBrowserRouter>
+                                        <GlobalStyle />
+                                        <ContentScopeProvider>
+                                            {({ match }) => (
+                                                <Switch>
+                                                    <Route
+                                                        path={`${match.path}/preview`}
+                                                        render={(props) => (
+                                                            <SitePreview
+                                                                resolvePath={(path: string, scope) => {
+                                                                    return `/${scope.language}${path}`;
+                                                                }}
+                                                                {...props}
+                                                            />
+                                                        )}
+                                                    />
+                                                    <Route
+                                                        render={() => (
+                                                            <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                <MasterMenuRoutes menu={masterMenuData} />
+                                                            </MasterLayout>
+                                                        )}
+                                                    />
+                                                </Switch>
+                                            )}
+                                        </ContentScopeProvider>
+                                    </RouterBrowserRouter>
+                                </CurrentUserProvider>
+                            </SnackbarProvider>
+                        </DndProvider>
+                    </MuiThemeProvider>
                 </IntlProvider>
             </ApolloProvider>
         </CometConfigProvider>
