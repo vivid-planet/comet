@@ -15,6 +15,16 @@ export async function writeGenerated(filePath: string, contents: string): Promis
         filePath,
     });
 
+    if (lintResult[0].errorCount > 0 || lintResult[0].fatalErrorCount > 0) {
+        const errorMessage = lintResult[0].messages
+            .map((message) => {
+                return message.message;
+            })
+            .join(".");
+
+        console.log(`❌ Linting error in ${filePath}: \n${errorMessage}`);
+    }
+
     const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
     await fs.writeFile(filePath, output ?? contents);
     console.log(`generated ${filePath}`);

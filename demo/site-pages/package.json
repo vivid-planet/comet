@@ -53,13 +53,13 @@
         "@graphql-codegen/typescript-operations": "^4.5.1",
         "@parcel/watcher": "^2.5.1",
         "@types/fs-extra": "^11.0.4",
-        "@types/node": "^22.13.5",
+        "@types/node": "^22.13.8",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.20.1",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.5.2",
+        "prettier": "^3.5.3",
         "rimraf": "^6.0.1",
         "typescript": "^5.7.3"
     }
