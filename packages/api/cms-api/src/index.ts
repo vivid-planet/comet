@@ -34,6 +34,7 @@ export {
     BlockMetaInterface,
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
+    BlockWarning,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
@@ -48,6 +49,7 @@ export {
     transformToBlockSave,
     TraversableTransformBlockResponse,
     TraversableTransformBlockResponseArray,
+    WarningSeverity,
 } from "./blocks/block";
 export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";

@@ -1,0 +1,30 @@
+import { Property } from "@mikro-orm/core";
+import { Field, InputType, ObjectType } from "@nestjs/graphql";
+
+@ObjectType()
+@InputType("WarningDependencyInfoInput")
+export class WarningDependencyInfo {
+    @Property()
+    @Field()
+    rootEntityName: string;
+
+    @Property()
+    @Field()
+    rootColumnName: string;
+
+    @Property()
+    @Field()
+    rootPrimaryKey: string;
+
+    @Property()
+    @Field()
+    targetId: string;
+
+    @Property()
+    @Field()
+    jsonPath: string;
+
+    @Property()
+    @Field()
+    graphqlObjectType: string; // do i need this??
+}
