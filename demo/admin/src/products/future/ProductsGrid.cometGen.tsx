@@ -35,9 +35,9 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             minWidth: 200,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
-                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
-                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };
                 const inStockLabels: Record<string, ReactNode> = {
                     true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
