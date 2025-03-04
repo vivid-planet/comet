@@ -10,7 +10,7 @@ import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
 import { type GQLLatestBuildsQuery, type GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
 
 export const LatestBuildsDashboardWidget = () => {
-    const { data, loading, error } = useQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>(LATEST_BUILDS);
+    const { data, loading, error } = useQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>(latestBuildsQuery);
 
     const intl = useIntl();
 
@@ -53,7 +53,7 @@ const disableFieldOptions = {
     hideable: false,
 };
 
-const LATEST_BUILDS = gql`
+const latestBuildsQuery = gql`
     query LatestBuilds {
         builds(limit: 5) {
             id
