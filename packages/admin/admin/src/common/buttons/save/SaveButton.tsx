@@ -87,6 +87,9 @@ export interface SaveButtonProps extends ButtonProps {
 
 export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
 
+/**
+ * @deprecated Use the `FeedbackButton` instead
+ */
 export function SaveButton(inProps: SaveButtonProps) {
     const {
         saving = false,
