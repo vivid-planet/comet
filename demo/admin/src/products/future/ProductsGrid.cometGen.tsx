@@ -40,8 +40,8 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
                     Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };
                 const inStockLabels: Record<string, ReactNode> = {
-                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
-                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.outOfStock" defaultMessage="Out of stock" />,
                 };
                 return (
                     <GridCellContent
