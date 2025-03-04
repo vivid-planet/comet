@@ -4,8 +4,8 @@
 
 DAM: Fix headers
 
-While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues with the way the headers were being handled:
+While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
 
--   All headers are stored while we only need the `content-type` header.
--   Imgproxy headers are passed through to the client.
--   `content-type` is stored redundantly for AzureStorageAccounts and S3 Buckets.
+-   Only store the `content-type` header
+-   Prevent imgproxy headers from being passed through to the client
+-   Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
