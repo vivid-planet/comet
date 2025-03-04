@@ -32,7 +32,7 @@ class SliderItemBlockInput extends BlockInput {
     }
 }
 
-export const SliderItemBlock = createBlock(SliderItemBlockData, SliderItemBlockInput, {
+const SliderItemBlock = createBlock(SliderItemBlockData, SliderItemBlockInput, {
     name: "SliderItem",
 });
 
