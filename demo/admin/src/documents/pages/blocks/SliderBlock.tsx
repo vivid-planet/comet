@@ -30,7 +30,7 @@ const SliderListBlock = createListBlock({
 export const SliderBlock = createCompositeBlock({
     name: "Slider",
     displayName: <FormattedMessage id="sliderBlock.displayName" defaultMessage="Slider" />,
-    category: BlockCategory.Teaser,
+    category: BlockCategory.Layout,
     blocks: {
         sliderList: {
             title: <FormattedMessage id="sliderBlock.sliderListBlock.title" defaultMessage="Slider List" />,
