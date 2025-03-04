@@ -1,5 +1,5 @@
-import { OkayButton } from "@comet/admin";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { messages } from "@comet/admin";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -17,7 +17,9 @@ const CannotPasteBlockDialog = ({ open, onClose, error }: Props) => {
             </DialogTitle>
             <DialogContent>{error}</DialogContent>
             <DialogActions>
-                <OkayButton onClick={onClose} variant="textDark" />
+                <Button onClick={onClose} color="info">
+                    <FormattedMessage {...messages.ok} />
+                </Button>
             </DialogActions>
         </Dialog>
     );
