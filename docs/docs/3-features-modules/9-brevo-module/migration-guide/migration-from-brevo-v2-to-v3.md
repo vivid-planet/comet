@@ -120,10 +120,10 @@ Instead define them in the `BrevoConfigProvider` once:
 ```diff
 //...
   input2State: (values?: AdditionalFormConfigInputProps) => {
--       email: string;
--       redirectionUrl: string;
-        attributes: //...
-    };
+-     email: string;
+-     redirectionUrl: string;
+      attributes: //...
+  };
 //...
 ```
 
