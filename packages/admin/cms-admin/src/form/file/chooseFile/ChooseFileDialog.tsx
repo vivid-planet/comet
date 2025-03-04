@@ -13,8 +13,8 @@ import { type SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
+import { useDamConfig } from "../../../dam/config/damConfig";
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
-import { useDamConfig } from "../../../dam/config/useDamConfig";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
 import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";

@@ -77,7 +77,6 @@ export const masterMenuData: MasterMenuData = [
 
                 return (
                     <PagesPage
-                        allCategories={pageTreeCategories}
                         documentTypes={(category): Record<DocumentType, DocumentInterface> => {
                             if (category === "TopMenu") {
                                 return {

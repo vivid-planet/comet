@@ -1,8 +1,8 @@
 import { type ReactNode } from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { useDamConfig } from "./damConfig";
 import { DamScopeContext } from "./DamScopeContext";
-import { useDamConfig } from "./useDamConfig";
 
 export function DamScopeProvider({ children }: { children?: ReactNode }) {
     const { scopeParts = [] } = useDamConfig();

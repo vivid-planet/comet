@@ -7,8 +7,8 @@ import {
     type BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
+    useBlockContext,
     useBlockPreview,
-    useCmsBlockContext,
     useContentScopeConfig,
     useSaveConflictQuery,
     useSiteConfig,
@@ -39,7 +39,7 @@ export function EditFooterPage(): JSX.Element | null {
     const [referenceContent, setReferenceContent] = useState<FooterContentBlockInput | null>(null);
     const match = useRouteMatch();
     const previewApi = useBlockPreview();
-    const blockContext = useCmsBlockContext();
+    const blockContext = useBlockContext();
 
     useContentScopeConfig({ redirectPathAfterChange: "/project-snips/footer" });
 

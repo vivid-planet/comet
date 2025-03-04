@@ -1,3 +1,9 @@
+import { type ApolloClient } from "@apollo/client";
 import { createContext } from "react";
 
-export const BlockContext = createContext<unknown>(undefined);
+export interface BlockContext {
+    apiUrl: string;
+    apolloClient: ApolloClient<object>;
+}
+
+export const CustomBlockContext = createContext<Omit<BlockContext, "apiUrl" | "apolloClient"> | undefined>(undefined);

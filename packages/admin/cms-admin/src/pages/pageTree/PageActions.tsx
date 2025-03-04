@@ -8,6 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { useContentScope } from "../../contentScope/Provider";
 import { serializeInitialValues } from "../../form/serializeInitialValues";
 import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
 import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "./Page";
@@ -25,7 +26,7 @@ interface Props {
 export default function PageActions({ page, editDialog, children, siteUrl }: PropsWithChildren<Props>) {
     const { tree } = usePageTreeContext();
     const { match: contentScopeMatch } = useContentScope();
-    const { documentTypes } = usePageTreeContext();
+    const { documentTypes } = usePageTreeConfig();
     const stackSwitchApi = useStackSwitchApi();
     const client = useApolloClient();
 
