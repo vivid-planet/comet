@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { ESLint } from "eslint";
 import { promises as fs } from "fs";
 import * as path from "path";
@@ -14,6 +15,16 @@ export async function writeGenerated(filePath: string, contents: string): Promis
     const lintResult = await eslint.lintText(header + contents, {
         filePath,
     });
+
+    if (lintResult[0].errorCount > 0 || lintResult[0].fatalErrorCount > 0) {
+        const errorMessage = lintResult[0].messages
+            .map((message) => {
+                return message.message;
+            })
+            .join(".");
+
+        console.log(chalk.red(`Linting error in ${filePath}: \n${errorMessage}`));
+    }
 
     const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
     await fs.writeFile(filePath, output ?? contents);
