@@ -49,7 +49,8 @@ export async function Link({ pageTreeNodeId }: Props): Promise<JSX.Element> {
         }
 
         if (content.block?.type === "damFileDownload") {
-            const link = (content.block.props as DamFileDownloadLinkBlockData).file?.fileUrl.replace("/download", "");
+            const fileUrl = (content.block.props as DamFileDownloadLinkBlockData).file?.fileUrl.replace("/download", "");
+            const link = fileUrl?.includes("/dam/") ? fileUrl.substring(fileUrl.indexOf("/dam/")) : fileUrl;
             if (link) {
                 redirect(link);
             }
