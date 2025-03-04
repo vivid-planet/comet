@@ -2022,7 +2022,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^8.0.0-beta.1
+        specifier: workspace:*
         version: link:../eslint-plugin
       '@eslint/js':
         specifier: ^9.21.0
