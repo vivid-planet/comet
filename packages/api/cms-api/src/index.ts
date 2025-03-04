@@ -177,7 +177,7 @@ export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
-export { UserPermissionsService } from "./user-permissions/user-permissions.service";
+export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
