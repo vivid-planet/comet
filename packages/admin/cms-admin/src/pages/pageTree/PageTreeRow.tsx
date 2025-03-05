@@ -5,6 +5,7 @@ import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { type DebouncedState } from "use-debounce";
 
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
 import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
 import { useButtonHoverStates } from "./InsertInBetweenAction/useButtonHoverStates";
@@ -16,7 +17,6 @@ import { PageTreeRowDivider } from "./PageTreeRowDivider";
 import { type DropInfo, type PageTreeService } from "./PageTreeService";
 import PageVisibility from "./PageVisibility";
 import { type PageTreePage } from "./usePageTree";
-import { usePageTreeContext } from "./usePageTreeContext";
 
 export type DropTarget = "ADD_BEFORE" | "ADD_AFTER" | "ADD_AS_CHILD";
 export type DropTargetBeforeAfter = Extract<DropTarget, "ADD_BEFORE" | "ADD_AFTER">;
@@ -66,7 +66,7 @@ const PageTreeRow = ({
 
     const [hoverState, setHoverState] = useState<DropInfo | undefined>();
     const { activatePage } = useStackSwitchApi();
-    const { documentTypes } = usePageTreeContext();
+    const { documentTypes } = usePageTreeConfig();
     const isEditable = !!(page.visibility !== "Archived" && documentTypes[page.documentType].editComponent);
 
     const { top: topInBetweenButtonHovered, bottom: bottomInBetweenButtonHovered, defaultHandler: inBetweenButtonHandle } = useButtonHoverStates();
