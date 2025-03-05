@@ -1168,6 +1168,9 @@ importers:
       '@graphql-tools/load':
         specifier: ^7.8.14
         version: 7.8.14(graphql@16.10.0)
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
