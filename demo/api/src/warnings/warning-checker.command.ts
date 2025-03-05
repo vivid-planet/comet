@@ -1,12 +1,15 @@
 import { Block, BlockData, FlatBlocks } from "@comet/cms-api";
 import { DiscoverService } from "@comet/cms-api/lib/dependencies/discover.service";
-import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
+import { EmitWarningsMeta } from "@comet/cms-api/lib/warnings/decorators/emit-warnings.decorator";
+import { CreateRequestContext, EntityClass, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
+import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
 
 import { Warning } from "./entities/warning.entity";
+import { WarningSeverity } from "./entities/warning-severity.enum";
 import { WarningService } from "./warning.service";
 
 interface RootBlockEntityData {
@@ -33,13 +36,15 @@ export class WarningCheckerCommand extends CommandRunner {
         private readonly entityManager: EntityManager,
         @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
         private readonly warningService: WarningService,
+        private reflector: Reflector,
+        private readonly moduleRef: ModuleRef,
     ) {
         super();
     }
 
     @CreateRequestContext()
     async run(): Promise<void> {
-        const startDate = new Date();
+        let startDate = new Date();
 
         // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
         for (const data of this.groupRootBlockDataByEntity()) {
@@ -73,7 +78,11 @@ export class WarningCheckerCommand extends CommandRunner {
                             if (warnings.length > 0) {
                                 for (const warning of warnings) {
                                     this.warningService.saveWarning({
-                                        warning,
+                                        warning: {
+                                            message: warning.message,
+                                            severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
+                                        },
+                                        type: "Block",
                                         dependencyInfo: {
                                             rootEntityName: tableName,
                                             rootColumnName: column,
@@ -95,6 +104,40 @@ export class WarningCheckerCommand extends CommandRunner {
 
         // remove all Block-Warnings that are not present anymore
         await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: startDate } });
+
+        startDate = new Date();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entities = this.orm.config.get("entities") as EntityClass<any>[];
+        for (const entity of entities) {
+            const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
+            if (emitWarnings) {
+                const repository = this.entityManager.getRepository(entity);
+
+                const rows = await repository.find();
+
+                for (const row of rows) {
+                    const service = this.moduleRef.get(emitWarnings, { strict: false });
+                    const warnings = (await service.emitWarnings(row)).map((warning) => ({
+                        ...warning,
+                        severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
+                    }));
+
+                    for (const warning of warnings) {
+                        this.warningService.saveWarning({
+                            warning,
+                            type: "Entity",
+                            dependencyInfo: {
+                                rootEntityName: entity.name,
+                                targetId: row.id,
+                            },
+                        });
+                    }
+                }
+            }
+        }
+
+        // remove all Entity-Warnings that are not present anymore
+        await this.entityManager.nativeDelete(Warning, { type: "Entity", updatedAt: { $lt: startDate } });
     }
 
     // Group root block data by tableName and className to reduce database calls.

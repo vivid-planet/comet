@@ -88,6 +88,8 @@ export function App() {
                                     generateAltText: true,
                                     generateImageTitle: true,
                                 },
+                                requireLicense: config.dam.requireLicense,
+                                enableLicenseFeature: config.dam.enableLicenseFeature,
                             }}
                         >
                             <DependenciesConfigProvider

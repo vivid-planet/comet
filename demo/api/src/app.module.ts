@@ -137,6 +137,8 @@ export class AppModule {
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
+                        enableLicenseFeature: config.dam.enableLicenseFeature,
+                        requireLicense: config.dam.requireLicense,
                     },
                     imgproxyConfig: config.imgproxy,
                     Scope: DamScope,
