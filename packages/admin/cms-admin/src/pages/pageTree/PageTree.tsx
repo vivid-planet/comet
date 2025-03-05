@@ -46,7 +46,7 @@ interface PageTreeProps {
 
 type PageTreeRefApi = { scrollToItem: List["scrollToItem"] };
 
-const MOVE_PAGE_TREE_NODES_BY_POS = gql`
+const movePageTreeNodesByPositionMutation = gql`
     mutation MovePageTreeNodesByPos($ids: [ID!]!, $input: MovePageTreeNodesByPosInput!) {
         movePageTreeNodesByPos(ids: $ids, input: $input) {
             id
@@ -58,7 +58,7 @@ const MOVE_PAGE_TREE_NODES_BY_POS = gql`
     }
 `;
 
-const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
+const movePageTreeNodesByNeighboursMutation = gql`
     mutation MovePageTreeNodesByNeighbour($ids: [ID!]!, $input: MovePageTreeNodesByNeighbourInput!) {
         movePageTreeNodesByNeighbour(ids: $ids, input: $input) {
             id
@@ -70,7 +70,7 @@ const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
     }
 `;
 
-const RESET_SLUG = gql`
+const resetSlugMutation = gql`
     mutation ResetSlug($id: ID!, $slug: String!) {
         updatePageTreeNodeSlug(id: $id, slug: $slug) {
             id
@@ -79,7 +79,7 @@ const RESET_SLUG = gql`
     }
 `;
 
-const PAGES_CACHE_QUERY = gql`
+const pagesCacheQuery = gql`
     query PagesCache($contentScope: PageTreeNodeScopeInput!, $category: String!) {
         pages: pageTreeNodeList(scope: $contentScope, category: $category) {
             id
@@ -157,7 +157,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
         // @TODO: handle path collisions when moving pages
         async ({ ids, parentId, position }: { ids: string[]; parentId: string | null; position: number }) => {
             await client.mutate({
-                mutation: MOVE_PAGE_TREE_NODES_BY_POS,
+                mutation: movePageTreeNodesByPositionMutation,
                 variables: {
                     ids: ids,
                     input: {
@@ -204,7 +204,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                     }
 
                     const pagesQueryData = proxy.readQuery<GQLPagesCacheQuery, GQLPagesCacheQueryVariables>({
-                        query: PAGES_CACHE_QUERY,
+                        query: pagesCacheQuery,
                         variables: {
                             contentScope: scope,
                             category,
@@ -223,7 +223,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
 
                         return updatedPageData;
                     });
-                    proxy.writeQuery({ query: PAGES_CACHE_QUERY, data: { pages: updatedPages } });
+                    proxy.writeQuery({ query: pagesCacheQuery, data: { pages: updatedPages } });
                 },
             });
         },
@@ -233,7 +233,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
     const moveByNeighbourRequest = useCallback(
         async ({ ids, parentId, afterId, beforeId }: { ids: string[]; parentId: string | null; afterId: string | null; beforeId: string | null }) => {
             await client.mutate({
-                mutation: MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
+                mutation: movePageTreeNodesByNeighboursMutation,
                 variables: {
                     ids: ids,
                     input: {
@@ -294,7 +294,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                                 });
 
                                 await client.mutate<GQLResetSlugMutation, GQLResetSlugMutationVariables>({
-                                    mutation: RESET_SLUG,
+                                    mutation: resetSlugMutation,
                                     variables: {
                                         id: pageToUndo.id,
                                         slug: pageToUndo.slug,
