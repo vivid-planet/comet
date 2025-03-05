@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     dataGridDateTimeColumn,
     DataGridToolbar,
@@ -12,12 +12,15 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { WarningSolid } from "@comet/admin-icons";
-import { Chip } from "@mui/material";
+import { ArrowRight, OpenNewTab, WarningSolid } from "@comet/admin-icons";
+import { type DependencyInterface, useDependenciesConfig } from "@comet/cms-admin";
+import { Chip, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { useContentScope } from "@src/common/ContentScopeProvider";
 import { type GQLWarningSeverity } from "@src/graphql.generated";
 import { type ReactNode } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useHistory } from "react-router";
 
 import { warningMessages as cometWarningMessages } from "./warningMessages";
 import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
@@ -31,6 +34,12 @@ const warningsFragment = gql`
         type
         severity
         status
+        sourceInfo {
+            rootEntityName
+            rootColumnName
+            targetId
+            jsonPath
+        }
     }
 `;
 
@@ -70,6 +79,10 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
         ...usePersistentColumnState("WarningsGrid"),
     };
     const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
+    const history = useHistory();
+    const entityDependencyMap = useDependenciesConfig();
+    const apolloClient = useApolloClient();
+    const contentScope = useContentScope();
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -134,6 +147,57 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                 { value: "ignored", label: intl.formatMessage({ id: "warning.status.ignored", defaultMessage: "Ignored" }) },
             ],
             width: 150,
+        },
+        {
+            field: "actions",
+            headerName: "",
+            sortable: false,
+            renderCell: ({ row }) => {
+                const dependencyObject = entityDependencyMap[row.sourceInfo.rootEntityName] as DependencyInterface | undefined;
+
+                if (!dependencyObject) return null; // to some warnings it cannot be linked to. When missing a dependency or for example a failing job cannot be resolved in the admin and therefore cannot have a link
+
+                if (dependencyObject === undefined) {
+                    if (process.env.NODE_ENV === "development") {
+                        console.warn(
+                            `Cannot load URL because no implementation of DependencyInterface for ${row.sourceInfo.rootEntityName} was provided via the DependenciesConfig`,
+                        );
+                    }
+                    return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
+                }
+
+                const loadUrl = async () => {
+                    const path = await dependencyObject.resolvePath({
+                        rootColumnName: row.sourceInfo.rootColumnName,
+                        jsonPath: row.sourceInfo.jsonPath,
+                        apolloClient,
+                        id: row.sourceInfo.targetId,
+                    });
+                    return contentScope.match.url + path;
+                };
+
+                return (
+                    <div style={{ display: "flex" }}>
+                        <IconButton
+                            onClick={async () => {
+                                const url = await loadUrl();
+                                window.open(url, "_blank");
+                            }}
+                        >
+                            <OpenNewTab />
+                        </IconButton>
+                        <IconButton
+                            onClick={async () => {
+                                const url = await loadUrl();
+
+                                history.push(url);
+                            }}
+                        >
+                            <ArrowRight />
+                        </IconButton>
+                    </div>
+                );
+            },
         },
     ];
 
