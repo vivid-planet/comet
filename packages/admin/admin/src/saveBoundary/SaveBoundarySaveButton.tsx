@@ -1,19 +1,29 @@
-import { SaveButton, type SaveButtonProps } from "../common/buttons/save/SaveButton";
+import { Save } from "@comet/admin-icons";
+import { FormattedMessage } from "react-intl";
+
+import { FeedbackButton, type FeedbackButtonProps } from "../common/buttons/feedback/FeedbackButton";
+import { messages } from "../messages";
 import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
 
-export function SaveBoundarySaveButton(props: SaveButtonProps) {
+type Props = Omit<FeedbackButtonProps, "loading" | "hasErrors" | "onClick">;
+
+export function SaveBoundarySaveButton({ disabled, ...restProps }: Props) {
     const saveBoundaryState = useSavable();
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryState || !saveBoundaryApi) throw new Error("SaveBoundarySaveButton must be inside SaveBoundary");
+
     return (
-        <SaveButton
-            disabled={!saveBoundaryState.hasChanges}
-            saving={saveBoundaryState.saving}
+        <FeedbackButton
+            startIcon={<Save />}
+            disabled={disabled || !saveBoundaryState.hasChanges}
+            loading={saveBoundaryState.saving}
             hasErrors={saveBoundaryState.hasErrors}
             onClick={async () => {
-                return saveBoundaryApi.save();
+                await saveBoundaryApi.save();
             }}
-            {...props}
-        />
+            {...restProps}
+        >
+            <FormattedMessage {...messages.save} />
+        </FeedbackButton>
     );
 }
