@@ -11,6 +11,7 @@ import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
+import { UserPermissionsPublicService } from "./user-permissions.public.service";
 import { UserPermissionsService } from "./user-permissions.service";
 import {
     UserPermissionsAsyncOptions,
@@ -24,6 +25,7 @@ import {
     imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes]), DiscoveryModule],
     providers: [
         UserPermissionsService,
+        UserPermissionsPublicService,
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
@@ -33,7 +35,7 @@ import {
             useClass: UserPermissionsGuard,
         },
     ],
-    exports: [ContentScopeService, ACCESS_CONTROL_SERVICE, UserPermissionsService],
+    exports: [ContentScopeService, ACCESS_CONTROL_SERVICE, UserPermissionsService, UserPermissionsPublicService],
 })
 export class UserPermissionsModule {
     static forRoot(options: UserPermissionsModuleSyncOptions): DynamicModule {
