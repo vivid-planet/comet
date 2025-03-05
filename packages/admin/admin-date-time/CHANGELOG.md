@@ -1,5 +1,13 @@
 # @comet/admin-date-time
 
+## 7.16.0
+
+### Patch Changes
+
+-   5b7c6b4a7: Disabled `DatePicker` fields no longer have a `ClearInputAdornment`
+    -   @comet/admin@7.16.0
+    -   @comet/admin-icons@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes
