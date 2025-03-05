@@ -1,4 +1,4 @@
-import { StackLink, SubRoute } from "@comet/admin";
+import { greyPalette, StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
 import {
     Button,
@@ -6,7 +6,6 @@ import {
     Dialog,
     DialogTitle,
     IconButton,
-    Link,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type SyntheticEvent } from "react";
@@ -57,6 +56,13 @@ const TableRowButton = styled(Button)`
     }
 `;
 
+const StyledStackLink = styled(StackLink)`
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: ${({ theme }) => theme.palette.grey[900]};
+`;
+
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
@@ -67,21 +73,21 @@ const renderDamLabel = (
             <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
         </TableRowButton>
     ) : (
-        <Link
-            underline="none"
-            component={StackLink}
+        <StyledStackLink
             pageName="folder"
             payload={row.id}
-            sx={{
+            style={{
                 width: "100%",
                 height: "100%",
+                textDecoration: "none",
+                color: `${greyPalette[900]}`,
             }}
             onClick={() => {
                 filterApi.formApi.change("searchText", undefined);
             }}
         >
             <DamItemLabel asset={row} matches={matches} />
-        </Link>
+        </StyledStackLink>
     );
 };
 
