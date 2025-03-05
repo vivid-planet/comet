@@ -574,7 +574,7 @@ export const GridColumnTypes = {
 export const _CrudMoreActionsMenu = {
     render: () => {
         const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
-        const dataGridProps = useDataGridRemote();
+        const dataGridProps = usePersistentColumnState("_CrudMoreActionsMenu");
 
         function DemoToolBar() {
             return (
