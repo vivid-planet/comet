@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 export const StandaloneCallToActionListBlock = createCompositeBlock(
     {
         name: "StandaloneCallToActionList",
-        displayName: <FormattedMessage id="standaloneCallToActionList.displayName" defaultMessage="CallToActionList" />,
+        displayName: CallToActionListBlock.displayName,
         blocks: {
             callToActionList: {
                 block: CallToActionListBlock,
