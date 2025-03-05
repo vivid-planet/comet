@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { FillSpace, LegacySaveButton, MainContent, messages, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, LegacySaveButton, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
@@ -147,6 +147,14 @@ export function EditFooterPage(): JSX.Element | null {
                     >
                         <FormattedMessage {...messages.save} />
                     </LegacySaveButton>
+                    <SaveButton
+                        disabled={!hasChanges}
+                        loading={saving}
+                        hasErrors={hasSaveErrors != null}
+                        // @ts-expect-error TODO: fix this
+                        onClick={handleSavePage}
+                        startIcon={<Save />}
+                    />
                 </ToolbarActions>
             </StackToolbar>
             <MainContent disablePaddingBottom>

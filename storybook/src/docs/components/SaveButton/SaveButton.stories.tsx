@@ -1,4 +1,4 @@
-import { LegacySaveButton } from "@comet/admin";
+import { SaveButton } from "@comet/admin";
 import { useState } from "react";
 
 export default {
@@ -7,10 +7,23 @@ export default {
 
 export const Basic = {
     render: () => {
+        return (
+            <SaveButton
+                onClick={() => {
+                    return new Promise((resolve) => setTimeout(resolve, 1000));
+                }}
+            />
+        );
+    },
+    name: "SaveButton",
+};
+
+export const Controlled = {
+    render: () => {
         const [saving, setSaving] = useState(false);
         return (
-            <LegacySaveButton
-                saving={saving}
+            <SaveButton
+                loading={saving}
                 onClick={() => {
                     setSaving(true);
                     setTimeout(() => {
@@ -20,6 +33,4 @@ export const Basic = {
             />
         );
     },
-
-    name: "SaveButton",
 };
