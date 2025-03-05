@@ -11,7 +11,7 @@ import {
     ToolbarBackButton,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Add, Delete, Preview, Save } from "@comet/admin-icons";
+import { Add, Delete, Preview } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
     type BlockOutputApi,
@@ -114,8 +114,8 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
         setContent(null);
     };
 
-    const handleSaveClick = () => {
-        return updateMainMenuItem({
+    const handleSaveClick = async () => {
+        await updateMainMenuItem({
             variables: {
                 pageTreeNodeId: item.node.id,
                 input: { content: content ? RichTextBlock.state2Output(content) : null },
@@ -150,17 +150,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                     >
                         <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
-                    <SaveButton
-                        disabled={!hasChanges}
-                        startIcon={<Save />}
-                        saving={saving}
-                        hasErrors={saveError != null}
-                        color="primary"
-                        variant="contained"
-                        onClick={handleSaveClick}
-                    >
-                        <FormattedMessage {...messages.save} />
-                    </SaveButton>
+                    <SaveButton disabled={!hasChanges} loading={saving} hasErrors={saveError != null} onClick={handleSaveClick} />
                 </ToolbarActions>
             </Toolbar>
             {hasChanges && (

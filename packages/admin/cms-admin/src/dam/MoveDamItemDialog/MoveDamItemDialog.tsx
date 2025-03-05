@@ -214,13 +214,12 @@ const MoveDamItemDialogInner = ({
                 </Button>
                 <SaveButton
                     startIcon={<Move />}
-                    variant="contained"
                     onClick={async () => {
                         await moveSelected();
                         handleClose();
                     }}
                     disabled={selectedId === undefined}
-                    saving={moving}
+                    loading={moving}
                     hasErrors={hasErrors}
                 >
                     <FormattedMessage
