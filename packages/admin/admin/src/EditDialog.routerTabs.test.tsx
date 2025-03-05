@@ -1,5 +1,5 @@
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { screen, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
@@ -8,6 +8,7 @@ import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render } from "test-utils";
 
+import { Button } from "./common/buttons/Button";
 import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
@@ -107,12 +108,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                         componentsProps={{
                             toolbar: {
                                 toolbarAction: (
-                                    <Button
-                                        startIcon={<Add />}
-                                        onClick={() => editDialogApi.current?.openAddDialog()}
-                                        variant="contained"
-                                        color="primary"
-                                    >
+                                    <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                         Add product
                                     </Button>
                                 ),
