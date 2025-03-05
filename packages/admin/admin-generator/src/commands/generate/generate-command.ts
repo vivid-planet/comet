@@ -1,33 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type GridColDef } from "@comet/admin";
 import { type IconName } from "@comet/admin-icons";
-import { type FinalFormFileUploadProps } from "@comet/cms-admin";
+import { type BlockInterface, type FinalFormFileUploadProps } from "@comet/cms-admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { type IconProps } from "@mui/material";
-import { type GridFilterItem, type GridSortDirection } from "@mui/x-data-grid";
+import {
+    type GridCellParams,
+    type GridFilterItem,
+    type GridFilterOperator,
+    type GridRenderCellParams,
+    type GridSortDirection,
+    type GridValidRowModel,
+} from "@mui/x-data-grid";
 import { Command } from "commander";
+import { type FieldValidator } from "final-form";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { type ComponentType } from "react";
 
 import { generateForm } from "./generateForm/generateForm";
 import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
+import { configsFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
-
-export type ImportReference = {
-    name: string;
-    import: string;
-};
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
     name: IconName;
 };
 
-type Icon = IconName | IconObject | ImportReference;
+type Icon = IconName | IconObject | ComponentType;
 export type Adornment = string | { icon: Icon };
 
 type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
@@ -45,7 +51,7 @@ type InputBaseFieldConfig = {
     endAdornment?: Adornment;
 };
 
-export type ComponentFormFieldConfig = { type: "component"; component: ImportReference };
+export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
@@ -70,7 +76,7 @@ export type FormFieldConfig<T> = (
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
-    | { type: "block"; block: ImportReference }
+    | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
 ) & {
@@ -78,11 +84,11 @@ export type FormFieldConfig<T> = (
     label?: string;
     required?: boolean;
     virtual?: boolean;
-    validate?: ImportReference;
+    validate?: FieldValidator<unknown>;
     helperText?: string;
     readOnly?: boolean;
 };
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
 }
@@ -91,7 +97,6 @@ type OptionalNestedFieldsConfig<T> = {
     type: "optionalNestedFields";
     name: keyof T; // object name containing fields
     checkboxLabel?: string;
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     fields: FormFieldConfig<any>[];
 };
 export type FormLayoutConfig<T> =
@@ -105,7 +110,7 @@ export type FormLayoutConfig<T> =
           fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T> | ComponentFormFieldConfig)[];
       }
     | OptionalNestedFieldsConfig<T>;
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+
 export function isFormLayoutConfig<T>(arg: any): arg is FormLayoutConfig<T> {
     return arg.type !== undefined && ["fieldSet", "optionalNestedFields"].includes(arg.type);
 }
@@ -133,17 +138,17 @@ export type StaticSelectLabelCellContent = {
     icon?: Icon;
 };
 
-export type GridColumnConfig<T> = (
-    | { type: "text" }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
-    | { type: "dateTime" }
+export type GridColumnConfig<T extends GridValidRowModel> = (
+    | { type: "text"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | { type: "number"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | { type: "boolean"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | { type: "date"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
-    | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
+    | { type: "block"; block: BlockInterface }
+) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
+export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
 
 type InitialFilterConfig = {
     items: GridFilterItem[];
@@ -173,7 +178,6 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 type GQLDocumentConfig = { document: string; export: boolean };
@@ -183,7 +187,7 @@ export type GeneratorReturn = { code: string; gqlDocuments: GQLDocumentConfigMap
 /**
  * @experimental
  */
-async function runGenerate(filePattern = "src/**/*.cometGen.ts") {
+async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -194,17 +198,18 @@ async function runGenerate(filePattern = "src/**/*.cometGen.ts") {
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
-        const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
-        const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
-        //const configs = await import(`${process.cwd()}/${file}`);
+        const baseOutputFilename = basename(file).replace(/\.cometGen\.tsx?$/, "");
 
-        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
+        const configs = configsFromSourceFile(morphTsSource(file));
+        //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
+
+        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
 
         console.log(`generating ${file}`);
 
         for (const exportName in configs) {
-            const config = configs[exportName] as GeneratorConfig;
+            const config = configs[exportName];
             let generated: GeneratorReturn;
             if (config.type == "form") {
                 generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
@@ -223,7 +228,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.ts") {
         await writeGenerated(codeOuputFilename, outputCode);
 
         if (gqlDocumentsOutputCode != "") {
-            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";

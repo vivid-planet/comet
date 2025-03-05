@@ -8,9 +8,11 @@ import {
 
 import { type Adornment, type FormConfig, type FormFieldConfig, type GQLDocumentConfigMap, isFormFieldConfig } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { convertConfigImport } from "../utils/convertConfigImport";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { type Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
+import { isGeneratorConfigCode, isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { findFieldByName, type GenerateFieldsReturn } from "./generateFields";
 
 type AdornmentData = {
@@ -33,12 +35,9 @@ const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ador
             importPath: "@comet/admin-icons",
         };
     } else if (typeof adornmentData.icon === "object") {
-        if ("import" in adornmentData.icon) {
+        if (isGeneratorConfigImport(adornmentData.icon)) {
             adornmentString = `<${adornmentData.icon.name} />`;
-            adornmentImport = {
-                name: `${adornmentData.icon.name}`,
-                importPath: `${adornmentData.icon.import}`,
-            };
+            adornmentImport = convertConfigImport(adornmentData.icon);
         } else {
             const { name, ...iconProps } = adornmentData.icon;
             adornmentString = `<${name}Icon
@@ -137,16 +136,13 @@ export function generateFormField({
 
     let validateCode = "";
     if (config.validate) {
-        let importPath = config.validate.import;
-        if (importPath.startsWith("./")) {
-            //go one level up as generated files are in generated subfolder
-            importPath = `.${importPath}`;
+        if (isGeneratorConfigImport(config.validate)) {
+            imports.push(convertConfigImport(config.validate));
+            validateCode = `validate={${config.validate.name}}`;
+        } else if (isGeneratorConfigCode(config.validate)) {
+            validateCode = `validate={${config.validate.code}}`;
+            imports.push(...config.validate.imports.map((imprt) => convertConfigImport(imprt)));
         }
-        imports.push({
-            name: config.validate.name,
-            importPath,
-        });
-        validateCode = `validate={${config.validate.name}}`;
     }
 
     const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;

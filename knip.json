@@ -75,7 +75,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "demo/admin": {
-            "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
+            "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/generated/**", "./src/products/future/AssignProductsGrid.tsx"],
             "ignoreDependencies": ["@swc/plugin-emotion", "cosmiconfig-toml-loader", "@babel/core"]
