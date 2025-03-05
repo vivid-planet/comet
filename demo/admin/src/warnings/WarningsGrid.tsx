@@ -16,7 +16,8 @@ import { WarningSolid } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { type GQLWarningSeverity } from "@src/graphql.generated";
-import { FormattedMessage, type MessageDescriptor, useIntl } from "react-intl";
+import { type ReactNode } from "react";
+import { useIntl } from "react-intl";
 
 import { warningMessages as cometWarningMessages } from "./warningMessages";
 import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
@@ -59,7 +60,7 @@ function WarningsGridToolbar() {
 }
 
 interface WarningsGridProps {
-    warningMessages?: Record<string, MessageDescriptor>;
+    warningMessages?: Record<string, ReactNode>;
 }
 
 export function WarningsGrid({ warningMessages: projectWarningMessages }: WarningsGridProps) {
@@ -116,7 +117,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                 const warning = warningMessages[params.value as keyof typeof warningMessages];
 
                 if (warning) {
-                    return <FormattedMessage {...warning} />;
+                    return warning;
                 } else {
                     console.error(`Missing warning message for "${params.value}". Custom warning messages can be passed to WarningsPage component.`);
                     return params.value;

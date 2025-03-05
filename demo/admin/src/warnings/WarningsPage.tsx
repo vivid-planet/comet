@@ -1,10 +1,11 @@
 import { Stack } from "@comet/admin";
-import { type MessageDescriptor, useIntl } from "react-intl";
+import { type ReactNode } from "react";
+import { useIntl } from "react-intl";
 
 import { WarningsGrid } from "./WarningsGrid";
 
 interface WarningsPageProps {
-    warningMessages?: Record<string, MessageDescriptor>;
+    warningMessages?: Record<string, ReactNode>;
 }
 
 export function WarningsPage({ warningMessages }: WarningsPageProps) {
