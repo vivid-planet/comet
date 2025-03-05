@@ -1,5 +1,6 @@
 "use client";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
@@ -34,13 +35,27 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
         );
     } else if (page.documentType === "Page") {
         return (
-            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+            <Link
+                href={createSiteUrl({
+                    path: page.path,
+                    scope: {
+                        language: page.scope.language,
+                    },
+                })}
+                className={className}
+            >
                 {children}
             </Link>
         );
     } else if (page.documentType === "PredefinedPage") {
         return (
-            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+            <Link
+                href={createSiteUrl({
+                    path: page.path,
+                    scope: page.scope,
+                })}
+                className={className}
+            >
                 {children}
             </Link>
         );
