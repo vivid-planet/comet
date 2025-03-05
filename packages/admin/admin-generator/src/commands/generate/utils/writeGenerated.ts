@@ -23,7 +23,7 @@ export async function writeGenerated(filePath: string, contents: string): Promis
             })
             .join(".");
 
-        console.log(chalk.red(`Linting error in ${filePath}: \n${errorMessage}`));
+        console.error(chalk.red(`Linting error in ${filePath}: \n${errorMessage}`));
     }
 
     const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
