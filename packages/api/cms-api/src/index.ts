@@ -261,3 +261,4 @@ export {
     UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
+export { EmitWarnings } from "./warnings/decorators/emit-warnings.decorator";
