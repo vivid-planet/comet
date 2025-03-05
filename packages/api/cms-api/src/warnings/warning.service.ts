@@ -3,9 +3,14 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { v5 } from "uuid";
 
-import { BlockWarning } from "../blocks/block";
 import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";
+import { WarningSeverity } from "./entities/warning-severity.enum";
+
+interface WarningInput {
+    message: string;
+    severity: WarningSeverity;
+}
 
 @Injectable()
 export class WarningService {
@@ -14,8 +19,7 @@ export class WarningService {
         private readonly entityManager: EntityManager,
     ) {}
 
-    public async saveWarning({ warning, sourceInfo }: { warning: BlockWarning; sourceInfo: WarningSourceInfo }): Promise<void> {
-        const type = "Block";
+    public async saveWarning({ warning, type, sourceInfo }: { warning: WarningInput; type: string; sourceInfo: WarningSourceInfo }): Promise<void> {
         const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
         const id = v5(`${sourceInfo.rootEntityName}${sourceInfo.targetId};${warning.message}`, staticNamespace);
 
@@ -34,18 +38,27 @@ export class WarningService {
         );
     }
 
-    public async updateWarningsForBlock(warnings: BlockWarning[], sourceInfo: WarningSourceInfo): Promise<void> {
+    public async updateWarningsAndDeleteOutdated({
+        warnings,
+        type,
+        sourceInfo,
+    }: {
+        warnings: WarningInput[];
+        type: string;
+        sourceInfo: WarningSourceInfo;
+    }): Promise<void> {
         const startDate = new Date();
         for (const warning of warnings) {
             await this.saveWarning({
                 warning,
+                type,
                 sourceInfo,
             });
         }
-        this.deleteOutdatedWarnings(startDate, sourceInfo);
+        this.deleteOutdatedWarnings(startDate, type, sourceInfo);
     }
 
-    public async deleteOutdatedWarnings(date: Date, sourceInfo: WarningSourceInfo): Promise<void> {
-        await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: date }, sourceInfo });
+    public async deleteOutdatedWarnings(date: Date, type: string, sourceInfo: WarningSourceInfo): Promise<void> {
+        await this.entityManager.nativeDelete(Warning, { type, updatedAt: { $lt: date }, sourceInfo });
     }
 }
