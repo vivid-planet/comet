@@ -1,4 +1,18 @@
 {
     "extends": "@comet/eslint-config/nestjs",
-    "ignorePatterns": ["src/db/migrations/**", "dist/**"]
+    "ignorePatterns": ["src/db/migrations/**", "dist/**"],
+    "rules": {
+        "no-restricted-imports": [
+            "error",
+            {
+                "paths": [
+                    {
+                        "name": "class-validator",
+                        "importNames": ["IsOptional"],
+                        "message": "Please use IsUndefinable or IsNullable from @comet/cms-api instead"
+                    }
+                ]
+            }
+        ]
+    }
 }

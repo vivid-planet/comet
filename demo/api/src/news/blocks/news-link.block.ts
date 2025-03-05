@@ -9,7 +9,8 @@ import {
     createBlock,
     inputToData,
 } from "@comet/blocks-api";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsUndefinable } from "@comet/cms-api";
+import { IsUUID } from "class-validator";
 
 import { NewsLinkBlockTransformerService } from "./news-link-block-transformer.service";
 
@@ -86,7 +87,7 @@ class Meta extends AnnotationBlockMeta {
 class NewsLinkBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     @IsUUID()
-    @IsOptional()
+    @IsUndefinable()
     id?: string;
 
     transformToBlockData(): NewsLinkBlockData {
