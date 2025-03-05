@@ -40,6 +40,7 @@ export class Warning extends BaseEntity {
     severity: WarningSeverity;
 
     @Property({ type: "jsonb" })
+    @Field()
     @CrudField()
     sourceInfo: WarningSourceInfo;
 

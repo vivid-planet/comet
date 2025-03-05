@@ -627,6 +627,14 @@ type RedirectScope {
   domain: String!
 }
 
+type WarningSourceInfo {
+  rootEntityName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
+  targetId: String!
+  jsonPath: String!
+}
+
 type Warning {
   id: ID!
   createdAt: DateTime!
@@ -634,6 +642,7 @@ type Warning {
   message: String!
   type: String!
   severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
   status: WarningStatus!
 }
 
@@ -780,6 +789,14 @@ input NewsContentScopeInput {
 
 input RedirectScopeInput {
   domain: String!
+}
+
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
+  targetId: String!
+  jsonPath: String!
 }
 
 type Query {
@@ -1618,14 +1635,6 @@ input WarningInput {
   severity: WarningSeverity!
   sourceInfo: WarningSourceInfoInput!
   status: WarningStatus! = open
-}
-
-input WarningSourceInfoInput {
-  rootEntityName: String!
-  rootColumnName: String!
-  rootPrimaryKey: String!
-  targetId: String!
-  jsonPath: String!
 }
 
 input WarningUpdateInput {
