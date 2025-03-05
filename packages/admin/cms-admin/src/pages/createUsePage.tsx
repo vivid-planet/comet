@@ -1,7 +1,17 @@
 import { type ApolloError, gql, type TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, type SaveButtonProps } from "@comet/admin";
+import { LegacySaveButton, messages } from "@comet/admin";
 import isEqual from "lodash.isequal";
-import { createElement, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import {
+    type ComponentProps,
+    createElement,
+    type Dispatch,
+    type ReactNode,
+    type SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -445,7 +455,7 @@ interface PageSaveButtonProps {
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
 function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveError }: PageSaveButtonProps): JSX.Element {
-    const saveButtonProps: Omit<SaveButtonProps, "children | onClick"> = {
+    const saveButtonProps: Omit<ComponentProps<typeof LegacySaveButton>, "children" | "onClick"> = {
         color: "primary",
         variant: "contained",
         saving,
@@ -460,8 +470,8 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
     };
 
     return (
-        <SaveButton disabled={!hasChanges} onClick={handleSavePage} {...saveButtonProps}>
+        <LegacySaveButton disabled={!hasChanges} onClick={handleSavePage} {...saveButtonProps}>
             <FormattedMessage {...messages.save} />
-        </SaveButton>
+        </LegacySaveButton>
     );
 }

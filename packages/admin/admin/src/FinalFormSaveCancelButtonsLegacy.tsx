@@ -4,7 +4,7 @@ import { type ReactNode } from "react";
 import { useFormState } from "react-final-form";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
-import { SaveButton } from "./common/buttons/save/SaveButton";
+import { LegacySaveButton } from "./common/buttons/save/LegacySaveButton";
 import { createComponentSlot } from "./helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 import { useStackApi } from "./stack/Api";
@@ -13,7 +13,7 @@ export interface FinalFormSaveCancelButtonsLegacyProps
     extends ThemedComponentBaseProps<{
         root: "div";
         cancelButton: typeof CancelButton;
-        saveButton: typeof SaveButton;
+        saveButton: typeof LegacySaveButton;
     }> {
     cancelIcon?: ReactNode;
     saveIcon?: ReactNode;
@@ -35,7 +35,7 @@ const StyledCancelButton = createComponentSlot(CancelButton)<FinalFormSaveCancel
     `,
 );
 
-const StyledSaveButton = createComponentSlot(SaveButton)<FinalFormSaveCancelButtonsLegacyClassKey>({
+const StyledSaveButton = createComponentSlot(LegacySaveButton)<FinalFormSaveCancelButtonsLegacyClassKey>({
     componentName: "FinalFormSaveCancelButtonsLegacy",
     slotName: "saveButton",
 })(

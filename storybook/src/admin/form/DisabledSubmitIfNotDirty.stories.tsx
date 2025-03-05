@@ -1,4 +1,4 @@
-import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, FormSection, LegacySaveButton } from "@comet/admin";
 
 export default {
     title: "stories/form/FinalForm",
@@ -18,7 +18,7 @@ export const DisabledSubmitIfNotDirty = () => {
                         <Field label="First name" name="firstname" component={FinalFormInput} fullWidth />
                         <Field label="Last name" name="lastname" component={FinalFormInput} fullWidth />
                     </FormSection>
-                    <SaveButton type="submit" disabled={!dirty} />
+                    <LegacySaveButton type="submit" disabled={!dirty} />
                 </>
             )}
         </FinalForm>

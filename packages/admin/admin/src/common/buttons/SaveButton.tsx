@@ -4,71 +4,13 @@ import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import { type ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { messages } from "../../../messages";
-import { useSplitButtonContext } from "../split/useSplitButtonContext";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { messages } from "../../messages";
+import { useSplitButtonContext } from "./split/useSplitButtonContext";
 
 export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | ButtonClassKey;
 
 type OwnerState = Pick<SaveButtonProps, "variant" | "color"> & { displayState?: SaveButtonDisplayState };
-
-const Root = createComponentSlot(Button)<SaveButtonClassKey, OwnerState>({
-    componentName: "SaveButton",
-    slotName: "root",
-    classesResolver(ownerState) {
-        return [
-            ownerState.displayState === "saving" && "saving",
-            ownerState.displayState === "error" && "error",
-            ownerState.displayState === "success" && "success",
-            ownerState.displayState === "conflict" && "conflict",
-        ];
-    },
-})(
-    ({ ownerState, theme }) => css`
-        ${ownerState.displayState === "saving" &&
-        css`
-            &:disabled {
-                ${ownerState.variant === "contained" &&
-                ownerState.color === "primary" &&
-                css`
-                    color: ${theme.palette.primary.contrastText};
-                    background-color: ${theme.palette.primary.main};
-                `};
-                ${ownerState.variant === "contained" &&
-                ownerState.color === "secondary" &&
-                css`
-                    color: ${theme.palette.secondary.contrastText};
-                    background-color: ${theme.palette.secondary.main};
-                `}
-            }
-        `}
-        ${ownerState.displayState === "error" &&
-        css`
-            &:disabled {
-                color: ${theme.palette.error.contrastText};
-                background-color: ${theme.palette.error.light};
-            }
-        `}
-        ${ownerState.displayState === "success" &&
-        css`
-            &:disabled {
-                color: ${theme.palette.success.contrastText};
-                background-color: ${theme.palette.success.light};
-            }
-        `}
-        ${ownerState.displayState === "conflict" &&
-        css`
-            color: ${theme.palette.error.contrastText};
-            background-color: ${theme.palette.error.main};
-            &:hover {
-                background-color: ${theme.palette.error.dark};
-            }
-            &.${buttonGroupClasses.grouped}:not(:last-child) {
-                border-right-color: ${theme.palette.error.dark};
-            }
-        `}
-    `,
-);
 
 export interface SaveButtonProps extends ButtonProps {
     saving?: boolean;
@@ -206,6 +148,65 @@ export function SaveButton(inProps: SaveButtonProps) {
         </Root>
     );
 }
+
+const Root = createComponentSlot(Button)<SaveButtonClassKey, OwnerState>({
+    componentName: "SaveButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [
+            ownerState.displayState === "saving" && "saving",
+            ownerState.displayState === "error" && "error",
+            ownerState.displayState === "success" && "success",
+            ownerState.displayState === "conflict" && "conflict",
+        ];
+    },
+})(
+    ({ ownerState, theme }) => css`
+        ${ownerState.displayState === "saving" &&
+        css`
+            &:disabled {
+                ${ownerState.variant === "contained" &&
+                ownerState.color === "primary" &&
+                css`
+                    color: ${theme.palette.primary.contrastText};
+                    background-color: ${theme.palette.primary.main};
+                `};
+                ${ownerState.variant === "contained" &&
+                ownerState.color === "secondary" &&
+                css`
+                    color: ${theme.palette.secondary.contrastText};
+                    background-color: ${theme.palette.secondary.main};
+                `}
+            }
+        `}
+        ${ownerState.displayState === "error" &&
+        css`
+            &:disabled {
+                color: ${theme.palette.error.contrastText};
+                background-color: ${theme.palette.error.light};
+            }
+        `}
+        ${ownerState.displayState === "success" &&
+        css`
+            &:disabled {
+                color: ${theme.palette.success.contrastText};
+                background-color: ${theme.palette.success.light};
+            }
+        `}
+        ${ownerState.displayState === "conflict" &&
+        css`
+            color: ${theme.palette.error.contrastText};
+            background-color: ${theme.palette.error.main};
+            &:hover {
+                background-color: ${theme.palette.error.dark};
+            }
+            &.${buttonGroupClasses.grouped}:not(:last-child) {
+                border-right-color: ${theme.palette.error.dark};
+            }
+        `}
+    `,
+);
+
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminSaveButton: SaveButtonClassKey;

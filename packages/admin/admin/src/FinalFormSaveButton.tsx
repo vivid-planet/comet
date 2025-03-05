@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { SaveButton } from "./common/buttons/save/SaveButton";
+import { LegacySaveButton } from "./common/buttons/save/LegacySaveButton";
 import { messages } from "./messages";
 
 interface FinalFormSaveButtonProps {
@@ -17,7 +17,7 @@ export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.s
     const isDisabled = pristine || hasValidationErrors || submitting;
 
     return (
-        <SaveButton
+        <LegacySaveButton
             hasConflict={hasConflict}
             disabled={isDisabled}
             color="primary"
@@ -29,6 +29,6 @@ export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.s
             }}
         >
             {message}
-        </SaveButton>
+        </LegacySaveButton>
     );
 };

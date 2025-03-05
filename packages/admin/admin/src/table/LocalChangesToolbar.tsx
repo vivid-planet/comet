@@ -1,7 +1,7 @@
 import { Toolbar } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { SaveButton } from "../common/buttons/save/SaveButton";
+import { LegacySaveButton } from "../common/buttons/save/LegacySaveButton";
 import { Loading } from "../common/Loading";
 import { type ITableLocalChangesApi } from "./TableLocalChanges";
 
@@ -26,7 +26,7 @@ export const TableLocalChangesToolbar = ({ tableLocalChangesApi, localChangesCou
                 <Loading behavior="fillParent" />
             ) : (
                 <>
-                    <SaveButton onClick={handleSaveClick} />
+                    <LegacySaveButton onClick={handleSaveClick} />
                     <FormattedMessage
                         values={{ count: localChangesCount }}
                         id="comet.table.localChangesToolbar.unsavedItems"

@@ -3,7 +3,7 @@ import { type PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { SaveButton } from "./common/buttons/save/SaveButton";
+import { LegacySaveButton } from "./common/buttons/save/LegacySaveButton";
 import { SplitButton, type SplitButtonProps } from "./common/buttons/split/SplitButton";
 import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
@@ -40,7 +40,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
     }
     return (
         <SplitButton {...splitButtonProps} disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
-            <SaveButton
+            <LegacySaveButton
                 // setting the color to "error" is only necessary for the SplitButton and doesn't affect the SaveButton
                 color={hasConflict ? "error" : "primary"}
                 variant="contained"
@@ -56,8 +56,8 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
                 }}
             >
                 <FormattedMessage {...messages.save} />
-            </SaveButton>
-            <SaveButton
+            </LegacySaveButton>
+            <LegacySaveButton
                 color="primary"
                 variant="contained"
                 saving={submitting}
@@ -75,7 +75,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
                 }}
             >
                 <FormattedMessage {...messages.saveAndGoBack} />
-            </SaveButton>
+            </LegacySaveButton>
         </SplitButton>
     );
 };

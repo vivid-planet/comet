@@ -1,7 +1,7 @@
 import "react-image-crop/dist/ReactCrop.css";
 
 import { useApolloClient } from "@apollo/client";
-import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FormSection, LegacySaveButton, messages } from "@comet/admin";
 import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
@@ -210,7 +210,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                         </DialogContent>
                         <DialogActions>
                             <CancelButton type="button" onClick={onClose} />
-                            <SaveButton type="submit" />
+                            <LegacySaveButton type="submit" />
                         </DialogActions>
                     </DialogFormWrapper>
                 </Dialog>

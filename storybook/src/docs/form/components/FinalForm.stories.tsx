@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
-import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, FormSection, LegacySaveButton } from "@comet/admin";
 import { useFormApiRef } from "@comet/admin/lib/FinalForm";
 import { type VoidFunctionComponent } from "react";
 
@@ -21,7 +21,7 @@ export const BasicFinalForm = {
                     <Field label="First name" name="firstname" placeholder="John" component={FinalFormInput} fullWidth />
                     <Field label="Last name" name="lastname" placeholder="Doe" component={FinalFormInput} fullWidth />
                 </FormSection>
-                <SaveButton type="submit" />
+                <LegacySaveButton type="submit" />
             </FinalForm>
         );
     },
@@ -129,7 +129,7 @@ export const SubmitMutationBestPractices = () => {
                     <Field label="First name" name="firstname" placeholder="John" component={FinalFormInput} fullWidth />
                     <Field label="Last name" name="lastname" placeholder="Doe" component={FinalFormInput} fullWidth />
                 </FormSection>
-                <SaveButton type="submit" />
+                <LegacySaveButton type="submit" />
             </FinalForm>
         );
     };

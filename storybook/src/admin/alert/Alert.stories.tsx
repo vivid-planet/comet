@@ -1,4 +1,4 @@
-import { Alert, OkayButton, SaveButton } from "@comet/admin";
+import { Alert, LegacySaveButton, OkayButton } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -140,7 +140,7 @@ export const Alerts = () => {
                             <Typography>Notification Text</Typography>
                         </Alert>
                         <Typography variant="h4">Other Actions</Typography>
-                        <Alert title="Title" action={<SaveButton />}>
+                        <Alert title="Title" action={<LegacySaveButton />}>
                             Text
                         </Alert>
                         <Alert severity="warning" action={<OkayButton />} />

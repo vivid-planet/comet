@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, LegacySaveButton, Loading } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import {
     // eslint-disable-next-line no-restricted-imports
@@ -185,7 +185,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                             <CancelButton onClick={handleDialogClose}>
                                 <FormattedMessage id="comet.userPermissions.close" defaultMessage="Close" />
                             </CancelButton>
-                            {!disabled && <SaveButton type="submit" />}
+                            {!disabled && <LegacySaveButton type="submit" />}
                         </DialogActions>
                     </>
                 )}

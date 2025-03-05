@@ -1,4 +1,4 @@
-import { Button, CancelButton, messages, SaveButton } from "@comet/admin";
+import { Button, CancelButton, LegacySaveButton, messages } from "@comet/admin";
 import { Reload } from "@comet/admin-icons";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
 import {
@@ -67,9 +67,9 @@ export const ImportFromPicsum = () => {
                         <Button variant="textDark" startIcon={<Reload />} onClick={handleShuffle}>
                             <FormattedMessage id="pages.dam.importFromPicsum.dialog.shuffle" defaultMessage="Shuffle" />
                         </Button>
-                        <SaveButton onClick={handleSave}>
+                        <LegacySaveButton onClick={handleSave}>
                             <FormattedMessage {...messages.save} />
-                        </SaveButton>
+                        </LegacySaveButton>
                     </DialogActions>
                 </div>
             </Dialog>

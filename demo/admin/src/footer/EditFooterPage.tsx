@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, LegacySaveButton, MainContent, messages, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
@@ -136,7 +136,7 @@ export function EditFooterPage(): JSX.Element | null {
                 </ToolbarTitleItem>
                 <FillSpace />
                 <ToolbarActions>
-                    <SaveButton
+                    <LegacySaveButton
                         disabled={!hasChanges}
                         color="primary"
                         variant="contained"
@@ -146,7 +146,7 @@ export function EditFooterPage(): JSX.Element | null {
                         startIcon={<Save />}
                     >
                         <FormattedMessage {...messages.save} />
-                    </SaveButton>
+                    </LegacySaveButton>
                 </ToolbarActions>
             </StackToolbar>
             <MainContent disablePaddingBottom>

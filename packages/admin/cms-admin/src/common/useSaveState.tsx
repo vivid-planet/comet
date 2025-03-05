@@ -1,5 +1,5 @@
-import { messages, SaveButton, type SaveButtonProps } from "@comet/admin";
-import { type ReactNode, useCallback, useState } from "react";
+import { LegacySaveButton, messages } from "@comet/admin";
+import { type ComponentProps, type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SaveStateOptions<TData> {
@@ -84,7 +84,7 @@ interface SaveStateSaveButtonProps {
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
 function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
-    const saveButtonProps: Omit<SaveButtonProps, "children" | "onClick"> = {
+    const saveButtonProps: Omit<ComponentProps<typeof LegacySaveButton>, "children" | "onClick"> = {
         color: "primary",
         variant: "contained",
         saving,
@@ -98,8 +98,8 @@ function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }:
     };
 
     return (
-        <SaveButton disabled={!hasChanges} onClick={() => handleSaveClick(true)} {...saveButtonProps}>
+        <LegacySaveButton disabled={!hasChanges} onClick={() => handleSaveClick(true)} {...saveButtonProps}>
             <FormattedMessage {...messages.save} />
-        </SaveButton>
+        </LegacySaveButton>
     );
 }
