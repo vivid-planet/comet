@@ -70,7 +70,7 @@ const movePageTreeNodesByNeighboursMutation = gql`
     }
 `;
 
-const restSlugMutation = gql`
+const resetSlugMutation = gql`
     mutation ResetSlug($id: ID!, $slug: String!) {
         updatePageTreeNodeSlug(id: $id, slug: $slug) {
             id
@@ -294,7 +294,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
                                 });
 
                                 await client.mutate<GQLResetSlugMutation, GQLResetSlugMutationVariables>({
-                                    mutation: restSlugMutation,
+                                    mutation: resetSlugMutation,
                                     variables: {
                                         id: pageToUndo.id,
                                         slug: pageToUndo.slug,
