@@ -14,7 +14,7 @@ import {
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Card, CardContent, Link, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import { type ReactNode, useCallback } from "react";
@@ -87,9 +87,9 @@ const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
                             defaultMessage="Failed to load file. <link>Go to Assets</link>"
                             values={{
                                 link: (chunks) => (
-                                    <Link to={`${scopeMatch.url}/assets`} component={RouterLink}>
+                                    <RouterLink style={{ outline: "5px solid green" }} to={`${scopeMatch.url}/assets`}>
                                         {chunks}
-                                    </Link>
+                                    </RouterLink>
                                 ),
                             }}
                         />
