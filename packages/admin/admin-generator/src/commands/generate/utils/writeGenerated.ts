@@ -27,9 +27,11 @@ export async function writeGenerated(filePath: string, contents: string): Promis
             .join(".");
 
         console.log(`❌ Linting error in ${filePath}: \n${errorMessage}`);
+    } else if (lintResult[0].output != null) {
+        await fs.writeFile(filePath, lintResult[0].output);
+    } else {
+        console.error("No output from linting");
     }
 
-    const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
-    await fs.writeFile(filePath, output ?? contents);
     console.log(`generated ${filePath}`);
 }
