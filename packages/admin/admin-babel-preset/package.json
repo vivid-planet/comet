@@ -28,6 +28,6 @@
         "registry": "https://registry.npmjs.org"
     },
     "engines": {
-        "node": "^22.0.0"
+        "node": ">=22.0.0"
     }
 }
