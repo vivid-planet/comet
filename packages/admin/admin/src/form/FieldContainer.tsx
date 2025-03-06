@@ -200,6 +200,9 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     slotName: "inputContainer",
 })(
     ({ ownerState }) => css`
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
         css`
@@ -207,7 +210,6 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
                 flex-grow: 1;
             }
         `}
-
         ${ownerState.variant === "horizontal" &&
         css`
             @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
