@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 export const StandaloneHeadingBlock = createCompositeBlock(
     {
         name: "StandaloneHeading",
-        displayName: <FormattedMessage id="standaloneHeading.displayName" defaultMessage="Heading" />,
+        displayName: HeadingBlock.displayName,
         blocks: {
             heading: {
                 block: HeadingBlock,

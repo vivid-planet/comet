@@ -43,6 +43,7 @@ export type FieldSetClassKey =
 type OwnerState = {
     disablePadding: boolean;
     hiddenSummary: boolean;
+    collapsible: boolean;
 };
 
 export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
@@ -66,6 +67,7 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
     const ownerState: OwnerState = {
         disablePadding,
         hiddenSummary: !title,
+        collapsible,
     };
 
     return (
@@ -83,9 +85,11 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
             {...restProps}
         >
             {!ownerState.hiddenSummary && (
-                <Summary expandIcon={collapsible && <ChevronRight />} {...slotProps?.summary}>
+                <Summary expandIcon={collapsible ? <ChevronRight /> : undefined} disabled={!collapsible} {...slotProps?.summary}>
                     <HeaderColumn {...slotProps?.headerColumn}>
-                        <Title {...slotProps?.title}>{title}</Title>
+                        <Title ownerState={ownerState} {...slotProps?.title}>
+                            {title}
+                        </Title>
                         <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
                     </HeaderColumn>
                     <Placeholder {...slotProps?.placeholder} />
@@ -115,10 +119,11 @@ const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
         display: flex;
         flex-direction: row-reverse;
         padding: 0 10px;
-        height: 80px;
+        height: 60px;
 
         ${theme.breakpoints.up("sm")} {
             padding: 0 20px;
+            height: 80px;
         }
     `,
 );
@@ -140,18 +145,25 @@ const HeaderColumn = createComponentSlot("div")<FieldSetClassKey>({
     `,
 );
 
-const Title = createComponentSlot("div")<FieldSetClassKey>({
+const Title = createComponentSlot("div")<FieldSetClassKey, OwnerState>({
     componentName: "FieldSet",
     slotName: "title",
 })(
-    ({ theme }) => css`
-        display: flex;
-        align-items: center;
-        font-weight: ${theme.typography.fontWeightMedium};
-        font-size: 16px;
-        text-transform: uppercase;
-        color: ${theme.palette.text.primary};
-    `,
+    ({ theme, ownerState }) =>
+        css`
+            display: flex;
+            align-items: center;
+            font-weight: ${theme.typography.fontWeightMedium};
+            font-size: 16px;
+            text-transform: uppercase;
+            color: ${theme.palette.text.primary};
+
+            ${!ownerState.collapsible &&
+            css`
+                // MUIAccordionSummary inherits from ButtonBase. Overriding the styling of a disabled button is necessary to align with the design.
+                opacity: 1;
+            `}
+        `,
 );
 
 const SupportText = createComponentSlot("div")<FieldSetClassKey>({
