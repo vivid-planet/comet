@@ -1,7 +1,7 @@
 "use client";
 import { PropsWithData } from "@comet/cms-site";
 import { InternalLinkBlockData } from "@src/blocks.generated";
-import { createSiteUrl } from "@src/util/createSiteUrl";
+import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
@@ -19,14 +19,15 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
         throw new Error("InternalLinkBlock: targetPage.scope is required");
     }
 
+    const pathWithAnchor = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+
     return (
         <Link
-            href={createSiteUrl({
+            href={createSitePath({
                 scope: {
                     language: (targetPage.scope as Record<string, string>).language,
                 },
-                path: targetPage.path,
-                anchor: targetPageAnchor,
+                path: pathWithAnchor,
             })}
             title={title}
             className={className}

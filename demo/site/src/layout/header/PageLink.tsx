@@ -1,6 +1,6 @@
 "use client";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { createSiteUrl } from "@src/util/createSiteUrl";
+import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
@@ -36,7 +36,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
     } else if (page.documentType === "Page") {
         return (
             <Link
-                href={createSiteUrl({
+                href={createSitePath({
                     path: page.path,
                     scope: {
                         language: page.scope.language,
@@ -50,7 +50,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
     } else if (page.documentType === "PredefinedPage") {
         return (
             <Link
-                href={createSiteUrl({
+                href={createSitePath({
                     path: page.path,
                     scope: page.scope,
                 })}
