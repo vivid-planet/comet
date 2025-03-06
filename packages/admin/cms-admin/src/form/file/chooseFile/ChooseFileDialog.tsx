@@ -76,12 +76,6 @@ const renderDamLabel = (
         <StyledStackLink
             pageName="folder"
             payload={row.id}
-            style={{
-                width: "100%",
-                height: "100%",
-                textDecoration: "none",
-                color: `${greyPalette[900]}`,
-            }}
             onClick={() => {
                 filterApi.formApi.change("searchText", undefined);
             }}
