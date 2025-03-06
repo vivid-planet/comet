@@ -349,8 +349,8 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0
       nest-commander:
-        specifier: ^3.16.0
-        version: 3.16.0(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)(@types/inquirer@8.2.10)(typescript@5.7.3)
+        specifier: ^3.16.1
+        version: 3.16.1(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)(@types/inquirer@8.2.10)(typescript@5.7.3)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1970,8 +1970,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       nest-commander:
-        specifier: ^3.16.0
-        version: 3.16.0(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)(@types/inquirer@8.2.10)(typescript@5.7.3)
+        specifier: ^3.16.1
+        version: 3.16.1(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)(@types/inquirer@8.2.10)(typescript@5.7.3)
       npm-run-all2:
         specifier: ^5.0.2
         version: 5.0.2
@@ -13127,8 +13127,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nest-commander@3.16.0:
-    resolution: {integrity: sha512-sBNPKZY6RItDaQE1fncAgTxWdZD63dMfCjnndsRpH8OHuJP9cRO2xEsVkzbhPut/vAU5QmtTJ5w9W3IVhR5hVw==}
+  nest-commander@3.16.1:
+    resolution: {integrity: sha512-04AqAVqMKtXKvJzkjSM3fERPSY8V78zvi5pWzXyegXdmovHGnJB+/l/YUNWa1EZc0ER6tqa6eI5tYFtS4ramjQ==}
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
       '@nestjs/core': ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
@@ -31275,7 +31275,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nest-commander@3.16.0(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)(@types/inquirer@8.2.10)(typescript@5.7.3):
+  nest-commander@3.16.1(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)(@types/inquirer@8.2.10)(typescript@5.7.3):
     dependencies:
       '@fig/complete-commander': 3.2.0(commander@11.1.0)
       '@golevelup/nestjs-discovery': 4.0.3(@nestjs/common@11.0.11(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.11)
