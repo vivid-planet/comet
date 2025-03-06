@@ -1,8 +1,8 @@
 import { AddNoCircle } from "@comet/admin-icons";
-import { Button } from "@mui/material";
 import { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { messages } from "../messages";
 import { ISelectionApi } from "../SelectionApi";
 
