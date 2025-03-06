@@ -1,4 +1,4 @@
-type CreateSiteUrlOptions = {
+type CreateSitePathOptions = {
     path: string;
     scope: {
         language: string;
@@ -10,7 +10,7 @@ type CreateSiteUrlOptions = {
  *
  * @return {string} The resolved URL: /{scope.language}/path
  */
-export const createSitePath = ({ path, scope }: CreateSiteUrlOptions) => {
+export const createSitePath = ({ path, scope }: CreateSitePathOptions) => {
     if (path.startsWith("/")) {
         return `/${scope.language}${path}`;
     }
