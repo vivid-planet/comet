@@ -11,7 +11,7 @@ FileUploadsModule.register({
     /* ... */
     download: {
         /* ... */
-        resolver: false,
+        createFieldResolvers: false,
     },
 });
 ```

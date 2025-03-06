@@ -14,6 +14,6 @@ export interface FileUploadsConfig {
          *
          * @default true
          */
-        resolver?: boolean;
+        createFieldResolvers?: boolean;
     };
 }

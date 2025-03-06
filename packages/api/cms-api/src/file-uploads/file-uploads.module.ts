@@ -39,7 +39,7 @@ export class FileUploadsModule {
             const FileUploadsDownloadController = createFileUploadsDownloadController({ public: options.download.public ?? false });
             controllers.push(FileUploadsDownloadController);
 
-            const shouldAddResolver = options.download.resolver ?? true;
+            const shouldAddResolver = options.download.createFieldResolvers ?? true;
 
             if (shouldAddResolver) {
                 providers.push(FileUploadsResolver);
