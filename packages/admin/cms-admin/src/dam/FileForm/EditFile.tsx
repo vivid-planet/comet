@@ -87,7 +87,7 @@ const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
                             defaultMessage="Failed to load file. <link>Go to Assets</link>"
                             values={{
                                 link: (chunks) => (
-                                    <RouterLink style={{ outline: "5px solid green" }} to={`${scopeMatch.url}/assets`}>
+                                    <RouterLink to={`${scopeMatch.url}/assets`}>
                                         {chunks}
                                     </RouterLink>
                                 ),
