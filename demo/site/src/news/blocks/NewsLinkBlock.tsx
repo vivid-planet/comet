@@ -14,9 +14,7 @@ function NewsLinkBlock({ data: { news }, children, title, className }: PropsWith
     return (
         <Link
             href={createSitePath({
-                scope: {
-                    language: news.scope.language,
-                },
+                scope: news.scope,
                 path: `/news/${news.slug}`,
             })}
             title={title}

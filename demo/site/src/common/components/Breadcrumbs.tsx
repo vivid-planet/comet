@@ -6,11 +6,7 @@ import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import * as sc from "./Breadcrumbs.sc";
 import { GridRoot } from "./Breadcrumbs.sc";
 
-type BreadcrumbsProps = GQLBreadcrumbsFragment & {
-    scope: {
-        language: string;
-    };
-};
+type BreadcrumbsProps = GQLBreadcrumbsFragment;
 const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
     return (
         <GridRoot>
@@ -21,9 +17,7 @@ const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
                             <sc.Link
                                 href={createSitePath({
                                     path: parentNode.path,
-                                    scope: {
-                                        language: scope.language,
-                                    },
+                                    scope: scope,
                                 })}
                             >
                                 {parentNode.name}
@@ -36,9 +30,7 @@ const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
                     <sc.Link
                         href={createSitePath({
                             path: path,
-                            scope: {
-                                language: scope.language,
-                            },
+                            scope: scope,
                         })}
                     >
                         {name}

@@ -1,6 +1,7 @@
 "use client";
 import { PropsWithData } from "@comet/cms-site";
 import { InternalLinkBlockData } from "@src/blocks.generated";
+import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
@@ -24,9 +25,7 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
     return (
         <Link
             href={createSitePath({
-                scope: {
-                    language: (targetPage.scope as Record<string, string>).language,
-                },
+                scope: targetPage.scope as GQLPageTreeNodeScope,
                 path: pathWithAnchor,
             })}
             title={title}

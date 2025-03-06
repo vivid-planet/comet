@@ -15,9 +15,7 @@ export function NewsList({ newsList }: { newsList: GQLNewsListFragment }) {
                     <Card
                         key={news.id}
                         href={createSitePath({
-                            scope: {
-                                language: news.scope.language,
-                            },
+                            scope: news.scope,
                             path: `/news/${news.slug}`,
                         })}
                     >

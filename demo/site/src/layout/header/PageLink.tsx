@@ -38,9 +38,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
             <Link
                 href={createSitePath({
                     path: page.path,
-                    scope: {
-                        language: page.scope.language,
-                    },
+                    scope: page.scope,
                 })}
                 className={className}
             >

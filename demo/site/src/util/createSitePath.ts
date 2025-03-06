@@ -1,8 +1,8 @@
+import { GQLPageTreeNodeScope } from "@src/graphql.generated";
+
 type CreateSitePathOptions = {
     path: string;
-    scope: {
-        language: string;
-    };
+    scope: Pick<GQLPageTreeNodeScope, "language">;
 };
 
 /**

@@ -77,7 +77,7 @@ export default async function Page({ params }: PageProps) {
                         if (internalLink.targetPage) {
                             destination = createSitePath({
                                 path: internalLink.targetPage.path,
-                                scope: { language: (internalLink.targetPage.scope as GQLPageTreeNodeScope).language },
+                                scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
                             });
                         }
                         break;

@@ -17,9 +17,7 @@ export const NewsListBlock = withPreview(
                     <li key={news.id}>
                         <Link
                             href={createSitePath({
-                                scope: {
-                                    language: news.scope.language,
-                                },
+                                scope: news.scope,
                                 path: `/news/${news.slug}`,
                             })}
                         >
