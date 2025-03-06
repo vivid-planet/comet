@@ -160,6 +160,7 @@ const Title = createComponentSlot("div")<FieldSetClassKey, OwnerState>({
 
             ${!ownerState.collapsible &&
             css`
+                // MUIAccordionSummary inherits from ButtonBase. Overriding the styling of a disabled button is necessary to align with the design.
                 opacity: 1;
             `}
         `,
