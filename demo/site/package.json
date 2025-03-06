@@ -39,7 +39,7 @@
         "react-intl": "^6.8.9",
         "redraft": "^0.10.2",
         "styled-components": "^6.1.15",
-        "swiper": "^11.2.4"
+        "swiper": "^11.2.5"
     },
     "devDependencies": {
         "@babel/core": "^7.26.9",
