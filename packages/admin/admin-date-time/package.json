@@ -39,7 +39,7 @@
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^6.4.6",
         "@types/react": "^18.3.18",
-        "@types/react-date-range": "^1.4.9",
+        "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^18.3.5",
         "eslint": "^9.20.1",
         "final-form": "^4.20.10",
