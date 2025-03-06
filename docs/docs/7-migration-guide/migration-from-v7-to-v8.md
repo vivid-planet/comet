@@ -33,10 +33,15 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 + 22
 ```
 
+```diff title=package.json
+- "@types/node": "^20.0.0",
++ "@types/node": "^22.0.0",
+```
+
 :::note Codemod available
 
 ```sh
-npx @comet/upgrade v8/replace-node-with-v22-in-nvmrc.ts
+npx @comet/upgrade v8/replace-node-with-v22-locally.ts
 ```
 
 :::
