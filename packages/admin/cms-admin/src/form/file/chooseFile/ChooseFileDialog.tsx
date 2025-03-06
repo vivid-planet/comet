@@ -1,4 +1,4 @@
-import { greyPalette, StackLink, SubRoute } from "@comet/admin";
+import { StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
 import {
     Button,

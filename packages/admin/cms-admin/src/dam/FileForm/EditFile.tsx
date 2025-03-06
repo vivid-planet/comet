@@ -86,11 +86,7 @@ const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
                             id="comet.dam.file.failedToLoad"
                             defaultMessage="Failed to load file. <link>Go to Assets</link>"
                             values={{
-                                link: (chunks) => (
-                                    <RouterLink to={`${scopeMatch.url}/assets`}>
-                                        {chunks}
-                                    </RouterLink>
-                                ),
+                                link: (chunks) => <RouterLink to={`${scopeMatch.url}/assets`}>{chunks}</RouterLink>,
                             }}
                         />
                     </Typography>
