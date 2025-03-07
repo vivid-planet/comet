@@ -1,5 +1,4 @@
 import { LoggerService } from "@nestjs/common";
-import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
 import { ImporterEntityClass } from "@src/importer/entities/base-import-target.entity";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
@@ -7,37 +6,25 @@ import { Transform as StreamTransform, TransformCallback } from "stream";
 
 import { ImporterPipe, PipeData, ValidationError } from "../importer-pipe.type";
 
-type DataTransformOptions = {
-    fields: ImportFieldMetadata[];
-};
 type PipeDataAndErrors = {
     data: PipeData;
     errors: ValidationError[];
 };
 
 export class DataTransformerPipe implements ImporterPipe {
-    private readonly options: DataTransformOptions;
-
-    constructor(options: DataTransformOptions, private readonly entity: ImporterEntityClass) {
-        this.options = options;
-    }
+    constructor(private readonly entity: ImporterEntityClass) {}
 
     getPipe(runLogger: LoggerService) {
-        return new DataTransformer(this.options, runLogger, this.entity);
+        return new DataTransformer(runLogger, this.entity);
     }
 }
 
 type ParserPipeData = Record<string, string>;
 
 export class DataTransformer extends StreamTransform {
-    constructor(
-        private readonly options: DataTransformOptions,
-        private readonly logger: LoggerService,
-        private readonly entity: ImporterEntityClass,
-    ) {
+    constructor(private readonly logger: LoggerService, private readonly entity: ImporterEntityClass) {
         super({ writableObjectMode: true, objectMode: true });
         this.logger = logger;
-        this.options = options;
     }
 
     async _transform(inputData: ParserPipeData, encoding: BufferEncoding, callback: TransformCallback) {

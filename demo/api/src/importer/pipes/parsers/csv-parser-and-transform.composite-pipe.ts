@@ -17,12 +17,7 @@ export class CsvParseAndTransformPipes implements CompositeImporterPipe {
 
     getPipes(logger: LoggerService, parserOptions: ParserOptions): Transform[] {
         const parserPipe = new CsvParsePipe(parserOptions, this.fields).getPipe();
-        const transformPipe = new DataTransformerPipe(
-            {
-                fields: this.fields,
-            },
-            this.targetEntity,
-        ).getPipe(logger);
+        const transformPipe = new DataTransformerPipe(this.targetEntity).getPipe(logger);
 
         const pipes: Transform[] = [parserPipe, transformPipe];
         return pipes;
