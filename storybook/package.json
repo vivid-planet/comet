@@ -48,7 +48,7 @@
         "@babel/cli": "^7.26.4",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@faker-js/faker": "^9.5.1",
+        "@faker-js/faker": "^9.6.0",
         "@graphql-mocks/network-msw": "^0.3.0",
         "@storybook/addon-actions": "^8.6.4",
         "@storybook/addon-controls": "^8.6.4",
