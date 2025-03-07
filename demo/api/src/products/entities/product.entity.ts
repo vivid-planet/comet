@@ -1,11 +1,26 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
 import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
-import { Collection, Entity, Enum, ManyToMany, ManyToOne, OneToMany, OneToOne, OptionalProps, Property, Ref, types } from "@mikro-orm/core";
-import { Field, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { BaseImportTargetEntity } from "@src/importer/entities/base-import-target.entity";
+import {
+    BaseEntity,
+    Collection,
+    Entity,
+    Enum,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+    Ref,
+    types,
+} from "@mikro-orm/core";
+import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { ImportEntity } from "@src/importer/import-entity.type";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
+import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
 import { ProductColor } from "./product-color.entity";
@@ -66,8 +81,12 @@ export class ProductPriceRange {
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseImportTargetEntity<Product, "id"> {
+export class Product extends BaseEntity<Product, "id"> implements ImportEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
+
+    @PrimaryKey({ type: "uuid" })
+    @Field(() => ID)
+    id: string = uuid();
 
     @Property()
     @Field()
