@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { parse, parseISO } from "date-fns";
 
-import { ImporterEntityClass } from "../entities/base-import-target.entity";
+import { ImporterInputClass } from "../importer-input.type";
 
 export enum Type {
     String = "String",
@@ -71,6 +71,6 @@ export const CsvColumn = (fieldName: string | number, parsingOptions: Partial<Pa
         })(target, key);
     };
 };
-export const getFields = (entity: ImporterEntityClass) => {
+export const getFields = (entity: ImporterInputClass) => {
     return Reflect.getOwnMetadata(metadataKey, entity) as ImportFieldMetadata[];
 };

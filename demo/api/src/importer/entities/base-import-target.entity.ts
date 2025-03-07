@@ -1,4 +1,4 @@
-import { BaseEntity, Constructor, Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 } from "uuid";
 
@@ -8,8 +8,6 @@ export interface BaseImportInterface {
     updatedAt?: Date;
     deletedAt?: Date;
 }
-
-export type ImporterEntityClass = Constructor;
 
 @ObjectType({ isAbstract: true, description: "Base import entity" })
 @Entity({ abstract: true })

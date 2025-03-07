@@ -1,13 +1,13 @@
 import { Collection } from "@mikro-orm/core";
 import { CsvColumn, Type } from "@src/importer/decorators/csv-column.decorator";
-import { TargetEntity } from "@src/importer/decorators/target-entity.decorator";
+import { TargetInput } from "@src/importer/decorators/target-input.decorator";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "./entities/product.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { ProductType } from "./entities/product-type.enum";
 
-@TargetEntity()
+@TargetInput()
 export class ProductImporterInput {
     @CsvColumn("title")
     @IsString()

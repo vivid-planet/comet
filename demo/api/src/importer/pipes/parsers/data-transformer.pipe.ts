@@ -1,5 +1,5 @@
 import { LoggerService } from "@nestjs/common";
-import { ImporterEntityClass } from "@src/importer/entities/base-import-target.entity";
+import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Transform as StreamTransform, TransformCallback } from "stream";
@@ -12,17 +12,17 @@ type PipeDataAndErrors = {
 };
 
 export class DataTransformerPipe implements ImporterPipe {
-    constructor(private readonly entity: ImporterEntityClass) {}
+    constructor(private readonly inputClass: ImporterInputClass) {}
 
     getPipe(runLogger: LoggerService) {
-        return new DataTransformer(runLogger, this.entity);
+        return new DataTransformer(runLogger, this.inputClass);
     }
 }
 
 type ParserPipeData = Record<string, string>;
 
 export class DataTransformer extends StreamTransform {
-    constructor(private readonly logger: LoggerService, private readonly entity: ImporterEntityClass) {
+    constructor(private readonly logger: LoggerService, private readonly inputClass: ImporterInputClass) {
         super({ writableObjectMode: true, objectMode: true });
         this.logger = logger;
     }
@@ -50,7 +50,7 @@ export class DataTransformer extends StreamTransform {
     }
 
     async convertToInstanceAndValidate(data: PipeData): Promise<PipeDataAndErrors> {
-        const instance = plainToInstance(this.entity, data) as Record<string, unknown>;
+        const instance = plainToInstance(this.inputClass, data) as Record<string, unknown>;
         const classValidationErrors = await validate(instance);
         const errors = classValidationErrors.map((error) => {
             const constraints = error.constraints || {};

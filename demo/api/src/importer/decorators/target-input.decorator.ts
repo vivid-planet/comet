@@ -1,6 +1,6 @@
 import { FilterQuery } from "@mikro-orm/core";
 
-import { ImporterEntityClass } from "../entities/base-import-target.entity";
+import { ImporterInputClass } from "../importer-input.type";
 import { PipeData } from "../pipes/importer-pipe.type";
 
 export type PreProcessor = (inputData: PipeData) => Record<string, unknown>;
@@ -10,18 +10,18 @@ interface Options {
     recordProcessors?: PreProcessorMap;
     getFindCondition?: GetFindConditionCallback;
 }
-export interface TargetEntityMetadata extends Options {
+export interface TargetInputMetadata extends Options {
     name: string;
 }
-export function TargetEntity(options: Options = {}): ClassDecorator {
+export function TargetInput(options: Options = {}): ClassDecorator {
     const { recordProcessors, getFindCondition } = options;
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
-        const metadata: TargetEntityMetadata = { name: target.name, recordProcessors, getFindCondition };
-        Reflect.defineMetadata(`data:TargetEntity`, metadata, target);
+        const metadata: TargetInputMetadata = { name: target.name, recordProcessors, getFindCondition };
+        Reflect.defineMetadata(`data:TargetInput`, metadata, target);
     };
 }
-export const getTargetEntityMetadata = (entity: ImporterEntityClass) => {
-    const reflectMetadata: TargetEntityMetadata = Reflect.getOwnMetadata(`data:TargetEntity`, entity);
+export const getTargetInputMetadata = (input: ImporterInputClass) => {
+    const reflectMetadata: TargetInputMetadata = Reflect.getOwnMetadata(`data:TargetInput`, input);
     return reflectMetadata;
 };

@@ -1,7 +1,7 @@
 import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
 import { getFields, ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
-import { ImporterEntityClass } from "@src/importer/entities/base-import-target.entity";
+import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { Transform } from "stream";
 
 import { CompositeImporterPipe } from "../importer-pipe.type";
@@ -11,13 +11,13 @@ import { DataTransformerPipe } from "./data-transformer.pipe";
 export class CsvParseAndTransformPipes implements CompositeImporterPipe {
     private readonly fields: ImportFieldMetadata[];
 
-    constructor(private readonly targetEntity: ImporterEntityClass, em: EntityManager<IDatabaseDriver<Connection>>) {
-        this.fields = getFields(targetEntity);
+    constructor(private readonly inputClass: ImporterInputClass, em: EntityManager<IDatabaseDriver<Connection>>) {
+        this.fields = getFields(inputClass);
     }
 
     getPipes(logger: LoggerService, parserOptions: ParserOptions): Transform[] {
         const parserPipe = new CsvParsePipe(parserOptions, this.fields).getPipe();
-        const transformPipe = new DataTransformerPipe(this.targetEntity).getPipe(logger);
+        const transformPipe = new DataTransformerPipe(this.inputClass).getPipe(logger);
 
         const pipes: Transform[] = [parserPipe, transformPipe];
         return pipes;
