@@ -214,6 +214,14 @@ npx @comet/upgrade v8/update-class-validator.ts
 
 #### Sentry
 
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/update-sentry.ts
+```
+
+:::
+
 1. Upgrade the "@sentry/node" dependency in your `package.json` file:
 
 ```diff title=api/package.json
