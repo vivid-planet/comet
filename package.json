@@ -59,9 +59,9 @@
         "typescript": "^5.7.3",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@9.15.6",
+    "packageManager": "pnpm@9.15.7",
     "engines": {
         "node": "22",
-        "pnpm": "9.15.6"
+        "pnpm": "9.15.7"
     }
 }
