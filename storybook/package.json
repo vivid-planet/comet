@@ -82,7 +82,7 @@
         "react-router-dom": "^5.3.4",
         "remark-gfm": "^4.0.1",
         "storybook": "^8.6.4",
-        "typescript": "^5.7.3"
+        "typescript": "^5.8.2"
     },
     "msw": {
         "workerDirectory": "public"
