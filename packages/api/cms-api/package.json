@@ -58,7 +58,7 @@
         "mime-db": "^1.53.0",
         "multer": "^1.4.4",
         "node-fetch": "^2.7.0",
-        "openai": "^4.85.4",
+        "openai": "^4.86.2",
         "probe-image-size": "^7.2.3",
         "request-ip": "^3.3.0",
         "rimraf": "^6.0.1",
