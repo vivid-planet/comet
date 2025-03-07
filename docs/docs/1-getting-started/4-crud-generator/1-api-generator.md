@@ -94,7 +94,7 @@ The api-generator script also supports the `-w` or `--watch` flag. This will wat
 {
   ...
   "scripts": {
-    "api-generator:watch": "rimraf 'src/*/generated' && comet api-generator --watch",
+    "api-generator:watch": "rimraf 'src/*/generated' && comet-api-generator --watch",
     ...
   }
 }
@@ -105,7 +105,7 @@ The api-generator script also supports the `-w` or `--watch` flag. This will wat
 If you want to generate only for specific entities, you can pass a file path to an .entity.ts file with the `-f` or `--file` flag
 
 ```json
-npm exec comet api-generator -f src/products/entities/product.entity.ts
+npm exec comet-api-generator -f src/products/entities/product.entity.ts
 ```
 
 ## Register generated resolvers and services
