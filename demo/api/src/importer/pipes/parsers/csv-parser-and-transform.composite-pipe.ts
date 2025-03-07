@@ -7,6 +7,7 @@ import { Transform } from "stream";
 import { CompositeImporterPipe } from "../importer-pipe.type";
 import { CsvParsePipe, ParserOptions } from "./csv-parser.pipe";
 import { DataTransformerPipe } from "./data-transformer.pipe";
+import { DataValidatorPipe } from "./data-validator.pipe";
 
 export class CsvParseAndTransformPipes implements CompositeImporterPipe {
     private readonly fields: ImportFieldMetadata[];
@@ -18,8 +19,9 @@ export class CsvParseAndTransformPipes implements CompositeImporterPipe {
     getPipes(logger: LoggerService, parserOptions: ParserOptions): Transform[] {
         const parserPipe = new CsvParsePipe(parserOptions, this.fields).getPipe();
         const transformPipe = new DataTransformerPipe(this.inputClass).getPipe(logger);
+        const validatorPipe = new DataValidatorPipe().getPipe(logger);
 
-        const pipes: Transform[] = [parserPipe, transformPipe];
+        const pipes: Transform[] = [parserPipe, transformPipe, validatorPipe];
         return pipes;
     }
 }
