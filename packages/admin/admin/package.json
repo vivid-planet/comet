@@ -117,6 +117,9 @@
             "optional": true
         }
     },
+    "engines": {
+        "node": ">=22.0.0"
+    },
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
