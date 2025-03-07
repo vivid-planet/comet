@@ -61,7 +61,7 @@
         "rimraf": "^6.0.1",
         "rxjs": "^7.8.2",
         "slugify": "^1.6.6",
-        "uuid": "^11.0.5"
+        "uuid": "^11.1.0"
     },
     "devDependencies": {
         "@comet/api-generator": "workspace:*",
