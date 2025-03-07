@@ -541,6 +541,24 @@ Import `JwtModule` from `@nestjs/jwt`:
 +   imports: [JwtModule],
 ```
 
+### Add new package @comet/api-generator
+
+The API Generator has been moved into a separate package `@comet/api-generator`.
+
+```diff title="api/package.json"
+devDependencies: {
++  "@comet/api-generator": "^8.0.0",
+}
+```
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
+    ```
+
+:::
+
 ## Admin
 
 ### Upgrade peer dependencies
@@ -887,6 +905,24 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
     </EditDialog>
 ```
 
+### Add new package @comet/admin-generator
+
+The Admin Generator has been moved into a separate package `@comet/admin-generator`.
+
+```diff title="admin/package.json"
+devDependencies: {
++  "@comet/admin-generator": "^8.0.0",
+}
+```
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
+    ```
+
+:::
+
 ## ESLint
 
 ### ESLint upgrade from v8 to v9 with ESM
@@ -1018,39 +1054,3 @@ Run ESLint with the --fix option to automatically update imports:
 ```bash
 npm run lint:eslint --fix
 ```
-
-### Add new package @comet/api-generator
-
-The API Generator has been moved into a separate package `@comet/api-generator`.
-
-```diff title="api/package.json"
-devDependencies: {
-+  "@comet/api-generator": "^8.0.0",
-}
-```
-
-:::note Codemod available
-
-    ```sh
-    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
-    ```
-
-:::
-
-### Add new package @comet/admin-generator
-
-The Admin Generator has been moved into a separate package `@comet/admin-generator`.
-
-```diff title="admin/package.json"
-devDependencies: {
-+  "@comet/admin-generator": "^8.0.0",
-}
-```
-
-:::note Codemod available
-
-    ```sh
-    npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
-    ```
-
-:::
