@@ -26,7 +26,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "jose": "^5.9.6",
+        "jose": "^5.10.0",
         "lodash.isequal": "^4.5.0",
         "rimraf": "^6.0.1",
         "scroll-into-view-if-needed": "^3.1.0",

@@ -50,7 +50,7 @@
         "graphql-parse-resolve-info": "^4.13.0",
         "graphql-scalars": "^1.24.1",
         "hasha": "^5.2.2",
-        "jose": "^5.9.6",
+        "jose": "^5.10.0",
         "jszip": "^3.10.1",
         "jwks-rsa": "^3.1.0",
         "lodash.isequal": "^4.5.0",
