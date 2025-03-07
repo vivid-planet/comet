@@ -1124,8 +1124,8 @@ importers:
         specifier: ^18.3.18
         version: 18.3.18
       '@types/react-date-range':
-        specifier: ^1.4.9
-        version: 1.4.9
+        specifier: ^1.4.10
+        version: 1.4.10
       '@types/react-dom':
         specifier: ^18.3.5
         version: 18.3.5(@types/react@18.3.18)
@@ -7821,8 +7821,8 @@ packages:
   '@types/range-parser@1.2.4':
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
 
-  '@types/react-date-range@1.4.9':
-    resolution: {integrity: sha512-5oVEDW0ElYmY1+YVSzdMUR8stxSI5QrRJCgCFUvuEAV5197t412vimD9aVTW6g4JTaxCnMmB1BdEOT/odpaBxQ==}
+  '@types/react-date-range@1.4.10':
+    resolution: {integrity: sha512-1g3SUKak9ShCH8ZAcLrYT/Ln3t5sI0iDKesAkuAuAXtagpgoI89RTh1APH4RV1IQ0YZQSBQvcQGC2oYaZ++2jw==}
 
   '@types/react-dom@18.3.5':
     resolution: {integrity: sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==}
@@ -24602,7 +24602,7 @@ snapshots:
 
   '@types/range-parser@1.2.4': {}
 
-  '@types/react-date-range@1.4.9':
+  '@types/react-date-range@1.4.10':
     dependencies:
       '@types/react': 18.3.18
       date-fns: 2.29.3
