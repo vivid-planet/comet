@@ -5,18 +5,18 @@ import { ImporterEntityClass } from "@src/importer/entities/base-import-target.e
 import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Transform } from "stream";
 
-import { Product } from "./entities/product.entity";
+import { ProductImporterInput } from "./product-importer.input";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
     dataStream: DataStreamAndMetadata | null = null;
     name = "productImport";
-    targetEntity: ImporterEntityClass = Product;
+    importTarget: ImporterEntityClass = ProductImporterInput;
     transformPipes: Transform[] = [];
 
     constructor(private readonly em: EntityManager) {
         this.logger = new Logger("product-importer");
-        const parsePipes = new CsvParseAndTransformPipes(this.targetEntity, this.em).getPipes(this.logger, { encoding: "utf-8" });
+        const parsePipes = new CsvParseAndTransformPipes(this.importTarget, this.em).getPipes(this.logger, { encoding: "utf-8" });
         this.transformPipes = [
             ...parsePipes,
             new Transform({
@@ -49,8 +49,14 @@ export class ProductImporter {
         return false;
     }
 
-    async displayData(row: unknown, encoding: string, callback: (error?: Error | null, data?: object[]) => void): Promise<void> {
+    async displayData(row: Record<string, unknown>, encoding: string, callback: (error?: Error | null, data?: object[]) => void): Promise<void> {
         this.logger.log("row: ", JSON.stringify(row, null, 2));
+        for (const key in row) {
+            if (Object.prototype.hasOwnProperty.call(row, key)) {
+                const element = row[key];
+                this.logger.log(`${key}: ${element} (${typeof element})`);
+            }
+        }
         return callback(null);
     }
 }
