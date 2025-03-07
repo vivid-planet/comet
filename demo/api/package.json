@@ -45,7 +45,7 @@
         "@opentelemetry/exporter-prometheus": "^0.53.0",
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
         "@opentelemetry/sdk-node": "^0.53.0",
-        "@sentry/node": "^9.2.0",
+        "@sentry/node": "^9.5.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "cli-progress": "^3.12.0",
