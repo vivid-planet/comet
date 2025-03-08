@@ -23,7 +23,7 @@
         "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
-        "@apollo/client": "^3.13.2",
+        "@apollo/client": "^3.13.3",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
