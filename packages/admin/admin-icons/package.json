@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "8.0.0-beta.1",
+    "version": "8.0.0-beta.2",
     "repository": {
         "directory": "packages/admin/admin-icons",
         "type": "git",
