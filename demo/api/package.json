@@ -77,7 +77,7 @@
         "@types/response-time": "^2.3.8",
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^7.4.4",
-        "eslint": "^9.21.0",
+        "eslint": "^9.22.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.5.3",
         "ts-node": "^10.9.2",
