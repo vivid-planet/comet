@@ -113,7 +113,7 @@
         "react-dnd-html5-backend": "^16.0.1",
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
-        "react-intl": "^6.8.9",
+        "react-intl": "^7.1.6",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "ts-jest": "^29.2.6",
@@ -132,7 +132,7 @@
         "react-dnd-html5-backend": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0",
         "react-final-form": "^6.0.0",
-        "react-intl": "^5.0.0 || ^6.0.0",
+        "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0"
     },
