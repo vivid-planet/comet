@@ -1,5 +1,27 @@
 # @comet/cms-api
 
+## 7.16.0
+
+### Minor Changes
+
+-   4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes
