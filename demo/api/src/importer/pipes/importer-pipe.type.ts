@@ -2,10 +2,8 @@ import { LoggerService } from "@nestjs/common";
 import { ValidationError as ClassValidationError } from "class-validator";
 import { Transform } from "stream";
 
-import { ParserOptions } from "./parsers/csv-parser.pipe";
-
 export type PipeData = Record<string, unknown>;
-
+type ParserOptions = Record<string, unknown>;
 export interface ValidationError extends ClassValidationError {
     name?: string | number;
     errorMessage: string;

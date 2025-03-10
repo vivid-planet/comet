@@ -4,12 +4,12 @@ import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorat
 
 import { ImporterPipe } from "../importer-pipe.type";
 
-export type ParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: BufferEncoding };
+export type CsvParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: BufferEncoding };
 
 export class CsvParsePipe implements ImporterPipe {
-    private readonly parserOptions: ParserOptions;
+    private readonly parserOptions: CsvParserOptions;
 
-    constructor(parserOptions: ParserOptions, csvColumns: ImportFieldMetadata[]) {
+    constructor(parserOptions: CsvParserOptions, csvColumns: ImportFieldMetadata[]) {
         this.parserOptions = this.getParserOption(parserOptions, csvColumns);
     }
 
@@ -17,7 +17,7 @@ export class CsvParsePipe implements ImporterPipe {
         return csv.parse(this.parserOptions);
     }
 
-    private getParserOption(jobRunParserOptions: ParserOptions, csvColumns: ImportFieldMetadata[]) {
+    private getParserOption(jobRunParserOptions: CsvParserOptions, csvColumns: ImportFieldMetadata[]) {
         //check entity metadata for csv headers
         const entityHasOnlyNumericCsvColumnNames = csvColumns.every((column) => typeof column.fieldPath === "number");
         const entityHasOnlyStringCsvColumnNames = csvColumns.every((column) => typeof column.fieldPath === "string");
