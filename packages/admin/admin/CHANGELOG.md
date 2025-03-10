@@ -1,5 +1,32 @@
 # @comet/admin
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 15c6fa0: Remove `DialogContent` from `EditDialog` as spacing inside a dialog is not always needed in the Comet DXP design
+
+    To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent`. This ensures proper spacing.
+    For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
+
+    ```diff
+        <EditDialog>
+        //...
+    +       <DialogContent>
+    +           //...
+    +       </DialogContent>
+        // ...
+        </EditDialog>
+    ```
+
+### Minor Changes
+
+- 535476e: Format numbers in `DataGrid` pagination depending on the current locale
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes

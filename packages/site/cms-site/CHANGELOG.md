@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 67ae9df: Fix opacity on `VideoPreviewImage` to only affect the background color
+
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0

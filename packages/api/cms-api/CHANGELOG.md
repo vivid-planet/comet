@@ -1,5 +1,13 @@
 # @comet/cms-api
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 56064fc: Remove `node-fetch` in favor of Node's native Fetch API
+
+    Note: **You need a Node version that supports the Fetch API, preferably Node v22.**
+
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0
