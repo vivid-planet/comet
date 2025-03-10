@@ -27,7 +27,7 @@ export class MigrateCommand extends CommandRunner {
             const connection = em.getConnection();
             // we can't use MikroORM's migrations table as lock object, because it does not exist on first run, so we bring our own lock object
             await connection.execute(
-                `CREATE TABLE IF NOT EXISTS "migrations_lock" ("id" int NOT NULL, PRIMARY KEY ("id"))`,
+                `CREATE TABLE IF NOT EXISTS "MigrationsLock" ("id" int NOT NULL, PRIMARY KEY ("id"))`,
                 undefined,
                 undefined,
                 em.getTransactionContext(),
@@ -40,7 +40,7 @@ export class MigrateCommand extends CommandRunner {
                     // we lock in exclusive mode, so any other transactions fails immediately (NOWAIT)
                     // lock gets automatically released on commit or rollback
                     await connection.execute(
-                        `LOCK TABLE "migrations_lock" IN EXCLUSIVE MODE NOWAIT`,
+                        `LOCK TABLE "MigrationsLock" IN EXCLUSIVE MODE NOWAIT`,
                         undefined,
                         undefined,
                         em.getTransactionContext(),
@@ -49,10 +49,10 @@ export class MigrateCommand extends CommandRunner {
                 } catch (error) {
                     await em.rollback();
                     this.logger.warn(error);
-                    this.logger.warn(`Cannot acquire lock for table migrations_lock (try ${++lockTries})`);
+                    this.logger.warn(`Cannot acquire lock for table MigrationsLock (try ${++lockTries})`);
                     if (lockTries > 3600) {
                         this.logger.error(`Giving up...`);
-                        throw new Error("Could not acquire lock for table migrations_lock");
+                        throw new Error("Could not acquire lock for table MigrationsLock");
                     }
                     await this.sleep(1);
                     await em.begin(em.getTransactionContext());
