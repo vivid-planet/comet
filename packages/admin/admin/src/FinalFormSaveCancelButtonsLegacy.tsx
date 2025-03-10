@@ -4,7 +4,7 @@ import { type ReactNode } from "react";
 import { useFormState } from "react-final-form";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
-import { SaveButton } from "./common/buttons/save/SaveButton";
+import { SaveButton } from "./common/buttons/SaveButton";
 import { createComponentSlot } from "./helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 import { useStackApi } from "./stack/Api";

@@ -35,8 +35,7 @@ export const DeleteDialog = (props: DeleteDialogProps) => {
                 <FeedbackButton
                     startIcon={<DeleteIcon />}
                     onClick={onDelete}
-                    color="error"
-                    variant="outlined"
+                    variant="destructive"
                     tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
                 >
                     <FormattedMessage {...messages.delete} />

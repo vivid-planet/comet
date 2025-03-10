@@ -1,6 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
-import { Save } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
     BlockPreviewWithTabs,
@@ -105,7 +104,7 @@ export function EditFooterPage(): JSX.Element | null {
         }
 
         const input = { content: FooterContentBlock.state2Output(footerState) };
-        return update({
+        await update({
             variables: { input, scope },
         });
     };
@@ -136,17 +135,7 @@ export function EditFooterPage(): JSX.Element | null {
                 </ToolbarTitleItem>
                 <FillSpace />
                 <ToolbarActions>
-                    <SaveButton
-                        disabled={!hasChanges}
-                        color="primary"
-                        variant="contained"
-                        saving={saving}
-                        hasErrors={hasSaveErrors != null}
-                        onClick={handleSavePage}
-                        startIcon={<Save />}
-                    >
-                        <FormattedMessage {...messages.save} />
-                    </SaveButton>
+                    <SaveButton disabled={!hasChanges} loading={saving} hasErrors={hasSaveErrors != null} onClick={handleSavePage} />
                 </ToolbarActions>
             </StackToolbar>
             <MainContent disablePaddingBottom>
