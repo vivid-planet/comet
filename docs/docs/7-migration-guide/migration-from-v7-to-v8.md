@@ -871,7 +871,6 @@ The separate providers for CMS features (e.g, `DamConfigProvider`) have been mer
 
     ```sh
     npx @comet/upgrade v8/comet-config-provider.ts
-
     ```
 
     **Note:** This codemod is experimental and might not work as expected in your application.
