@@ -16,7 +16,7 @@ import {
     types,
 } from "@mikro-orm/core";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { ImportEntity } from "@src/importer/import-entity.type";
+import { ImportTargetInterface } from "@src/importer/import-target.interface";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
@@ -81,7 +81,7 @@ export class ProductPriceRange {
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> implements ImportEntity {
+export class Product extends BaseEntity<Product, "id"> implements ImportTargetInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
