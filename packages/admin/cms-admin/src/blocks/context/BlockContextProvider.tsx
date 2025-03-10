@@ -1,11 +1,11 @@
 import { type PropsWithChildren } from "react";
 
-import { BlockContext } from "./BlockContext";
+import { type BlockContext, CustomBlockContext } from "./BlockContext";
 
 interface Props {
-    value: unknown;
+    value: Omit<BlockContext, "apiUrl" | "apolloClient">;
 }
 
 export const BlockContextProvider = ({ value, children }: PropsWithChildren<Props>) => {
-    return <BlockContext.Provider value={value}>{children}</BlockContext.Provider>;
+    return <CustomBlockContext.Provider value={value}>{children}</CustomBlockContext.Provider>;
 };

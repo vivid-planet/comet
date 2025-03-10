@@ -23,11 +23,11 @@ import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
@@ -111,7 +111,7 @@ interface EditFileInnerProps {
 }
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
@@ -245,7 +245,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {isAllowed("dependencies") && Object.keys(dependencyMap).length > 0 && (
+                                {isAllowed("dependencies") && Object.keys(entityDependencyMap).length > 0 && (
                                     <RouterTab
                                         key="dependents"
                                         label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}

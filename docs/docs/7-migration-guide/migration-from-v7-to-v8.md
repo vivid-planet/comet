@@ -863,6 +863,85 @@ To upgrade, perform the following steps:
 
     :::
 
+### Merge providers into `CometConfigProvider`
+
+The separate providers for CMS features (e.g, `DamConfigProvider`) have been merged into a `CometConfigProvider`.
+
+:::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/comet-config-provider.ts
+    ```
+
+    **Note:** This codemod is experimental and might not work as expected in your application.
+    Review the result carefully.
+
+:::
+
+Wrap your application with the `CometConfigProvider`:
+
+```tsx title="src/App.tsx"
+import { CometConfigProvider } from "@comet/cms-admin";
+
+function App() {
+    return (
+        <CometConfigProvider
+            apiUrl={config.apiUrl}
+            graphQLApiUrl={`${config.apiUrl}/graphql`}
+            adminUrl={config.adminUrl}
+        >
+            {/* Application */}
+        </CometConfigProvider>
+    );
+}
+```
+
+Move module configs to the new provider:
+
+```diff
+ <CometConfigProvider
+     apiUrl={config.apiUrl}
+     graphQLApiUrl={`${config.apiUrl}/graphql`}
+     adminUrl={config.adminUrl}
++    dam={{
++        ...config.dam,
++        scopeParts: ["domain"],
++        contentGeneration: {
++            generateAltText: true,
++            generateImageTitle: true,
++        },
++    }}
+ >
+     {/* Application */}
+ </CometConfigProvider>
+```
+
+Remove the old config providers:
+
+```diff
+- <DamConfigProvider>
+      {/* Application */}
+- </DamConfigProvider>
+```
+
+Update usages of renamed exports:
+
+- `useSitesConfig()` -> `useSiteConfigs()`
+- `useLocale()` -> `useContentLanguage()`
+- `useCmsBlockContext()` -> `useBlockContext()`
+
+Remove the `allCategories` prop from `PagesPage`:
+
+```diff
+ <PagesPage
+     path="/pages/pagetree/main-navigation"
+-    allCategories={pageTreeCategories}
+     documentTypes={pageTreeDocumentTypes}
+     category="MainNavigation"
+     renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
+ />
+```
+
 ### Add `DialogContent` to `EditDialog`
 
 The `DialogContent` inside `EditDialog` has been removed.

@@ -8,6 +8,7 @@ import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "../common
 import { BlockAdminComponentSection } from "../common/BlockAdminComponentSection";
 import { BlockAdminComponentSectionGroup } from "../common/BlockAdminComponentSectionGroup";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
+import { useBlockContext } from "../context/useBlockContext";
 import { composeBlocks, type CompositeBlockInterface } from "../helpers/composeBlocks/composeBlocks";
 import { type BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
 import { normalizedBlockConfig } from "../helpers/composeBlocks/utils";
@@ -164,7 +165,8 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             const urlPrefix = useSubRoutePrefix();
             const isInPaper = useBlockAdminComponentPaper();
             const blockAdminComponents = adminComponents({ state, updateState });
-            const blockPreviews = previews(state);
+            const context = useBlockContext();
+            const blockPreviews = previews(state, context);
             const blockChildBlockCounts = childBlockCounts(state);
             const blockIsValids = isValids(state);
 

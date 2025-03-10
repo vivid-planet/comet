@@ -8,9 +8,7 @@ import { type GQLPageTreePageFragment } from "./usePageTree";
 export type AllCategories = Array<{ category: string; label: ReactNode }>;
 
 export interface PageTreeContext {
-    allCategories: AllCategories;
     currentCategory: string;
-    documentTypes: Record<DocumentType, DocumentInterface>;
     getDocumentTypesByCategory?: (category: string) => Record<DocumentType, DocumentInterface>;
     tree: TreeMap<GQLPageTreePageFragment>;
     query: DocumentNode;
