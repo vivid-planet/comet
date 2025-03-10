@@ -419,6 +419,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input BooleanFilter {
