@@ -1,5 +1,5 @@
 ---
-"@comet/admin-theme": minor
+"@comet/admin": minor
 ---
 
 Adapt styling of `MuiLink` according to design of Comet DXP
