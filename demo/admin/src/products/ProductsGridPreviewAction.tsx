@@ -8,13 +8,14 @@ import {
     IconButton,
     Typography,
 } from "@mui/material";
-import { type GridCellParams, type GridValidRowModel } from "@mui/x-data-grid-pro";
-import { type GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
-import { type GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
+import { type GridCellParams } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-type Props = GridCellParams<GridValidRowModel, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
+import { type GQLProductsGridFutureFragment } from "./future/generated/ProductsGrid.generated";
+import { type GQLProductsListManualFragment } from "./ProductsGrid.generated";
+
+type Props = GridCellParams<GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
 
 export const ProductsGridPreviewAction = ({ row }: Props) => {
     const [showDetails, setShowDetails] = useState(false);

@@ -1,5 +1,9 @@
 import { type FormConfig } from "@comet/admin-generator";
+import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
+import { FormattedMessage } from "react-intl";
+
+import { FutureProductNotice } from "../helpers/FutureProductNotice";
 
 export const ProductForm: FormConfig<GQLProduct> = {
     type: "form",
@@ -18,7 +22,10 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     name: "title",
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
                     required: true, // default is inferred from gql schema
-                    validate: { name: "validateTitle", import: "./validateTitle" },
+                    validate: (value: string) =>
+                        value.length < 3 ? (
+                            <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />
+                        ) : undefined,
                 },
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
@@ -68,8 +75,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
-                { type: "component", component: { name: "FutureProductNotice", import: "../../helpers/FutureProductNotice" } },
-                { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+                { type: "component", component: FutureProductNotice },
+                { type: "block", name: "image", label: "Image", block: DamImageBlock },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4, download: false },
                 { type: "dateTime", name: "lastCheckedAt", label: "Last checked at" },

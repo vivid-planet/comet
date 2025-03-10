@@ -3,6 +3,7 @@ import {
     Button,
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateColumn,
     dataGridDateTimeColumn,
     DataGridToolbar,
     FileIcon,
@@ -65,11 +66,13 @@ export const UseDataGridRemote = {
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                ...dataGridDateTimeColumn,
+                flex: 1,
             },
         ];
 
@@ -122,11 +125,13 @@ export const UseDataGridRemoteInitialSort = {
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                ...dataGridDateTimeColumn,
+                flex: 1,
             },
         ];
 
@@ -396,11 +401,13 @@ export const UseDataGridExcelExport = {
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                ...dataGridDateTimeColumn,
+                flex: 1,
             },
         ];
 
@@ -495,6 +502,73 @@ export const UseDataGridExcelExport = {
         );
     },
     name: "useDataGridExcelExport",
+};
+
+export const GridColumnTypes = {
+    render: () => {
+        const dataGridProps = useDataGridRemote();
+
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+                flex: 1,
+            },
+            {
+                ...dataGridDateColumn,
+                field: "launch_date_local_without_time",
+                headerName: "Launch Date",
+                flex: 1,
+            },
+            {
+                ...dataGridDateTimeColumn,
+                field: "launch_date_local",
+                headerName: "Launch Date and Time",
+                flex: 1,
+            },
+        ];
+
+        const query = gql`
+            query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                    data {
+                        id
+                        mission_name
+                        launch_date_local
+                    }
+                    result {
+                        totalCount
+                    }
+                }
+            }
+        `;
+
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables>(query, {
+            variables: {
+                limit: dataGridProps.paginationModel.pageSize,
+                offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+                sort: dataGridProps.sortModel[0]?.field,
+                order: dataGridProps.sortModel[0]?.sort,
+            },
+        });
+
+        const rows = (data?.launchesPastResult.data ?? []).map((row) => ({
+            ...row,
+            launch_date_local_without_time: row.launch_date_local,
+        }));
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        if (error) {
+            throw error;
+        }
+
+        return (
+            <Box height={400}>
+                <DataGrid {...dataGridProps} rows={rows} columns={columns} rowCount={rowCount} loading={loading} />
+            </Box>
+        );
+    },
+    name: "GridColumnTypes",
 };
 
 export const _CrudMoreActionsMenu = {
