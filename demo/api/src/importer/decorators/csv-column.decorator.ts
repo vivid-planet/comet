@@ -71,6 +71,6 @@ export const CsvColumn = (fieldName: string | number, parsingOptions: Partial<Pa
         })(target, key);
     };
 };
-export const getFields = (entity: ImporterInputClass) => {
+export const getFieldMetadata = (entity: ImporterInputClass) => {
     return Reflect.getOwnMetadata(metadataKey, entity) as ImportFieldMetadata[];
 };
