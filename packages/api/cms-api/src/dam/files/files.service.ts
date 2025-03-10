@@ -6,7 +6,6 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
@@ -564,9 +563,12 @@ export class FilesService {
     async getFileAsBase64String(file: FileInterface) {
         const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
 
-        const buffer = await new Response(fileStream).buffer();
-        const base64String = buffer.toString("base64");
+        const chunks: Buffer[] = [];
+        for await (const chunk of fileStream) {
+            chunks.push(chunk);
+        }
 
+        const base64String = Buffer.concat(chunks).toString("base64");
         return `data:${file.mimetype};base64,${base64String}`;
     }
 

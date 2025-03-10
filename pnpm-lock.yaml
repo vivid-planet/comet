@@ -1836,9 +1836,6 @@ importers:
       multer:
         specifier: ^1.4.4
         version: 1.4.4
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
       openai:
         specifier: ^4.86.2
         version: 4.86.2(ws@8.18.0)(zod@3.23.8)
@@ -1936,9 +1933,6 @@ importers:
       '@types/node':
         specifier: ^22.13.9
         version: 22.13.9
-      '@types/node-fetch':
-        specifier: ^2.6.12
-        version: 2.6.12
       '@types/probe-image-size':
         specifier: ^7.2.5
         version: 7.2.5
