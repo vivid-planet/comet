@@ -1,5 +1,5 @@
-import { messages } from "@comet/admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, messages } from "@comet/admin";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 export interface PageCanNotDeleteDialogProps {
