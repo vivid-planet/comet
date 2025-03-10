@@ -3,7 +3,7 @@ import { parse, parseISO } from "date-fns";
 
 import { ImporterInputClass } from "../importer-input.type";
 
-export enum Type {
+export enum CsvColumnType {
     String = "String",
     Integer = "Integer",
     Float = "Float",
@@ -14,7 +14,7 @@ export enum Type {
 export interface ParsingOptions {
     valueMapping?: ValueMapping;
     dateFormatString?: string;
-    type?: Type;
+    type?: CsvColumnType;
     transform?: (value: string) => unknown;
 }
 export interface ImportFieldMetadata extends ParsingOptions {
@@ -50,17 +50,17 @@ export const CsvColumn = (fieldName: string | number, parsingOptions: Partial<Pa
             if (transform) {
                 return transform(value);
             }
-            if (type === Type.Boolean) {
+            if (type === CsvColumnType.Boolean) {
                 const valueMapping = parsingOptions.valueMapping || defaultValueMapping;
                 return valueMapping[value];
             }
-            if (type === Type.Integer) {
+            if (type === CsvColumnType.Integer) {
                 return parseInt(value);
             }
-            if (type === Type.Float) {
+            if (type === CsvColumnType.Float) {
                 return parseFloat(value);
             }
-            if (type === Type.DateTime) {
+            if (type === CsvColumnType.DateTime) {
                 if (dateFormatString) {
                     return parse(value, dateFormatString, new Date());
                 } else {

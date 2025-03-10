@@ -1,5 +1,5 @@
 import { Collection } from "@mikro-orm/core";
-import { CsvColumn, Type } from "@src/importer/decorators/csv-column.decorator";
+import { CsvColumn, CsvColumnType } from "@src/importer/decorators/csv-column.decorator";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "./entities/product.entity";
@@ -42,21 +42,21 @@ export class ProductImporterInput {
     @IsOptional()
     priceRange?: ProductPriceRange = undefined;
 
-    @CsvColumn("inStock", { type: Type.Boolean, valueMapping: { true: true, false: false, "": false } })
+    @CsvColumn("inStock", { type: CsvColumnType.Boolean, valueMapping: { true: true, false: false, "": false } })
     @IsBoolean()
     inStock: boolean = true;
 
-    @CsvColumn("soldCount", { type: Type.Integer })
+    @CsvColumn("soldCount", { type: CsvColumnType.Integer })
     @IsOptional()
     @IsInt()
     soldCount?: number;
 
-    @CsvColumn("availableSince", { type: Type.DateTime, dateFormatString: "dd-MM-yyyy" })
+    @CsvColumn("availableSince", { type: CsvColumnType.DateTime, dateFormatString: "dd-MM-yyyy" })
     @IsOptional()
     @IsDate()
     availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
 
-    @CsvColumn("lastCheckedAt", { type: Type.DateTime, dateFormatString: "dd-MM-yyyy-HH:mm:ss" })
+    @CsvColumn("lastCheckedAt", { type: CsvColumnType.DateTime, dateFormatString: "dd-MM-yyyy-HH:mm:ss" })
     @IsOptional()
     @IsDate()
     lastCheckedAt?: Date = undefined;
