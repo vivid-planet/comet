@@ -5,7 +5,7 @@ import { useIntl } from "react-intl";
 import EditMainMenuItem, { editMainMenuItemFragment, type GQLEditMainMenuItemFragment } from "./components/EditMainMenuItem";
 import MainMenuItems from "./components/MainMenuItems";
 
-const MAIN_MENU_ITEM_QUERY = gql`
+const mainMenuItemQuery = gql`
     query MainMenuItem($id: ID!) {
         mainMenuItem(pageTreeNodeId: $id) {
             ...EditMainMenuItem
@@ -29,7 +29,7 @@ const MainMenu = () => {
                         <Selected<GQLEditMainMenuItemFragment>
                             selectionMode="edit"
                             selectedId={selectedId}
-                            query={MAIN_MENU_ITEM_QUERY}
+                            query={mainMenuItemQuery}
                             dataAccessor="mainMenuItem"
                         >
                             {(item) => (item === undefined ? <Loading behavior="fillPageHeight" /> : <EditMainMenuItem item={item} />)}

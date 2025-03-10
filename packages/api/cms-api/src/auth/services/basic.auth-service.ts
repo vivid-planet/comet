@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Request } from "express";
 
-import { AuthServiceInterface } from "../util/auth-service.interface";
+import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
 interface BasicAuthServiceConfig {
     username: string;
@@ -14,16 +14,16 @@ export function createBasicAuthService({ username: requiredUsername, password: r
 
     @Injectable()
     class BasicAuthService implements AuthServiceInterface {
-        authenticateUser(request: Request) {
+        authenticateUser(request: Request): AuthenticateUserResult {
             const [type, token] = request.header("authorization")?.split(" ") ?? [];
-            if (type !== "Basic") return;
+            if (type !== "Basic") return SKIP_AUTH_SERVICE;
 
             const [username, password] = Buffer.from(token, "base64").toString("ascii").split(":");
-            if (username !== requiredUsername) return;
+            if (username !== requiredUsername) return SKIP_AUTH_SERVICE;
 
-            if (password !== requiredPassword) throw new UnauthorizedException(`Wrong password for Basic Auth user "${username}".`);
+            if (password !== requiredPassword) return { authenticationError: `Wrong password for Basic Auth user "${username}".` };
 
-            return username;
+            return { systemUser: username };
         }
     }
     return BasicAuthService;

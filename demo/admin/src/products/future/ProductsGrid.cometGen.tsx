@@ -1,6 +1,10 @@
 import { type GridConfig } from "@comet/admin-generator";
 import { type GQLProduct } from "@src/graphql.generated";
 
+import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "./ManufacturerFilter";
+import { ProductTitle } from "./ProductTitle";
+
 const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
 
 export const ProductsGrid: GridConfig<GQLProduct> = {
@@ -62,6 +66,14 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             sortBy: ["title", "price", "type", "category", "inStock"],
             disableExport: true, // TODO: Implement `valueFormatter` for type "combination"
         },
+        {
+            type: "text",
+            renderCell: ({ value, row }) => <ProductTitle title={value} />,
+            name: "title",
+            headerName: "Custom",
+            minWidth: 200,
+            visible: "down('md')",
+        },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description" },
         // TODO: Allow setting options for `intl.formatNumber` through `valueFormatter` (type "number")
@@ -102,11 +114,11 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             name: "manufacturer.name",
             headerName: "Manufacturer",
             fieldName: "manufacturer",
-            filterOperators: { name: "ManufacturerFilterOperators", import: "./ManufacturerFilter" },
+            filterOperators: ManufacturerFilterOperators,
         },
         {
             type: "actions",
-            component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
+            component: ProductsGridPreviewAction,
         },
     ],
 };

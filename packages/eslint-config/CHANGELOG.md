@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.1
+
+### Patch Changes
+
+- 649297e: Readd `@comet/eslint-plugin` dependency that was mistakenly removed
+    - @comet/eslint-plugin@8.0.0-beta.1
+
 ## 8.0.0-beta.0
 
 ### Major Changes

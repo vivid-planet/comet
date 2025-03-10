@@ -8,8 +8,10 @@ import {
     isFormFieldConfig,
     isFormLayoutConfig,
 } from "../generate-command";
+import { convertConfigImport } from "../utils/convertConfigImport";
 import { findMutationTypeOrThrow } from "../utils/findMutationType";
 import { generateImportsCode, type Imports } from "../utils/generateImportsCode";
+import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
 import { getForwardedGqlArgs } from "./getForwardedGqlArgs";
 
@@ -110,10 +112,9 @@ export function generateForm(
             return field;
         });
     rootBlockFields.forEach((field) => {
-        imports.push({
-            name: field.block.name,
-            importPath: field.block.import,
-        });
+        if (isGeneratorConfigImport(field.block)) {
+            imports.push(convertConfigImport(field.block));
+        }
     });
 
     const readOnlyFields = formFields.filter((field) => field.readOnly);
