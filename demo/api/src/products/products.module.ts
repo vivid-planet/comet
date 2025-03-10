@@ -21,7 +21,6 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductImporterConsole } from "./product-importer.console";
-import { ProductImporterInput } from "./product-importer.input";
 import { ProductImporterService } from "./product-importer.service";
 
 @Module({
@@ -38,7 +37,6 @@ import { ProductImporterService } from "./product-importer.service";
             FileUpload,
             ManufacturerCountry,
         ]),
-        ProductImporterInput,
     ],
     providers: [
         ProductResolver,
