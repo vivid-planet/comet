@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 7.16.0
+
+### Patch Changes
+
+-   bf7b89ffc: Adapt styling of `FieldSet` to align with Comet DXP design
+    -   @comet/admin-icons@7.16.0
+    -   @comet/admin-theme@7.16.0
+
 ## 7.15.0
 
 ### Minor Changes

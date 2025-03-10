@@ -1,5 +1,24 @@
 # @comet/cms-admin
 
+## 7.16.0
+
+### Minor Changes
+
+-   997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+
+### Patch Changes
+
+-   ea014c5e3: Set the correct icon for the button to confirm page actions
+-   e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+-   Updated dependencies [bf7b89ffc]
+-   Updated dependencies [5b7c6b4a7]
+    -   @comet/admin@7.16.0
+    -   @comet/admin-date-time@7.16.0
+    -   @comet/admin-icons@7.16.0
+    -   @comet/admin-rte@7.16.0
+    -   @comet/admin-theme@7.16.0
+    -   @comet/blocks-admin@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes
