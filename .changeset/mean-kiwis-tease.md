@@ -3,7 +3,7 @@
 "@comet/cms-api": major
 ---
 
-Protect images in site preview
+Protect images in the site preview
 
-The image urls in the site preview are now generated as preview-urls. Authorization is handled
-via the new `createSitePreviewAuthService` which validates the cookie of the site preview.
+The image URLs in the site preview are now generated as preview URLs.
+Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
