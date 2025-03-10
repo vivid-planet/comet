@@ -43,9 +43,8 @@ const apolloClient = createApolloClient(config.apiUrl);
 export function App() {
     return (
         <CometConfigProvider
-            apiUrl={config.apiUrl}
+            {...config}
             graphQLApiUrl={`${config.apiUrl}/graphql`}
-            adminUrl={config.adminUrl}
             pageTree={{
                 categories: pageTreeCategories,
                 documentTypes: pageTreeDocumentTypes,
