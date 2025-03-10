@@ -531,9 +531,6 @@ type ProductPriceRange {
 
 type Product {
   id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
   title: String!
   status: ProductStatus!
   slug: String!
@@ -550,6 +547,8 @@ type Product {
   articleNumbers: [String!]!
   dimensions: ProductDimensions
   statistics: ProductStatistics
+  createdAt: DateTime!
+  updatedAt: DateTime!
   priceList: FileUpload
   datasheets: [FileUpload!]!
   category: ProductCategory
@@ -1001,7 +1000,6 @@ input ProductFilter {
   additionalTypes: ProductTypeEnumsFilter
   price: NumberFilter
   inStock: BooleanFilter
-  soldCount: NumberFilter
   availableSince: DateFilter
   lastCheckedAt: DateTimeFilter
   colors: OneToManyFilter
@@ -1077,7 +1075,6 @@ enum ProductSortField {
   additionalTypes
   price
   inStock
-  soldCount
   availableSince
   lastCheckedAt
   category
