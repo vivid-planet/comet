@@ -19,6 +19,7 @@ import { ColumnsBlock } from "./ColumnsBlock";
 import { ContentGroupBlock } from "./ContentGroupBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { KeyFactsBlock } from "./KeyFactsBlock";
+import { SliderBlock } from "./SliderBlock";
 import { TeaserBlock } from "./TeaserBlock";
 
 export const PageContentBlock = createBlocksBlock({
@@ -37,6 +38,7 @@ export const PageContentBlock = createBlocksBlock({
         media: StandaloneMediaBlock,
         contentGroup: ContentGroupBlock,
         mediaGallery: MediaGalleryBlock,
+        slider: SliderBlock,
 
         image: DamImageBlock,
         newsDetail: NewsDetailBlock,
