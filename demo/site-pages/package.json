@@ -35,7 +35,7 @@
         "next": "^14.2.24",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "react-intl": "^6.8.9",
+        "react-intl": "^7.1.6",
         "redraft": "^0.10.2",
         "sitemap": "^8.0.0",
         "styled-components": "^6.1.15",
