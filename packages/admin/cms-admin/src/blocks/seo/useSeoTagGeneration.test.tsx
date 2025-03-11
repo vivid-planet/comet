@@ -17,9 +17,9 @@ jest.mock("../../contentScope/Provider", () => {
     };
 });
 
-jest.mock("../../locale/useLocale", () => {
+jest.mock("../../contentLanguage/useContentLanguage", () => {
     return {
-        useLocale: jest.fn(),
+        useContentLanguage: jest.fn(),
     };
 });
 

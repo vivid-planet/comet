@@ -27,7 +27,7 @@ import { ImageCrop } from "../../common/image/ImageCrop";
 import { useContentScope } from "../../contentScope/Provider";
 import { CropSettingsFields } from "../../dam/FileForm/CropSettingsFields";
 import { type EditImageFormValues } from "../../dam/FileForm/EditFile";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { type GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
@@ -72,7 +72,7 @@ const DialogContent = styled(MuiDialogContent)`
 export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props) {
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
 
     const handleSubmit = (values: FormValues) => {
         if (values.useInheritedDamSettings) {
@@ -181,13 +181,13 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                             </FormSection>
                                         </Box>
 
-                                        {dependencyMap["DamFile"] && damFileId && (
+                                        {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
                                                 <Button
                                                     variant="outlined"
                                                     color="inherit"
                                                     onClick={async () => {
-                                                        const path = await dependencyMap["DamFile"].resolvePath({
+                                                        const path = await entityDependencyMap["DamFile"].resolvePath({
                                                             apolloClient,
                                                             id: damFileId,
                                                         });

@@ -7,7 +7,6 @@ import { FormattedMessage } from "react-intl";
 import { type InternalLinkBlockData, type InternalLinkBlockInput } from "../blocks.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
-import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
@@ -39,7 +38,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext) => {
+    output2State: async (output, { apolloClient }) => {
         if (output.targetPageId === undefined) {
             return {};
         }

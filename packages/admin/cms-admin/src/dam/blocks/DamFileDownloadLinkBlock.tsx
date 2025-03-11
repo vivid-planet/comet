@@ -6,7 +6,6 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { type CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
@@ -36,7 +35,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         openFileType: state.openFileType,
     }),
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<DamFileDownloadLinkBlockData> => {
+    output2State: async (output, { apolloClient }): Promise<DamFileDownloadLinkBlockData> => {
         const ret: DamFileDownloadLinkBlockData = {
             openFileType: output.openFileType,
         };

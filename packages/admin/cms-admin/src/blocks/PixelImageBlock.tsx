@@ -8,12 +8,12 @@ import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -21,8 +21,7 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
-import { BlockCategory, type BlockDependency, type BlockInterface, type BlockPreviewContext } from "./types";
-import { useCmsBlockContext } from "./useCmsBlockContext";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
 
@@ -62,10 +61,10 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: BlockPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
-        adminMeta: { route: previewCtx.parentUrl },
+        urlTemplate: createPreviewUrl(state, previewContext.apiUrl),
+        adminMeta: { route: previewContext.parentUrl },
     }),
 
     state2Output: (v) => {
@@ -79,7 +78,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<ImageBlockState> => {
+    output2State: async (output, { apolloClient }): Promise<ImageBlockState> => {
         if (!output.damFileId) {
             return {};
         }
@@ -153,11 +152,11 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     AdminComponent: ({ state, updateState }) => {
         const [open, setOpen] = useState(false);
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-        const context = useCmsBlockContext();
+        const { apiUrl } = useCometConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
+        const { entityDependencyMap } = useDependenciesConfig();
 
         // useSyncImageAttributes({ state, updateState });
 
@@ -175,7 +174,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             setAnchorEl(null);
         };
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl, { width: 320, height: 320 });
+        const previewUrl = createPreviewUrl(state, apiUrl, { width: 320, height: 320 });
 
         return (
             <SelectPreviewComponent>
@@ -220,12 +219,12 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 </ListItemIcon>
                                 <FormattedMessage id="comet.blocks.image.cropImage" defaultMessage="Crop image" />
                             </MenuItem>
-                            {dependencyMap["DamFile"] && state.damFile?.id && (
+                            {entityDependencyMap["DamFile"] && state.damFile?.id && (
                                 <MenuItem
                                     onClick={async () => {
                                         // id is checked three lines above
                                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                        const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                        const path = await entityDependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
                                         const url = contentScope.match.url + path;
                                         window.open(url, "_blank");
                                     }}
@@ -279,13 +278,13 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             </SelectPreviewComponent>
         );
     },
-    previewContent: (state, ctx) => {
-        if (!state.damFile || !state.damFile?.fileUrl || !ctx?.damConfig?.apiUrl) {
+    previewContent: (state, context) => {
+        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl) {
             return [];
         }
         const imageSize = { width: 320, height: 320 };
         return [
-            { type: "image", content: { src: createPreviewUrl(state, ctx.damConfig.apiUrl, imageSize), ...imageSize } },
+            { type: "image", content: { src: createPreviewUrl(state, context.apiUrl, imageSize), ...imageSize } },
             { type: "text", content: state.damFile.name },
         ];
     },

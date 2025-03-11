@@ -20,8 +20,8 @@ import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
 import { type GQLDamItemType } from "../../graphql.generated";
+import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
-import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { type DamConfig, type DamFilter } from "../DamTable";
 import { licenseTypeLabels } from "../FileForm/licenseType";

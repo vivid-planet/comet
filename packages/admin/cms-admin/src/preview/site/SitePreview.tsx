@@ -8,7 +8,7 @@ import { type RouteComponentProps, useHistory, useLocation } from "react-router"
 
 import { type ExternalLinkBlockData } from "../../blocks.generated";
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
