@@ -78,7 +78,6 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
         startIcon,
         endIcon,
         children,
-
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminButton" });
 
