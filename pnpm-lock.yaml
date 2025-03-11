@@ -1685,6 +1685,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../cms-api
+      chokidar:
+        specifier: ^4.0.3
+        version: 4.0.3
       commander:
         specifier: ^9.5.0
         version: 9.5.0
