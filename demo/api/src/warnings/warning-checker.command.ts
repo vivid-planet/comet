@@ -1,9 +1,11 @@
-import { Block, BlockData, FlatBlocks } from "@comet/cms-api";
+import { Block, BlockData, ContentScope, FlatBlocks, ScopedEntityMeta } from "@comet/cms-api";
 import { DiscoverService } from "@comet/cms-api/lib/dependencies/discover.service";
 import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
+import { ModuleRef, Reflector } from "@nestjs/core";
+import { Page } from "@src/documents/pages/entities/page.entity";
 import { Command, CommandRunner } from "nest-commander";
 import { v5 } from "uuid";
 
@@ -13,6 +15,7 @@ import { WarningSeverity } from "./entities/warning-severity.enum";
 interface RootBlockEntityData {
     tableName: string;
     className: string;
+    hasScope: boolean;
     rootBlockData: Array<{ block: Block; column: string }>;
 }
 
@@ -27,6 +30,8 @@ export class WarningCheckerCommand extends CommandRunner {
         private readonly discoverService: DiscoverService,
         private readonly entityManager: EntityManager,
         @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
+        private reflector: Reflector,
+        private readonly moduleRef: ModuleRef,
     ) {
         super();
     }
@@ -37,14 +42,17 @@ export class WarningCheckerCommand extends CommandRunner {
 
         // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
         for (const data of this.groupRootBlockDataByEntity()) {
-            const { tableName, className, rootBlockData } = data;
+            const { tableName, className, rootBlockData, hasScope } = data;
 
             const queryBuilderLimit = 100;
             const baseQueryBuilder = this.entityManager.createQueryBuilder(className);
-            baseQueryBuilder
-                .select(["id", ...rootBlockData.map(({ column }) => column)])
-                .from(tableName)
-                .limit(queryBuilderLimit);
+
+            const selectFields = ["id", ...rootBlockData.map(({ column }) => column)];
+            if (hasScope) {
+                selectFields.push("scope");
+            }
+
+            baseQueryBuilder.select(selectFields).from(tableName).limit(queryBuilderLimit);
             let rootBlocks: Array<{ [key: string]: BlockData }> = [];
             let offset = 0;
 
@@ -55,7 +63,25 @@ export class WarningCheckerCommand extends CommandRunner {
 
                 for (const { column, block } of rootBlockData) {
                     for (const rootBlock of rootBlocks) {
+                        let scope: ContentScope | undefined = hasScope ? (rootBlock["scope"] as unknown as ContentScope) : undefined;
                         const blockData = rootBlock[column];
+
+                        if (!scope) {
+                            // TODO: handle error, PageTreeNode not found for document with id: 7f926a5f-e7be-4b51-81cb-9b99299efff3 which is in PageTreeNodeDocumentEntityScopeService
+                            try {
+                                const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [Page]);
+                                const service = this.moduleRef.get(scoped, { strict: false });
+                                const scopedEntityScope = await service.getEntityScope(rootBlock);
+
+                                if (Array.isArray(scopedEntityScope)) {
+                                    scope = scopedEntityScope[0]; // Check when this happens and what to do with it
+                                } else {
+                                    scope = scopedEntityScope;
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
 
                         const flatBlocks = new FlatBlocks(blockData, {
                             name: block.name,
@@ -81,6 +107,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                             type,
                                             message: warning.message,
                                             severity: WarningSeverity[warning.severity],
+                                            scope,
                                         },
                                         { onConflictExcludeFields: ["createdAt"] },
                                     );
@@ -105,7 +132,7 @@ export class WarningCheckerCommand extends CommandRunner {
         const rootBlockEntityData = new Map<string, RootBlockEntityData>();
 
         for (const {
-            metadata: { tableName, className },
+            metadata: { tableName, className, definedProperties },
             block,
             column,
         } of this.discoverService.discoverRootBlocks()) {
@@ -115,6 +142,7 @@ export class WarningCheckerCommand extends CommandRunner {
                 rootBlockEntityData.set(key, {
                     tableName,
                     className,
+                    hasScope: "scope" in definedProperties,
                     rootBlockData: [],
                 });
             }
