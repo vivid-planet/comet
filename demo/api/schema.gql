@@ -871,6 +871,7 @@ enum SlugAvailability {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
