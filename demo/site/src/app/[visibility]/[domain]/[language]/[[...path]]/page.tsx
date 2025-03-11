@@ -1,7 +1,7 @@
 export const dynamic = "error";
 
 import { gql } from "@comet/cms-site";
-import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { VisibilityParam } from "@src/middleware/domainRewrite";
@@ -81,6 +81,13 @@ export default async function Page({ params }: PageProps) {
                     case "external":
                         destination = (target.block.props as ExternalLinkBlockData).targetUrl;
                         break;
+                    case "news": {
+                        const newsLink = target.block.props as NewsLinkBlockData;
+                        if (newsLink.news) {
+                            destination = `/${newsLink.news.scope.language}/news/${newsLink.news.slug}`;
+                        }
+                        break;
+                    }
                 }
             }
             if (destination) {
