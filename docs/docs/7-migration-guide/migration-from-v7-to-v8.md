@@ -738,6 +738,8 @@ The `useDataGridRemote` hook has been changed to match the updated DataGrid prop
 + const { paginationModel, onPaginationModelChange } = useDataGridRemote();
 ```
 
+Also be aware that you need to pass `rowCount` to the DataGrid, when using the `useDataGridRemote` hook.
+
 #### `muiGridSortToGql` Function
 
 The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
