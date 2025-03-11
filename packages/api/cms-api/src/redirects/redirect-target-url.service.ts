@@ -11,13 +11,23 @@ export type RedirectTargetUrlServiceInterface = {
 
 @Injectable({ scope: Scope.REQUEST })
 export class DefaultRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+    private cache: Record<string, string> = {};
+
     constructor(private readonly pageTreeReadApi: PageTreeReadApiService) {}
 
     async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
         if (target.type === "internal") {
             const targetPageId = (target.props as ExtractBlockData<typeof InternalLinkBlock>).targetPageId;
             if (targetPageId) {
-                return this.pageTreeReadApi.nodePathById(targetPageId);
+                if (this.cache[targetPageId]) {
+                    return this.cache[targetPageId];
+                }
+
+                const url = await this.pageTreeReadApi.nodePathById(targetPageId);
+
+                this.cache[targetPageId] = url;
+
+                return url;
             }
         } else if (target.type === "external") {
             return (target.props as ExtractBlockData<typeof ExternalLinkBlock>).targetUrl;
