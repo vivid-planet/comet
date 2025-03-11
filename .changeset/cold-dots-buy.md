@@ -2,6 +2,6 @@
 "@comet/admin": minor
 ---
 
-Adapt styling of `MuiLink` according to design of Comet DXP
+Adapt styling of MUI's `Link` according to the Comet DXP design
 
-Use `MuiLink` only for links in continuous text or as stand-alone text-links. Replace all other usages with better fitting components (e.g. `RouterLink`, `StackLink`, or `Button`)
+Use `Link` only for links in continuous text or as standalone text links. Replace all other usages with better fitting components (e.g., `RouterLink`, `StackLink`, or `Button`).
