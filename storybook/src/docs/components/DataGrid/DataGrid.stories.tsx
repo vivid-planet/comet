@@ -617,6 +617,7 @@ export const _CrudMoreActionsMenu = {
             <Box height={600}>
                 <DataGrid
                     {...dataGridProps}
+                    paginationMode="client"
                     rows={exampleRows}
                     columns={exampleColumns}
                     checkboxSelection
