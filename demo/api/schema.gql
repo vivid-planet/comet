@@ -570,6 +570,18 @@ enum ProductType {
   Cap
   Shirt
   Tie
+  Pants
+  Jacket
+  Shoes
+  Socks
+  Mug
+  Pen
+  Calendar
+  Notebook
+  Bag
+  Watch
+  Sunglasses
+  Wallet
 }
 
 """
@@ -988,7 +1000,6 @@ input ProductFilter {
   additionalTypes: ProductTypeEnumsFilter
   price: NumberFilter
   inStock: BooleanFilter
-  soldCount: NumberFilter
   availableSince: DateFilter
   lastCheckedAt: DateTimeFilter
   colors: OneToManyFilter
@@ -1064,7 +1075,6 @@ enum ProductSortField {
   additionalTypes
   price
   inStock
-  soldCount
   availableSince
   lastCheckedAt
   category

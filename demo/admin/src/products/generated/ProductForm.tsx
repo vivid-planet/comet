@@ -204,6 +204,42 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     <MenuItem value="Tie">
                                         <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
                                     </MenuItem>
+                                    <MenuItem value="Pants">
+                                        <FormattedMessage id="product.type.pants" defaultMessage="Pants" />
+                                    </MenuItem>
+                                    <MenuItem value="Jacket">
+                                        <FormattedMessage id="product.type.jacket" defaultMessage="Jacket" />
+                                    </MenuItem>
+                                    <MenuItem value="Shoes">
+                                        <FormattedMessage id="product.type.shoes" defaultMessage="Shoes" />
+                                    </MenuItem>
+                                    <MenuItem value="Socks">
+                                        <FormattedMessage id="product.type.socks" defaultMessage="Socks" />
+                                    </MenuItem>
+                                    <MenuItem value="Mug">
+                                        <FormattedMessage id="product.type.mug" defaultMessage="Mug" />
+                                    </MenuItem>
+                                    <MenuItem value="Pen">
+                                        <FormattedMessage id="product.type.pen" defaultMessage="Pen" />
+                                    </MenuItem>
+                                    <MenuItem value="Calendar">
+                                        <FormattedMessage id="product.type.calendar" defaultMessage="Calendar" />
+                                    </MenuItem>
+                                    <MenuItem value="Notebook">
+                                        <FormattedMessage id="product.type.notebook" defaultMessage="Notebook" />
+                                    </MenuItem>
+                                    <MenuItem value="Bag">
+                                        <FormattedMessage id="product.type.bag" defaultMessage="Bag" />
+                                    </MenuItem>
+                                    <MenuItem value="Watch">
+                                        <FormattedMessage id="product.type.watch" defaultMessage="Watch" />
+                                    </MenuItem>
+                                    <MenuItem value="Sunglasses">
+                                        <FormattedMessage id="product.type.sunglasses" defaultMessage="Sunglasses" />
+                                    </MenuItem>
+                                    <MenuItem value="Wallet">
+                                        <FormattedMessage id="product.type.wallet" defaultMessage="Wallet" />
+                                    </MenuItem>
                                 </FinalFormSelect>
                             )}
                         </Field>

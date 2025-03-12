@@ -76,12 +76,6 @@ export class ProductFilter {
     @Type(() => BooleanFilter)
     inStock?: BooleanFilter;
 
-    @Field(() => NumberFilter, { nullable: true })
-    @ValidateNested()
-    @IsOptional()
-    @Type(() => NumberFilter)
-    soldCount?: NumberFilter;
-
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
