@@ -371,7 +371,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <SelectField name="blockType" options={options} fullWidth required={!allowEmpty} />
+                                            <SelectField name="blockType" options={options} fullWidth required />
                                         </Box>
                                         {isInPaper && activeBlock.block && <Divider />}
                                     </>
