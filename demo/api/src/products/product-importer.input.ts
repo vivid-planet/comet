@@ -9,7 +9,7 @@ import { ProductType } from "./entities/product-type.enum";
 export class ProductImporterInput {
     @CsvColumn("title")
     @IsString()
-    titleA: string;
+    title: string;
 
     @CsvColumn("status")
     @IsEnum(ProductStatus)
