@@ -96,7 +96,7 @@ export function withPredefinedPagesMiddleware(middleware: CustomMiddleware) {
         const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
 
         if (predefinedPageRewrite) {
-            return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+            request.nextUrl.pathname = predefinedPageRewrite; //don't use NextResponse.rewrite, as domainRewrite middleware does this (and uses the modified pathname)
         }
 
         return middleware(request);
