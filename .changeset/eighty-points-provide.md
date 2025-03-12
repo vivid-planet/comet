@@ -2,4 +2,4 @@
 "@comet/blocks-admin": patch
 ---
 
-Fix behavior of `SelectField` in `createOneOfBlock`
+Remove incorrect clear button from type select in `createOneOfBlock`
