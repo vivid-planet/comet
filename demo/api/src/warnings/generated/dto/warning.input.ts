@@ -5,7 +5,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
-import { WarningDependencyInfo } from "../../dto/warning-dependency-info";
+import { WarningSourceInfo } from "../../dto/warning-dependency-info";
 import { WarningSeverity } from "../../entities/warning-severity.enum";
 import { WarningStatus } from "../../entities/warning-status.enum";
 
@@ -28,9 +28,9 @@ export class WarningInput {
 
     @IsNotEmpty()
     @ValidateNested()
-    @Type(() => WarningDependencyInfo)
-    @Field(() => WarningDependencyInfo)
-    dependencyInfo: WarningDependencyInfo;
+    @Type(() => WarningSourceInfo)
+    @Field(() => WarningSourceInfo)
+    sourceInfo: WarningSourceInfo;
 
     @IsNotEmpty()
     @IsEnum(WarningStatus)

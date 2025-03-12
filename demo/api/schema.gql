@@ -1616,11 +1616,11 @@ input WarningInput {
   message: String!
   type: String!
   severity: WarningSeverity!
-  dependencyInfo: WarningDependencyInfoInput!
+  sourceInfo: WarningSourceInfoInput!
   status: WarningStatus! = open
 }
 
-input WarningDependencyInfoInput {
+input WarningSourceInfoInput {
   rootEntityName: String!
   rootColumnName: String!
   rootPrimaryKey: String!
@@ -1632,6 +1632,6 @@ input WarningUpdateInput {
   message: String
   type: String
   severity: WarningSeverity
-  dependencyInfo: WarningDependencyInfoInput
+  sourceInfo: WarningSourceInfoInput
   status: WarningStatus
 }

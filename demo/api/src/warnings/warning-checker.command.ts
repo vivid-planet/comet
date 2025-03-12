@@ -74,7 +74,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                 for (const warning of warnings) {
                                     this.warningService.saveWarning({
                                         warning,
-                                        dependencyInfo: {
+                                        sourceInfo: {
                                             rootEntityName: tableName,
                                             rootColumnName: column,
                                             rootPrimaryKey: data.primaryKey,

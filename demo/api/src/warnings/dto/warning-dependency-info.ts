@@ -2,8 +2,8 @@ import { Property } from "@mikro-orm/core";
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
-@InputType("WarningDependencyInfoInput")
-export class WarningDependencyInfo {
+@InputType("WarningSourceInfoInput")
+export class WarningSourceInfo {
     @Property()
     @Field()
     rootEntityName: string;
