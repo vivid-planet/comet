@@ -1,6 +1,7 @@
 import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
+import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generatorConfigs/formConfig";
+import { Adornment } from "../generatorConfigs/miscellaneousConfig";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";

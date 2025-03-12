@@ -1,6 +1,6 @@
 import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormLayoutConfig } from "../generator";
+import { FormConfig, FormLayoutConfig } from "../generatorConfigs/formConfig";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
 import { generateFields, GenerateFieldsReturn } from "./generateFields";

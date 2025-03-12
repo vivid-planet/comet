@@ -1,4 +1,4 @@
-import { ComponentFormFieldConfig } from "../generator";
+import { ComponentFormFieldConfig } from "../generatorConfigs/formConfig";
 import { Imports } from "../utils/generateImportsCode";
 import { GenerateFieldsReturn } from "./generateFields";
 

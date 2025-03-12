@@ -1,7 +1,7 @@
 import { IntrospectionInputObjectType } from "graphql";
 
 import { Prop } from "../generateGrid";
-import { GridConfig } from "../generator";
+import { GridConfig } from "../generatorConfigs/gridConfig";
 import { Imports } from "../utils/generateImportsCode";
 
 export function getPropsForFilterProp({

@@ -1,6 +1,6 @@
 import objectPath from "object-path";
 
-import { ActionsGridColumnConfig, GridColumnConfig } from "../generator";
+import { ActionsGridColumnConfig, GridColumnConfig } from "../generatorConfigs/gridConfig";
 import { getAllColumnFieldNames, GridCombinationColumnConfig } from "./combinationColumn";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };

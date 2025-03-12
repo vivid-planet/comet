@@ -89,13 +89,9 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
-export type {
-    FormConfig as future_FormConfig,
-    FormFieldConfig as future_FormFieldConfig,
-    GeneratorConfig as future_GeneratorConfig,
-    GridColumnConfig as future_GridColumnConfig,
-    GridConfig as future_GridConfig,
-} from "./generator/future/generator";
+export type { GeneratorConfig as future_GeneratorConfig } from "./generator/future/generator";
+export type { FormConfig as future_FormConfig, FormFieldConfig as future_FormFieldConfig } from "./generator/future/generatorConfigs/formConfig";
+export type { GridColumnConfig as future_GridColumnConfig, GridConfig as future_GridConfig } from "./generator/future/generatorConfigs/gridConfig";
 export { CrudGeneratorConfig } from "./generator/types";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";

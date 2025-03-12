@@ -1,6 +1,6 @@
 import { IntrospectionQuery } from "graphql";
 
-import { FormFieldConfig } from "../generator";
+import { FormFieldConfig } from "../generatorConfigs/formConfig";
 
 export const isFieldOptional = ({
     config,
