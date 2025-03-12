@@ -73,7 +73,7 @@ If it's still missing, you can add it to `api/package.json`:
 {
   ...
   "scripts": {
-    "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+    "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
     ...
   }
 }
