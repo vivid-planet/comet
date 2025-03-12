@@ -7,5 +7,6 @@ export const MediaBlock: BlockInterface = createOneOfBlock({
     name: "Media",
     displayName: <FormattedMessage id="mediaBlock.displayName" defaultMessage="Media" />,
     allowEmpty: false,
+    variant: "toggle",
     category: BlockCategory.Media,
 });
