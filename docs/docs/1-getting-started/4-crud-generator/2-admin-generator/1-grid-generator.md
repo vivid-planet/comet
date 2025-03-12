@@ -119,7 +119,7 @@ Setting `readOnly` to `true` overrides other options.
 ### toolbar
 
 When set to `false`, no toolbar is generated.
-This overrides all other toolbar related options such as `toolbarActionProp`, `excelExport`, or `newEntryMessage`.
+This overrides all other toolbar related options such as `toolbarActionProp`, `excelExport`, or `newEntryText`.
 Default is `true`.
 
 :::caution
@@ -165,7 +165,7 @@ initialSort: [
 
 ### initialFilter
 
-This option sets an initial filter for the grid. This sort can be overridden by the user via the filter panel.
+This option sets an initial filter for the grid. This filter can be overridden by the user via the filter panel.
 The array values are applied in order.
 
 | Parameter      | Type               | Required | Description                                                 |
@@ -201,7 +201,7 @@ When a filter is passed as a parameter, it cannot be changed by the user. It is 
 ### rowActionProp
 
 Setting this to `true` generates a parameter to pass a custom row action to the grid component.
-It is generated into the "actions" column of the grid.
+It is generated into the `actions` column of the grid.
 
 :::caution
 This option can be overridden by the option `edit: false`.
@@ -386,7 +386,8 @@ There are no further type specific options.
 -   There is no `string` column type. Always use `text` for `string` values.
 -   `asyncSelect` fields of forms correspond to `text` columns in grids.
 -   Further formatting of `text` values can be done by using the `combination` column type.
-    :::
+
+:::
 
 ### number
 
