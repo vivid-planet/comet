@@ -101,7 +101,7 @@ export function generateCrudPage(config: CrudPageConfig<any>): GeneratorReturn {
         );
     }
 
-    const pagesCodetoRenderString = hasMultiplePagesToRender
+    const pagesCodeToRenderString = hasMultiplePagesToRender
         ? `
             <StackSwitch>${pagesCodetoRender.join("")}</StackSwitch>
         `
@@ -119,7 +119,7 @@ export function generateCrudPage(config: CrudPageConfig<any>): GeneratorReturn {
 
             return (
                 <Stack topLevelTitle={${getFormattedMessageString(`${rootMessageId}.topLevelTitle`, topLevelTitle)}}>
-                    ${pagesCodetoRenderString}
+                    ${pagesCodeToRenderString}
                 </Stack>
             );
         }
