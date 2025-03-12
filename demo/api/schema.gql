@@ -583,6 +583,33 @@ enum NewsCategory {
 """NewsContent root block data"""
 scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  type: String!
+  severity: WarningSeverity!
+  status: WarningStatus!
+}
+
+enum WarningSeverity {
+  critical
+  high
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type PaginatedWarnings {
+  nodes: [Warning!]!
+  totalCount: Int!
+}
+
 type PaginatedNews {
   nodes: [News!]!
   totalCount: Int!
@@ -625,33 +652,6 @@ type PaginatedProductVariants {
 
 type RedirectScope {
   domain: String!
-}
-
-type Warning {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  message: String!
-  type: String!
-  severity: WarningSeverity!
-  status: WarningStatus!
-}
-
-enum WarningSeverity {
-  critical
-  high
-  low
-}
-
-enum WarningStatus {
-  open
-  resolved
-  ignored
-}
-
-type PaginatedWarnings {
-  nodes: [Warning!]!
-  totalCount: Int!
 }
 
 type PaginatedPageTreeNodes {
@@ -1616,7 +1616,7 @@ input WarningInput {
   message: String!
   type: String!
   severity: WarningSeverity!
-  dependencyInfo: WarningDependencyInfoInput!
+  dependencyInfo: WarningDependencyInfoInput
   status: WarningStatus! = open
 }
 

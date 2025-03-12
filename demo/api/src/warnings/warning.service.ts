@@ -49,4 +49,46 @@ export class WarningService {
     public async deleteOutdatedWarnings(date: Date, dependencyInfo: WarningDependencyInfo): Promise<void> {
         await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: date }, dependencyInfo });
     }
+
+    public async saveCustomWarning({
+        warning,
+        type,
+        metadata,
+    }: {
+        warning: BlockWarning;
+        type: string;
+        metadata: Record<string, string | number>;
+    }): Promise<void> {
+        const id = this.generateIdForCustomWarning({ type, metadata });
+
+        await this.entityManager.upsert(
+            Warning,
+            {
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                id,
+                type,
+                message: warning.message,
+                severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
+            },
+            { onConflictExcludeFields: ["createdAt"] },
+        );
+    }
+    private generateIdForCustomWarning({ type, metadata }: { type: string; metadata: Record<string, string | number> }) {
+        const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
+
+        let idText = `${type}`;
+
+        // add metadata to idtext
+        Object.entries(metadata).forEach(([key, value]) => {
+            idText += `;${key}:${value}`;
+        });
+        return v5(`${idText}`, staticNamespace);
+    }
+
+    public async deleteCustomWarning({ type, metadata }: { type: string; metadata: Record<string, string | number> }) {
+        const id = this.generateIdForCustomWarning({ type, metadata });
+
+        await this.entityManager.nativeDelete(Warning, { id });
+    }
 }
