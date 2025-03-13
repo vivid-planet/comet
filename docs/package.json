@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "build": "docusaurus build",
+        "build": "npm run generate-story-code-files && docusaurus build",
         "clear": "docusaurus clear",
         "deploy": "docusaurus deploy",
         "docusaurus": "docusaurus",
@@ -11,8 +11,10 @@
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:spelling": "$npm_execpath cspell docs/**",
+        "generate-story-code-files": "ts-node src/utils/generateStoryCodeFiles.ts",
+        "watch-story-files": "chokidar -s \"../storybook/src/component-docs/**/*.stories.tsx\" -c \"npm run generate-story-code-files\"",
         "serve": "docusaurus serve",
-        "start": "docusaurus start --port 3300",
+        "start": "npm run generate-story-code-files && run-p watch-story-files \"docusaurus start --port 3300\"",
         "swizzle": "docusaurus swizzle",
         "write-heading-ids": "docusaurus write-heading-ids",
         "write-translations": "docusaurus write-translations"
@@ -51,6 +53,7 @@
         "@mui/material": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.17.6",
+        "change-case": "^5.4.4",
         "draft-js": "^0.11.7",
         "final-form": "^4.20.9",
         "graphql": "^15.0.0",
@@ -77,10 +80,13 @@
         "@tsconfig/docusaurus": "^1.0.5",
         "@types/react": "^17.0.48",
         "@types/react-dom": "^17.0.17",
+        "chokidar-cli": "^2.0.0",
         "cspell": "^8.15.4",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.6.2",
         "sucrase": "^3.32.0",
+        "ts-morph": "^16.0.0",
+        "ts-node": "^10.0.0",
         "typescript": "^4.7.4",
         "webpack": "^5.88.1"
     }
