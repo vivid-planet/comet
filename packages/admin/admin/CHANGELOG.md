@@ -1,5 +1,60 @@
 # @comet/admin
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 15c6fa0: Remove `DialogContent` from `EditDialog` as spacing inside a dialog is not always needed in the Comet DXP design
+
+    To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent`. This ensures proper spacing.
+    For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
+
+    ```diff
+        <EditDialog>
+        //...
+    +       <DialogContent>
+    +           //...
+    +       </DialogContent>
+        // ...
+        </EditDialog>
+    ```
+
+### Minor Changes
+
+- 535476e: Format numbers in `DataGrid` pagination depending on the current locale
+- 43eb598: Set the custom `DataGridPanel` as default in the theme of the `DataGrid` component
+
+    If set, the `DataGridPanel` can now be removed from the project's theme, e.g., in `admin/src/theme.ts`:
+
+    ```diff
+    - import { DataGridPanel } from "@comet/admin";
+      import { createCometTheme } from "@comet/admin-theme";
+    - import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    - export const theme = createCometTheme({
+    -     components: {
+    -         MuiDataGrid: {
+    -             defaultProps: {
+    -                 components: {
+    -                     Panel: DataGridPanel,
+    -                 },
+    -             },
+    -         },
+    -     },
+    - });
+    + export const theme = createCometTheme();
+    ```
+
+### Patch Changes
+
+- Updated dependencies [f904b71]
+    - @comet/admin-icons@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes
