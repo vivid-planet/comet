@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Added support for `isAnyOf` filter for the types `String`, `Number`, `ManyToMany` and `OneToMany`.
+Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
