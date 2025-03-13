@@ -58,7 +58,7 @@
         "mime": "^3.0.0",
         "mime-db": "^1.53.0",
         "multer": "^1.4.4",
-        "openai": "^4.86.2",
+        "openai": "^4.87.3",
         "probe-image-size": "^7.2.3",
         "request-ip": "^3.3.0",
         "rimraf": "^6.0.1",
@@ -92,7 +92,7 @@
         "@types/mime": "^2.0.3",
         "@types/mime-db": "^1.43.5",
         "@types/multer": "^1.4.12",
-        "@types/node": "^22.13.9",
+        "@types/node": "^22.13.10",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
         "chokidar-cli": "^3.0.0",
@@ -136,6 +136,9 @@
         "@sentry/node": {
             "optional": true
         }
+    },
+    "engines": {
+        "node": ">=22.0.0"
     },
     "publishConfig": {
         "access": "public",

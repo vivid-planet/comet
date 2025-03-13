@@ -22,6 +22,55 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 </details>
 
+## General
+
+### Upgrade Node to v22
+
+#### In development:
+
+```diff title=.nvmrc
+- 20
++ 22
+```
+
+```diff title=package.json
+- "@types/node": "^20.0.0",
++ "@types/node": "^22.0.0",
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/replace-node-with-v22-locally.ts
+```
+
+:::
+
+#### In pipeline and deployment:
+
+Make sure you use Node 22 in your CI files.
+When using Gitlab CI, check all files in the .gitlab-ci folders.
+Make sure to extend the correct jobs and replace all images and base images.
+
+```diff
+- extends: .lint-npm-node20
++ extends: .lint-npm-node22
+
+- BASE_IMAGE: "ubi/s2i-ubi9-nodejs20-minimal"
++ BASE_IMAGE: "ubi/s2i-ubi9-nodejs22-minimal"
+
+- image: eu.gcr.io/vivid-planet/utils/ubi9-nodejs20-minimal:master
++ image: eu.gcr.io/vivid-planet/utils/ubi9-nodejs22-minimal:master
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/replace-node-with-v22-in-gitlab-ci-files.ts
+```
+
+:::
+
 ## API
 
 ### Upgrade peer dependencies
@@ -507,6 +556,7 @@ Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`
 +   ...createAuthGuardProviders(
 +       createBasicAuthService({ ... }),
 +       createJwtAuthService({ ... }),
++       createSitePreviewAuthService({ ... }),
 +       createStaticUserAuthService({ ... }),
 +   ),
 ```

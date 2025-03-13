@@ -7,6 +7,7 @@ export { CometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createBasicAuthService } from "./auth/services/basic.auth-service";
 export { createJwtAuthService } from "./auth/services/jwt.auth-service";
+export { createSitePreviewAuthService } from "./auth/services/site-preview.auth-service";
 export { createStaticUserAuthService } from "./auth/services/static-authed-user.auth-service";
 export { createAuthGuardProviders } from "./auth/util/auth-guard.providers";
 export { AuthServiceInterface } from "./auth/util/auth-service.interface";

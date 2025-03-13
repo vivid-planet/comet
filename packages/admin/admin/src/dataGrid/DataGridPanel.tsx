@@ -56,7 +56,7 @@ export type DataGridPanelClassKey =
     | "resetColumnsButton"
     | "applyButton";
 
-export type DataGridPanelProps = Pick<GridPanelProps, "open" | "children"> &
+export type DataGridPanelProps = GridPanelProps &
     Omit<
         ThemedComponentBaseProps<{
             desktopGridPanel: typeof GridPanel;
