@@ -55,19 +55,14 @@ export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
         }
 
         @ResolveField(() => [GraphQLJSONObject])
-        allowedContentScopes(@Parent() user: CurrentUser): ContentScope[] {
-            return uniqWith(
+        async allowedContentScopes(@Parent() user: CurrentUser): Promise<ContentScopeWithLabel[]> {
+            const allowedContentScopes = uniqWith(
                 user.permissions.flatMap((p) => p.contentScopes),
                 isEqual,
             );
-        }
-
-        @ResolveField(() => [GraphQLJSONObject])
-        async allowedContentScopesWithLabels(@Parent() user: CurrentUser): Promise<ContentScopeWithLabel[]> {
-            const allowedContentScopes = this.allowedContentScopes(user);
-            return (await this.service.getAvailableContentScopesWithLabels()).filter((contentScopeWithLabels) =>
+            return (await this.service.getAvailableContentScopes()).filter((contentScopeWithLabel) =>
                 allowedContentScopes.some((allowedContentScope) =>
-                    isEqual(this.service.removeLabelsFromContentScope(contentScopeWithLabels), allowedContentScope),
+                    isEqual(this.service.removeLabelsFromContentScope(contentScopeWithLabel), allowedContentScope),
                 ),
             );
         }

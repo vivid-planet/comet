@@ -48,7 +48,6 @@ type CurrentUser {
   authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
   allowedContentScopes: [JSONObject!]!
-  allowedContentScopesWithLabels: [JSONObject!]!
 }
 
 type Dependency {

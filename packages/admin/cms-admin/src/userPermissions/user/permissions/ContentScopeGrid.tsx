@@ -36,27 +36,6 @@ type ContentScope = {
     [key: string]: string;
 };
 
-type ContentScopeWithLabel = {
-    [key in keyof ContentScope]: {
-        label: string;
-        value: ContentScope[key];
-    };
-};
-
-type ContentScopeAndLabel = {
-    label: string;
-    contentScope: ContentScope;
-};
-
-export function getContentScopeAndLabel(contentScopes: ContentScopeWithLabel[]): ContentScopeAndLabel[] {
-    return contentScopes.map((contentScope) => ({
-        contentScope: Object.fromEntries(Object.entries<ContentScopeWithLabel[0]>(contentScope).map(([key, value]) => [key, value.value])),
-        label: Object.values<ContentScopeWithLabel[0]>(contentScope)
-            .map(({ label, value }) => label || camelCaseToHumanReadable(value))
-            .join(" / "),
-    }));
-}
-
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const [open, setOpen] = useState(false);
 
@@ -151,7 +130,7 @@ export function generateGridColumnsFromContentScopeProperties(
             headerName: camelCaseToHumanReadable(propertyName),
             renderCell: ({ row }) => {
                 if (row[propertyName] != null) {
-                    return <Typography variant="subtitle2">{camelCaseToHumanReadable(row[propertyName])}</Typography>;
+                    return <Typography variant="subtitle2">{row[propertyName].label}</Typography>;
                 } else {
                     return "-";
                 }

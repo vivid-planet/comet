@@ -1,13 +1,16 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, Field, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
+import { GraphQLJSONObject } from "graphql-scalars";
+import isEqual from "lodash.isequal";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
+import { ContentScopeWithLabel } from "./user-permissions.types";
 
 @ArgsType()
 export class UserPermissionListArgs {
@@ -81,11 +84,19 @@ export class UserPermissionResolver {
         @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) input: UserPermissionOverrideContentScopesInput,
     ): Promise<UserPermission> {
         const permission = await this.getPermission(input.permissionId);
-        await this.service.checkContentScopes(input.contentScopes);
+        const contentScopes = input.contentScopes.map((cs) => this.service.removeLabelsFromContentScope(cs));
+        await this.service.checkContentScopes(contentScopes);
         permission.overrideContentScopes = input.overrideContentScopes;
-        permission.contentScopes = input.contentScopes;
+        permission.contentScopes = contentScopes;
         await this.entityManager.persistAndFlush(permission);
         return permission;
+    }
+
+    @ResolveField(() => [GraphQLJSONObject])
+    async contentScopes(@Parent() permission: UserPermission): Promise<ContentScopeWithLabel> {
+        return (await this.service.getAvailableContentScopes()).filter((availableContentScope) =>
+            permission.contentScopes.some((contentScope) => isEqual(contentScope, this.service.removeLabelsFromContentScope(availableContentScope))),
+        );
     }
 
     async getPermission(id: string, userId?: string): Promise<UserPermission> {

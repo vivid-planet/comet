@@ -21,8 +21,7 @@ export interface CurrentUserInterface<ContentScope extends ContentScopeInterface
         name: string;
         email: string;
     } | null;
-    allowedContentScopes: ContentScope[];
-    allowedContentScopesWithLabels: {
+    allowedContentScopes: {
         [key in keyof ContentScope]: {
             label: string;
             value: string;
@@ -47,7 +46,6 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     contentScopes
                 }
                 allowedContentScopes
-                allowedContentScopesWithLabels
                 impersonated
             }
         }
