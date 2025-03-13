@@ -1,13 +1,13 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { type ComponentsOverrides, type Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import { css, useThemeProps } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode, SyntheticEvent, useState } from "react";
+import { type PropsWithChildren, type ReactNode, type SyntheticEvent, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface FieldSetProps
     extends ThemedComponentBaseProps<{
@@ -20,7 +20,7 @@ export interface FieldSetProps
         endAdornment: "div";
         children: typeof MuiAccordionDetails;
     }> {
-    title: ReactNode;
+    title?: ReactNode;
     supportText?: ReactNode;
     endAdornment?: ReactNode;
     collapsible?: boolean;
@@ -30,6 +30,7 @@ export interface FieldSetProps
 
 export type FieldSetClassKey =
     | "root"
+    | "hiddenSummary"
     | "summary"
     | "headerColumn"
     | "title"
@@ -41,6 +42,7 @@ export type FieldSetClassKey =
 
 type OwnerState = {
     disablePadding: boolean;
+    hiddenSummary: boolean;
 };
 
 export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
@@ -63,6 +65,7 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
 
     const ownerState: OwnerState = {
         disablePadding,
+        hiddenSummary: !title,
     };
 
     return (
@@ -75,17 +78,20 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
                           /* do nothing */
                       }
             }
+            ownerState={ownerState}
             {...slotProps?.root}
             {...restProps}
         >
-            <Summary expandIcon={collapsible && <ChevronRight />} {...slotProps?.summary}>
-                <HeaderColumn {...slotProps?.headerColumn}>
-                    <Title {...slotProps?.title}>{title}</Title>
-                    <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
-                </HeaderColumn>
-                <Placeholder {...slotProps?.placeholder} />
-                <EndAdornment {...slotProps?.endAdornment}>{endAdornment}</EndAdornment>
-            </Summary>
+            {!ownerState.hiddenSummary && (
+                <Summary expandIcon={collapsible && <ChevronRight />} {...slotProps?.summary}>
+                    <HeaderColumn {...slotProps?.headerColumn}>
+                        <Title {...slotProps?.title}>{title}</Title>
+                        <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
+                    </HeaderColumn>
+                    <Placeholder {...slotProps?.placeholder} />
+                    <EndAdornment {...slotProps?.endAdornment}>{endAdornment}</EndAdornment>
+                </Summary>
+            )}
             <Children ownerState={ownerState} {...slotProps?.children}>
                 {children}
             </Children>
@@ -93,9 +99,12 @@ export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
     );
 };
 
-const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey>({
+const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey, OwnerState>({
     componentName: "FieldSet",
     slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.hiddenSummary && "hiddenSummary"];
+    },
 })();
 
 const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
@@ -181,10 +190,12 @@ const Children = createComponentSlot(MuiAccordionDetails)<FieldSetClassKey, Owne
     },
 })(
     ({ theme, ownerState }) => css`
-        display: flex;
-        flex-direction: column;
-        border-top: 1px solid ${theme.palette.divider};
         padding: 20px;
+
+        ${!ownerState.hiddenSummary &&
+        css`
+            border-top: 1px solid ${theme.palette.divider};
+        `}
 
         ${theme.breakpoints.up("sm")} {
             padding: 40px;

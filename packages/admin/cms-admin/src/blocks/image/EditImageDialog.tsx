@@ -6,6 +6,7 @@ import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
     Button,
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent as MuiDialogContent,
@@ -18,16 +19,16 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ImageCrop } from "../../common/image/ImageCrop";
 import { useContentScope } from "../../contentScope/Provider";
 import { CropSettingsFields } from "../../dam/FileForm/CropSettingsFields";
-import { EditImageFormValues } from "../../dam/FileForm/EditFile";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
-import { GQLFocalPoint } from "../../graphql.generated";
+import { type EditImageFormValues } from "../../dam/FileForm/EditFile";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
+import { type GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
     focalPoint: GQLFocalPoint;
@@ -71,7 +72,7 @@ const DialogContent = styled(MuiDialogContent)`
 export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props) {
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
 
     const handleSubmit = (values: FormValues) => {
         if (values.useInheritedDamSettings) {
@@ -160,7 +161,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>
-                                        <Box padding={8} paddingBottom={6}>
+                                        <Box padding={8} paddingTop={0}>
                                             <FormSection
                                                 title={<FormattedMessage id="comet.blocks.image.dam" defaultMessage="DAM" />}
                                                 disableMarginBottom
@@ -180,13 +181,13 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                             </FormSection>
                                         </Box>
 
-                                        {dependencyMap["DamFile"] && damFileId && (
+                                        {entityDependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
                                                 <Button
-                                                    variant="text"
+                                                    variant="outlined"
                                                     color="inherit"
                                                     onClick={async () => {
-                                                        const path = await dependencyMap["DamFile"].resolvePath({
+                                                        const path = await entityDependencyMap["DamFile"].resolvePath({
                                                             apolloClient,
                                                             id: damFileId,
                                                         });
@@ -199,7 +200,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                 </Button>
                                             </Box>
                                         )}
-                                        <Divider />
+                                        <Divider sx={{ marginLeft: 8, marginRight: 8 }} />
                                     </>
                                 )}
                                 <Box padding={8}>

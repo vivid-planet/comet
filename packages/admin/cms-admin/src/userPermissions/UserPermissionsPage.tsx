@@ -11,16 +11,14 @@ import { UserPermissionsUserPageBasicDataPanel } from "./user/basicData/UserBasi
 import { UserPermissionsUserPagePermissionsPanel } from "./user/permissions/PermissionsPanel";
 import { UserPermissionsUserPageToolbar } from "./user/UserPageToolbar";
 import { UserPermissionsUserGrid } from "./UserGrid";
-import { LabelsContext, LabelsContextType } from "./utils/LabelsContext";
+import { LabelsContext, type LabelsContextType } from "./utils/LabelsContext";
 
 type UserPermissionsPageProps = LabelsContextType;
-
 export const UserPermissionsPage = ({ permissionLabels }: UserPermissionsPageProps) => {
     const { match } = useContentScope();
     const routeMatch = useRouteMatch();
     const location = routeMatch.url.replace(match.url, "");
     useContentScopeConfig({ redirectPathAfterChange: location });
-
     return (
         <LabelsContext.Provider
             value={{
@@ -42,8 +40,8 @@ export const UserPermissionsPage = ({ permissionLabels }: UserPermissionsPagePro
                         <MainContent fullHeight>
                             <UserPermissionsUserGrid
                                 rowAction={(params) => (
-                                    <IconButton component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
-                                        <Edit color="primary" />
+                                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
+                                        <Edit />
                                     </IconButton>
                                 )}
                             />

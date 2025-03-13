@@ -1,7 +1,8 @@
+import { Tooltip } from "@comet/admin";
 import { Archive, Delete, Error as ErrorIcon, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
-import { Divider, IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
+import { Divider, IconButton as CometAdminIconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamMoreActions } from "../selection/DamMoreActions";
@@ -76,7 +77,13 @@ export const DamSelectionFooter = ({ open }: DamSelectionFooterProps) => {
                     loading={damSelectionActionsApi.deleting}
                     hasErrors={damSelectionActionsApi.hasDeletionErrors}
                 />
-                <Divider orientation="vertical" sx={{ borderColor: (theme) => theme.palette.grey.A200 }} flexItem={true} />
+                <Divider
+                    orientation="vertical"
+                    sx={(theme) => ({
+                        borderColor: theme.palette.grey.A200,
+                    })}
+                    flexItem={true}
+                />
                 <DamMoreActions
                     anchorOrigin={{
                         vertical: "top",

@@ -1,16 +1,16 @@
 import { messages } from "@comet/admin";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
-import { BlockInterface, BlockState } from "@comet/blocks-admin";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { EditorState, EntityInstance, RichUtils } from "draft-js";
-import { MouseEvent, ReactElement, useCallback, useMemo, useState } from "react";
+import { EditorState, type EntityInstance, RichUtils } from "draft-js";
+import { type MouseEvent, type ReactElement, useCallback, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { type BlockInterface, type BlockState } from "../../../types";
 import { ENTITY_TYPE } from "./Decorator";
 
 interface IProps {

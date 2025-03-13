@@ -4,32 +4,32 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { DataGridPro, type GridRenderCellParams, type GridSlotsComponent, type GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { type ReactNode } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
-    GQLCombinationFieldsTestProductsGridFutureFragment,
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductsGridQuery,
-    GQLProductsGridQueryVariables,
+    type GQLCombinationFieldsTestProductsGridFutureFragment,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductsGridQuery,
+    type GQLProductsGridQueryVariables,
 } from "./CombinationFieldsTestProductsGrid.generated";
 
 const productsFragment = gql`
@@ -71,7 +71,10 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
+    toolbarAction: ReactNode;
+}
+function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -80,20 +83,20 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <FillSpace />
+            <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
 }
 
 type Props = {
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => React.ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
+export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -105,16 +108,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return (
-                    <GridCellContent
-                        primaryText={row.title}
-                        secondaryText={
-                            row.category?.title ?? (
-                                <FormattedMessage id="product.titleAndCategory.secondaryText.empty" defaultMessage="No category set" />
-                            )
-                        }
-                    />
-                );
+                return <GridCellContent primaryText={row.title ?? "-"} secondaryText={row.category?.title ?? "-"} />;
             },
             flex: 1,
             minWidth: 150,
@@ -125,17 +119,13 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryEmptyMessage = "-";
-                const typePrimaryLabels: Record<string, React.ReactNode> = {
+                const typeLabels: Record<string, ReactNode> = {
                     Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
                     Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
                 };
                 return (
-                    <GridCellContent
-                        primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[`${row.type}`] ?? row.type}
-                        secondaryText={row.type}
-                    />
+                    <GridCellContent primaryText={row.type == null ? "-" : (typeLabels[`${row.type}`] ?? row.type)} secondaryText={row.type ?? "-"} />
                 );
             },
             flex: 1,
@@ -147,14 +137,19 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryEmptyMessage = <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />;
-                const inStockPrimaryLabels: Record<string, React.ReactNode> = {
+                const inStockLabels: Record<string, ReactNode> = {
                     true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage={`It's in stock :D`} />,
                     false: <FormattedMessage id="product.staticSelectInStock.primaryText.false" defaultMessage="No longer available :(" />,
                 };
                 return (
                     <GridCellContent
-                        primaryText={row.inStock == null ? primaryEmptyMessage : inStockPrimaryLabels[`${row.inStock}`] ?? row.inStock}
+                        primaryText={
+                            row.inStock == null ? (
+                                <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />
+                            ) : (
+                                (inStockLabels[`${row.inStock}`] ?? row.inStock)
+                            )
+                        }
                     />
                 );
             },
@@ -247,6 +242,85 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             minWidth: 150,
         },
         {
+            field: "combinedAndNestedValues",
+            headerName: intl.formatMessage({ id: "product.combinedAndNestedValues", defaultMessage: "Custom formatting with nested values" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                return (
+                    <GridCellContent
+                        primaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValues.primaryText"
+                                defaultMessage={`This product is named "{title}" and is a "{type}"`}
+                                values={{ title: row.title ?? "-", type: row.type ?? "-" }}
+                            />
+                        }
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValues.secondaryText"
+                                defaultMessage="Price: {price} • Category: {category} • Same values again: ({nestedValues})"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage
+                                                id="product.combinedAndNestedValues.secondaryText.price.empty"
+                                                defaultMessage="No price set"
+                                            />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage
+                                            id="product.combinedAndNestedValues.secondaryText.category.empty"
+                                            defaultMessage="No category set"
+                                        />
+                                    ),
+                                    nestedValues: (
+                                        <FormattedMessage
+                                            id="product.combinedAndNestedValues.secondaryText.nestedValues"
+                                            defaultMessage="Price: {price} • Category: {category}"
+                                            values={{
+                                                price:
+                                                    typeof row.price === "undefined" || row.price === null ? (
+                                                        <FormattedMessage
+                                                            id="product.combinedAndNestedValues.secondaryText.nestedValues.price.empty"
+                                                            defaultMessage="No price set"
+                                                        />
+                                                    ) : (
+                                                        <FormattedNumber
+                                                            value={row.price}
+                                                            minimumFractionDigits={2}
+                                                            maximumFractionDigits={2}
+                                                            style="currency"
+                                                            currency="EUR"
+                                                        />
+                                                    ),
+                                                category: row.category?.title ?? (
+                                                    <FormattedMessage
+                                                        id="product.combinedAndNestedValues.secondaryText.nestedValues.category.empty"
+                                                        defaultMessage="No category set"
+                                                    />
+                                                ),
+                                            }}
+                                        />
+                                    ),
+                                }}
+                            />
+                        }
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
             field: "actions",
             headerName: "",
             sortable: false,
@@ -294,8 +368,8 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -306,16 +380,15 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { toolbarAction },
+            slotProps={{
+                toolbar: { toolbarAction } as ProductsGridToolbarToolbarProps,
             }}
         />
     );

@@ -1,13 +1,14 @@
 "use client";
 
-import { ReactElement, ReactNode, useState } from "react";
+import { type ReactElement, type ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import { DamVideoBlockData } from "../blocks.generated";
+import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { PropsWithData } from "./PropsWithData";
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
+import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import { type PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
@@ -27,11 +28,23 @@ export const DamVideoBlock = withPreview(
         previewImageIcon,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
+
+        const videoRef = useRef<HTMLVideoElement>(null);
+
+        useIsElementInViewport(videoRef, (inView) => {
+            if (autoplay && videoRef.current) {
+                if (inView) {
+                    videoRef.current.play();
+                } else {
+                    videoRef.current.pause();
+                }
+            }
+        });
 
         return (
             <>
@@ -62,6 +75,7 @@ export const DamVideoBlock = withPreview(
                         loop={loop}
                         playsInline
                         muted={autoplay}
+                        ref={videoRef}
                         $aspectRatio={aspectRatio.replace("x", " / ")}
                         $fill={fill}
                     >

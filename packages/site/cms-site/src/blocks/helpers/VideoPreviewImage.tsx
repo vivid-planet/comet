@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import styled, { css } from "styled-components";
 
-import { PixelImageBlockData } from "../../blocks.generated";
+import { type PixelImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../PixelImageBlock";
 
 export interface VideoPreviewImageProps {
@@ -35,15 +35,11 @@ const Root = styled.div<{ $fill?: boolean }>`
 
 const IconWrapper = styled.button`
     position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
-    opacity: 0.5;
+    background-color: rgba(0 0 0 / 50%);
     appearance: none;
     border: none;
     padding: 0;

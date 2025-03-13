@@ -2,16 +2,16 @@ import { gql, useMutation } from "@apollo/client";
 import { Invisible, Visible } from "@comet/admin-icons";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLRedirectActivenessFragment,
-    GQLUpdateRedirectActivenessMutation,
-    GQLUpdateRedirectActivenessMutationVariables,
+    type GQLRedirectActivenessFragment,
+    type GQLUpdateRedirectActivenessMutation,
+    type GQLUpdateRedirectActivenessMutationVariables,
 } from "./RedirectActiveness.generated";
 
-export const updateRedirectActivenessMutation = gql`
+const updateRedirectActivenessMutation = gql`
     mutation UpdateRedirectActiveness($id: ID!, $input: RedirectUpdateActivenessInput!) {
         updateRedirectActiveness(id: $id, input: $input) {
             id

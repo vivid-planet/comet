@@ -1,6 +1,6 @@
-import { createComponentSlot, InputWithPopper, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, InputWithPopper, type ThemedComponentBaseProps } from "@comet/admin";
 import { Box, ButtonBase, IconButton, InputAdornment as MuiInputAdornment, Typography } from "@mui/material";
-import { css, Theme } from "@mui/material/styles";
+import { css, type Theme } from "@mui/material/styles";
 import { HexColorPicker as HexColorPickerBase, RgbaStringColorPicker as RgbaStringColorPickerBase } from "react-colorful";
 
 export type ColorPickerClassKey =
@@ -203,6 +203,7 @@ export const FooterClearButton = createComponentSlot(ButtonBase)<ColorPickerClas
     ({ theme }) => css`
         padding: ${theme.spacing(2)};
         border-radius: ${theme.shape.borderRadius};
+        gap: 8px;
     `,
 );
 

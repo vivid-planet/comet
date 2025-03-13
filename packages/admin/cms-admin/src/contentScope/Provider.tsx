@@ -1,16 +1,24 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
-import { generatePath, match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
+import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 }
 
+type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
+    createPath: (scope: ContentScopeValues<S>) => string | string[];
+    createUrl: (scope: S) => string;
+};
+
+const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
+
 interface ContentScopeContext {
-    path: string;
+    path: string | string[];
     redirectPathAfterChange?: string; // define where the user should be redirected to after a scope change
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     values: ContentScopeValues;
+    location: ContentScopeLocation;
 }
 
 const defaultContentScopeContext: ContentScopeContext = {
@@ -19,6 +27,7 @@ const defaultContentScopeContext: ContentScopeContext = {
         //
     },
     values: [],
+    location: defaultContentScopeLocation,
 };
 
 type NonNull<T> = T extends null ? never : T;
@@ -100,16 +109,15 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
 
     const matchParamsString = JSON.stringify(match.params); // convert matchParams to string, like this we can memoize or callbacks more easily
     const scope = useMemo(() => parseScopeFromRouterMatchParams<S>(JSON.parse(matchParamsString)), [matchParamsString]);
-    const matchPath = match.path;
     const redirectPath = context.redirectPathAfterChange;
     const setScope = useCallback(
         (action: SetContentScopeAction) => {
             const newContentScope = action(scope);
             const pathAfterScopePath = redirectPath || "";
-            const url = generatePath(matchPath, formatScopeToRouterMatchParams(newContentScope));
+            const url = context.location.createUrl(newContentScope);
             history.push({ pathname: url + pathAfterScopePath });
         },
-        [scope, matchPath, history, redirectPath],
+        [scope, history, redirectPath, context.location],
     );
 
     return {
@@ -126,25 +134,40 @@ export interface ContentScopeProviderProps<S extends ContentScopeInterface = Con
     defaultValue: S;
     values: ContentScopeValues<S>;
     children: (p: { match: match<NonNullRecord<S>> }) => ReactNode;
-    location?: {
-        createPath: (scope: ContentScopeValues<S>) => string;
-        createUrl: (scope: S) => string;
-    };
+    location?: ContentScopeLocation<S>;
 }
 
 export function ContentScopeProvider<S extends ContentScopeInterface = ContentScopeInterface>({
     children,
     defaultValue,
     values,
-    location = { createPath: defaultCreatePath, createUrl: defaultCreateUrl },
+    location = defaultContentScopeLocation,
 }: ContentScopeProviderProps<S>) {
     const path = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<S>>(path);
-    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
+    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<string>();
+    const currentLocation = useLocation();
+
+    let defaultRedirectPathAfterChange: string | undefined;
+
+    if (match) {
+        // Location: /main/en/dashboard
+        // Match: /main/en
+        // Page: Location - Match = /dashboard
+        defaultRedirectPathAfterChange = currentLocation.pathname.replace(match.url, "");
+    }
 
     return (
-        <Context.Provider value={{ path, redirectPathAfterChange, setRedirectPathAfterChange, values }}>
+        <Context.Provider
+            value={{
+                path,
+                redirectPathAfterChange: redirectPathAfterChange ?? defaultRedirectPathAfterChange,
+                setRedirectPathAfterChange,
+                values,
+                location: location as ContentScopeLocation,
+            }}
+        >
             <Switch>
                 {match && (
                     <Route exact={false} strict={false} path={path}>

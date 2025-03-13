@@ -1,9 +1,8 @@
-import { Controller, ForbiddenException, forwardRef, Get, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
+import { BadRequestException, Controller, ForbiddenException, forwardRef, Get, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 import mime from "mime";
-import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
@@ -26,8 +25,8 @@ import { BASIC_TYPES, MODERN_TYPES } from "./images.constants";
 import { ImagesService } from "./images.service";
 import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "./images.util";
 
-const smartImageUrl = `:fileId/crop::focalPoint([A-Z]{5,9})/resize::resizeWidth::resizeHeight/:filename`;
-const focusImageUrl = `:fileId/crop::cropWidth::cropHeight::focalPoint::cropX::cropY/resize::resizeWidth::resizeHeight/:filename`;
+const smartImageUrl = `:fileId/crop\\::focalPoint/resize\\::resizeWidth\\::resizeHeight/:filename`;
+const focusImageUrl = `:fileId/crop\\::cropWidth\\::cropHeight\\::focalPoint\\::cropX\\::cropY/resize\\::resizeWidth\\::resizeHeight/:filename`;
 
 @Controller("dam/images")
 @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scopes are checked in Code
@@ -42,33 +41,7 @@ export class ImagesController {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    @Get(`/preview/${smartImageUrl}`)
-    async previewSmartCroppedImage(
-        @Param() params: ImageParams,
-        @Headers("Accept") accept: string,
-        @Res() res: Response,
-        @GetCurrentUser() user: CurrentUser,
-    ): Promise<void> {
-        if (params.cropArea.focalPoint !== FocalPoint.SMART) {
-            throw new NotFoundException();
-        }
-
-        const file = await this.filesService.findOneById(params.fileId);
-
-        if (file === null) {
-            throw new NotFoundException();
-        }
-
-        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
-            throw new ForbiddenException();
-        }
-
-        return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "private",
-        });
-    }
-
-    @Get(`/preview/${focusImageUrl}`)
+    @Get(`/preview{/:contentHash}/${focusImageUrl}`)
     async previewFocusCroppedImage(
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
@@ -85,20 +58,54 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new BadRequestException("Content Hash mismatch!");
+        }
+
         if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
 
         return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "private",
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
+        });
+    }
+
+    @Get(`/preview{/:contentHash}/${smartImageUrl}`)
+    async previewSmartCroppedImage(
+        @Param() params: ImageParams,
+        @Headers("Accept") accept: string,
+        @Res() res: Response,
+        @GetCurrentUser() user: CurrentUser,
+    ): Promise<void> {
+        if (params.cropArea.focalPoint !== FocalPoint.SMART) {
+            throw new NotFoundException();
+        }
+
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new BadRequestException("Content Hash mismatch!");
+        }
+
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            throw new ForbiddenException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
 
     @DisableCometGuards()
-    @Get(`/:hash/${smartImageUrl}`)
-    async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
-        if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
-            throw new NotFoundException();
+    @Get(`/:hash{/:contentHash}/${focusImageUrl}`)
+    async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
+        if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
+            throw new BadRequestException("Invalid hash");
         }
 
         const file = await this.filesService.findOneById(params.fileId);
@@ -107,14 +114,20 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(file, params, accept, res);
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new BadRequestException("Content Hash mismatch!");
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        });
     }
 
     @DisableCometGuards()
-    @Get(`/:hash/${focusImageUrl}`)
-    async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
-        if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
-            throw new NotFoundException();
+    @Get(`/:hash{/:contentHash}/${smartImageUrl}`)
+    async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
+        if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
+            throw new BadRequestException("Invalid hash");
         }
 
         const file = await this.filesService.findOneById(params.fileId);
@@ -123,7 +136,13 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(file, params, accept, res);
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new BadRequestException("Content Hash mismatch!");
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        });
     }
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {
@@ -204,17 +223,22 @@ export class ImagesController {
         const cache = await this.cacheService.get(file.contentHash, path);
         if (!cache) {
             const response = await fetch(this.imgproxyService.getSignedUrl(path));
+            if (response.body === null) {
+                throw new Error("Response body is null");
+            }
+
             const headers: Record<string, string> = {};
             for (const [key, value] of response.headers.entries()) {
                 headers[key] = value;
             }
-
             res.writeHead(response.status, { ...headers, ...overrideHeaders });
-            response.body.pipe(new PassThrough()).pipe(res);
+
+            const readableBody = Readable.fromWeb(response.body);
+            readableBody.pipe(new PassThrough()).pipe(res);
 
             if (response.ok) {
                 await this.cacheService.set(file.contentHash, path, {
-                    file: response.body.pipe(new PassThrough()),
+                    file: readableBody.pipe(new PassThrough()),
                     metaData: {
                         size: Number(headers["content-length"]),
                         headers,

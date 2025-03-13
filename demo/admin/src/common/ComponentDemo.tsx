@@ -1,10 +1,9 @@
 import {
-    CheckboxField,
+    CheckboxListField,
     Field,
-    FieldContainer,
     FinalForm,
-    FinalFormRadio,
     MainContent,
+    RadioGroupField,
     SelectField,
     Stack,
     SwitchField,
@@ -25,11 +24,11 @@ import {
     Snips,
 } from "@comet/admin-icons";
 import {
-    AdminComponentButton,
-    AdminComponentNestedButton,
-    AdminComponentPaper,
-    AdminComponentSection,
-    AdminComponentSectionGroup,
+    BlockAdminComponentButton,
+    BlockAdminComponentNestedButton,
+    BlockAdminComponentPaper,
+    BlockAdminComponentSection,
+    BlockAdminComponentSectionGroup,
     BlocksFinalForm,
     ColumnsLayoutPreview,
     ColumnsLayoutPreviewContent,
@@ -39,11 +38,13 @@ import {
     createFinalFormBlock,
     createListBlock,
     createOptionalBlock,
+    DamImageBlock,
+    FinalFormToggleButtonGroup,
+    PixelImageBlock,
     resolveNewState,
-} from "@comet/blocks-admin";
-import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
-import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
-import { ReactNode, useState } from "react";
+} from "@comet/cms-admin";
+import { Box, Grid, MenuItem, Typography } from "@mui/material";
+import { type ReactNode, useState } from "react";
 
 import { RichTextBlock } from "./blocks/RichTextBlock";
 
@@ -116,22 +117,22 @@ export function ComponentDemo() {
                             Basic Blocks
                         </Typography>
 
-                        <AdminComponentSectionGroup title="Grouped Section Headline">
-                            <AdminComponentSection>
+                        <BlockAdminComponentSectionGroup title="Grouped Section Headline">
+                            <BlockAdminComponentSection>
                                 <Typography variant="subtitle1">Label</Typography>
-                            </AdminComponentSection>
+                            </BlockAdminComponentSection>
 
-                            <AdminComponentSection>
+                            <BlockAdminComponentSection>
                                 <Typography variant="caption">
                                     Infotext/Caption Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
                                     Aenean massa.
                                 </Typography>
-                            </AdminComponentSection>
+                            </BlockAdminComponentSection>
 
-                            <AdminComponentSection>
-                                <AdminComponentPaper>Card with any content</AdminComponentPaper>
-                            </AdminComponentSection>
-                        </AdminComponentSectionGroup>
+                            <BlockAdminComponentSection>
+                                <BlockAdminComponentPaper>Card with any content</BlockAdminComponentPaper>
+                            </BlockAdminComponentSection>
+                        </BlockAdminComponentSectionGroup>
 
                         <FinalForm
                             mode="add"
@@ -208,26 +209,58 @@ export function ComponentDemo() {
 
                             <Field name="richText" label="Rich Text" component={FinalFormRichTextBlock} fullWidth />
 
-                            <FieldContainer label="Single choice">
-                                <Field name="single-choice" type="radio" value="Option 1" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 1" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="single-choice" type="radio" value="Option 2" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 2" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="single-choice" type="radio" value="Option 3" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 3" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="single-choice" type="radio" value="Option 4 disabled" fullWidth disabled>
-                                    {(props) => <FormControlLabel label="Option 4 disabled" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                            </FieldContainer>
-                            <FieldContainer label="Multiple choice">
-                                <CheckboxField name="multiple-choice-1" label="Option 1" fullWidth />
-                                <CheckboxField name="multiple-choice-2" label="Option 2" fullWidth />
-                                <CheckboxField name="multiple-choice-3" label="Option 3" fullWidth />
-                                <CheckboxField name="multiple-choice-4-disabled" label="Option 4 disabled" fullWidth disabled />
-                            </FieldContainer>
+                            <RadioGroupField
+                                label="Single choice"
+                                layout="column"
+                                name="single-choice"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option 1",
+                                        value: "Option 1",
+                                    },
+                                    {
+                                        label: "Option 2",
+                                        value: "Option 2",
+                                    },
+                                    {
+                                        label: "Option 3",
+                                        value: "Option 3",
+                                    },
+                                    {
+                                        label: "Option 4 disabled",
+                                        value: "Option 4",
+                                        disabled: true,
+                                    },
+                                ]}
+                            />
+
+                            <CheckboxListField
+                                layout="column"
+                                label="Multiple choice"
+                                variant="horizontal"
+                                name="multiple-choice"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option 1",
+                                        value: "Option 1",
+                                    },
+                                    {
+                                        label: "Option 2",
+                                        value: "Option 2",
+                                    },
+                                    {
+                                        label: "Option 3",
+                                        value: "Option 3",
+                                    },
+                                    {
+                                        label: "Option 4 disabled",
+                                        value: "Option 4",
+                                        disabled: true,
+                                    },
+                                ]}
+                            />
 
                             <SwitchField name="switch" fieldLabel="Switch with label" />
 
@@ -274,74 +307,74 @@ export function ComponentDemo() {
                             Action Blocks
                         </Typography>
 
-                        <AdminComponentSection>
+                        <BlockAdminComponentSection>
                             <OptionalRichTextBlock.AdminComponent
                                 state={optionalBlockState}
                                 updateState={(setStateAction) => setOptionalBlockState((prevState) => resolveNewState({ prevState, setStateAction }))}
                             />
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
 
-                        <AdminComponentSection>
-                            <AdminComponentNestedButton displayName="Nested" preview="Lorem impsum dolor" />
-                        </AdminComponentSection>
+                        <BlockAdminComponentSection>
+                            <BlockAdminComponentNestedButton displayName="Nested" preview="Lorem impsum dolor" />
+                        </BlockAdminComponentSection>
 
-                        <AdminComponentSection>
-                            <AdminComponentButton startIcon={<Add />} variant="primary">
+                        <BlockAdminComponentSection>
+                            <BlockAdminComponentButton startIcon={<Add />} variant="primary">
                                 Action Primary
-                            </AdminComponentButton>
-                        </AdminComponentSection>
+                            </BlockAdminComponentButton>
+                        </BlockAdminComponentSection>
 
-                        <AdminComponentSection>
-                            <AdminComponentButton startIcon={<Add />}>Action Default</AdminComponentButton>
-                        </AdminComponentSection>
+                        <BlockAdminComponentSection>
+                            <BlockAdminComponentButton startIcon={<Add />}>Action Default</BlockAdminComponentButton>
+                        </BlockAdminComponentSection>
 
-                        <AdminComponentSection>
+                        <BlockAdminComponentSection>
                             <PixelImageBlock.AdminComponent
                                 state={pixelImageBlockState}
                                 updateState={(setStateAction) =>
                                     setPixelImageBlockState((prevState) => resolveNewState({ prevState, setStateAction }))
                                 }
                             />
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
 
                         <Typography variant="h2" gutterBottom>
                             Collection Blocks
                         </Typography>
 
-                        <AdminComponentSection title="List Block">
+                        <BlockAdminComponentSection title="List Block">
                             <ListBlock.AdminComponent
                                 state={listBlockState}
                                 updateState={(setStateAction) => setListBlockState((prevState) => resolveNewState({ prevState, setStateAction }))}
                             />
-                        </AdminComponentSection>
-                        <AdminComponentSection title="Blocks Block">
+                        </BlockAdminComponentSection>
+                        <BlockAdminComponentSection title="Blocks Block">
                             <BlocksBlock.AdminComponent
                                 state={blocksBlockState}
                                 updateState={(setStateAction) => setBlocksBlockState((prevState) => resolveNewState({ prevState, setStateAction }))}
                             />
-                        </AdminComponentSection>
-                        <AdminComponentSection title="Columns Block">
+                        </BlockAdminComponentSection>
+                        <BlockAdminComponentSection title="Columns Block">
                             <ColumnsBlock.AdminComponent
                                 state={columnsBlockState}
                                 updateState={(setStateAction) => setColumnsBlockState((prevState) => resolveNewState({ prevState, setStateAction }))}
                             />
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
                     </Grid>
                     <Grid item xs={3}>
                         <Typography variant="h2" gutterBottom>
                             Compounds
                         </Typography>
 
-                        <AdminComponentSection>
-                            <AdminComponentPaper disablePadding>
+                        <BlockAdminComponentSection>
+                            <BlockAdminComponentPaper disablePadding>
                                 <DamImageBlock.AdminComponent
                                     state={imageBlockState}
                                     updateState={(setStateAction) =>
                                         setImageBlockState((prevState) => resolveNewState({ prevState, setStateAction }))
                                     }
                                 />
-                            </AdminComponentPaper>
-                            <AdminComponentPaper>
+                            </BlockAdminComponentPaper>
+                            <BlockAdminComponentPaper>
                                 <BlocksFinalForm
                                     onSubmit={() => {
                                         // noop
@@ -360,8 +393,8 @@ export function ComponentDemo() {
 
                                     <SwitchField name="shadow" fieldLabel="Shadow" />
                                 </BlocksFinalForm>
-                            </AdminComponentPaper>
-                        </AdminComponentSection>
+                            </BlockAdminComponentPaper>
+                        </BlockAdminComponentSection>
                     </Grid>
                 </Grid>
             </MainContent>

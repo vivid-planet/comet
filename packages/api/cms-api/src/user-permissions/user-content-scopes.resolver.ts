@@ -1,5 +1,5 @@
-import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
@@ -16,7 +16,8 @@ import { ContentScopeWithLabel } from "./user-permissions.types";
 export class UserContentScopesResolver {
     constructor(
         @InjectRepository(UserContentScopes) private readonly repository: EntityRepository<UserContentScopes>,
-        private readonly service: UserPermissionsService,
+        private readonly userService: UserPermissionsService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Mutation(() => Boolean)
@@ -25,14 +26,14 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
     ): Promise<boolean> {
-        await this.service.checkContentScopes(contentScopes);
+        await this.userService.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });
         if (entity) {
             entity = this.repository.assign(entity, { userId, contentScopes });
         } else {
             entity = this.repository.create({ userId, contentScopes });
         }
-        await this.repository.persistAndFlush(entity);
+        await this.entityManager.persistAndFlush(entity);
         return true;
     }
 
@@ -41,14 +42,14 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.service.normalizeContentScopes(
-            await this.service.getContentScopes(await this.service.getUser(userId), !skipManual),
-            await this.service.getAvailableContentScopes(),
+        return this.userService.normalizeContentScopes(
+            await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual),
+            await this.userService.getAvailableContentScopes(),
         );
     }
 
     @Query(() => [GraphQLJSONObject])
     async userPermissionsAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
-        return this.service.getAvailableContentScopesWithLabels();
+        return this.userService.getAvailableContentScopesWithLabels();
     }
 }

@@ -1,5 +1,5 @@
-import { future_GridConfig as GridConfig } from "@comet/cms-admin";
-import { GQLProduct } from "@src/graphql.generated";
+import { type GridConfig } from "@comet/admin-generator";
+import { type GQLProduct } from "@src/graphql.generated";
 
 export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
     type: "grid",
@@ -13,11 +13,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
             name: "titleAndCategory",
             headerName: "Title and Category",
             primaryText: "title",
-            secondaryText: {
-                type: "text",
-                field: "category.title",
-                emptyValue: "No category set",
-            },
+            secondaryText: "category.title",
         },
         {
             type: "combination",
@@ -88,6 +84,53 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 unit: "kilobyte",
                 unitDisplay: "short",
                 decimals: 1,
+            },
+        },
+        {
+            type: "combination",
+            name: "combinedAndNestedValues",
+            headerName: "Custom formatting with nested values",
+            primaryText: {
+                type: "formattedMessage",
+                message: 'This product is named "{title}" and is a "{type}"',
+                valueFields: {
+                    title: "title",
+                    type: "type",
+                },
+            },
+            secondaryText: {
+                type: "formattedMessage",
+                message: "Price: {price} • Category: {category} • Same values again: ({nestedValues})",
+                valueFields: {
+                    price: {
+                        type: "number",
+                        field: "price",
+                        currency: "EUR",
+                        emptyValue: "No price set",
+                    },
+                    category: {
+                        type: "text",
+                        field: "category.title",
+                        emptyValue: "No category set",
+                    },
+                    nestedValues: {
+                        type: "formattedMessage",
+                        message: "Price: {price} • Category: {category}",
+                        valueFields: {
+                            price: {
+                                type: "number",
+                                field: "price",
+                                currency: "EUR",
+                                emptyValue: "No price set",
+                            },
+                            category: {
+                                type: "text",
+                                field: "category.title",
+                                emptyValue: "No category set",
+                            },
+                        },
+                    },
+                },
             },
         },
     ],

@@ -1,9 +1,18 @@
 import { Close } from "@comet/admin-icons";
-import { Dialog, DialogContent as MuiDialogContent, DialogTitle, IconButton, Link, Modal as MuiModal, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent as MuiDialogContent,
+    DialogTitle,
+    IconButton,
+    Link,
+    Modal as MuiModal,
+    Typography,
+} from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import { styled } from "@mui/material/styles";
-import { ReactElement } from "react";
-import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
+import { type ReactElement } from "react";
+import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
 import { useBuildInformation } from "./build-information/useBuildInformation";
@@ -33,7 +42,7 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /
                     </DialogTitleContent>
                 </DialogTitle>
                 <DialogContent>
-                    {logo}
+                    <LogoContainer>{logo}</LogoContainer>
                     <VersionContainer>
                         <Typography fontWeight={500}>{`v${version}`}</Typography>
                         {buildInformation?.number && buildInformation.commitHash && (
@@ -50,7 +59,7 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /
                         )}
                         {buildInformation?.date && (
                             <Typography>
-                                <FormattedDate value={buildInformation.date} /> <FormattedTime value={buildInformation.date} />
+                                <FormattedDate value={buildInformation.date} dateStyle="medium" timeStyle="short" />
                             </Typography>
                         )}
                     </VersionContainer>
@@ -89,6 +98,7 @@ const DialogTitleSpace = styled("div")`
 const DialogContent = styled(MuiDialogContent)`
     display: flex;
     align-items: center;
+    text-align: center;
     justify-content: center;
     flex-direction: column;
 `;
@@ -99,4 +109,13 @@ const VersionContainer = styled("div")`
     flex-direction: column;
     margin-top: 40px;
     margin-bottom: 40px;
+`;
+
+const LogoContainer = styled("div")`
+    align-items: center;
+
+    svg {
+        max-width: 100%;
+        height: auto;
+    }
 `;

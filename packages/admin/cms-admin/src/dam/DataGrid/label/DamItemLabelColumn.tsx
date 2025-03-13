@@ -1,17 +1,17 @@
-import { IFilterApi, StackLink } from "@comet/admin";
+import { type IFilterApi, StackLink } from "@comet/admin";
 import { Box, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode, useEffect, useRef } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type ReactNode, useEffect, useRef } from "react";
+import { type FileRejection, useDropzone } from "react-dropzone";
 
-import { TextMatch } from "../../../common/MarkedMatches";
-import { useDamConfig } from "../../config/useDamConfig";
-import { DamFilter } from "../../DamTable";
+import { type TextMatch } from "../../../common/MarkedMatches";
+import { useDamConfig } from "../../config/damConfig";
+import { type DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";
-import { FileUploadApi } from "../fileUpload/useDamFileUpload";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
-import { DamItemMatches } from "../useDamSearchHighlighting";
+import { type FileUploadApi } from "../fileUpload/useDamFileUpload";
+import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../FolderDataGrid";
+import { type DamItemMatches } from "../useDamSearchHighlighting";
 import DamItemLabel from "./DamItemLabel";
 
 interface DamLabelWrapperProps {

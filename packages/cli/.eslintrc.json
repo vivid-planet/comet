@@ -1,7 +1,0 @@
-{
-    "extends": "@comet/eslint-config/core",
-    "ignorePatterns": ["bin/", "lib/**"],
-    "rules": {
-        "@comet/no-other-module-relative-import": "off"
-    }
-}

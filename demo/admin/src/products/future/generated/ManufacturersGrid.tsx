@@ -2,16 +2,17 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -19,19 +20,18 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { IconButton } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLDeleteManufacturerMutation,
-    GQLDeleteManufacturerMutationVariables,
-    GQLManufacturersGridFutureFragment,
-    GQLManufacturersGridQuery,
-    GQLManufacturersGridQueryVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLDeleteManufacturerMutation,
+    type GQLDeleteManufacturerMutationVariables,
+    type GQLManufacturersGridFutureFragment,
+    type GQLManufacturersGridQuery,
+    type GQLManufacturersGridQueryVariables,
 } from "./ManufacturersGrid.generated";
 
 const manufacturersFragment = gql`
@@ -92,20 +92,25 @@ function ManufacturersGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
     );
 }
 
-export function ManufacturersGrid(): React.ReactElement {
+export function ManufacturersGrid() {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "manufacturers",
+        }),
+        ...usePersistentColumnState("ManufacturersGrid"),
+    };
 
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
         {
@@ -122,7 +127,7 @@ export function ManufacturersGrid(): React.ReactElement {
             headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.street,
+            valueGetter: (params, row) => row.address?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -132,7 +137,7 @@ export function ManufacturersGrid(): React.ReactElement {
             type: "number",
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.streetNumber,
+            valueGetter: (params, row) => row.address?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
@@ -145,7 +150,6 @@ export function ManufacturersGrid(): React.ReactElement {
                         columnWidth={150}
                     />
                     <Tooltip
-                        trigger="hover"
                         title={
                             <FormattedMessage
                                 id="manufacturer.address.alternativeAddress.street.tooltip"
@@ -159,7 +163,7 @@ export function ManufacturersGrid(): React.ReactElement {
             ),
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.alternativeAddress?.street,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -175,7 +179,6 @@ export function ManufacturersGrid(): React.ReactElement {
                         columnWidth={150}
                     />
                     <Tooltip
-                        trigger="hover"
                         title={
                             <FormattedMessage
                                 id="manufacturer.address.alternativeAddress.streetNumber.tooltip"
@@ -190,14 +193,14 @@ export function ManufacturersGrid(): React.ReactElement {
             type: "number",
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.alternativeAddress?.streetNumber,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
         {
             field: "addressAsEmbeddable_street",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.street,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -205,14 +208,14 @@ export function ManufacturersGrid(): React.ReactElement {
             field: "addressAsEmbeddable_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
             type: "number",
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
         {
             field: "addressAsEmbeddable_alternativeAddress_street",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.street,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -223,7 +226,7 @@ export function ManufacturersGrid(): React.ReactElement {
                 defaultMessage: "Alt-Street number 2",
             }),
             type: "number",
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
@@ -274,8 +277,8 @@ export function ManufacturersGrid(): React.ReactElement {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -286,13 +289,12 @@ export function ManufacturersGrid(): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ManufacturersGridToolbar,
+            slots={{
+                toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

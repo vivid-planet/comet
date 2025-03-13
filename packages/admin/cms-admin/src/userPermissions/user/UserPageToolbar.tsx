@@ -1,12 +1,18 @@
 import { gql, useQuery } from "@apollo/client";
-import { Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { CrudMoreActionsMenu, FillSpace, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { ImpersonateUser, Reset } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 
+import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
-import { StartImpersonationButton } from "./ImpersonationButtons";
-import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
+import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
+import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
+import { type GQLUserPageQuery, type GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
+    const currentUser = useCurrentUser();
+    const isAllowed = useUserPermissionCheck();
+
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {
@@ -36,9 +42,26 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                 <TitleText>{data.user.name}</TitleText>
                 <SupportText>{data.user.email}</SupportText>
             </ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <StartImpersonationButton userId={userId} />
+                {isAllowed("impersonation") && (
+                    <CrudMoreActionsMenu
+                        overallActions={[
+                            currentUser.impersonated
+                                ? {
+                                      icon: <Reset />,
+                                      label: commonImpersonationMessages.stopImpersonation,
+                                      onClick: () => stopImpersonation,
+                                  }
+                                : {
+                                      label: commonImpersonationMessages.startImpersonation,
+                                      icon: <ImpersonateUser />,
+                                      disabled: userId === currentUser.id,
+                                      onClick: () => startImpersonation(userId),
+                                  },
+                        ]}
+                    />
+                )}
             </ToolbarActions>
         </StackToolbar>
     );

@@ -1,10 +1,54 @@
 # @comet/cli
 
+## 8.0.0-beta.1
+
+## 8.0.0-beta.0
+
+## 7.15.0
+
+## 7.14.0
+
+## 7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+- 753cd6f04: Add option for base64 encoding in `inject-site-configs` command
+
+## 7.11.0
+
+## 7.10.0
+
+## 7.9.0
+
+## 7.8.0
+
+## 7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+- d353fc847: The `inject-site-configs` command locates the site-config-file argument relative to the current directory
+- 9e2b0fac8: Add support for literal arrays to block meta
+
+    String, number, boolean, and JSON arrays can be defined by setting `array: true`.
+
+    **Example**
+
+    ```ts
+    class NewsListBlockData {
+        @BlockField({ type: "string", array: true })
+        newsIds: string[];
+    }
+    ```
+
 ## 7.5.0
 
 ### Patch Changes
 
--   bc0570ff2: Fix setting prelogin domain for deployment with site-configs
+- bc0570ff2: Fix setting prelogin domain for deployment with site-configs
 
 ## 7.4.2
 
@@ -14,7 +58,7 @@
 
 ### Patch Changes
 
--   a101ed6f5: inject-site-configs: Add sane defaults for preloginEnabled
+- a101ed6f5: inject-site-configs: Add sane defaults for preloginEnabled
 
     When `preloginEnabled` is `undefined` or `null` set it to `true`
     on environments != `prod` or `local`.
@@ -75,7 +119,7 @@
 
 ### Minor Changes
 
--   360b8b137: Add `--input-file` and `--output-file` options to generate-block-types script for enhanced flexibility.
+- 360b8b137: Add `--input-file` and `--output-file` options to generate-block-types script for enhanced flexibility.
 
 ## 6.7.0
 

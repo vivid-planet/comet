@@ -1,13 +1,15 @@
 import { gql } from "@comet/cms-site";
-import { languages } from "@src/config";
-import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
+import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
+import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { memoryCache } from "./cache";
-import { GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
+import { type CustomMiddleware } from "./chain";
+import { type GQLPredefinedPagesQuery, type GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
 
-async function getPredefinedPageRedirect(scope: { domain: string }, pathname: string): Promise<string | undefined> {
-    const pages = await fetchPredefinedPages(scope);
+async function getPredefinedPageRedirect(domain: string, pathname: string): Promise<string | undefined> {
+    const pages = await fetchPredefinedPages(domain);
 
     const matchingPredefinedPage = pages.find((page) => pathname.startsWith(page.codePath));
 
@@ -18,8 +20,8 @@ async function getPredefinedPageRedirect(scope: { domain: string }, pathname: st
     return undefined;
 }
 
-async function getPredefinedPageRewrite(scope: { domain: string }, pathname: string): Promise<string | undefined> {
-    const pages = await fetchPredefinedPages(scope);
+async function getPredefinedPageRewrite(domain: string, pathname: string): Promise<string | undefined> {
+    const pages = await fetchPredefinedPages(domain);
 
     const matchingPredefinedPage = pages.find((page) => pathname.startsWith(page.pageTreeNodePath));
 
@@ -47,17 +49,17 @@ const predefinedPagesQuery = gql`
     }
 `;
 
-const graphQLFetch = createGraphQLFetch();
+const graphQLFetch = createGraphQLFetchMiddleware();
 
-async function fetchPredefinedPages(scope: { domain: string }) {
-    const key = `predefinedPages-${JSON.stringify(scope)}`;
+async function fetchPredefinedPages(domain: string) {
+    const key = `predefinedPages-${domain}`;
 
     return memoryCache.wrap(key, async () => {
         const pages: Array<{ codePath: string; pageTreeNodePath: string }> = [];
 
-        for (const language of languages) {
+        for (const language of getSiteConfigForDomain(domain).scope.languages) {
             const { paginatedPageTreeNodes } = await graphQLFetch<GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables>(predefinedPagesQuery, {
-                scope: { domain: scope.domain, language },
+                scope: { domain: domain, language },
             });
 
             for (const node of paginatedPageTreeNodes.nodes) {
@@ -74,4 +76,29 @@ async function fetchPredefinedPages(scope: { domain: string }) {
     });
 }
 
-export { getPredefinedPageRedirect, getPredefinedPageRewrite };
+export function withPredefinedPagesMiddleware(middleware: CustomMiddleware) {
+    return async (request: NextRequest) => {
+        const headers = request.headers;
+        const host = getHostByHeaders(headers);
+        const siteConfig = await getSiteConfigForHost(host);
+        if (!siteConfig) {
+            throw new Error(`Cannot get siteConfig for host ${host}`);
+        }
+
+        const { pathname } = new URL(request.url);
+
+        const predefinedPageRedirect = await getPredefinedPageRedirect(siteConfig.scope.domain, pathname);
+
+        if (predefinedPageRedirect) {
+            return NextResponse.redirect(new URL(predefinedPageRedirect, request.url), 307);
+        }
+
+        const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
+
+        if (predefinedPageRewrite) {
+            return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+        }
+
+        return middleware(request);
+    };
+}

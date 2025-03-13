@@ -17,7 +17,7 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
@@ -25,34 +25,36 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
-import { LinksModule } from "@src/links/links.module";
-import { PagesModule } from "@src/pages/pages.module";
-import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
-import { ValidationError } from "apollo-server-express";
+import { LinksModule } from "@src/documents/links/links.module";
+import { PagesModule } from "@src/documents/pages/pages.module";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
-import { AuthModule } from "./auth/auth.module";
+import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
+import { Link } from "./documents/links/entities/link.entity";
+import { Page } from "./documents/pages/entities/page.entity";
+import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
+import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
-import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { NewsModule } from "./news/news.module";
+import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
-import { Page } from "./pages/entities/page.entity";
-import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 
 @Module({})
 export class AppModule {
     static forRoot(config: Config): DynamicModule {
+        const authModule = AuthModule.forRoot(config);
+
         return {
             module: AppModule,
             imports: [
@@ -68,7 +70,7 @@ export class AppModule {
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
-                                if (error instanceof ValidationError) {
+                                if (error.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
                                     return new ValidationError("Invalid request.");
                                 }
                             }
@@ -87,20 +89,21 @@ export class AppModule {
                     }),
                     inject: [ModuleRef],
                 }),
-                AuthModule,
+                authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availableContentScopes: [
-                            { domain: { value: "main", label: "MAIN" }, language: { value: "en", label: "English" } },
-                            { domain: { value: "main", label: "MAIN" }, language: { value: "de", label: "Deutsch" } },
-                            { domain: { value: "secondary", label: "SECONDARY" }, language: { value: "en", label: "English" } },
-                            { domain: { value: "secondary", label: "SECONDARY" }, language: { value: "de", label: "Deutsch" } },
-                        ],
+                        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+                            siteConfig.scope.languages.map((language) => ({
+                                domain: { value: siteConfig.scope.domain, label: siteConfig.name },
+                                language: { value: language, label: language.toUpperCase() },
+                            })),
+                        ),
                         userService,
                         accessControlService,
+                        systemUsers: [SYSTEM_USER_NAME],
                     }),
                     inject: [UserService, AccessControlService],
-                    imports: [AuthModule],
+                    imports: [authModule],
                 }),
                 BlocksModule,
                 DependenciesModule,
@@ -167,7 +170,7 @@ export class AppModule {
                 NewsModule,
                 MenusModule,
                 FooterModule,
-                PredefinedPageModule,
+                PredefinedPagesModule,
                 CronJobsModule,
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
@@ -180,6 +183,7 @@ export class AppModule {
                         return true;
                     },
                 }),
+                OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
             ],
         };

@@ -1,11 +1,11 @@
-import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mikro-orm/core";
+import { type EntityMetadata, type EntityRepository, type FilterQuery, type ObjectQuery } from "@mikro-orm/postgresql";
 
-import { getCrudSearchFieldsFromMetadata } from "../../generator/utils/search-fields-from-metadata";
+import { getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
-import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
-import { EnumsFilterInterface, isEnumsFilter } from "./enums.filter.factory";
+import { type EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
+import { type EnumsFilterInterface, isEnumsFilter } from "./enums.filter.factory";
 import { ManyToManyFilter } from "./many-to-many.filter";
 import { ManyToOneFilter } from "./many-to-one.filter";
 import { NumberFilter } from "./number.filter";
@@ -121,7 +121,7 @@ export function filterToMikroOrmQuery(
             if (!prop) {
                 throw new Error("Property not found");
             }
-            if (prop.reference != "1:m") {
+            if (prop.kind != "1:m") {
                 throw new Error("Property is not a 1:m relation");
             }
             if (!prop.targetMeta) {
@@ -142,7 +142,7 @@ export function filterToMikroOrmQuery(
             if (!prop) {
                 throw new Error("Property not found");
             }
-            if (prop.reference != "m:n") {
+            if (prop.kind != "m:n") {
                 throw new Error("Property is not a m:n relation");
             }
             if (!prop.targetMeta) {
@@ -154,7 +154,7 @@ export function filterToMikroOrmQuery(
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
-        if (filterProperty.equal !== undefined) {
+        if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {

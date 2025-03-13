@@ -1,5 +1,5 @@
-import { AllCategories } from "@comet/cms-admin";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { type AllCategories } from "@comet/cms-admin";
+import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { kebabCase, pascalCase } from "change-case";
 import { FormattedMessage } from "react-intl";
 

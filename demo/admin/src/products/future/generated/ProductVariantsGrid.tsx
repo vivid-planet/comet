@@ -2,16 +2,18 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -19,19 +21,18 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { IconButton } from "@mui/material";
+import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateProductVariantMutation,
-    GQLCreateProductVariantMutationVariables,
-    GQLDeleteProductVariantMutation,
-    GQLDeleteProductVariantMutationVariables,
-    GQLProductVariantsGridFutureFragment,
-    GQLProductVariantsGridQuery,
-    GQLProductVariantsGridQueryVariables,
+    type GQLCreateProductVariantMutation,
+    type GQLCreateProductVariantMutationVariables,
+    type GQLDeleteProductVariantMutation,
+    type GQLDeleteProductVariantMutationVariables,
+    type GQLProductVariantsGridFutureFragment,
+    type GQLProductVariantsGridQuery,
+    type GQLProductVariantsGridQueryVariables,
 } from "./ProductVariantsGrid.generated";
 
 const productVariantsFragment = gql`
@@ -84,10 +85,10 @@ function ProductVariantsGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                    <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
@@ -98,19 +99,22 @@ type Props = {
     product: string;
 };
 
-export function ProductVariantsGrid({ product }: Props): React.ReactElement {
+export function ProductVariantsGrid({ product }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "product-variants",
+        }),
+        ...usePersistentColumnState("ProductVariantsGrid"),
+    };
 
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
+            ...dataGridDateColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-            type: "date",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             flex: 1,
             minWidth: 150,
         },
@@ -165,8 +169,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             product,
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -177,13 +181,12 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductVariantsGridToolbar,
+            slots={{
+                toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

@@ -1,6 +1,6 @@
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 
-import { ColorPicker, ColorPickerProps } from "./ColorPicker";
+import { ColorPicker, type ColorPickerProps } from "./ColorPicker";
 
 export type FinalFormColorPickerProps = ColorPickerProps & FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
 

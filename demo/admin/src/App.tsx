@@ -1,44 +1,32 @@
 import "@fontsource-variable/roboto-flex/full.css";
-import "material-design-icons/iconfont/material-icons.css";
-import "typeface-open-sans";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import {
-    CmsBlockContextProvider,
-    ContentScopeInterface,
-    createDamFileDependency,
-    createHttpClient,
-    CurrentUserProvider,
-    DamConfigProvider,
-    DependenciesConfigProvider,
-    LocaleProvider,
-    MasterMenuRoutes,
-    SitePreview,
-    SitesConfigProvider,
-} from "@comet/cms-admin";
+import { CometConfigProvider, createDamFileDependency, CurrentUserProvider, MasterMenuRoutes, SitePreview } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
-import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
-import { ConfigProvider, createConfig } from "@src/config";
-import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
-import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
+import { createConfig } from "@src/config";
+import { type ContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
-import { Component, Fragment } from "react";
 import { DndProvider } from "react-dnd-multi-backend";
-import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router";
 
+import { ContentScopeProvider } from "./common/ContentScopeProvider";
+import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
-import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { ImportFromPicsum } from "./dam/ImportFromPicsum";
+import { Link } from "./documents/links/Link";
+import { Page } from "./documents/pages/Page";
 import { getMessages } from "./lang";
-import { Link } from "./links/Link";
+import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
+import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
+import { NewsListBlock } from "./news/blocks/NewsListBlock";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
-import { Page } from "./pages/Page";
+import { pageTreeCategories } from "./pageTree/pageTreeCategories";
 
 const GlobalStyle = () => (
     <Global
@@ -49,117 +37,113 @@ const GlobalStyle = () => (
         `}
     />
 );
-
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
-const apiClient = createHttpClient(config.apiUrl);
 
-class App extends Component {
-    public static render(baseEl: Element): void {
-        ReactDOM.render(<App />, baseEl);
-    }
+export function App() {
+    return (
+        <CometConfigProvider
+            {...config}
+            graphQLApiUrl={`${config.apiUrl}/graphql`}
+            pageTree={{
+                categories: pageTreeCategories,
+                documentTypes: pageTreeDocumentTypes,
+                additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
+            }}
+            dam={{
+                ...config.dam,
+                scopeParts: ["domain"],
+                additionalToolbarItems: <ImportFromPicsum />,
+                importSources: {
+                    picsum: {
+                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
+                    },
+                },
+                contentGeneration: {
+                    generateAltText: true,
+                    generateImageTitle: true,
+                },
+            }}
+            imgproxy={config.imgproxy}
+            dependencies={{
+                entityDependencyMap: {
+                    Page,
+                    Link,
+                    News: NewsDependency,
+                    DamFile: createDamFileDependency(),
+                },
+            }}
+            siteConfigs={{
+                configs: config.siteConfigs,
+                resolveSiteConfigForScope: (configs, scope) => {
+                    const siteConfig = configs.find((config) => {
+                        return config.scope.domain === scope.domain;
+                    });
 
-    public render(): JSX.Element {
-        return (
-            <ConfigProvider config={config}>
-                <ApolloProvider client={apolloClient}>
-                    <SitesConfigProvider
-                        value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
-                        }}
-                    >
-                        <DamConfigProvider
-                            value={{
-                                scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
-                                importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
-                                    },
-                                },
-                                contentGeneration: {
-                                    generateAltText: true,
-                                    generateImageTitle: true,
-                                },
-                            }}
-                        >
-                            <DependenciesConfigProvider
-                                entityDependencyMap={{
-                                    Page,
-                                    Link,
-                                    News: NewsDependency,
-                                    DamFile: createDamFileDependency(),
-                                }}
-                            >
-                                <IntlProvider locale="en" messages={getMessages()}>
-                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
-                                        <MuiThemeProvider theme={theme}>
-                                            <ErrorDialogHandler />
-                                            <CurrentUserProvider>
-                                                <RouterBrowserRouter>
-                                                    <DndProvider options={HTML5toTouch}>
-                                                        <SnackbarProvider>
-                                                            <CmsBlockContextProvider
-                                                                damConfig={{
-                                                                    apiUrl: config.apiUrl,
-                                                                    apiClient,
-                                                                    maxFileSize: config.dam.uploadsMaxFileSize,
-                                                                    maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                                    allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
+                    if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    return {
+                        url: siteConfig.url,
+                        preloginEnabled: siteConfig.preloginEnabled || false,
+                        blockPreviewBaseUrl:
+                            siteConfig.scope.domain === "secondary"
+                                ? `${siteConfig.url}/block-preview`
+                                : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                        sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
+                    };
+                },
+            }}
+            buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
+            contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
+            blocks={{
+                isBlockSupported: (block, scope) => {
+                    if (scope.domain === "main") {
+                        return true;
+                    } else {
+                        return block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name;
+                    }
+                },
+            }}
+        >
+            <ApolloProvider client={apolloClient}>
+                <IntlProvider locale="en" messages={getMessages()}>
+                    <MuiThemeProvider theme={theme}>
+                        <DndProvider options={HTML5toTouch}>
+                            <SnackbarProvider>
+                                <ErrorDialogHandler />
+                                <CurrentUserProvider>
+                                    <RouterBrowserRouter>
+                                        <GlobalStyle />
+                                        <ContentScopeProvider>
+                                            {({ match }) => (
+                                                <Switch>
+                                                    <Route
+                                                        path={`${match.path}/preview`}
+                                                        render={(props) => (
+                                                            <SitePreview
+                                                                resolvePath={(path: string, scope) => {
+                                                                    return `/${scope.language}${path}`;
                                                                 }}
-                                                                pageTreeCategories={pageTreeCategories}
-                                                                pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                                additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                            >
-                                                                <Fragment>
-                                                                    <GlobalStyle />
-                                                                    <ContentScopeProvider>
-                                                                        {({ match }) => (
-                                                                            <Switch>
-                                                                                {/* @TODO: add preview to contentScope once site is capable of contentScope */}
-                                                                                <Route
-                                                                                    path={`${match.path}/preview`}
-                                                                                    render={(props) => (
-                                                                                        <SitePreview
-                                                                                            resolvePath={(
-                                                                                                path: string,
-                                                                                                scope: ContentScopeInterface,
-                                                                                            ) => {
-                                                                                                return `/${scope.language}${path}`;
-                                                                                            }}
-                                                                                            {...props}
-                                                                                        />
-                                                                                    )}
-                                                                                />
-                                                                                <Route
-                                                                                    render={() => (
-                                                                                        <MasterLayout
-                                                                                            headerComponent={MasterHeader}
-                                                                                            menuComponent={MasterMenu}
-                                                                                        >
-                                                                                            <MasterMenuRoutes menu={masterMenuData} />
-                                                                                        </MasterLayout>
-                                                                                    )}
-                                                                                />
-                                                                            </Switch>
-                                                                        )}
-                                                                    </ContentScopeProvider>
-                                                                </Fragment>
-                                                            </CmsBlockContextProvider>
-                                                        </SnackbarProvider>
-                                                    </DndProvider>
-                                                </RouterBrowserRouter>
-                                            </CurrentUserProvider>
-                                        </MuiThemeProvider>
-                                    </LocaleProvider>
-                                </IntlProvider>
-                            </DependenciesConfigProvider>
-                        </DamConfigProvider>
-                    </SitesConfigProvider>
-                </ApolloProvider>
-            </ConfigProvider>
-        );
-    }
+                                                                {...props}
+                                                            />
+                                                        )}
+                                                    />
+                                                    <Route
+                                                        render={() => (
+                                                            <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                <MasterMenuRoutes menu={masterMenuData} />
+                                                            </MasterLayout>
+                                                        )}
+                                                    />
+                                                </Switch>
+                                            )}
+                                        </ContentScopeProvider>
+                                    </RouterBrowserRouter>
+                                </CurrentUserProvider>
+                            </SnackbarProvider>
+                        </DndProvider>
+                    </MuiThemeProvider>
+                </IntlProvider>
+            </ApolloProvider>
+        </CometConfigProvider>
+    );
 }
-export default App;

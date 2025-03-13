@@ -1,22 +1,37 @@
 import {
+    convertPreviewDataToHeaders,
     createFetchWithDefaults,
-    createFetchWithPreviewHeaders,
     createGraphQLFetch as createGraphQLFetchLibrary,
-    SitePreviewData,
+    type SitePreviewData,
 } from "@comet/cms-site";
 
-const isServerSide = typeof window === "undefined";
-export const graphQLApiUrl = `${isServerSide ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
-export function createGraphQLFetch(previewData?: SitePreviewData) {
-    const headers = isServerSide
-        ? {
-              authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
-          }
-        : undefined;
+import { getVisibilityParam } from "./ServerContext";
+
+export function createGraphQLFetch() {
+    if (typeof window !== "undefined") {
+        throw new Error("createGraphQLFetch: cannot use on client side.");
+    }
+    if (process.env.NEXT_RUNTIME === "edge") {
+        throw new Error("createGraphQLFetch: cannot use in edge runtime, use createGraphQLFetchMiddleware instead.");
+    }
+
+    let previewData: SitePreviewData | undefined;
+    const visibilityParam = getVisibilityParam();
+    if (visibilityParam === "invisibleBlocks") previewData = { includeInvisible: true };
+    if (visibilityParam === "invisiblePages") previewData = { includeInvisible: false };
+
     return createGraphQLFetchLibrary(
         // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled
         // see cache-handler.ts for maximum cache duration (24 hours)
-        createFetchWithDefaults(createFetchWithPreviewHeaders(fetch, previewData), { next: { revalidate: 7.5 * 60 }, headers }),
-        graphQLApiUrl,
+        createFetchWithDefaults(fetch, {
+            next: {
+                revalidate: 7.5 * 60,
+            },
+            headers: {
+                authorization: `Basic ${Buffer.from(`system-user:${process.env.BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                ...convertPreviewDataToHeaders(previewData),
+            },
+        }),
+        `${process.env.API_URL_INTERNAL}/graphql`,
     );
 }

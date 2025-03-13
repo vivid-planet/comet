@@ -1,5 +1,5 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 import { addHours } from "date-fns";
@@ -21,6 +21,7 @@ export class FileUploadsService {
         @InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
+        private readonly entityManager: EntityManager,
     ) {}
 
     async upload(file: FileUploadInput): Promise<FileUpload> {
@@ -38,7 +39,7 @@ export class FileUploadsService {
             contentHash,
         });
 
-        this.repository.persist(fileUpload);
+        this.entityManager.persist(fileUpload);
 
         return fileUpload;
     }
@@ -73,10 +74,6 @@ export class FileUploadsService {
     }
 
     createImageUrl(file: FileUpload, resizeWidth: number): string | undefined {
-        if (!this.config.download) {
-            throw new Error("File Uploads: Missing download configuration");
-        }
-
         if (!ALL_TYPES.includes(file.mimetype)) {
             return undefined;
         }

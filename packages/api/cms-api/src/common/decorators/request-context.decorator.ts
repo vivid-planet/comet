@@ -1,5 +1,5 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { IncomingHttpHeaders } from "http";
+import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
+import { type IncomingHttpHeaders } from "http";
 
 import { BlockVisibility } from "../../blocks/types";
 import { PageTreeNodeVisibility } from "../../page-tree/types";

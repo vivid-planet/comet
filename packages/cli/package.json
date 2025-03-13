@@ -1,10 +1,10 @@
 {
     "name": "@comet/cli",
-    "version": "7.5.0",
+    "version": "8.0.0-beta.1",
     "repository": {
+        "directory": "packages/cli",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/cli"
+        "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
     "main": "lib/index.js",
@@ -21,25 +21,22 @@
         "clean": "rimraf lib",
         "dev": "tsc --watch",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc"
     },
     "dependencies": {
-        "commander": "^9.2.0",
-        "prettier": "^2.7.1"
+        "commander": "^9.5.0",
+        "prettier": "^3.5.3",
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:^7.5.0",
-        "@types/node": "^18.0.0",
-        "eslint": "^8.0.0",
-        "npm-run-all": "^4.1.5",
-        "rimraf": "^3.0.0",
-        "ts-node": "^10.9.1",
-        "typescript": "^4.0.0"
-    },
-    "peerDependencies": {
-        "ts-node": "^10.9.1"
+        "@comet/eslint-config": "workspace:*",
+        "@types/node": "^22.13.9",
+        "eslint": "^9.22.0",
+        "npm-run-all2": "^5.0.2",
+        "rimraf": "^6.0.1",
+        "typescript": "^5.7.3"
     },
     "publishConfig": {
         "access": "public",

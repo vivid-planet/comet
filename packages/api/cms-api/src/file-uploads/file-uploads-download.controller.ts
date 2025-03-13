@@ -1,10 +1,21 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Controller, Get, GoneException, Headers, Inject, NotFoundException, Param, Res, Type, UnsupportedMediaTypeException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Controller,
+    Get,
+    GoneException,
+    Headers,
+    Inject,
+    NotFoundException,
+    Param,
+    Res,
+    Type,
+    UnsupportedMediaTypeException,
+} from "@nestjs/common";
 import { Response } from "express";
 import mime from "mime";
-import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
@@ -37,7 +48,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
         @Get(":hash/:id/:timeout")
         async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             if (Date.now() > params.timeout) {
@@ -103,7 +114,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
         @Get(":hash/:id/:timeout/:resizeWidth/:filename")
         async image(@Param() { hash, ...params }: HashImageParams, @Res() res: Response, @Headers("Accept") accept: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             if (Date.now() > params.timeout) {
@@ -140,17 +151,22 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
                 const response = await fetch(this.imgproxyService.getSignedUrl(path));
+                if (response.body === null) {
+                    throw new Error("Response body is null");
+                }
+
                 const headers: Record<string, string> = {};
                 for (const [key, value] of response.headers.entries()) {
                     headers[key] = value;
                 }
-
                 res.writeHead(response.status, headers);
-                response.body.pipe(new PassThrough()).pipe(res);
+
+                const readableBody = Readable.fromWeb(response.body);
+                readableBody.pipe(new PassThrough()).pipe(res);
 
                 if (response.ok) {
                     await this.cacheService.set(file.contentHash, path, {
-                        file: response.body.pipe(new PassThrough()),
+                        file: readableBody.pipe(new PassThrough()),
                         metaData: {
                             size: Number(headers["content-length"]),
                             headers,

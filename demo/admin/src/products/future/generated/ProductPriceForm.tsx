@@ -3,18 +3,19 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Field, filterByFragment, FinalForm, FinalFormInput, Loading, useFormApiRef } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormApi } from "final-form";
+import { InputAdornment } from "@mui/material";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { productFormFragment, productQuery, updateProductMutation } from "./ProductPriceForm.gql";
 import {
-    GQLProductPriceFormDetailsFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLProductPriceFormDetailsFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductPriceForm.gql.generated";
 
 type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
@@ -25,14 +26,14 @@ interface FormProps {
     id: string;
 }
 
-export function ProductPriceForm({ id }: FormProps): React.ReactElement {
+export function ProductPriceForm({ id }: FormProps) {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id } });
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
@@ -94,6 +95,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
                         component={FinalFormInput}
                         type="number"
                         label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                        startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                     />
                 </>

@@ -1,0 +1,155 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as ToolbarStories from "./Toolbar.stories";
+
+<Meta of={ToolbarStories} />
+
+# Toolbar
+
+The Toolbar System is a lightweight drop-in system to build a common and recognizable UI Pattern over all `@comet/admin` screens. It offers a structured place for Back Button, Title, Breadcrumbs, Action Buttons, Filters, Filter Bar, and many other UI Components which concern the currently presented screen.
+
+## Components
+
+The Toolbar system currently consists of some basic components. Everything is designed to offer developers a structured, easy usable, customizable and extendable toolbar system. From the User perspective the `@comet/admin` Toolbar should offer an application wide consistent UI, where the user consistently knows where one can find the back button, breadcrumbs, screen title or call to action buttons.
+
+Currently supported and built-in components:
+
+- `Toolbar`
+- `ToolbarBackButton`
+- `ToolbarBreadcrumbs`
+- `ToolbarAutomaticTitleItem`
+- `ToolbarItem`
+- `ToolbarActions`
+- `FillSpace`
+
+### Toolbar
+
+The Toolbar component is the wrapper for all `Toolbar`\* child components and takes care of the positioning of the toolbar.
+
+### ToolbarAutomaticTitleItem
+
+The `ToolbarAutomaticTitleItem` uses the StackApi to evaluate the title. Just drop it in the toolbar and the title will be fetched automatically.
+
+If you need a custom title, simple build your own `CustomToolbarTitleItem`. For custom appearance - see more on custom title stories.
+
+<Canvas of={ToolbarStories.AutomaticTitleItem} />
+
+### ToolbarTitleItem
+
+If you only want a consistent Title over the all application, we recommend to use our ToolbarTitleItem. Simple put your Component in it, and if it is a string, it will get a consistent styling over the whole application
+
+<Canvas of={ToolbarStories.TitleItem} />
+
+### ToolbarTitleItem internationalization
+
+<Canvas of={ToolbarStories.LocalizedTitleItem} />
+
+### ToolbarBreadcrumbs
+
+The ToolbarBreadcrumbs Component uses the StackApi to evaluate all necessary Breadcrumbs to display.
+
+Breadcrumb entries get displayed side by side and are clickable.
+
+<Canvas of={ToolbarStories.Breadcrumbs} />
+
+### ToolbarBackButton
+
+The `ToolbarBackButton` uses the `StackApiContext` to evaluate, if the user can go back. It should offer a simple and common drop in component, which indicates the user that one is inside a stack and has the possibility to go back.
+
+The back button will only be shown, if there is a `StackApiContext` and the user can go back. If you want to use a custom back button - see more how to customize the back button on custom back button story.
+
+<Canvas of={ToolbarStories.BackButton} />
+
+### FillSpace
+
+The `FillSpace` Component is a layout component that can fill space between components, so one can simple move e.g. the buttons to the right side or center them.
+
+Here are some examples how one can use this component.
+
+<Canvas of={ToolbarStories.FillSpaceLeft} />
+
+<Canvas of={ToolbarStories.FillSpaceRight} />
+
+<Canvas of={ToolbarStories.FillSpaceMiddle} />
+
+<Canvas of={ToolbarStories.FillSpaceMiddle2} />
+
+### ToolbarItem
+
+This component is meant to separate components in the toolbar, it adds a consistent separator on the right side.
+
+<Canvas of={ToolbarStories._ToolbarItem} />
+
+The `ToolbarItem` can be easily mixed up with other drop in compoents like `ToolbarAutomaticTitleItem`
+
+<Canvas of={ToolbarStories.ToolbarItemMixingWithOtherComponents} />
+
+### ToolbarActions
+
+<Canvas of={ToolbarStories.ToolbarActionsOneAction} />
+
+<Canvas of={ToolbarStories.ToolbarActionsTwoActions} />
+
+### Custom Title Item
+
+Here one can find some examples, how one can deal with custom titles. Add a `ToolbarItem` which encapsulates a `Typography` or maybe any other React component.
+
+<Canvas of={ToolbarStories.CustomTitleH1} />
+
+<Canvas of={ToolbarStories.CustomTitleH2} />
+
+One can also use totally custom components in it.
+
+<Canvas of={ToolbarStories.CustomTitleH3} />
+
+The Toolbar expands automatically if it needs more space
+
+<Canvas of={ToolbarStories.CustomTitleH4} />
+
+### Custom Back Button
+
+<Canvas of={ToolbarStories.CustomBackButton} />
+
+### Search - Final Form Search
+
+<Canvas of={ToolbarStories.FinalFormSearch} />
+
+### Search - Final Form Search Custom Icon
+
+<Canvas of={ToolbarStories.FinalFormSearchCustomIcon} />
+
+### Search - Final Form Input
+
+<Canvas of={ToolbarStories.WithFinalFormInput} />
+
+### Search - Autocomplete
+
+<Canvas of={ToolbarStories.SearchAutocomplete} />
+
+### Save
+
+<Canvas of={ToolbarStories.Save} />
+
+### Final Form Save Button
+
+There is also a component (`FinalFormSaveButton`) which automatically handles saving inside a `Form` or `FinalForm` component.
+
+This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying statuses (disabled, saving, error, success).
+
+<Canvas of={ToolbarStories._FinalFormSaveButton} />
+
+### SplitButton Save
+
+> ⚠️`SplitButton` is deprecated since v7 and shouldn't be used
+
+<Canvas of={ToolbarStories.SaveSplitButton} />
+
+### Final Form Save Split Button
+
+> ⚠️`FinalFormSaveSplitButton` is deprecated since v7 and shouldn't be used
+
+The `FinalFormSaveSplitButton` component automatically handles **saving** and **save and go back** inside a `Form` or `FinalForm` component.
+
+This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying statuses (disabled, saving, saving successfully) and also handles back navigation on automatically.
+
+<Canvas of={ToolbarStories._FinalFormSaveSplitButton} />

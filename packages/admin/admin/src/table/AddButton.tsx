@@ -4,7 +4,7 @@ import { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
-import { ISelectionApi } from "../SelectionApi";
+import { type ISelectionApi } from "../SelectionApi";
 
 interface IProps {
     selectionApi: ISelectionApi;

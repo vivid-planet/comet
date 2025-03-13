@@ -4,10 +4,10 @@ import { SsgRunning, SsgStandby } from "@comet/admin-icons";
 import { Box, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { differenceInMinutes, parseISO } from "date-fns";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage, FormattedTime } from "react-intl";
 
-import { GQLBuildStatusQuery } from "./BuildEntry.generated";
+import { type GQLBuildStatusQuery } from "./BuildEntry.generated";
 import { PublishButton } from "./PublishButton";
 
 const buildStatusQuery = gql`
@@ -120,7 +120,25 @@ export function BuildEntry() {
     const running = data?.builds[0]?.status === "active" || data?.builds[0]?.status === "pending";
 
     return (
-        <AppHeaderDropdown startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />} dropdownArrow={null}>
+        <AppHeaderDropdown
+            startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />}
+            dropdownArrow={null}
+            slotProps={{
+                button: {
+                    slotProps: {
+                        content: {
+                            sx: (theme) => ({
+                                paddingX: "17px",
+
+                                [theme.breakpoints.up("md")]: {
+                                    paddingX: theme.spacing(4),
+                                },
+                            }),
+                        },
+                    },
+                },
+            }}
+        >
             <Content>
                 <List>
                     <ListItem dense={false}>

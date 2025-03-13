@@ -3,14 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
+    CheckboxField,
     Field,
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRangeInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     messages,
@@ -21,40 +21,42 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
+import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
 import {
+    type BlockState,
+    createFinalFormBlock,
     DamImageBlock,
     FileUploadField,
-    GQLFinalFormFileUploadFragment,
+    type GQLFinalFormFileUploadDownloadableFragment,
+    type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { validateTitle } from "../validateTitle";
+import { FutureProductNotice } from "../../helpers/FutureProductNotice";
 import {
-    GQLManufacturersSelectQuery,
-    GQLManufacturersSelectQueryVariables,
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
+    type GQLManufacturersSelectQuery,
+    type GQLManufacturersSelectQueryVariables,
+    type GQLProductCategoriesSelectQuery,
+    type GQLProductCategoriesSelectQueryVariables,
 } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLProductFormDetailsFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLProductFormDetailsFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 const rootBlocks = {
@@ -62,7 +64,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
@@ -80,7 +82,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -91,7 +93,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
@@ -107,6 +109,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
+                      lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
                   }
                 : {
                       inStock: false,
@@ -187,7 +190,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                     {saveConflict.dialogs}
                     <>
                         <FieldSet
-                            initiallyExpanded
+                            initiallyExpanded={true}
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
                             supportText={
                                 mode === "edit" && (
@@ -209,7 +212,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 name="title"
                                 label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
-                                validate={validateTitle}
+                                validate={(value: string) =>
+                                    value.length < 3 ? (
+                                        <FormattedMessage
+                                            id="product.validate.titleMustBe3CharsLog"
+                                            defaultMessage="Title must be at least 3 characters long"
+                                        />
+                                    ) : undefined
+                                }
                             />
 
                             <TextField
@@ -310,7 +320,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
+                            <Field name="dimensionsEnabled" fullWidth subscription={{ value: true }}>
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>
@@ -355,6 +365,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <LocationIcon />
+                                    </InputAdornment>
+                                }
                                 loadOptions={async () => {
                                     const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
                                         query: gql`
@@ -381,14 +396,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     }
                                 }}
                             </OnChangeField>
-                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                        control={<FinalFormCheckbox {...props} />}
-                                    />
-                                )}
-                            </Field>
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"
@@ -396,7 +409,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
+                            <FutureProductNotice />
                             <Field
                                 name="image"
                                 isEqual={isEqual}
@@ -410,14 +429,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="priceList"
                                 label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
                                 variant="horizontal"
-                                maxFileSize={4194304}
+                                maxFileSize={1024 * 1024 * 4}
                             />
                             <FileUploadField
                                 name="datasheets"
                                 label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
                                 variant="horizontal"
                                 multiple
-                                maxFileSize={4194304}
+                                maxFileSize={1024 * 1024 * 4}
+                            />
+                            <DateTimeField
+                                variant="horizontal"
+                                fullWidth
+                                name="lastCheckedAt"
+                                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
                             />
                         </FieldSet>
                     </>

@@ -1,4 +1,4 @@
-import { StorageMetaData } from "../../../blob-storage/backends/blob-storage-backend.interface";
+import { type StorageMetaData } from "../../../blob-storage/backends/blob-storage-backend.interface";
 
 export interface FileCache {
     file: NodeJS.ReadableStream;

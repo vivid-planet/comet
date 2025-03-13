@@ -1,14 +1,29 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
+import {
+    commonFileErrorMessages,
+    type ErrorFileSelectItem,
+    FileSelect,
+    type FileSelectProps,
+    type LoadingFileSelectItem,
+    type ValidFileSelectItem,
+} from "@comet/admin";
 import { useMemo, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import { useCometConfig } from "../../config/CometConfigContext";
+import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
     fragment FinalFormFileUpload on FileUpload {
+        id
+        name
+        size
+    }
+`;
+
+export const finalFormFileUploadDownloadableFragment = gql`
+    fragment FinalFormFileUploadDownloadable on FileUpload {
         id
         name
         size
@@ -34,12 +49,18 @@ type FailedApiResponse = {
     error?: string;
 };
 
-type FinalFormFileUploadSingleFileProps = FieldRenderProps<GQLFinalFormFileUploadFragment, HTMLInputElement> & {
+type FinalFormFileUploadSingleFileProps = FieldRenderProps<
+    GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment,
+    HTMLInputElement
+> & {
     multiple?: false;
     maxFiles?: 1;
 };
 
-type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement> & {
+type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<
+    Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>,
+    HTMLInputElement
+> & {
     multiple: true;
     maxFiles?: number;
 };
@@ -47,7 +68,7 @@ type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<GQLFinalFormFileUp
 export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
     ? FinalFormFileUploadMultipleFilesProps
     : FinalFormFileUploadSingleFileProps) &
-    Partial<FileSelectProps<GQLFinalFormFileUploadFragment>>;
+    Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>>;
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
@@ -57,17 +78,15 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
-    const {
-        damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
-    } = useCmsBlockContext();
+    const { apiUrl } = useCometConfig();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
-    const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment>[]>(() => {
+    const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>[]>(() => {
         const files = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
         return files.map((file) => {
             let previewUrl: string | undefined = undefined;
 
-            if (file.imageUrl) {
+            if (isDownloadableFile(file) && file.imageUrl) {
                 const isNewlyUploadedFile = file.imageUrl.startsWith("blob:");
 
                 if (isNewlyUploadedFile) {
@@ -87,7 +106,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
     return (
-        <FileSelect<GQLFinalFormFileUploadFragment>
+        <FileSelect<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>
             onDrop={async (acceptedFiles, rejectedFiles) => {
                 setFailedUploads([]);
 
@@ -121,7 +140,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
 
                 setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
 
-                const successfullyUploadedFiles: GQLFinalFormFileUploadFragment[] = [];
+                const successfullyUploadedFiles: Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment> = [];
 
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
@@ -134,13 +153,16 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
 
                     if ("id" in jsonResponse) {
                         setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
-                        const newlyUploadedFile: GQLFinalFormFileUploadFragment = {
+                        const newlyUploadedFile: GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment = {
                             id: jsonResponse.id,
                             name: jsonResponse.name,
                             size: jsonResponse.size,
-                            downloadUrl: jsonResponse.downloadUrl ?? null,
                             imageUrl: ["image/png", "image/jpeg", "image/gif", "image/webp"].includes(file.type) ? URL.createObjectURL(file) : null,
                         };
+
+                        if (jsonResponse.downloadUrl) {
+                            (newlyUploadedFile as GQLFinalFormFileUploadDownloadableFragment).downloadUrl = jsonResponse.downloadUrl;
+                        }
 
                         if (singleFile) {
                             onChange(newlyUploadedFile);
@@ -183,8 +205,14 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             multiple={multiple}
             maxFiles={maxFiles}
             error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
-            getDownloadUrl={(file) => (file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
+            getDownloadUrl={(file) => (isDownloadableFile(file) && file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />
     );
 };
+
+function isDownloadableFile(
+    file: GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment,
+): file is GQLFinalFormFileUploadDownloadableFragment {
+    return "downloadUrl" in file;
+}

@@ -1,17 +1,17 @@
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
+
 import {
-    AnnotationBlockMeta,
     BlockContext,
     BlockData,
     BlockIndexData,
     BlockInput,
+    blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
-    inputToData,
-} from "@comet/blocks-api";
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
-
+} from "../../blocks/block";
+import { AnnotationBlockMeta } from "../../blocks/decorators/field";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
@@ -76,7 +76,7 @@ class PixelImageBlockInput extends BlockInput {
     cropArea?: ImageCropAreaInput;
 
     transformToBlockData(): PixelImageBlockData {
-        return inputToData(PixelImageBlockData, this);
+        return blockInputToData(PixelImageBlockData, this);
     }
 }
 

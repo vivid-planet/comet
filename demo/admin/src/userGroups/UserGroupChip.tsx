@@ -1,5 +1,5 @@
 import { Box, Chip } from "@mui/material";
-import { GQLUserGroup } from "@src/graphql.generated";
+import { type GQLUserGroup } from "@src/graphql.generated";
 
 import { userGroupOptions } from "./userGroupOptions";
 

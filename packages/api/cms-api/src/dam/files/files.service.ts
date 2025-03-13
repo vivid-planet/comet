@@ -1,13 +1,11 @@
-import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw, Utils } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
@@ -17,8 +15,6 @@ import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.ut
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -35,13 +31,12 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { FileValidationService } from "./file-validation.service";
 import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
-export const withFilesSelect = (
+const withFilesSelect = (
     qb: QueryBuilder<FileInterface>,
     args: {
         query?: string;
@@ -109,7 +104,6 @@ export class FilesService {
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
-        @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
@@ -117,8 +111,7 @@ export class FilesService {
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
-        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
-        private readonly fileValidationService: FileValidationService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -240,6 +233,54 @@ export class FilesService {
         );
     }
 
+    async replace(
+        fileToReplace: FileInterface,
+        uploadedFile: FileUploadInput,
+        assignData: Omit<UploadFileBodyInterface, "scope" | "folderId">,
+    ): Promise<FileInterface> {
+        let result: FileInterface | undefined = undefined;
+        try {
+            if (uploadedFile.mimetype !== fileToReplace.mimetype) {
+                throw new Error(
+                    `File cannot be replaced by a file with a different mimetype. Existing mimetype: ${fileToReplace.mimetype}, new mimetype: ${uploadedFile.mimetype}`,
+                );
+            }
+
+            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(uploadedFile);
+            await this.blobStorageBackendService.upload(uploadedFile, contentHash, this.config.filesDirectory);
+
+            // Check if the current file is the only one using the contentHash before deleting from blob storage
+            if (
+                (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: fileToReplace.contentHash }).getResult())
+                    .length === 1
+            ) {
+                await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
+            }
+
+            if (image && image.width && image.height && fileToReplace.image) {
+                fileToReplace.image.width = image.width;
+                fileToReplace.image.height = image.height;
+                fileToReplace.image.exif = exifData;
+            }
+
+            Object.assign(fileToReplace, {
+                size: uploadedFile.size,
+                mimetype: uploadedFile.mimetype,
+                contentHash,
+                ...assignData,
+            });
+
+            result = await this.save(fileToReplace);
+
+            rimraf.sync(uploadedFile.path);
+        } catch (e) {
+            rimraf.sync(uploadedFile.path);
+            throw e;
+        }
+
+        return result;
+    }
+
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
         const file = await this.findOneById(id);
         if (!file) throw new CometEntityNotFoundException();
@@ -301,7 +342,7 @@ export class FilesService {
     }
 
     async save(entity: FileInterface): Promise<FileInterface> {
-        await this.filesRepository.persistAndFlush(entity);
+        await this.entityManager.persistAndFlush(entity);
         return entity;
     }
 
@@ -311,47 +352,10 @@ export class FilesService {
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            const contentHash = await this.calculateHashForFile(file.path);
-            let image: probe.ProbeResult | undefined;
-            try {
-                image = await probe(createReadStream(file.path));
-                if (image.type == "svg") image = undefined;
-                if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
-                    image = {
-                        ...image,
-                        width: image.height,
-                        height: image.width,
-                    };
-                }
-            } catch (e) {
-                // empty
-            }
-
-            if (
-                image !== undefined &&
-                image.width &&
-                image.height &&
-                Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
-            ) {
-                throw new CometImageResolutionException(`Maximal image resolution exceeded`);
-            }
-
-            if (folderId) {
-                const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new Error("Folder not found");
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
-                    throw new Error("Folder scope doesn't match passed scope");
-                }
-            }
-
+            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(file);
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
             const name = await this.findNextAvailableFilename({ filePath: file.originalname, folderId, scope });
-
-            let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
-            if (exifrSupportedMimetypes.includes(file.mimetype)) {
-                exifData = await exifr.parse(file.path);
-            }
 
             result = await this.create({
                 name,
@@ -402,7 +406,7 @@ export class FilesService {
         const subQb = withFilesSelect(
             this.filesRepository
                 .createQueryBuilder("file")
-                .select(["file.id", `ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`])
+                .select(["file.id", raw(`ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)])
                 .leftJoinAndSelect("file.folder", "folder"),
             {
                 archived: !args.includeArchived ? false : undefined,
@@ -415,7 +419,7 @@ export class FilesService {
             },
         );
 
-        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.createQueryBuilder().raw(
+        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.getKnex().raw(
             `select "file_with_row_number".row_number
                 from "${FILE_TABLE_NAME}" as "file"
                 join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
@@ -553,15 +557,18 @@ export class FilesService {
             baseUrl.push(hash);
         }
 
-        return [...baseUrl, file.id, filename].join("/");
+        return [...baseUrl, file.contentHash, file.id, filename].join("/");
     }
 
     async getFileAsBase64String(file: FileInterface) {
         const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
 
-        const buffer = await new Response(fileStream).buffer();
-        const base64String = buffer.toString("base64");
+        const chunks: Buffer[] = [];
+        for await (const chunk of fileStream) {
+            chunks.push(chunk);
+        }
 
+        const base64String = Buffer.concat(chunks).toString("base64");
         return `data:${file.mimetype};base64,${base64String}`;
     }
 
@@ -584,11 +591,53 @@ export class FilesService {
             baseUrl.push(hash);
         }
 
-        return [...baseUrl, file.id, filename].join("/");
+        return [...baseUrl, file.contentHash, file.id, filename].join("/");
     }
 
     createHash(params: FileParams): string {
         const fileHash = `file:${params.fileId}:${params.filename}`;
         return createHmac("sha1", this.config.secret).update(fileHash).digest("hex");
+    }
+
+    private async getFileMetadataForUpload(file: FileUploadInput): Promise<{
+        exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
+        contentHash: string;
+        image: probe.ProbeResult | undefined;
+    }> {
+        const contentHash = await this.calculateHashForFile(file.path);
+        let image: probe.ProbeResult | undefined;
+        try {
+            image = await probe(createReadStream(file.path));
+            if (image.type == "svg") image = undefined;
+            if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
+                image = {
+                    ...image,
+                    width: image.height,
+                    height: image.width,
+                };
+            }
+        } catch {
+            // empty
+        }
+
+        if (
+            image !== undefined &&
+            image.width &&
+            image.height &&
+            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
+        ) {
+            throw new CometImageResolutionException(`Maximal image resolution exceeded`);
+        }
+
+        let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
+        if (exifrSupportedMimetypes.includes(file.mimetype)) {
+            try {
+                exifData = await exifr.parse(file.path);
+            } catch {
+                // empty
+            }
+        }
+
+        return { exifData, contentHash, image };
     }
 }

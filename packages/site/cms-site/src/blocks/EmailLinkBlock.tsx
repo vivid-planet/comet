@@ -1,7 +1,7 @@
-import { cloneElement, ReactElement } from "react";
+import { cloneElement, type ReactElement } from "react";
 
-import { EmailLinkBlockData } from "../blocks.generated";
-import { PropsWithData } from "./PropsWithData";
+import { type EmailLinkBlockData } from "../blocks.generated";
+import { type PropsWithData } from "./PropsWithData";
 
 interface EmailLinkBlockProps extends PropsWithData<EmailLinkBlockData> {
     children: ReactElement;

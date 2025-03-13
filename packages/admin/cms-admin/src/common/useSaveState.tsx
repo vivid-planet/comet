@@ -1,5 +1,5 @@
-import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import { ReactNode, useCallback, useState } from "react";
+import { messages, SaveButton, type SaveButtonProps } from "@comet/admin";
+import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SaveStateOptions<TData> {
@@ -83,7 +83,7 @@ interface SaveStateSaveButtonProps {
     saving: boolean;
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
-export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
+function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
     const saveButtonProps: Omit<SaveButtonProps, "children" | "onClick"> = {
         color: "primary",
         variant: "contained",

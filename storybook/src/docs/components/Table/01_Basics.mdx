@@ -1,0 +1,160 @@
+import { Canvas, Meta, Source } from "@storybook/addon-docs";
+import dedent from "ts-dedent";
+
+import * as BasicsStories from "./01_Basics.stories";
+
+<Meta of={BasicsStories} />
+
+**The `Table` component has been deprecated in favor of [MUI X Data Grid](https://mui.com/x/react-data-grid/) in combination with `useDataGridRemote`. View [docs](?path=/docs/docs-components-datagrid--docs).**
+
+# Table
+
+> Tables display information in a way that's easy to scan, so that users can look for patterns and insights.
+>
+> \- [MUI Docs](https://mui.com/components/tables/)
+
+The Comet Admin `Table` internally uses [Material UI's `Table` component](https://v4.mui.com/components/tables/) and its [associated components](https://v4.mui.com/components/tables/#api).
+It provides an additional layer of abstraction and adds common table functionalities like [sorting by column](?path=/docs/docs-components-table-sorting--docs) or [pagination](?path=/docs/docs-components-table-pagination--docs).
+
+In the following text, `Table` refers to the Comet Admin Table, while `MuiTable` refers to Material UI's Table.
+
+## Differences between Comet Admin `Table` and `MuiTable`
+
+`MuiTable` is very low-level.
+It's extremely flexible but requires more effort to define and configure.
+If you need common table functionalities like pagination or sorting, you have to implement them yourself from scratch.
+
+Comet Admin `Table` adds a layer of abstraction to `MuiTable`.
+It allows you to define simple tables without writing any additional JSX and also has a lot of configuration options for more complex use cases.
+Additionally, it has common table functionalities built-in, as listed below:
+
+|                                                                                          | Material UI `Table` | Comet Admin `Table` |
+| ---------------------------------------------------------------------------------------- | ------------------- | ------------------- |
+| Layer of Abstraction                                                                     | low-level           | higher-level        |
+| [Managing GraphQL Queries](?path=/docs/docs-components-table-tablequery--docs)           | -                   | built-in            |
+| [Sorting by column](?path=/docs/docs-components-table-sorting--docs)                     | -                   | built-in            |
+| [Pagination](?path=/docs/docs-components-table-pagination--docs)                         | -                   | built-in            |
+| [Filtering](?path=/docs/docs-components-table-filterbar--docs)                           | -                   | built-in            |
+| [Excel Export](?path=/docs/docs-components-table-excel-export--docs)                     | -                   | built-in            |
+| [Ordering Rows via Drag and Drop](?path=/docs/docs-components-table-tabledndorder--docs) | -                   | built-in            |
+
+The following example shows the definition of a simple table with `MuiTable` and Comet Admin `Table`.
+It demonstrates their different layers of abstraction.
+
+With `MuiTable`, you have to write a lot of JSX to define this simple table:
+
+<Source
+    language="tsx"
+    code={dedent`
+        // based on https://v4.mui.com/components/tables/#BasicTable.tsx
+        <MuiTable>
+            <MuiTableHead>
+                <MuiTableRow>
+                    <MuiTableCell>Dessert (100g)</MuiTableCell>
+                    <MuiTableCell>Calories</MuiTableCell>
+                </MuiTableRow>
+            </MuiTableHead>
+            <MuiTableBody>
+                {rows.map((row) => (
+                    <MuiTableRow key={row.name}>
+                        <MuiTableCell>{row.name}</MuiTableCell>
+                        <MuiTableCell>{row.calories}</MuiTableCell>
+                    </MuiTableRow>
+                ))}
+            </MuiTableBody>
+        </MuiTable>
+  `}
+/>
+
+In Comet Admin `Table`, it's sufficient to provide an object containing column definitions:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <Table
+            data={rows}
+            totalCount={rows.length}
+            columns={[
+                {
+                    name: "name",
+                    header: "Dessert (100g)"
+                },
+                {
+                    name: "calories",
+                    header: "Calories"
+                }
+            ]}
+        />
+  `}
+/>
+
+However, Comet Admin `Table` is not limited to simple tables.
+It has lots of configuration options to handle complex use cases.
+Keep reading to learn more.
+
+## Table
+
+<Canvas of={BasicsStories.BasicTable} />
+
+`Table` has three required parameters: `data`, `totalCount` and `columns`.
+
+`data` contains the data that should be displayed in the table. It must be an array of objects, and each object must have a unique `id`.
+
+`totalCount` specifies the total number of items.
+It's only relevant if pagination is used. Then, the totalCount should be provided by the API.
+If **no pagination** is used, `totalCount` can simply be set to `data.length`.
+
+`columns` is an array that defines the structure of the table.
+It specifies which columns exist and how to render them.
+More information can be found in the [column section](#table-column).
+
+## Table Column
+
+### name
+
+The only required property of a column is its `name`.
+Per default, the `name` is matched to a property of `data`, which is then rendered:
+
+<Canvas of={BasicsStories.TableColumnNameProp} />
+
+Matching also works for nested properties if the `name` is separated by dots:
+
+<Canvas of={BasicsStories.TableColumnNestedNameProp} />
+
+### render
+
+Passing a function to the `render` prop overrides the default rendering behavior.
+The render function can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`:
+
+<Canvas of={BasicsStories.TableColumnRenderProp} />
+
+### header
+
+The `header` property defines the heading of a column.
+It can be a string or a JSX element.
+
+If no header is set, the heading of a column is empty.
+
+<Canvas of={BasicsStories.TableColumnHeaderProp} />
+
+### visible
+
+`visible` can be used to hide a column.
+
+<Canvas of={BasicsStories.TableColumnVisibleProp} />
+
+### cellProps & headerProps
+
+Internally, the `Table` uses Material UI's `TableCell` to render table headers and cells.
+`cellProps` and `headerProps` can be used to pass props to these internal elements.
+You can find more information in the [Material UI Docs](https://v4.mui.com/api/table-cell/).
+
+### sortable
+
+The `sortable` property can be used for sorting the table.
+See [Sorting page](?path=/docs/docs-components-table-sorting--docs) for more information.
+
+### headerExcel & renderExcel & formatForExcel
+
+These properties can be used for formatting the table data when exporting it to an Excel file.
+See [Excel Export page](?path=/docs/docs-components-table-excel-export--docs#excel-export-and-custom-rendered-columns) for more information.

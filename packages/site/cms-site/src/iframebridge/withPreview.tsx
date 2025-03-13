@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentType, createContext, useContext } from "react";
+import { type ComponentType, createContext, useContext } from "react";
 
 import { Preview } from "./Preview";
 
@@ -12,7 +12,7 @@ export interface WithPreviewProps {
     data: WithPreviewPropsData;
 }
 
-export interface WithPreviewPropsData {
+interface WithPreviewPropsData {
     adminMeta?: AdminMetaInterface;
 }
 

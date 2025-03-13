@@ -1,5 +1,5 @@
-import MuiSwitch, { SwitchProps } from "@mui/material/Switch";
-import { FieldRenderProps } from "react-final-form";
+import MuiSwitch, { type SwitchProps } from "@mui/material/Switch";
+import { type FieldRenderProps } from "react-final-form";
 
 export type FinalFormSwitchProps = SwitchProps & FieldRenderProps<string, HTMLInputElement>;
 

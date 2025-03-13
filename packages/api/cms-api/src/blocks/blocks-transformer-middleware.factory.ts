@@ -1,9 +1,9 @@
-import { isBlockDataInterface } from "@comet/blocks-api";
-import { ContextId, ContextIdFactory, ModuleRef } from "@nestjs/core";
+import { type ContextId, ContextIdFactory, type ModuleRef } from "@nestjs/core";
 import { REQUEST_CONTEXT_ID } from "@nestjs/core/router/request/request-constants";
-import { FieldMiddleware, MiddlewareContext, NextFn } from "@nestjs/graphql";
+import { type FieldMiddleware, type MiddlewareContext, type NextFn } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
+import { isBlockDataInterface } from "./block";
 import { transformToPlain } from "./blocks-transformer";
 
 export class BlocksTransformerMiddlewareFactory {

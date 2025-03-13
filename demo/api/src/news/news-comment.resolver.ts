@@ -1,6 +1,6 @@
 import { AffectedEntity } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Resolver } from "@nestjs/graphql";
 
 import { NewsCommentInput } from "./dto/news-comment.input";
@@ -12,6 +12,7 @@ export class NewsCommentResolver {
     constructor(
         @InjectRepository(NewsComment) private readonly newsCommentRepository: EntityRepository<NewsComment>,
         @InjectRepository(News) private readonly newsRepository: EntityRepository<News>,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Mutation(() => NewsComment)
@@ -27,7 +28,7 @@ export class NewsCommentResolver {
             news,
         });
 
-        await this.newsCommentRepository.persistAndFlush(newsComment);
+        await this.entityManager.persistAndFlush(newsComment);
         return newsComment;
     }
 
@@ -42,7 +43,7 @@ export class NewsCommentResolver {
             ...input,
         });
 
-        await this.newsCommentRepository.flush();
+        await this.entityManager.flush();
 
         return newsComment;
     }
@@ -50,7 +51,7 @@ export class NewsCommentResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(NewsComment)
     async deleteNewsComment(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        await this.newsCommentRepository.removeAndFlush({ id });
+        await this.entityManager.removeAndFlush({ id });
 
         return true;
     }

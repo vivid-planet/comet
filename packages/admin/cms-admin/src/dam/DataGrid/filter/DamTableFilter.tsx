@@ -3,15 +3,14 @@ import {
     FilterBar,
     FilterBarPopoverFilter,
     FinalFormSearchTextField,
-    FinalFormSwitch,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
+    SwitchField,
     TableFilterFinalForm,
 } from "@comet/admin";
-import { FormControlLabel } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DamFilter } from "../../DamTable";
+import { type DamFilter } from "../../DamTable";
 import { DamSortPopover } from "./DamSortPopover";
 
 interface DamTableFilterProps {
@@ -25,17 +24,22 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
     return (
         <TableFilterFinalForm filterApi={filterApi}>
             <FilterBar>
-                <Field name="searchText" component={FinalFormSearchTextField} clearable disableContentTranslation />
+                <Field
+                    name="searchText"
+                    component={FinalFormSearchTextField}
+                    clearable
+                    disableContentTranslation
+                    fieldContainerProps={{ fieldMargin: "never" }}
+                />
                 {!hideArchiveFilter && (
-                    <FilterBarPopoverFilter label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}>
-                        <Field name="archived" type="checkbox">
-                            {(props) => (
-                                <FormControlLabel
-                                    control={<FinalFormSwitch {...props} />}
-                                    label={<FormattedMessage id="comet.pages.dam.showArchivedAssets" defaultMessage="Show archived assets" />}
-                                />
-                            )}
-                        </Field>
+                    <FilterBarPopoverFilter
+                        label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}
+                        sx={{ marginRight: 2, marginLeft: 2 }}
+                    >
+                        <SwitchField
+                            name="archived"
+                            label={<FormattedMessage id="comet.pages.dam.showArchivedAssets" defaultMessage="Show archived assets" />}
+                        />
                     </FilterBarPopoverFilter>
                 )}
                 <Field<ISortInformation> name="sort">

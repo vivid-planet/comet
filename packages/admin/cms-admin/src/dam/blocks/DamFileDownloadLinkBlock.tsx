@@ -1,24 +1,19 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-} from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
+import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
+import { createBlockSkeleton } from "../../blocks/helpers/createBlockSkeleton";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "../../blocks/types";
 import { DamPathLazy } from "../../form/file/DamPathLazy";
 import { FileField } from "../../form/file/FileField";
-import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
+import { type GQLDamFileDownloadLinkFileQuery, type GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
 export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput> = {
     ...createBlockSkeleton(),
@@ -40,7 +35,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         openFileType: state.openFileType,
     }),
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<DamFileDownloadLinkBlockData> => {
+    output2State: async (output, { apolloClient }): Promise<DamFileDownloadLinkBlockData> => {
         const ret: DamFileDownloadLinkBlockData = {
             openFileType: output.openFileType,
         };
@@ -124,7 +119,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                 {state.file === undefined ? (
                     <Field name="file" component={FileField} fullWidth />
                 ) : (
-                    <AdminComponentPaper disablePadding>
+                    <BlockAdminComponentPaper disablePadding>
                         <Box padding={3}>
                             <Typography variant="subtitle1">{state.file.name}</Typography>
                             <Typography variant="body1" color="textSecondary">
@@ -132,13 +127,13 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                             </Typography>
                         </Box>
                         <Divider />
-                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
+                        <BlockAdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
                             <FormattedMessage {...messages.empty} />
-                        </AdminComponentButton>
-                    </AdminComponentPaper>
+                        </BlockAdminComponentButton>
+                    </BlockAdminComponentPaper>
                 )}
                 <Divider />
-                <AdminComponentPaper>
+                <BlockAdminComponentPaper>
                     <Field
                         name="openFileType"
                         fullWidth
@@ -155,8 +150,17 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                             </FinalFormSelect>
                         )}
                     </Field>
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             </BlocksFinalForm>
         );
+    },
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.file?.altText) contents.push(state.file.altText);
+        if (state.file?.title) contents.push(state.file.title);
+
+        return contents;
     },
 };

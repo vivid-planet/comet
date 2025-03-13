@@ -1,13 +1,23 @@
 import { getApolloContext } from "@apollo/client";
-import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+import {
+    type Config,
+    type Decorator,
+    FORM_ERROR,
+    type FormApi,
+    type FormSubscription,
+    type MutableState,
+    type Mutator,
+    type SubmissionErrors,
+    type ValidationErrors,
+} from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
-import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
+import { type MutableRefObject, type PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
+import { type AnyObject, Form, type FormRenderProps, FormSpy, type RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { renderComponent } from "./finalFormRenderComponent";
-import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
+import { type FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
+import { renderFinalFormChildren } from "./renderFinalFormChildren";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
 import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
@@ -32,17 +42,17 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
     // override final-form onSubmit and remove callback as we don't support that (return promise instead)
     onSubmit: (
         values: FormValues,
-        form: FormApi<FormValues>,
+        form: FormApi<FormValues, InitialFormValues>,
         event: FinalFormSubmitEvent,
     ) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
 
     /**
      * This method will be called at the end of a submit process.
      */
-    onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
+    onAfterSubmit?: (values: FormValues, form: FormApi<FormValues, InitialFormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
-    apiRef?: MutableRefObject<FormApi<FormValues> | undefined>;
+    apiRef?: MutableRefObject<FormApi<FormValues, InitialFormValues> | undefined>;
     subRoutePath?: string;
 }
 
@@ -98,30 +108,36 @@ export class FinalFormSubmitEvent extends Event {
     navigatingBack?: boolean;
 }
 
-export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
+export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<FormValues>>(props: IProps<FormValues, InitialFormValues>) {
     const { client } = useContext(getApolloContext());
     const tableQuery = useContext(TableQueryContext);
 
     const { onAfterSubmit, validateWarning } = props;
 
     return (
-        <Form
+        <Form<FormValues, InitialFormValues>
             {...props}
             mutators={{
                 ...props.mutators,
-                setFieldData: setFieldData as unknown as Mutator<FormValues, object>,
-                setSubmitEvent: setSubmitEvent as unknown as Mutator<FormValues, object>,
-                getSubmitEvent: getSubmitEvent as unknown as Mutator<FormValues, object>,
+                setFieldData: setFieldData as unknown as Mutator<FormValues, InitialFormValues>,
+                setSubmitEvent: setSubmitEvent as unknown as Mutator<FormValues, InitialFormValues>,
+                getSubmitEvent: getSubmitEvent as unknown as Mutator<FormValues, InitialFormValues>,
             }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />
     );
 
-    function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
+    function RenderForm({
+        formContext = {},
+        ...formRenderProps
+    }: FormRenderProps<FormValues, InitialFormValues> & { formContext: Partial<FinalFormContext> }) {
         const subRoutePrefix = useSubRoutePrefix();
         const saveBoundaryApi = useSaveBoundaryApi();
-        if (props.apiRef) props.apiRef.current = formRenderProps.form;
+        // Explicit cast to set InitialFormValues because FormRenderProps doesn't pass InitialFormValues to RenderableProps here:
+        // https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L56-L67.
+        // See https://github.com/final-form/react-final-form/pull/998.
+        if (props.apiRef) props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
         const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
@@ -156,6 +172,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         const registeredFields = formRenderProps.form.getRegisteredFields();
 
+        const formLevelWarnings = useRef<Record<string, string | undefined>>({});
+
         useEffect(() => {
             if (validateWarning) {
                 const validate = async () => {
@@ -171,10 +189,16 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
                     if (!validationWarnings) {
                         registeredFields.forEach((fieldName) => {
-                            setFieldData(fieldName, { warning: undefined });
+                            const hasFormLevelWarning = Boolean(formLevelWarnings.current[fieldName]);
+                            if (hasFormLevelWarning) {
+                                setFieldData(fieldName, { warning: undefined });
+                            }
                         });
+                        formLevelWarnings.current = {};
                         return;
                     }
+
+                    formLevelWarnings.current = validationWarnings;
 
                     Object.entries(validationWarnings).forEach(([fieldName, warning]) => {
                         setFieldData(fieldName, { warning });
@@ -211,7 +235,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
                     <form onSubmit={submit}>
                         <div>
-                            {renderComponent<FormValues>(
+                            {renderFinalFormChildren<FormValues, InitialFormValues>(
                                 {
                                     children: props.children,
                                     component: props.component,
@@ -229,7 +253,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         );
     }
 
-    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues, InitialFormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
         if (ret === undefined) return ret;
@@ -256,7 +280,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             .then(
                 (data) => {
                     // for final-form undefined means success, an obj means error
-                    form.reset(values);
+                    form.reset(values as unknown as InitialFormValues);
                     return undefined;
                 },
                 (error) => {

@@ -1,10 +1,9 @@
 import { DiscoveryService } from "@golevelup/nestjs-discovery";
-import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
-import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
@@ -86,21 +85,15 @@ export class UserPermissionsService {
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
                     .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
+                    .concat(["impersonation"])
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
         ];
     }
 
-    async createUser(request: Request, idToken: JwtPayload): Promise<User> {
-        if (this.userService?.createUserFromRequest) return this.userService.createUserFromRequest(request, idToken);
-        if (this.userService?.createUserFromIdToken) return this.userService.createUserFromIdToken(idToken);
-        if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
-        return {
-            id: idToken.sub,
-            name: idToken.name,
-            email: idToken.email,
-        };
+    getUserService(): UserPermissionsUserServiceInterface | undefined {
+        return this.userService;
     }
 
     async getUser(id: string): Promise<User> {
@@ -134,7 +127,7 @@ export class UserPermissionsService {
         });
         if (this.accessControlService.getPermissionsForUser) {
             if (user) {
-                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
+                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
@@ -190,22 +183,11 @@ export class UserPermissionsService {
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
                     return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
-                } catch (e) {
-                    this.unsetImpersonatedUser(request);
+                } catch {
+                    return undefined;
                 }
             }
         }
-    }
-
-    async setImpersonatedUser(userId: string, request: Request) {
-        if (!(await this.getUser(userId))) {
-            throw new Error("User not found.");
-        }
-        request.res?.cookie("comet-impersonate-user-id", userId);
-    }
-
-    unsetImpersonatedUser(request: Request) {
-        request.res?.clearCookie("comet-impersonate-user-id");
     }
 
     async createCurrentUser(authenticatedUser: User, request?: Request): Promise<CurrentUser> {

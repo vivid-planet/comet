@@ -1,17 +1,20 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     FileIcon,
-    GridColDef,
+    FillSpace,
+    type GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
     RowActionsItem,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
@@ -19,14 +22,14 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
-import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
+import { Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import { useRef, useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 type Launch = {
@@ -52,41 +55,24 @@ interface GQLQuery {
     launchesPastResult: LaunchesPastResultData;
 }
 
-const exampleRows = [
-    { id: 1, lastName: "Snow", firstName: "Jon" },
-    { id: 2, lastName: "Lannister", firstName: "Cersei" },
-    { id: 3, lastName: "Lannister", firstName: "Jaime" },
-    { id: 4, lastName: "Stark", firstName: "Arya" },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys" },
-    { id: 6, lastName: "Melisandre", firstName: null },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara" },
-    { id: 8, lastName: "Frances", firstName: "Rossini" },
-    { id: 9, lastName: "Roxie", firstName: "Harvey" },
-];
-const exampleColumns: GridColDef[] = [
-    {
-        field: "firstName",
-        headerName: "First name",
-    },
-    {
-        field: "lastName",
-        headerName: "Last name",
-    },
-];
+export default {
+    title: "Docs/Components/DataGrid",
+    decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql")],
+};
 
-storiesOf("stories/components/DataGrid", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("useDataGridRemote", () => {
+export const UseDataGridRemote = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                flex: 1,
             },
         ];
 
@@ -109,33 +95,43 @@ storiesOf("stories/components/DataGrid", module)
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
                 },
             },
         );
 
+        if (error) {
+            throw error;
+        }
+
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
-    })
-    .add("useDataGridRemoteInitialSort", () => {
+    },
+    name: "useDataGridRemote",
+};
+
+export const UseDataGridRemoteInitialSort = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                flex: 1,
             },
         ];
 
@@ -158,24 +154,32 @@ storiesOf("stories/components/DataGrid", module)
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
                 },
             },
         );
 
+        if (error) {
+            throw error;
+        }
+
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
-    })
-    .add("useDataGridRemoteInitialFilter", () => {
+    },
+    name: "useDataGridRemoteInitialSort",
+};
+
+export const UseDataGridRemoteInitialFilter = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -185,13 +189,13 @@ storiesOf("stories/components/DataGrid", module)
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                ...dataGridDateTimeColumn,
                 flex: 1,
             },
         ];
 
         const dataGridProps = useDataGridRemote({
-            initialFilter: { items: [{ columnField: "mission_name", operatorValue: "contains", value: "able" }] },
+            initialFilter: { items: [{ field: "mission_name", operator: "contains", value: "able" }] },
         });
 
         const { data, loading, error } = useQuery(
@@ -211,8 +215,8 @@ storiesOf("stories/components/DataGrid", module)
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     filter: muiGridFilterToGql(columns, dataGridProps.filterModel).filter,
                 },
             },
@@ -221,13 +225,20 @@ storiesOf("stories/components/DataGrid", module)
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
+        if (error) {
+            throw error;
+        }
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
-    })
-    .add("usePersistentColumnState", () => {
+    },
+    name: "useDataGridRemoteInitialFilter",
+};
+
+export const UsePersistentColumnState = {
+    render: () => {
         const dataGridProps = usePersistentColumnState("PersColStateStory");
 
         return (
@@ -235,8 +246,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={exampleRows} columns={exampleColumns} />
             </Box>
         );
-    })
-    .add("responsiveColumns", () => {
+    },
+    name: "usePersistentColumnState",
+};
+
+export const ResponsiveColumns = {
+    render: () => {
         const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
         const theme = useTheme();
 
@@ -268,12 +283,16 @@ storiesOf("stories/components/DataGrid", module)
         ];
 
         return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
-    })
-    .add("GridFilterButton", () => {
+    },
+    name: "Responsive columns",
+};
+
+export const _GridFilterButton = {
+    render: () => {
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
@@ -286,14 +305,18 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
         );
-    })
-    .add("CrudContextMenu", () => {
+    },
+    name: "GridFilterButton",
+};
+
+export const _CrudContextMenu = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "firstName",
@@ -318,20 +341,20 @@ storiesOf("stories/components/DataGrid", module)
                             url={`http://example.com/people/${params.row.id}`}
                             onPaste={async ({ input, client }) => {
                                 /*
-                                    await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
-                                        mutation: createPeopleMutation,
-                                        variables: { input },
-                                    });
-                                    */
+                                        await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
+                                            mutation: createPeopleMutation,
+                                            variables: { input },
+                                        });
+                                        */
                                 alert(`insert ${JSON.stringify(input)}`);
                             }}
                             onDelete={async ({ client }) => {
                                 /*
-                                    await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
-                                        mutation: deletePeopleMutation,
-                                        variables: { id: params.row.id },
-                                    });
-                                    */
+                                        await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
+                                            mutation: deletePeopleMutation,
+                                            variables: { id: params.row.id },
+                                        });
+                                        */
                                 alert(`delete id ${params.row.id}`);
                             }}
                             refetchQueries={[]}
@@ -359,13 +382,17 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid rows={exampleRows} columns={columns} />
             </Box>
         );
-    })
-    .add("useDataGridExcelExport", () => {
+    },
+    name: "CrudContextMenu",
+};
+
+export const UseDataGridExcelExport = {
+    render: () => {
         const dataGridProps = useDataGridRemote();
 
         const variables = {
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             sort: dataGridProps.sortModel[0]?.field,
             order: dataGridProps.sortModel[0]?.sort,
         };
@@ -374,16 +401,18 @@ storiesOf("stories/components/DataGrid", module)
             {
                 field: "mission_name",
                 headerName: "Mission Name",
+                flex: 1,
             },
             {
+                ...dataGridDateTimeColumn,
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                flex: 1,
             },
         ];
 
-        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
-        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+        const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
+        const moreMenuRef = useRef<HTMLButtonElement>(null);
 
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
@@ -400,7 +429,7 @@ storiesOf("stories/components/DataGrid", module)
             }
         `;
 
-        const { data, loading, error } = useQuery<GQLQuery, QueryVariables | undefined>(query, {
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables>(query, {
             variables,
         });
 
@@ -418,10 +447,10 @@ storiesOf("stories/components/DataGrid", module)
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
+                            <Button variant="textDark" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />}>
                                 More Actions
                             </Button>
                             <Menu
@@ -454,6 +483,9 @@ storiesOf("stories/components/DataGrid", module)
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
+        if (error) {
+            throw error;
+        }
         return (
             <Box sx={{ height: 400, width: "100%" }}>
                 <DataGrid
@@ -462,84 +494,143 @@ storiesOf("stories/components/DataGrid", module)
                     columns={columns}
                     rowCount={rowCount}
                     loading={loading}
-                    error={error}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
         );
-    })
-    .add("CrudMoreActionsMenu", () => {
-        return (
-            <Box sx={{ height: 300, width: "100%" }}>
-                <h2>Without selection:</h2>
-                <DataGridToolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={0}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
-                </DataGridToolbar>
+    },
+    name: "useDataGridExcelExport",
+};
 
-                <h2>With selection:</h2>
-                <DataGridToolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={2}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
-                </DataGridToolbar>
+export const GridColumnTypes = {
+    render: () => {
+        const dataGridProps = useDataGridRemote();
+
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+                flex: 1,
+            },
+            {
+                ...dataGridDateColumn,
+                field: "launch_date_local_without_time",
+                headerName: "Launch Date",
+                flex: 1,
+            },
+            {
+                ...dataGridDateTimeColumn,
+                field: "launch_date_local",
+                headerName: "Launch Date and Time",
+                flex: 1,
+            },
+        ];
+
+        const query = gql`
+            query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                    data {
+                        id
+                        mission_name
+                        launch_date_local
+                    }
+                    result {
+                        totalCount
+                    }
+                }
+            }
+        `;
+
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables>(query, {
+            variables: {
+                limit: dataGridProps.paginationModel.pageSize,
+                offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+                sort: dataGridProps.sortModel[0]?.field,
+                order: dataGridProps.sortModel[0]?.sort,
+            },
+        });
+
+        const rows = (data?.launchesPastResult.data ?? []).map((row) => ({
+            ...row,
+            launch_date_local_without_time: row.launch_date_local,
+        }));
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        if (error) {
+            throw error;
+        }
+
+        return (
+            <Box height={400}>
+                <DataGrid {...dataGridProps} rows={rows} columns={columns} rowCount={rowCount} loading={loading} />
             </Box>
         );
-    });
+    },
+    name: "GridColumnTypes",
+};
+
+export const _CrudMoreActionsMenu = {
+    render: () => {
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+        const dataGridProps = useDataGridRemote();
+
+        function DemoToolBar() {
+            return (
+                <DataGridToolbar>
+                    <FillSpace />
+                    <ToolbarItem>
+                        <CrudMoreActionsMenu
+                            selectionSize={selectionModel.length}
+                            overallActions={[
+                                {
+                                    label: "Export to excel",
+                                    onClick: () => {},
+                                },
+                            ]}
+                            selectiveActions={[
+                                {
+                                    label: "Move",
+                                    onClick: () => {},
+                                    icon: <Move />,
+                                },
+                                {
+                                    label: "Delete",
+                                    onClick: () => {},
+                                    icon: <Delete />,
+                                    divider: true,
+                                },
+                                {
+                                    label: "Download",
+                                    onClick: () => {},
+                                    icon: <Download />,
+                                },
+                            ]}
+                        />
+                    </ToolbarItem>
+                </DataGridToolbar>
+            );
+        }
+
+        return (
+            <Box height={600}>
+                <DataGrid
+                    {...dataGridProps}
+                    paginationMode="client"
+                    rows={exampleRows}
+                    columns={exampleColumns}
+                    checkboxSelection
+                    onRowSelectionModelChange={(newSelectionModel) => {
+                        setSelectionModel(newSelectionModel);
+                    }}
+                    rowSelectionModel={selectionModel}
+                    slots={{
+                        toolbar: DemoToolBar,
+                    }}
+                />
+            </Box>
+        );
+    },
+    name: "CrudMoreActionsMenu",
+};

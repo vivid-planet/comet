@@ -24,7 +24,10 @@ export const IsValidImageAspectRatio = (validationOptions?: ValidationOptions) =
 @ValidatorConstraint({ name: "IsValidImageAspectRatio" })
 @Injectable()
 export class IsValidImageAspectRatioConstraint implements ValidatorConstraintInterface {
-    constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig, private readonly filesService: FilesService) {}
+    constructor(
+        @Inject(DAM_CONFIG) private readonly config: DamConfig,
+        private readonly filesService: FilesService,
+    ) {}
 
     async validate(value: number, validationArguments: ValidationArguments): Promise<boolean> {
         const params = validationArguments.object as ImageParams;

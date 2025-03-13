@@ -1,13 +1,12 @@
-import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { Children, ComponentType, isValidElement, ReactElement, ReactNode, SyntheticEvent } from "react";
+import { type ComponentsOverrides, Tab as MuiTab, type TabProps as MuiTabProps, Tabs, type TabsProps } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { Children, type ComponentType, isValidElement, type ReactElement, type ReactNode, type SyntheticEvent } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
-import { useStackApi } from "../stack/Api";
-import { useStackSwitchApi } from "../stack/Switch";
+import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 import { TabScrollButton } from "./TabScrollButton";
 
 export type RouterTabsClassKey = "root" | "tabs" | "content" | "contentHidden";
@@ -55,7 +54,7 @@ export const RouterTab = (props: TabProps) => null;
 type RouterTabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
 
-export interface Props
+interface Props
     extends ThemedComponentBaseProps<{
         root: "div";
         tabs: typeof Tabs;
@@ -75,11 +74,10 @@ export function RouterTabs(inProps: Props) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminRouterTabs" });
 
-    const stackApi = useStackApi();
-    const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
     const subRoutePrefix = useSubRoutePrefix();
     const routeMatch = useRouteMatch();
+    const isActiveStackSwitch = useIsActiveStackSwitch();
 
     const childrenArr = Children.toArray(children);
 
@@ -112,15 +110,6 @@ export function RouterTabs(inProps: Props) {
         rearrangedChildren.push(defaultPathChild);
     }
 
-    let shouldShowTabBar = true;
-    if (stackApi && stackSwitchApi) {
-        // When inside a Stack show only the last TabBar
-        const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex((i) => i.id === stackSwitchApi.id) : -1;
-        const nextSwitchShowsInitialPage = stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
-
-        shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
-    }
-
     // used for only rendering the first matching child
     // note: React Router's Switch can't be used because it
     // prevents the rendering of more than one child
@@ -129,7 +118,8 @@ export function RouterTabs(inProps: Props) {
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            {shouldShowTabBar && (
+            {/* When inside a Stack show only the last TabBar */}
+            {isActiveStackSwitch && (
                 <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`)}>
                     {({ match }) => {
                         const routePath = match ? `/${match.params.tab}` : "";

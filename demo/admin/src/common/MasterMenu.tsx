@@ -1,60 +1,60 @@
-import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
+import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
-    DocumentInterface,
-    DocumentType,
-    MasterMenu as CometMasterMenu,
-    MasterMenuData,
+    type DocumentInterface,
+    type DocumentType,
+    MasterMenu,
+    type MasterMenuData,
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
-import { ContentScope } from "@src/common/ContentScopeProvider";
-import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
-import Dashboard from "@src/dashboard/Dashboard";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import { Link } from "@src/links/Link";
+import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
+import { DashboardPage } from "@src/dashboard/DashboardPage";
+import { Link } from "@src/documents/links/Link";
+import { Page } from "@src/documents/pages/Page";
+import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
+import { EditFooterPage } from "@src/footer/EditFooterPage";
+import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import { NewsPage } from "@src/news/generated/NewsPage";
-import MainMenu from "@src/pages/mainMenu/MainMenu";
-import { Page } from "@src/pages/Page";
+import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
-import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
-import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
+import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
+import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
-import { ProductsPage } from "@src/products/generated/ProductsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
-import { Redirect, RouteComponentProps } from "react-router-dom";
+import { Redirect, type RouteComponentProps } from "react-router";
 
 import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";
 
-export const pageTreeDocumentTypes = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
     Page,
     Link,
-    PredefinedPage,
 };
-
 const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {
         type: "route",
         primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
-        icon: <DashboardIcon />,
+        icon: <Dashboard />,
         route: {
             path: "/dashboard",
-            component: Dashboard,
+            component: DashboardPage,
         },
     },
     {
@@ -77,8 +77,6 @@ export const masterMenuData: MasterMenuData = [
 
                 return (
                     <PagesPage
-                        path={`/pages/pagetree/${match.params.category}`}
-                        allCategories={pageTreeCategories}
                         documentTypes={(category): Record<DocumentType, DocumentInterface> => {
                             if (category === "TopMenu") {
                                 return {
@@ -124,22 +122,32 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
+            render: () => <DamPage additionalToolbarItems={<ImportFromPicsum />} />,
         },
         requiredPermission: "dam",
     },
     {
         type: "collapsible",
-        primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
+        primary: <FormattedMessage id="menu.project-snips" defaultMessage="Project Snips" />,
         icon: <Snips />,
         items: [
             {
                 type: "route",
-                primary: <FormattedMessage id="menu.mainMenu" defaultMessage="Main menu" />,
+                primary: <FormattedMessage id="menu.project-snips.mainMenu" defaultMessage="Main menu" />,
                 route: {
                     path: "/project-snips/main-menu",
                     component: MainMenu,
                 },
+                requiredPermission: "pageTree",
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.project-snips.footer" defaultMessage="Footer" />,
+                route: {
+                    path: "/project-snips/footer",
+                    component: EditFooterPage,
+                },
+                requiredPermission: "pageTree",
             },
         ],
         requiredPermission: "pageTree",
@@ -172,12 +180,11 @@ export const masterMenuData: MasterMenuData = [
                 primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
                 route: {
                     path: "/system/redirects",
-                    render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
+                    component: RedirectsPage,
                 },
                 requiredPermission: "pageTree",
             },
         ],
-        requiredPermission: "pageTree",
     },
     {
         type: "route",
@@ -310,6 +317,14 @@ export const masterMenuData: MasterMenuData = [
                             component: ManufacturersHandmadePage,
                         },
                     },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategoryHandmade" defaultMessage="Product Category Handmade" />,
+                        route: {
+                            path: "/product-category-handmade",
+                            component: ProductCategoriesHandmadePage,
+                        },
+                    },
                 ],
             },
         ],
@@ -317,5 +332,4 @@ export const masterMenuData: MasterMenuData = [
     },
 ];
 
-const MasterMenu = () => <CometMasterMenu menu={masterMenuData} />;
-export default MasterMenu;
+export const AppMasterMenu = () => <MasterMenu menu={masterMenuData} />;

@@ -1,15 +1,24 @@
 import { DeleteButton, messages } from "@comet/admin";
 import { ArrowRight, Clear, Delete } from "@comet/admin-icons";
-import { AdminComponentPaper } from "@comet/blocks-admin";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography,
+} from "@mui/material";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
+import { type GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 
-export interface PageDeleteDialogProps {
+interface PageDeleteDialogProps {
     dialogOpen: boolean;
     handleCancelClick: () => void;
     handleDeleteClick: () => void;
@@ -79,7 +88,7 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                 </DeleteContentInformation>
 
                 {dialogInformation && dialogInformation?.publishedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Published" />
@@ -95,10 +104,10 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
                 {dialogInformation && dialogInformation?.unpublishedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Unpublished" />
@@ -114,10 +123,10 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
                 {dialogInformation && dialogInformation?.archivedCount > 0 && (
-                    <AdminComponentPaper>
+                    <BlockAdminComponentPaper>
                         <Box display="flex" flexDirection="row" justifyContent="space-between">
                             <PageVisibility>
                                 <PageVisibilityIcon visibility="Archived" />
@@ -133,7 +142,7 @@ export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
                                 <Delete />
                             </PageCount>
                         </Box>
-                    </AdminComponentPaper>
+                    </BlockAdminComponentPaper>
                 )}
             </DialogContent>
             <DialogActions>

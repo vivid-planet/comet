@@ -1,13 +1,21 @@
 import { Tooltip } from "@comet/admin";
 import { View } from "@comet/admin-icons";
-import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
-import { GridCellParams } from "@mui/x-data-grid-pro";
-import { GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
-import { GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Typography,
+} from "@mui/material";
+import { type GridCellParams } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-type Props = GridCellParams<unknown, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
+import { type GQLProductsGridFutureFragment } from "./future/generated/ProductsGrid.generated";
+import { type GQLProductsListManualFragment } from "./ProductsGrid.generated";
+
+type Props = GridCellParams<GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
 
 export const ProductsGridPreviewAction = ({ row }: Props) => {
     const [showDetails, setShowDetails] = useState(false);

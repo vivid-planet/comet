@@ -1,8 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { filterByFragment, FinalForm, type FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -13,15 +13,15 @@ import {
     updateProductCategoryMutation,
 } from "./ProductCategoryForm.gql";
 import {
-    GQLCheckForChangesProductCategoryQuery,
-    GQLCheckForChangesProductCategoryQueryVariables,
-    GQLProductCategoryFormCreateProductCategoryMutation,
-    GQLProductCategoryFormCreateProductCategoryMutationVariables,
-    GQLProductCategoryFormFragment,
-    GQLProductCategoryFormUpdateProductCategoryMutation,
-    GQLProductCategoryFormUpdateProductCategoryMutationVariables,
-    GQLProductCategoryQuery,
-    GQLProductCategoryQueryVariables,
+    type GQLCheckForChangesProductCategoryQuery,
+    type GQLCheckForChangesProductCategoryQueryVariables,
+    type GQLProductCategoryFormCreateProductCategoryMutation,
+    type GQLProductCategoryFormCreateProductCategoryMutationVariables,
+    type GQLProductCategoryFormFragment,
+    type GQLProductCategoryFormUpdateProductCategoryMutation,
+    type GQLProductCategoryFormUpdateProductCategoryMutationVariables,
+    type GQLProductCategoryQuery,
+    type GQLProductCategoryQueryVariables,
 } from "./ProductCategoryForm.gql.generated";
 
 interface FormProps {
@@ -95,7 +95,7 @@ function ProductCategoryForm({ id }: FormProps) {
     };
 
     if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
     }
 
     if (loading) {

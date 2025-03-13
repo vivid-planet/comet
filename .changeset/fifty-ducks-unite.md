@@ -5,8 +5,8 @@
 
 Allow setting labels for user permissions admin panel
 
--   Support labels in `availableContentScopes`
-    It now possible to use the following format (the same like for `ContentScopeSelect` in the admin):
+- Support labels in `availableContentScopes`
+  It now possible to use the following format (the same like for `ContentScopeSelect` in the admin):
     ```ts
     availableContentScopes: [
         {
@@ -22,4 +22,4 @@ Allow setting labels for user permissions admin panel
         // ...,
     ];
     ```
--   Add `permissionLabels` prop to `UserPermissionsPage`
+- Add `permissionLabels` prop to `UserPermissionsPage`

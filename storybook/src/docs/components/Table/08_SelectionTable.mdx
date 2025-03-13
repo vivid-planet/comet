@@ -1,0 +1,22 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as SelectionTableStories from "./08_SelectionTable.stories";
+
+<Meta of={SelectionTableStories} />
+
+**The `Table` component has been deprecated in favor of [MUI X Data Grid](https://mui.com/x/react-data-grid/) in combination with `useDataGridRemote`. View [docs](?path=/docs/docs-components-datagrid--docs).**
+
+# Selection Table
+
+The `Table` component has a built-in [selection](?path=/docs/docs-components-selection--docs) functionality.
+That can, for example, be used to create a table with an adjacent form.
+The user can select an item from the table and edit it in the form.
+
+To use this functionality, follow these steps:
+
+1. get an instance of `selection` and `selectionApi` from a selection hook ([useSelection()](?path=/docs/docs-components-selection--docs#useselection-hook-recommended) or [useSelectionRoute()](?path=/docs/docs-components-selection--docs#useselectionroute-hook-recommended))
+2. (only for `useSelectionRoute()`) wrap `Table` and form in the `SelectionRoute`
+3. set the `selectable` prop to `true` and pass `selectedId` and `selectionApi` to the `Table`
+4. use the `Selected` component to access the currently selected item. Pass the item to your form
+
+<Canvas of={SelectionTableStories.SelectionTable} />

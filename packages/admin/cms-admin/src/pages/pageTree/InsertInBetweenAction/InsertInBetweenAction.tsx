@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import Button from "./Button";
 import * as sc from "./InsertInBetweenAction.sc";

@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
 import { SvgImageBlockData } from "./svg-image.block";

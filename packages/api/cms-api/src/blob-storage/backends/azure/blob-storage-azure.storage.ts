@@ -1,8 +1,8 @@
-import { BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
+import { type BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
 import { Readable } from "stream";
 
-import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
-import { BlobStorageAzureConfig } from "./blob-storage-azure.config";
+import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";
+import { type BlobStorageAzureConfig } from "./blob-storage-azure.config";
 
 export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
     private readonly client: BlobServiceClient;
@@ -75,16 +75,16 @@ export class BlobStorageAzureStorage implements BlobStorageBackendInterface {
         }
     }
 
-    async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+    async getFile(folderName: string, fileName: string): Promise<Readable> {
         const response = await this.client.getContainerClient(folderName).getBlobClient(fileName).download();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return response.readableStreamBody!; // is defined in node.js but not for browsers
+        return Readable.from(response.readableStreamBody!); // is defined in node.js but not for browsers
     }
 
-    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable> {
         const response = await this.client.getContainerClient(folderName).getBlobClient(fileName).download(offset, length);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return response.readableStreamBody!; // is defined in node.js but not for browsers
+        return Readable.from(response.readableStreamBody!); // is defined in node.js but not for browsers
     }
 
     async removeFile(folderName: string, fileName: string): Promise<void> {

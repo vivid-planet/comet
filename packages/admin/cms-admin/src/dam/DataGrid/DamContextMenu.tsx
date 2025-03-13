@@ -6,20 +6,20 @@ import { saveAs } from "file-saver";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { UnknownError } from "../../common/errors/errorMessages";
-import { GQLDamFile, GQLDamFolder } from "../../graphql.generated";
+import { useCometConfig } from "../../config/CometConfigContext";
+import { type GQLDamFile, type GQLDamFolder } from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { GQLDeleteDamFolderMutation, GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
+import { type GQLDeleteDamFolderMutation, type GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
 import {
-    GQLArchiveFileMutation,
-    GQLArchiveFileMutationVariables,
-    GQLDeleteDamFileMutation,
-    GQLDeleteDamFileMutationVariables,
-    GQLRestoreFileMutation,
-    GQLRestoreFileMutationVariables,
+    type GQLArchiveFileMutation,
+    type GQLArchiveFileMutationVariables,
+    type GQLDeleteDamFileMutation,
+    type GQLDeleteDamFileMutationVariables,
+    type GQLRestoreFileMutation,
+    type GQLRestoreFileMutationVariables,
 } from "./DamContextMenu.gql.generated";
 
 interface FolderInnerMenuProps {
@@ -31,7 +31,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
-    const context = useCmsBlockContext();
+    const { apiUrl } = useCometConfig();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -58,7 +58,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
         }
     };
 
-    const downloadUrl = `${context.damConfig.apiUrl}/dam/folders/${folder.id}/zip`;
+    const downloadUrl = `${apiUrl}/dam/folders/${folder.id}/zip`;
 
     return (
         <>

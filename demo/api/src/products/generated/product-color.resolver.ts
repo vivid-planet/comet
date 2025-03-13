@@ -12,6 +12,6 @@ import { ProductColor } from "../entities/product-color.entity";
 export class ProductColorResolver {
     @ResolveField(() => Product)
     async product(@Parent() productColor: ProductColor): Promise<Product> {
-        return productColor.product.load();
+        return productColor.product.loadOrFail();
     }
 }

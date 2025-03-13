@@ -49,13 +49,13 @@ export class ScaledImagesCacheService {
             const path = [fileDirectory, hasha(scaleSettingsCacheKey, { algorithm: "md5" })].join(sep);
             try {
                 await this.blobStorageBackendService.removeFile(this.config.cacheDirectory, path);
-            } catch (e) {
+            } catch {
                 // empty
             }
         } else {
             try {
                 await this.blobStorageBackendService.removeFile(this.config.cacheDirectory, fileDirectory);
-            } catch (e) {
+            } catch {
                 // empty
             }
         }

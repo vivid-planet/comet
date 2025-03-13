@@ -1,32 +1,18 @@
-import { gql, useApolloClient } from "@apollo/client";
-import { Button, ButtonProps } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { Button, type ButtonProps } from "@mui/material";
+import Cookies from "js-cookie";
 
+import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
-import {
-    GQLUserPermissionsStartImpersonationMutation,
-    GQLUserPermissionsStartImpersonationMutationVariables,
-    GQLUserPermissionsStopImpersonationMutation,
-} from "./ImpersonationButtons.generated";
 
 export const StopImpersonationButton = (buttonProps: ButtonProps) => {
-    const client = useApolloClient();
     const stopImpersonation = async () => {
-        const result = await client.mutate<GQLUserPermissionsStopImpersonationMutation>({
-            mutation: gql`
-                mutation UserPermissionsStopImpersonation {
-                    userPermissionsStopImpersonation
-                }
-            `,
-        });
-        if (result.data?.userPermissionsStopImpersonation) {
-            location.href = "/";
-        }
+        Cookies.remove("comet-impersonate-user-id");
+        location.href = "/";
     };
 
     return (
         <Button onClick={stopImpersonation} {...buttonProps}>
-            <FormattedMessage id="comet.stopImpersonation" defaultMessage="Stop Impersonation" />
+            {commonImpersonationMessages.stopImpersonation}
         </Button>
     );
 };
@@ -34,21 +20,9 @@ export const StopImpersonationButton = (buttonProps: ButtonProps) => {
 export const StartImpersonationButton = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
     const isAllowed = useUserPermissionCheck();
-    const client = useApolloClient();
     const startImpersonation = async () => {
-        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
-            mutation: gql`
-                mutation UserPermissionsStartImpersonation($userId: String!) {
-                    userPermissionsStartImpersonation(userId: $userId)
-                }
-            `,
-            variables: {
-                userId,
-            },
-        });
-        if (result.data?.userPermissionsStartImpersonation) {
-            location.href = "/";
-        }
+        Cookies.set("comet-impersonate-user-id", userId);
+        location.href = "/";
     };
 
     if (!isAllowed("impersonation")) return null;
@@ -56,7 +30,7 @@ export const StartImpersonationButton = ({ userId }: { userId: string }) => {
     if (currentUser.id !== userId && !currentUser.impersonated) {
         return (
             <Button onClick={startImpersonation} variant="contained">
-                <FormattedMessage id="comet.userPermissions.startImpersonation" defaultMessage="Start Impersonation" />
+                {commonImpersonationMessages.startImpersonation}
             </Button>
         );
     }

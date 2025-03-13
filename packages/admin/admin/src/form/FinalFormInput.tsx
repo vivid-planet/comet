@@ -1,10 +1,11 @@
 import { Translate } from "@comet/admin-icons";
-import { IconButton, InputBase, InputBaseProps, Tooltip } from "@mui/material";
+import { IconButton, InputBase, type InputBaseProps } from "@mui/material";
 import { useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
+import { Tooltip } from "../common/Tooltip";
 import { PlainTextTranslationDialog } from "../translator/PlainTextTranslationDialog";
 import { useContentTranslationService } from "../translator/useContentTranslationService";
 
@@ -28,28 +29,30 @@ export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable,
                 {...input}
                 {...props}
                 endAdornment={
-                    <>
-                        {clearable && (
-                            <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
-                        )}
-                        {isTranslatable && (
-                            <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
-                                <IconButton
-                                    onClick={async () => {
-                                        if (showApplyTranslationDialog) {
-                                            setPendingTranslation(await translate(input.value));
-                                            setOpen(true);
-                                        } else {
-                                            input.onChange(await translate(input.value));
-                                        }
-                                    }}
-                                >
-                                    <Translate />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                        {endAdornment}
-                    </>
+                    (endAdornment || clearable || isTranslatable) && (
+                        <>
+                            {clearable && (
+                                <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
+                            )}
+                            {isTranslatable && (
+                                <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
+                                    <IconButton
+                                        onClick={async () => {
+                                            if (showApplyTranslationDialog) {
+                                                setPendingTranslation(await translate(input.value));
+                                                setOpen(true);
+                                            } else {
+                                                input.onChange(await translate(input.value));
+                                            }
+                                        }}
+                                    >
+                                        <Translate />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                            {endAdornment}
+                        </>
+                    )
                 }
             />
             {open && pendingTranslation && (

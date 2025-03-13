@@ -1,15 +1,15 @@
 import { useApolloClient } from "@apollo/client";
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
-import { Button, Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { Button, Checkbox, Grid, IconButton, useTheme } from "@mui/material";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
+import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
-import { traverse, TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
+import { traverse, type TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { GQLPageTreePageFragment, PageTreeSelectionState } from "../pageTree/usePageTree";
+import { type GQLPageTreePageFragment, type PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
@@ -24,7 +24,7 @@ interface ConfirmActionState {
     handleAction: () => void;
 }
 
-export interface PagesPageActionToolbarProps {
+interface PagesPageActionToolbarProps {
     selectedState: PageTreeSelectionState;
     onSelectAllPressed: () => void;
 
@@ -273,8 +273,7 @@ export const PagesPageActionToolbar = ({
                                     variables: { id: node.id },
                                 });
                             }
-                        } catch (e) {
-                            // eslint-disable-next-line no-console
+                        } catch {
                             console.error("Error deleting pages");
                         } finally {
                             client.refetchQueries({ include: ["Pages"] });

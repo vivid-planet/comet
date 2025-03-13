@@ -14,9 +14,9 @@ import {
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
+import { type GQLDamFileDuplicatesQuery, type GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
 
-export const damFileDuplicatesQuery = gql`
+const damFileDuplicatesQuery = gql`
     query DamFileDuplicates($id: ID!) {
         damFile(id: $id) {
             duplicates {

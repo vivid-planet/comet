@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { InternalLinkBlockData } from "../blocks.generated";
-import { PropsWithData } from "./PropsWithData";
+import { type InternalLinkBlockData } from "../blocks.generated";
+import { type PropsWithData } from "./PropsWithData";
 
 interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
     title?: string;

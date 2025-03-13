@@ -1,4 +1,4 @@
-import { IsHash, IsString, IsUUID } from "class-validator";
+import { IsHash, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class FileParams {
     @IsUUID()
@@ -6,6 +6,10 @@ export class FileParams {
 
     @IsString()
     filename: string;
+
+    @IsOptional()
+    @IsHash("md5")
+    contentHash?: string;
 }
 
 export class HashFileParams extends FileParams {

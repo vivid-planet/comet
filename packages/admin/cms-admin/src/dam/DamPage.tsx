@@ -1,12 +1,10 @@
 import { styled } from "@mui/material/styles";
-import { ReactNode } from "react";
-import { useRouteMatch } from "react-router";
+import { type ReactNode } from "react";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
-import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
+import { type ContentScopeInterface, useContentScope } from "../contentScope/Provider";
+import { useDamConfig } from "./config/damConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
-import { useDamConfig } from "./config/useDamConfig";
 import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
@@ -36,10 +34,7 @@ const DamTableWrapper = styled("div")`
 `;
 
 function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
-    const { scope, match } = useContentScope();
-    const routeMatch = useRouteMatch();
-    const damRouteLocation = routeMatch.url.replace(match.url, "");
-    useContentScopeConfig({ redirectPathAfterChange: damRouteLocation });
+    const { scope } = useContentScope();
     const damConfig = useDamConfig();
 
     return (

@@ -1,13 +1,13 @@
 import { useApolloClient } from "@apollo/client";
 import { Assets } from "@comet/admin-icons";
-import { AdminComponentButton } from "@comet/blocks-admin";
 import { useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { damFileFieldFileQuery } from "./FileField.gql";
-import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+import { type GQLDamFileFieldFileFragment, type GQLDamFileFieldFileQuery, type GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
 
 export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
@@ -22,9 +22,9 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
 
     return (
         <>
-            <AdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
+            <BlockAdminComponentButton onClick={() => setChooseFileDialogOpen(true)} startIcon={<Assets />} size="large">
                 {buttonText ?? <FormattedMessage id="comet.form.file.chooseFile" defaultMessage="Choose file" />}
-            </AdminComponentButton>
+            </BlockAdminComponentButton>
             <ChooseFileDialog
                 open={chooseFileDialogOpen}
                 allowedMimetypes={allowedMimetypes}

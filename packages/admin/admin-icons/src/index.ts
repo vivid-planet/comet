@@ -1,7 +1,8 @@
-import { GeneratedIconName } from "./generated/GeneratedIconName";
+import { type GeneratedIconName } from "./generated/GeneratedIconName";
 
 export { default as BallTriangle } from "./BallTriangle";
 export { default as CheckboxChecked } from "./CheckboxChecked";
+export { default as CheckboxIndeterminate } from "./CheckboxIndeterminate";
 export { default as CheckboxUnchecked } from "./CheckboxUnchecked";
 export { default as CometColor } from "./CometColor";
 export * from "./generated";
@@ -18,6 +19,7 @@ export type IconName =
     | "BallTriangle"
     | "CheckboxChecked"
     | "CheckboxUnchecked"
+    | "CheckboxIndeterminate"
     | "CometColor"
     | "Html"
     | "MovePage"

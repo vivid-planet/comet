@@ -49,6 +49,7 @@ export class ImagesService {
 
         return [
             ...baseUrl,
+            file.contentHash,
             file.id,
             (imageCropArea.focalPoint !== FocalPoint.SMART
                 ? ["crop", imageCropArea.width, imageCropArea.height, imageCropArea.focalPoint, imageCropArea.x, imageCropArea.y]

@@ -13,15 +13,12 @@ export class ImageFileFixtureService {
         const images = [];
         for (let index = 0; index < IMAGE_FILE_PATHS.length; index++) {
             console.log(`Downloading ${IMAGE_FILE_PATHS[index]}.`);
-            const image_path = path.resolve(`./src/db/fixtures/generators/images/${IMAGE_FILE_PATHS[index]}.png`);
+            const image_path = path.resolve(`./src/db/fixtures/assets/images/${IMAGE_FILE_PATHS[index]}.png`);
 
             const downloadedImage = await createFileUploadInputFromUrl(image_path);
             console.log(`Downloading ${IMAGE_FILE_PATHS[index]} done.`);
-            downloadedImage.mimetype = "image/png";
-            downloadedImage.originalname = `${IMAGE_FILE_PATHS[index]}.png`;
 
             console.log(`Uploading ${downloadedImage.originalname}.`);
-
             const file = await this.filesService.upload(downloadedImage, { scope });
             console.log(`Uploading ${downloadedImage.originalname} done.`);
             images.push(file);
