@@ -201,7 +201,6 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
 })(
     ({ ownerState }) => css`
         overflow: hidden;
-        text-overflow: ellipsis;
 
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
