@@ -85,7 +85,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
             <DialogActions>
                 <CancelButton onClick={() => onClose()} />
                 <Button
-                    variant="primary"
                     disabled={loading || selectionModel.length < 1}
                     startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {
