@@ -3,6 +3,7 @@ const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
 const fs = require("fs");
+const https = require("node:https");
 
 const app = express();
 const port = process.env.APP_PORT ?? 3000;
@@ -38,6 +39,29 @@ app.use(
 
 app.get("/status/health", (req, res) => {
     res.send("OK!");
+});
+
+app.use("/dam", (req, res) => {
+    const targetUrl = new URL(process.env.API_URL);
+
+    const options = {
+        hostname: targetUrl.hostname,
+        path: targetUrl.pathname + req.originalUrl,
+        method: req.method,
+        headers: req.headers,
+    };
+
+    const proxy = https.request(options, (proxyRes) => {
+        res.writeHead(proxyRes.statusCode, proxyRes.headers);
+        proxyRes.pipe(res, { end: true });
+    });
+
+    req.pipe(proxy, { end: true });
+
+    proxy.on("error", (err) => {
+        console.error("Proxy Error:", err);
+        res.status(500).send("Proxy request failed");
+    });
 });
 
 app.use(
