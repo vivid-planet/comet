@@ -1,5 +1,4 @@
 import { Button, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { Link } from "@mui/material";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -20,9 +19,9 @@ export const _StackLink = {
                     <StackSwitch>
                         <StackPage name="page1">
                             <h3>Page 1</h3>
-                            <Link component={StackLink} pageName="page2" payload="test">
+                            <StackLink pageName="page2" payload="test">
                                 link based on StackLink
-                            </Link>
+                            </StackLink>
                         </StackPage>
                         <StackPage name="page2">
                             <h3>Page 2</h3>
