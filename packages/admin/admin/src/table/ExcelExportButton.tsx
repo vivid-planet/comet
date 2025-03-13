@@ -29,6 +29,7 @@ export const ExcelExportButton = ({ onClick, children, exportApi, loadingCompone
     return (
         <Button
             onClick={onClickButtonPressed}
+            variant="textDark"
             startIcon={
                 loading ? (
                     <>

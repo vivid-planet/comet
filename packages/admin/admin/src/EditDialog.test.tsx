@@ -18,7 +18,9 @@ describe("EditDialog", () => {
 
                 return (
                     <>
-                        <Button onClick={() => editDialogApi.openAddDialog()}>Open dialog</Button>
+                        <Button variant="textDark" onClick={() => editDialogApi.openAddDialog()}>
+                            Open dialog
+                        </Button>
                         <EditDialog onAfterSave={onAfterSave}>
                             <FinalForm
                                 mode="edit"

@@ -16,7 +16,7 @@ interface IProps {
 export class TableAddButton extends Component<IProps> {
     public render() {
         return (
-            <Button onClick={this.handleAddClick} startIcon={<AddNoCircle />}>
+            <Button variant="textDark" onClick={this.handleAddClick} startIcon={<AddNoCircle />}>
                 <FormattedMessage {...messages.add} />
             </Button>
         );

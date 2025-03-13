@@ -167,6 +167,7 @@ export function CronJobsGrid() {
 
                     <Button
                         startIcon={<Play />}
+                        variant="textDark"
                         onClick={async () => {
                             if (cronJobToStart) {
                                 await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
