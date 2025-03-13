@@ -52,7 +52,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnSortedDescendingIcon: ArrowDown,
             BaseTextField: (props: TextFieldProps) => <TextField {...props} InputLabelProps={{ shrink: true }} />,
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
-            // @ts-expect-error @jamesricky fix this please
             panel: DataGridPanel,
             ...component?.defaultProps?.slots,
         },
