@@ -33,7 +33,7 @@ class PixelImageBlockData extends BlockData {
 
     async previewImageUrlTemplate(
         { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls, relativeDamUrls }: BlockContext,
+        { previewDamUrls }: BlockContext,
     ): Promise<string | undefined> {
         if (!this.damFileId) {
             return undefined;
@@ -45,7 +45,7 @@ class PixelImageBlockData extends BlockData {
             return undefined;
         }
 
-        return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls, relativeDamUrls });
+        return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls });
     }
 
     indexData(): BlockIndexData {

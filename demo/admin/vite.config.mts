@@ -77,6 +77,13 @@ export default defineConfig(({ mode }) => {
         server: {
             host: true,
             port: Number(process.env.ADMIN_PORT),
+            proxy: {
+                "/dam": {
+                    target: process.env.API_URL,
+                    changeOrigin: true,
+                    secure: false,
+                },
+            },
         },
         define: {
             // define NODE_ENV for packages using it
