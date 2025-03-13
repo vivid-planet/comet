@@ -17,6 +17,7 @@ import { getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
+import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
@@ -51,6 +52,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnSortedDescendingIcon: ArrowDown,
             BaseTextField: (props: TextFieldProps) => <TextField {...props} InputLabelProps={{ shrink: true }} />,
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
+            // @ts-expect-error @jamesricky fix this please
+            panel: DataGridPanel,
             ...component?.defaultProps?.slots,
         },
         slotProps: {
