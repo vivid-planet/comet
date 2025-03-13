@@ -16,7 +16,7 @@ export function ImpersonationInlay() {
                 <Name variant="h6">{user.name}</Name>
                 <SingleLineTypography variant="body2">{user.email}</SingleLineTypography>
             </TextContainer>
-            <StopImpersonationButton startIcon={<Reset />} variant="contained" color="secondary" />{" "}
+            <StopImpersonationButton startIcon={<Reset />} variant="contained" color="secondary" />
         </Root>
     );
 }
