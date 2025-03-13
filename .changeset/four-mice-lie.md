@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix styling of `SelectField` to prevent large text content to cause resizing of the field
+Prevent the content of FieldContainer from overflowing to fix the styling of a nested SelectField with long labels.
