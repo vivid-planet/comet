@@ -80,6 +80,8 @@ export class AppModule {
                         context: ({ req }: { req: Request }) => ({ ...req }),
                         cors: {
                             credentials: true,
+                            methods: ["GET", "POST"],
+                            maxAge: 600,
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
