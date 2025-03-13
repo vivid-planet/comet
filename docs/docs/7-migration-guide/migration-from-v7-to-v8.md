@@ -507,6 +507,7 @@ Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`
 +   ...createAuthGuardProviders(
 +       createBasicAuthService({ ... }),
 +       createJwtAuthService({ ... }),
++       createSitePreviewAuthService({ ... }),
 +       createStaticUserAuthService({ ... }),
 +   ),
 ```
