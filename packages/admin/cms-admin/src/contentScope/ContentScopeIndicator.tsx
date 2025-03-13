@@ -78,7 +78,6 @@ const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "gl
     text-transform: ${({ global }) => (global ? "uppercase" : "none")};
 
     ${({ theme }) => theme.breakpoints.up("sm")} {
-        width: auto;
         max-width: none;
     }
 `;
