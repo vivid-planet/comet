@@ -26,7 +26,7 @@ export const OptionalDimensions = function () {
     return (
         <ContentScopeProvider
             values={values}
-            defaultValue={{ organizationId: "organization-1" }}
+            defaultValue={values[0]}
             location={{
                 createPath: () => ["/organization/:organizationId", "/channel/:channelId"],
                 createUrl: (scope) => {
