@@ -131,7 +131,7 @@ export function createSeoBlock(
 
                             <FieldWithContentGeneration
                                 label={intl.formatMessage({
-                                    id: "comet.blocks.seo.html  Title",
+                                    id: "comet.blocks.seo.htmlTitle",
                                     defaultMessage: "HTML Title",
                                 })}
                                 name="htmlTitle"
