@@ -84,12 +84,37 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
 
     const childrenWrapperRef = useRef<HTMLDivElement>(null);
+    const childrenWrapperWidth = childrenWrapperRef.current?.offsetWidth;
 
     const recalculatePreviewElementsData = useCallback(() => {
+        if (!childrenWrapperWidth) {
+            return;
+        }
+
         const newPreviewElementsData = previewElements
             .map((previewElement) => {
                 const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
                 const positioning = getCombinedPositioningOfElements(childNodes);
+
+                const isRenderedOutsideOfViewportWidth = positioning.left > childrenWrapperWidth;
+
+                if (isRenderedOutsideOfViewportWidth) {
+                    // TODO: Simply return `null` here after updating to typescript 5+
+                    return {
+                        adminRoute: previewElement.adminRoute,
+                        label: previewElement.label,
+                        position: {
+                            top: positioning.top,
+                            left: positioning.left,
+                            width: 0,
+                            height: positioning.height,
+                        },
+                    };
+                }
+
+                const spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport = positioning.left + positioning.width - childrenWrapperWidth;
+                const tooWideForPreviewViewportByPixels =
+                    spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport > 0 ? spaceBetweenRightEdgeOfElementAndRightEdgeOfViewport : 0;
 
                 return {
                     adminRoute: previewElement.adminRoute,
@@ -97,11 +122,12 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                     position: {
                         top: positioning.top,
                         left: positioning.left,
-                        width: positioning.width,
+                        width: positioning.width - tooWideForPreviewViewportByPixels,
                         height: positioning.height,
                     },
                 };
             })
+            .filter((elementData) => elementData.position.width !== 0) // TODO: Filter out null after updating to typescript 5+ instead of filtering `width !== 0`
             .sort((previousElementData, nextElementData) => {
                 const previousSize = previousElementData.position.width * previousElementData.position.height;
                 const nextSize = nextElementData.position.width * nextElementData.position.height;
@@ -127,7 +153,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
 
             return newPreviewElementsData;
         });
-    }, [previewElements]);
+    }, [previewElements, childrenWrapperWidth]);
 
     useEffect(() => {
         if (childrenWrapperRef.current) {
