@@ -3,6 +3,7 @@ import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { FormattedDate } from "react-intl";
 import styled from "styled-components";
 
 import { GQLNewsIndexPageQuery } from "./NewsPage.loader.generated";
@@ -21,7 +22,9 @@ export function NewsPage({ initialData }: { initialData: GQLNewsIndexPageQuery["
                     <Card key={news.id} href={`${pathname}/${news.slug}`}>
                         <DamImageBlock data={news.image} aspectRatio="4x3" />
                         <h2>{news.title}</h2>
-                        {/* <p><FormattedDate value={news.createdAt} /></p> */}
+                        <p>
+                            <FormattedDate value={news.createdAt} />
+                        </p>
                     </Card>
                 ))}
             </CardList>
