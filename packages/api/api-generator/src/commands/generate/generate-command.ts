@@ -1,5 +1,6 @@
 import { type CrudGeneratorOptions, type CrudSingleGeneratorOptions } from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
+import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { Command } from "commander";
 
@@ -8,9 +9,14 @@ import { generateCrudSingle } from "./generateCrudSingle/generate-crud-single";
 import { writeGeneratedFiles } from "./utils/write-generated-files";
 
 export const generateCommand = new Command("generate").action(async (options) => {
+    let orm: MikroORM | null = null;
     try {
-        const orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });
+        orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });
+    } catch (e) {
+        console.warn(e);
+    }
 
+    if (orm != null) {
         const entities = orm.em.getMetadata().getAll();
         LazyMetadataStorage.load();
 
@@ -37,8 +43,7 @@ export const generateCommand = new Command("generate").action(async (options) =>
                 }
             }
         }
+
         await orm.close(true);
-    } catch (e) {
-        console.warn(e);
     }
 });
