@@ -12,7 +12,7 @@ export default function BottomAddLink({ onClick }: Props) {
     return (
         <>
             <Divider />
-            <AddButton onClick={onClick} startIcon={<Add />} fullWidth>
+            <AddButton variant="textDark" onClick={onClick} startIcon={<Add />} fullWidth>
                 <FormattedMessage {...messages.add} />
             </AddButton>
         </>

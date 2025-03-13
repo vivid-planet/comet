@@ -26,7 +26,7 @@ export const UndoSnackbar = <Payload,>({ onUndoClick, payload, ...props }: UndoS
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             action={
-                <Button variant="secondary" size="small" onClick={onClick}>
+                <Button variant="textDark" size="small" onClick={onClick}>
                     <FormattedMessage {...messages.undo} />
                 </Button>
             }

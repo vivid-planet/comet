@@ -228,7 +228,13 @@ export const PagesPageActionToolbar = ({
                     </Tooltip>
                 </CenterContainer>
                 <Grid item>
-                    <Button disabled={collapseAllDisabled} startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
+                    <Button
+                        disabled={collapseAllDisabled}
+                        startIcon={<TreeCollapseAll />}
+                        onClick={onCollapseAllPressed}
+                        size="small"
+                        variant="textDark"
+                    >
                         <FormattedMessage id="comet.pages.pages.collapseAll" defaultMessage="Collapse all" />
                     </Button>
                 </Grid>

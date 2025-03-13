@@ -95,7 +95,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
             </DialogContent>
             <DialogActions>
                 <Box display="flex" justifyContent="space-between" width="100%">
-                    <Button variant="secondary" onClick={onSkip} startIcon={<Forward />}>
+                    <Button variant="textDark" onClick={onSkip} startIcon={<Forward />}>
                         <FormattedMessage
                             id="comet.dam.duplicateFilenameDialog.action.skip"
                             defaultMessage="Skip {count, plural, one {file} other {files}}"

@@ -22,7 +22,7 @@ export const PageCanNotDeleteDialog = (props: PageCanNotDeleteDialogProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClosePressed} color="primary">
+                <Button onClick={onClosePressed} variant="textDark">
                     <FormattedMessage {...messages.close} />
                 </Button>
             </DialogActions>

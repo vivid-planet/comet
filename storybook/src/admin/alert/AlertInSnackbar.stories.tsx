@@ -15,6 +15,7 @@ export const AlertInSnackbar = {
                     onClick={() => {
                         setShowSnackbar(true);
                     }}
+                    variant="textDark"
                 >
                     Show snackbar
                 </Button>

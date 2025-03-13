@@ -243,7 +243,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <StyledDialogAction>
                 {value && (
                     <Button
-                        variant="outlined"
+                        variant="textDark"
                         onClick={() => {
                             onChange(null);
                             onClose();
