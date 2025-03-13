@@ -34,8 +34,16 @@ export interface UserPermissionsUserServiceInterface {
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
 }
 
+export type ContentScopeWithLabel = {
+    [key in keyof ContentScope]: {
+        label: string;
+        value: ContentScope[key];
+    };
+};
+type AvailableContentScope = ContentScope | ContentScopeWithLabel;
+
 export interface UserPermissionsOptions {
-    availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
+    availableContentScopes?: AvailableContentScope[] | (() => Promise<AvailableContentScope[]> | AvailableContentScope[]);
     systemUsers?: string[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {

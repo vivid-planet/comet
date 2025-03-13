@@ -51,6 +51,7 @@ type CurrentUser {
   impersonated: Boolean
   authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [JSONObject!]!
 }
 
 type Dependency {

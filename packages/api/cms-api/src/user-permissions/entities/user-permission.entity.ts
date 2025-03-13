@@ -1,6 +1,5 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
@@ -54,7 +53,6 @@ export class UserPermission extends BaseEntity {
     @Property()
     overrideContentScopes: boolean = false;
 
-    @Field(() => [GraphQLJSONObject])
     @Property({ type: "json" })
     contentScopes: ContentScope[] = [];
 }

@@ -6,13 +6,13 @@ import { type ContentScopeInterface, useContentScope } from "../../contentScope/
 import { type GQLCurrentUserPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
-type CurrentUserContext = {
-    currentUser: CurrentUserInterface;
-    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => boolean;
+type CurrentUserContext<ContentScope extends ContentScopeInterface = ContentScopeInterface> = {
+    currentUser: CurrentUserInterface<ContentScope>;
+    isAllowed: (user: CurrentUserInterface<ContentScope>, permission: string, contentScope?: ContentScope) => boolean;
 };
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
-export interface CurrentUserInterface {
+export interface CurrentUserInterface<ContentScope extends ContentScopeInterface = ContentScopeInterface> {
     id: string;
     name: string;
     email: string;
@@ -21,7 +21,12 @@ export interface CurrentUserInterface {
         name: string;
         email: string;
     } | null;
-    allowedContentScopes: ContentScopeInterface[];
+    allowedContentScopes: {
+        [key in keyof ContentScope]: {
+            label: string;
+            value: string;
+        };
+    }[];
     impersonated: boolean;
 }
 
@@ -40,6 +45,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     permission
                     contentScopes
                 }
+                allowedContentScopes
                 impersonated
             }
         }
@@ -56,7 +62,6 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
             ...data.currentUser,
             impersonated: !!data.currentUser.impersonated,
             authenticatedUser: data.currentUser.authenticatedUser,
-            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
         },
         isAllowed:
             isAllowed ??
@@ -73,10 +78,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     return <CurrentUserContext.Provider value={context}>{children}</CurrentUserContext.Provider>;
 };
 
-export function useCurrentUser(): CurrentUserInterface {
+export function useCurrentUser<ContentScope extends ContentScopeInterface>(): CurrentUserInterface<ContentScope> {
     const ret = useContext(CurrentUserContext);
     if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
-    return ret.currentUser;
+    return ret.currentUser as CurrentUserContext<ContentScope>["currentUser"];
 }
 
 export function useUserPermissionCheck(): (permission: string) => boolean {

@@ -130,7 +130,7 @@ export function generateGridColumnsFromContentScopeProperties(
             headerName: camelCaseToHumanReadable(propertyName),
             renderCell: ({ row }) => {
                 if (row[propertyName] != null) {
-                    return <Typography variant="subtitle2">{camelCaseToHumanReadable(row[propertyName])}</Typography>;
+                    return <Typography variant="subtitle2">{row[propertyName].label}</Typography>;
                 } else {
                     return "-";
                 }
