@@ -1,4 +1,4 @@
-import { Button } from "@comet/admin";
+import { Button } from "@mui/material";
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
 
 import { AdminComponentPaper } from "./AdminComponentPaper";
@@ -16,7 +16,7 @@ export const AdminComponentButton = ({ variant, size, ...buttonProps }: PropsWit
         <AdminComponentPaper disablePadding>
             <Button
                 fullWidth
-                variant="textDark"
+                color={variant === "primary" ? "primary" : "info"}
                 sx={({ spacing }) => ({
                     ...(size === "large" && {
                         padding: spacing(4),
