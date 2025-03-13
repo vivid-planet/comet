@@ -1,6 +1,7 @@
 import { EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
 import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
+import { FileStreamMetadata } from "@src/importer/data-streams/local-file-data-stream";
 import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Transform } from "stream";
@@ -9,7 +10,7 @@ import { ProductImporterInput } from "./product-importer.input";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
-    dataStream: DataStreamAndMetadata | null = null;
+    dataStream: DataStreamAndMetadata<FileStreamMetadata> | null = null;
     name = "productImport";
     importTarget: ImporterInputClass = ProductImporterInput;
     transformPipes: Transform[] = [];
@@ -26,7 +27,7 @@ export class ProductImporter {
         ];
     }
 
-    async init({ dataStream }: { dataStream: DataStream }): Promise<void> {
+    async init({ dataStream }: { dataStream: DataStream<FileStreamMetadata> }): Promise<void> {
         this.dataStream = await dataStream.getDataStreamAndMetadata();
     }
 

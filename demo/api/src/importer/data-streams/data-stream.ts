@@ -1,9 +1,10 @@
-export interface DataStreamAndMetadata {
+import { PipeMetadata } from "../pipes/importer-pipe.type";
+
+export interface DataStreamAndMetadata<T> {
     dataStream: NodeJS.ReadableStream;
-    params?: Record<string, unknown>;
-    additionalData?: Record<string, unknown>;
+    metadata: PipeMetadata<T>;
 }
 
-export abstract class DataStream {
-    abstract getDataStreamAndMetadata(): Promise<DataStreamAndMetadata | null>;
+export abstract class DataStream<T> {
+    abstract getDataStreamAndMetadata(): Promise<DataStreamAndMetadata<T> | null>;
 }
