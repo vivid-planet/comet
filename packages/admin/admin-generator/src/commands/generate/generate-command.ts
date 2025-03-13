@@ -21,6 +21,7 @@ import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 import { type ComponentType } from "react";
 
+import { generateCrudPage } from "./generateCrudPage/generateCrudPage";
 import { generateForm } from "./generateForm/generateForm";
 import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { generateGrid } from "./generateGrid/generateGrid";
@@ -178,7 +179,26 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
+type CrudPageGridConfig = {
+    component: ComponentType;
+};
+
+export type CrudPageFormConfig = {
+    component: ComponentType;
+    pageTitle?: string;
+};
+
+export type CrudPageConfig<T extends { __typename?: string }> = {
+    type: "crudPage";
+    topLevelTitle?: string;
+    gqlType: T["__typename"];
+    grid: CrudPageGridConfig;
+    forms?: CrudPageFormConfig;
+    addForm?: Partial<CrudPageFormConfig>;
+    editForm?: Partial<CrudPageFormConfig>;
+};
+
+export type GeneratorConfig = FormConfig<any> | GridConfig<any> | CrudPageConfig<any> | TabsConfig;
 
 type GQLDocumentConfig = { document: string; export: boolean };
 export type GQLDocumentConfigMap = Record<string, GQLDocumentConfig>;
@@ -215,6 +235,8 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
                 generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
             } else if (config.type == "grid") {
                 generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+            } else if (config.type == "crudPage") {
+                generated = generateCrudPage(config);
             } else {
                 throw new Error(`Unknown config type: ${config.type}`);
             }
