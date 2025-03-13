@@ -15,7 +15,7 @@ interface Props extends PropsWithChildren {
 
 function PageLink({ page, children, className: passedClassName, activeClassName }: Props): JSX.Element | null {
     const pathname = usePathname();
-    const active = (pathname?.substring(3) || "/") === page.path; // Remove language prefix
+    const active = (pathname.substring(3) || "/") === page.path; // Remove language prefix
 
     let className = passedClassName;
 
