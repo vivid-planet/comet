@@ -1,5 +1,70 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- b10c4f9: Merge providers into new `CometConfigProvider`
+
+    Previously, each module (e.g., DAM) had its own provider used for configuration.
+    This led to crowding the application since most applications use multiple CMS features.
+    A new `CometConfigProvider` provider is introduced to use instead.
+
+    **Example**
+
+    ```tsx
+    <CometConfigProvider
+        apiUrl={config.apiUrl}
+        graphQLApiUrl={`${config.apiUrl}/graphql`}
+        adminUrl={config.adminUrl}
+        // Config for the page tree module
+        pageTree={{
+            categories: pageTreeCategories,
+            documentTypes: pageTreeDocumentTypes,
+        }}
+        // Config for the DAM module
+        dam={{
+            ...config.dam,
+            scopeParts: ["domain"],
+            contentGeneration: {
+                generateAltText: true,
+                generateImageTitle: true,
+            },
+        }}
+        // Additional modules...
+    >
+        {/* Application */}
+    </CometConfigProvider>
+    ```
+
+    **Breaking changes**
+
+    - Multiple exports have been removed: `CmsBlockContext`, `CmsBlockContextProvider`, `useCmsBlockContext`, `BuildInformationProvider`, `DamConfigProvider`, `useDamConfig`, `DependenciesConfigProvider`, `useDependenciesConfig`, `LocaleProvider`, `SitesConfigProvider`
+    - `useLocale` has been renamed to `useContentLanguage`
+    - `useSitesConfig` has been renamed to `useSiteConfigs`
+
+    **How to upgrade**
+
+    1. Add the `CometConfigProvider` to `src/App.tsx`
+    2. Move configs for used modules to the new provider
+    3. Remove the old config providers
+
+### Patch Changes
+
+- Updated dependencies [f904b71]
+- Updated dependencies [15c6fa0]
+- Updated dependencies [535476e]
+- Updated dependencies [43eb598]
+    - @comet/admin-date-time@8.0.0-beta.2
+    - @comet/admin-icons@8.0.0-beta.2
+    - @comet/admin-rte@8.0.0-beta.2
+    - @comet/admin@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes

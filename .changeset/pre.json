@@ -28,6 +28,7 @@
   "changesets": [
     "chatty-pets-serve",
     "clean-dots-pull",
+    "clean-rivers-give",
     "cyan-ghosts-smoke",
     "dirty-brooms-beam",
     "eighty-rockets-yell",
@@ -38,7 +39,9 @@
     "four-forks-call",
     "four-houses-taste",
     "giant-teachers-tease",
+    "gold-windows-fetch",
     "grumpy-fishes-live",
+    "healthy-mugs-roll",
     "heavy-games-marry",
     "hot-cheetahs-juggle",
     "khaki-zebras-roll",
@@ -48,13 +51,17 @@
     "lucky-books-thank",
     "lucky-doors-raise",
     "mean-forks-rule",
+    "mean-kiwis-tease",
+    "modern-seahorses-pump",
     "nasty-pets-check",
     "nervous-otters-hunt",
     "new-cherries-provide",
     "nice-bananas-press",
     "nice-masks-invite",
     "old-adults-whisper",
+    "olive-elephants-protect",
     "perfect-mangos-greet",
+    "pink-keys-drop",
     "polite-chairs-join",
     "popular-seals-promise",
     "purple-pants-tell",
@@ -77,6 +84,7 @@
     "thick-windows-cover",
     "thirty-moles-invite",
     "two-humans-decide",
-    "wicked-coins-work"
+    "wicked-coins-work",
+    "young-turkeys-sleep"
   ]
 }
