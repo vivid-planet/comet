@@ -1,7 +1,7 @@
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useIntl } from "react-intl";
 
 import { DatePicker as DatePickerBase } from "../datePicker/DatePicker";
@@ -60,10 +60,19 @@ export interface DateTimePickerProps
 }
 
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, required, slotProps, ...restProps } = useThemeProps({
+    const {
+        onChange,
+        value: _value,
+        required,
+        slotProps,
+        ...restProps
+    } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
+
+    const value = useMemo(() => _value, [_value]);
+
     const intl = useIntl();
     const datePickerRef = useRef<HTMLElement>(null);
     const timePickerRef = useRef<HTMLElement>(null);
@@ -98,30 +107,40 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
         }
     };
 
+    console.log("### RENDER", { value, getIsoDateString: value ? getIsoDateString(value) : null });
+
     return (
-        <Root {...slotProps?.root} {...restProps}>
-            <DateFormControl {...slotProps?.dateFormControl}>
-                <DatePicker
-                    inputRef={datePickerRef}
-                    value={value ? getIsoDateString(value) : undefined}
-                    onChange={onChangeDate}
-                    fullWidth
-                    required={required}
-                    {...slotProps?.datePicker}
-                />
-            </DateFormControl>
-            <TimeFormControl {...slotProps?.timeFormControl}>
-                <TimePicker
-                    inputRef={timePickerRef}
-                    value={value ? getTimeStringFromDate(value) : undefined}
-                    placeholder={intl.formatMessage({ id: "comet.timeTimePicker.time", defaultMessage: "Time" })}
-                    onChange={onChangeTime}
-                    fullWidth
-                    required={required}
-                    {...slotProps?.timePicker}
-                />
-            </TimeFormControl>
-        </Root>
+        <>
+            {value && (
+                <div>
+                    <pre>{value?.toString()}</pre>
+                    <pre>{getIsoDateString(value)}</pre>
+                </div>
+            )}
+            <Root {...slotProps?.root} {...restProps}>
+                <DateFormControl {...slotProps?.dateFormControl}>
+                    <DatePicker
+                        inputRef={datePickerRef}
+                        value={value ? getIsoDateString(value) : undefined}
+                        onChange={onChangeDate}
+                        fullWidth
+                        required={required}
+                        {...slotProps?.datePicker}
+                    />
+                </DateFormControl>
+                <TimeFormControl {...slotProps?.timeFormControl}>
+                    <TimePicker
+                        inputRef={timePickerRef}
+                        value={value ? getTimeStringFromDate(value) : undefined}
+                        placeholder={intl.formatMessage({ id: "comet.timeTimePicker.time", defaultMessage: "Time" })}
+                        onChange={onChangeTime}
+                        fullWidth
+                        required={required}
+                        {...slotProps?.timePicker}
+                    />
+                </TimeFormControl>
+            </Root>
+        </>
     );
 };
 
