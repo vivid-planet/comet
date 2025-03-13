@@ -80,7 +80,7 @@ export default defineConfig(({ mode }) => {
             port: Number(process.env.ADMIN_PORT),
             proxy: {
                 "/api": {
-                    target: new URL(process.env.API_URL).origin,
+                    target: new URL(process.env.API_URL_INTERNAL).origin,
                     changeOrigin: true,
                     secure: false,
                 },
