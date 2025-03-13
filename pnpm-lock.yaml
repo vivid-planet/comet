@@ -1707,6 +1707,9 @@ importers:
       '@mikro-orm/cli':
         specifier: ^6.4.9
         version: 6.4.9
+      '@mikro-orm/core':
+        specifier: ^6.4.9
+        version: 6.4.9
       '@mikro-orm/postgresql':
         specifier: ^6.4.9
         version: 6.4.9(@mikro-orm/core@6.4.9)
