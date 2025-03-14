@@ -92,9 +92,9 @@ describe("GenerateCrud", () => {
             expect(cls.getName()).toBe("TestEntityWithStringFilter");
             const structure = cls.getStructure();
 
-            expect(structure.properties?.length).toBe(3);
-            if (!structure.properties || !structure.properties[0]) throw new Error("property not found");
-            const filterProp = structure.properties[0];
+            expect(structure.properties?.length).toBe(4);
+            if (!structure.properties || !structure.properties[1]) throw new Error("property not found");
+            const filterProp = structure.properties[1];
             expect(filterProp.name).toBe("title");
             expect(filterProp.type).toBe("StringFilter");
 
@@ -128,9 +128,9 @@ describe("GenerateCrud", () => {
             expect(cls.getName()).toBe("TestEntityWithNumberFilter");
             const structure = cls.getStructure();
 
-            expect(structure.properties?.length).toBe(3);
-            if (!structure.properties || !structure.properties[0]) throw new Error("property not found");
-            const filterProp = structure.properties[0];
+            expect(structure.properties?.length).toBe(4);
+            if (!structure.properties || !structure.properties[1]) throw new Error("property not found");
+            const filterProp = structure.properties[1];
             expect(filterProp.name).toBe("foo");
             expect(filterProp.type).toBe("NumberFilter");
 
@@ -163,9 +163,9 @@ describe("GenerateCrud", () => {
             expect(cls.getName()).toBe("TestEntityWithTextRuntimeTypeFilter");
             const structure = cls.getStructure();
 
-            expect(structure.properties?.length).toBe(3);
-            if (!structure.properties || !structure.properties[0]) throw new Error("property not found");
-            const filterProp = structure.properties[0];
+            expect(structure.properties?.length).toBe(4);
+            if (!structure.properties || !structure.properties[1]) throw new Error("property not found");
+            const filterProp = structure.properties[1];
             expect(filterProp.name).toBe("title");
             expect(filterProp.type).toBe("StringFilter");
 
