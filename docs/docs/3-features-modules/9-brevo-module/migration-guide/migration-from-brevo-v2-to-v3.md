@@ -121,7 +121,6 @@ Create `BrevoTestContactsPage` with `createBrevoTestContactsPage` from `@comet/b
 
 ```tsx
 const BrevoTestContactsPage = createBrevoTestContactsPage({
-    scopeParts: ["domain", "language"],
     additionalAttributesFragment: brevoContactConfig.additionalAttributesFragment,
     additionalGridFields: brevoContactConfig.additionalGridFields,
     additionalFormFields: brevoContactConfig.additionalFormFields,
