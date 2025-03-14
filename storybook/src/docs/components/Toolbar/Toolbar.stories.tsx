@@ -526,9 +526,7 @@ export const Save = () => {
             <FillSpace />
             <ToolbarActions>
                 <SaveButton
-                    color="primary"
-                    variant="contained"
-                    saving={saving}
+                    loading={saving}
                     onClick={() => {
                         setSaving(true);
                         setTimeout(() => {
@@ -610,7 +608,7 @@ export const SaveSplitButton = () => {
             <ToolbarActions>
                 <SplitButton localStorageKey="Page5.SaveSplitButton" color="primary" variant="contained">
                     <SaveButton
-                        saving={saving}
+                        loading={saving}
                         onClick={() => {
                             setSaving(true);
                             setTimeout(() => {
@@ -621,7 +619,7 @@ export const SaveSplitButton = () => {
                         <FormattedMessage id="comet.save" defaultMessage="Save" />
                     </SaveButton>
                     <SaveButton
-                        saving={saving}
+                        loading={saving}
                         onClick={() => {
                             setSaving(true);
                             setTimeout(() => {
