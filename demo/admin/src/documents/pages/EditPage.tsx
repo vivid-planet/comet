@@ -10,6 +10,7 @@ import {
     createUsePage,
     openSitePreviewWindow,
     PageName,
+    PixelImageBlock,
     useBlockPreview,
     useCmsBlockContext,
     useSiteConfig,
@@ -38,6 +39,7 @@ const usePage = createUsePage({
         content: PageContentBlock,
         seo: SeoBlock,
         stage: StageBlock,
+        image: PixelImageBlock,
     },
     pageType: "Page",
 })<GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation["savePage"], GQLUpdatePageMutationVariables>({
@@ -56,6 +58,7 @@ const usePage = createUsePage({
                         content
                         seo
                         stage
+                        image
                     }
                 }
             }
@@ -68,6 +71,7 @@ const usePage = createUsePage({
                 content
                 seo
                 stage
+                image
                 updatedAt
             }
         }
@@ -192,6 +196,21 @@ export const EditPage = ({ id }: Props) => {
                                     title={intl.formatMessage({ id: "pages.pages.page.edit.stage.title", defaultMessage: "Stage" })}
                                 >
                                     {rootBlocksApi.stage.adminUI}
+                                </BlockAdminComponentRoot>
+                            ),
+                        },
+                        {
+                            key: "image",
+                            label: (
+                                <BlockAdminTabLabel isValid={rootBlocksApi.stage.isValid}>
+                                    <FormattedMessage id="pages.page.edit.image" defaultMessage="Image" />
+                                </BlockAdminTabLabel>
+                            ),
+                            content: (
+                                <BlockAdminComponentRoot
+                                    title={intl.formatMessage({ id: "pages.pages.page.edit.image.title", defaultMessage: "Image" })}
+                                >
+                                    {rootBlocksApi.image.adminUI}
                                 </BlockAdminComponentRoot>
                             ),
                         },

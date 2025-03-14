@@ -85,6 +85,7 @@ export class ManyImagesTestPageFixtureService {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 stage: pageInput.stage.transformToBlockData(),
+                image: pageInput.image.transformToBlockData(),
             }),
         );
     }

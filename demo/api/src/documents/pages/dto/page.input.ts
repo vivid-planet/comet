@@ -1,4 +1,4 @@
-import { BlockInputInterface, RootBlockInputScalar } from "@comet/cms-api";
+import { BlockInputInterface, PixelImageBlock, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { ValidateNested } from "class-validator";
@@ -23,4 +23,9 @@ export class PageInput {
     @Transform(({ value }) => StageBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
     stage: BlockInputInterface;
+
+    @Field(() => RootBlockInputScalar(PixelImageBlock))
+    @Transform(({ value }) => PixelImageBlock.blockInputFactory(value), { toClassOnly: true })
+    @ValidateNested()
+    image: BlockInputInterface;
 }

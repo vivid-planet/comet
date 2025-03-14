@@ -1,4 +1,11 @@
-import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import {
+    BlobStorageBackendService,
+    DependenciesService,
+    PageTreeNodeInterface,
+    PageTreeNodeVisibility,
+    PageTreeService,
+    PixelImageBlock,
+} from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
@@ -37,6 +44,7 @@ const getDefaultPageInput = (): PageInput => {
     pageInput.seo = generateSeoBlock();
     pageInput.content = PageContentBlock.blockInputFactory({ blocks: [] });
     pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
+    pageInput.image = PixelImageBlock.blockInputFactory({});
     return pageInput;
 };
 
@@ -213,6 +221,7 @@ export class FixturesCommand extends CommandRunner {
                     content: pageInput.content.transformToBlockData(),
                     seo: pageInput.seo.transformToBlockData(),
                     stage: pageInput.stage.transformToBlockData(),
+                    image: pageInput.image.transformToBlockData(),
                 }),
             );
         }
@@ -266,6 +275,7 @@ export class FixturesCommand extends CommandRunner {
                             content: pageInput.content.transformToBlockData(),
                             seo: pageInput.seo.transformToBlockData(),
                             stage: pageInput.stage.transformToBlockData(),
+                            image: pageInput.image.transformToBlockData(),
                         }),
                     );
                     await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
