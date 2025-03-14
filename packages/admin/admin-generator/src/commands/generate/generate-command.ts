@@ -22,7 +22,6 @@ import { basename, dirname } from "path";
 import { type ComponentType } from "react";
 
 import { generateForm } from "./generateForm/generateForm";
-import { type GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
@@ -126,7 +125,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
+type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
     fieldName?: string; // this can be used to overwrite field-prop of column-config
@@ -149,6 +148,13 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
+export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
+    type: "virtual";
+    name: string;
+    queryFields?: UsableFields<T>[];
+    renderCell: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
+} & Pick<GridColDef, "sortBy"> &
+    BaseColumnConfig;
 
 type InitialFilterConfig = {
     items: GridFilterItem[];
@@ -161,7 +167,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
+    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;

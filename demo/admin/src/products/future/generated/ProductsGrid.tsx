@@ -56,14 +56,14 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        title
-        price
-        type
         category {
             title
         }
-        inStock
+        title
         description
+        price
+        inStock
+        type
         availableSince
         createdAt
         manufacturer {
@@ -169,13 +169,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
-                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
-                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };
                 const inStockLabels: Record<string, ReactNode> = {
-                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
-                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.outOfStock" defaultMessage="Out of stock" />,
                 };
                 return (
                     <GridCellContent
