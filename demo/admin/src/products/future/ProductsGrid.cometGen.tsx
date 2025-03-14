@@ -30,7 +30,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         {
             type: "virtual",
             name: "overview",
-            loadFields: ["category.title"],
+            queryFields: ["category.title"],
             headerName: "Overview",
             minWidth: 200,
             renderCell: ({ row }) => {
