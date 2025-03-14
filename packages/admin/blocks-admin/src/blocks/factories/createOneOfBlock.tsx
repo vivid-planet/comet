@@ -437,10 +437,10 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         },
 
         dynamicDisplayName: (state) => {
-            const { block } = getActiveBlock(state);
+            const { block, state: blockState } = getActiveBlock(state);
 
             if (block != null) {
-                return block.displayName;
+                return block.dynamicDisplayName?.(blockState.props) ?? block.displayName;
             } else {
                 return displayName;
             }
