@@ -2,8 +2,10 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { PartialType } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
+import { WarningSourceInfo } from "../../dto/warning-dependency-info";
 import { WarningSeverity } from "../../entities/warning-severity.enum";
 import { WarningStatus } from "../../entities/warning-status.enum";
 
@@ -23,6 +25,12 @@ export class WarningInput {
     @IsEnum(WarningSeverity)
     @Field(() => WarningSeverity)
     severity: WarningSeverity;
+
+    @IsNotEmpty()
+    @ValidateNested()
+    @Type(() => WarningSourceInfo)
+    @Field(() => WarningSourceInfo)
+    sourceInfo: WarningSourceInfo;
 
     @IsNotEmpty()
     @IsEnum(WarningStatus)
