@@ -104,7 +104,7 @@ The api-generator script also supports the `-w` or `--watch` flag. This will wat
 
 If you want to generate only for specific entities, you can pass a file path to an .entity.ts file with the `-f` or `--file` flag
 
-```json
+```sh
 npm exec comet-api-generator -f src/products/entities/product.entity.ts
 ```
 
