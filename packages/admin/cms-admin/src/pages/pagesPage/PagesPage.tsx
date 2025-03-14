@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     Alert,
+    Button,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -16,7 +17,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
+import { Box, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -150,8 +151,6 @@ export function PagesPage({
                             </ToolbarItem>
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         editDialogApi.openAddDialog();

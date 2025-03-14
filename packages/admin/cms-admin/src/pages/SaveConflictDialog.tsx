@@ -1,6 +1,6 @@
-import { Alert, messages } from "@comet/admin";
+import { Alert, Button, messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
@@ -86,7 +86,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClosePressed} startIcon={<Clear />} color="info">
+                <Button variant="textDark" onClick={onClosePressed} startIcon={<Clear />}>
                     <FormattedMessage {...messages.close} />
                 </Button>
                 <DialogActionsSpacer />
@@ -96,8 +96,6 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         onClosePressed();
                         onDiscardChangesPressed();
                     }}
-                    variant="contained"
-                    color="info"
                 >
                     <FormattedMessage id="comet.saveConflictDialog.actionButtons.discardChanges" defaultMessage="Discard your changes" />
                 </DiscardButton>
@@ -107,8 +105,6 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         onClosePressed();
                         window.open(window.location.href, "_blank");
                     }}
-                    variant="contained"
-                    color="primary"
                 >
                     <FormattedMessage
                         id="comet.saveConflictDialog.actionButtons.openCurrentVersionInNewTab"
