@@ -65,9 +65,11 @@ export class DocumentGeneratorService {
         await this.entityManager.persistAndFlush(
             this.pagesRepository.create({
                 id,
-                content: PageContentBlock.blockDataFactory(await this.pageContentBlockFixtureService.generateBlockInput(blockCategory)),
-                seo: SeoBlock.blockDataFactory(await this.seoBlockFixtureService.generateBlockInput()),
-                stage: StageBlock.blockDataFactory(await this.stageBlockFixtureService.generateBlockInput()),
+                content: PageContentBlock.blockInputFactory(
+                    await this.pageContentBlockFixtureService.generateBlockInput(blockCategory),
+                ).transformToBlockData(),
+                seo: SeoBlock.blockInputFactory(await this.seoBlockFixtureService.generateBlockInput()).transformToBlockData(),
+                stage: StageBlock.blockInputFactory(await this.stageBlockFixtureService.generateBlockInput()).transformToBlockData(),
             }),
         );
 

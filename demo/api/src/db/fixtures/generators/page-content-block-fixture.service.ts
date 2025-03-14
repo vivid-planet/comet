@@ -1,4 +1,4 @@
-import { ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
+import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
@@ -50,7 +50,7 @@ export class PageContentBlockFixtureService {
         private readonly sliderBlockFixtureService: SliderBlockFixtureService,
     ) {}
 
-    async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInput<typeof PageContentBlock>> {
+    async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
 
         type SupportedBlocks = (typeof blocks)[number]["type"];
@@ -94,6 +94,6 @@ export class PageContentBlockFixtureService {
             });
         }
 
-        return PageContentBlock.blockInputFactory({ blocks });
+        return { blocks };
     }
 }
