@@ -81,6 +81,7 @@ export class AppModule {
                             credentials: true,
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
+                        useGlobalPrefix: true,
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },

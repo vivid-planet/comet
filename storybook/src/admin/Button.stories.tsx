@@ -97,6 +97,9 @@ export const AllVariants = {
                     <Button>
                         <ArrowRight />
                     </Button>
+                    <Button endIcon={<ArrowRight />} disabled>
+                        Button
+                    </Button>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={8}>
                     <Button variant="secondary">Button</Button>
@@ -125,6 +128,9 @@ export const AllVariants = {
                     </Button>
                     <Button variant="secondary">
                         <ArrowRight />
+                    </Button>
+                    <Button variant="secondary" endIcon={<ArrowRight />} disabled>
+                        Button
                     </Button>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={8}>
@@ -155,6 +161,9 @@ export const AllVariants = {
                     <Button variant="outlined">
                         <ArrowRight />
                     </Button>
+                    <Button variant="outlined" endIcon={<ArrowRight />} disabled>
+                        Button
+                    </Button>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={8}>
                     <Button variant="destructive">Button</Button>
@@ -184,6 +193,9 @@ export const AllVariants = {
                     <Button variant="destructive">
                         <ArrowRight />
                     </Button>
+                    <Button variant="destructive" endIcon={<ArrowRight />} disabled>
+                        Button
+                    </Button>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={8}>
                     <Button variant="success">Button</Button>
@@ -212,6 +224,9 @@ export const AllVariants = {
                     </Button>
                     <Button variant="success">
                         <ArrowRight />
+                    </Button>
+                    <Button variant="success" endIcon={<ArrowRight />} disabled>
+                        Button
                     </Button>
                 </Stack>
                 <Stack
@@ -249,6 +264,9 @@ export const AllVariants = {
                     <Button variant="textLight">
                         <ArrowRight />
                     </Button>
+                    <Button variant="textLight" endIcon={<ArrowRight />} disabled>
+                        Button
+                    </Button>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={8}>
                     <Button variant="textDark">Button</Button>
@@ -277,6 +295,9 @@ export const AllVariants = {
                     </Button>
                     <Button variant="textDark">
                         <ArrowRight />
+                    </Button>
+                    <Button variant="textDark" endIcon={<ArrowRight />} disabled>
+                        Button
                     </Button>
                 </Stack>
             </Stack>
