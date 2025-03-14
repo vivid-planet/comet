@@ -1,7 +1,13 @@
 import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, type DependencyInterface, type DocumentInterface } from "@comet/cms-admin";
+import {
+    createDocumentDependencyMethods,
+    createDocumentRootBlocksMethods,
+    DamImageBlock,
+    type DependencyInterface,
+    type DocumentInterface,
+} from "@comet/cms-admin";
 import { type PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { type GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode.generated";
@@ -47,6 +53,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
                 content
                 seo
                 stage
+                image
                 updatedAt
             }
         }
@@ -61,6 +68,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
         content: PageContentBlock,
         seo: SeoBlock,
         stage: StageBlock,
+        image: DamImageBlock,
     }),
     ...createDocumentDependencyMethods({
         rootQueryName: "page",
@@ -68,6 +76,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             content: PageContentBlock,
             seo: { block: SeoBlock, path: "/config" },
             stage: { block: StageBlock, path: "/stage" },
+            image: { block: DamImageBlock, path: "/dam" },
         },
         basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
     }),

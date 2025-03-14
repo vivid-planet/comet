@@ -4,6 +4,7 @@ import {
     EntityInfo,
     PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
+    PixelImageBlock,
     RootBlock,
     RootBlockDataScalar,
     RootBlockEntity,
@@ -46,6 +47,11 @@ export class Page extends BaseEntity implements DocumentInterface {
     @Property({ type: new RootBlockType(StageBlock) })
     @Field(() => RootBlockDataScalar(StageBlock))
     stage: BlockDataInterface;
+
+    @RootBlock(PixelImageBlock)
+    @Property({ type: new RootBlockType(PixelImageBlock) })
+    @Field(() => RootBlockDataScalar(PixelImageBlock))
+    image: BlockDataInterface;
 
     @Property({
         type: "timestamp with time zone",
