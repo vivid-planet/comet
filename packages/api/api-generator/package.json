@@ -25,7 +25,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-        "test:watch": "jest --watch"
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
     },
     "dependencies": {
         "@comet/cms-api": "workspace:*",
