@@ -2,7 +2,6 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import {
     BooleanFilter,
-    createEnumFilter,
     createEnumsFilter,
     DateFilter,
     DateTimeFilter,
@@ -13,16 +12,15 @@ import {
     StringFilter,
 } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
+import { createEnumFilter } from "@src/_temp/enum-filter.factory";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
 import { ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 
-@InputType()
-class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {}
-@InputType()
-class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}
+const ProductStatusEnumFilter = createEnumFilter("ProductStatus", ProductStatus);
+const ProductTypeEnumFilter = createEnumFilter("ProductType", ProductType);
 @InputType()
 class ProductTypeEnumsFilter extends createEnumsFilter(ProductType) {}
 
@@ -38,7 +36,7 @@ export class ProductFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => ProductStatusEnumFilter)
-    status?: ProductStatusEnumFilter;
+    status?: typeof ProductStatusEnumFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
@@ -56,7 +54,7 @@ export class ProductFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => ProductTypeEnumFilter)
-    type?: ProductTypeEnumFilter;
+    type?: typeof ProductTypeEnumFilter;
 
     @Field(() => ProductTypeEnumsFilter, { nullable: true })
     @ValidateNested()
