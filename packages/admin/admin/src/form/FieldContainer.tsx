@@ -209,6 +209,7 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
                 flex-grow: 1;
             }
         `}
+
         ${ownerState.variant === "horizontal" &&
         css`
             @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
