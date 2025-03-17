@@ -122,9 +122,7 @@ export function createRedirectsResolver({
                         const targetBlock = target.attachedBlocks.find((block) => block.type === target.activeType);
 
                         if (!targetBlock) {
-                            // TODO throw error here?
-                            // throw new Error(`Can't find target block for redirect ${redirect.id}`);
-                            continue;
+                            throw new Error(`Can't find target block for redirect '${redirect.id}'`);
                         }
 
                         const targetBlockKey = JSON.stringify(targetBlock);
