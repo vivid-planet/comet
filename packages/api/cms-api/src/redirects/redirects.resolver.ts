@@ -87,7 +87,6 @@ export function createRedirectsResolver({
 
         @Query(() => PaginatedRedirects)
         async paginatedRedirects(@Args() { scope, search, filter, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
-            // TODO decide if we only want to search in-memory if a target filter is set
             const needsInMemoryFiltering = search || (filter && !isEmptyFilter(filter));
 
             if (needsInMemoryFiltering) {
