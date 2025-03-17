@@ -1,5 +1,18 @@
 # @comet/cms-site
 
+## 7.16.0
+
+### Minor Changes
+
+-   71642aa07: Export `VideoPreviewImage` component
+
+### Patch Changes
+
+-   636326207: Fix preview overlay alignment for blocks that are scrolled into view when selected from the admin block list, e.g., in slider blocks
+-   4ddeeb09e: Prevent unintended horizontal scrolling in the admin's block preview
+
+    This previously occurred when blocks were rendered outside of the viewport width, such as elements of a slider.
+
 ## 7.15.0
 
 ### Patch Changes
