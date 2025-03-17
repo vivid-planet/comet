@@ -1,10 +1,13 @@
 import { type AnyEntity } from "@mikro-orm/postgresql";
 import { type CustomDecorator, SetMetadata, type Type } from "@nestjs/common";
 
-import { type BlockWarning } from "../../blocks/block";
+import { type WarningInput } from "../dto/warning.input";
 
-type EmitWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<BlockWarning[]>; // todo change block warning to a more generic warning type
+type EmitWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<WarningInput[]>;
+type EmitWarningsBulkFunction = () => Promise<WarningInput[]>;
+
 export interface EmitWarningsServiceInterface<Entity extends AnyEntity = AnyEntity> {
+    emitWarningsBulk?: EmitWarningsBulkFunction;
     emitWarnings: EmitWarningsFunction<Entity>;
 }
 

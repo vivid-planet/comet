@@ -1,7 +1,9 @@
+import { EntityManager, FilterQuery } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
-import { BlockWarning } from "src/blocks/block";
 import { EmitWarningsServiceInterface } from "src/warnings/decorators/emit-warnings.decorator";
 
+import { WarningInput } from "../../warnings/dto/warning.input";
+import { WarningSeverity } from "../../warnings/dto/warning-severity.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "./entities/file.entity";
@@ -9,24 +11,63 @@ import { LicenseType } from "./entities/license.embeddable";
 
 @Injectable()
 export class FileWarningService implements EmitWarningsServiceInterface<FileInterface> {
-    constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig) {}
+    constructor(
+        @Inject(DAM_CONFIG) private readonly config: DamConfig,
+        private readonly entityManager: EntityManager,
+    ) {}
 
-    async emitWarnings(entity: FileInterface): Promise<BlockWarning[]> {
-        const warnings: BlockWarning[] = [];
+    async emitWarningsBulk() {
+        if (!this.config.enableLicenseFeature) return []; // license feature not enabled, no warnings
 
-        // If license feature is enabled, check for expired licenses
-        if (this.config.enableLicenseFeature && entity.license?.durationTo) {
-            const soonToExpireDate = new Date(entity.license.durationTo);
+        const soonToExpireDate = new Date();
+        soonToExpireDate.setDate(soonToExpireDate.getDate() - 30);
+
+        const filterQuery: FilterQuery<FileInterface> = [
+            {
+                license: {
+                    durationTo: {
+                        $ne: soonToExpireDate,
+                    },
+                },
+            },
+        ];
+        if (this.config.requireLicense) {
+            filterQuery.push({ license: null });
+        }
+
+        const files = await this.entityManager.getRepository<FileInterface>("DamFile").find(
+            {
+                $or: filterQuery,
+            },
+            { limit: 100, offset: 0 },
+        );
+
+        let warnings: WarningInput[] = [];
+        for (const file of files) {
+            const newWarnings = await this.emitWarnings(file);
+            warnings = warnings.concat(newWarnings);
+        }
+
+        return warnings;
+    }
+
+    async emitWarnings(entity: FileInterface) {
+        if (!this.config.enableLicenseFeature) return []; // license feature not enabled, no warnings
+
+        const warnings: WarningInput[] = [];
+
+        if (entity.license?.durationTo) {
+            const soonToExpireDate = new Date();
             soonToExpireDate.setDate(soonToExpireDate.getDate() - 30);
 
             if (entity.license.durationTo < new Date()) {
                 warnings.push({
-                    severity: "critical",
+                    severity: WarningSeverity.critical,
                     message: "fileLicenseExpired",
                 });
-            } else if (soonToExpireDate < new Date()) {
+            } else if (entity.license.durationTo < soonToExpireDate) {
                 warnings.push({
-                    severity: "high",
+                    severity: WarningSeverity.high,
                     message: "fileLicenseSoonToExpire",
                 });
             }
@@ -36,7 +77,7 @@ export class FileWarningService implements EmitWarningsServiceInterface<FileInte
         if (this.config.requireLicense) {
             if (!entity.license?.durationTo && entity.license?.type !== LicenseType.ROYALTY_FREE) {
                 warnings.push({
-                    severity: "critical",
+                    severity: WarningSeverity.critical,
                     message: "fileLicenseRequired",
                 });
             }

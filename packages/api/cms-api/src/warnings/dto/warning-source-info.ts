@@ -8,6 +8,10 @@ export class WarningSourceInfo {
     @Field()
     rootEntityName: string;
 
+    @Property()
+    @Field()
+    targetId: string;
+
     @Property({ nullable: true })
     @Field({ nullable: true })
     rootColumnName?: string;
@@ -15,10 +19,6 @@ export class WarningSourceInfo {
     @Property({ nullable: true })
     @Field({ nullable: true })
     rootPrimaryKey?: string;
-
-    @Property()
-    @Field()
-    targetId: string;
 
     @Property({ nullable: true })
     @Field({ nullable: true })

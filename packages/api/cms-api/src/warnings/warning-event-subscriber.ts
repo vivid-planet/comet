@@ -48,9 +48,7 @@ export class WarningEventSubscriber implements EventSubscriber {
     private async handleUpdateAndCreate(args: EventArgs<any>): Promise<void> {
         const entity = args.meta.class;
 
-        // check if emitWarnings or rootBlockEntityOptions is defined, or both
         if (entity) {
-            // check if it throws an error if emitWarnings is not defined
             const keys = Reflect.getMetadata(`keys:rootBlock`, entity.prototype) || [];
             for (const key of keys) {
                 const block = Reflect.getMetadata(`data:rootBlock`, entity.prototype, key);
@@ -61,10 +59,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                     rootPath: "root",
                 });
                 for (const node of flatBlocks.depthFirst()) {
-                    const warnings = node.block.warnings().map((warning) => ({
-                        ...warning,
-                        severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
-                    }));
+                    const warnings = node.block.warnings();
 
                     await this.warningService.updateWarningsAndDeleteOutdated({
                         warnings,

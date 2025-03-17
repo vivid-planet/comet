@@ -1,6 +1,5 @@
 import { CreateRequestContext, EntityClass, MikroORM } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
@@ -10,7 +9,6 @@ import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
 import { EmitWarningsMeta } from "./decorators/emit-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
-import { WarningSeverity } from "./entities/warning-severity.enum";
 import { WarningService } from "./warning.service";
 
 interface RootBlockEntityData {
@@ -35,7 +33,6 @@ export class WarningCheckerCommand extends CommandRunner {
         private readonly orm: MikroORM,
         private readonly discoverService: DiscoverService,
         private readonly entityManager: EntityManager,
-        @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
         private readonly warningService: WarningService,
         private reflector: Reflector,
         private readonly moduleRef: ModuleRef,
@@ -79,10 +76,7 @@ export class WarningCheckerCommand extends CommandRunner {
                             if (warnings.length > 0) {
                                 for (const warning of warnings) {
                                     this.warningService.saveWarning({
-                                        warning: {
-                                            message: warning.message,
-                                            severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
-                                        },
+                                        warning,
                                         type: "Block",
                                         sourceInfo: {
                                             rootEntityName: tableName,
@@ -113,25 +107,35 @@ export class WarningCheckerCommand extends CommandRunner {
             const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
             if (emitWarnings) {
                 const repository = this.entityManager.getRepository(entity);
+                const service = this.moduleRef.get(emitWarnings, { strict: false });
 
-                const rows = await repository.find();
-
-                for (const row of rows) {
-                    const service = this.moduleRef.get(emitWarnings, { strict: false });
-                    const warnings = (await service.emitWarnings(row)).map((warning) => ({
-                        ...warning,
-                        severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
-                    }));
-
+                if (service.emitWarningsBulk) {
+                    const warnings = await service.emitWarningsBulk();
                     for (const warning of warnings) {
                         this.warningService.saveWarning({
                             warning,
                             type: "Entity",
                             sourceInfo: {
                                 rootEntityName: entity.name,
-                                targetId: row.id,
+                                targetId: "bulk",
                             },
                         });
+                    }
+                } else {
+                    const rows = await repository.find();
+
+                    for (const row of rows) {
+                        const warnings = await service.emitWarnings(row);
+                        for (const warning of warnings) {
+                            this.warningService.saveWarning({
+                                warning,
+                                type: "Entity",
+                                sourceInfo: {
+                                    rootEntityName: entity.name,
+                                    targetId: row.id,
+                                },
+                            });
+                        }
                     }
                 }
             }
