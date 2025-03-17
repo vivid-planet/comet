@@ -17,8 +17,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
-    ToolbarActions,
-    ToolbarItem,
     Tooltip,
     useBufferedRowCount,
     useDataGridExcelExport,
@@ -105,31 +103,25 @@ interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
 function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <CrudMoreActionsMenu
-                    slotProps={{
-                        button: {
-                            responsive: true,
-                        },
-                    }}
-                    overallActions={[
-                        {
-                            label: <FormattedMessage {...messages.downloadAsExcel} />,
-                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                            onClick: () => exportApi.exportGrid(),
-                            disabled: exportApi.loading,
-                        },
-                    ]}
-                />
-                {toolbarAction}
-            </ToolbarActions>
+            <CrudMoreActionsMenu
+                slotProps={{
+                    button: {
+                        responsive: true,
+                    },
+                }}
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                ]}
+            />
+            {toolbarAction}
         </DataGridToolbar>
     );
 }
