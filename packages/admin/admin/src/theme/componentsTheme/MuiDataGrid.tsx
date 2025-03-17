@@ -9,9 +9,10 @@ import {
     nativeSelectClasses,
     svgIconClasses,
     type SvgIconProps,
+    tablePaginationClasses,
+    toolbarClasses,
 } from "@mui/material";
-import { type Spacing } from "@mui/system";
-import { getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
+import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
@@ -19,14 +20,14 @@ import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-const getDensityHeightValue = (density: string | unknown, spacing: Spacing) => {
+const getDensityHeightValue = (density: string) => {
     switch (density) {
         case "compact":
-            return spacing(8);
+            return 40;
         case "comfortable":
-            return spacing(16);
+            return 80;
         default:
-            return spacing(12);
+            return 60;
     }
 };
 
@@ -40,6 +41,17 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     defaultProps: {
         ...component?.defaultProps,
         disableRowSelectionOnClick: true,
+        getRowHeight: ({ densityFactor }) => {
+            if (densityFactor === COMPACT_DENSITY_FACTOR) {
+                return getDensityHeightValue("compact");
+            }
+
+            if (densityFactor === COMFORTABLE_DENSITY_FACTOR) {
+                return getDensityHeightValue("comfortable");
+            }
+
+            return getDensityHeightValue("standard");
+        },
         slots: {
             quickFilterIcon: Search,
             quickFilterClearIcon: Clear,
@@ -114,7 +126,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         columnHeader: ({ ownerState }) => ({
             /* !important is required to override inline styles */
-            height: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
+            height: `${getDensityHeightValue(ownerState?.density)}px !important`,
+
             "&:focus": {
                 outline: "none",
             },
@@ -122,19 +135,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 outline: "none",
             },
         }),
-        columnHeaderTitleContainer: ({ ownerState }) => ({
-            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
-        }),
         pinnedColumns: {
             backgroundColor: "white",
             boxShadow: shadows[2],
         },
-        row: ({ ownerState }) => ({
-            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
-            /* !important is required to override inline styles */
-            minHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
-            maxHeight: `${getDensityHeightValue(ownerState?.density, spacing)} !important`,
-        }),
         cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
@@ -146,18 +150,20 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${getDataGridUtilityClass("booleanCell")}`]: {
                 color: palette.grey[900],
             },
-            height: `${getDensityHeightValue(ownerState?.density, spacing)}`,
             alignContent: "center",
         }),
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             boxSizing: "border-box",
-            minHeight: getDensityHeightValue(ownerState?.density, spacing),
-            maxHeight: getDensityHeightValue(ownerState?.density, spacing),
+            minHeight: getDensityHeightValue(ownerState?.density),
 
-            "& .MuiTablePagination-root > .MuiToolbar-root": {
-                height: getDensityHeightValue(ownerState?.density, spacing),
-                minHeight: getDensityHeightValue(ownerState?.density, spacing),
+            [`& .${tablePaginationClasses.selectLabel}, & .${tablePaginationClasses.displayedRows}`]: {
+                marginTop: 0,
+                marginBottom: 0,
+            },
+
+            [`& .${tablePaginationClasses.root} > .${toolbarClasses.root}`]: {
+                minHeight: getDensityHeightValue(ownerState?.density),
             },
         }),
 
