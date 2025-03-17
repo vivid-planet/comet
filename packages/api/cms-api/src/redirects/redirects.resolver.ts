@@ -23,7 +23,7 @@ import { REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
 import { RedirectSourceTypeValues } from "./redirects.enum";
 import { RedirectsLinkBlock } from "./redirects.module";
 import { RedirectsService } from "./redirects.service";
-import { redirectMatchesFilter } from "./redirects.util";
+import { isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
 import { RedirectScopeInterface } from "./types";
 
 export function createRedirectsResolver({
@@ -88,7 +88,7 @@ export function createRedirectsResolver({
         @Query(() => PaginatedRedirects)
         async paginatedRedirects(@Args() { scope, search, filter, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
             // TODO decide if we only want to search in-memory if a target filter is set
-            const needsInMemoryFiltering = search || filter;
+            const needsInMemoryFiltering = search || (filter && !isEmptyFilter(filter));
 
             if (needsInMemoryFiltering) {
                 const where = {};

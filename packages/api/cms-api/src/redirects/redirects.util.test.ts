@@ -1,7 +1,7 @@
 import { addDays, subDays } from "date-fns";
 
 import { RedirectGenerationType } from "./redirects.enum";
-import { FilterableRedirect, redirectMatchesFilter } from "./redirects.util";
+import { FilterableRedirect, isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
 
 describe("redirectMatchesFilter", () => {
     it("should match for empty filter", () => {
@@ -142,5 +142,31 @@ describe("redirectMatchesFilter", () => {
         expect(redirectMatchesFilter(redirect, { or: [{ source: { contains: "our" } }, { active: { equal: false } }] })).toBe(true); // First matches
         expect(redirectMatchesFilter(redirect, { or: [{ source: { equal: "/target" } }, { active: { equal: true } }] })).toBe(true); // Second matches
         expect(redirectMatchesFilter(redirect, { or: [{ source: { equal: "/target" } }, { active: { equal: false } }] })).toBe(false); // None match
+    });
+});
+
+describe("isEmptyFilter", () => {
+    it("should return true for empty filter", () => {
+        expect(isEmptyFilter({})).toBe(true);
+    });
+
+    it("should return false for non-empty filter", () => {
+        expect(isEmptyFilter({ source: { contains: "our" } })).toBe(false);
+    });
+
+    it("should return true for empty and-filter", () => {
+        expect(isEmptyFilter({ and: [] })).toBe(true);
+    });
+
+    it("should return false for non-empty and-filter", () => {
+        expect(isEmptyFilter({ and: [{ source: { contains: "our" } }] })).toBe(false);
+    });
+
+    it("should return true for empty or-filter", () => {
+        expect(isEmptyFilter({ or: [] })).toBe(true);
+    });
+
+    it("should return false for non-empty or-filter", () => {
+        expect(isEmptyFilter({ or: [{ source: { contains: "our" } }] })).toBe(false);
     });
 });

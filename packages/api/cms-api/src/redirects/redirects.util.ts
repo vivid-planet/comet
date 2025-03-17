@@ -9,9 +9,7 @@ export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "sou
 export function redirectMatchesFilter(redirect: FilterableRedirect, filter: RedirectFilter): boolean {
     let matches: boolean | undefined;
 
-    const isEmptyFilter = Object.keys(filter).length === 0;
-
-    if (isEmptyFilter) {
+    if (isEmptyFilter(filter)) {
         matches = true;
     }
 
@@ -100,4 +98,14 @@ function dateTimeMatchesFilter(date: Date, filter: DateTimeFilter) {
     }
 
     return false;
+}
+
+export function isEmptyFilter(filter: RedirectFilter): boolean {
+    const filters = Object.keys(filter);
+
+    return (
+        filters.length === 0 ||
+        (filters.length === 1 && filter.and !== undefined && filter.and.length === 0) ||
+        (filters.length === 1 && filter.or !== undefined && filter.or.length === 0)
+    );
 }
