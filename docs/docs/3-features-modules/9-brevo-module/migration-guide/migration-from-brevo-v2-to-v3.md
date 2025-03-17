@@ -115,6 +115,19 @@ Instead define them in the `BrevoConfigProvider` once:
 </BrevoConfigProvider>
 ```
 
+### Add Brevo test contacts page to admin interface
+
+Create `BrevoTestContactsPage` with `createBrevoTestContactsPage` from `@comet/brevo-admin` and add it to your project's `MasterMenu`:
+
+```tsx
+const BrevoTestContactsPage = createBrevoTestContactsPage({
+    additionalAttributesFragment: brevoContactConfig.additionalAttributesFragment,
+    additionalGridFields: brevoContactConfig.additionalGridFields,
+    additionalFormFields: brevoContactConfig.additionalFormFields,
+    input2State: brevoContactConfig.input2State,
+});
+```
+
 ### Remove `email` and `allowedRedirectUrl` from `brevoContactsPageAttributesConfig`
 
 ```diff
