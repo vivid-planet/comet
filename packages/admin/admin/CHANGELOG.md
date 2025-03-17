@@ -1,5 +1,6 @@
 # @comet/admin
 
+<<<<<<< HEAD
 ## 8.0.0-beta.1
 
 ### Patch Changes
@@ -202,6 +203,17 @@
 - Updated dependencies [04e308a]
 - Updated dependencies [682a674]
     - @comet/admin-icons@8.0.0-beta.0
+=======
+## 7.16.0
+
+### Patch Changes
+
+-   ec1cf3cf8: Adapt styling of `Button` variants to align with Comet DXP design
+-   bf7b89ffc: Adapt styling of `FieldSet` to align with Comet DXP design
+-   Updated dependencies [ec1cf3cf8]
+    -   @comet/admin-theme@7.16.0
+    -   @comet/admin-icons@7.16.0
+>>>>>>> main
 
 ## 7.15.0
 
