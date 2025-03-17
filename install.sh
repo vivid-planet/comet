@@ -54,9 +54,6 @@ sh ./demo/site-pages/intl-update.sh
 
 # Build the packages CLI and eslint-plugin to be used for dev startup
 pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
-<<<<<<< HEAD
-=======
 
 # create site-config-envs
 pnpm run create-site-configs-env
->>>>>>> main

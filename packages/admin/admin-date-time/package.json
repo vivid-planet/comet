@@ -1,10 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-<<<<<<< HEAD
     "version": "8.0.0-beta.1",
-=======
-    "version": "7.16.0",
->>>>>>> main
     "repository": {
         "directory": "packages/admin/admin-date-time",
         "type": "git",
@@ -30,7 +26,6 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-<<<<<<< HEAD
         "@comet/admin": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@mui/utils": "^6.4.6",
@@ -56,33 +51,6 @@
         "react-intl": "^7.1.6",
         "rimraf": "^6.0.1",
         "typescript": "^5.7.3"
-=======
-        "@comet/admin": "workspace:^7.16.0",
-        "@comet/admin-icons": "workspace:^7.16.0",
-        "@mui/utils": "^5.4.1",
-        "date-fns": "^2.28.0",
-        "react-date-range": "^1.4.0"
-    },
-    "devDependencies": {
-        "@babel/cli": "^7.17.6",
-        "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.16.0",
-        "@comet/eslint-config": "workspace:^7.16.0",
-        "@mui/material": "^5.0.0",
-        "@types/react": "^17.0",
-        "@types/react-date-range": "^1.4.3",
-        "@types/react-dom": "^17.0.0",
-        "eslint": "^8.0.0",
-        "final-form": "^4.0.0",
-        "npm-run-all": "^4.1.5",
-        "prettier": "^2.0.0",
-        "react": "^17.0",
-        "react-dom": "^17.0",
-        "react-final-form": "^6.5.7",
-        "react-intl": "^6.0.0",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.0.0"
->>>>>>> main
     },
     "peerDependencies": {
         "@mui/material": "^6.0.0",

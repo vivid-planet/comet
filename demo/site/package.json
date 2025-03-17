@@ -38,15 +38,9 @@
         "react-dom": "^18.3.1",
         "react-intl": "^7.1.6",
         "redraft": "^0.10.2",
-<<<<<<< HEAD
         "styled-components": "^6.1.15",
-        "swiper": "^11.2.5"
-=======
-        "styled-components": "^6.1.8",
-        "swiper": "^11.1.15",
-        "ts-node": "^10.0.0",
+        "swiper": "^11.2.5",
         "zod": "^3.24.1"
->>>>>>> main
     },
     "devDependencies": {
         "@babel/core": "^7.26.10",
