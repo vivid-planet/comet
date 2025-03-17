@@ -3,11 +3,10 @@
 import { AffectedEntity, gqlArgsToMikroOrmQuery, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 
 import { Warning } from "../entities/warning.entity";
 import { PaginatedWarnings } from "./dto/paginated-warnings";
-import { WarningInput, WarningUpdateInput } from "./dto/warning.input";
 import { WarningsArgs } from "./dto/warnings.args";
 
 @Resolver(() => Warning)
@@ -42,42 +41,5 @@ export class WarningResolver {
 
         const [entities, totalCount] = await this.repository.findAndCount(where, options);
         return new PaginatedWarnings(entities, totalCount);
-    }
-
-    @Mutation(() => Warning)
-    async createWarning(@Args("input", { type: () => WarningInput }) input: WarningInput): Promise<Warning> {
-        const warning = this.repository.create({
-            ...input,
-        });
-
-        await this.entityManager.flush();
-
-        return warning;
-    }
-
-    @Mutation(() => Warning)
-    @AffectedEntity(Warning)
-    async updateWarning(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => WarningUpdateInput }) input: WarningUpdateInput,
-    ): Promise<Warning> {
-        const warning = await this.repository.findOneOrFail(id);
-
-        warning.assign({
-            ...input,
-        });
-
-        await this.entityManager.flush();
-
-        return warning;
-    }
-
-    @Mutation(() => Boolean)
-    @AffectedEntity(Warning)
-    async deleteWarning(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        const warning = await this.repository.findOneOrFail(id);
-        this.entityManager.remove(warning);
-        await this.entityManager.flush();
-        return true;
     }
 }

@@ -3,13 +3,13 @@ import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { WarningSourceInfo } from "../dto/warning-dependency-info";
+import { WarningSourceInfo } from "../dto/warning-source-info";
 import { WarningSeverity } from "./warning-severity.enum";
 import { WarningStatus } from "./warning-status.enum";
 
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["warnings"] })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["warnings"], create: false, update: false, delete: false })
 export class Warning extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 

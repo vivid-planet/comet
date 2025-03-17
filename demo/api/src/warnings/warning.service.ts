@@ -4,7 +4,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { v5 } from "uuid";
 
-import { WarningSourceInfo } from "./dto/warning-dependency-info";
+import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";
 import { WarningSeverity } from "./entities/warning-severity.enum";
 

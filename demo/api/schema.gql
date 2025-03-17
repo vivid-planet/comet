@@ -1307,9 +1307,6 @@ type Mutation {
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
   publishAllProducts: Boolean!
-  createWarning(input: WarningInput!): Warning!
-  updateWarning(id: ID!, input: WarningUpdateInput!): Warning!
-  deleteWarning(id: ID!): Boolean!
 }
 
 input UserPermissionInput {
@@ -1610,28 +1607,4 @@ input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
-}
-
-input WarningInput {
-  message: String!
-  type: String!
-  severity: WarningSeverity!
-  sourceInfo: WarningSourceInfoInput!
-  status: WarningStatus! = open
-}
-
-input WarningSourceInfoInput {
-  rootEntityName: String!
-  rootColumnName: String!
-  rootPrimaryKey: String!
-  targetId: String!
-  jsonPath: String!
-}
-
-input WarningUpdateInput {
-  message: String
-  type: String
-  severity: WarningSeverity
-  sourceInfo: WarningSourceInfoInput
-  status: WarningStatus
 }
