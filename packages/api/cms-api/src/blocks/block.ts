@@ -1,5 +1,6 @@
 import { type Type } from "@nestjs/common";
 import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
+import { type WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
 
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
@@ -57,13 +58,7 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
-// TODO: import from WarningModule after the warning module is in the package (this enum is currently duplicated)
-enum WarningEntityWarningSeverity {
-    critical = "critical",
-    high = "high",
-    low = "low",
-}
-export type WarningSeverity = `${WarningEntityWarningSeverity}`;
+export type WarningSeverity = `${WarningSeverityEnum}`;
 
 export interface BlockWarning {
     message: string;
