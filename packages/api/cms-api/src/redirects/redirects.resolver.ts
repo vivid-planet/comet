@@ -112,6 +112,8 @@ export function createRedirectsResolver({
                 const allRedirects = await this.repository.find(where, options);
                 const redirects = [];
 
+                const targetUrlCache = new Map<string, string | undefined>();
+
                 for (const redirect of allRedirects) {
                     let targetUrl: string | undefined;
 
@@ -126,7 +128,14 @@ export function createRedirectsResolver({
                             continue;
                         }
 
-                        targetUrl = await this.targetUrlService.resolveTargetUrl(targetBlock);
+                        const targetBlockKey = JSON.stringify(targetBlock);
+
+                        if (targetUrlCache.has(targetBlockKey)) {
+                            targetUrl = targetUrlCache.get(targetBlockKey);
+                        } else {
+                            targetUrl = await this.targetUrlService.resolveTargetUrl(targetBlock);
+                            targetUrlCache.set(targetBlockKey, targetUrl);
+                        }
 
                         if (!targetUrl) {
                             continue;

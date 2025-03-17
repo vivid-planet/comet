@@ -11,8 +11,6 @@ import { type PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope"
 
 @Injectable({ scope: Scope.REQUEST })
 export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
-    private cache: Record<string, string> = {};
-
     constructor(
         private readonly pageTreeReadApi: PageTreeReadApiService,
         @Inject(CONFIG) private readonly config: Config,
@@ -23,40 +21,24 @@ export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterfa
         if (target.type === "internal") {
             const targetPageId = (target.props as ExtractBlockData<typeof InternalLinkBlock>).targetPageId;
             if (targetPageId) {
-                if (this.cache[targetPageId]) {
-                    return this.cache[targetPageId];
-                }
-
                 const targetPageNode = await this.pageTreeReadApi.getNodeOrFail(targetPageId);
                 const scope = targetPageNode.scope as PageTreeNodeScope;
                 const baseUrl = this.getSiteUrl(scope);
                 const path = await this.pageTreeReadApi.nodePath(targetPageNode);
 
-                const url = `${baseUrl}/${scope.language}${path}`;
-
-                this.cache[targetPageId] = url;
-
-                return url;
+                return `${baseUrl}/${scope.language}${path}`;
             }
         } else if (target.type === "external") {
             return (target.props as ExtractBlockData<typeof ExternalLinkBlock>).targetUrl;
         } else {
             const newsId = (target.props as ExtractBlockData<typeof NewsLinkBlock>).id;
             if (newsId) {
-                if (this.cache[newsId]) {
-                    return this.cache[newsId];
-                }
-
                 const news = await this.newsRepository.findOneOrFail(newsId);
                 const scope = news.scope;
                 const baseUrl = this.getSiteUrl(scope);
                 const path = `/news/${news.slug}`; // TODO implement predefined pages
 
-                const url = `${baseUrl}/${scope.language}${path}`;
-
-                this.cache[newsId] = url;
-
-                return url;
+                return `${baseUrl}/${scope.language}${path}`;
             }
         }
     }
