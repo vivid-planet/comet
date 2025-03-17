@@ -40,10 +40,11 @@ export class ProductCategoryResolver {
 
     @Query(() => PaginatedProductCategories)
     async productCategories(
-        @Args() { search, filter, sort, offset, limit }: ProductCategoriesArgs,
+        @Args() { status, search, filter, sort, offset, limit }: ProductCategoriesArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProductCategories> {
         const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+        where.status = { $in: status };
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];

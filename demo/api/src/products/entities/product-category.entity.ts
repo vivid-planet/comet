@@ -1,10 +1,10 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
-import { Product } from "./product.entity";
+import { Product, ProductStatus } from "./product.entity";
 
 @ObjectType()
 @Entity()
@@ -28,6 +28,10 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
     @Field(() => Int)
     @Min(1)
     position: number;
+
+    @Enum({ items: () => ProductStatus })
+    @Field(() => ProductStatus)
+    status: ProductStatus = ProductStatus.Unpublished;
 
     @CrudField({
         resolveField: true, //default is true
