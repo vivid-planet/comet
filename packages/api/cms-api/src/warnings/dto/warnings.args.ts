@@ -1,7 +1,7 @@
-import { OffsetBasedPaginationArgs } from "@comet/cms-api";
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { OffsetBasedPaginationArgs } from "src/common/pagination/offset-based.args";
 
 import { WarningStatus } from "../entities/warning-status.enum";
 import { WarningFilter } from "./warning.filter";

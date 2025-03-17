@@ -1,8 +1,9 @@
-import { FlatBlocks } from "@comet/cms-api";
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { WarningService } from "@src/warnings/warning.service";
+import { FlatBlocks } from "src/blocks/flat-blocks/flat-blocks";
+
+import { WarningService } from "./warning.service";
 
 @Injectable()
 export class WarningEventSubscriber implements EventSubscriber {

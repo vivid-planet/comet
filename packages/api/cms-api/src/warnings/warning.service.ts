@@ -1,7 +1,7 @@
-import { BlockWarning } from "@comet/cms-api";
 import { MikroORM } from "@mikro-orm/core";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
+import { BlockWarning } from "src/blocks/block";
 import { v5 } from "uuid";
 
 import { WarningSourceInfo } from "./dto/warning-source-info";
