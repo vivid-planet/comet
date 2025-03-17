@@ -256,7 +256,9 @@ const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey, D
     slotName: "desktopGridPanel",
 })(css`
     .MuiDataGrid-panelHeader,
-    .MuiDataGrid-panelFooter {
+    .MuiDataGrid-columnsManagementHeader,
+    .MuiDataGrid-panelFooter,
+    .MuiDataGrid-columnsManagementFooter {
         // Hide MUIs header and footer so we can add our own with a better structure for styling
         display: none;
     }
@@ -287,12 +289,15 @@ const MobileDialog = createComponentSlot(Dialog)<DataGridPanelClassKey>({
     componentName: "DataGridPanel",
     slotName: "mobileDialog",
 })(css`
-    .MuiDataGrid-panelContent {
+    .MuiDataGrid-panelContent,
+    .MuiDataGrid-columnsManagement {
         max-height: none;
     }
 
     .MuiDataGrid-panelHeader,
-    .MuiDataGrid-panelFooter {
+    .MuiDataGrid-columnsManagementHeader,
+    .MuiDataGrid-panelFooter,
+    .MuiDataGrid-columnsManagementFooter {
         // Hide MUIs header and footer so we can add our own with a better structure for styling
         display: none;
     }

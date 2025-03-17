@@ -1,16 +1,14 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
 import {
+    autocompleteClasses,
     buttonBaseClasses,
-    getSwitchUtilityClass,
+    checkboxClasses,
     iconButtonClasses,
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
     svgIconClasses,
     type SvgIconProps,
-    switchClasses,
-    TextField,
-    type TextFieldProps,
 } from "@mui/material";
 import { type Spacing } from "@mui/system";
 import { getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
@@ -43,15 +41,14 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         ...component?.defaultProps,
         disableRowSelectionOnClick: true,
         slots: {
-            QuickFilterIcon: Search,
-            QuickFilterClearIcon: Clear,
-            FilterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
-            BooleanCellTrueIcon: Check,
-            BooleanCellFalseIcon: Close,
-            ColumnSortedAscendingIcon: ArrowUp,
-            ColumnSortedDescendingIcon: ArrowDown,
-            BaseTextField: (props: TextFieldProps) => <TextField {...props} InputLabelProps={{ shrink: true }} />,
-            ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
+            quickFilterIcon: Search,
+            quickFilterClearIcon: Clear,
+            filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
+            booleanCellTrueIcon: Check,
+            booleanCellFalseIcon: Close,
+            columnSortedAscendingIcon: ArrowUp,
+            columnSortedDescendingIcon: ArrowDown,
+            columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             panel: DataGridPanel,
             ...component?.defaultProps?.slots,
         },
@@ -101,27 +98,18 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             borderBottom: `1px solid ${palette.divider}`,
         },
         columnsManagement: {
-            padding: 0,
-        },
-        columnsManagementRow: {
-            marginBottom: spacing(2),
+            padding: spacing(4),
 
-            "&:last-child": {
-                marginBottom: 0,
-            },
+            [`& .${gridClasses.columnsManagementRow}`]: {
+                margin: 0,
 
-            [`& .${switchClasses.root}`]: {
-                marginRight: 0,
-            },
-            [`& .${switchClasses.root} .${switchClasses.thumb}`]: {
-                width: 10,
-                height: 10,
-            },
-            [`& .${switchClasses.root} .${switchClasses.switchBase}`]: {
-                padding: 3,
-            },
-            [`& .${switchClasses.root} .${switchClasses.switchBase}.${getSwitchUtilityClass("checked")}`]: {
-                transform: "translateX(20px)",
+                "&:last-child": {
+                    marginBottom: 0,
+                },
+
+                [`& .${checkboxClasses.root}`]: {
+                    padding: 9,
+                },
             },
         },
         columnHeader: ({ ownerState }) => ({
@@ -211,7 +199,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 },
             },
 
-            [`&:first-child .${gridClasses.filterFormOperatorInput}`]: {
+            [`&:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
                 // The first "Operator"-select is fully hidden by default when there is only one filter.
                 // Setting `display: block` makes sure it takes up it's space as if it were visible to prevent the alignment from breaking.
                 // Even though `display: block` is set now, it's still not visible, due to it's default styling of `visibility: hidden`.
@@ -288,6 +276,14 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             "&:empty": {
                 display: "none", // Make space for `filterFormOperatorInput` to expand and take up the full width
+            },
+
+            [`&& .${autocompleteClasses.inputRoot}`]: {
+                paddingBottom: 0,
+
+                [`& > .${autocompleteClasses.input}`]: {
+                    padding: `calc(${spacing(2)} - 1px)`,
+                },
             },
 
             [`& .${inputBaseClasses.root}`]: {
