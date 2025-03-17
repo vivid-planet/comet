@@ -17,7 +17,13 @@ export class DefaultRedirectTargetUrlService implements RedirectTargetUrlService
         if (target.type === "internal") {
             const targetPageId = (target.props as ExtractBlockData<typeof InternalLinkBlock>).targetPageId;
             if (targetPageId) {
-                return this.pageTreeReadApi.nodePathById(targetPageId);
+                const targetPageNode = await this.pageTreeReadApi.getNode(targetPageId);
+
+                if (!targetPageNode) {
+                    return undefined;
+                }
+
+                return this.pageTreeReadApi.nodePath(targetPageNode);
             }
         } else if (target.type === "external") {
             return (target.props as ExtractBlockData<typeof ExternalLinkBlock>).targetUrl;

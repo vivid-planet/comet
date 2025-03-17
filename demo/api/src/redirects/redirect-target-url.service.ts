@@ -21,7 +21,12 @@ export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterfa
         if (target.type === "internal") {
             const targetPageId = (target.props as ExtractBlockData<typeof InternalLinkBlock>).targetPageId;
             if (targetPageId) {
-                const targetPageNode = await this.pageTreeReadApi.getNodeOrFail(targetPageId);
+                const targetPageNode = await this.pageTreeReadApi.getNode(targetPageId);
+
+                if (!targetPageNode) {
+                    return undefined;
+                }
+
                 const scope = targetPageNode.scope as PageTreeNodeScope;
                 const baseUrl = this.getSiteUrl(scope);
                 const path = await this.pageTreeReadApi.nodePath(targetPageNode);
@@ -33,7 +38,12 @@ export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterfa
         } else {
             const newsId = (target.props as ExtractBlockData<typeof NewsLinkBlock>).id;
             if (newsId) {
-                const news = await this.newsRepository.findOneOrFail(newsId);
+                const news = await this.newsRepository.findOne(newsId);
+
+                if (!news) {
+                    return undefined;
+                }
+
                 const scope = news.scope;
                 const baseUrl = this.getSiteUrl(scope);
                 const path = `/news/${news.slug}`; // TODO implement predefined pages
