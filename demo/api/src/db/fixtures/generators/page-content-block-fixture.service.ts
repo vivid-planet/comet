@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/cms-api";
-=======
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
->>>>>>> main
+import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";

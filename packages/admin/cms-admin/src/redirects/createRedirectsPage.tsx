@@ -11,12 +11,6 @@ import { useContentScope } from "../contentScope/Provider";
 import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
 
-<<<<<<< HEAD
-=======
-interface RedirectsPageProps {
-    redirectPathAfterChange?: string;
-}
-
 const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
     ...InternalLinkBlock,
     previewContent: (state) => (state.targetPage ? [{ type: "text", content: state.targetPage.path }] : []),
@@ -29,7 +23,6 @@ const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 
->>>>>>> main
 interface CreateRedirectsPageOptions {
     customTargets?: Record<string, BlockInterface>;
     scopeParts?: string[];

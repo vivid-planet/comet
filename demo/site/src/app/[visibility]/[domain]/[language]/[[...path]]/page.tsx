@@ -1,18 +1,11 @@
 export const dynamic = "error";
 
 import { gql } from "@comet/cms-site";
-<<<<<<< HEAD
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { type VisibilityParam } from "@src/middleware/domainRewrite";
-=======
-import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
-import { documentTypes } from "@src/documents";
-import { GQLPageTreeNodeScope } from "@src/graphql.generated";
-import { VisibilityParam } from "@src/middleware/domainRewrite";
 import { createSitePath } from "@src/util/createSitePath";
->>>>>>> main
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { setVisibilityParam } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";

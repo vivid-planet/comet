@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import { type PropsWithData, withPreview } from "@comet/cms-site";
 import { type NewsListBlockData } from "@src/blocks.generated";
-=======
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { NewsListBlockData } from "@src/blocks.generated";
 import { createSitePath } from "@src/util/createSitePath";
->>>>>>> main
 import Link from "next/link";
 
 import { type LoadedData } from "./NewsListBlock.loader";

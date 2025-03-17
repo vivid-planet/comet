@@ -46,13 +46,8 @@ function createLinkBlock(
             return (
                 <>
                     <OneOfBlock.AdminComponent state={state} updateState={updateState} />
-<<<<<<< HEAD
-                    <Box padding={isInPaper ? 3 : 0} paddingTop={0}>
-                        <BlockAdminComponentSection>
-=======
                     <Box padding={isInPaper ? 3 : 0} paddingTop={isInPaper ? 0 : 3}>
-                        <AdminComponentSection>
->>>>>>> main
+                        <BlockAdminComponentSection>
                             <BlocksFinalForm<Pick<LinkBlockData, "title">>
                                 onSubmit={({ title }) => {
                                     updateState({ ...state, title });

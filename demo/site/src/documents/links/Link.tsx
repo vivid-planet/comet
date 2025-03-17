@@ -1,11 +1,6 @@
 import { gql } from "@comet/cms-site";
-<<<<<<< HEAD
-import { type ExternalLinkBlockData, type InternalLinkBlockData } from "@src/blocks.generated";
+import { type DamFileDownloadLinkBlockData, type ExternalLinkBlockData, type InternalLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
-=======
-import { DamFileDownloadLinkBlockData, ExternalLinkBlockData, InternalLinkBlockData } from "@src/blocks.generated";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
->>>>>>> main
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound, redirect } from "next/navigation";
 

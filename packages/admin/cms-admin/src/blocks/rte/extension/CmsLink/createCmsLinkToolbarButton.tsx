@@ -1,23 +1,13 @@
 import { CancelButton, DeleteButton, OkayButton } from "@comet/admin";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
-<<<<<<< HEAD
-import Button from "@mui/material/Button";
-=======
-import { BlockInterface, BlockState } from "@comet/blocks-admin";
->>>>>>> main
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-<<<<<<< HEAD
+import { styled } from "@mui/material/styles";
 import { EditorState, type EntityInstance, RichUtils } from "draft-js";
 import { type MouseEvent, type ReactElement, useCallback, useMemo, useState } from "react";
-=======
-import { styled } from "@mui/material/styles";
-import { EditorState, EntityInstance, RichUtils } from "draft-js";
-import { MouseEvent, ReactElement, useCallback, useMemo, useState } from "react";
->>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 import { type BlockInterface, type BlockState } from "../../../types";

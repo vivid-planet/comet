@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-import { CancelButton } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
+import { CancelButton, OkayButton } from "@comet/admin";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -11,11 +8,6 @@ import {
     DialogTitle,
 } from "@mui/material";
 import { type ComponentType } from "react";
-=======
-import { CancelButton, OkayButton } from "@comet/admin";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { ComponentType } from "react";
->>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 import { type PageAction } from "./PagesPageActionToolbar";
