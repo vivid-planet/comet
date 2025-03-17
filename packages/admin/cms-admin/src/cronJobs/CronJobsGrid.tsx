@@ -137,6 +137,7 @@ export function CronJobsGrid() {
                     },
                     {
                         field: "actions",
+                        type: "actions",
                         headerName: "",
                         renderCell: ({ row }) => (
                             <>

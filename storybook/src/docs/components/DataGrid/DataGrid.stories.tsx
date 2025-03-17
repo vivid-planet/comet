@@ -330,6 +330,7 @@ export const _CrudContextMenu = {
             },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 sortable: false,
                 filterable: false,

@@ -28,6 +28,7 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
                         { field: "name", headerName: "Name", flex: 1 },
                         {
                             field: "actions",
+                            type: "actions",
                             headerName: "",
                             width: 52,
                             renderCell: ({ row }) => (
@@ -84,6 +85,7 @@ export const NestedEditDialogInStack = function Story() {
                                 { field: "name", headerName: "Name", flex: 1 },
                                 {
                                     field: "actions",
+                                    type: "actions",
                                     headerName: "",
                                     renderCell: ({ row }) => (
                                         <StackLink pageName="detail" payload={row.id}>

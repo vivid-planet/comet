@@ -84,6 +84,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         */
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,

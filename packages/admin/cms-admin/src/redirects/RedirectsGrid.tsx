@@ -134,6 +134,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>
