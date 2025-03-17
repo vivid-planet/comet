@@ -10,17 +10,19 @@ export class DataValidatorPipe implements ImporterPipe {
     }
 }
 
-type ParserPipeData = Record<string, string>;
-
 export class DataValidator extends StreamTransform {
     constructor(private readonly logger: LoggerService) {
         super({ writableObjectMode: true, objectMode: true });
         this.logger = logger;
     }
 
-    async _transform(instance: ParserPipeData, encoding: BufferEncoding, callback: TransformCallback) {
+    async _transform(
+        inputDataAndMetadata: { data: Record<string, unknown>; metadata: Record<string, unknown> },
+        encoding: BufferEncoding,
+        callback: TransformCallback,
+    ) {
         try {
-            const classValidationErrors = await validate(instance);
+            const classValidationErrors = await validate(inputDataAndMetadata.data);
             const errors: ValidationError[] = classValidationErrors.map((error) => {
                 const constraints = error.constraints || {};
                 const errorMessage = Object.keys(constraints)
@@ -36,7 +38,7 @@ export class DataValidator extends StreamTransform {
                 this.push(null);
                 return callback(new Error("Too many validation errors"));
             }
-            this.push(instance);
+            this.push(inputDataAndMetadata);
             // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } catch (err: any) {
             this.logger.error(`Error transforming Data: ${err}`);

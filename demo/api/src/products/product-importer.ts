@@ -1,16 +1,15 @@
 import { EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
-import { DataStream, DataStreamAndMetadata } from "@src/importer/data-streams/data-stream";
-import { FileStreamMetadata } from "@src/importer/data-streams/local-file-data-stream";
+import { DataStream } from "@src/importer/data-streams/data-stream";
 import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
-import { pipeline, Transform } from "stream";
+import { pipeline, Readable, Transform } from "stream";
 
 import { ProductImporterInput } from "./product-importer.input";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
-    dataStream: DataStreamAndMetadata<FileStreamMetadata> | null = null;
+    dataStream: Readable | null = null;
     name = "productImport";
     importTarget: ImporterInputClass = ProductImporterInput;
     transformPipes: Transform[] = [];
@@ -27,7 +26,7 @@ export class ProductImporter {
         ];
     }
 
-    async init({ dataStream }: { dataStream: DataStream<FileStreamMetadata> }): Promise<void> {
+    async init({ dataStream }: { dataStream: DataStream }): Promise<void> {
         this.dataStream = await dataStream.getDataStreamAndMetadata();
     }
 
@@ -35,7 +34,7 @@ export class ProductImporter {
         const dataStream = this.dataStream;
         if (dataStream) {
             return new Promise((resolve, reject) => {
-                return pipeline([dataStream.dataStream, ...this.transformPipes], (error) => {
+                return pipeline([dataStream, ...this.transformPipes], (error) => {
                     this.transformPipes.map((stream) => stream.end());
                     if (error) {
                         this.logger.error(error);
