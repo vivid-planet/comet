@@ -2,4 +2,6 @@
 "@comet/admin": patch
 ---
 
-Prevent the content of FieldContainer from overflowing to fix the styling of a nested SelectField with long labels
+Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+
+Select components now truncate their value with ellipsis when used within these components, consistent with their behavior in other usages.
