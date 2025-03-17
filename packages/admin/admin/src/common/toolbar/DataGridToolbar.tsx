@@ -1,24 +1,30 @@
-import { type ComponentsOverrides } from "@mui/material";
+import { type ComponentsOverrides, Paper, type PaperProps } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-import { useGridApiContext } from "@mui/x-data-grid";
+import { type GridDensity, useGridApiContext } from "@mui/x-data-grid";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { Toolbar, type ToolbarProps } from "./Toolbar";
 
-export type DataGridToolbarClassKey = "root" | "standard" | "comfortable" | "compact";
+export type DataGridToolbarClassKey = "root" | GridDensity;
 
-export type DataGridToolbarProps = {
-    /** @deprecated The `density` prop is deprecated. The density is now used from the DataGrid. */
-    density?: "standard" | "comfortable" | "compact";
-} & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
-    ThemedComponentBaseProps<{ root: typeof Toolbar }>;
+export type DataGridToolbarProps = PaperProps;
 
 type OwnerState = {
-    density: "standard" | "comfortable" | "compact";
+    density: GridDensity;
 };
 
-const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
+export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
+    const { elevation = 1, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+    const apiRef = useGridApiContext();
+    const gridDensity = apiRef.current.state.density;
+
+    const ownerState: OwnerState = {
+        density: gridDensity,
+    };
+
+    return <Root ownerState={ownerState} elevation={elevation} {...restProps} />;
+};
+
+const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
     classesResolver(ownerState) {
@@ -26,6 +32,28 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     },
 })(
     ({ ownerState, theme }) => css`
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+        padding: ${theme.spacing(2)};
+
+        ${ownerState.density === "comfortable" &&
+        css`
+            ${theme.breakpoints.up("sm")} {
+                padding-top: ${theme.spacing(4)};
+                padding-bottom: ${theme.spacing(4)};
+            }
+        `}
+
+        .CometAdminToolbarItem-root,
+        .CometAdminToolbarActions-root {
+            // Hide components that were required by the old usage of DataGridToolbar but would now break the styling.
+            // This is for usages of components that use ToolbarItem internally, such as ToolbarTitleItem or for existing projects where the usage was not updated.
+            display: contents;
+        }
+
         [class*="MuiDataGrid-toolbarQuickFilter"] {
             width: 120px;
 
@@ -37,35 +65,8 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
                 width: "auto";
             }
         }
-
-        ${ownerState.density === "comfortable" &&
-        css`
-            min-height: 80px;
-
-            ${theme.breakpoints.up("sm")} {
-                min-height: 80px;
-            }
-
-            // necessary to override strange MUI default styling
-            @media (min-width: 0px) and (orientation: landscape) {
-                min-height: 80px;
-            }
-        `}
     `,
 );
-
-export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
-    const { density, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
-
-    const apiRef = useGridApiContext();
-    const gridDensity = apiRef.current?.state?.density;
-
-    const ownerState: OwnerState = {
-        density: density || gridDensity,
-    };
-
-    return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} headerHeight={0} />;
-};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
