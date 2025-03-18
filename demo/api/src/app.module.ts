@@ -129,7 +129,7 @@ export class AppModule {
                 }),
 
                 RedirectsModule.register({
-                    imports: [MikroOrmModule.forFeature([News])],
+                    imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
                     customTargets: { news: NewsLinkBlock },
                     Scope: RedirectScope,
                     targetUrlService: RedirectTargetUrlService,
