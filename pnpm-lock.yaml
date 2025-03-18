@@ -520,8 +520,8 @@ importers:
         specifier: ^5.0.0
         version: 5.2.2
       helmet:
-        specifier: ^4.6.0
-        version: 4.6.0
+        specifier: ^7.2.0
+        version: 7.2.0
       image-size:
         specifier: ^0.9.0
         version: 0.9.7
@@ -23871,11 +23871,6 @@ packages:
   /headers-utils@3.0.2:
     resolution: {integrity: sha512-xAxZkM1dRyGV2Ou5bzMxBPNLoRCjcX+ya7KSWybQD2KwLphxsapUVK6x/02o7f4VU6GPSXch9vNY2+gkU8tYWQ==}
     dev: true
-
-  /helmet@4.6.0:
-    resolution: {integrity: sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg==}
-    engines: {node: '>=10.0.0'}
-    dev: false
 
   /helmet@7.2.0:
     resolution: {integrity: sha512-ZRiwvN089JfMXokizgqEPXsl2Guk094yExfoDXR0cBYWxtBbaSww/w+vT4WEJsBW2iTUi1GgZ6swmoug3Oy4Xw==}
