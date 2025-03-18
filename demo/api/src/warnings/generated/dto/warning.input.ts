@@ -5,7 +5,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
-import { WarningSourceInfo } from "../../dto/warning-dependency-info";
+import { WarningSourceInfo } from "../../dto/warning-source-info";
 import { WarningSeverity } from "../../entities/warning-severity.enum";
 import { WarningStatus } from "../../entities/warning-status.enum";
 
