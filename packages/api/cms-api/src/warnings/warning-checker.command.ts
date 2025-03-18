@@ -4,9 +4,9 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData } from "src/blocks/block";
-import { FlatBlocks } from "src/blocks/flat-blocks/flat-blocks";
-import { DiscoverService } from "src/dependencies/discover.service";
 
+import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
+import { DiscoverService } from "../dependencies/discover.service";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 

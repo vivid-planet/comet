@@ -1,8 +1,8 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { FlatBlocks } from "src/blocks/flat-blocks/flat-blocks";
 
+import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { WarningService } from "./warning.service";
 
 @Injectable()

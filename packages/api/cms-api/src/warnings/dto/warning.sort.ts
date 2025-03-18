@@ -1,6 +1,7 @@
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
-import { SortDirection } from "src/common/sorting/sort-direction.enum";
+
+import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
 export enum WarningSortField {
     createdAt = "createdAt",

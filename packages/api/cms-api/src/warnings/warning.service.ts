@@ -1,9 +1,9 @@
 import { MikroORM } from "@mikro-orm/core";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { BlockWarning } from "src/blocks/block";
 import { v5 } from "uuid";
 
+import { BlockWarning } from "../blocks/block";
 import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";
 import { WarningSeverity } from "./entities/warning-severity.enum";

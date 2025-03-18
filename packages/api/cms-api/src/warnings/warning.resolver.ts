@@ -1,10 +1,10 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
-import { gqlArgsToMikroOrmQuery } from "src/common/filter/mikro-orm";
-import { AffectedEntity } from "src/user-permissions/decorators/affected-entity.decorator";
-import { RequiredPermission } from "src/user-permissions/decorators/required-permission.decorator";
 
+import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
+import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
