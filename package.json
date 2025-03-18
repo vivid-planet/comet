@@ -29,7 +29,7 @@
         "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
         "lint:eslint": "pnpm --recursive run lint:eslint",
         "lint:tsc": "pnpm --recursive run lint:tsc",
-        "lint:knip": "dotenv -- knip --exports --files --dependencies --tags=-knipignore",
+        "lint:knip": "knip --exports --files --dependencies --tags=-knipignore",
         "storybook": "dev-pm start storybook",
         "test": "pnpm --recursive run test",
         "prepare": "husky",
