@@ -6,6 +6,7 @@ import {
     createEnumsFilter,
     DateFilter,
     DateTimeFilter,
+    IdFilter,
     ManyToManyFilter,
     ManyToOneFilter,
     NumberFilter,
@@ -28,6 +29,12 @@ class ProductTypeEnumsFilter extends createEnumsFilter(ProductType) {}
 
 @InputType()
 export class ProductFilter {
+    @Field(() => IdFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => IdFilter)
+    id?: IdFilter;
+
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
