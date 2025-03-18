@@ -8,7 +8,7 @@ export interface ContentScopeInterface {
 
 type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
     createPath: (scope: ContentScopeValues<S>) => string | string[];
-    createUrl: (scope: S) => string;
+    createUrl: (scope: ContentScopeValue<S>) => string;
 };
 
 const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
@@ -47,9 +47,11 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     values: ContentScopeValues<S>;
 };
 
-export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
+export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<ContentScopeValue<S>>;
+
+type ContentScopeValue<S extends ContentScopeInterface = ContentScopeInterface> = {
     [P in keyof S]: { label?: string; value: NonNull<S[P]> };
-}>;
+};
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
 // ... and get rid of "as" type-assertions
@@ -66,11 +68,11 @@ function parseScopeFromRouterMatchParams<S extends ContentScopeInterface = Conte
     }, {} as S);
 }
 
-function formatScopeToRouterMatchParams<S extends ContentScopeInterface = ContentScopeInterface>(scope: Partial<S>): NonNullRecord<S> {
+function formatScopeToRouterMatchParams<S extends ContentScopeInterface = ContentScopeInterface>(scope: ContentScopeValue<S>): NonNullRecord<S> {
     return Object.entries(scope).reduce((a, [key, value]) => {
         return {
             ...a,
-            [key]: !value || value === null ? NullValueAsString : value,
+            [key]: !value.value || value.value === null ? NullValueAsString : value.value,
         };
     }, {} as NonNullRecord<S>);
 }
@@ -92,7 +94,7 @@ function defaultCreatePath(values: ContentScopeValues) {
     }, "");
 }
 
-function defaultCreateUrl(scope: ContentScopeInterface) {
+function defaultCreateUrl(scope: ContentScopeValue) {
     const formattedMatchParams = formatScopeToRouterMatchParams(scope);
     return Object.entries(formattedMatchParams).reduce((a, [, value]) => `${a}/${value}`, "");
 }
@@ -131,7 +133,7 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
 }
 
 export interface ContentScopeProviderProps<S extends ContentScopeInterface = ContentScopeInterface> {
-    defaultValue: S;
+    defaultValue: ContentScopeValue<S>;
     values: ContentScopeValues<S>;
     children: (p: { match: match<NonNullRecord<S>> }) => ReactNode;
     location?: ContentScopeLocation<S>;
