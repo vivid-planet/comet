@@ -15,7 +15,6 @@ import {
     ExtractBlockInput,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
-    WarningSeverity,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
@@ -139,8 +138,7 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
 
         warnings() {
             if (!this.htmlTitle) {
-                const severity: WarningSeverity = "low";
-                return [{ severity, message: "missingHtmlTitle" }];
+                return [{ severity: "low" as const, message: "missingHtmlTitle" }];
             }
             return [];
         }
