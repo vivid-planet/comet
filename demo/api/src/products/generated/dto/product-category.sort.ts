@@ -8,6 +8,7 @@ export enum ProductCategorySortField {
     title = "title",
     slug = "slug",
     position = "position",
+    status = "status",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
 }

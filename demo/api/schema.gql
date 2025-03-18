@@ -319,9 +319,16 @@ type ProductCategory {
   title: String!
   slug: String!
   position: Int!
+  status: ProductStatus!
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [Product!]!
+}
+
+enum ProductStatus {
+  Published
+  Unpublished
+  Deleted
 }
 
 type ProductColor implements DocumentInterface {
@@ -413,12 +420,6 @@ type Product {
   tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
   image: DamImageBlockData!
-}
-
-enum ProductStatus {
-  Published
-  Unpublished
-  Deleted
 }
 
 enum ProductType {
@@ -809,7 +810,7 @@ type Query {
   products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
-  productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
+  productCategories(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!
@@ -871,6 +872,7 @@ enum SlugAvailability {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1077,6 +1079,7 @@ enum ProductSortField {
 input ProductCategoryFilter {
   title: StringFilter
   slug: StringFilter
+  status: ProductStatusEnumFilter
   products: OneToManyFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1093,6 +1096,7 @@ enum ProductCategorySortField {
   title
   slug
   position
+  status
   createdAt
   updatedAt
 }
@@ -1491,6 +1495,7 @@ input ProductCategoryInput {
   title: String!
   slug: String!
   position: Int
+  status: ProductStatus! = Unpublished
   products: [ID!]! = []
 }
 
@@ -1498,6 +1503,7 @@ input ProductCategoryUpdateInput {
   title: String
   slug: String
   position: Int
+  status: ProductStatus
   products: [ID!]
 }
 

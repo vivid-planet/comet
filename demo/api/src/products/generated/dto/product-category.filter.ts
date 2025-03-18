@@ -2,8 +2,13 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { DateTimeFilter, OneToManyFilter, StringFilter } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
+import { createEnumFilter } from "@src/_temp/enum-filter.factory";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
+
+import { ProductStatus } from "../../entities/product.entity";
+
+const ProductStatusEnumFilter = createEnumFilter("ProductStatus", ProductStatus);
 
 @InputType()
 export class ProductCategoryFilter {
@@ -18,6 +23,12 @@ export class ProductCategoryFilter {
     @IsOptional()
     @Type(() => StringFilter)
     slug?: StringFilter;
+
+    @Field(() => ProductStatusEnumFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ProductStatusEnumFilter)
+    status?: typeof ProductStatusEnumFilter;
 
     @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()

@@ -3,13 +3,18 @@
 import { OffsetBasedPaginationArgs } from "@comet/cms-api";
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 
+import { ProductStatus } from "../../entities/product.entity";
 import { ProductCategoryFilter } from "./product-category.filter";
 import { ProductCategorySort } from "./product-category.sort";
 
 @ArgsType()
 export class ProductCategoriesArgs extends OffsetBasedPaginationArgs {
+    @Field(() => [ProductStatus], { defaultValue: [ProductStatus.Published, ProductStatus.Unpublished] })
+    @IsEnum(ProductStatus, { each: true })
+    status: ProductStatus[];
+
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
