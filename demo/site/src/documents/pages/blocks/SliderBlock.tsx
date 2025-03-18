@@ -1,16 +1,13 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { SliderBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type SliderBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";
-import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 type SliderBlockProps = PropsWithData<SliderBlockData>;
-
-SwiperCore.use([Navigation]);
 
 export const SliderBlock = withPreview(
     ({ data: { sliderList } }: SliderBlockProps) => {

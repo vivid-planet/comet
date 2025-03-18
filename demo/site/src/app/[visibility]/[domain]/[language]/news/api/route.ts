@@ -2,7 +2,7 @@ import { fetchNewsList } from "@src/news/NewsPage.loader";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { PageParams } from "../page";
+import { type PageParams } from "../page";
 
 export async function GET(request: NextRequest, { params: { domain, language } }: { params: PageParams }) {
     const result = z

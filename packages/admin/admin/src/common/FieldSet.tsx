@@ -149,21 +149,20 @@ const Title = createComponentSlot("div")<FieldSetClassKey, OwnerState>({
     componentName: "FieldSet",
     slotName: "title",
 })(
-    ({ theme, ownerState }) =>
-        css`
-            display: flex;
-            align-items: center;
-            font-weight: ${theme.typography.fontWeightMedium};
-            font-size: 16px;
-            text-transform: uppercase;
-            color: ${theme.palette.text.primary};
+    ({ theme, ownerState }) => css`
+        display: flex;
+        align-items: center;
+        font-weight: ${theme.typography.fontWeightMedium};
+        font-size: 16px;
+        text-transform: uppercase;
+        color: ${theme.palette.text.primary};
 
-            ${!ownerState.collapsible &&
-            css`
-                // MUIAccordionSummary inherits from ButtonBase. Overriding the styling of a disabled button is necessary to align with the design.
-                opacity: 1;
-            `}
-        `,
+        ${!ownerState.collapsible &&
+        css`
+            // MUIAccordionSummary inherits from ButtonBase. Overriding the styling of a disabled button is necessary to align with the design.
+            opacity: 1;
+        `}
+    `,
 );
 
 const SupportText = createComponentSlot("div")<FieldSetClassKey>({
