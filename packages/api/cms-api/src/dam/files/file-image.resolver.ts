@@ -28,7 +28,6 @@ export class FileImagesResolver {
                 { file },
                 {
                     previewDamUrls: Boolean(req.headers["x-preview-dam-urls"]),
-                    relativeDamUrls: Boolean(req.headers["x-relative-dam-urls"]),
                 },
             );
             return urlTemplate.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(height));

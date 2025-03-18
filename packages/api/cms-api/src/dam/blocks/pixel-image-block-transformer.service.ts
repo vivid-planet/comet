@@ -39,7 +39,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
         private readonly imagesService: ImagesService,
     ) {}
 
-    async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
+    async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls }: BlockContext) {
         if (!block.damFileId) {
             return {};
         }
@@ -50,7 +50,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
             return {};
         }
 
-        const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }) : undefined;
+        const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls }) : undefined;
 
         return {
             damFile: {
@@ -76,7 +76,7 @@ export class PixelImageBlockTransformerService implements BlockTransformerServic
                 fileUrl,
             },
             cropArea: block.cropArea ? { ...block.cropArea } : undefined,
-            urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea: block.cropArea }, { previewDamUrls, relativeDamUrls }),
+            urlTemplate: this.imagesService.createUrlTemplate({ file, cropArea: block.cropArea }, { previewDamUrls }),
         };
     }
 }
