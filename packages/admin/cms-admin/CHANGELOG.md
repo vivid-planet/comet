@@ -234,6 +234,32 @@
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
 
+## 7.16.0
+
+### Minor Changes
+
+- 997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+- ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+- ea014c5e3: Set the correct icon for the button to confirm page actions
+- e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+- Updated dependencies [9bd499dcd]
+- Updated dependencies [ed9282b3b]
+- Updated dependencies [ec1cf3cf8]
+- Updated dependencies [bf7b89ffc]
+- Updated dependencies [5b7c6b4a7]
+    - @comet/blocks-admin@7.16.0
+    - @comet/admin-theme@7.16.0
+    - @comet/admin@7.16.0
+    - @comet/admin-date-time@7.16.0
+    - @comet/admin-icons@7.16.0
+    - @comet/admin-rte@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes

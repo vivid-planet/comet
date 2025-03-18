@@ -496,6 +496,9 @@ importers:
       swiper:
         specifier: ^11.2.5
         version: 11.2.5
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.2
     devDependencies:
       '@babel/core':
         specifier: ^7.26.10
@@ -1844,7 +1847,7 @@ importers:
         version: 1.4.4
       openai:
         specifier: ^4.87.3
-        version: 4.87.3(ws@8.18.0)(zod@3.23.8)
+        version: 4.87.3(ws@8.18.0)(zod@3.24.2)
       probe-image-size:
         specifier: ^7.2.3
         version: 7.2.3
@@ -16591,8 +16594,8 @@ packages:
     peerDependencies:
       zod: ^3.18.0
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -29945,8 +29948,8 @@ snapshots:
       strip-json-comments: 5.0.1
       summary: 2.1.0
       typescript: 5.7.3
-      zod: 3.23.8
-      zod-validation-error: 3.4.0(zod@3.23.8)
+      zod: 3.24.2
+      zod-validation-error: 3.4.0(zod@3.24.2)
 
   kolorist@1.8.0: {}
 
@@ -31273,7 +31276,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.87.3(ws@8.18.0)(zod@3.23.8):
+  openai@4.87.3(ws@8.18.0)(zod@3.24.2):
     dependencies:
       '@types/node': 18.15.3
       '@types/node-fetch': 2.6.12
@@ -31284,7 +31287,7 @@ snapshots:
       node-fetch: 2.7.0
     optionalDependencies:
       ws: 8.18.0
-      zod: 3.23.8
+      zod: 3.24.2
     transitivePeerDependencies:
       - encoding
 
@@ -35009,10 +35012,10 @@ snapshots:
       compress-commons: 4.1.2
       readable-stream: 3.6.0
 
-  zod-validation-error@3.4.0(zod@3.23.8):
+  zod-validation-error@3.4.0(zod@3.24.2):
     dependencies:
-      zod: 3.23.8
+      zod: 3.24.2
 
-  zod@3.23.8: {}
+  zod@3.24.2: {}
 
   zwitch@2.0.4: {}
