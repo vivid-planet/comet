@@ -77,7 +77,15 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description" },
         // TODO: Allow setting options for `intl.formatNumber` through `valueFormatter` (type "number")
-        { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR", visible: "up('md')" },
+        {
+            type: "number",
+            name: "price",
+            currency: "EUR",
+            headerName: "Price",
+            maxWidth: 150,
+            headerInfoTooltip: "Price in EUR",
+            visible: "up('md')",
+        },
         {
             // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
             type: "staticSelect",
