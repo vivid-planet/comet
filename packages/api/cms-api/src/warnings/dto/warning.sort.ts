@@ -3,7 +3,7 @@ import { IsEnum } from "class-validator";
 
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
-export enum WarningSortField {
+enum WarningSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     message = "message",
