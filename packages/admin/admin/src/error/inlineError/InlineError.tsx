@@ -1,5 +1,5 @@
 import { Error, Info, Warning } from "@comet/admin-icons";
-import { type ComponentsOverrides, type Theme, type Typography, useTheme } from "@mui/material";
+import { type ComponentsOverrides, type Theme, type Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
@@ -69,13 +69,12 @@ type InlineErrorProps = ThemedComponentBaseProps<{
  * It provides visual feedback for errors, warnings, or informational messages with optional actions.
  */
 export const InlineError: FunctionComponent<PropsWithChildren<InlineErrorProps>> = (inProps) => {
-    const theme = useTheme();
     const {
         icon,
         iconMapping = {
-            error: <Error sx={{ fontSize: "32px" }} htmlColor={theme.palette.error.main} />,
-            warning: <Warning sx={{ fontSize: "32px" }} htmlColor={theme.palette.warning.main} />,
-            info: <Info sx={{ fontSize: "32px" }} htmlColor={theme.palette.primary.main} />,
+            error: <Error sx={{ fontSize: "32px" }} color="error" />,
+            warning: <Warning sx={{ fontSize: "32px" }} color="warning" />,
+            info: <Info sx={{ fontSize: "32px" }} color="info" />,
         },
         actions,
         variant = "error",
