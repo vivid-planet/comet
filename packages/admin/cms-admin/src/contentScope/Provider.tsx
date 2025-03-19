@@ -128,15 +128,15 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     values,
     location = defaultContentScopeLocation,
 }: ContentScopeProviderProps<S>) {
-    const paths = location.createPath(values);
+    const path = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
-    const match = useRouteMatch<NonNullRecord<S>>(paths);
+    const match = useRouteMatch<NonNullRecord<S>>(path);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     return (
         <Context.Provider
             value={{
-                path: paths,
+                path,
                 redirectPathAfterChange,
                 setRedirectPathAfterChange,
                 values,
@@ -145,7 +145,7 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
         >
             <Switch>
                 {match && (
-                    <Route exact={false} strict={false} path={paths}>
+                    <Route exact={false} strict={false} path={path}>
                         {children({ match })}
                     </Route>
                 )}
