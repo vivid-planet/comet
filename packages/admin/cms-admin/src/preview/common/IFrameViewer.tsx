@@ -56,7 +56,6 @@ const IFrameViewer = forwardRef<HTMLIFrameElement, Props>(({ device, initialPage
                 deviceConfig={deviceConfig}
             >
                 <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} onLoad={() => setIsLoading(false)} />
-                {deviceConfig && <DeviceFrameWrapper />}
             </OuterFrame>
         </Root>
     );
@@ -127,15 +126,6 @@ const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceC
         */
         pointer-events: none;
     }
-`;
-
-const DeviceFrameWrapper = styled("div")`
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
 `;
 
 export { IFrameViewer };
