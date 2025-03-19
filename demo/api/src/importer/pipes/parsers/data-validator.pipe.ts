@@ -2,7 +2,7 @@ import { LoggerService } from "@nestjs/common";
 import { validate } from "class-validator";
 import { Transform as StreamTransform, TransformCallback } from "stream";
 
-import { ImporterPipe, ValidationError } from "../importer-pipe.type";
+import { ImporterPipe, PipeData, PipeMetadata, ValidationError } from "../importer-pipe.type";
 
 export class DataValidatorPipe implements ImporterPipe {
     getPipe(runLogger: LoggerService) {
@@ -16,11 +16,7 @@ export class DataValidator extends StreamTransform {
         this.logger = logger;
     }
 
-    async _transform(
-        inputDataAndMetadata: { data: Record<string, unknown>; metadata: Record<string, unknown> },
-        encoding: BufferEncoding,
-        callback: TransformCallback,
-    ) {
+    async _transform(inputDataAndMetadata: { data: PipeData; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
         try {
             const classValidationErrors = await validate(inputDataAndMetadata.data);
             const errors: ValidationError[] = classValidationErrors.map((error) => {

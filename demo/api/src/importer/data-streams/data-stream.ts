@@ -4,7 +4,7 @@ import { PipeMetadata } from "../pipes/importer-pipe.type";
 
 export type StreamChunkAndMetadata = {
     chunk: Buffer | string;
-    metadata: PipeMetadata<Record<string, unknown>>;
+    metadata: PipeMetadata;
 };
 export abstract class DataStream {
     abstract getDataStreamAndMetadata(): Promise<Readable | null>;

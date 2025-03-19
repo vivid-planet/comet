@@ -3,7 +3,7 @@ import { HeaderArray, ParserOptionsArgs } from "@fast-csv/parse";
 import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
 import { Transform, TransformCallback } from "stream";
 
-import { ImporterPipe } from "../importer-pipe.type";
+import { ImporterPipe, PipeMetadata } from "../importer-pipe.type";
 
 export type CsvParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: BufferEncoding };
 
@@ -64,7 +64,7 @@ export class CsvParser extends Transform {
         this.parser = csv.parse({ ...this.options });
     }
 
-    _transform(input: { chunk: Buffer | string; metadata: Record<string, unknown> }, encoding: BufferEncoding, callback: TransformCallback) {
+    _transform(input: { chunk: Buffer | string; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
         const { chunk, metadata } = input;
 
         this.parser.removeAllListeners();

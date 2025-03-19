@@ -3,7 +3,7 @@ import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { plainToInstance } from "class-transformer";
 import { Transform as StreamTransform, TransformCallback } from "stream";
 
-import { ImporterPipe } from "../importer-pipe.type";
+import { ImporterPipe, PipeData, PipeMetadata } from "../importer-pipe.type";
 
 export class DataTransformerPipe implements ImporterPipe {
     constructor(private readonly inputClass: ImporterInputClass) {}
@@ -19,11 +19,7 @@ export class DataTransformer extends StreamTransform {
         this.logger = logger;
     }
 
-    async _transform(
-        inputData: { data: Record<string, unknown>; metadata: Record<string, unknown> },
-        encoding: BufferEncoding,
-        callback: TransformCallback,
-    ) {
+    async _transform(inputData: { data: PipeData; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
         try {
             const instance = plainToInstance(this.inputClass, inputData.data) as Record<string, unknown>;
             this.push({ data: instance, metadata: inputData.metadata });

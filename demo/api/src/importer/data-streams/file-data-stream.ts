@@ -16,10 +16,8 @@ export interface FileStreamAndSize {
 export type FileStreamAndMetadata = {
     dataStream: FileStream;
     metadata: {
-        additionalData: {
-            fileName?: string;
-            fileSize?: number;
-        };
+        fileName?: string;
+        fileSize?: number;
     };
 };
 
@@ -28,9 +26,7 @@ export abstract class FileDataStream extends DataStream {
         return {
             dataStream: fileStreamAndSize.fileStream,
             metadata: {
-                additionalData: {
-                    fileName: fileStreamAndSize.fileName,
-                },
+                fileName: fileStreamAndSize.fileName,
             },
         };
     }
