@@ -2,6 +2,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { v5 } from "uuid";
 
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { WarningData } from "./dto/warning-data";
 import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";
@@ -10,7 +11,17 @@ import { Warning } from "./entities/warning.entity";
 export class WarningService {
     constructor(private readonly entityManager: EntityManager) {}
 
-    private async saveWarning({ warning, type, sourceInfo }: { warning: WarningData; type: string; sourceInfo: WarningSourceInfo }): Promise<void> {
+    private async saveWarning({
+        warning,
+        type,
+        sourceInfo,
+        scope,
+    }: {
+        warning: WarningData;
+        type: string;
+        sourceInfo: WarningSourceInfo;
+        scope?: ContentScope;
+    }): Promise<void> {
         const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
         const id = v5(`${sourceInfo.rootEntityName}${sourceInfo.targetId};${warning.message}`, staticNamespace);
 
@@ -24,6 +35,7 @@ export class WarningService {
                 message: warning.message,
                 severity: warning.severity,
                 sourceInfo,
+                scope,
             },
             { onConflictExcludeFields: ["createdAt"] },
         );
@@ -33,16 +45,19 @@ export class WarningService {
         warnings,
         type,
         sourceInfo,
+        scope,
     }: {
         warnings: WarningData[];
         type: string;
         sourceInfo: WarningSourceInfo;
+        scope?: ContentScope;
     }): Promise<void> {
         for (const warning of warnings) {
             await this.saveWarning({
                 warning,
                 type,
                 sourceInfo,
+                scope,
             });
         }
     }
