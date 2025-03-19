@@ -1,6 +1,6 @@
 import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/blocks-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { ClassProvider, DynamicModule, Global, Module, ModuleMetadata, Type, ValueProvider } from "@nestjs/common";
+import { ClassProvider, DynamicModule, FactoryProvider, Global, Module, ModuleMetadata, Type, ValueProvider } from "@nestjs/common";
 
 import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
@@ -19,16 +19,25 @@ export type RedirectsLinkBlock = OneOfBlock<
     CustomTargets & { internal: Block<InternalLinkBlockData, InternalLinkBlockInput>; external: typeof ExternalLinkBlock }
 >;
 
-// TODO implement registerAsync instead of imports option?
-interface Config extends Pick<ModuleMetadata, "imports"> {
+type RedirectsModuleStaticOptions = {
     customTargets?: CustomTargets;
     Scope?: Type<RedirectScopeInterface>;
-    targetUrlService?: Type<RedirectTargetUrlServiceInterface>;
-}
+};
+
+type RedirectsModuleDynamicOptions = {
+    targetUrlService?: RedirectTargetUrlServiceInterface | Type<RedirectTargetUrlServiceInterface>;
+};
+
+type RedirectsModuleOptions = RedirectsModuleStaticOptions;
+
+type RedirectsModuleAsyncOptions = RedirectsModuleStaticOptions &
+    Pick<ModuleMetadata, "imports"> &
+    Pick<FactoryProvider<RedirectsModuleDynamicOptions>, "useFactory" | "inject">;
+
 @Global()
 @Module({})
 export class RedirectsModule {
-    static register({ customTargets, Scope, targetUrlService = DefaultRedirectTargetUrlService, imports }: Config = {}): DynamicModule {
+    static register({ customTargets, Scope }: RedirectsModuleOptions = {}): DynamicModule {
         const linkBlock = createOneOfBlock(
             {
                 supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
@@ -49,19 +58,67 @@ export class RedirectsModule {
 
         const targetUrlServiceProvider: ClassProvider<RedirectTargetUrlServiceInterface> = {
             provide: REDIRECTS_TARGET_URL_SERVICE,
-            useClass: targetUrlService,
+            useClass: DefaultRedirectTargetUrlService,
         };
 
         const mikroOrmModule = MikroOrmModule.forFeature([Redirect]);
 
         return {
             module: RedirectsModule,
-            imports: [...(imports ?? []), mikroOrmModule],
+            imports: [mikroOrmModule],
             providers: [
                 RedirectsResolver,
                 RedirectsDependenciesResolver,
                 RedirectsService,
                 linkBlockProvider,
+                ImportRedirectsConsole,
+                targetUrlServiceProvider,
+            ],
+            exports: [RedirectsService, REDIRECTS_LINK_BLOCK, mikroOrmModule],
+        };
+    }
+
+    static registerAsync({ customTargets, Scope, ...dynamicOptions }: RedirectsModuleAsyncOptions): DynamicModule {
+        const linkBlock = createOneOfBlock(
+            {
+                supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
+                allowEmpty: false,
+            },
+            "RedirectsLink",
+        );
+
+        const Redirect = RedirectEntityFactory.create({ linkBlock, Scope });
+        const RedirectInput = RedirectInputFactory.create({ linkBlock });
+        const RedirectsResolver = createRedirectsResolver({ Redirect, RedirectInput, Scope });
+        const RedirectsDependenciesResolver = DependenciesResolverFactory.create(Redirect);
+
+        const linkBlockProvider: ValueProvider<RedirectsLinkBlock> = {
+            provide: REDIRECTS_LINK_BLOCK,
+            useValue: linkBlock,
+        };
+
+        const mikroOrmModule = MikroOrmModule.forFeature([Redirect]);
+
+        const optionsProvider: FactoryProvider<RedirectsModuleDynamicOptions> = {
+            provide: "redirects-dynamic-options",
+            ...dynamicOptions,
+        };
+
+        const targetUrlServiceProvider: FactoryProvider<RedirectTargetUrlServiceInterface | Type<RedirectTargetUrlServiceInterface>> = {
+            provide: REDIRECTS_TARGET_URL_SERVICE,
+            useFactory: (options: RedirectsModuleDynamicOptions) => options.targetUrlService ?? DefaultRedirectTargetUrlService,
+            inject: ["redirects-dynamic-options"],
+        };
+
+        return {
+            module: RedirectsModule,
+            imports: [...(dynamicOptions.imports ?? []), mikroOrmModule],
+            providers: [
+                optionsProvider,
+                linkBlockProvider,
+                RedirectsResolver,
+                RedirectsDependenciesResolver,
+                RedirectsService,
                 ImportRedirectsConsole,
                 targetUrlServiceProvider,
             ],
