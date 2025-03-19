@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { v5 } from "uuid";
 
 import { BlockWarning } from "../blocks/block";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";
 
@@ -14,7 +15,15 @@ export class WarningService {
         private readonly entityManager: EntityManager,
     ) {}
 
-    public async saveWarning({ warning, sourceInfo }: { warning: BlockWarning; sourceInfo: WarningSourceInfo }): Promise<void> {
+    public async saveWarning({
+        warning,
+        scope,
+        sourceInfo,
+    }: {
+        warning: BlockWarning;
+        scope?: ContentScope;
+        sourceInfo: WarningSourceInfo;
+    }): Promise<void> {
         const type = "Block";
         const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
         const id = v5(`${sourceInfo.rootEntityName}${sourceInfo.targetId};${warning.message}`, staticNamespace);
@@ -29,16 +38,26 @@ export class WarningService {
                 message: warning.message,
                 severity: warning.severity,
                 sourceInfo,
+                scope,
             },
             { onConflictExcludeFields: ["createdAt"] },
         );
     }
 
-    public async updateWarningsForBlock(warnings: BlockWarning[], sourceInfo: WarningSourceInfo): Promise<void> {
+    public async updateWarningsForBlock({
+        warnings,
+        scope,
+        sourceInfo,
+    }: {
+        warnings: BlockWarning[];
+        scope?: ContentScope;
+        sourceInfo: WarningSourceInfo;
+    }): Promise<void> {
         const startDate = new Date();
         for (const warning of warnings) {
             await this.saveWarning({
                 warning,
+                scope,
                 sourceInfo,
             });
         }
