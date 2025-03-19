@@ -1,10 +1,9 @@
 import { Stack, StackMainContent, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { ProductCategoriesGrid } from "@src/products/categories/ProductCategoriesGrid";
 import { useIntl } from "react-intl";
 
-import { ProductCategoriesGrid } from "./generated/ProductCategoriesGrid";
-
-export function ProductCategoriesPage() {
+export function ProductCategoriesHandmadePage() {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories" })}>

@@ -28,10 +28,11 @@ import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPag
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
-import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
+import { ProductCategoriesPage as ProductCategoriesFuturePage } from "@src/products/future/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
+import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { ContentScope } from "@src/site-configs";
@@ -264,6 +265,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/combination-fields-test-products-future",
                             component: CombinationFieldsTestProductsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Product Categories" />,
+                        route: {
+                            path: "/product-categories",
+                            component: ProductCategoriesFuturePage,
                         },
                     },
                 ],
