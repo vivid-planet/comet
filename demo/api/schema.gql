@@ -635,6 +635,7 @@ type Warning {
   type: String!
   severity: WarningSeverity!
   status: WarningStatus!
+  scope: JSONObject
 }
 
 enum WarningSeverity {

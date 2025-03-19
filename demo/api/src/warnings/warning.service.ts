@@ -1,4 +1,4 @@
-import { BlockWarning } from "@comet/cms-api";
+import { BlockWarning, ContentScope } from "@comet/cms-api";
 import { MikroORM } from "@mikro-orm/core";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
@@ -15,7 +15,15 @@ export class WarningService {
         private readonly entityManager: EntityManager,
     ) {}
 
-    public async saveWarning({ warning, sourceInfo }: { warning: BlockWarning; sourceInfo: WarningSourceInfo }): Promise<void> {
+    public async saveWarning({
+        warning,
+        scope,
+        sourceInfo,
+    }: {
+        warning: BlockWarning;
+        scope?: ContentScope;
+        sourceInfo: WarningSourceInfo;
+    }): Promise<void> {
         const type = "Block";
         const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
         const id = v5(`${sourceInfo.rootEntityName}${sourceInfo.targetId};${warning.message}`, staticNamespace);
@@ -30,16 +38,26 @@ export class WarningService {
                 message: warning.message,
                 severity: WarningSeverity[warning.severity as keyof typeof WarningSeverity],
                 sourceInfo,
+                scope,
             },
             { onConflictExcludeFields: ["createdAt"] },
         );
     }
 
-    public async updateWarningsForBlock(warnings: BlockWarning[], sourceInfo: WarningSourceInfo): Promise<void> {
+    public async updateWarningsForBlock({
+        warnings,
+        scope,
+        sourceInfo,
+    }: {
+        warnings: BlockWarning[];
+        scope?: ContentScope;
+        sourceInfo: WarningSourceInfo;
+    }): Promise<void> {
         const startDate = new Date();
         for (const warning of warnings) {
             await this.saveWarning({
                 warning,
+                scope,
                 sourceInfo,
             });
         }

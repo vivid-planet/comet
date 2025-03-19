@@ -15,6 +15,7 @@ import {
 import { WarningSolid } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { useContentScope } from "@src/common/ContentScopeProvider";
 import { type GQLWarningSeverity } from "@src/graphql.generated";
 import { type ReactNode } from "react";
 import { useIntl } from "react-intl";
@@ -31,6 +32,7 @@ const warningsFragment = gql`
         type
         severity
         status
+        scope
     }
 `;
 
@@ -70,6 +72,16 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
         ...usePersistentColumnState("WarningsGrid"),
     };
     const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
+    const { scope } = useContentScope();
+
+    const scopeColumns: GridColDef[] = Object.keys(scope).map((key) => ({
+        field: `scope_${key}`,
+        headerName: key,
+        type: "singleSelect",
+        renderCell: ({ row }) => row.scope && row.scope[key],
+        sortable: false, // TODO: Implement sorting for content scope
+        filterable: false, // TODO: Implement sorting for content scope
+    }));
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -124,6 +136,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                 }
             },
         },
+        ...scopeColumns,
         {
             field: "status",
             headerName: intl.formatMessage({ id: "warning.status", defaultMessage: "Status" }),
