@@ -14,7 +14,7 @@ import {
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, WarningSolid } from "@comet/admin-icons";
 import { Chip, IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { type ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
@@ -41,6 +41,7 @@ const warningsFragment = gql`
             targetId
             jsonPath
         }
+        scope
     }
 `;
 
@@ -84,6 +85,30 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const entityDependencyMap = useDependenciesConfig();
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
+    const { values } = useContentScope();
+
+    const scopeValueOptions = values.map((item) => {
+        const keys = Object.keys(item);
+        const firstKey = keys[0];
+        const secondKey = keys[1];
+
+        const firstValue = item[firstKey].value;
+        const secondLabel = item[secondKey].label;
+
+        const scope = Object.fromEntries(
+            Object.entries(item).map(([key, value]) => {
+                if (typeof value === "object" && value !== null) {
+                    return [key, value.value];
+                }
+                return [key, value];
+            }),
+        );
+
+        return {
+            value: JSON.stringify(scope),
+            label: `${firstValue} / ${secondLabel}`,
+        };
+    });
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -139,6 +164,24 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             },
         },
         {
+            field: "scope",
+            headerName: intl.formatMessage({ id: "warning.scope", defaultMessage: "Scope" }),
+            type: "singleSelect",
+            sortable: false,
+            valueOptions: scopeValueOptions,
+            valueFormatter: (value) => {
+                if (typeof value === "object" && value !== null) {
+                    const objectValues = Object.values(value);
+
+                    // Format the values: first value stays as is, values after get " / " added
+                    const formattedValues = objectValues.map((val, index) => (index === 0 ? val : ` / ${val}`));
+                    return formattedValues.join("");
+                }
+
+                return value;
+            },
+        },
+        {
             field: "status",
             headerName: intl.formatMessage({ id: "warning.status", defaultMessage: "Status" }),
             type: "singleSelect",
@@ -153,6 +196,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             field: "actions",
             headerName: "",
             sortable: false,
+            filterable: false,
             renderCell: ({ row }) => {
                 const dependencyObject = entityDependencyMap[row.sourceInfo.rootEntityName] as DependencyInterface | undefined;
 
@@ -174,6 +218,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                         apolloClient,
                         id: row.sourceInfo.targetId,
                     });
+                    // TODO: adapt contentScope.match to allow content scope switches
                     return contentScope.match.url + path;
                 };
 
@@ -202,7 +247,30 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
         },
     ];
 
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    function gridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel) {
+        // Create a custom filter model by transforming the filterModel's items
+        const customFilterModel = {
+            ...filterModel,
+            items:
+                filterModel?.items.map((item) => {
+                    if (item.field === "scope") {
+                        if (typeof item.value === "string") {
+                            return { ...item, value: JSON.parse(item.value) };
+                        }
+
+                        if (typeof item.value === "object" && Array.isArray(item.value)) {
+                            return { ...item, value: item.value.map((value) => JSON.parse(value)) };
+                        }
+                    }
+
+                    return item;
+                }) ?? [],
+        };
+
+        return muiGridFilterToGql(columns, customFilterModel);
+    }
+
+    const { filter: gqlFilter, search: gqlSearch } = gridFilterToGql(columns, dataGridProps.filterModel);
 
     const { data, loading, error } = useQuery<GQLWarningsGridQuery, GQLWarningsGridQueryVariables>(warningsQuery, {
         variables: {

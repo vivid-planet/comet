@@ -1,7 +1,9 @@
 import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { WarningSourceInfo } from "../dto/warning-source-info";
 import { WarningSeverity } from "./warning-severity.enum";
 import { WarningStatus } from "./warning-status.enum";
@@ -42,4 +44,8 @@ export class Warning extends BaseEntity {
     @Enum({ items: () => WarningStatus })
     @Field(() => WarningStatus)
     status: WarningStatus = WarningStatus.open;
+
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    @Property({ type: "jsonb", nullable: true })
+    scope?: ContentScope;
 }
