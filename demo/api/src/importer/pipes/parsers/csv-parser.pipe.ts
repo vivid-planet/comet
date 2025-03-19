@@ -1,8 +1,9 @@
 import * as csv from "@fast-csv/parse";
 import { HeaderArray, ParserOptionsArgs } from "@fast-csv/parse";
 import { ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
+import { Transform, TransformCallback } from "stream";
 
-import { ImporterPipe } from "../importer-pipe.type";
+import { ImporterPipe, PipeMetadata } from "../importer-pipe.type";
 
 export type CsvParserOptions = Omit<ParserOptionsArgs, "encoding"> & { encoding: BufferEncoding };
 
@@ -14,7 +15,7 @@ export class CsvParsePipe implements ImporterPipe {
     }
 
     getPipe() {
-        return csv.parse(this.parserOptions);
+        return new CsvParser(this.parserOptions);
     }
 
     private getParserOption(jobRunParserOptions: CsvParserOptions, csvColumns: ImportFieldMetadata[]) {
@@ -52,5 +53,36 @@ export class CsvParsePipe implements ImporterPipe {
                               return csvColumn.key;
                           }),
         };
+    }
+}
+
+export class CsvParser extends Transform {
+    private parser: csv.CsvParserStream<csv.Row<unknown>, csv.Row<unknown>>;
+
+    constructor(private readonly options: CsvParserOptions) {
+        super({ objectMode: true });
+        this.parser = csv.parse({ ...this.options });
+    }
+
+    _transform(input: { chunk: Buffer | string; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
+        const { chunk, metadata } = input;
+
+        this.parser.removeAllListeners();
+
+        this.parser.on("error", (err) => callback(err));
+        this.parser.on("data", (row) => {
+            this.push({ data: row, metadata });
+        });
+        this.parser.on("end", () => {
+            callback();
+        });
+        this.parser.write(chunk);
+
+        callback();
+    }
+
+    _flush(callback: TransformCallback): void {
+        this.parser.end();
+        callback();
     }
 }

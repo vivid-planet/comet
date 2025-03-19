@@ -1,9 +1,11 @@
-export interface DataStreamAndMetadata {
-    dataStream: NodeJS.ReadableStream;
-    params?: Record<string, unknown>;
-    additionalData?: Record<string, unknown>;
-}
+import { Readable } from "stream";
 
+import { PipeMetadata } from "../pipes/importer-pipe.type";
+
+export type StreamChunkAndMetadata = {
+    chunk: Buffer | string;
+    metadata: PipeMetadata;
+};
 export abstract class DataStream {
-    abstract getDataStreamAndMetadata(): Promise<DataStreamAndMetadata | null>;
+    abstract getDataStreamAndMetadata(): Promise<Readable | null>;
 }
