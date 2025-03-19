@@ -6,17 +6,15 @@ import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withPreviewMiddleware } from "./middleware/preview";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
-import { withSitePreviewMiddleware } from "./middleware/sitePreview";
 import { withStatusMiddleware } from "./middleware/status";
 
 export default chain([
     withStatusMiddleware,
-    withSitePreviewMiddleware,
-    withRedirectToMainHostMiddleware,
+    withCspHeadersMiddleware,
     withAdminRedirectMiddleware,
-    withDamRewriteMiddleware,
-    withCspHeadersMiddleware, // order matters: after redirects (that don't need csp headers), before everything else that needs csp headers
     withPreviewMiddleware,
+    withRedirectToMainHostMiddleware,
+    withDamRewriteMiddleware,
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);
