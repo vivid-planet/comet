@@ -7,15 +7,13 @@ import { type InlineErrorClassKey } from "./InlineError";
 export const Root = createComponentSlot(Box)<InlineErrorClassKey>({
     componentName: "InlineError",
     slotName: "root",
-})(
-    () => css`
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        flex: 0;
-    `,
-);
+})(css`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 0;
+`);
 
 export const IconContainer = createComponentSlot("div")<InlineErrorClassKey>({
     componentName: "InlineError",
