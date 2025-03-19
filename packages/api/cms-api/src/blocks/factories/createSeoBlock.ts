@@ -11,11 +11,11 @@ import {
     blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
+    BlockWarning,
     createBlock,
     ExtractBlockInput,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
-    WarningSeverity,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
@@ -137,10 +137,9 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
             };
         }
 
-        warnings() {
+        warnings(): BlockWarning[] {
             if (!this.htmlTitle) {
-                const severity: WarningSeverity = "low";
-                return [{ severity, message: "missingHtmlTitle" }];
+                return [{ severity: "low", message: "missingHtmlTitle" }];
             }
             return [];
         }
