@@ -39,11 +39,9 @@ export const Title = createComponentSlot(Typography)<InlineErrorClassKey>({
 export const Description = createComponentSlot(Typography)<InlineErrorClassKey>({
     componentName: "InlineError",
     slotName: "description",
-})(
-    ({ theme }) => css`
-        text-align: center;
-    `,
-);
+})(css`
+    text-align: center;
+`);
 
 export const ActionsContainer = createComponentSlot("div")<InlineErrorClassKey>({
     componentName: "InlineError",
