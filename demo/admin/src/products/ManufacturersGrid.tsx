@@ -117,6 +117,7 @@ export function ManufacturersGrid() {
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,

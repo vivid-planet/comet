@@ -428,6 +428,7 @@ export const GridWithFormInADialog = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: ({ row }) => (
@@ -507,6 +508,7 @@ export const GridWithFormOnAPage = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -619,6 +621,7 @@ export const NestedGridsAndFormsWithTabs = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -742,6 +745,7 @@ export const NestedFormInGridInTabsInGrid = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (

@@ -77,6 +77,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             { field: "id", headerName: "ID", width: 90 },
                             {
                                 field: "actions",
+                                type: "actions",
                                 headerName: "",
                                 sortable: false,
                                 filterable: false,

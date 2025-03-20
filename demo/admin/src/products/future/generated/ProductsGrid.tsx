@@ -228,14 +228,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             minWidth: 200,
         },
         {
-            field: "title",
-            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
-            flex: 1,
-            visible: theme.breakpoints.up("md"),
-            minWidth: 200,
-            maxWidth: 250,
-        },
-        {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
             flex: 1,

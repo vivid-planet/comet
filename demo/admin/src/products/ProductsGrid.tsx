@@ -307,6 +307,7 @@ export function ProductsGrid() {
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
