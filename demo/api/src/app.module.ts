@@ -50,6 +50,8 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { RedirectTargetUrlModule } from "./redirects/redirect-target-url.module";
+import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 
 @Module({})
 export class AppModule {
@@ -124,8 +126,16 @@ export class AppModule {
                     reservedPaths: ["/events"],
                     sitePreviewSecret: config.sitePreviewSecret,
                 }),
-
-                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
+                RedirectTargetUrlModule,
+                RedirectsModule.registerAsync({
+                    customTargets: { news: NewsLinkBlock },
+                    Scope: RedirectScope,
+                    imports: [RedirectTargetUrlModule],
+                    useFactory: async (targetUrlService: RedirectTargetUrlService) => ({
+                        targetUrlService,
+                    }),
+                    inject: [RedirectTargetUrlService],
+                }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
                 }),
