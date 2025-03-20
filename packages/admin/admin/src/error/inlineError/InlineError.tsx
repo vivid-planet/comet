@@ -11,7 +11,7 @@ export type InlineErrorClassKey = "root" | "iconContainer" | "title" | "descript
 
 type InlineErrorVariant = "error" | "warning" | "info";
 
-type InlineErrorProps = ThemedComponentBaseProps<{
+export type InlineErrorProps = ThemedComponentBaseProps<{
     root: "div";
     iconContainer: "div";
     title: typeof Typography;
