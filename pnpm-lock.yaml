@@ -497,7 +497,7 @@ importers:
         specifier: ^11.2.5
         version: 11.2.5
       zod:
-        specifier: ^3.24.1
+        specifier: ^3.24.2
         version: 3.24.2
     devDependencies:
       '@babel/core':
