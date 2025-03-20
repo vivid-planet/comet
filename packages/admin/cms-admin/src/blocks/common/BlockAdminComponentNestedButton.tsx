@@ -1,5 +1,6 @@
+import { Button } from "@comet/admin";
 import { Edit, Warning } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type MouseEventHandler, type ReactNode } from "react";
 
@@ -18,8 +19,13 @@ export const BlockAdminComponentNestedButton = ({ displayName, preview, count, o
     const isValid = usePromise(isValidFn, { initialValue: true });
 
     return (
+<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/common/BlockAdminComponentNestedButton.tsx
         <BlockAdminComponentPaper disablePadding>
             <Button onClick={onClick} fullWidth endIcon={<Edit />} color="info">
+=======
+        <AdminComponentPaper disablePadding>
+            <Button onClick={onClick} fullWidth endIcon={<Edit />} variant="textDark">
+>>>>>>> main:packages/admin/blocks-admin/src/blocks/common/AdminComponentNestedButton.tsx
                 <TextContainer>
                     <Typography variant="body1" align="left" noWrap>
                         {!isValid && <Warning color="error" />}

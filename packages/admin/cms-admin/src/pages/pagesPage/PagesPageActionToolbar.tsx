@@ -1,8 +1,15 @@
 import { useApolloClient } from "@apollo/client";
+<<<<<<< HEAD
 import { Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
 import { Button, Checkbox, Grid, IconButton, useTheme } from "@mui/material";
 import { type ReactNode, useState } from "react";
+=======
+import { Button, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
+import { Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
+import { ReactNode, useState } from "react";
+>>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 import { deletePageMutation, type GQLDeletePageTreeNodeMutation, type GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
@@ -228,7 +235,13 @@ export const PagesPageActionToolbar = ({
                     </Tooltip>
                 </CenterContainer>
                 <Grid item>
-                    <Button disabled={collapseAllDisabled} startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
+                    <Button
+                        disabled={collapseAllDisabled}
+                        startIcon={<TreeCollapseAll />}
+                        onClick={onCollapseAllPressed}
+                        size="small"
+                        variant="textDark"
+                    >
                         <FormattedMessage id="comet.pages.pages.collapseAll" defaultMessage="Collapse all" />
                     </Button>
                 </Grid>
