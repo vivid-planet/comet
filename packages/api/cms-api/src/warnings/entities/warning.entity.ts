@@ -1,4 +1,3 @@
-import { CrudField, CrudGenerator } from "@comet/cms-api";
 import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -9,7 +8,6 @@ import { WarningStatus } from "./warning-status.enum";
 
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["warnings"], create: false, update: false, delete: false })
 export class Warning extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
@@ -27,20 +25,17 @@ export class Warning extends BaseEntity {
 
     @Property({ columnType: "text" })
     @Field()
-    @CrudField()
     message: string;
 
     @Property()
     @Field()
-    @CrudField()
     type: string;
 
     @Enum({ items: () => WarningSeverity })
     @Field(() => WarningSeverity)
-    severity: WarningSeverity;
+    severity: `${WarningSeverity}`;
 
     @Property({ type: "jsonb" })
-    @CrudField()
     sourceInfo: WarningSourceInfo;
 
     @Enum({ items: () => WarningStatus })

@@ -200,6 +200,28 @@ type UserPermissionPaginatedUserList {
   totalCount: Int!
 }
 
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  type: String!
+  severity: WarningSeverity!
+  status: WarningStatus!
+}
+
+enum WarningSeverity {
+  critical
+  high
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
 type PageTreeNode {
   id: ID!
   parentId: String

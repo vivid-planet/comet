@@ -16,6 +16,7 @@ import {
     RedirectsModule,
     SentryModule,
     UserPermissionsModule,
+    WarningsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -49,7 +50,6 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
-import { WarningsModule } from "./warnings/warning.module";
 
 @Module({})
 export class AppModule {

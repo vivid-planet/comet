@@ -204,6 +204,33 @@ type UserPermissionPaginatedUserList {
   totalCount: Int!
 }
 
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  type: String!
+  severity: WarningSeverity!
+  status: WarningStatus!
+}
+
+enum WarningSeverity {
+  critical
+  high
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type PaginatedWarnings {
+  nodes: [Warning!]!
+  totalCount: Int!
+}
+
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -625,33 +652,6 @@ type PaginatedProductVariants {
 
 type RedirectScope {
   domain: String!
-}
-
-type Warning {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  message: String!
-  type: String!
-  severity: WarningSeverity!
-  status: WarningStatus!
-}
-
-enum WarningSeverity {
-  critical
-  high
-  low
-}
-
-enum WarningStatus {
-  open
-  resolved
-  ignored
-}
-
-type PaginatedWarnings {
-  nodes: [Warning!]!
-  totalCount: Int!
 }
 
 type PaginatedPageTreeNodes {
