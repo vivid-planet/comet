@@ -1,7 +1,7 @@
 import { Error, Info, Warning } from "@comet/admin-icons";
 import { type ComponentsOverrides, type Theme, type Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
+import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -68,7 +68,7 @@ export type InlineErrorProps = ThemedComponentBaseProps<{
  * The InlineError component is used to display inline error messages within an application.
  * It provides visual feedback for errors, warnings, or informational messages with optional actions.
  */
-export const InlineError: FunctionComponent<PropsWithChildren<InlineErrorProps>> = (inProps) => {
+export const InlineError: FunctionComponent<InlineErrorProps> = (inProps) => {
     const {
         icon,
         iconMapping = {
@@ -95,17 +95,24 @@ export const InlineError: FunctionComponent<PropsWithChildren<InlineErrorProps>>
             warning: null,
             info: null,
         },
+        sx,
+        className,
+        slotProps = {},
     } = useThemeProps({ props: inProps, name: "CometAdminInlineError" });
 
     return (
-        <Root>
-            <IconContainer>{icon ?? iconMapping[variant]}</IconContainer>
+        <Root sx={sx} className={className} {...slotProps.root}>
+            <IconContainer {...slotProps.iconContainer}>{icon ?? iconMapping[variant]}</IconContainer>
 
-            <Title variant="h5">{title ?? titleMapping[variant]}</Title>
+            <Title variant="h5" {...slotProps.title}>
+                {title ?? titleMapping[variant]}
+            </Title>
 
-            <Description variant="body2">{description ?? descriptionMapping[variant]}</Description>
+            <Description variant="body2" {...slotProps.description}>
+                {description ?? descriptionMapping[variant]}
+            </Description>
 
-            {actions && <ActionsContainer>{actions}</ActionsContainer>}
+            {actions && <ActionsContainer {...slotProps.actionsContainer}>{actions}</ActionsContainer>}
         </Root>
     );
 };
