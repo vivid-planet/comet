@@ -53,7 +53,7 @@
         "cookie-parser": "^1.4.7",
         "express": "^5.0.1",
         "graphql": "^16.10.0",
-        "graphql-scalars": "^1.24.1",
+        "graphql-scalars": "^1.24.2",
         "helmet": "^4.6.0",
         "nest-commander": "^3.16.1",
         "reflect-metadata": "^0.2.2",
