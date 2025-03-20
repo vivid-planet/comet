@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
 import { Box, Button, buttonClasses, type ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
+=======
+import { Button, createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
+import { Box, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
+>>>>>>> main
 import { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -43,6 +50,7 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
                     onClick={() => setShowMonthSelect(true)}
                     ref={monthSelectRef}
                     endIcon={<ChevronDown />}
+                    variant="textDark"
                     {...slotProps?.selectMonthButton}
                 >
                     {intl.formatDate(focusedDate, { month: "long" })}
@@ -72,6 +80,7 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
                     ref={yearSelectRef}
                     onClick={() => setShowYearSelect(true)}
                     endIcon={<ChevronDown />}
+                    variant="textDark"
                     {...slotProps?.selectYearButton}
                 >
                     {focusedDate.getFullYear()}
@@ -142,6 +151,7 @@ const SelectMonthButton = createComponentSlot(Button)<DatePickerNavigationClassK
         padding: 10px;
         border-radius: 4;
         font-weight: ${theme.typography.fontWeightBold};
+        color: ${theme.palette.primary.main};
 
         :hover {
             background-color: ${theme.palette.grey[50]};
@@ -164,6 +174,7 @@ const SelectYearButton = createComponentSlot(Button)<DatePickerNavigationClassKe
         padding: 10px;
         border-radius: 4;
         font-weight: ${theme.typography.fontWeightBold};
+        color: ${theme.palette.primary.main};
 
         :hover {
             background-color: ${theme.palette.grey[50]};

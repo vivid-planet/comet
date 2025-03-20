@@ -1,8 +1,12 @@
 import { useApolloClient } from "@apollo/client";
-import { useErrorDialog } from "@comet/admin";
+import { Button, useErrorDialog } from "@comet/admin";
 import { ThreeDotSaving, Upload } from "@comet/admin-icons";
+<<<<<<< HEAD
 import { Button } from "@mui/material";
 import axios, { type CancelTokenSource } from "axios";
+=======
+import axios, { CancelTokenSource } from "axios";
+>>>>>>> main
 import { useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
@@ -81,7 +85,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     return (
         <>
             <Button
-                sx={{ color: "white" }}
+                variant="textLight"
                 startIcon={replaceLoading ? <ThreeDotSaving /> : <Upload />}
                 onClick={() => {
                     // Trigger file input with button click

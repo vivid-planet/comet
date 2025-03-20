@@ -1,13 +1,20 @@
 import { Add, Edit } from "@comet/admin-icons";
+<<<<<<< HEAD
 import { Button, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { screen, waitFor, within } from "@testing-library/react";
+=======
+import { IconButton } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { screen, within } from "@testing-library/react";
+>>>>>>> main
 import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render } from "test-utils";
 
+import { Button } from "./common/buttons/Button";
 import { MainContent } from "./common/MainContent";
 import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
 import { ToolbarAutomaticTitleItem } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
@@ -123,12 +130,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                     slotProps={{
                                         toolbar: {
                                             toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
+                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     Add product
                                                 </Button>
                                             ),

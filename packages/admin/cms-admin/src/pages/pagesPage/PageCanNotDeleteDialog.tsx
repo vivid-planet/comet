@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { messages } from "@comet/admin";
 import {
     Button,
@@ -7,6 +8,10 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
+=======
+import { Button, messages } from "@comet/admin";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+>>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 interface PageCanNotDeleteDialogProps {
@@ -29,7 +34,7 @@ export const PageCanNotDeleteDialog = (props: PageCanNotDeleteDialogProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClosePressed} color="primary">
+                <Button onClick={onClosePressed} variant="textDark">
                     <FormattedMessage {...messages.close} />
                 </Button>
             </DialogActions>
