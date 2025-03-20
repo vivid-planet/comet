@@ -88,7 +88,7 @@ export const InlineError: FunctionComponent<InlineErrorProps> = (inProps) => {
         descriptionMapping = {
             error: (
                 <FormattedMessage
-                    defaultMessage="An error occurred. Please try again later or contact the support."
+                    defaultMessage="An error occurred. Please try again later."
                     id="comet.inlineError.error.description"
                 />
             ),
