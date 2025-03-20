@@ -71,7 +71,7 @@
         "@types/cli-progress": "^3.11.6",
         "@types/compression": "^1.7.5",
         "@types/cookie-parser": "^1.4.8",
-        "@types/express": "^5.0.0",
+        "@types/express": "^5.0.1",
         "@types/inquirer": "^8.2.10",
         "@types/node": "^22.13.10",
         "@types/response-time": "^2.3.8",
