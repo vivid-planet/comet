@@ -1,5 +1,27 @@
 # @comet/cms-api
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 56064fc: Remove `node-fetch` in favor of Node's native Fetch API
+
+    Note: **You need a Node version that supports the Fetch API, preferably Node v22.**
+
+- 23f393b: Protect images in the site preview
+
+    The image URLs in the site preview are now generated as preview URLs.
+    Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
+
+### Patch Changes
+
+- 092e96e: Fix validation error caused by `EmptyDamScope` when uploading a file
+
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0

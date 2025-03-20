@@ -1,5 +1,20 @@
 # @comet/cms-site
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 67ae9df: Fix opacity on `VideoPreviewImage` to only affect the background color
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 23f393b: Protect images in the site preview
+
+    The image URLs in the site preview are now generated as preview URLs.
+    Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
+
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0

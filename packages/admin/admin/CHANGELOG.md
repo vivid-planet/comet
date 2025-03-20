@@ -1,5 +1,103 @@
 # @comet/admin
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 5b8fe2e: Update props and usage of `FeedbackButton` to be consistent with the new Comet `Button`
+
+    - The `variant` prop now replaces its old values and the now removed `color` prop.
+    - The `responsive` prop is now supported to move the button's text to a tooltip on smaller devices.
+    - The previous values of `slotProps` have been removed, they can now be set through the `slotProps` of the `root` slot.
+
+    ```diff
+    - <FeedbackButton variant="contained" color="primary">
+    + <FeedbackButton>
+          Okay
+      </FeedbackButton>
+    - <FeedbackButton variant="contained" color="error">
+    + <FeedbackButton variant="destructive">
+          Delete
+      </FeedbackButton>
+    ```
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 15c6fa0: Remove `DialogContent` from `EditDialog` as spacing inside a dialog is not always needed in the Comet DXP design
+
+    To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent`. This ensures proper spacing.
+    For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
+
+    ```diff
+        <EditDialog>
+        //...
+    +       <DialogContent>
+    +           //...
+    +       </DialogContent>
+        // ...
+        </EditDialog>
+    ```
+
+- 5b8fe2e: Adapt `SaveButton` and `SaveBoundarySaveButton` to look like the standard `FeedbackButton` in order to match the Comet DXP design
+
+    Their props have been updated to match those of `FeedbackButton`:
+
+    - `saving` has been renamed to `loading`.
+    - `saveIcon` has been renamed to `startIcon`.
+    - `hasConflict` has been removed. Use `hasErrors` instead and optionally provide a `tooltipErrorMessage` to show a more precise error message in the tooltip.
+    - The following icon-props have been removed, as the `startIcon` is now shown in all states: `savingIcon`, `successIcon`, `errorIcon`, `conflictIcon`.
+    - The following props used for the text-content have been removed as now the default text is shown in all states: `savingItem`, `successItem`, `errorItem`, `conflictItem`.
+
+### Minor Changes
+
+- d99602a: Adapt styling of MUI's `Link` according to the Comet DXP design
+
+    Use `Link` only for links in continuous text or as standalone text links. Replace all other usages with better fitting components (e.g., `RouterLink`, `StackLink`, or `Button`).
+
+- 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
+
+    This applies to:
+
+    - `FinalFormSaveButton`
+    - `FinalFormSaveCancelButtonsLegacy`
+    - `FinalFormSaveSplitButton`
+    - The save button inside `TableLocalChangesToolbar`
+    - The save button inside the `useSaveState` hook
+    - The save button inside `MoveDamItemDialog`
+    - The save button inside `createUsePage`
+
+- 535476e: Format numbers in `DataGrid` pagination depending on the current locale
+- 43eb598: Set the custom `DataGridPanel` as default in the theme of the `DataGrid` component
+
+    If set, the `DataGridPanel` can now be removed from the project's theme, e.g., in `admin/src/theme.ts`:
+
+    ```diff
+    - import { DataGridPanel } from "@comet/admin";
+      import { createCometTheme } from "@comet/admin-theme";
+    - import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    - export const theme = createCometTheme({
+    -     components: {
+    -         MuiDataGrid: {
+    -             defaultProps: {
+    -                 components: {
+    -                     Panel: DataGridPanel,
+    -                 },
+    -             },
+    -         },
+    -     },
+    - });
+    + export const theme = createCometTheme();
+    ```
+
+### Patch Changes
+
+- Updated dependencies [f904b71]
+    - @comet/admin-icons@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes
