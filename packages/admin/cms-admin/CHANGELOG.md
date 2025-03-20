@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 7.16.1
+
+### Patch Changes
+
+-   ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    -   @comet/admin@7.16.1
+    -   @comet/admin-date-time@7.16.1
+    -   @comet/admin-icons@7.16.1
+    -   @comet/admin-rte@7.16.1
+    -   @comet/admin-theme@7.16.1
+    -   @comet/blocks-admin@7.16.1
+
 ## 7.16.0
 
 ### Minor Changes
