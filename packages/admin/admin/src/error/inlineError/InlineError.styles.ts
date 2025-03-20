@@ -1,10 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type InlineErrorClassKey } from "./InlineError";
 
-export const Root = createComponentSlot(Box)<InlineErrorClassKey>({
+export const Root = createComponentSlot("div")<InlineErrorClassKey>({
     componentName: "InlineError",
     slotName: "root",
 })(css`
