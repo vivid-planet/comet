@@ -1,46 +1,35 @@
 import { Loading } from "@comet/admin";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { forwardRef, ReactNode, useState } from "react";
+import { forwardRef, useState } from "react";
 import useDimensions from "react-cool-dimensions";
 
 import { Device } from "./Device";
-import { DeviceFrameDesktop } from "./icons/DeviceFrameDesktop";
-import { DeviceFrameMobile } from "./icons/DeviceFrameMobile";
-import { DeviceFrameTablet } from "./icons/DeviceFrameTablet";
 
 interface DeviceConfig {
-    deviceFrame: ReactNode;
     outerFrame: {
         width: number;
         height: number;
-        padding: string;
     };
 }
 
 const devicesConfig: Record<Exclude<Device, Device.Responsive>, DeviceConfig> = {
     [Device.Mobile]: {
-        deviceFrame: <DeviceFrameMobile />,
         outerFrame: {
             width: 406,
             height: 763,
-            padding: "34px 22px 34px",
         },
     },
     [Device.Tablet]: {
-        deviceFrame: <DeviceFrameTablet />,
         outerFrame: {
             width: 1063,
             height: 766,
-            padding: "40px 41px 41px 40px",
         },
     },
     [Device.Desktop]: {
-        deviceFrame: <DeviceFrameDesktop />,
         outerFrame: {
             width: 1600,
             height: 885,
-            padding: "40px 160px 45px",
         },
     },
 };
@@ -67,7 +56,6 @@ const IFrameViewer = forwardRef<HTMLIFrameElement, Props>(({ device, initialPage
                 deviceConfig={deviceConfig}
             >
                 <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} onLoad={() => setIsLoading(false)} />
-                {deviceConfig && <DeviceFrameWrapper>{deviceConfig.deviceFrame}</DeviceFrameWrapper>}
             </OuterFrame>
         </Root>
     );
@@ -119,7 +107,6 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
             top: calc(50% - ${deviceConfig.outerFrame.height / 2}px);
             width: ${deviceConfig.outerFrame.width}px;
             height: ${deviceConfig.outerFrame.height}px;
-            padding: ${deviceConfig.outerFrame.padding};
         `}
 `;
 
@@ -139,15 +126,6 @@ const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceC
         */
         pointer-events: none;
     }
-`;
-
-const DeviceFrameWrapper = styled("div")`
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
 `;
 
 export { IFrameViewer };
