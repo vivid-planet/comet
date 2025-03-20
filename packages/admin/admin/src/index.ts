@@ -78,7 +78,7 @@ export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/error
 export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
-export { InlineError } from "./error/inlineError/InlineError";
+export { InlineError, InlineErrorClassKey, InlineErrorProps } from "./error/inlineError/InlineError";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
