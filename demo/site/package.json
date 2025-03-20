@@ -54,7 +54,7 @@
         "@graphql-codegen/typescript-operations": "^4.5.1",
         "@parcel/watcher": "^2.5.1",
         "@types/node": "^22.13.10",
-        "@types/react": "^18.3.18",
+        "@types/react": "^18.3.19",
         "@types/react-dom": "^18.3.5",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.22.0",
