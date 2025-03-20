@@ -1,5 +1,4 @@
-import { Field, FieldContainer } from "@comet/admin";
-import { DateTimePicker, FinalFormDateTimePicker } from "@comet/admin-date-time";
+import { DateTimeField, DateTimePicker } from "@comet/admin-date-time";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -9,14 +8,14 @@ export default {
 };
 
 export const Basic = () => {
-    const [dateTimeOne, setDateTimeOne] = useState<Date | undefined>();
-    const [dateTimeTwo, setDateTimeTwo] = useState<Date | undefined>(new Date());
-    const [dateTimeThree, setDateTimeThree] = useState<Date | undefined>();
+    // const [dateTimeOne, setDateTimeOne] = useState<Date | undefined>();
+    // const [dateTimeTwo, setDateTimeTwo] = useState<Date | undefined>(new Date());
+    // const [dateTimeThree, setDateTimeThree] = useState<Date | undefined>();
     const [dateTimeFour, setDateFour] = useState<Date | undefined>(new Date());
 
     return (
         <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
                 <FieldContainer label="Date-Time Picker" fullWidth>
                     <DateTimePicker value={dateTimeOne} onChange={setDateTimeOne} />
                 </FieldContainer>
@@ -54,7 +53,21 @@ export const Basic = () => {
                         }}
                     />
                 </FieldContainer>
-            </Grid>
+            </Grid> */}
+
+            <DateTimePicker
+                value={dateTimeFour}
+                onChange={setDateFour}
+                slotProps={{
+                    datePicker: {
+                        formatDateOptions: {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        },
+                    },
+                }}
+            />
         </Grid>
     );
 };
@@ -65,13 +78,14 @@ export const FinalForm = () => {
         dateTimeTwo?: Date;
         dateTimeThree?: Date;
         dateTimeFour?: Date;
+        test?: Date;
     };
 
     return (
-        <Form<Values> initialValues={{ dateTimeTwo: new Date(), dateTimeFour: new Date() }} onSubmit={() => {}}>
+        <Form<Values> initialValues={{ dateTimeTwo: new Date(), dateTimeFour: new Date(), test: new Date() }} onSubmit={() => {}}>
             {() => (
                 <Grid container spacing={4}>
-                    <Grid item xs={12} md={6}>
+                    {/* <Grid item xs={12} md={6}>
                         <Field name="dateTimeOne" label="Date Picker" fullWidth component={FinalFormDateTimePicker} />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -88,23 +102,9 @@ export const FinalForm = () => {
                                 timePicker: { placeholder: "Time Placeholder" },
                             }}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} md={6}>
-                        <Field
-                            name="dateTimeFour"
-                            label="Custom date format"
-                            fullWidth
-                            component={FinalFormDateTimePicker}
-                            componentsProps={{
-                                datePicker: {
-                                    formatDateOptions: {
-                                        month: "long",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    },
-                                },
-                            }}
-                        />
+                        <DateTimeField name="test" label="test" />
                     </Grid>
                 </Grid>
             )}
