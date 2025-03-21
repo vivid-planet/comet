@@ -211,8 +211,8 @@ type Warning {
 }
 
 enum WarningSeverity {
-  critical
   high
+  medium
   low
 }
 
