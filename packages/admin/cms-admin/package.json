@@ -79,7 +79,7 @@
         "@graphql-codegen/typescript-operations": "^4.5.1",
         "@mui/material": "^6.4.8",
         "@mui/system": "^6.4.8",
-        "@mui/x-data-grid": "^7.27.3",
+        "@mui/x-data-grid": "^7.28.0",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/react": "^16.2.0",
         "@types/draft-js": "^0.11.18",
