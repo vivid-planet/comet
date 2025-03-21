@@ -7,4 +7,6 @@ export interface DamConfig {
     cacheDirectory: string;
     acceptedMimeTypes?: string[];
     maxFileSize: number;
+    requireLicense?: boolean;
+    enableLicenseFeature?: boolean;
 }
