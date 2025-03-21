@@ -12,8 +12,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
@@ -86,18 +84,12 @@ const createManufacturerMutation = gql`
 function ManufacturersGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
+            </Button>
         </DataGridToolbar>
     );
 }

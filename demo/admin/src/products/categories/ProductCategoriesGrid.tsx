@@ -4,7 +4,6 @@ import {
     DataGridToolbar,
     filterByFragment,
     type GridColDef,
-    ToolbarActions,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -76,11 +75,7 @@ interface ProductCategoriesGridToolbarProps extends GridToolbarProps {
 }
 
 function ProductCategoriesGridToolbar({ toolbarAction }: ProductCategoriesGridToolbarProps) {
-    return (
-        <DataGridToolbar>
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
-        </DataGridToolbar>
-    );
+    return <DataGridToolbar>{toolbarAction}</DataGridToolbar>;
 }
 
 type Props = {

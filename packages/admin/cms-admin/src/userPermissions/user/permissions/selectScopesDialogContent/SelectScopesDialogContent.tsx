@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { DataGridToolbar, Field, FinalForm, type GridColDef, Loading, ToolbarFillSpace, ToolbarItem, useFormApiRef } from "@comet/admin";
+import { DataGridToolbar, Field, FillSpace, FinalForm, type GridColDef, Loading, useFormApiRef } from "@comet/admin";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
@@ -30,10 +30,8 @@ type ContentScope = {
 function SelectScopesDialogContentGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarFillSpace />
+            <GridToolbarQuickFilter />
+            <FillSpace />
         </DataGridToolbar>
     );
 }

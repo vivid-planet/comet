@@ -20,7 +20,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { DialogContent, IconButton, Typography } from "@mui/material";
@@ -138,16 +137,14 @@ interface ToolbarProps extends GridToolbarProps {
 function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <Typography>
-                    <FormattedMessage
-                        id="toolbar.helperText"
-                        defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
-                    />
-                </Typography>
-            </ToolbarItem>
+            <Typography>
+                <FormattedMessage
+                    id="toolbar.helperText"
+                    defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
+                />
+            </Typography>
             <FillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            {toolbarAction}
         </DataGridToolbar>
     );
 }

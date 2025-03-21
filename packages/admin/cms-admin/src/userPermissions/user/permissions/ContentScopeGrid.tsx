@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CancelButton,
+    FillSpace,
     type GridColDef,
     Loading,
     messages,
     SaveBoundary,
     SaveBoundarySaveButton,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
@@ -66,7 +66,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     <ToolbarTitleItem>
                         <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
                     </ToolbarTitleItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="contained" color="primary">
                             <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Select scopes" />

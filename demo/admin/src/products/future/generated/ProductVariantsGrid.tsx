@@ -13,8 +13,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -79,18 +77,12 @@ const createProductVariantMutation = gql`
 function ProductVariantsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="productVariant.productVariantsGridFuture.newEntry" defaultMessage="New Product Variant" />
+            </Button>
         </DataGridToolbar>
     );
 }

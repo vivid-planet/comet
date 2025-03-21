@@ -7,8 +7,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
-    ToolbarActions,
-    ToolbarItem,
     Tooltip,
     useDataGridRemote,
     usePersistentColumnState,
@@ -33,14 +31,10 @@ interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
 function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            {toolbarAction && <>{toolbarAction}</>}
         </DataGridToolbar>
     );
 }

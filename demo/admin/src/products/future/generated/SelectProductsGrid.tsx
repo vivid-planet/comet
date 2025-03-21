@@ -11,7 +11,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -52,12 +51,8 @@ const productsQuery = gql`
 function ProductsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
         </DataGridToolbar>
     );

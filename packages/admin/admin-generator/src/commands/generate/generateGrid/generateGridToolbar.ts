@@ -32,8 +32,8 @@ export const generateGridToolbar = ({
     function ${componentName}(${getGridToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
-                ${hasSearch ? searchItem : ""}
-                ${hasFilter ? filterItem : ""}
+                ${hasSearch ? "<GridToolbarQuickFilter />" : ""}
+                ${hasFilter ? "<GridFilterButton />" : ""}
                 <FillSpace />
                 ${renderToolbarActions({
                     forwardToolbarAction,
@@ -78,14 +78,6 @@ const getGridToolbarProps = (componentName: string, toolbarAction: boolean, expo
     }: ${componentName}ToolbarProps`;
 };
 
-const searchItem = `<ToolbarItem>
-    <GridToolbarQuickFilter />
-</ToolbarItem>`;
-
-const filterItem = `<ToolbarItem>
-    <GridFilterButton />
-</ToolbarItem>`;
-
 type RenderToolbarActionsOptions = {
     forwardToolbarAction: boolean | undefined;
     addItemText: string;
@@ -126,10 +118,9 @@ const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, 
 
     const addAction = forwardToolbarAction ? "{toolbarAction}" : defaultAddItemButton;
 
-    return `<ToolbarActions>
+    return `
         ${showMoreActionsMenu ? moreActionsMenu : ""}
-        ${allowAdding ? addAction : ""}
-    </ToolbarActions>`;
+        ${allowAdding ? addAction : ""}`;
 };
 
 const renderToolbarProps = (componentName: string, forwardToolbarAction: boolean | undefined, exportApi: boolean) => {

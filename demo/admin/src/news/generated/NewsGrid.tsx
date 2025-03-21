@@ -14,8 +14,6 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -78,18 +76,12 @@ const createNewsMutation = gql`
 function NewsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
+            </Button>
         </DataGridToolbar>
     );
 }

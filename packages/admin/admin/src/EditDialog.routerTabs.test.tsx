@@ -8,9 +8,8 @@ import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render } from "test-utils";
 
-import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
+import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
-import { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
 import { EditDialog } from "./EditDialog";
 import { type IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
@@ -55,8 +54,8 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
     function Toolbar({ toolbarAction }: ToolbarProps) {
         return (
             <DataGridToolbar>
-                <ToolbarFillSpace />
-                <ToolbarActions>{toolbarAction}</ToolbarActions>
+                <FillSpace />
+                {toolbarAction}
             </DataGridToolbar>
         );
     }
