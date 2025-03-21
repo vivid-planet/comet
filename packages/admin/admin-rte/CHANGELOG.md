@@ -1,5 +1,27 @@
 # @comet/admin-rte
 
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+### Patch Changes
+
+- Updated dependencies [d99602a]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [f904b71]
+- Updated dependencies [15c6fa0]
+- Updated dependencies [535476e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [43eb598]
+    - @comet/admin@8.0.0-beta.2
+    - @comet/admin-icons@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes
