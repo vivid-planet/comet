@@ -204,6 +204,14 @@ type UserPermissionPaginatedUserList {
   totalCount: Int!
 }
 
+type WarningSourceInfo {
+  rootEntityName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
+  targetId: String!
+  jsonPath: String!
+}
+
 type Warning {
   id: ID!
   createdAt: DateTime!
@@ -211,6 +219,7 @@ type Warning {
   message: String!
   type: String!
   severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
   status: WarningStatus!
 }
 
@@ -711,6 +720,14 @@ type PaginatedDamFiles {
 type PaginatedDamFolders {
   nodes: [DamFolder!]!
   totalCount: Int!
+}
+
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
+  targetId: String!
+  jsonPath: String!
 }
 
 input AlternativeAddressInput {

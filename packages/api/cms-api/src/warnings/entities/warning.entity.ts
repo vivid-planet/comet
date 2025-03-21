@@ -36,6 +36,7 @@ export class Warning extends BaseEntity {
     severity: `${WarningSeverity}`;
 
     @Property({ type: "jsonb" })
+    @Field()
     sourceInfo: WarningSourceInfo;
 
     @Enum({ items: () => WarningStatus })
