@@ -46,18 +46,6 @@ const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
                 padding-bottom: ${theme.spacing(4)};
             }
         `}
-
-        [class*="MuiDataGrid-toolbarQuickFilter"] {
-            width: 120px;
-
-            ${theme.breakpoints.up("sm")} {
-                width: 150px;
-            }
-
-            ${theme.breakpoints.up("md")} {
-                width: "auto";
-            }
-        }
     `,
 );
 
