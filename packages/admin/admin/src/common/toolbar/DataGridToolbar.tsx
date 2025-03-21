@@ -47,13 +47,6 @@ const Root = createComponentSlot(Paper)<DataGridToolbarClassKey, OwnerState>({
             }
         `}
 
-        .CometAdminToolbarItem-root,
-        .CometAdminToolbarActions-root {
-            // Hide components that were required by the old usage of DataGridToolbar but would now break the styling.
-            // This is for usages of components that use ToolbarItem internally, such as ToolbarTitleItem or for existing projects where the usage was not updated.
-            display: contents;
-        }
-
         [class*="MuiDataGrid-toolbarQuickFilter"] {
             width: 120px;
 
