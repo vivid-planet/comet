@@ -25,7 +25,7 @@ interface NeighbouringLevel {
 type SearchDirection = "UPWARDS" | "DOWNWARDS";
 
 // interface that describes a position of a node within the tree
-export interface PageTreeNodePosition {
+interface PageTreeNodePosition {
     pos?: number;
     parent: string | null;
     level: number;

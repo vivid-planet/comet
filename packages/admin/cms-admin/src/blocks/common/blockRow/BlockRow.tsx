@@ -5,10 +5,10 @@ import { type ChangeEvent, type MouseEventHandler, type ReactNode, useRef, useSt
 import { type DropTargetMonitor, useDrag, useDrop, type XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 
+import InsertInBetweenAction from "../../../pages/pageTree/InsertInBetweenAction/InsertInBetweenAction";
+import { InsertInBetweenActionButton } from "../../../pages/pageTree/InsertInBetweenAction/InsertInBetweenActionButton";
 import { usePromise } from "../usePromise";
 import * as sc from "./BlockRow.sc";
-import InsertInBetweenAction from "./InsertInBetweenAction";
-import InsertInBetweenActionButton from "./InsertInBetweenActionButton";
 
 const ItemTypes = {
     BLOCK: "block",

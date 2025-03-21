@@ -5,9 +5,11 @@ import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { type DebouncedState } from "use-debounce";
 
+import { serializeInitialValues } from "../../form/serializeInitialValues";
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
 import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
+import { InsertInBetweenActionButton } from "./InsertInBetweenAction/InsertInBetweenActionButton";
 import { useButtonHoverStates } from "./InsertInBetweenAction/useButtonHoverStates";
 import PageActions from "./PageActions";
 import PageInfo from "./PageInfo";
@@ -245,19 +247,21 @@ const PageTreeRow = ({
                 <sc.AddContainer>
                     <InsertInBetweenAction
                         top={
-                            <InsertInBetweenAction.Button
-                                editDialogApi={editDialogApi}
-                                position={insertInBetweenTopPosition}
-                                onMouseOverButton={inBetweenButtonHandle.mouseOverTop}
-                                onMouseOutButton={inBetweenButtonHandle.mouseOutTop}
+                            <InsertInBetweenActionButton
+                                onClick={() => {
+                                    editDialogApi.openAddDialog(serializeInitialValues(insertInBetweenTopPosition));
+                                }}
+                                onMouseOver={inBetweenButtonHandle.mouseOverTop}
+                                onMouseOut={inBetweenButtonHandle.mouseOutTop}
                             />
                         }
                         bottom={
-                            <InsertInBetweenAction.Button
-                                editDialogApi={editDialogApi}
-                                position={insertInBetweenBottomPosition}
-                                onMouseOverButton={inBetweenButtonHandle.mouseOverBottom}
-                                onMouseOutButton={inBetweenButtonHandle.mouseOutBottom}
+                            <InsertInBetweenActionButton
+                                onClick={() => {
+                                    editDialogApi.openAddDialog(serializeInitialValues(insertInBetweenBottomPosition));
+                                }}
+                                onMouseOver={inBetweenButtonHandle.mouseOverBottom}
+                                onMouseOut={inBetweenButtonHandle.mouseOutBottom}
                             />
                         }
                     />
