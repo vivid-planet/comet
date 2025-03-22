@@ -287,23 +287,61 @@ export function generateFormField({
         }
         formFragmentField = `${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`;
     } else if (config.type == "staticSelect") {
-        const enumType = gqlIntrospection.__schema.types.find(
-            (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
-        ) as IntrospectionEnumType | undefined;
-        if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
-
-        const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
-            if (typeof value === "string") {
-                return {
-                    value,
-                    label: camelCaseToHumanReadable(value),
-                };
+        let valuesCode = "";
+        let selectPropsCode = "";
+        let renderAsRadio = false;
+        if (config.values && isGeneratorConfigImport(config.values)) {
+            //values is a import
+            imports.push(convertConfigImport(config.values));
+            renderAsRadio = config.inputType === "radio";
+            if (renderAsRadio) {
+                valuesCode = `${config.values.name}`;
             } else {
-                return value;
+                //defaulting to select (we can't count the values)
+                valuesCode = ``;
+                selectPropsCode = `options={${config.values.name}}`;
             }
-        });
+        } else {
+            //values defined inline (defaulting to enum values)
+            const enumType = gqlIntrospection.__schema.types.find(
+                (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+            ) as IntrospectionEnumType | undefined;
+            if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+            const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
+                if (typeof value === "string") {
+                    return {
+                        value,
+                        label: camelCaseToHumanReadable(value),
+                    };
+                } else {
+                    return value;
+                }
+            });
+            renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+            if (renderAsRadio) {
+                valuesCode = `[
+                    ${values
+                        .map((value) => {
+                            return `{
+                                  label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
+                                      value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                                  }" defaultMessage="${value.label}" />,
+                                  value: "${value.value}",
+                              }`;
+                        })
+                        .join(",")}
+              ]`;
+            } else {
+                valuesCode = values
+                    .map((value) => {
+                        const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                        const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
+                        return `<MenuItem value="${value.value}">${label}</MenuItem>`;
+                    })
+                    .join("\n");
+            }
+        }
 
-        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
         if (renderAsRadio) {
             code = `<RadioGroupField
              ${required ? "required" : ""}
@@ -311,18 +349,7 @@ export function generateFormField({
              fullWidth
              name="${nameWithPrefix}"
              label={${fieldLabel}}
-             options={[
-                  ${values
-                      .map((value) => {
-                          return `{
-                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
-                                    value.value.charAt(0).toLowerCase() + value.value.slice(1)
-                                }" defaultMessage="${value.label}" />,
-                                value: "${value.value}",
-                            }`;
-                      })
-                      .join(",")}
-            ]}/>`;
+             options={${valuesCode}}/>`;
         } else {
             code = `<Field
             ${required ? "required" : ""}
@@ -340,14 +367,8 @@ export function generateFormField({
             }
             ${validateCode}>
             {(props) =>
-                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
-                ${values
-                    .map((value) => {
-                        const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
-                        const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
-                        return `<MenuItem value="${value.value}">${label}</MenuItem>`;
-                    })
-                    .join("\n")}
+                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} ${selectPropsCode} {...props}>
+                    ${valuesCode}
                 </FinalFormSelect>
             }
         </Field>`;

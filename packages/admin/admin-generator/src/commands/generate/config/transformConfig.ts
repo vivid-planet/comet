@@ -10,6 +10,7 @@ const supportedImportPaths = [
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.block`),
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.component`),
+    ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.values`),
 ];
 const supportedInlineCodePaths = [
     // TODO implement in generator "[type=grid].columns.filterOperators",
