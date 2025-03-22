@@ -66,7 +66,13 @@ export type FormFieldConfig<T> = (
     | ({ type: "dateTime" } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
+          /**
+           * Values, defaults to enum values of gqlType. Import (in cometGen config) is supported.
+           */
           values?: Array<{ value: string; label: string } | string>;
+          /**
+           * Defaults to "select" for >5 values, else "radio". When values is imported (in cometGen config), defaults to "select".
+           */
           inputType?: "select" | "radio";
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
