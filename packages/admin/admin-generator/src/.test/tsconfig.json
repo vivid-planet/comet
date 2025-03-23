@@ -2,6 +2,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
+        "checkJs": true,
         "esModuleInterop": true,
         "inlineSources": true,
         "jsx": "react-jsx",
