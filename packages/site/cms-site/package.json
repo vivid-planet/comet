@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "8.0.0-beta.2",
+    "version": "8.0.0-beta.3",
     "repository": {
         "directory": "packages/site/cms-site",
         "type": "git",

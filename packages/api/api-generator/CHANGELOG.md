@@ -1,5 +1,11 @@
 # @comet/api-generator
 
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- @comet/cms-api@8.0.0-beta.3
+
 ## 8.0.0-beta.2
 
 ### Major Changes
