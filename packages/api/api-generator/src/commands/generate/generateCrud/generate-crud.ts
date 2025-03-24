@@ -75,7 +75,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.kind === "m:1" ||
                 prop.kind === "1:m" ||
                 prop.kind === "m:n" ||
-                prop.type === "EnumArrayType") &&
+                prop.type === "EnumArrayType" ||
+                prop.type === "uuid") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
     const hasFilterArg = crudFilterProps.length > 0;
@@ -177,7 +178,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, IdFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -262,6 +263,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @IsOptional()
                     @Type(() => ManyToManyFilter)
                     ${prop.name}?: ManyToManyFilter;
+                    `;
+                } else if (prop.type == "uuid") {
+                    return `@Field(() => IdFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => IdFilter)
+                    ${prop.name}?: IdFilter;
                     `;
                 } else {
                     //unsupported type TODO support more

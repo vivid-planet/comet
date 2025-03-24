@@ -86,10 +86,10 @@ describe("GenerateCrudEnumArray", () => {
             const cls = classes[1];
             const structure = cls.getStructure();
             expect(structure.name).toBe("TestEntityFilter");
-            expect(structure.properties?.length).toBe(3);
+            expect(structure.properties?.length).toBe(4);
 
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const prop = structure.properties![0];
+            const prop = structure.properties![1];
             expect(prop.name).toBe("foo");
             expect(prop.type).toBe("TestEnumEnumsFilter");
         }
