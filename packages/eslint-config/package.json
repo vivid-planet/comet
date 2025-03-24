@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "7.14.0",
+    "version": "7.16.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
-        "@comet/eslint-plugin": "workspace:^7.14.0",
+        "@comet/eslint-plugin": "workspace:^7.16.0",
         "@next/eslint-plugin-next": "^14.0.0",
         "@typescript-eslint/eslint-plugin": "^5.48.2",
         "@typescript-eslint/parser": "^5.48.2",

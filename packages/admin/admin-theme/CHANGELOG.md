@@ -1,5 +1,22 @@
 # @comet/admin-theme
 
+## 7.16.0
+
+### Patch Changes
+
+-   ec1cf3cf8: Adapt styling of `Button` variants to align with Comet DXP design
+    -   @comet/admin-icons@7.16.0
+
+## 7.15.0
+
+### Minor Changes
+
+-   7d8c36e6c: Improve the styling of the filter and columns panels of `DataGrid`
+
+### Patch Changes
+
+-   @comet/admin-icons@7.15.0
+
 ## 7.14.0
 
 ### Patch Changes
