@@ -1,5 +1,5 @@
 import { GridCellContent } from "@comet/admin";
-import { type GridConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { type GQLProduct } from "@src/graphql.generated";
 import { type ReactNode } from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
@@ -10,7 +10,7 @@ import { ProductTitle } from "./ProductTitle";
 
 const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
 
-export const ProductsGrid: GridConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "grid",
     gqlType: "Product",
     fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
@@ -137,4 +137,4 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             component: ProductsGridPreviewAction,
         },
     ],
-};
+});
