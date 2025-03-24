@@ -40,6 +40,7 @@ const warningsFragment = gql`
             targetId
             jsonPath
         }
+        scope
     }
 `;
 
@@ -83,6 +84,16 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const entityDependencyMap = useDependenciesConfig();
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
+    const { scope } = useContentScope();
+
+    const scopeColumns: GridColDef[] = Object.keys(scope).map((key) => ({
+        field: `scope_${key}`,
+        headerName: key,
+        type: "singleSelect",
+        renderCell: ({ row }) => row.scope && row.scope[key],
+        sortable: false, // TODO: Implement sorting for content scope
+        filterable: false, // TODO: Implement sorting for content scope
+    }));
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -137,6 +148,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                 }
             },
         },
+        ...scopeColumns,
         {
             field: "status",
             headerName: intl.formatMessage({ id: "warning.status", defaultMessage: "Status" }),

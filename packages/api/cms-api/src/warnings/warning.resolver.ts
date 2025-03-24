@@ -2,9 +2,11 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
@@ -25,9 +27,19 @@ export class WarningResolver {
     }
 
     @Query(() => PaginatedWarnings)
-    async warnings(@Args() { status, search, filter, sort, offset, limit }: WarningsArgs): Promise<PaginatedWarnings> {
+    async warnings(
+        @Args() { status, search, filter, sort, offset, limit }: WarningsArgs,
+        @GetCurrentUser() user: CurrentUser,
+    ): Promise<PaginatedWarnings> {
+        // TODO: Has to be implemented outside of generated folder
+        const scopes = user.permissions.find(({ permission }) => permission === "warnings")?.contentScopes;
+        if (!scopes) {
+            throw new Error("User does not have the necessary permissions to view warnings");
+        }
+
         const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
         where.status = { $in: status };
+        where.$or = [{ scope: { $in: scopes } }, { scope: { $eq: null } }];
 
         const options: FindOptions<Warning> = { offset, limit };
 

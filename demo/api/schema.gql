@@ -221,6 +221,7 @@ type Warning {
   severity: WarningSeverity!
   sourceInfo: WarningSourceInfo!
   status: WarningStatus!
+  scope: JSONObject
 }
 
 enum WarningSeverity {
