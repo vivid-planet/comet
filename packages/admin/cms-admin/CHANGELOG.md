@@ -1,5 +1,15 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- 8f58741: Remove unused field `allowedImageSizes` from DamConfig
+    - @comet/admin@8.0.0-beta.3
+    - @comet/admin-date-time@8.0.0-beta.3
+    - @comet/admin-icons@8.0.0-beta.3
+    - @comet/admin-rte@8.0.0-beta.3
+
 ## 8.0.0-beta.2
 
 ### Major Changes

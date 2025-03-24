@@ -1,5 +1,11 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.0.0-beta.3
+
 ## 8.0.0-beta.2
 
 ### Major Changes
