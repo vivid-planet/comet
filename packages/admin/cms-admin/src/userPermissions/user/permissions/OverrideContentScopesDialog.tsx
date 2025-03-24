@@ -2,7 +2,6 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, DataGridToolbar, Field, FinalForm, FinalFormSwitch, SaveButton, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
@@ -141,9 +140,6 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                     Toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}
                                                 pageSize={25}
-                                                isRowSelectable={(params) => {
-                                                    return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
-                                                }}
                                             />
                                         );
                                     }}
