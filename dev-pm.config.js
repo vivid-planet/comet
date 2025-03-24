@@ -62,7 +62,7 @@ module.exports = {
         },
         {
             name: "cms-admin-codegen-graphql-types",
-            script: "pnpm --filter @comet/cms-admin run generate-graphql-types:watch",
+            script: "pnpm --filter @comet/cms-admin run gql:watch",
             group: ["cms-admin", "cms"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons", "@comet/admin-rte"),
         },
