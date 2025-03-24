@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-User Permissions: remove isRowSelectable logic from overrideContentScopeDataGrid to enable the selection of all options again
+User Permissions: Allow permission-specific content scopes to override by-rule content scopes
