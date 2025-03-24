@@ -2,8 +2,8 @@ import { Readable } from "stream";
 
 export type StorageMetaData = {
     size: number;
-    etag?: string;
-    lastModified?: Date;
+    etag?: string; // TODO: currently unused, consider removing
+    lastModified?: Date; // TODO: currently unused, consider removing
     contentType: string;
 };
 

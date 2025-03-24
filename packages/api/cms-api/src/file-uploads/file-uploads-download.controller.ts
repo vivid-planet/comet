@@ -176,7 +176,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     });
                 }
             } else {
-                res.writeHead(200, { "content-type": cache.metaData.contentType });
+                res.writeHead(200, { "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
 
                 cache.file.pipe(res);
             }

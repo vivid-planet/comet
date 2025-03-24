@@ -244,7 +244,7 @@ export class ImagesController {
                 });
             }
         } else {
-            res.writeHead(200, { ...headers, "content-type": cache.metaData.contentType });
+            res.writeHead(200, { ...headers, "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
 
             cache.file.pipe(res);
         }
