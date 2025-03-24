@@ -96,15 +96,15 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             headerName: intl.formatMessage({ id: "warning.severity", defaultMessage: "Severity" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "critical", label: intl.formatMessage({ id: "warning.severity.critical", defaultMessage: "Critical" }) },
                 { value: "high", label: intl.formatMessage({ id: "warning.severity.high", defaultMessage: "High" }) },
+                { value: "medium", label: intl.formatMessage({ id: "warning.severity.medium", defaultMessage: "Medium" }) },
                 { value: "low", label: intl.formatMessage({ id: "warning.severity.low", defaultMessage: "Low" }) },
             ],
             width: 150,
             renderCell: (params) => {
                 const colorMapping: Record<GQLWarningSeverity, "error" | "warning" | "default"> = {
-                    critical: "error",
-                    high: "warning",
+                    high: "error",
+                    medium: "warning",
                     low: "default",
                 };
                 return (
