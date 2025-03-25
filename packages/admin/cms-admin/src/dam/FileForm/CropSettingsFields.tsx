@@ -1,6 +1,7 @@
-import { Field, FieldContainer, FormSection } from "@comet/admin";
+import { Button, Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
-import { Box, Button, FormControlLabel, Switch, Typography } from "@mui/material";
+import { AdminComponentSection } from "@comet/blocks-admin";
+import { FormControlLabel, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
@@ -35,33 +36,54 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
     return (
         <Container>
             <FormSection title={<FormattedMessage id="comet.dam.file.cropSettings.sectionTitle" defaultMessage="Crop/Focus settings" />}>
-                <FieldContainer>
-                    <FormControlLabel
-                        control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
-                        label={<FormattedMessage id="comet.dam.file.smartFocusPoint" defaultMessage="Smart focus point" />}
-                    />
-                    <Box mt={2} pl={2}>
-                        <Typography variant="body2" paragraph>
+                <FieldContainer
+                    fullWidth
+                    helperText={
+                        <>
                             <FormattedMessage
                                 id="comet.dam.file.croppingInfoText"
                                 defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
                             />
-                        </Typography>
-                        <Typography variant="body2">
+                            <br />
+                            <br />
                             <FormattedMessage
                                 id="comet.dam.file.focusPointInfoText"
                                 defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
                             />
-                        </Typography>
-                    </Box>
+                        </>
+                    }
+                >
+                    <AdminComponentSection
+                        title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
+                    >
+                        <FormControlLabel
+                            control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
+                            label={
+                                focalPoint === "SMART" ? (
+                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.yes" defaultMessage="Yes" />
+                                ) : (
+                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.no" defaultMessage="No" />
+                                )
+                            }
+                        />
+                    </AdminComponentSection>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
-                    <Field name="focalPoint">
+                    <Field
+                        name="focalPoint"
+                        fullWidth
+                        helperText={
+                            <FormattedMessage
+                                id="comet.blocks.image.hintSelectFocalPoint"
+                                defaultMessage="You can also select the focus point by clicking on the bullets in the image."
+                            />
+                        }
+                    >
                         {({ input: { value, onChange } }) => <ChooseFocalPoint focalPoint={value} onChangeFocalPoint={onChange} />}
                     </Field>
                 )}
                 {showResetCropAreaButton && (
-                    <Field name="crop">
+                    <Field name="crop" fullWidth>
                         {({ input: { value, onChange } }) => (
                             <Button
                                 startIcon={<Reset />}
@@ -74,7 +96,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                         y: 0,
                                     });
                                 }}
-                                color="info"
+                                variant="outlined"
                             >
                                 <FormattedMessage id="comet.dam.file.resetCropArea" defaultMessage="Reset crop area" />
                             </Button>

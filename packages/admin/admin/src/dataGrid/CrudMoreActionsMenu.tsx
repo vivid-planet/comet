@@ -1,6 +1,5 @@
 import { MoreVertical } from "@comet/admin-icons";
 import {
-    Button,
     Chip,
     ComponentsOverrides,
     css,
@@ -9,15 +8,17 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    MenuItemProps,
     MenuList,
     MenuListProps,
     Theme,
     Typography,
 } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
-import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
+import { ComponentProps, createContext, isValidElement, MouseEvent, PropsWithChildren, ReactElement, ReactNode, useContext, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
@@ -26,7 +27,6 @@ export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button
 export interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
     icon?: ReactNode;
-    divider?: boolean;
 }
 
 export interface CrudMoreActionsMenuProps
@@ -35,16 +35,16 @@ export interface CrudMoreActionsMenuProps
         menuItem: typeof MenuItem;
         button: typeof Button;
         group: typeof CrudMoreActionsGroup;
-        divider: typeof CrudMoreActionsDivider;
+        divider: typeof Divider;
         chip: typeof Chip;
     }> {
     selectionSize?: number;
-    overallActions?: Maybe<ActionItem>[];
-    selectiveActions?: Maybe<ActionItem>[];
+    overallActions?: Maybe<ActionItem | ReactElement>[];
+    selectiveActions?: Maybe<ActionItem | ReactElement>[];
 }
 
 interface CrudMoreActionsGroupProps {
-    groupTitle: ReactNode;
+    groupTitle?: ReactNode;
     menuListProps?: MenuListProps;
     typographyProps?: ComponentProps<typeof Typography>;
 }
@@ -52,9 +52,11 @@ interface CrudMoreActionsGroupProps {
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
     return (
         <>
-            <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
-                {groupTitle}
-            </Typography>
+            {groupTitle && (
+                <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+                    {groupTitle}
+                </Typography>
+            )}
             <MenuList {...menuListProps}>{children}</MenuList>
         </>
     );
@@ -63,12 +65,7 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
 const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "divider",
-})(
-    ({ theme }) => css`
-        margin: 8px 10px;
-        border-color: ${theme.palette.grey[50]};
-    `,
-);
+})();
 
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
@@ -79,7 +76,7 @@ const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMe
         height: 20px;
         flex-shrink: 0;
         border-radius: 20px;
-        margin-left: 1px;
+        margin-left: 6px;
     `,
 );
 
@@ -95,12 +92,28 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "menuItem",
-})(
-    css`
-        padding: 8px 15px 8px 30px !important;
-        column-gap: 10px;
-    `,
-);
+})();
+
+type CrudMoreActionsMenuContext = {
+    closeMenu: () => void;
+};
+
+export const CrudMoreActionsMenuContext = createContext<CrudMoreActionsMenuContext>({
+    closeMenu: () => {
+        throw new Error("`CrudMoreActionsMenuContext` cannot be used outside of `CrudMoreActionsMenu`");
+    },
+});
+
+export function CrudMoreActionsMenuItem({ onClick, ...props }: MenuItemProps) {
+    const { closeMenu } = useContext(CrudMoreActionsMenuContext);
+
+    const handleClick: typeof onClick = (event) => {
+        onClick?.(event);
+        closeMenu();
+    };
+
+    return <MoreActionsMenuItem onClick={handleClick} {...props} />;
+}
 
 export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const {
@@ -116,16 +129,17 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
 
     const handleClose = () => setAnchorEl(null);
+    const hasOverallActions = !!overallActions?.length;
+    const hasSelectiveActions = !!selectiveActions?.length;
 
     return (
-        <>
-            <MoreActionsButton variant="text" color="inherit" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
-                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More actions" />
+        <CrudMoreActionsMenuContext.Provider value={{ closeMenu: handleClose }}>
+            <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
+                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>
             <Menu
                 keepMounted={false}
-                PaperProps={{ sx: { minWidth: 220, borderRadius: "4px" } }}
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 {...menuProps}
@@ -134,30 +148,30 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     menuProps?.onClose?.(event, reason);
                 }}
             >
-                {!!overallActions?.length && (
+                {hasOverallActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />}
+                        groupTitle={
+                            hasSelectiveActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
                             if (!item) return null;
 
-                            const { divider, label, icon, onClick, ...rest } = item;
+                            if (isValidElement(item)) {
+                                return item;
+                            }
+
+                            const { divider, label, icon, ...rest } = item as ActionItem;
 
                             return (
                                 <div key={index}>
-                                    <MoreActionsMenuItem
-                                        key={index}
-                                        disabled={!!selectionSize}
-                                        {...rest}
-                                        onClick={(e) => {
-                                            onClick?.(e);
-                                            handleClose();
-                                        }}
-                                    >
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
+                                    <CrudMoreActionsMenuItem key={index} disabled={!!selectionSize} {...rest}>
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
-                                    </MoreActionsMenuItem>
+                                    </CrudMoreActionsMenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
                                 </div>
                             );
@@ -165,35 +179,35 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
+                {hasOverallActions && hasSelectiveActions && <CrudMoreActionsDivider {...dividerProps} />}
 
-                {!!selectiveActions?.length && (
+                {hasSelectiveActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
+                        groupTitle={
+                            hasOverallActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {
                             if (!item) return;
 
-                            const { divider, label, icon, onClick, ...rest } = item;
+                            if (isValidElement(item)) {
+                                return item;
+                            }
+
+                            const { divider, label, icon, ...rest } = item as ActionItem;
 
                             return (
                                 <div key={index}>
-                                    <MoreActionsMenuItem
-                                        key={index}
-                                        disabled={!selectionSize}
-                                        {...rest}
-                                        onClick={(e) => {
-                                            onClick?.(e);
-                                            handleClose();
-                                        }}
-                                    >
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
+                                    <CrudMoreActionsMenuItem key={index} disabled={!selectionSize} {...rest}>
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                         {!!selectionSize && (
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
                                         )}
-                                    </MoreActionsMenuItem>
+                                    </CrudMoreActionsMenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
                                 </div>
                             );
@@ -201,7 +215,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     </CrudMoreActionsGroup>
                 )}
             </Menu>
-        </>
+        </CrudMoreActionsMenuContext.Provider>
     );
 }
 

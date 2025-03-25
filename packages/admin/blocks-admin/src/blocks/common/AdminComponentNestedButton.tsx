@@ -1,5 +1,6 @@
+import { Button } from "@comet/admin";
 import { Edit, Warning } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { MouseEventHandler, ReactNode } from "react";
 
@@ -19,7 +20,7 @@ export const AdminComponentNestedButton = ({ displayName, preview, count, onClic
 
     return (
         <AdminComponentPaper disablePadding>
-            <Button onClick={onClick} fullWidth endIcon={<Edit />} color="info">
+            <Button onClick={onClick} fullWidth endIcon={<Edit />} variant="textDark">
                 <TextContainer>
                     <Typography variant="body1" align="left" noWrap>
                         {!isValid && <Warning color="error" />}

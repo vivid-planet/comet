@@ -1,14 +1,14 @@
 import { Field, FieldProps } from "@comet/admin";
 
 import { FinalFormFileUpload } from "./FinalFormFileUpload";
-import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
-type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment, HTMLInputElement> & {
+type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment, HTMLInputElement> & {
     multiple?: false;
     maxFiles?: 1;
 };
 
-type MultipleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment[], HTMLInputElement> & {
+type MultipleFileUploadProps = FieldProps<Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>, HTMLInputElement> & {
     multiple: true;
     maxFiles?: number;
 };
@@ -17,7 +17,11 @@ export type FileUploadFieldProps<Multiple extends boolean | undefined> = Multipl
 
 export const FileUploadField = <Multiple extends boolean | undefined>({ name, ...restProps }: FileUploadFieldProps<Multiple>) => {
     return (
-        <Field<Multiple extends true ? GQLFinalFormFileUploadFragment[] : GQLFinalFormFileUploadFragment>
+        <Field<
+            Multiple extends true
+                ? Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>
+                : GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment
+        >
             component={FinalFormFileUpload}
             name={name}
             {...restProps}

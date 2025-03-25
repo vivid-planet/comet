@@ -23,10 +23,10 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
 
     const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
         const label = values.find((value) => {
-            return value[scopePart] && value[scopePart].value === scope[scopePart];
+            return value[scopePart] && value[scopePart]?.value === scope[scopePart];
         })?.[scopePart].label;
 
-        return label ?? capitalizeString(scope[scopePart]);
+        return label ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
     };
 
     let content: ReactNode;
@@ -34,23 +34,15 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
         content = <FormattedMessage {...messages.globalContentScope} />;
     } else {
         const scopeParts = Object.keys(scope);
-        content = scopeParts.map((scopePart, index, array) => {
-            const isLastPart = index === array.length - 1;
-
-            const ret = [findLabelForScopePart(scopePart)];
-            if (!isLastPart) {
-                ret.push(" / ");
-            }
-
-            return ret;
-        });
+        const scopeLabels = scopeParts.map((scopePart) => findLabelForScopePart(scopePart)).filter((label) => typeof label === "string") as string[];
+        content = scopeLabels.join(" / ");
     }
 
     return (
         <Wrapper>
             <ScopeIndicator global={global}>
                 <DomainIcon />
-                {children ?? content}
+                <TextContainer>{children ?? content}</TextContainer>
             </ScopeIndicator>
             <Triangle fill={global ? theme.palette.primary.dark : theme.palette.grey.A100} />
         </Wrapper>
@@ -70,6 +62,7 @@ interface ScopeIndicatorProps {
 
 const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<ScopeIndicatorProps>`
     display: flex;
+    max-width: 150px;
     height: 24px;
     padding: 0 5px 0 12px;
     align-items: center;
@@ -83,6 +76,16 @@ const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "gl
     font-weight: ${({ global }) => (global ? 600 : 400)};
     line-height: 16px;
     text-transform: ${({ global }) => (global ? "uppercase" : "none")};
+
+    ${({ theme }) => theme.breakpoints.up("sm")} {
+        max-width: none;
+    }
+`;
+
+const TextContainer = styled("div")`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const DomainIcon = styled(Domain)`

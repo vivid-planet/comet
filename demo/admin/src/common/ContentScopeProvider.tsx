@@ -7,50 +7,38 @@ import {
     UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
-    useSitesConfig,
 } from "@comet/cms-admin";
-import { SitesConfig } from "@src/config";
+import { ContentScope } from "@src/site-configs";
 
-type Domain = "main" | "secondary" | string;
-type Language = "en" | string;
-export interface ContentScope {
-    domain: Domain;
-    language: Language;
-}
-
-// convenince wrapper for app (Bind Generic)
+// convenience wrapper for app (Bind Generic)
 export function useContentScope(): UseContentScopeApi<ContentScope> {
     return useContentScopeLibrary<ContentScope>();
 }
-
-// @TODO (maybe): make factory in library to statically create Provider
 
 export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }
 
-const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
-    const sitesConfig = useSitesConfig<SitesConfig>();
+export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
     const user = useCurrentUser();
 
-    const allowedUserDomains = user.allowedContentScopes.map((scope) => scope.domain);
+    // TODO in COMET: filter already in API, avoid type cast, support labels
+    const userContentScopes = user.allowedContentScopes.filter(
+        (value, index, self) => self.map((x) => JSON.stringify(x)).indexOf(JSON.stringify(value)) == index,
+    ) as ContentScope[];
 
-    const allowedSiteConfigs = Object.fromEntries(
-        Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
-    );
+    const values: ContentScopeValues<ContentScope> = userContentScopes.map((contentScope) => ({
+        domain: { value: contentScope.domain },
+        language: { value: contentScope.language, label: contentScope.language.toUpperCase() },
+    }));
 
-    const values: ContentScopeValues<ContentScope> = Object.keys(allowedSiteConfigs).flatMap((key) => {
-        return [
-            { domain: { value: key }, language: { label: "English", value: "en" } },
-            { domain: { value: key }, language: { label: "German", value: "de" } },
-        ];
-    });
+    if (user.allowedContentScopes.length === 0) {
+        throw new Error("User does not have access to any scopes.");
+    }
 
     return (
-        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={{ domain: Object.keys(allowedSiteConfigs)[0], language: "en" }}>
+        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={userContentScopes[0]}>
             {children}
         </ContentScopeProviderLibrary>
     );
 };
-
-export default ContentScopeProvider;

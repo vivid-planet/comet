@@ -1,9 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudMoreActionsMenu,
     DataGridToolbar,
     FileIcon,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     Loading,
@@ -11,7 +13,6 @@ import {
     RowActionsItem,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
@@ -19,14 +20,14 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
-import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
+import { Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import { useRef, useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 type Launch = {
@@ -52,32 +53,13 @@ interface GQLQuery {
     launchesPastResult: LaunchesPastResultData;
 }
 
-const exampleRows = [
-    { id: 1, lastName: "Snow", firstName: "Jon" },
-    { id: 2, lastName: "Lannister", firstName: "Cersei" },
-    { id: 3, lastName: "Lannister", firstName: "Jaime" },
-    { id: 4, lastName: "Stark", firstName: "Arya" },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys" },
-    { id: 6, lastName: "Melisandre", firstName: null },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara" },
-    { id: 8, lastName: "Frances", firstName: "Rossini" },
-    { id: 9, lastName: "Roxie", firstName: "Harvey" },
-];
-const exampleColumns: GridColDef[] = [
-    {
-        field: "firstName",
-        headerName: "First name",
-    },
-    {
-        field: "lastName",
-        headerName: "Last name",
-    },
-];
+export default {
+    title: "Docs/Components/DataGrid",
+    decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql")],
+};
 
-storiesOf("stories/components/DataGrid", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("useDataGridRemote", () => {
+export const UseDataGridRemote = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -125,8 +107,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
             </Box>
         );
-    })
-    .add("useDataGridRemoteInitialSort", () => {
+    },
+    name: "useDataGridRemote",
+};
+
+export const UseDataGridRemoteInitialSort = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -174,8 +160,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
             </Box>
         );
-    })
-    .add("useDataGridRemoteInitialFilter", () => {
+    },
+    name: "useDataGridRemoteInitialSort",
+};
+
+export const UseDataGridRemoteInitialFilter = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -226,8 +216,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
             </Box>
         );
-    })
-    .add("usePersistentColumnState", () => {
+    },
+    name: "useDataGridRemoteInitialFilter",
+};
+
+export const UsePersistentColumnState = {
+    render: () => {
         const dataGridProps = usePersistentColumnState("PersColStateStory");
 
         return (
@@ -235,8 +229,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={exampleRows} columns={exampleColumns} />
             </Box>
         );
-    })
-    .add("responsiveColumns", () => {
+    },
+    name: "usePersistentColumnState",
+};
+
+export const ResponsiveColumns = {
+    render: () => {
         const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
         const theme = useTheme();
 
@@ -268,12 +266,16 @@ storiesOf("stories/components/DataGrid", module)
         ];
 
         return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
-    })
-    .add("GridFilterButton", () => {
+    },
+    name: "Responsive columns",
+};
+
+export const _GridFilterButton = {
+    render: () => {
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
@@ -292,8 +294,12 @@ storiesOf("stories/components/DataGrid", module)
                 />
             </Box>
         );
-    })
-    .add("CrudContextMenu", () => {
+    },
+    name: "GridFilterButton",
+};
+
+export const _CrudContextMenu = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "firstName",
@@ -318,20 +324,20 @@ storiesOf("stories/components/DataGrid", module)
                             url={`http://example.com/people/${params.row.id}`}
                             onPaste={async ({ input, client }) => {
                                 /*
-                                    await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
-                                        mutation: createPeopleMutation,
-                                        variables: { input },
-                                    });
-                                    */
+                                        await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
+                                            mutation: createPeopleMutation,
+                                            variables: { input },
+                                        });
+                                        */
                                 alert(`insert ${JSON.stringify(input)}`);
                             }}
                             onDelete={async ({ client }) => {
                                 /*
-                                    await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
-                                        mutation: deletePeopleMutation,
-                                        variables: { id: params.row.id },
-                                    });
-                                    */
+                                        await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
+                                            mutation: deletePeopleMutation,
+                                            variables: { id: params.row.id },
+                                        });
+                                        */
                                 alert(`delete id ${params.row.id}`);
                             }}
                             refetchQueries={[]}
@@ -359,8 +365,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid rows={exampleRows} columns={columns} />
             </Box>
         );
-    })
-    .add("useDataGridExcelExport", () => {
+    },
+    name: "CrudContextMenu",
+};
+
+export const UseDataGridExcelExport = {
+    render: () => {
         const dataGridProps = useDataGridRemote();
 
         const variables = {
@@ -382,8 +392,8 @@ storiesOf("stories/components/DataGrid", module)
             },
         ];
 
-        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
-        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+        const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
+        const moreMenuRef = useRef<HTMLButtonElement>(null);
 
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
@@ -418,10 +428,10 @@ storiesOf("stories/components/DataGrid", module)
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
+                            <Button variant="textDark" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />}>
                                 More Actions
                             </Button>
                             <Menu
@@ -469,50 +479,22 @@ storiesOf("stories/components/DataGrid", module)
                 />
             </Box>
         );
-    })
-    .add("CrudMoreActionsMenu", () => {
-        return (
-            <Box sx={{ height: 300, width: "100%" }}>
-                <h2>Without selection:</h2>
-                <DataGridToolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={0}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
-                </DataGridToolbar>
+    },
+    name: "useDataGridExcelExport",
+};
 
-                <h2>With selection:</h2>
+export const _CrudMoreActionsMenu = {
+    render: () => {
+        const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+        const dataGridProps = useDataGridRemote();
+
+        function DemoToolBar() {
+            return (
                 <DataGridToolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <CrudMoreActionsMenu
-                            selectionSize={2}
+                            selectionSize={selectionModel.length}
                             overallActions={[
                                 {
                                     label: "Export to excel",
@@ -540,6 +522,27 @@ storiesOf("stories/components/DataGrid", module)
                         />
                     </ToolbarItem>
                 </DataGridToolbar>
+            );
+        }
+
+        return (
+            <Box height={600}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={exampleRows}
+                    columns={exampleColumns}
+                    checkboxSelection
+                    disableSelectionOnClick
+                    onSelectionModelChange={(newSelectionModel) => {
+                        setSelectionModel(newSelectionModel);
+                    }}
+                    selectionModel={selectionModel}
+                    components={{
+                        Toolbar: DemoToolBar,
+                    }}
+                />
             </Box>
         );
-    });
+    },
+    name: "CrudMoreActionsMenu",
+};

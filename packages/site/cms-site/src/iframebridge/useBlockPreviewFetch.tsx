@@ -1,25 +1,41 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
-import { createFetchWithPreviewHeaders, createGraphQLFetch } from "../graphQLFetch/graphQLFetch";
+import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch, GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);
 
-export function useBlockPreviewFetch(graphqlApiUrl: string) {
-    const iFrameBridge = useIFrameBridge();
+type Fetch = typeof fetch;
 
-    const graphQLFetchRef = useRef(
-        createGraphQLFetch(createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !iFrameBridge.showOnlyVisible }), graphqlApiUrl),
+/**
+ * @deprecated Use useBlockPreviewFetch() without argument instead
+ * @param apiUrl the API URL
+ */
+export function useBlockPreviewFetch(apiUrl: string): { fetch: Fetch; graphQLFetch: GraphQLFetch };
+export function useBlockPreviewFetch(apiUrl?: string | undefined): { fetch: Fetch; graphQLFetch?: GraphQLFetch };
+export function useBlockPreviewFetch(apiUrl?: string | undefined) {
+    const { showOnlyVisible, graphQLApiUrl } = useIFrameBridge();
+    const [graphQLFetch, setGraphQLFetch] = useState<GraphQLFetch | undefined>(() =>
+        apiUrl ? createBlockPreviewFetch(apiUrl, !showOnlyVisible) : undefined,
     );
+
     useEffect(() => {
-        graphQLFetchRef.current = createGraphQLFetch(
-            createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !iFrameBridge.showOnlyVisible }),
-            graphqlApiUrl,
-        );
-    }, [iFrameBridge.showOnlyVisible, graphqlApiUrl]);
+        if (graphQLApiUrl) {
+            // We need to use an updater function here because createBlockPreviewFetch's return value would otherwise be incorrectly treated as an updater function.
+            setGraphQLFetch(() => createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible));
+        }
+    }, [showOnlyVisible, graphQLApiUrl]);
+
     return {
-        graphQLFetch: graphQLFetchRef.current,
+        graphQLFetch,
         fetch: cachingFetch,
     };
+}
+
+function createBlockPreviewFetch(graphqlApiUrl: string, includeInvisible: boolean) {
+    return createGraphQLFetch(
+        createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }), credentials: "include" }),
+        graphqlApiUrl,
+    );
 }

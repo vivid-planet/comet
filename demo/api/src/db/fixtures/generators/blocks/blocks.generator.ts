@@ -1,10 +1,10 @@
 import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { FileInterface } from "@comet/cms-api";
 import { Config } from "@src/config/config";
-import { PageContentBlock } from "@src/pages/blocks/page-content.block";
+import { generateImageBlock } from "@src/db/fixtures/generators/blocks/image.generator";
+import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import faker from "faker";
 
-import { generateImageBlock } from "./image.generator";
 import { generateRichtextBlock } from "./richtext.generator";
 import { generateSpaceBlock } from "./space.generator";
 import { generateTextImageBlock } from "./text-image.generator";

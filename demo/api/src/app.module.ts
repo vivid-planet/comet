@@ -25,8 +25,8 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
-import { LinksModule } from "@src/links/links.module";
-import { PagesModule } from "@src/pages/pages.module";
+import { LinksModule } from "@src/documents/links/links.module";
+import { PagesModule } from "@src/documents/pages/pages.module";
 import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
@@ -36,10 +36,11 @@ import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
+import { Link } from "./documents/links/entities/link.entity";
+import { Page } from "./documents/pages/entities/page.entity";
 import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
-import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { NewsModule } from "./news/news.module";
@@ -47,7 +48,6 @@ import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
-import { Page } from "./pages/entities/page.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 
@@ -82,6 +82,7 @@ export class AppModule {
                             credentials: true,
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
+                        useGlobalPrefix: true,
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
@@ -93,12 +94,12 @@ export class AppModule {
                 authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                            { domain: "secondary", language: "de" },
-                        ],
+                        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+                            siteConfig.scope.languages.map((language) => ({
+                                domain: siteConfig.scope.domain,
+                                language,
+                            })),
+                        ),
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],

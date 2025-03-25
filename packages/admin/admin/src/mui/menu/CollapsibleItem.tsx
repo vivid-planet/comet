@@ -78,6 +78,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
             // child is selected
             if (checkIfPathInLocation(child)) {
                 hasSelectedChild.current = true;
+                setIsSubmenuOpen(true);
             }
 
             // sub child is selected
@@ -85,6 +86,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
                 "children" in child.props ? Children.map(child?.props?.children, (child: MenuChild) => child) : ([] as MenuChild[]);
             if (subChildElements?.some((child: MenuChild) => child.props && checkIfPathInLocation(child))) {
                 hasSelectedChild.current = true;
+                setIsSubmenuOpen(true);
             }
 
             const newItemLevel = itemLevel + 1;

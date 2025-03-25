@@ -1,5 +1,6 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
@@ -16,6 +17,7 @@ export class UserContentScopesResolver {
     constructor(
         @InjectRepository(UserContentScopes) private readonly repository: EntityRepository<UserContentScopes>,
         private readonly userService: UserPermissionsService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Mutation(() => Boolean)
@@ -31,7 +33,7 @@ export class UserContentScopesResolver {
         } else {
             entity = this.repository.create({ userId, contentScopes });
         }
-        await this.repository.persistAndFlush(entity);
+        await this.entityManager.persistAndFlush(entity);
         return true;
     }
 

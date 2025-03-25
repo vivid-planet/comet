@@ -27,6 +27,9 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
             "&:hover": {
                 backgroundColor: "transparent",
             },
+            "& .MuiSvgIcon-root": {
+                fontSize: "12px",
+            },
         },
     }),
 });

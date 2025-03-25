@@ -1,6 +1,5 @@
-import { messages } from "@comet/admin";
+import { Button, messages } from "@comet/admin";
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -96,7 +95,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
                 </Table>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="primary" onClick={onClose}>
+                <Button onClick={onClose}>
                     <FormattedMessage {...messages.ok} />
                 </Button>
             </DialogActions>

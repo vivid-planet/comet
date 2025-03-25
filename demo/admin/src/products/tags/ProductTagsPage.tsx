@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     MainContent,
     SaveBoundary,
     SaveBoundarySaveButton,
@@ -9,7 +10,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
@@ -35,7 +35,7 @@ const ProductTagsPage = () => {
                             <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                                 <ToolbarBackButton />
                                 <ToolbarAutomaticTitleItem />
-                                <ToolbarFillSpace />
+                                <FillSpace />
                                 <ToolbarActions>
                                     <SaveBoundarySaveButton />
                                 </ToolbarActions>
@@ -49,7 +49,7 @@ const ProductTagsPage = () => {
                         <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                             <ToolbarBackButton />
                             <ToolbarAutomaticTitleItem />
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 <SaveBoundarySaveButton />
                             </ToolbarActions>

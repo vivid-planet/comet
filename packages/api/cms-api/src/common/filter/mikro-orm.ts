@@ -172,7 +172,7 @@ export function filterToMikroOrmQuery(
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
-        if (filterProperty.equal !== undefined) {
+        if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
         if (filterProperty.isAnyOf !== undefined) {

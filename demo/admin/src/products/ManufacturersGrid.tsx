@@ -1,15 +1,15 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -17,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
@@ -39,9 +39,9 @@ function ManufacturersGridToolbar() {
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>
@@ -119,7 +119,7 @@ export function ManufacturersGrid() {
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.zip,
         },
         {
-            field: "action",
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
@@ -128,8 +128,8 @@ export function ManufacturersGrid() {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
@@ -175,19 +175,17 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ManufacturersGridToolbar,
+            }}
+        />
     );
 }
 

@@ -1,14 +1,15 @@
 import {
+    FillSpace,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
@@ -19,7 +20,7 @@ const FormToolbar = () => (
     <StackToolbar>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
-        <ToolbarFillSpace />
+        <FillSpace />
         <ToolbarActions>
             <SaveBoundarySaveButton />
         </ToolbarActions>
@@ -33,20 +34,26 @@ export function ManufacturersPage() {
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <ManufacturersGrid />
+                    <StackMainContent fullHeight>
+                        <ManufacturersGrid />
+                    </StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editManufacturers", defaultMessage: "Edit Manufacturers" })}>
                     {(selectedId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <ManufacturerForm id={selectedId} />
+                            <StackMainContent>
+                                <ManufacturerForm id={selectedId} />
+                            </StackMainContent>
                         </SaveBoundary>
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addManufacturers", defaultMessage: "Add Manufacturers" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ManufacturerForm />
+                        <StackMainContent>
+                            <ManufacturerForm />
+                        </StackMainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>

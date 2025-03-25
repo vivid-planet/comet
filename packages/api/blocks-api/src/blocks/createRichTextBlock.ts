@@ -71,6 +71,10 @@ export function createRichTextBlock<LinkBlock extends Block>(
     { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
     nameOrOptions: BlockFactoryNameOrOptions = "RichText",
 ): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
+    if (!LinkBlock) {
+        throw new Error("Provided 'link' is undefined. This is most likely due to a circular import");
+    }
+
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 

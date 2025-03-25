@@ -9,12 +9,13 @@ export { OneOfBlock } from "./blocks/factories/OneOfBlock";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
+export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
+export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export type { PropsWithData } from "./blocks/PropsWithData";
-export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
@@ -25,7 +26,14 @@ export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
 export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
 export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
-export { createFetchWithDefaults, createFetchWithPreviewHeaders, createGraphQLFetch, gql, GraphQLFetch } from "./graphQLFetch/graphQLFetch";
+export {
+    convertPreviewDataToHeaders,
+    createFetchWithDefaults,
+    createFetchWithPreviewHeaders,
+    createGraphQLFetch,
+    gql,
+    GraphQLFetch,
+} from "./graphQLFetch/graphQLFetch";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";

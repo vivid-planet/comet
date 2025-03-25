@@ -1,8 +1,8 @@
 import { SitePreviewParams } from "@comet/cms-site";
 import { domain } from "@src/config";
+import PageTypePage, { loader as pageTypePageLoader } from "@src/documents/pages/Page";
 import { GQLPage, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
-import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";

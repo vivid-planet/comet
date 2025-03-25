@@ -17,6 +17,10 @@ export interface CurrentUserInterface {
     name: string;
     email: string;
     permissions: GQLCurrentUserPermission[];
+    authenticatedUser: {
+        name: string;
+        email: string;
+    } | null;
     allowedContentScopes: ContentScopeInterface[];
     impersonated: boolean;
 }
@@ -28,6 +32,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                 id
                 name
                 email
+                authenticatedUser {
+                    name
+                    email
+                }
                 permissions {
                     permission
                     contentScopes
@@ -47,6 +55,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
         currentUser: {
             ...data.currentUser,
             impersonated: !!data.currentUser.impersonated,
+            authenticatedUser: data.currentUser.authenticatedUser,
             allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
         },
         isAllowed:

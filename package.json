@@ -7,12 +7,13 @@
     },
     "license": "BSD-2-Clause",
     "scripts": {
-        "create-site-configs-env": "npx @comet/cli inject-site-configs -i .env.site-configs.tpl -o .env.site-configs -d",
+        "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
         "build:storybook": "pnpm recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm recursive --filter '@comet/*' run build",
         "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
         "clean": "pnpm recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
+        "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
         "dev:admin": "dev-pm start @comet-admin",
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",
@@ -32,18 +33,25 @@
         "docs": "dev-pm start docs",
         "test": "pnpm recursive run test",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
-        "publish": "pnpm run build:packages && $npm_execpath changeset publish"
+        "publish": "pnpm run build:packages && $npm_execpath changeset publish",
+        "browser:demo": "run-p browser:demo:api browser:demo:admin browser:demo:site browser:demo:jaeger",
+        "browser:demo:api": "dotenv -- sh -c 'open-cli $API_URL/graphql'",
+        "browser:demo:admin": "dotenv -- sh -c 'open-cli $ADMIN_URL'",
+        "browser:demo:site": "dotenv -- sh -c 'open-cli $SITE_URL'",
+        "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^6.0.0",
-        "@types/node": "^18.0.0",
+        "@types/node": "^22.0.0",
         "cspell": "^8.15.4",
         "dotenv-cli": "^7.0.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",
+        "open-cli": "^8.0.0",
+        "npm-run-all2": "^7.0.2",
         "prettier": "^2.0.0",
         "rimraf": "^3.0.2",
         "typescript": "^4.2.2",
@@ -51,7 +59,7 @@
     },
     "packageManager": "pnpm@8.15.5",
     "engines": {
-        "node": "18",
+        "node": "22",
         "pnpm": "8"
     },
     "dependencies": {
@@ -77,6 +85,11 @@
             "react-intl": {
                 "peerDependencies": {
                     "@types/react": "*"
+                }
+            },
+            "swiper": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
                 }
             }
         }

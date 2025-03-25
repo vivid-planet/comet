@@ -1,3 +1,5 @@
+import { camelCase } from "change-case";
+
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { getFormattedMessageNode } from "../utils/intl";
 
@@ -10,6 +12,8 @@ type Options = {
     allowAdding: boolean;
     instanceGqlType: string;
     gqlType: string;
+    newEntryText: string | undefined;
+    fragmentName: string;
 };
 
 export const generateGridToolbar = ({
@@ -21,24 +25,24 @@ export const generateGridToolbar = ({
     allowAdding,
     instanceGqlType,
     gqlType,
+    newEntryText,
+    fragmentName,
 }: Options) => {
-    const showMoreActionsMenu = excelExport;
-
     return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
-                <ToolbarFillSpace />
-                ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
-              ${
-                  allowAdding
-                      ? renderToolbarActions(
-                            forwardToolbarAction,
-                            getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
-                        )
-                      : ""
-              }
+                <FillSpace />
+                ${renderToolbarActions({
+                    forwardToolbarAction,
+                    addItemText: getFormattedMessageNode(
+                        `${instanceGqlType}.${camelCase(fragmentName)}.newEntry`,
+                        newEntryText ?? `New ${camelCaseToHumanReadable(gqlType)}`,
+                    ),
+                    excelExport,
+                    allowAdding,
+                })}
             </DataGridToolbar>
         );
     }`.replace(/^\s+\n/gm, "");
@@ -83,31 +87,48 @@ const filterItem = `<ToolbarItem>
     <GridFilterButton />
 </ToolbarItem>`;
 
-const renderMoreActionsMenu = (excelExport: boolean | undefined) => {
-    return `<CrudMoreActionsMenu
+type RenderToolbarActionsOptions = {
+    forwardToolbarAction: boolean | undefined;
+    addItemText: string;
+    excelExport: boolean | undefined;
+    allowAdding: boolean | undefined;
+};
+
+const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, allowAdding }: RenderToolbarActionsOptions) => {
+    const showMoreActionsMenu = excelExport;
+
+    if (!showMoreActionsMenu && !allowAdding) {
+        return "";
+    }
+
+    const moreActionsMenu = `<CrudMoreActionsMenu
+        slotProps={{
+            button: {
+                responsive: true
+            }
+        }}
         overallActions={[
             ${
                 excelExport
                     ? `{
-                label: <FormattedMessage {...messages.downloadAsExcel} />,
-                icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                onClick: () => exportApi.exportGrid(),
-                disabled: exportApi.loading,
-            }`
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    }`
                     : ""
             }
         ]}
     />`;
-};
 
-const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
-    if (forwardToolbarAction) {
-        return `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`;
-    }
+    const defaultAddItemButton = `<Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+        ${addItemText}
+    </Button>`;
+
+    const addAction = forwardToolbarAction ? "{toolbarAction}" : defaultAddItemButton;
 
     return `<ToolbarActions>
-        <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-            ${addItemText}
-        </Button>
+        ${showMoreActionsMenu ? moreActionsMenu : ""}
+        ${allowAdding ? addAction : ""}
     </ToolbarActions>`;
 };

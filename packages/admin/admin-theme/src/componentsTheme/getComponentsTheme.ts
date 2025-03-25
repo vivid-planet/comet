@@ -13,7 +13,9 @@ import { getMuiAutocomplete } from "./MuiAutocomplete";
 import { getMuiBadge } from "./MuiBadge";
 import { getMuiButton } from "./MuiButton";
 import { getMuiButtonGroup } from "./MuiButtonGroup";
+import { getMuiCard } from "./MuiCard";
 import { getMuiCardContent } from "./MuiCardContent";
+import { getMuiCardHeader } from "./MuiCardHeader";
 import { getMuiCheckbox } from "./MuiCheckbox";
 import { getMuiChip } from "./MuiChip";
 import { getMuiDataGrid } from "./MuiDataGrid";
@@ -33,6 +35,9 @@ import { getMuiInputBase } from "./MuiInputBase";
 import { getMuiLinearProgress } from "./MuiLinearProgress";
 import { getMuiLink } from "./MuiLink";
 import { getMuiListItem } from "./MuiListItem";
+import { getMuiListItemAvatar } from "./MuiListItemAvatar";
+import { getMuiListItemIcon } from "./MuiListItemIcon";
+import { getMuiMenu } from "./MuiMenu";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
 import { getMuiPaper } from "./MuiPaper";
 import { getMuiPopover } from "./MuiPopover";
@@ -74,7 +79,9 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiBadge: getMuiBadge(components.MuiBadge, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
     MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
+    MuiCard: getMuiCard(components.MuiCard, themeData),
     MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),
+    MuiCardHeader: getMuiCardHeader(components.MuiCardHeader, themeData),
     MuiCheckbox: getMuiCheckbox(components.MuiCheckbox, themeData),
     MuiChip: getMuiChip(components.MuiChip, themeData),
     MuiDataGrid: getMuiDataGrid(components.MuiDataGrid, themeData),
@@ -94,6 +101,9 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiLinearProgress: getMuiLinearProgress(components.MuiLinearProgress, themeData),
     MuiLink: getMuiLink(components.MuiLink, themeData),
     MuiListItem: getMuiListItem(components.MuiListItem, themeData),
+    MuiListItemIcon: getMuiListItemIcon(components.MuiListItemIcon, themeData),
+    MuiListItemAvatar: getMuiListItemAvatar(components.MuiListItemAvatar, themeData),
+    MuiMenu: getMuiMenu(components.MuiMenu, themeData),
     MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, themeData),
     MuiPaper: getMuiPaper(components.MuiPaper, themeData),
     MuiPopover: getMuiPopover(components.MuiPopover, themeData),

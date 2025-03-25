@@ -1,22 +1,28 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    StackSwitchApiContext,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Chip, Typography } from "@mui/material";
+import { Edit, ImpersonateUser } from "@comet/admin-icons";
+import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
+import { useCurrentUser } from "./hooks/currentUser";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
+import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 type Props = {
     toolbarAction?: React.ReactNode;
@@ -28,6 +34,9 @@ type Props = {
 export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
+    const stackApi = useContext(StackSwitchApiContext);
+    const currentUser = useCurrentUser();
+    const isImpersonated = currentUser.impersonated;
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -131,17 +140,53 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             type: "actions",
             align: "right",
             pinned: "right",
-            width: actionsColumnWidth,
             disableExport: true,
             renderCell: (params) => {
-                return <> {rowAction && rowAction(params)}</>;
+                const isCurrentUser = params.row.id === currentUser.id;
+                return (
+                    <>
+                        <Tooltip
+                            title={
+                                isCurrentUser ? (
+                                    <FormattedMessage
+                                        id="comet.userPermissions.cannotImpersonateYourself"
+                                        defaultMessage="You can't impersonate yourself"
+                                    />
+                                ) : (
+                                    commonImpersonationMessages.impersonate
+                                )
+                            }
+                        >
+                            {/* span is needed for the tooltip to trigger even if the button is disabled*/}
+                            <span>
+                                <IconButton
+                                    disabled={isCurrentUser && !isImpersonated}
+                                    onClick={() => {
+                                        !isCurrentUser && startImpersonation(params.row.id.toString());
+                                        isCurrentUser && isImpersonated && stopImpersonation();
+                                    }}
+                                >
+                                    <ImpersonateUser />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <IconButton
+                            onClick={() => {
+                                stackApi.activatePage("edit", params.id.toString());
+                            }}
+                            color="primary"
+                        >
+                            <Edit />
+                        </IconButton>
+                    </>
+                );
             },
         },
     ];
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String) {
+            query UserGrid($offset: Int, $limit: Int, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
                 users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
                     nodes {
                         ...UserForGrid
@@ -151,7 +196,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 availablePermissions: userPermissionsAvailablePermissions
                 availableContentScopes: userPermissionsAvailableContentScopes
             }
-            fragment UserForGrid on User {
+            fragment UserForGrid on UserPermissionsUser {
                 id
                 name
                 email
@@ -187,7 +232,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                         <ToolbarItem>
                             <GridFilterButton />
                         </ToolbarItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
                     </DataGridToolbar>
                 ),

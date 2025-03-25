@@ -29,6 +29,7 @@ export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";
 export { MarkedMatches } from "./common/MarkedMatches";
+export { findTextMatches } from "./common/MarkedMatches";
 export type { MasterMenuData, MasterMenuProps } from "./common/MasterMenu";
 export { MasterMenu, useMenuFromMasterMenuData } from "./common/MasterMenu";
 export type { MasterMenuRoutesProps } from "./common/MasterMenuRoutes";
@@ -53,8 +54,10 @@ export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
+export { useDamScope } from "./dam/config/useDamScope";
 export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
+export type { FileWithDamUploadMetadata } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { useDamFileUpload } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { createDamFileDependency } from "./dam/dependencies/createDamFileDependency";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
@@ -69,13 +72,19 @@ export { createDocumentDependencyMethods } from "./dependencies/createDocumentDe
 export { DependenciesConfigProvider, useDependenciesConfig } from "./dependencies/DependenciesConfig";
 export { DependencyList } from "./dependencies/DependencyList";
 export { DependencyInterface } from "./dependencies/types";
+export { ContentGenerationConfig, ContentGenerationConfigProvider, useContentGenerationConfig } from "./documents/ContentGenerationConfigContext";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FileUploadField, FileUploadFieldProps } from "./form/file/FileUploadField";
-export { FinalFormFileUpload, finalFormFileUploadFragment, FinalFormFileUploadProps } from "./form/file/FinalFormFileUpload";
-export { GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
+export {
+    FinalFormFileUpload,
+    finalFormFileUploadDownloadableFragment,
+    finalFormFileUploadFragment,
+    FinalFormFileUploadProps,
+} from "./form/file/FinalFormFileUpload";
+export { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
 export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
@@ -120,6 +129,7 @@ export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/
 export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
 export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports

@@ -92,6 +92,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
         },
         sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
+        siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
     };
 }
 

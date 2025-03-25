@@ -77,8 +77,18 @@ export const FileExtensionTypeMismatchError = ({ extension, mimetype }: FileExte
 
 export const SvgContainsJavaScriptError = () => (
     <FormattedMessage
-        id="comet.file.errors.svgContainsJavaScript"
-        defaultMessage="<strong>The SVG contains JavaScript.</strong> JavaScript is not allowed inside SVG files. Please remove all JavaScript code from the file."
+        id="comet.file.errors.svgContainsForbiddenContent"
+        defaultMessage="<strong>The SVG contains forbidden content.</strong> The SVG must not contain JavaScript or security-relevant tags or attributes."
+        values={{
+            strong: formatStrong,
+        }}
+    />
+);
+
+export const FilenameTooLongError = () => (
+    <FormattedMessage
+        id="comet.file.errors.filenameTooLong"
+        defaultMessage="<strong>Filename is too long.</strong> The filename can't exceed 255 characters."
         values={{
             strong: formatStrong,
         }}

@@ -1,5 +1,243 @@
 # @comet/cms-api
 
+## 7.16.0
+
+### Minor Changes
+
+-   4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+-   a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+-   @comet/blocks-api@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   83b8111d6: Allow `use` tag in SVG again
+
+    `use` can be used to define paths once in a SVG and then integrating them multiple times via anchor links: `<use xlink:href="#path-id" />`. This should not be prohibited.
+
+    It's still not possible to use `use` to reference external files, since we still prohibit `href` and `xlink:href` attributes starting with `http://`, `https://` and `javascript:`.
+
+-   e6f9641db: Add fallback values for users created via ID token
+    -   @comet/blocks-api@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   99ff0357b: Pass available permissions to `AccessControlService.getPermissionsForUser`
+-   a84d88cf9: Ignore filters in `@AffectedEntity` check
+
+    When using the `@AffectedEntity` decorator we possibly also want to check entities which are filtered by default. Since we don't know how the entity is handled in the resolver we ignore the filters completely.
+
+-   3c47c089e: Allow passing a language to `generateAltText` and `generateImageTitle`
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+### Patch Changes
+
+-   0233d486b: Export `FileUploadInput`
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+-   Updated dependencies [7e7a4aae1]
+    -   @comet/blocks-api@7.14.0
+
+## 7.13.0
+
+### Patch Changes
+
+-   f49370a9e: Improve SVG validation
+
+    Following tags are banned in SVGs:
+
+    -   script
+    -   \[new\] foreignObject
+    -   \[new\] use
+    -   \[new\] image
+    -   \[new\] animate
+    -   \[new\] animateMotion
+    -   \[new\] animateTransform
+    -   \[new\] set
+
+    Following attributes are banned:
+
+    -   Event handlers (`onload`, `onclick`, ...)
+    -   \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
+    -   @comet/blocks-api@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+-   575f1a77f: Add `ExceptionFilter` to replace `ExceptionInterceptor`
+
+    The main motivation for this change was that the `ExceptionInterceptor` didn't capture exceptions thrown in guards. This could lead to information leaks, e.g., details about the database schema or the underlying code. This is considered a security risk.
+
+    The `ExceptionFilter` also catches error within guards. The error format remains unchanged.
+
+    Switching from the `ExceptionInterceptor` to the `ExceptionFilter` must be done in the project:
+
+    ```diff
+    // main.ts
+
+    - app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
+    + app.useGlobalFilters(new ExceptionFilter(config.debug));
+    ```
+
+### Patch Changes
+
+-   64173b513: Fix page tree node slug validation to prevent URL encoded characters
+-   c66a403d2: Migrate from deprecated `@azure/openai` package to `openai`
+
+    See https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/migration-javascript for more information.
+
+-   6b4866a12: Pass `x-preview-dam-urls` and `x-relative-dam-urls` headers to `url` field resolver in `FileImagesResolver`
+-   cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    -   `video/avi` doesn't actually exist
+    -   `image/psd` doesn't exist / is non-standard
+    -   `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+        instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+-   cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+-   ff0a037a4: Prevent image uploads from failing if exif data cannot be parsed
+    -   @comet/blocks-api@7.12.0
+
+## 7.11.0
+
+### Patch Changes
+
+-   fb2297b2d: Fix `notEqual` operation for enum filter
+-   6778c4e97: Prevent the creation of a second home page
+-   Updated dependencies [58a99bbdd]
+    -   @comet/blocks-api@7.11.0
+
+## 7.10.0
+
+### Patch Changes
+
+-   7b2adae8b: API Generator: Don't generate an update input for the single generator
+    -   @comet/blocks-api@7.10.0
+
+## 7.9.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   45fbc54c1: Rename `User` to `UserPermissionsUser` in GraphQL schema
+
+    This prevents naming collisions if a web wants to use a `User` type.
+
+    Additionally prefix remaining user permissions-specific actions with `UserPermissions`.
+
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   02a5bdc68: API Generator: Fix generated types for position code
+-   f20ec6ce5: Make class-validator a peer dependency
+-   Updated dependencies [f20ec6ce5]
+    -   @comet/blocks-api@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   af892c106: Prevent the API from crashing because of stream errors when delivering a file
+-   253aebbc1: Allow overriding `requestHandler` in `BlobStorageS3Storage`
+-   af892c106: Prevent socket exhaustion in `BlobStorageS3Storage`
+
+    By default, the S3 client allows a maximum of 50 open sockets.
+    A socket is only released once a file is streamed completely.
+    Meaning, it can remain open forever if a file stream is interrupted (e.g., when the user leaves the site).
+    This could lead to socket exhaustion, preventing further file delivery.
+
+    To resolve this, the following changes were made:
+
+    1. Add a close handler to destroy the stream when the client disconnects
+    2. Set a 60-second `requestTimeout` to close unused connections
+
+    -   @comet/blocks-api@7.7.0
+
 ## 7.6.0
 
 ### Minor Changes
@@ -384,7 +622,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
@@ -900,7 +1138,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 

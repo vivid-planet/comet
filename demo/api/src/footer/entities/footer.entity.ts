@@ -1,30 +1,31 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudSingleGenerator, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { ExtractBlockData, RootBlock, RootBlockEntity } from "@comet/blocks-api";
+import { CrudSingleGenerator, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 as uuid } from "uuid";
+import { v4 } from "uuid";
 
 import { FooterContentBlock } from "../blocks/footer-content.block";
-import { FooterContentScope } from "./footer-content-scope.entity";
+import { FooterScope } from "../dto/footer-scope";
 
 @Entity()
 @ObjectType()
 @RootBlockEntity()
 @CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["pageTree"] })
-export class Footer extends BaseEntity<Footer, "id"> {
+export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
-    @PrimaryKey({ columnType: "uuid" })
+    @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = uuid();
+    id: string = v4();
+
     @RootBlock(FooterContentBlock)
     @Property({ customType: new RootBlockType(FooterContentBlock) })
     @Field(() => RootBlockDataScalar(FooterContentBlock))
-    content: BlockDataInterface;
+    content: ExtractBlockData<typeof FooterContentBlock>;
 
-    @Embedded(() => FooterContentScope)
-    @Field(() => FooterContentScope)
-    scope: FooterContentScope;
+    @Embedded(() => FooterScope)
+    @Field(() => FooterScope)
+    scope: FooterScope;
 
     @Property({ columnType: "timestamp with time zone" })
     @Field()

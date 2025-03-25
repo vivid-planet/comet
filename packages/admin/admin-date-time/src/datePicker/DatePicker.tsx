@@ -28,13 +28,13 @@ export const DatePicker = (inProps: DatePickerProps) => {
         onChange,
         value,
         formatDateOptions,
-        endAdornment,
         required,
         placeholder,
         monthsToShow,
         minDate = defaultMinDate,
         maxDate = defaultMaxDate,
         slotProps,
+        endAdornment,
         ...inputWithPopperProps
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
     const intl = useIntl();
@@ -55,7 +55,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
             readOnly
             required={required}
             endAdornment={
-                !required ? (
+                !required && !inputWithPopperProps.disabled ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}

@@ -1,5 +1,5 @@
-import { FinalFormContextProvider, FinalFormContextProviderProps } from "@comet/admin";
-import { AnyObject, Form, FormProps, FormSpy } from "react-final-form";
+import { FinalFormContextProvider, FinalFormContextProviderProps, renderFinalFormChildren } from "@comet/admin";
+import { AnyObject, Form, FormProps, FormRenderProps, FormSpy } from "react-final-form";
 
 interface AutoSaveSpyProps<FormValues> {
     onSubmit: FormProps<FormValues>["onSubmit"];
@@ -34,11 +34,20 @@ const finalFormContextValues: Omit<FinalFormContextProviderProps, "children"> = 
 export function BlocksFinalForm<FormValues = AnyObject>({ onSubmit, children, ...rest }: FormProps<FormValues>): JSX.Element {
     return <Form {...rest} render={renderForm} onSubmit={noop} />;
 
-    function renderForm() {
+    function renderForm(props: FormRenderProps<FormValues, Partial<FormValues>>) {
         return (
             <>
                 <AutosaveSpy<FormValues> onSubmit={onSubmit} />
-                <FinalFormContextProvider {...finalFormContextValues}>{children}</FinalFormContextProvider>
+                <FinalFormContextProvider {...finalFormContextValues}>
+                    {renderFinalFormChildren(
+                        {
+                            children: children,
+                            component: rest.component,
+                            render: rest.render,
+                        },
+                        props,
+                    )}
+                </FinalFormContextProvider>
             </>
         );
     }

@@ -6,7 +6,7 @@ if (process.env.TRACING == "production") {
     require("./tracing.dev");
 }
 
-import { CdnGuard, ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
+import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
@@ -33,12 +33,13 @@ async function bootstrap(): Promise<void> {
     //     https://github.com/typestack/class-validator#using-service-container.
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
+    app.setGlobalPrefix("api");
     app.enableCors({
         credentials: true,
         origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
     });
 
-    app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
+    app.useGlobalFilters(new ExceptionFilter(config.debug));
     app.useGlobalPipes(
         new ValidationPipe({
             exceptionFactory: ValidationExceptionFactory,

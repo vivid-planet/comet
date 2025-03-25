@@ -1,5 +1,117 @@
 # @comet/cms-site
 
+## 7.16.0
+
+### Minor Changes
+
+-   71642aa07: Export `VideoPreviewImage` component
+
+### Patch Changes
+
+-   636326207: Fix preview overlay alignment for blocks that are scrolled into view when selected from the admin block list, e.g., in slider blocks
+-   4ddeeb09e: Prevent unintended horizontal scrolling in the admin's block preview
+
+    This previously occurred when blocks were rendered outside of the viewport width, such as elements of a slider.
+
+## 7.15.0
+
+### Patch Changes
+
+-   75fb1d0d4: Fix block preview not rendering before user interaction
+
+## 7.14.0
+
+### Minor Changes
+
+-   6163b83a4: Play/pause auto-play videos depending on their visibility
+
+    Start videos in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock` when the block is in or enters the viewport.
+    Pause them when the block is leaving the viewport.
+
+-   d07a6da51: Add comment explaining why we omit the `alt`-prop in `PixelImageBlock`
+
+### Patch Changes
+
+-   6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
+-   8e648a757: Set alt attribute to empty string as default in `SvgImageBlock`
+
+## 7.13.0
+
+### Minor Changes
+
+-   f60b6360c: Extend the `usePreview`-helpers `isSelected` and `isHovered` with optional partial match support
+
+    -   When `exactMatch` is set to `true` (default), the function checks for exact URL matches.
+    -   When `exactMatch` is set to `false`, the function checks if the selected route starts with the given URL.
+
+## 7.12.0
+
+### Patch Changes
+
+-   e92e6df03: Prevent the block-preview from becoming unresponsive when rendering an `input`
+
+## 7.11.0
+
+## 7.10.0
+
+## 7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   2352959f8: Export `convertPreviewDataToHeaders` to make `createGraphQLFetch` more configurable
+-   059636aba: Pass the `graphQLApiUrl` for `useBlockPreviewFetch` through the `IFrameBridge`
+
+    It's not necessary to set it in the site anymore. To migrate, remove the argument from `useBlockPreviewFetch()`:
+
+    ```diff
+    const PreviewPage = () => {
+        const iFrameBridge = useIFrameBridge();
+
+    -   const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    +   const { fetch, graphQLFetch } = useBlockPreviewFetch();
+
+        const [blockData, setBlockData] = useState<PageContentBlockData>();
+        useEffect(() => {
+            async function load() {
+    +           if (!graphQLFetch) {
+    +               return;
+    +           }
+                if (!iFrameBridge.block) {
+                    setBlockData(undefined);
+                    return;
+                }
+                const newData = await recursivelyLoadBlockData({
+                    blockType: "PageContent",
+                    blockData: iFrameBridge.block,
+                    graphQLFetch,
+                    fetch,
+                    pageTreeNodeId: undefined, //we don't have a pageTreeNodeId in preview
+                });
+                setBlockData(newData);
+            }
+            load();
+        }, [iFrameBridge.block, fetch, graphQLFetch]);
+
+        return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
+    };
+    ```
+
+### Patch Changes
+
+-   e032353df: The `graphQLFetch` helper for block preview uses `credentials: "include"`
+
+    This is necessary for the block preview when using block loaders because they load the data from the API on the client side.
+
+## 7.7.0
+
+### Minor Changes
+
+-   723a0b865: Disable showing related videos from other channels in `YouTubeVideoBlock`
+
+    By setting the parameter `rel` to `0` only related videos from the same channel as the embedded video are shown.
+
 ## 7.6.0
 
 ### Minor Changes

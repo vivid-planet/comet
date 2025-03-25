@@ -9,7 +9,7 @@ import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
-import { CurrentUser } from "./dto/current-user";
+import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
@@ -69,8 +69,8 @@ export class UserPermissionsService {
         if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
         return {
             id: idToken.sub,
-            name: idToken.name,
-            email: idToken.email,
+            name: idToken.name || "Unknown User",
+            email: idToken.email || "",
         };
     }
 
@@ -105,7 +105,7 @@ export class UserPermissionsService {
         });
         if (this.accessControlService.getPermissionsForUser) {
             if (user) {
-                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
+                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
@@ -172,9 +172,18 @@ export class UserPermissionsService {
         const impersonatedUser = request && (await this.getImpersonatedUser(authenticatedUser, request));
         const user = impersonatedUser || authenticatedUser;
 
+        return {
+            ...user,
+            permissions: await this.getPermissionsAndContentScopes(user),
+            impersonated: !!impersonatedUser,
+            authenticatedUser: impersonatedUser ? authenticatedUser : undefined,
+        };
+    }
+
+    async getPermissionsAndContentScopes(user: User): Promise<CurrentUserPermission[]> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
-        const permissions = (await this.getPermissions(user))
+        return (await this.getPermissions(user))
             .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
             .reduce((acc: CurrentUser["permissions"], userPermission) => {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
@@ -193,12 +202,5 @@ export class UserPermissionsService {
                 p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
                 return p;
             });
-
-        return {
-            ...user,
-            permissions,
-            impersonated: !!impersonatedUser,
-            authenticatedUser: impersonatedUser ? authenticatedUser : undefined,
-        };
     }
 }

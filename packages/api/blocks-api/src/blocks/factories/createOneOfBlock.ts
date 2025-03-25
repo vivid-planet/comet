@@ -26,10 +26,10 @@ import { BlockFactoryNameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
 
-interface OneOfBlockDataInterface<BlockMap extends BaseBlockMap> extends BlockDataInterface {
+type OneOfBlockDataInterface<BlockMap extends BaseBlockMap, Data extends BlockDataInterface> = Data & {
     attachedBlocks: SupportedBlocksDataInterfaces<BlockMap>[];
     activeType?: keyof BlockMap;
-}
+};
 
 type SupportedBlocksDataInterfaces<BlockMap extends BaseBlockMap> = {
     [Typename in keyof BlockMap]: BlockDataInterface & {
@@ -38,10 +38,14 @@ type SupportedBlocksDataInterfaces<BlockMap extends BaseBlockMap> = {
     };
 }[keyof BlockMap];
 
-interface OneOfBlockInputInterface<BlockMap extends BaseBlockMap> extends SimpleBlockInputInterface {
+type OneOfBlockInputInterface<
+    BlockMap extends BaseBlockMap,
+    Data extends BlockDataInterface,
+    Input extends SimpleBlockInputInterface<Data>,
+> = Input & {
     attachedBlocks: SupportedBlocksInputInterfaces<BlockMap>[];
     activeType?: keyof BlockMap;
-}
+};
 
 type SupportedBlocksInputInterfaces<BlockMap extends BaseBlockMap> = {
     [Typename in keyof BlockMap]: SimpleBlockInputInterface & {
@@ -91,13 +95,13 @@ export function BaseOneOfBlockItemData<BlockMap extends BaseBlockMap>({
     return OneOfBlockItemData;
 }
 
-export function BaseOneOfBlockData<BlockMap extends BaseBlockMap>({
+export function BaseOneOfBlockData<BlockMap extends BaseBlockMap, Data extends BlockDataInterface = BlockDataInterface>({
     supportedBlocks,
     OneOfBlockItemData,
 }: {
     supportedBlocks: BlockMap;
     OneOfBlockItemData: Type<OneOfBlockItemDataInterface>;
-}): Type<OneOfBlockDataInterface<BlockMap>> {
+}): Type<OneOfBlockDataInterface<BlockMap, Data>> {
     class OneOfBlockData extends BlockData {
         @Transform(({ value }: { value: OneOfBlockItemDataInterface[] }) =>
             value
@@ -111,7 +115,7 @@ export function BaseOneOfBlockData<BlockMap extends BaseBlockMap>({
                 })
                 .map((item) => plainToInstance(OneOfBlockItemData, item)),
         )
-        attachedBlocks: OneOfBlockDataInterface<BlockMap>["attachedBlocks"][number][];
+        attachedBlocks: OneOfBlockDataInterface<BlockMap, Data>["attachedBlocks"][number][];
 
         // index of blocks
         activeType?: string;
@@ -141,7 +145,8 @@ export function BaseOneOfBlockData<BlockMap extends BaseBlockMap>({
         }
     }
 
-    return OneOfBlockData;
+    // Type cast to suppress error: 'OneOfBlockData' is assignable to the constraint of type 'Data', but 'Data' could be instantiated with a different subtype of constraint 'BlockDataInterface'.
+    return OneOfBlockData as unknown as Type<OneOfBlockDataInterface<BlockMap, Data>>;
 }
 
 interface OneOfBlockItemInputInterface extends BlockInput {
@@ -195,7 +200,11 @@ export function BaseOneOfBlockItemInput<BlockMap extends BaseBlockMap>({
     return OneOfBlockItemInput;
 }
 
-export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
+export function BaseOneOfBlockInput<
+    BlockMap extends BaseBlockMap,
+    Data extends BlockDataInterface = BlockDataInterface,
+    Input extends SimpleBlockInputInterface<Data> = SimpleBlockInputInterface<Data>,
+>({
     supportedBlocks,
     allowEmpty,
     OneOfBlockData,
@@ -203,9 +212,9 @@ export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
 }: {
     supportedBlocks: BlockMap;
     allowEmpty?: boolean;
-    OneOfBlockData: Type<OneOfBlockDataInterface<BlockMap>>;
+    OneOfBlockData: Type<OneOfBlockDataInterface<BlockMap, Data>>;
     OneOfBlockItemInput: Type<OneOfBlockItemInputInterface>;
-}): Type<OneOfBlockInputInterface<BlockMap>> {
+}): Type<OneOfBlockInputInterface<BlockMap, Data, Input>> {
     for (const block in supportedBlocks) {
         if (!supportedBlocks[block]) {
             throw new Error(`Supported block '${block}' is undefined. This is most likely due to a circular import`);
@@ -214,7 +223,7 @@ export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
 
     const supportedBlockTypes: Array<keyof BlockMap | null> = Object.keys(supportedBlocks);
 
-    class OneOfBlockInput extends BlockInput {
+    class OneOfBlockInput extends BlockInput<Data> {
         @Transform(({ value }: { value: OneOfBlockItemInputInterface[] }) =>
             value
                 .filter((item) => {
@@ -229,14 +238,14 @@ export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
         )
         @ArrayMinSize(allowEmpty ? 0 : 1)
         @ValidateNested({ each: true })
-        attachedBlocks: OneOfBlockInputInterface<BlockMap>["attachedBlocks"];
+        attachedBlocks: OneOfBlockInputInterface<BlockMap, Data, Input>["attachedBlocks"];
 
         @IsOptional()
         @IsIn(supportedBlockTypes)
         @BlockField({ nullable: allowEmpty })
         activeType?: string;
 
-        transformToBlockData(): OneOfBlockDataInterface<BlockMap> {
+        transformToBlockData(): OneOfBlockDataInterface<BlockMap, Data> {
             const { attachedBlocks, activeType, ...additionalFields } = this;
 
             return plainToInstance(OneOfBlockData, {
@@ -247,21 +256,34 @@ export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
         }
     }
 
-    return OneOfBlockInput;
+    // Type cast to suppress error: 'OneOfBlockInput' is assignable to the constraint of type 'Input', but 'Input' could be instantiated with a different subtype of constraint 'SimpleBlockInputInterface<Data>'.
+    return OneOfBlockInput as unknown as Type<OneOfBlockInputInterface<BlockMap, Data, Input>>;
 }
 
-export type OneOfBlock<BlockMap extends BaseBlockMap> = Block<OneOfBlockDataInterface<BlockMap>, OneOfBlockInputInterface<BlockMap>>;
+export type OneOfBlock<
+    BlockMap extends BaseBlockMap,
+    Data extends BlockDataInterface = BlockDataInterface,
+    Input extends SimpleBlockInputInterface<Data> = SimpleBlockInputInterface<Data>,
+> = Block<OneOfBlockDataInterface<BlockMap, Data>, OneOfBlockInputInterface<BlockMap, Data, Input>>;
 
-export interface CreateOneOfBlockOptions<BlockMap extends BaseBlockMap> {
+export interface CreateOneOfBlockOptions<
+    BlockMap extends BaseBlockMap,
+    Data extends BlockDataInterface = BlockDataInterface,
+    Input extends SimpleBlockInputInterface<Data> = SimpleBlockInputInterface<Data>,
+> {
     supportedBlocks: BlockMap;
     allowEmpty?: boolean;
     OneOfBlockItemData?: Type<OneOfBlockItemDataInterface>;
     OneOfBlockItemInput?: Type<OneOfBlockItemInputInterface>;
-    OneOfBlockData?: Type<OneOfBlockDataInterface<BlockMap>>;
-    OneOfBlockInput?: Type<OneOfBlockInputInterface<BlockMap>>;
+    OneOfBlockData?: Type<OneOfBlockDataInterface<BlockMap, Data>>;
+    OneOfBlockInput?: Type<OneOfBlockInputInterface<BlockMap, Data, Input>>;
 }
 
-export function createOneOfBlock<BlockMap extends BaseBlockMap>(
+export function createOneOfBlock<
+    BlockMap extends BaseBlockMap,
+    Data extends BlockDataInterface = BlockDataInterface,
+    Input extends SimpleBlockInputInterface<Data> = SimpleBlockInputInterface<Data>,
+>(
     {
         supportedBlocks,
         allowEmpty = true,
@@ -269,9 +291,9 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         OneOfBlockItemInput = BaseOneOfBlockItemInput({ supportedBlocks, OneOfBlockItemData }),
         OneOfBlockData = BaseOneOfBlockData({ supportedBlocks, OneOfBlockItemData }),
         OneOfBlockInput = BaseOneOfBlockInput({ supportedBlocks, allowEmpty, OneOfBlockData, OneOfBlockItemInput }),
-    }: CreateOneOfBlockOptions<BlockMap>,
+    }: CreateOneOfBlockOptions<BlockMap, Data, Input>,
     nameOrOptions: BlockFactoryNameOrOptions,
-): OneOfBlock<BlockMap> {
+): OneOfBlock<BlockMap, Data, Input> {
     class Meta extends AnnotationBlockMeta {
         get fields(): BlockMetaField[] {
             const attachedBlocksField: BlockMetaField = {

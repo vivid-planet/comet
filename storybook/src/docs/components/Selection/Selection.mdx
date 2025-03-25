@@ -1,0 +1,79 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as SelectionStories from "./Selection.stories";
+
+<Meta of={SelectionStories} />
+
+# Selection
+
+In Comet Admin, a _selection_ can be used to manage which item of a list or table a user has currently selected.
+
+The two most common use cases for selections are
+
+-   creating and editing items in a dialog.
+    Comet Admin has a dedicated `EditDialog` component that uses selection internally.
+    You can find more infos in the [EditDialog docs](?path=/docs/docs-components-edit-dialog--docs#editdialog-and-table).
+
+-   selecting items from a table to edit them in an adjacent form.
+    An example can be found in the [Selection Table docs](?path=/docs/docs-components-table-selection-table--docs).
+
+## Selection (without URL State)
+
+You can either use the `useSelection()` hook or the `Selection` component to implement a selection.
+
+### useSelection() Hook (Recommended)
+
+The `useSelection()` hook returns an array containing two objects.
+The first object contains two values:
+
+-   `id` holds the id of the currently selected item.
+-   `mode` specifies the goal of the selection. Either `add` (add a new item) or `edit` (edit an existing item).
+
+The second object is the [Selection API](#selection-api).
+
+<Canvas of={SelectionStories.UseSelectionHook} />
+
+### Selection Component
+
+The `Selection` component passes its values to its children via child function.
+
+It provides the same values as `useSelection()`, but the variable names are slightly different:
+
+-   `selectedId` instead of `id`
+-   `selectionMode` instead of `mode`
+-   `selectionApi` contains the [Selection API](#selection-api)
+
+<Canvas of={SelectionStories.SelectionComponent} />
+
+## Selection with URL State
+
+In practice, a common requirement is that each item should have a unique URL.
+For that purpose, the id of the currently selected item has to be written to the URL path.
+Comet Admin has this functionality built-in.
+
+To implement a selection with URL state, you can use the `useSelectionRoute()` hook or the `SelectionRoute` component.
+
+### useSelectionRoute() Hook (Recommended)
+
+The `useSelectionRoute()` hook is similar to `useSelection()`.
+The main difference is that it returns three objects instead of two.
+
+The first - and additional - object is now a `SelectionRoute`.
+This `SelectionRoute` must wrap the selection-specific part of your application for the routing to function correctly.
+
+<Canvas of={SelectionStories.UseSelectionRouteHook} />
+
+### SelectionRoute Component
+
+The `SelectionRoute` is the URL-stateful equivalent of the `Selection` component.
+You can use it exactly like `Selection` since it provides the same values.
+
+<Canvas of={SelectionStories.SelectionRouteComponent} />
+
+## Selection API
+
+The Selection API provides three functions to select and deselect items:
+
+-   `handleSelectId()` for selecting an existing item
+-   `handleAdd()` for "selecting" a new item. It accepts an optional `id` parameter if you generate the new id on the client-side.
+-   `handleDeselect()` for deselection

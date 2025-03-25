@@ -1,15 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    Field,
-    filterByFragment,
-    FinalForm,
-    FinalFormInput,
-    FinalFormSubmitEvent,
-    Loading,
-    MainContent,
-    useFormApiRef,
-    useStackSwitchApi,
-} from "@comet/admin";
+import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, Loading, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
@@ -122,17 +112,15 @@ export function ProductVariantForm({ id, productId }: FormProps) {
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <Field
-                            fullWidth
-                            name="name"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="productVariant.name" defaultMessage="Name" />}
-                        />
-                        <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.image)}
-                        </Field>
-                    </MainContent>
+                    <Field
+                        fullWidth
+                        name="name"
+                        component={FinalFormInput}
+                        label={<FormattedMessage id="productVariant.name" defaultMessage="Name" />}
+                    />
+                    <Field name="image" isEqual={isEqual} fullWidth>
+                        {createFinalFormBlock(rootBlocks.image)}
+                    </Field>
                 </>
             )}
         </FinalForm>

@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
+type UserPermissionsUser {
   id: String!
   name: String!
   email: String!
@@ -26,7 +26,7 @@ type CurrentUser {
   email: String!
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
-  authenticatedUser: User
+  authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -195,150 +195,14 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  downloadUrl: String
+  downloadUrl: String!
   imageUrl(resizeWidth: Int!): String
 }
 
-type PaginatedUserList {
-  nodes: [User!]!
+type UserPermissionPaginatedUserList {
+  nodes: [UserPermissionsUser!]!
   totalCount: Int!
 }
-
-type NewsComment {
-  id: ID!
-  comment: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-type News {
-  id: ID!
-  scope: NewsContentScope!
-  slug: String!
-  title: String!
-  status: NewsStatus!
-  date: DateTime!
-  category: NewsCategory!
-  image: DamImageBlockData!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  comments: [NewsComment!]!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-}
-
-enum NewsStatus {
-  Active
-  Deleted
-}
-
-enum NewsCategory {
-  Events
-  Company
-  Awards
-}
-
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-input DependencyFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
-}
-
-input DependentFilter {
-  rootGraphqlObjectType: String
-  rootId: String
-  rootColumnName: String
-}
-
-type Link implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: LinkBlockData!
-  createdAt: DateTime!
-  pageTreeNode: PageTreeNode
-}
-
-interface DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-}
-
-"""Link root block data"""
-scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type Page implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: PageContentBlockData!
-  seo: SeoBlockData!
-  createdAt: DateTime!
-  pageTreeNode: PageTreeNode
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-}
-
-"""PageContent root block data"""
-scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""Seo root block data"""
-scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type PageTreeNodeScope {
-  domain: String!
-  language: String!
-}
-
-type PageTreeNode {
-  id: ID!
-  parentId: String
-  pos: Int!
-  name: String!
-  slug: String!
-  visibility: PageTreeNodeVisibility!
-  documentType: String!
-  hideInMenu: Boolean!
-  updatedAt: DateTime!
-  scope: PageTreeNodeScope!
-  category: PageTreeNodeCategory!
-  userGroup: UserGroup!
-  childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
-  parentNode: PageTreeNode
-  path: String!
-  parentNodes: [PageTreeNode!]!
-  document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-}
-
-enum PageTreeNodeVisibility {
-  Published
-  Unpublished
-  Archived
-}
-
-enum PageTreeNodeCategory {
-  MainNavigation
-  TopMenu
-}
-
-enum UserGroup {
-  All
-  Admin
-  User
-}
-
-union PageContentUnion = Page | Link | PredefinedPage
 
 type DamScope {
   domain: String!
@@ -382,54 +246,35 @@ type DamFile {
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
-type PredefinedPage implements DocumentInterface {
+input DependentFilter {
+  rootGraphqlObjectType: String
+  rootId: String
+  rootColumnName: String
+}
+
+type Page implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  content: PageContentBlockData!
+  seo: SeoBlockData!
+  stage: StageBlockData!
   createdAt: DateTime!
-  type: PredefinedPageType
+  pageTreeNode: PageTreeNode
 }
 
-enum PredefinedPageType {
-  News
-}
-
-type FooterContentScope {
-  domain: String!
-  language: String!
-}
-
-type Footer {
+interface DocumentInterface {
   id: ID!
-  content: FooterContentBlockData!
-  scope: FooterContentScope!
-  createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
-"""FooterContent root block data"""
-scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+"""PageContent root block data"""
+scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-type MainMenuItem {
-  id: ID!
-  node: PageTreeNode!
-  content: RichTextBlockData
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-}
+"""Seo root block data"""
+scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-"""RichText root block data"""
-scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type MainMenu {
-  items: [MainMenuItem!]!
-}
-
-type PaginatedNews {
-  nodes: [News!]!
-  totalCount: Int!
-}
+"""Stage root block data"""
+scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type AlternativeAddress {
   street: String!
@@ -467,11 +312,6 @@ type Manufacturer {
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   updatedAt: DateTime!
-}
-
-type ManufacturerCountry {
-  id: String!
-  used: Float!
 }
 
 type ProductCategory {
@@ -518,11 +358,15 @@ type ProductTag {
 type ProductVariant {
   id: ID!
   name: String!
+  position: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   product: Product!
   image: DamImageBlockData!
 }
+
+"""DamImage root block data"""
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type ProductDiscounts {
   quantity: Float!
@@ -587,6 +431,166 @@ enum ProductType {
 A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar Date
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
+  pageTreeNode: PageTreeNode
+}
+
+"""Link root block data"""
+scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type PageTreeNodeScope {
+  domain: String!
+  language: String!
+}
+
+type PageTreeNode {
+  id: ID!
+  parentId: String
+  pos: Int!
+  name: String!
+  slug: String!
+  visibility: PageTreeNodeVisibility!
+  documentType: String!
+  hideInMenu: Boolean!
+  updatedAt: DateTime!
+  scope: PageTreeNodeScope!
+  category: PageTreeNodeCategory!
+  userGroup: UserGroup!
+  childNodes: [PageTreeNode!]!
+  numberOfDescendants: Float!
+  parentNode: PageTreeNode
+  path: String!
+  parentNodes: [PageTreeNode!]!
+  document: PageContentUnion
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum PageTreeNodeVisibility {
+  Published
+  Unpublished
+  Archived
+}
+
+enum PageTreeNodeCategory {
+  MainNavigation
+  TopMenu
+}
+
+enum UserGroup {
+  All
+  Admin
+  User
+}
+
+union PageContentUnion = Page | Link | PredefinedPage
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: PredefinedPageType
+}
+
+enum PredefinedPageType {
+  News
+}
+
+type FooterScope {
+  domain: String!
+  language: String!
+}
+
+type Footer {
+  id: ID!
+  content: FooterContentBlockData!
+  scope: FooterScope!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+"""FooterContent root block data"""
+scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input DependencyFilter {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
+}
+
+type MainMenuItem {
+  id: ID!
+  node: PageTreeNode!
+  content: RichTextBlockData
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+"""RichText root block data"""
+scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type MainMenu {
+  items: [MainMenuItem!]!
+}
+
+type NewsComment {
+  id: ID!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News {
+  id: ID!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  status: NewsStatus!
+  date: DateTime!
+  category: NewsCategory!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  comments: [NewsComment!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum NewsStatus {
+  Active
+  Deleted
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type PaginatedNews {
+  nodes: [News!]!
+  totalCount: Int!
+}
+
+type ManufacturerCountry {
+  id: String!
+  used: Float!
+}
 
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
@@ -681,23 +685,8 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-input NewsContentScopeInput {
-  domain: String!
-  language: String!
-}
-
-input PageTreeNodeScopeInput {
-  domain: String!
-  language: String!
-}
-
 input DamScopeInput {
   domain: String!
-}
-
-input FooterContentScopeInput {
-  domain: String!
-  language: String!
 }
 
 input AlternativeAddressInput {
@@ -746,14 +735,29 @@ input ProductPriceRangeInput {
   max: Float!
 }
 
+input PageTreeNodeScopeInput {
+  domain: String!
+  language: String!
+}
+
+input FooterScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
 input RedirectScopeInput {
   domain: String!
 }
 
 type Query {
   currentUser: CurrentUser!
-  userPermissionsUserById(id: String!): User!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsUserById(id: String!): UserPermissionsUser!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
@@ -762,7 +766,7 @@ type Query {
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
-  link(linkId: ID!): Link
+  link(id: ID!): Link
   page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
@@ -793,7 +797,7 @@ type Query {
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
-  footer(scope: FooterContentScopeInput!): Footer
+  footer(scope: FooterScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
@@ -816,12 +820,12 @@ type Query {
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
 }
 
-input UserFilter {
+input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  and: [UserFilter!]
-  or: [UserFilter!]
+  and: [UserPermissionsUserFilter!]
+  or: [UserPermissionsUserFilter!]
 }
 
 input StringFilter {
@@ -834,12 +838,12 @@ input StringFilter {
   isNotEmpty: Boolean
 }
 
-input UserSort {
-  field: UserSortField!
+input UserPermissionsUserSort {
+  field: UserPermissionsUserSortField!
   direction: SortDirection! = ASC
 }
 
-enum UserSortField {
+enum UserPermissionsUserSortField {
   name
   email
   status
@@ -1137,6 +1141,7 @@ input ProductVariantSort {
 
 enum ProductVariantSortField {
   name
+  position
   product
   createdAt
   updatedAt
@@ -1190,8 +1195,8 @@ type Mutation {
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
   createBuilds(input: CreateBuildsInput!): Boolean!
-  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
-  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
+  saveLink(id: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
+  savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
@@ -1224,7 +1229,7 @@ type Mutation {
   updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!): Footer!
+  saveFooter(scope: FooterScopeInput!, input: FooterInput!): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
@@ -1242,6 +1247,7 @@ type Mutation {
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
+  publishAllProducts: Boolean!
 }
 
 input UserPermissionInput {
@@ -1277,6 +1283,7 @@ scalar LinkBlockInput @specifiedBy(url: "http://www.ecma-international.org/publi
 input PageInput {
   content: PageContentBlockInput!
   seo: SeoBlockInput!
+  stage: StageBlockInput!
 }
 
 """PageContent root block input"""
@@ -1284,6 +1291,9 @@ scalar PageContentBlockInput @specifiedBy(url: "http://www.ecma-international.or
 
 """Seo root block input"""
 scalar SeoBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""Stage root block input"""
+scalar StageBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PageTreeNodeUpdateInput {
   name: String!
@@ -1489,12 +1499,14 @@ input ProductCategoryInput {
   title: String!
   slug: String!
   position: Int
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
   position: Int
+  products: [ID!]
 }
 
 input ProductTagInput {
@@ -1517,11 +1529,13 @@ input ProductTagUpdateInput {
 input ProductVariantInput {
   name: String!
   image: DamImageBlockInput!
+  position: Int
 }
 
 input ProductVariantUpdateInput {
   name: String
   image: DamImageBlockInput
+  position: Int
 }
 
 input ManufacturerInput {

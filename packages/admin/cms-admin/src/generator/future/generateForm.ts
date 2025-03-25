@@ -38,6 +38,8 @@ export function generateForm(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormConfig<any>,
 ): GeneratorReturn {
+    assertValidConfig(config);
+
     const gqlType = config.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const formFragmentName = config.fragmentName ?? `${gqlType}Form`;
@@ -109,6 +111,17 @@ export function generateForm(
     const readOnlyFields = formFields.filter((field) => field.readOnly);
     const fileFields = formFields.filter((field) => field.type == "fileUpload");
 
+    if (fileFields.length > 0) {
+        imports.push({ name: "GQLFinalFormFileUploadFragment", importPath: "@comet/cms-admin" });
+    }
+
+    // Unnecessary field.type == "fileUpload" check to make TypeScript happy
+    const downloadableFileFields = fileFields.filter((field) => field.type == "fileUpload" && field.download);
+
+    if (fileFields.length > 0) {
+        imports.push({ name: "GQLFinalFormFileUploadDownloadableFragment", importPath: "@comet/cms-admin" });
+    }
+
     let hooksCode = "";
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
@@ -134,7 +147,8 @@ export function generateForm(
         fragment ${formFragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
         }
-        ${fileFields.length > 0 ? "${finalFormFileUploadFragment}" : ""}
+        ${fileFields.length > 0 && fileFields.length !== downloadableFileFields.length ? "${finalFormFileUploadFragment}" : ""}
+        ${downloadableFileFields.length > 0 ? "${finalFormFileUploadDownloadableFragment}" : ""}
     `;
 
     if (editMode) {
@@ -228,13 +242,21 @@ export function generateForm(
             .join(" | ")}> & {
             ${fileFields
                 .map((field) => {
+                    if (field.type !== "fileUpload") {
+                        throw new Error("Field is not a file upload field");
+                    }
+
                     if (
                         ("multiple" in field && field.multiple) ||
                         ("maxFiles" in field && typeof field.maxFiles === "number" && field.maxFiles > 1)
                     ) {
-                        return `${String(field.name)}: GQLFinalFormFileUploadFragment[];`;
+                        return `${String(field.name)}: ${
+                            field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                        }[];`;
                     }
-                    return `${String(field.name)}: GQLFinalFormFileUploadFragment | null;`;
+                    return `${String(field.name)}: ${
+                        field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                    } | null;`;
                 })
                 .join("\n")}
         }`;
@@ -245,10 +267,10 @@ export function generateForm(
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
         AsyncSelectField,
+        CheckboxField,
         Field,
         filterByFragment,
         FinalForm,
-        FinalFormCheckbox,
         FinalFormInput,
         FinalFormRangeInput,
         FinalFormSelect,
@@ -261,10 +283,9 @@ export function generateForm(
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft, Lock } from "@comet/admin-icons";
-    import { FinalFormDatePicker } from "@comet/admin-date-time";
+    import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField, GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
-    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
@@ -377,7 +398,7 @@ export function generateForm(
                 ${
                     editMode
                         ? `
-                if (!id) throw new Error();
+                ${readOnlyFields.some((field) => field.name === "id") ? "" : "if (!id) throw new Error();"}
                 const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
@@ -461,4 +482,30 @@ export function generateForm(
         code,
         gqlDocuments,
     };
+}
+
+/**
+ * Checks if the provided form config is valid.
+ *
+ * Examples of invalid configs:
+ * - The "id" field is not read-only
+ *
+ * @param config The form config to check.
+ * @throws Will throw an error if the provided config is invalid.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function assertValidConfig(config: FormConfig<any>) {
+    function validateFields(fields: typeof config.fields) {
+        for (const field of fields) {
+            if (isFormFieldConfig(field)) {
+                if (field.name === "id" && !field.readOnly) {
+                    throw new Error(`Invalid form config: the "id" field must be read-only`);
+                }
+            } else if (isFormLayoutConfig(field)) {
+                validateFields(field.fields);
+            }
+        }
+    }
+
+    validateFields(config.fields);
 }

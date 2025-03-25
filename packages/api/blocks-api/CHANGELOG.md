@@ -1,5 +1,37 @@
 # @comet/blocks-api
 
+## 7.16.0
+
+## 7.15.0
+
+## 7.14.0
+
+### Patch Changes
+
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+
+## 7.13.0
+
+## 7.12.0
+
+## 7.11.0
+
+### Patch Changes
+
+-   58a99bbdd: Fix input validation for missing child blocks
+
+## 7.10.0
+
+## 7.9.0
+
+## 7.8.0
+
+### Patch Changes
+
+-   f20ec6ce5: Make class-validator a peer dependency
+
+## 7.7.0
+
 ## 7.6.0
 
 ### Minor Changes
@@ -94,7 +126,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   ebf597120: Remove unused/unnecessary peer dependencies
 
@@ -209,7 +241,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   ebf597120: Remove unused/unnecessary peer dependencies
 

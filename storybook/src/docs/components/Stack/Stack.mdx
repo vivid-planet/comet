@@ -1,0 +1,143 @@
+import { Canvas, Meta, Source } from "@storybook/addon-docs";
+import dedent from "ts-dedent";
+
+import * as StackStories from "./Stack.stories";
+
+<Meta of={StackStories} />
+
+# Stack
+
+Comet Admin Stack is a component for creating an application with stacked pages allowing the user to navigate between them.
+A single page will be displayed at a time.
+
+## Stack Components
+
+<Canvas of={StackStories.Basic} />
+
+A stack consists of 3 components: `Stack`, `StackSwitch` and `StackPage`:
+
+### Stack
+
+Root component of the stack.
+
+### StackSwitch
+
+Container for pages where one will render at a time. Similar to a react-router Switch. Provides a context with an API allowing to switch between pages in this `StackSwitch`.
+
+### StackPage
+
+The pages a `StackSwitch` will switch. First one is the default page.
+
+Comet Admin Stack uses react-router behind the scene and creates a `Route` for every page.
+
+## Switch page
+
+### StackLink (Recommended)
+
+Use the `StackLink` component for creating a link to a page.
+
+The StackLink is based on [react-router Link](https://reactrouter.com/web/api/Link).
+It can be combined with the Material UI components [`Link`](https://mui.com/api/link/) and [`Button`](https://mui.com/api/button/) using their `component` prop.
+More infos on this functionality can be found in the [Routing Libraries section of the Material UI Docs](https://mui.com/guides/composition/#routing-libraries/).
+
+#### Material UI Link with underlying StackLink
+
+<Canvas of={StackStories.StackLinkMuiLink} />
+
+#### Material UI Button and IconButton with underlying StackLink
+
+<Canvas of={StackStories.StackLinkButton} />
+
+### activatePage
+
+Alternatively, you can use the `activatePage()` method provided by the `StackSwitchApi` to change the page.
+However, it's recommended to use `StackLink` whenever possible because it behaves like a native link.
+
+<Source
+    language="tsx"
+    code={dedent`
+        const switchApi = useStackSwitchApi();
+        <button
+            onClick={(e) => {
+                switchApi.activatePage("page2", "test");
+            }}
+        >
+            activate page2
+        </button>
+  `}
+/>
+
+`activatePage(pageName: string, payload: string, subUrl?: string)`
+
+This method will activate (navigate to) the given page.
+
+In case you need the url of a page, it can be obtained by calling `switchApi.getTargetUrl(pageName: string, payload: string, subUrl?: string)`.
+This method should only be used if you cannot achieve your goal with a `StackLink` or `activatePage()`.
+
+#### Arguments
+
+| Name       | Type   | Description                                                                      |
+| :--------- | :----- | :------------------------------------------------------------------------------- |
+| pageName\* | string | Name of the page that will be activated.                                         |
+| payload\*  | string | Additional payload containing eg. an id that will get passed into the StackPage. |
+| subUrl     | string | SubUrl to append, for nested stacks or other nested routes.                      |
+
+## payload
+
+When activating a page (not the default/initial one) you can pass a payload, that can contain eg. an id.
+The activated StackPage can access the payload by rendering a function child like so:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <StackPage name="example" title="Example">
+            {(id) => <div>{id}</div>}
+        </Stackpage>
+`}
+/>
+
+The payload needs to be a string as it is used in the url.
+
+### Example
+
+<Canvas of={StackStories.Payload} />
+
+## Nested Stacks
+
+It is possible to nest `StackSwitch`, just render another `StackSwitch` (plus `StackPage`s) in a `StackPage`. You will get automatic Breadcrumbs showing this nesting.
+
+<Canvas of={StackStories.Nested} />
+
+A nested `Stack` component is usually not desired, as it will have it's own breadcrumbs.
+
+## useStackSwitch
+
+`useStackSwitchApi` accesses the Context created by StackSwitch. For that reason you cannot use it outside of StackSwitch, which also means not in the component where StackSwitch is created.
+
+Comet Admin Stack provides a unique way to create a StackSwitch associated with its api using `useStackSwitch` hook:
+
+<Canvas of={StackStories.UseStackSwitch} />
+
+## Breadcrumbs
+
+The Stack can create automatic Breadcrumbs, which is especially useful for nested stacks.
+
+You have two options:
+
+### `StackBreadcrumbs`, `StackBackButton`
+
+Simple components showing breadcrumbs of the current stack, see Nested Stacks example.
+
+### `ToolbarBreadcrumbs`, `ToolbarBackButton`
+
+Toolbar components that integrate stack nicely into the Comet Toolbar System.
+
+<Canvas of={StackStories.BreadcrumbsToolbar} />
+
+### Custom/Dynamic Breadcrumb Title
+
+Breadcrumbs by default show the title of the `StackPage`. If you want to show something dynamic based on the payload (like the name of the selected item) you can use `StackPageTitle` component:
+
+<Canvas of={StackStories.DynamicTitle} />
+
+You can also do a graphql query to fetch data needed for creating the title.

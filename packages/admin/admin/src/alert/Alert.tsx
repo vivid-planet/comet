@@ -110,7 +110,9 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
 const Title = createComponentSlot(AlertTitle)<AlertClassKey>({
     componentName: "Alert",
     slotName: "title",
-})();
+})(css`
+    margin-top: 0px;
+`);
 
 const Text = createComponentSlot(Typography)<AlertClassKey>({
     componentName: "Alert",
