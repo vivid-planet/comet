@@ -143,6 +143,23 @@ describe("redirectMatchesFilter", () => {
         expect(redirectMatchesFilter(redirect, { or: [{ source: { equal: "/target" } }, { active: { equal: true } }] })).toBe(true); // Second matches
         expect(redirectMatchesFilter(redirect, { or: [{ source: { equal: "/target" } }, { active: { equal: false } }] })).toBe(false); // None match
     });
+
+    it("should match target URL and pathname", () => {
+        const redirect: FilterableRedirect = {
+            generationType: RedirectGenerationType.manual,
+            source: "/source",
+            target: "https://example.com/target",
+            active: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        expect(redirectMatchesFilter(redirect, { target: { equal: "/target" } })).toBe(true);
+        expect(redirectMatchesFilter(redirect, { target: { equal: "https://example.com/target" } })).toBe(true);
+
+        expect(redirectMatchesFilter(redirect, { target: { startsWith: "/target" } })).toBe(true);
+        expect(redirectMatchesFilter(redirect, { target: { startsWith: "https://example.com/target" } })).toBe(true);
+    });
 });
 
 describe("isEmptyFilter", () => {

@@ -22,7 +22,18 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
     }
 
     if (filter.target) {
-        matches = redirect.target ? stringMatchesFilter(redirect.target, filter.target) : false;
+        if (redirect.target) {
+            const isAbsoluteUrl = redirect.target.startsWith("http://") || redirect.target.startsWith("https://");
+
+            if (isAbsoluteUrl) {
+                const url = new URL(redirect.target);
+                matches = stringMatchesFilter(redirect.target, filter.target) || stringMatchesFilter(url.pathname, filter.target);
+            } else {
+                matches = stringMatchesFilter(redirect.target, filter.target);
+            }
+        } else {
+            matches = false;
+        }
     }
 
     if (filter.active) {
