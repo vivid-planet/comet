@@ -38,6 +38,7 @@ import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
+import { WarningResolver } from "./src/warnings/warning.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -116,6 +117,7 @@ async function generateSchema(): Promise<void> {
         GenerateImageTitleResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+        WarningResolver
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

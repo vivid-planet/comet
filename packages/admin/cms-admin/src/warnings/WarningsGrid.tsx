@@ -13,15 +13,16 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, WarningSolid } from "@comet/admin-icons";
-import { type DependencyInterface, useDependenciesConfig } from "@comet/cms-admin";
 import { Chip, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { useContentScope } from "@src/common/ContentScopeProvider";
-import { type GQLWarningSeverity } from "@src/graphql.generated";
 import { type ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
+import { useContentScope } from "../contentScope/Provider";
+import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { type DependencyInterface } from "../dependencies/types";
+import { type GQLWarningSeverity } from "../graphql.generated";
 import { warningMessages as cometWarningMessages } from "./warningMessages";
 import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
 
