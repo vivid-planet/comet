@@ -109,7 +109,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                 };
                 return (
                     <Chip
-                        icon={params.value === "critical" ? <WarningSolid /> : undefined}
+                        icon={params.value === "high" ? <WarningSolid /> : undefined}
                         color={colorMapping[params.value as GQLWarningSeverity]}
                         label={params.value}
                     />
