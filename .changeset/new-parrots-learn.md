@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add `InlineError` component
+Add `InlineAlert` component

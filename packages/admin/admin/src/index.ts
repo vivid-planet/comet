@@ -78,7 +78,6 @@ export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/error
 export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
-export { InlineError, InlineErrorClassKey, InlineErrorProps } from "./error/inlineError/InlineError";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
@@ -202,6 +201,7 @@ export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
+export { InlineAlert, InlineAlertClassKey, InlineAlertProps } from "./inlineAlert/InlineAlert";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";
