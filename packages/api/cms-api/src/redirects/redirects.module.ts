@@ -19,7 +19,6 @@ export type RedirectsLinkBlock = OneOfBlock<
     CustomTargets & { internal: Block<InternalLinkBlockData, InternalLinkBlockInput>; external: typeof ExternalLinkBlock }
 >;
 
-// TODO implement registerAsync instead of imports option?
 interface Config extends Pick<ModuleMetadata, "imports"> {
     customTargets?: CustomTargets;
     Scope?: Type<RedirectScopeInterface>;
