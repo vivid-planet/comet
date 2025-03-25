@@ -58,7 +58,7 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
-export type WarningSeverity = `${WarningSeverityEnum}`;
+type WarningSeverity = `${WarningSeverityEnum}`;
 
 export interface BlockWarning {
     message: string;
