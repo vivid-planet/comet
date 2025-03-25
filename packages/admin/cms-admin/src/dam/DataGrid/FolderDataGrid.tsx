@@ -12,7 +12,7 @@ import {
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { Slide, type SlideProps, Snackbar } from "@mui/material";
+import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -581,10 +581,10 @@ const FolderDataGrid = ({
             >
                 {({ selectedId, selectionMode }) => {
                     return (
-                        <>
+                        <DialogContent>
                             {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
                             {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
-                        </>
+                        </DialogContent>
                     );
                 }}
             </EditDialog>
