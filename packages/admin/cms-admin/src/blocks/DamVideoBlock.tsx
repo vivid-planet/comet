@@ -200,7 +200,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                             </AdminComponentPaper>
                         </FieldContainer>
                     ) : (
-                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
+                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
                     <VideoOptionsFields />
                     <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
