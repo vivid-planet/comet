@@ -132,7 +132,7 @@ export class AppModule {
                     imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
                     customTargets: { news: NewsLinkBlock },
                     Scope: RedirectScope,
-                    targetUrlService: RedirectTargetUrlService,
+                    TargetUrlService: RedirectTargetUrlService,
                 }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,

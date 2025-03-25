@@ -129,6 +129,6 @@ export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInter
 RedirectsModule.register({
     customTargets: { news: NewsLinkBlock },
     // highlight-next-line
-    targetUrlService: MyRedirectTargetUrlService,
+    TargetUrlService: MyRedirectTargetUrlService,
 }),
 ```

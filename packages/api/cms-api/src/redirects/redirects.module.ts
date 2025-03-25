@@ -22,12 +22,12 @@ export type RedirectsLinkBlock = OneOfBlock<
 interface Config extends Pick<ModuleMetadata, "imports"> {
     customTargets?: CustomTargets;
     Scope?: Type<RedirectScopeInterface>;
-    targetUrlService?: Type<RedirectTargetUrlServiceInterface>;
+    TargetUrlService?: Type<RedirectTargetUrlServiceInterface>;
 }
 @Global()
 @Module({})
 export class RedirectsModule {
-    static register({ customTargets, Scope, targetUrlService = DefaultRedirectTargetUrlService, imports }: Config = {}): DynamicModule {
+    static register({ customTargets, Scope, TargetUrlService = DefaultRedirectTargetUrlService, imports }: Config = {}): DynamicModule {
         const linkBlock = createOneOfBlock(
             {
                 supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
@@ -48,7 +48,7 @@ export class RedirectsModule {
 
         const targetUrlServiceProvider: ClassProvider<RedirectTargetUrlServiceInterface> = {
             provide: REDIRECTS_TARGET_URL_SERVICE,
-            useClass: targetUrlService,
+            useClass: TargetUrlService,
         };
 
         const mikroOrmModule = MikroOrmModule.forFeature([Redirect]);
