@@ -2,47 +2,7 @@ import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
 import { format, resolveConfig } from "prettier";
 
-type BlockMetaField =
-    | {
-          name: string;
-          kind: "String" | "Number" | "Boolean" | "Json";
-          nullable: boolean;
-          array?: boolean;
-      }
-    | {
-          name: string;
-          kind: "Enum";
-          nullable: boolean;
-          enum: string[];
-      }
-    | {
-          name: string;
-          kind: "Block";
-          nullable: boolean;
-          block: string;
-      }
-    | {
-          name: string;
-          kind: "OneOfBlocks";
-          nullable: boolean;
-          blocks: Record<string, string>;
-      }
-    | {
-          name: string;
-          kind: "NestedObject" | "NestedObjectList";
-          nullable: boolean;
-          object: BlockMetaNestedObject;
-      };
-
-interface BlockMeta {
-    name: string;
-    fields: BlockMetaField[];
-    inputFields: BlockMetaField[];
-}
-
-interface BlockMetaNestedObject {
-    fields: BlockMetaField[];
-}
+import { type BlockMeta, type BlockMetaField } from "../BlockMeta";
 
 let content = "";
 
