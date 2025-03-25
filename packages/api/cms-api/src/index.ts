@@ -49,7 +49,6 @@ export {
     transformToBlockSave,
     TraversableTransformBlockResponse,
     TraversableTransformBlockResponseArray,
-    WarningSeverity,
 } from "./blocks/block";
 export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";
@@ -261,4 +260,5 @@ export {
     UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
+export { EmitWarnings } from "./warnings/decorators/emit-warnings.decorator";
 export { WarningsModule } from "./warnings/warning.module";
