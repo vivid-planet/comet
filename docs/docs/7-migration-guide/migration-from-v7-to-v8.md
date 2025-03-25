@@ -1160,6 +1160,13 @@ devDependencies: {
 
 :::
 
+#### API Generator - Removed Special `status` Field Behavior
+
+Previously, if entities specified a `status` enum, it was automatically added to list queries arguments with a default value.
+
+This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
+done with the normal filtering mechanism.
+
 ### Add new package @comet/admin-generator
 
 The Admin Generator has been moved into a separate package `@comet/admin-generator`.
