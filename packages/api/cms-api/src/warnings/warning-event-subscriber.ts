@@ -76,7 +76,6 @@ export class WarningEventSubscriber implements EventSubscriber {
 
             const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
             if (emitWarnings) {
-                const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
                 const repository = this.entityManager.getRepository(entity);
 
                 const rows = await repository.find();
