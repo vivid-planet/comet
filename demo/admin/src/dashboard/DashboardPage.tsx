@@ -30,7 +30,7 @@ export function DashboardPage() {
                 <Grid container direction="row" spacing={4}>
                     {isAllowed("pageTree") && <LatestContentUpdates />}
                     {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
-                    <LatestWarningsDashboardWidget />
+                    {isAllowed("warnings") && <LatestWarningsDashboardWidget />}
                 </Grid>
             </MainContent>
         </Stack>
