@@ -45,12 +45,8 @@ export class NewsResolver {
     }
 
     @Query(() => PaginatedNews)
-    async newsList(
-        @Args() { scope, status, search, filter, sort, offset, limit }: NewsListArgs,
-        @Info() info: GraphQLResolveInfo,
-    ): Promise<PaginatedNews> {
+    async newsList(@Args() { scope, search, filter, sort, offset, limit }: NewsListArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedNews> {
         const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
-        where.status = { $in: status };
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });

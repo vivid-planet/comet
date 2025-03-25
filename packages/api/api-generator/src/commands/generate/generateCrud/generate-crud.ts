@@ -8,7 +8,7 @@ import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "../utils/build-name-variants";
 import { integerTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
-import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "../utils/ts-morph-helper";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 
 // TODO move into own file
@@ -29,32 +29,6 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
 
     const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
     const hasSearchArg = crudSearchPropNames.length > 0;
-
-    let statusProp = metadata.props.find((prop) => prop.name == "status");
-    if (statusProp) {
-        if (!statusProp.enum) {
-            console.warn(`${metadata.className} status prop must be an enum to be supported by crud generator`);
-            statusProp = undefined;
-        } else if (statusProp.nullable) {
-            console.warn(`${metadata.className} status prop must not be nullable to be supported by crud generator`);
-            statusProp = undefined;
-        } else if (morphTsProperty(statusProp.name, metadata).getInitializer()?.getText() == "") {
-            console.warn(`${metadata.className} status prop must have a default value to be supported by crud generator`);
-            statusProp = undefined;
-        }
-    }
-    let statusActiveItems: Array<string | number> | undefined = undefined;
-    if (statusProp) {
-        if (!statusProp.items) throw new Error("Status enum prop has not items");
-        statusActiveItems = statusProp.items.filter((item) => {
-            if (typeof item == "number") {
-                console.warn(`${metadata.className} status prop must not have numeric items to be supported by crud generator`);
-                return false;
-            }
-            return ["Active", "Visible", "Invisible", "Published", "Unpublished"].includes(item);
-        });
-    }
-    const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
 
     const crudFilterProps = metadata.props.filter(
         (prop) =>
@@ -133,9 +107,6 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         hasSlugProp,
         hasPositionProp,
         positionGroupProps,
-        statusProp,
-        statusActiveItems,
-        hasStatusFilter,
         scopeProp,
         skipScopeCheck,
         argsClassName,
@@ -346,38 +317,10 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const {
-        scopeProp,
-        argsClassName,
-        hasSearchArg,
-        hasSortArg,
-        hasFilterArg,
-        statusProp,
-        statusActiveItems,
-        hasStatusFilter,
-        dedicatedResolverArgProps,
-    } = buildOptions(metadata, generatorOptions);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
-    }
-
-    let statusFilterClassName: string | undefined = undefined;
-    let statusFilterDefaultValue;
-    if (hasStatusFilter && statusProp) {
-        statusFilterClassName = findEnumName(statusProp.name, metadata);
-
-        const importPath = findEnumImportPath(statusFilterClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
-        imports.push({
-            name: statusFilterClassName,
-            importPath,
-        });
-
-        if (statusActiveItems && statusActiveItems.length > 1) {
-            statusFilterDefaultValue = `[${statusActiveItems.map((i) => `${statusFilterClassName}.${i}`).join(", ")}]`;
-        } else {
-            statusFilterDefaultValue = `[${morphTsProperty(statusProp.name, metadata).getInitializer()?.getText()}]`;
-        }
     }
 
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
@@ -416,16 +359,6 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
                 }
             })
             .join("")}
-
-        ${
-            hasStatusFilter
-                ? `
-        @Field(() => [${statusFilterClassName}], { defaultValue: ${statusFilterDefaultValue} })
-        @IsEnum(${statusFilterClassName}, { each: true })
-        status: ${statusFilterClassName}[];
-        `
-                : ""
-        }
 
         ${
             hasSearchArg
@@ -948,8 +881,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasFilterArg,
         hasPositionProp,
         positionGroupProps,
-        statusProp,
-        hasStatusFilter,
         dedicatedResolverArgProps,
     } = buildOptions(metadata, generatorOptions);
 
@@ -1002,15 +933,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
     imports.push(...injectRepositories.map((meta) => generateEntityImport(meta, generatorOptions.targetDirectory)));
-
-    if (statusProp) {
-        const enumName = findEnumName(statusProp.name, metadata);
-        const importPath = findEnumImportPath(enumName, generatorOptions.targetDirectory, metadata);
-        imports.push({
-            name: enumName,
-            importPath,
-        });
-    }
 
     function generateIdArg(name: string, metadata: EntityMetadata<any>): string {
         if (integerTypes.includes(metadata.properties[name].type)) {
@@ -1096,7 +1018,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     },
                     {} as Record<string, boolean>,
                 ),
-                status: !!hasStatusFilter,
                 search: !!hasSearchArg,
                 filter: !!hasFilterArg,
                 sort: !!hasSortArg,
@@ -1113,7 +1034,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.repository);`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
-            ${hasStatusFilter ? `where.status = { $in: status };` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
             ${dedicatedResolverArgProps
                 .map((dedicatedResolverArgProp) => {
