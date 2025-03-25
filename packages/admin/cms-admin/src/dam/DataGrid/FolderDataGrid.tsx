@@ -6,6 +6,7 @@ import {
     type GridColDef,
     type IFilterApi,
     type ISelectionApi,
+    MainContent,
     PrettyBytes,
     useDataGridRemote,
     useSnackbarApi,
@@ -522,9 +523,12 @@ const FolderDataGrid = ({
             disableColumnMenu: true,
         },
         {
-            field: "contextMenu",
+            field: "actions",
             headerName: "",
-            align: "center",
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 52,
             renderCell: ({ row }) => {
                 return isFile(row) ? (
                     <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
@@ -543,7 +547,7 @@ const FolderDataGrid = ({
         throw error;
     }
     return (
-        <sc.FolderWrapper>
+        <MainContent>
             <FolderHead
                 isSearching={isSearching}
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
@@ -596,7 +600,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </sc.FolderWrapper>
+        </MainContent>
     );
 };
 
