@@ -17,6 +17,7 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
@@ -43,6 +44,7 @@ import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-p
 import { FooterModule } from "./footer/footer.module";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
+import { News } from "./news/entities/news.entity";
 import { NewsModule } from "./news/news.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
@@ -50,7 +52,6 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
-import { RedirectTargetUrlModule } from "./redirects/redirect-target-url.module";
 import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 
 @Module({})
@@ -126,15 +127,12 @@ export class AppModule {
                     reservedPaths: ["/events"],
                     sitePreviewSecret: config.sitePreviewSecret,
                 }),
-                RedirectTargetUrlModule,
-                RedirectsModule.registerAsync({
+
+                RedirectsModule.register({
+                    imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
                     customTargets: { news: NewsLinkBlock },
                     Scope: RedirectScope,
-                    imports: [RedirectTargetUrlModule],
-                    useFactory: async (targetUrlService: RedirectTargetUrlService) => ({
-                        targetUrlService,
-                    }),
-                    inject: [RedirectTargetUrlService],
+                    targetUrlService: RedirectTargetUrlService,
                 }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
