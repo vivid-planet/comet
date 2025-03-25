@@ -19,8 +19,8 @@ export const generateBlockTypeStringUnion = new Command("generate-block-type-str
         const sortedBlockMeta = uniqueBlockNames.sort();
 
         let content = "export type AvailableBlockTypes =";
-        sortedBlockMeta.forEach((blockName, index) => {
-            content += `    | "${blockName}"`;
+        sortedBlockMeta.forEach((blockName) => {
+            content += ` | "${blockName}"`;
         });
         content += "\n";
 
