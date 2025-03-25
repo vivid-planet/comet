@@ -23,6 +23,6 @@ RedirectsModule.register({
     imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
     customTargets: { news: NewsLinkBlock },
     Scope: RedirectScope,
-+   targetUrlService: MyRedirectTargetUrlService,
++   TargetUrlService: MyRedirectTargetUrlService,
 }),
 ```
