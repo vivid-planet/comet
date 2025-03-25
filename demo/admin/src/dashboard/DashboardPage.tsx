@@ -1,5 +1,11 @@
 import { MainContent, Stack, Toolbar } from "@comet/admin";
-import { ContentScopeIndicator, DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
+import {
+    ContentScopeIndicator,
+    DashboardHeader,
+    LatestBuildsDashboardWidget,
+    LatestWarningsDashboardWidget,
+    useUserPermissionCheck,
+} from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import { useIntl } from "react-intl";
 
@@ -24,6 +30,7 @@ export function DashboardPage() {
                 <Grid container direction="row" spacing={4}>
                     {isAllowed("pageTree") && <LatestContentUpdates />}
                     {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
+                    <LatestWarningsDashboardWidget />
                 </Grid>
             </MainContent>
         </Stack>

@@ -146,6 +146,7 @@ export { createDamFileDependency } from "./dam/dependencies/createDamFileDepende
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
 export { DashboardWidgetRoot, DashboardWidgetRootProps } from "./dashboard/widgets/DashboardWidgetRoot";
 export { LatestBuildsDashboardWidget } from "./dashboard/widgets/LatestBuildsDashboardWidget";
+export { LatestWarningsDashboardWidget } from "./dashboard/widgets/LatestWarningsDashboardWidget";
 export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
