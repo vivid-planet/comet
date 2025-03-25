@@ -936,6 +936,7 @@ input FolderFilterInput {
 }
 
 input NewsFilter {
+  id: IdFilter
   slug: StringFilter
   title: StringFilter
   status: NewsStatusEnumFilter
@@ -946,6 +947,12 @@ input NewsFilter {
   updatedAt: DateTimeFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input IdFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
 }
 
 input NewsStatusEnumFilter {
@@ -981,6 +988,7 @@ enum NewsSortField {
 }
 
 input ProductFilter {
+  id: IdFilter
   title: StringFilter
   status: ProductStatusEnumFilter
   slug: StringFilter
@@ -1076,6 +1084,7 @@ enum ProductSortField {
 }
 
 input ProductCategoryFilter {
+  id: IdFilter
   title: StringFilter
   slug: StringFilter
   products: OneToManyFilter
@@ -1099,6 +1108,7 @@ enum ProductCategorySortField {
 }
 
 input ProductTagFilter {
+  id: IdFilter
   title: StringFilter
   products: ManyToManyFilter
   productsWithStatus: OneToManyFilter
@@ -1120,6 +1130,7 @@ enum ProductTagSortField {
 }
 
 input ProductVariantFilter {
+  id: IdFilter
   name: StringFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1141,6 +1152,7 @@ enum ProductVariantSortField {
 }
 
 input ManufacturerFilter {
+  id: IdFilter
   name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
