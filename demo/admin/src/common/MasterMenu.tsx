@@ -11,6 +11,7 @@ import {
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
+    WarningsPage,
 } from "@comet/cms-admin";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
@@ -33,7 +34,6 @@ import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/Ma
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { type ContentScope } from "@src/site-configs";
-import { WarningsPage } from "@src/warnings/WarningsPage";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
 
