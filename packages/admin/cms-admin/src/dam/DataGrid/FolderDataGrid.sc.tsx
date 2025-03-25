@@ -7,11 +7,6 @@ interface TableHoverHighlightProps {
     isHovered?: boolean;
 }
 
-export const FolderWrapper = styled("div")`
-    padding: ${({ theme }) => theme.spacing(4)};
-    overflow-y: auto;
-`;
-
 export const FolderOuterHoverHighlight = styled("div", { shouldForwardProp: (prop) => prop !== "isHovered" })<TableHoverHighlightProps>`
     display: flex;
     flex-grow: 1;
