@@ -169,8 +169,8 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
 
                 const loadUrl = async () => {
                     const path = await dependencyObject.resolvePath({
-                        rootColumnName: row.sourceInfo.rootColumnName,
-                        jsonPath: row.sourceInfo.jsonPath,
+                        rootColumnName: row.sourceInfo.rootColumnName ?? undefined,
+                        jsonPath: row.sourceInfo.jsonPath ?? undefined,
                         apolloClient,
                         id: row.sourceInfo.targetId,
                     });
