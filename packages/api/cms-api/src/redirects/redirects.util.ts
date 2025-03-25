@@ -80,6 +80,8 @@ function stringMatchesFilter(string: string, filter: StringFilter) {
         return true;
     } else if (filter.notEqual && string !== filter.notEqual) {
         return true;
+    } else if (filter.isAnyOf && filter.isAnyOf.includes(string)) {
+        return true;
     }
 
     return false;

@@ -41,6 +41,9 @@ describe("redirectMatchesFilter", () => {
 
         expect(redirectMatchesFilter(redirect, { source: { notEqual: "/source" } })).toBe(false);
         expect(redirectMatchesFilter(redirect, { source: { notEqual: "/target" } })).toBe(true);
+
+        expect(redirectMatchesFilter(redirect, { source: { isAnyOf: ["/source", "/target"] } })).toBe(true);
+        expect(redirectMatchesFilter(redirect, { source: { isAnyOf: ["/target"] } })).toBe(false);
     });
 
     it("should match for boolean filter", () => {
