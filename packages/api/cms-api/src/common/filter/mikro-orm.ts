@@ -22,6 +22,9 @@ export function filterToMikroOrmQuery(
         | DateTimeFilter
         | DateFilter
         | BooleanFilter
+        | ManyToOneFilter
+        | OneToManyFilter
+        | ManyToManyFilter
         | EnumFilterInterface<unknown>
         | EnumsFilterInterface<unknown>,
     propertyName: string,
@@ -56,6 +59,9 @@ export function filterToMikroOrmQuery(
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -74,6 +80,9 @@ export function filterToMikroOrmQuery(
         }
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
         }
     } else if (filterProperty instanceof DateTimeFilter || filterProperty instanceof DateFilter) {
         if (filterProperty.equal !== undefined) {
@@ -129,6 +138,9 @@ export function filterToMikroOrmQuery(
             }
             ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
         }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (filterProperty instanceof ManyToManyFilter) {
         if (filterProperty.contains !== undefined) {
             ret.id = {
@@ -149,6 +161,9 @@ export function filterToMikroOrmQuery(
                 throw new Error("targetMeta is not defined");
             }
             ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
         }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {
