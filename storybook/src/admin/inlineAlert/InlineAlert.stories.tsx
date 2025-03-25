@@ -1,50 +1,50 @@
-import { InlineError } from "@comet/admin";
+import { InlineAlert } from "@comet/admin";
 import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
 import { Box, Button } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react";
 
-type Story = StoryObj<typeof InlineError>;
+type Story = StoryObj<typeof InlineAlert>;
 
-const config: Meta<typeof InlineError> = {
-    component: InlineError,
-    title: "@comet/admin/error/Inline Error",
+const config: Meta<typeof InlineAlert> = {
+    component: InlineAlert,
+    title: "@comet/admin/inlineAlert/Inline Alert",
 };
 
 export default config;
 
 /**
- * Renders the `InlineError` component with default settings.
+ * Renders the `InlineAlert` component with default settings.
  * Demonstrates the base appearance of the error component.
  */
-export const InlineErrorStory: Story = {};
-InlineErrorStory.storyName = "InlineError";
+export const InlineAlertStory: Story = {};
+InlineAlertStory.storyName = "InlineAlert";
 
 /**
- * Displays the `InlineError` component with a warning variant.
+ * Displays the `InlineAlert` component with a warning variant.
  * This variation visually represents a warning message to the user.
  */
-export const InlineErrorWithWarning: Story = {
+export const InlineAlertWithWarning: Story = {
     args: {
-        variant: "warning",
+        severity: "warning",
     },
 };
 
 /**
- * Displays the `InlineError` component with an info variant.
+ * Displays the `InlineAlert` component with an info variant.
  * This variant is used for informational messages rather than errors.
  */
-export const InlineErrorWithInfo: Story = {
+export const InlineAlertWithInfo: Story = {
     args: {
-        variant: "info",
+        severity: "info",
     },
 };
 
 /**
- * Displays the `InlineError` component with custom content.
+ * Displays the `InlineAlert` component with custom content.
  * Includes a custom icon, title, and description to illustrate how
  * the component can be adjusted for different use cases.
  */
-export const InlineErrorWithCustomContent: Story = {
+export const InlineAlertWithCustomContent: Story = {
     args: {
         icon: <CometColor sx={{ fontSize: "32px" }} />,
         title: "Custom Title",
@@ -53,11 +53,11 @@ export const InlineErrorWithCustomContent: Story = {
 };
 
 /**
- * Displays the `InlineError` component with custom icons by using `iconMapping` prop.
+ * Displays the `InlineAlert` component with custom icons by using `iconMapping` prop.
  */
-export const InlineErrorWithIconMapper: Story = {
+export const InlineAlertWithIconMapper: Story = {
     args: {
-        variant: "warning",
+        severity: "warning",
         iconMapping: {
             error: <RemoveFilled sx={{ fontSize: "32px" }} color="error" />,
             info: <InfoFilled sx={{ fontSize: "32px" }} color="info" />,
@@ -67,11 +67,11 @@ export const InlineErrorWithIconMapper: Story = {
 };
 
 /**
- * Displays the `InlineError` component with an action button.
+ * Displays the `InlineAlert` component with an action button.
  * The button allows the user to retry an action when an error occurs.
  * Clicking the button triggers an alert as an example interaction.
  */
-export const InlineErrorWithActions: Story = {
+export const InlineAlertWithActions: Story = {
     args: {
         actions: (
             <Button
@@ -88,11 +88,11 @@ export const InlineErrorWithActions: Story = {
 };
 
 /**
- * Displays the `InlineError` component with multiple actions.
+ * Displays the `InlineAlert` component with multiple actions.
  * Includes a retry button and a clear button to demonstrate
  * how multiple interactions can be provided to the user.
  */
-export const InlineErrorWithMultipleActions: Story = {
+export const InlineAlertWithMultipleActions: Story = {
     args: {
         actions: (
             <Box sx={{ display: "flex", gap: 2 }}>
