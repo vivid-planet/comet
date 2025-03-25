@@ -113,14 +113,7 @@ export function ManufacturersGrid() {
     };
 
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
-        {
-            field: "id",
-            headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
-            filterable: false,
-            sortable: false,
-            flex: 1,
-            minWidth: 150,
-        },
+        { field: "id", headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }), sortable: false, flex: 1, minWidth: 150 },
         { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             field: "address_street",
