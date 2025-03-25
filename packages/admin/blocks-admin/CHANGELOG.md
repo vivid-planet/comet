@@ -1,5 +1,19 @@
 # @comet/blocks-admin
 
+## 7.16.0
+
+### Minor Changes
+
+-   ed9282b3b: createOneOfBlock: Add support for dynamic display names of child blocks
+
+### Patch Changes
+
+-   9bd499dcd: Remove incorrect clear button from type select in `createOneOfBlock`
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+    -   @comet/admin@7.16.0
+    -   @comet/admin-icons@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes

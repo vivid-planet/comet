@@ -1,6 +1,6 @@
-import { Alert } from "@comet/admin";
+import { Alert, Button } from "@comet/admin";
 import { Duplicate, Forward, Save } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
@@ -95,7 +95,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
             </DialogContent>
             <DialogActions>
                 <Box display="flex" justifyContent="space-between" width="100%">
-                    <Button variant="text" color="secondary" onClick={onSkip} startIcon={<Forward />}>
+                    <Button variant="textDark" onClick={onSkip} startIcon={<Forward />}>
                         <FormattedMessage
                             id="comet.dam.duplicateFilenameDialog.action.skip"
                             defaultMessage="Skip {count, plural, one {file} other {files}}"
@@ -114,7 +114,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                                 }}
                             />
                         </Button>
-                        <Button variant="contained" color="primary" onClick={onUpload} startIcon={<Save />}>
+                        <Button onClick={onUpload} startIcon={<Save />}>
                             <FormattedMessage
                                 id="comet.dam.duplicateFilenameDialog.action.uploadAsCopy"
                                 defaultMessage="Upload as {count, plural, one {copy} other {copies}}"

@@ -834,6 +834,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input UserPermissionsUserSort {
@@ -963,6 +964,7 @@ input NewsCategoryEnumFilter {
 input OneToManyFilter {
   contains: ID
   search: String
+  isAnyOf: [ID!]
 }
 
 input NewsSort {
@@ -1029,6 +1031,7 @@ input NumberFilter {
   lowerThanEqual: Float
   greaterThanEqual: Float
   notEqual: Float
+  isAnyOf: [Float!]
 }
 
 input DateFilter {
@@ -1049,6 +1052,7 @@ input ManyToOneFilter {
 input ManyToManyFilter {
   contains: ID
   search: String
+  isAnyOf: [ID!]
 }
 
 input ProductSort {
