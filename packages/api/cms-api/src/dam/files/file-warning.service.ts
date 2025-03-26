@@ -3,7 +3,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { EmitWarningsServiceInterface } from "src/warnings/decorators/emit-warnings.decorator";
 
 import { WarningInput } from "../../warnings/dto/warning.input";
-import { WarningService } from "../../warnings/warning.service";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "./entities/file.entity";
@@ -14,10 +13,9 @@ export class FileWarningService implements EmitWarningsServiceInterface<FileInte
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly entityManager: EntityManager,
-        private readonly warningService: WarningService,
     ) {}
 
-    async emitWarningsBulk() {
+    async *emitWarningsBulk() {
         if (!this.config.enableLicenseFeature) return; // license feature not enabled, no warnings
 
         const soonToExpireDate = new Date();
@@ -49,15 +47,7 @@ export class FileWarningService implements EmitWarningsServiceInterface<FileInte
 
             for (const file of files) {
                 const warnings = await this.emitWarnings(file);
-                await this.warningService.saveWarnings({
-                    warnings,
-                    type: "Entity",
-                    sourceInfo: {
-                        rootEntityName: "DamFile",
-                        rootPrimaryKey: "id",
-                        targetId: file.id,
-                    },
-                });
+                yield { warnings, tableRowId: file.id };
             }
             offset += limit;
         } while (files.length > 0);

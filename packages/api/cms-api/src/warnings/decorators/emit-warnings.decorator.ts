@@ -3,8 +3,13 @@ import { type CustomDecorator, SetMetadata, type Type } from "@nestjs/common";
 
 import { type WarningInput } from "../dto/warning.input";
 
+interface WarningBulkCreationInput {
+    warnings: WarningInput[];
+    tableRowId: string;
+}
+
 type EmitWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<WarningInput[]>;
-type EmitWarningsBulkFunction = () => Promise<void>;
+type EmitWarningsBulkFunction = () => AsyncGenerator<WarningBulkCreationInput>;
 
 export interface EmitWarningsServiceInterface<Entity extends AnyEntity = AnyEntity> {
     /**
