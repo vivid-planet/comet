@@ -653,15 +653,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "RichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -697,15 +697,15 @@
                             "blocks": {
                                 "accordion": "Accordion",
                                 "anchor": "Anchor",
-                                "space": "Space",
-                                "teaser": "Teaser",
-                                "richtext": "RichText",
-                                "heading": "StandaloneHeading",
-                                "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
+                                "columns": "Columns",
+                                "heading": "StandaloneHeading",
                                 "keyFacts": "KeyFacts",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "richtext": "RichText",
+                                "space": "Space",
+                                "teaser": "Teaser"
                             },
                             "nullable": false
                         }
@@ -746,6 +746,16 @@
                         {
                             "name": "scope",
                             "kind": "Json",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
                             "nullable": true
                         }
                     ]
@@ -2019,6 +2029,7 @@
                                 "media": "StandaloneMedia",
                                 "contentGroup": "ContentGroup",
                                 "mediaGallery": "MediaGallery",
+                                "slider": "Slider",
                                 "image": "DamImage",
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
@@ -2081,6 +2092,7 @@
                                 "media": "StandaloneMedia",
                                 "contentGroup": "ContentGroup",
                                 "mediaGallery": "MediaGallery",
+                                "slider": "Slider",
                                 "image": "DamImage",
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
@@ -2615,6 +2627,113 @@
                             "name": "url",
                             "kind": "String",
                             "nullable": true
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "Slider",
+        "fields": [
+            {
+                "name": "sliderList",
+                "kind": "Block",
+                "block": "SliderList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "sliderList",
+                "kind": "Block",
+                "block": "SliderList",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SliderItem",
+        "fields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SliderList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SliderItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SliderItem",
+                            "nullable": false
                         }
                     ]
                 },

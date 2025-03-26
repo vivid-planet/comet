@@ -1,12 +1,12 @@
-import { messages } from "@comet/admin";
+import { CancelButton, DeleteButton, OkayButton } from "@comet/admin";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
 import { BlockInterface, BlockState } from "@comet/blocks-admin";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { styled } from "@mui/material/styles";
 import { EditorState, EntityInstance, RichUtils } from "draft-js";
 import { MouseEvent, ReactElement, useCallback, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -131,22 +131,44 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                 <DialogContent>
                     <LinkBlock.AdminComponent state={newLinkState} updateState={setNewLinkState} />
                 </DialogContent>
-                <DialogActions>
-                    {linkEntity && (
-                        <Button onClick={handleRemove} color="primary">
-                            <FormattedMessage id="comet.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
-                        </Button>
-                    )}
-                    <Button onClick={handleUpdate} color="primary">
-                        <FormattedMessage {...messages.ok} />
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        <FormattedMessage {...messages.cancel} />
-                    </Button>
-                </DialogActions>
+                <StyledDialogActions>
+                    <CancelButton onClick={handleClose} />
+                    <ButtonContainer>
+                        {linkEntity && (
+                            <DeleteButton onClick={handleRemove}>
+                                <FormattedMessage id="comet.rteExtensions.cmsLink.removeLink" defaultMessage="Delete Link" />
+                            </DeleteButton>
+                        )}
+                        <OkayButton onClick={handleUpdate} />
+                    </ButtonContainer>
+                </StyledDialogActions>
             </Dialog>
         );
     }
 
     return ToolbarButton;
 }
+
+const StyledDialogActions = styled(DialogActions)`
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+
+    ${({ theme }) => theme.breakpoints.up("md")} {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0;
+    }
+`;
+
+const ButtonContainer = styled("div")`
+    display: contents;
+
+    ${({ theme }) => theme.breakpoints.up("md")} {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+`;

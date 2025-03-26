@@ -10,8 +10,6 @@ nvm use
 npm i -g pnpm@8
 pnpm install
 
-# create site-config-envs
-npm run create-site-configs-env
 
 # admin Blocks
 ln -sf ../../api/blocks-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
@@ -58,3 +56,6 @@ sh ./demo/site-pages/intl-update.sh
 
 # Build the packages CLI and eslint-plugin to be used for dev startup
 pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
+
+# create site-config-envs
+pnpm run create-site-configs-env

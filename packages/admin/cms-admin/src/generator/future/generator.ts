@@ -172,6 +172,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     toolbarActionProp?: boolean;
     newEntryText?: string;
     rowActionProp?: boolean;
+    selectionProps?: "multiSelect" | "singleSelect";
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
