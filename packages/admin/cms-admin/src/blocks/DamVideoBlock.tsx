@@ -21,7 +21,6 @@ import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
-import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
@@ -133,7 +132,6 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
         const dependencyMap = useDependenciesConfig();
-        const acceptedVideoMimetypes = useDamAcceptedMimeTypes().filteredAcceptedMimeTypes.video;
 
         const showMenu = Boolean(dependencyMap["DamFile"]);
 
@@ -202,7 +200,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                             </AdminComponentPaper>
                         </FieldContainer>
                     ) : (
-                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={acceptedVideoMimetypes} />
+                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
                     <VideoOptionsFields />
                     <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
