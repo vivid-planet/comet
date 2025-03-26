@@ -19,13 +19,13 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
         if (!this.config.enableLicenseFeature) return; // license feature not enabled, no warnings
 
         const soonToExpireDate = new Date();
-        soonToExpireDate.setDate(soonToExpireDate.getDate() - 30);
+        soonToExpireDate.setDate(soonToExpireDate.getDate() + 30);
 
         const filterQuery: FilterQuery<FileInterface> = [
             {
                 license: {
                     durationTo: {
-                        $ne: soonToExpireDate,
+                        $lt: soonToExpireDate,
                     },
                 },
             },
