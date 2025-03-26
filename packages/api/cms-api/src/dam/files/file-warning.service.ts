@@ -2,7 +2,7 @@ import { EntityManager, FilterQuery } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 
 import { CreateWarningsServiceInterface } from "../../warnings/decorators/create-warnings.decorator";
-import { WarningInput } from "../../warnings/dto/warning.input";
+import { CreateWarningInput } from "../../warnings/dto/create-warning.input";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "./entities/file.entity";
@@ -56,7 +56,7 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
     async createWarnings(entity: FileInterface) {
         if (!this.config.enableLicenseFeature) return []; // license feature not enabled, no warnings
 
-        const warnings: WarningInput[] = [];
+        const warnings: CreateWarningInput[] = [];
 
         if (entity.license?.durationTo) {
             const soonToExpireDate = new Date();

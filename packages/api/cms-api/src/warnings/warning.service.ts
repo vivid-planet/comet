@@ -2,7 +2,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { v5 } from "uuid";
 
-import { WarningInput } from "./dto/warning.input";
+import { CreateWarningInput } from "./dto/create-warning.input";
 import { WarningSourceInfo } from "./dto/warning-source-info";
 import { Warning } from "./entities/warning.entity";
 
@@ -10,7 +10,15 @@ import { Warning } from "./entities/warning.entity";
 export class WarningService {
     constructor(private readonly entityManager: EntityManager) {}
 
-    private async saveWarning({ warning, type, sourceInfo }: { warning: WarningInput; type: string; sourceInfo: WarningSourceInfo }): Promise<void> {
+    private async saveWarning({
+        warning,
+        type,
+        sourceInfo,
+    }: {
+        warning: CreateWarningInput;
+        type: string;
+        sourceInfo: WarningSourceInfo;
+    }): Promise<void> {
         const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
         const id = v5(`${sourceInfo.rootEntityName}${sourceInfo.targetId};${warning.message}`, staticNamespace);
 
@@ -34,7 +42,7 @@ export class WarningService {
         type,
         sourceInfo,
     }: {
-        warnings: WarningInput[];
+        warnings: CreateWarningInput[];
         type: string;
         sourceInfo: WarningSourceInfo;
     }): Promise<void> {
@@ -52,7 +60,7 @@ export class WarningService {
         type,
         sourceInfo,
     }: {
-        warnings: WarningInput[];
+        warnings: CreateWarningInput[];
         type: string;
         sourceInfo: WarningSourceInfo;
     }): Promise<void> {
