@@ -7,29 +7,27 @@ import {
     DataGridToolbar,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     StackLink,
-    ToolbarActions,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGridPro, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    GQLCreateProductCategoryMutation,
-    GQLCreateProductCategoryMutationVariables,
-    GQLDeleteProductCategoryMutation,
-    GQLDeleteProductCategoryMutationVariables,
-    GQLProductCategoriesGridFutureFragment,
-    GQLProductCategoriesGridQuery,
-    GQLProductCategoriesGridQueryVariables,
-    GQLUpdateProductCategoryPositionMutation,
-    GQLUpdateProductCategoryPositionMutationVariables,
+    type GQLCreateProductCategoryMutation,
+    type GQLCreateProductCategoryMutationVariables,
+    type GQLDeleteProductCategoryMutation,
+    type GQLDeleteProductCategoryMutationVariables,
+    type GQLProductCategoriesGridFutureFragment,
+    type GQLProductCategoriesGridQuery,
+    type GQLProductCategoriesGridQueryVariables,
+    type GQLUpdateProductCategoryPositionMutation,
+    type GQLUpdateProductCategoryPositionMutationVariables,
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
@@ -81,16 +79,14 @@ function ProductCategoriesGridToolbar() {
     return (
         <DataGridToolbar>
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="productCategory.productCategoriesGridFuture.newEntry" defaultMessage="New Product Category" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="productCategory.productCategoriesGridFuture.newEntry" defaultMessage="New Product Category" />
+            </Button>
         </DataGridToolbar>
     );
 }
 
-export function ProductCategoriesGrid(): React.ReactElement {
+export function ProductCategoriesGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -194,13 +190,12 @@ export function ProductCategoriesGrid(): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductCategoriesGridToolbar,
+            slots={{
+                toolbar: ProductCategoriesGridToolbar as GridSlotsComponent["toolbar"],
             }}
             rowReordering
             onRowOrderChange={handleRowOrderChange}

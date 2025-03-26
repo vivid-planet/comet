@@ -1,7 +1,7 @@
-import { future_GridConfig as GridConfig } from "@comet/cms-admin";
-import { GQLProductCategory } from "@src/graphql.generated";
+import { defineConfig } from "@comet/admin-generator";
+import { type GQLProductCategory } from "@src/graphql.generated";
 
-export const ProductCategoriesGrid: GridConfig<GQLProductCategory> = {
+export default defineConfig<GQLProductCategory>({
     type: "grid",
     gqlType: "ProductCategory",
     fragmentName: "ProductCategoriesGridFuture",
@@ -26,4 +26,4 @@ export const ProductCategoriesGrid: GridConfig<GQLProductCategory> = {
             headerName: "Position",
         },
     ],
-};
+});
