@@ -219,7 +219,7 @@ export function generateGrid(
     const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
-    const allowRowReordering = typeof config.rowReordering !== "undefined" && config.rowReordering && hasUpdateMutation;
+    const allowRowReordering = typeof config.rowReordering?.enabled !== "undefined" && config.rowReordering?.enabled && hasUpdateMutation;
 
     const updateInputArg = updateMutationType?.args.find((arg) => arg.name === "input");
     if (allowRowReordering && updateInputArg) {
@@ -231,13 +231,13 @@ export function generateGrid(
     }
 
     const hasRowReorderingOnDragField =
-        allowRowReordering && typeof config.rowReorderingOnDragField !== "undefined" && !!config.rowReorderingOnDragField;
+        allowRowReordering && typeof config.rowReordering?.dragPreviewField !== "undefined" && !!config.rowReordering?.dragPreviewField;
 
     if (
         hasRowReorderingOnDragField &&
-        !config.columns.find((column) => column.type !== "actions" && column?.name === config.rowReorderingOnDragField)
+        !config.columns.find((column) => column.type !== "actions" && column?.name === config.rowReordering?.dragPreviewField)
     ) {
-        throw new Error(`rowReorderingOnDragField '${config.rowReorderingOnDragField}' must exist in columns`);
+        throw new Error(`rowReorderingOnDragField '${config.rowReordering?.dragPreviewField}' must exist in columns`);
     }
 
     const forwardRowAction = allowEditing && config.rowActionProp;
@@ -966,7 +966,7 @@ export function generateGrid(
                 ? `data?.${gridQuery}.nodes`
                 : `data?.${gridQuery}.nodes.map((node) => ({
             ...node,
-            __reorder__: node.${config.rowReorderingOnDragField},
+            __reorder__: node.${config.rowReordering?.dragPreviewField},
         }))`
         } ?? [];
 
