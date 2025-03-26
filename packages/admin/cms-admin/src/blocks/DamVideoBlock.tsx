@@ -200,7 +200,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                             </AdminComponentPaper>
                         </FieldContainer>
                     ) : (
-                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
+                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
                     <VideoOptionsFields />
                     <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
@@ -217,4 +217,13 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     },
 
     previewContent: (state) => (state.damFile ? [{ type: "text", content: state.damFile.name }] : []),
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.damFile?.altText) contents.push(state.damFile.altText);
+        if (state.damFile?.title) contents.push(state.damFile.title);
+
+        return contents;
+    },
 };

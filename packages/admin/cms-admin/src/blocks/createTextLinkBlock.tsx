@@ -51,8 +51,8 @@ export function createTextLinkBlock(
                 <AdminComponentPaper disablePadding>
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
-                            onSubmit={({ text }) => {
-                                updateState((prevState) => ({ ...prevState, text }));
+                            onSubmit={({ text }: { text: string | undefined }) => {
+                                updateState((prevState) => ({ ...prevState, text: text ?? "" }));
                             }}
                             initialValues={{ text: state.text }}
                         >
@@ -67,6 +67,19 @@ export function createTextLinkBlock(
         previewContent: (state) => [{ type: "text", content: state.text }],
 
         dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
+
+        extractTextContents: (state, options) => {
+            const content = [];
+
+            if (state.text) {
+                content.push(state.text);
+            }
+
+            const blockContent = block.extractTextContents?.(state, options) ?? [];
+            content.push(...blockContent);
+
+            return content;
+        },
     };
 
     if (override) {

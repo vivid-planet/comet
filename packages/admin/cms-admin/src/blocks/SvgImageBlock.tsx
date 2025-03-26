@@ -221,4 +221,12 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
             { type: "text", content: state.damFile.name },
         ];
     },
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.damFile?.altText) contents.push(state.damFile.altText);
+        if (state.damFile?.title) contents.push(state.damFile.title);
+
+        return contents;
+    },
 };

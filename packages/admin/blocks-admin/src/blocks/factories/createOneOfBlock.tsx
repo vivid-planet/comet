@@ -371,7 +371,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <SelectField name="blockType" options={options} fullWidth required={!allowEmpty} />
+                                            <SelectField name="blockType" options={options} fullWidth required />
                                         </Box>
                                         {isInPaper && activeBlock.block && <Divider />}
                                     </>
@@ -437,13 +437,31 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         },
 
         dynamicDisplayName: (state) => {
-            const { block } = getActiveBlock(state);
+            const { block, state: blockState } = getActiveBlock(state);
 
             if (block != null) {
-                return block.displayName;
+                return block.dynamicDisplayName?.(blockState.props) ?? block.displayName;
             } else {
                 return displayName;
             }
+        },
+
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            const content = state.attachedBlocks.reduce<string[]>((content, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+
+                if (child.type !== state.activeType && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
+            }, []);
+            return content;
         },
     };
     if (override) {

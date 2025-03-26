@@ -1,5 +1,5 @@
-import { messages } from "@comet/admin";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
+import { Button, messages } from "@comet/admin";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
 import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -34,7 +34,7 @@ export function ProgressDialog(props: { title: ReactNode; progress: number | und
                     </DialogContent>
                     {props.onCancel && (
                         <DialogActions>
-                            <Button onClick={props.onCancel}>
+                            <Button onClick={props.onCancel} variant="textDark">
                                 <FormattedMessage {...messages.cancel} />
                             </Button>
                         </DialogActions>

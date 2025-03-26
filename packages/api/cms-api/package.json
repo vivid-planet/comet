@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "7.13.0",
+    "version": "7.17.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -35,7 +35,7 @@
         "@aws-sdk/client-s3": "3.645.0",
         "@azure-rest/ai-translation-text": "^1.0.0-beta.1",
         "@azure/storage-blob": "^12.23.0",
-        "@comet/blocks-api": "workspace:^7.13.0",
+        "@comet/blocks-api": "workspace:^7.17.0",
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
@@ -85,7 +85,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "3.609.0",
-        "@comet/eslint-config": "workspace:^7.13.0",
+        "@comet/eslint-config": "workspace:^7.17.0",
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/core": "^5.9.8",

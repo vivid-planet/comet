@@ -1,5 +1,115 @@
 # @comet/cms-api
 
+## 7.17.0
+
+### Minor Changes
+
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+-   e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
+
+### Patch Changes
+
+-   @comet/blocks-api@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+-   a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+-   @comet/blocks-api@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   83b8111d6: Allow `use` tag in SVG again
+
+    `use` can be used to define paths once in a SVG and then integrating them multiple times via anchor links: `<use xlink:href="#path-id" />`. This should not be prohibited.
+
+    It's still not possible to use `use` to reference external files, since we still prohibit `href` and `xlink:href` attributes starting with `http://`, `https://` and `javascript:`.
+
+-   e6f9641db: Add fallback values for users created via ID token
+    -   @comet/blocks-api@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   99ff0357b: Pass available permissions to `AccessControlService.getPermissionsForUser`
+-   a84d88cf9: Ignore filters in `@AffectedEntity` check
+
+    When using the `@AffectedEntity` decorator we possibly also want to check entities which are filtered by default. Since we don't know how the entity is handled in the resolver we ignore the filters completely.
+
+-   3c47c089e: Allow passing a language to `generateAltText` and `generateImageTitle`
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+### Patch Changes
+
+-   0233d486b: Export `FileUploadInput`
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+-   Updated dependencies [7e7a4aae1]
+    -   @comet/blocks-api@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes

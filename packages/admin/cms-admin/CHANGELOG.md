@@ -1,5 +1,131 @@
 # @comet/cms-admin
 
+## 7.17.0
+
+### Minor Changes
+
+-   4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+-   ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    -   @comet/admin@7.17.0
+    -   @comet/admin-date-time@7.17.0
+    -   @comet/admin-icons@7.17.0
+    -   @comet/admin-rte@7.17.0
+    -   @comet/admin-theme@7.17.0
+    -   @comet/blocks-admin@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+-   ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+-   ea014c5e3: Set the correct icon for the button to confirm page actions
+-   e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+-   Updated dependencies [9bd499dcd]
+-   Updated dependencies [ed9282b3b]
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+-   Updated dependencies [5b7c6b4a7]
+    -   @comet/blocks-admin@7.16.0
+    -   @comet/admin-theme@7.16.0
+    -   @comet/admin@7.16.0
+    -   @comet/admin-date-time@7.16.0
+    -   @comet/admin-icons@7.16.0
+    -   @comet/admin-rte@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   46ab330da: Adapt styling of the dashboard header to match the Comet DXP design
+-   Updated dependencies [e056e8f3d]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [7d8c36e6c]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [6827982fe]
+-   Updated dependencies [7d8c36e6c]
+    -   @comet/blocks-admin@7.15.0
+    -   @comet/admin@7.15.0
+    -   @comet/admin-theme@7.15.0
+    -   @comet/admin-date-time@7.15.0
+    -   @comet/admin-icons@7.15.0
+    -   @comet/admin-rte@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   97cd0a3dd: User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+-   c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   Updated dependencies [6b75f20e4]
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+-   Updated dependencies [948e07bba]
+-   Updated dependencies [bb041f7a7]
+-   Updated dependencies [7f72e82fc]
+    -   @comet/admin@7.14.0
+    -   @comet/admin-theme@7.14.0
+    -   @comet/blocks-admin@7.14.0
+    -   @comet/admin-rte@7.14.0
+    -   @comet/admin-date-time@7.14.0
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
