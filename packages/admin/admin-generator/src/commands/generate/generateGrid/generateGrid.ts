@@ -672,7 +672,7 @@ export function generateGrid(
     ${
         allowRowReordering
             ? `const update${gqlType}PositionMutation = gql\`
-                mutation Update${gqlType}Position($id: ID!, ${[...[`$input: ${gqlType}UpdateInput!`]]}) {
+                mutation Update${gqlType}Position($id: ID!, $input: ${gqlType}UpdateInput!) {
                     update${gqlType}(id: $id, input: $input) {
                         id
                         position
