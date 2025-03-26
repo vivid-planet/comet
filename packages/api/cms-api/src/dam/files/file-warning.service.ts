@@ -1,7 +1,7 @@
 import { EntityManager, FilterQuery } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
-import { EmitWarningsServiceInterface } from "src/warnings/decorators/emit-warnings.decorator";
 
+import { CreateWarningsServiceInterface } from "../../warnings/decorators/create-warnings.decorator";
 import { WarningInput } from "../../warnings/dto/warning.input";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
@@ -9,13 +9,13 @@ import { FileInterface } from "./entities/file.entity";
 import { LicenseType } from "./entities/license.embeddable";
 
 @Injectable()
-export class FileWarningService implements EmitWarningsServiceInterface<FileInterface> {
+export class FileWarningService implements CreateWarningsServiceInterface<FileInterface> {
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly entityManager: EntityManager,
     ) {}
 
-    async *bulkEmitWarnings() {
+    async *bulkCreateWarnings() {
         if (!this.config.enableLicenseFeature) return; // license feature not enabled, no warnings
 
         const soonToExpireDate = new Date();
@@ -46,14 +46,14 @@ export class FileWarningService implements EmitWarningsServiceInterface<FileInte
             );
 
             for (const file of files) {
-                const warnings = await this.emitWarnings(file);
+                const warnings = await this.createWarnings(file);
                 yield { warnings, tableRowId: file.id };
             }
             offset += limit;
         } while (files.length > 0);
     }
 
-    async emitWarnings(entity: FileInterface) {
+    async createWarnings(entity: FileInterface) {
         if (!this.config.enableLicenseFeature) return []; // license feature not enabled, no warnings
 
         const warnings: WarningInput[] = [];

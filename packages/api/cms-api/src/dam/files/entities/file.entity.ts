@@ -17,7 +17,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { EntityInfo } from "../../../dependencies/decorators/entity-info.decorator";
-import { EmitWarnings } from "../../../warnings/decorators/emit-warnings.decorator";
+import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
 import { DamScopeInterface } from "../../types";
 import { FileWarningService } from "../file-warning.service";
 import { FilesEntityInfoService } from "../files-entity-info.service";
@@ -50,7 +50,7 @@ export interface FileInterface extends BaseEntity {
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
-    @EmitWarnings(FileWarningService)
+    @CreateWarnings(FileWarningService)
     class FileBase extends BaseEntity implements FileInterface {
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)

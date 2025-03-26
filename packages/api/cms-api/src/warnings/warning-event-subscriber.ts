@@ -4,7 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
-import { EmitWarningsMeta } from "./decorators/emit-warnings.decorator";
+import { CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { WarningService } from "./warning.service";
 
 @Injectable()
@@ -25,9 +25,9 @@ export class WarningEventSubscriber implements EventSubscriber {
         const entities = this.orm.config.get("entities") as EntityClass<unknown>[];
         for (const entity of entities) {
             const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
-            const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
 
-            if (rootBlockEntityOptions || emitWarnings) {
+            if (rootBlockEntityOptions || createWarnings) {
                 subscribedEntities.push(entity);
             }
         }
@@ -74,17 +74,17 @@ export class WarningEventSubscriber implements EventSubscriber {
                 }
             }
 
-            const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
-            if (emitWarnings) {
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            if (createWarnings) {
                 const repository = this.entityManager.getRepository(entity);
 
                 const rows = await repository.find();
 
                 for (const row of rows) {
-                    const service = this.moduleRef.get(emitWarnings, { strict: false });
+                    const service = this.moduleRef.get(createWarnings, { strict: false });
 
                     await this.warningService.saveWarningsAndDeleteOutdated({
-                        warnings: await service.emitWarnings(row),
+                        warnings: await service.createWarnings(row),
                         type: "Entity",
                         sourceInfo: {
                             rootEntityName: entity.name,

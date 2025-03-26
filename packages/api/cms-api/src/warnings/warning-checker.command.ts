@@ -7,7 +7,7 @@ import { Block, BlockData } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
-import { EmitWarningsMeta } from "./decorators/emit-warnings.decorator";
+import { CreateWarningsMeta } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -101,17 +101,17 @@ export class WarningCheckerCommand extends CommandRunner {
 
         for (const entity of entities) {
             const entityMetadata = metadataStorage.get(entity.name);
-            const emitWarnings = this.reflector.getAllAndOverride<EmitWarningsMeta>("emitWarnings", [entity]);
-            if (emitWarnings) {
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            if (createWarnings) {
                 const repository = this.entityManager.getRepository(entity);
-                const service = this.moduleRef.get(emitWarnings, { strict: false });
+                const service = this.moduleRef.get(createWarnings, { strict: false });
 
-                if (service.bulkEmitWarnings) {
-                    const warningGenerator = service.bulkEmitWarnings();
+                if (service.bulkCreateWarnings) {
+                    const warningGenerator = service.bulkCreateWarnings();
                     for await (const { warnings, tableRowId } of warningGenerator) {
                         for (const warning of warnings) {
                             await this.warningService.saveWarnings({
-                                warnings: await service.emitWarnings(warning),
+                                warnings: await service.createWarnings(warning),
                                 type: "Entity",
                                 sourceInfo: {
                                     rootEntityName: entity.name,
@@ -126,7 +126,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
                     for (const row of rows) {
                         await this.warningService.saveWarnings({
-                            warnings: await service.emitWarnings(row),
+                            warnings: await service.createWarnings(row),
                             type: "Entity",
                             sourceInfo: {
                                 rootEntityName: entity.name,
