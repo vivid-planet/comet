@@ -21,7 +21,7 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Grid, IconButton, Typography } from "@mui/material";
-import * as React from "react";
+import { useContext } from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -65,7 +65,7 @@ interface IExampleTableProps {
     filterApi: IFilterApi<IFilterValues>;
 }
 function ExampleTable(props: IExampleTableProps) {
-    const stackApi = React.useContext(StackSwitchApiContext);
+    const stackApi = useContext(StackSwitchApiContext);
 
     return (
         <>

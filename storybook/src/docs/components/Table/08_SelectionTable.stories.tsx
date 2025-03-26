@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";

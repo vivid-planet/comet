@@ -2,7 +2,7 @@ import { Field, FieldContainer } from "@comet/admin";
 import { ColorPicker, ColorPickerColorPreviewProps, FinalFormColorPicker } from "@comet/admin-color-picker";
 import { StateFilled, StateRing, Warning } from "@comet/admin-icons";
 import { Grid } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -11,11 +11,11 @@ export default {
 
 export const Basic = {
     render: () => {
-        const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
-        const [colorTwo, setColorTwo] = React.useState<string | undefined>("rgba(255, 127, 80, 0.75)");
-        const [colorThree, setColorThree] = React.useState<string | undefined>();
-        const [colorFour, setColorFour] = React.useState<string | undefined>();
-        const [colorFive, setColorFive] = React.useState<string | undefined>();
+        const [colorOne, setColorOne] = useState<string | undefined>("#00ff00");
+        const [colorTwo, setColorTwo] = useState<string | undefined>("rgba(255, 127, 80, 0.75)");
+        const [colorThree, setColorThree] = useState<string | undefined>();
+        const [colorFour, setColorFour] = useState<string | undefined>();
+        const [colorFive, setColorFive] = useState<string | undefined>();
 
         return (
             <Grid container spacing={4} sx={{ pb: 2 }}>
@@ -128,18 +128,18 @@ export const FinalForm = {
 
 export const Customized = {
     render: () => {
-        const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
-        const [colorTwo, setColorTwo] = React.useState<string | undefined>();
+        const [colorOne, setColorOne] = useState<string | undefined>("#00ff00");
+        const [colorTwo, setColorTwo] = useState<string | undefined>();
 
-        const CustomColorPreview = ({ color }: ColorPickerColorPreviewProps): React.ReactElement => {
+        const CustomColorPreview = ({ color }: ColorPickerColorPreviewProps) => {
             return <StateFilled htmlColor={color} sx={{ fontSize: 24 }} />;
         };
 
-        const CustomColorEmptyPreview = (): React.ReactElement => {
+        const CustomColorEmptyPreview = () => {
             return <StateRing color="warning" sx={{ fontSize: 24 }} />;
         };
 
-        const CustomColorInvalidPreview = (): React.ReactElement => {
+        const CustomColorInvalidPreview = () => {
             return <Warning color="error" sx={{ fontSize: 24 }} />;
         };
 

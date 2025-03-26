@@ -49,34 +49,53 @@ type SvgNode =
           [key: string]: SvgNode;
       };
 
-const recursivelyFindJSInSvg = (node: SvgNode): boolean => {
+const disallowedSvgTags = [
+    "script", // can lead to XSS
+    "foreignObject", // can embed non-SVG content
+    "image", // can load external resources
+    "animate", // can modify attributes; resource exhaustion
+    "animateMotion", // can modify attributes; resource exhaustion
+    "animateTransform", // can modify attributes; resource exhaustion
+    "set", // can modify attributes
+];
+
+const recursiveIsValidSvgNode = (node: SvgNode): boolean => {
     if (typeof node === "string") {
         // is plain text -> can't contain JS
-        return false;
+        return true;
     }
 
-    for (const tagOrAttr of Object.keys(node)) {
-        if (tagOrAttr.toLowerCase() === "script" || tagOrAttr.toLowerCase().startsWith("on")) {
-            // is script tag or event handler
-            return true;
+    for (const [tagOrAttributeName, value] of Object.entries(node)) {
+        const containsDisallowedTags = disallowedSvgTags.some((tag) => tag.toLowerCase() === tagOrAttributeName.toLowerCase());
+
+        const containsEventHandler = tagOrAttributeName.toLowerCase().startsWith("on"); // can execute JavaScript
+
+        const containsHref = // can execute JavaScript or link to malicious targets
+            ["href", "xlink:href"].includes(tagOrAttributeName) &&
+            typeof value === "string" &&
+            (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("javascript:"));
+
+        if (containsDisallowedTags || containsEventHandler || containsHref) {
+            return false;
         }
 
         // is node -> children can contain JS
-        const children = node[tagOrAttr];
-        const childrenContainJS = recursivelyFindJSInSvg(children);
-        if (childrenContainJS) {
-            return true;
+        const children = node[tagOrAttributeName];
+        const childrenAreValid = recursiveIsValidSvgNode(children);
+
+        if (!childrenAreValid) {
+            return false;
         }
     }
 
-    return false;
+    return true;
 };
 
-export const svgContainsJavaScript = (svg: string) => {
+export const isValidSvg = (svg: string) => {
     const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" });
     const jsonObj = parser.parse(svg) as SvgNode;
 
-    return recursivelyFindJSInSvg(jsonObj);
+    return recursiveIsValidSvgNode(jsonObj);
 };
 
 export const removeMulterTempFile = async (file: FileUploadInput) => {

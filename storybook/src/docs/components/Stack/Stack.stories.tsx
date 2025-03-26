@@ -1,4 +1,5 @@
 import {
+    Button,
     Stack,
     StackBackButton,
     StackBreadcrumbs,
@@ -14,8 +15,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft, ArrowRight } from "@comet/admin-icons";
-import { Button, IconButton, Link } from "@mui/material";
-import * as React from "react";
+import { IconButton, Link } from "@mui/material";
 
 import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";

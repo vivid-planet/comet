@@ -1,6 +1,5 @@
 import { DateField, DateRange, DateRangeField, DateTimeField, TimeField, TimeRange, TimeRangeField } from "@comet/admin-date-time";
 import { Box, Card, CardContent } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {

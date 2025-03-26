@@ -16,6 +16,7 @@ import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
+    FilenameTooLongError,
     FileSizeError,
     MaxResolutionError,
     MissingFileExtensionError,
@@ -31,12 +32,15 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-interface FileWithPathAndLicenseInfo extends File {
+export interface FileWithDamUploadMetadata extends File {
     path?: string;
     license?: GQLLicenseInput;
+    title?: string;
+    altText?: string;
+    importSource?: ImportSource;
 }
 
-export interface FileWithFolderPath extends FileWithPathAndLicenseInfo {
+export interface FileWithFolderPath extends FileWithDamUploadMetadata {
     folderPath?: string;
 }
 
@@ -45,7 +49,7 @@ interface UploadDamFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithPathAndLicenseInfo[];
+    acceptedFiles: FileWithDamUploadMetadata[];
     fileRejections: FileRejection[];
 }
 
@@ -53,8 +57,10 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 
 interface UploadFilesOptions {
     folderId?: string;
+    /**
+     * @deprecated Set `importSource` directly on the file
+     */
     importSource?: ImportSource;
-    license?: GQLLicenseInput;
 }
 
 export interface FileUploadApi {
@@ -82,7 +88,7 @@ interface RejectedFile {
     file: File;
 }
 
-const addFolderPathToFiles = async (acceptedFiles: FileWithPathAndLicenseInfo[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
@@ -107,6 +113,9 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPathAndLicenseInfo[])
         const newFile: FileWithFolderPath = new File([buffer], file.name, { lastModified: file.lastModified, type: file.type });
         newFile.path = file.path;
         newFile.license = file.license;
+        newFile.title = file.title;
+        newFile.altText = file.altText;
+        newFile.importSource = file.importSource;
 
         const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
         newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
@@ -354,7 +363,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
     const uploadFiles = async (
         { acceptedFiles, fileRejections }: Files,
-        { folderId, importSource, license }: UploadFilesOptions,
+        { folderId, importSource }: UploadFilesOptions,
     ): Promise<{ hasError: boolean; rejectedFiles: RejectedFile[]; uploadedItems: NewlyUploadedItem[] }> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
@@ -403,7 +412,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         scope,
                         importSourceId: importSource?.importSourceId,
                         importSourceType: importSource?.importSourceType,
-                        license,
                     };
 
                     const onUploadProgress = (progressEvent: ProgressEvent) => {
@@ -423,11 +431,11 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
                     errorOccurred = true;
-                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
+                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number } | string>;
 
-                    if (typedErr.response?.data.error === "CometImageResolutionException") {
+                    if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
                         addValidationError(file, <MaxResolutionError maxResolution={context.damConfig.maxSrcResolution} />);
-                    } else if (typedErr.response?.data.error === "CometValidationException") {
+                    } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
                         const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
 
@@ -437,10 +445,12 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                             addValidationError(file, <MissingFileExtensionError />);
                         } else if (message.includes("File type and extension mismatch")) {
                             addValidationError(file, <FileExtensionTypeMismatchError extension={extension} mimetype={file.type} />);
+                        } else if (message.includes("Filename is too long")) {
+                            addValidationError(file, <FilenameTooLongError />);
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response?.data.message === "Rejected File Upload: SVG must not contain JavaScript") {
+                    } else if (hasStringErrorData(typedErr) && typedErr.response?.data.includes("SVG contains forbidden content")) {
                         addValidationError(file, <SvgContainsJavaScriptError />);
                     } else if (typedErr.response === undefined && typedErr.request) {
                         addValidationError(file, <NetworkError />);
@@ -492,4 +502,14 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         },
         newlyUploadedItems,
     };
+};
+
+const hasObjectErrorData = (
+    err: AxiosError<{ error: string; message: string; statusCode: number } | string>,
+): err is AxiosError<{ error: string; message: string; statusCode: number }> => {
+    return typeof err.response?.data === "object" && err.response?.data.error !== undefined;
+};
+
+const hasStringErrorData = (err: AxiosError<{ error: string; message: string; statusCode: number } | string>): err is AxiosError<string> => {
+    return typeof err.response?.data === "string";
 };

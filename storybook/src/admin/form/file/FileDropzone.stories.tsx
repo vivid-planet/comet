@@ -1,7 +1,7 @@
 import { FileDropzone, FileDropzoneProps } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import { Meta } from "@storybook/react";
-import React from "react";
+import { useState } from "react";
 
 type FileRejections = Parameters<Required<FileDropzoneProps>["onDropRejected"]>[0];
 
@@ -45,8 +45,8 @@ type Args = {
 
 export const _FileDropzone = {
     render: ({ disabled, multiple, hasError }: Args) => {
-        const [files, setFiles] = React.useState<File[]>([]);
-        const [rejectedFiles, setRejectedFiles] = React.useState<FileRejections>([]);
+        const [files, setFiles] = useState<File[]>([]);
+        const [rejectedFiles, setRejectedFiles] = useState<FileRejections>([]);
 
         return (
             <>

@@ -2,7 +2,7 @@ import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@
 import { Box, Card, CardContent } from "@mui/material";
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
-import * as React from "react";
+import { useState } from "react";
 
 import { PrintAnything } from "./helper";
 
@@ -28,7 +28,7 @@ export default {
 
 export const SaveAsHtml = {
     render: () => {
-        const [savableContent, setSavableContent] = React.useState<Html>(defaultValue);
+        const [savableContent, setSavableContent] = useState<Html>(defaultValue);
 
         const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
             setSavableContent(convertStateToRawContent(innerEditorState));

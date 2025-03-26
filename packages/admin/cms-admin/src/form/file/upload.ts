@@ -1,14 +1,20 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 
-import { GQLLicenseInput } from "../../graphql.generated";
+import { GQLUpdateDamFileInput } from "../../graphql.generated";
 
 interface UploadFileData {
-    file: File;
+    file: File &
+        Pick<GQLUpdateDamFileInput, "license" | "title" | "altText"> & { importSource?: { importSourceType: string; importSourceId: string } };
     scope: Record<string, unknown>;
     folderId?: string;
+    /**
+     * @deprecated Set `file.importSource.importSourceId` instead
+     */
     importSourceId?: string;
+    /**
+     * @deprecated Set `file.importSource.importSourceType` instead
+     */
     importSourceType?: string;
-    license?: GQLLicenseInput;
 }
 
 interface UploadFileParams {
@@ -36,12 +42,23 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("scope", JSON.stringify(data.scope));
-    if (data.importSourceId && data.importSourceType) {
+
+    if (data.importSourceId && data.importSourceType && !data.file.importSource) {
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
     }
-    if (data.license) {
-        formData.append("license", JSON.stringify(data.license));
+    if (data.file.importSource) {
+        formData.append("importSourceId", data.file.importSource.importSourceId);
+        formData.append("importSourceType", data.file.importSource.importSourceType);
+    }
+    if (data.file.license) {
+        formData.append("license", JSON.stringify(data.file.license));
+    }
+    if (data.file.title) {
+        formData.append("title", data.file.title);
+    }
+    if (data.file.altText) {
+        formData.append("altText", data.file.altText);
     }
     if (data.folderId !== undefined) {
         formData.append("folderId", data.folderId);
@@ -59,11 +76,8 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
 }
 
 interface ReplaceFileByIdData {
-    file: File;
+    file: File & Pick<GQLUpdateDamFileInput, "license" | "title" | "altText">;
     fileId: string;
-    importSourceId?: string;
-    importSourceType?: string;
-    license?: GQLLicenseInput;
 }
 
 export function replaceById<ResponseData>({
@@ -75,12 +89,14 @@ export function replaceById<ResponseData>({
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("fileId", data.fileId);
-    if (data.importSourceId && data.importSourceType) {
-        formData.append("importSourceId", data.importSourceId);
-        formData.append("importSourceType", data.importSourceType);
+    if (data.file.license) {
+        formData.append("license", JSON.stringify(data.file.license));
     }
-    if (data.license) {
-        formData.append("license", JSON.stringify(data.license));
+    if (data.file.title) {
+        formData.append("title", data.file.title);
+    }
+    if (data.file.altText) {
+        formData.append("altText", data.file.altText);
     }
 
     return apiClient.post<ResponseData>("/dam/files/replace-by-id", formData, {

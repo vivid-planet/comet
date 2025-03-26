@@ -1,6 +1,5 @@
-import { Table } from "@comet/admin";
-import { Button } from "@mui/material";
-import * as React from "react";
+import { Button, Table } from "@comet/admin";
+import { useState } from "react";
 
 interface Person {
     id: number;
@@ -149,14 +148,12 @@ export const TableColumnVisibleProp = () => {
         { id: 2, firstname: "Lewis", lastname: "Chan" },
     ];
 
-    const [idVisible, setIdVisible] = React.useState(false);
+    const [idVisible, setIdVisible] = useState(false);
 
     return (
         <>
             <p>
-                <Button onClick={() => setIdVisible((visible) => !visible)} variant="contained" color="primary">
-                    Show ID Column
-                </Button>
+                <Button onClick={() => setIdVisible((visible) => !visible)}>Show ID Column</Button>
             </p>
             <Table
                 data={data}

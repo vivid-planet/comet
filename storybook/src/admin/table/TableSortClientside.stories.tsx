@@ -1,5 +1,4 @@
 import { SortDirection, Table, useTableQuerySort } from "@comet/admin";
-import * as React from "react";
 
 interface IExampleRow {
     id: number;

@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    FillSpace,
     FinalForm,
     FinalFormSaveButton,
     Loading,
@@ -10,7 +11,6 @@ import {
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
@@ -26,6 +26,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
+import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig } from "../config/useDamConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
@@ -115,6 +116,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
+    const isAllowed = useUserPermissionCheck();
 
     const onSubmit = useCallback(
         async (values: EditFileFormValues) => {
@@ -202,7 +204,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                     />
                                 </ToolbarItem>
                             )}
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <FinalFormSaveButton />
                         </ToolbarActions>
@@ -244,7 +246,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {Object.keys(dependencyMap).length > 0 && (
+                                {isAllowed("dependencies") && Object.keys(dependencyMap).length > 0 && (
                                     <RouterTab
                                         key="dependents"
                                         label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}

@@ -1,7 +1,6 @@
 import { FilterBarButton } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import { List, ListItem } from "@mui/material";
-import * as React from "react";
 
 function Story() {
     return (

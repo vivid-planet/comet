@@ -1,5 +1,4 @@
 import { Stack, StackBreadcrumbs, StackPage, useStackSwitch } from "@comet/admin";
-import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

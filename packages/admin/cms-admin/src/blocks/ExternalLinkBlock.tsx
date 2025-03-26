@@ -1,6 +1,5 @@
-import { Field, FinalFormCheckbox, FinalFormInput } from "@comet/admin";
+import { CheckboxField, Field, FinalFormInput } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
-import { FormControlLabel } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
@@ -70,14 +69,10 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         validate={(url) => validateLinkTarget(url)}
                         disableContentTranslation
                     />
-                    <Field name="openInNewWindow" type="checkbox">
-                        {(props) => (
-                            <FormControlLabel
-                                label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
-                                control={<FinalFormCheckbox {...props} />}
-                            />
-                        )}
-                    </Field>
+                    <CheckboxField
+                        label={<FormattedMessage id="comet.blocks.link.external.openInNewWindow" defaultMessage="Open in new window" />}
+                        name="openInNewWindow"
+                    />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );
@@ -85,4 +80,6 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
     previewContent: (state) => {
         return state.targetUrl ? [{ type: "text", content: state.targetUrl }] : [];
     },
+
+    extractTextContents: (state) => (state.targetUrl ? [state.targetUrl] : []),
 };

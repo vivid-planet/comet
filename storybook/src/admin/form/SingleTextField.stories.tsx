@@ -1,7 +1,7 @@
 import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
-import * as React from "react";
+import { ChangeEvent, useState } from "react";
 
 export default {
     title: "@comet/admin/form",
@@ -9,9 +9,9 @@ export default {
 
 export const SingleTextField = {
     render: () => {
-        const [searchString1, setSearchString1] = React.useState<string>("");
-        const [searchString2, setSearchString2] = React.useState<string>("");
-        const [checkboxValue, setCheckboxValue] = React.useState<boolean>(false);
+        const [searchString1, setSearchString1] = useState<string>("");
+        const [searchString2, setSearchString2] = useState<string>("");
+        const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
 
         return (
             <div style={{ width: 400 }}>
@@ -31,7 +31,7 @@ export const SingleTextField = {
                                                 <Search />
                                             </InputAdornment>
                                         }
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString1(e.target.value)}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchString1(e.target.value)}
                                         value={searchString1}
                                     />
                                 </FieldContainer>
@@ -52,7 +52,7 @@ export const SingleTextField = {
                                                 <Search />
                                             </InputAdornment>
                                         }
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString2(e.target.value)}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchString2(e.target.value)}
                                         value={searchString2}
                                     />
                                 </FieldContainer>
@@ -60,7 +60,7 @@ export const SingleTextField = {
                                     control={
                                         <Checkbox
                                             checked={checkboxValue}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckboxValue(e.target.checked)}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setCheckboxValue(e.target.checked)}
                                         />
                                     }
                                     label="Additional Setting"

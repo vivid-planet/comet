@@ -1,7 +1,6 @@
 import { Field, FilterBar, FilterBarPopoverFilter, FinalFormRangeInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
 import { Typography } from "@mui/material";
 import faker from "faker";
-import * as React from "react";
 
 interface IFilterValues {
     horsepower: {

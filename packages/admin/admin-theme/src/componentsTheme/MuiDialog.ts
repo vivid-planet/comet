@@ -32,5 +32,10 @@ export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (component, { spa
         paperFullWidth: {
             width: `calc(100% - ${spacing(16)})`,
         },
+        paperFullScreen: {
+            borderRadius: 0,
+            maxWidth: "none",
+            margin: 0,
+        },
     }),
 });

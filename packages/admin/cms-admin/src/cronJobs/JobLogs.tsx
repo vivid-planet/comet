@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
@@ -24,7 +24,7 @@ function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string |
                     }}
                 />
             </ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
         </Toolbar>
     );
 }

@@ -1,6 +1,5 @@
 import { ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
 import { TableCell } from "@mui/material";
-import * as React from "react";
 
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {
     return (

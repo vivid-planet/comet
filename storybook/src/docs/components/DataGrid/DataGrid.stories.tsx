@@ -1,9 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     CrudMoreActionsMenu,
     DataGridToolbar,
     FileIcon,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     Loading,
@@ -11,7 +13,6 @@ import {
     RowActionsItem,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
@@ -19,12 +20,11 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
-import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
+import { Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import * as React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
@@ -275,7 +275,7 @@ export const _GridFilterButton = {
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
@@ -392,8 +392,8 @@ export const UseDataGridExcelExport = {
             },
         ];
 
-        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
-        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+        const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
+        const moreMenuRef = useRef<HTMLButtonElement>(null);
 
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
@@ -428,10 +428,10 @@ export const UseDataGridExcelExport = {
         function DemoToolbar() {
             return (
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
+                            <Button variant="textDark" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />}>
                                 More Actions
                             </Button>
                             <Menu
@@ -491,7 +491,7 @@ export const _CrudMoreActionsMenu = {
         function DemoToolBar() {
             return (
                 <DataGridToolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <CrudMoreActionsMenu
                             selectionSize={selectionModel.length}

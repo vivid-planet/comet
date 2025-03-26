@@ -8,6 +8,7 @@ import {
     dataGridDateTimeColumn,
     DataGridToolbar,
     ExportApi,
+    FillSpace,
     filterByFragment,
     GridCellContent,
     GridColDef,
@@ -17,7 +18,6 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
@@ -99,18 +99,25 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: Rea
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
-            <CrudMoreActionsMenu
-                overallActions={[
-                    {
-                        label: <FormattedMessage {...messages.downloadAsExcel} />,
-                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                        onClick: () => exportApi.exportGrid(),
-                        disabled: exportApi.loading,
-                    },
-                ]}
-            />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+            <FillSpace />
+            <ToolbarActions>
+                <CrudMoreActionsMenu
+                    slotProps={{
+                        button: {
+                            responsive: true,
+                        },
+                    }}
+                    overallActions={[
+                        {
+                            label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                            onClick: () => exportApi.exportGrid(),
+                            disabled: exportApi.loading,
+                        },
+                    ]}
+                />
+                {toolbarAction}
+            </ToolbarActions>
         </DataGridToolbar>
     );
 }
@@ -132,6 +139,9 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" },
             ],
+            initialFilter: {
+                items: [{ columnField: "type", operatorValue: "is", value: "Shirt" }],
+            },
             queryParamsPrefix: "products",
         }),
         ...usePersistentColumnState("ProductsGrid"),

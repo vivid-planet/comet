@@ -1,20 +1,24 @@
-import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
-import { ComponentsOverrides, css } from "@mui/material/styles";
+import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, svgIconClasses, useThemeProps } from "@mui/material";
+import { ComponentsOverrides, css, Theme } from "@mui/material/styles";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { useObservedWidth } from "../utils/useObservedWidth";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
     root: typeof FormControl;
+    innerContainer: "div";
     label: typeof FormLabel;
     inputContainer: "div";
     error: typeof FormHelperText;
     warning: typeof FormHelperText;
     helperText: typeof FormHelperText;
+    secondaryHelperText: typeof FormHelperText;
+    helperTextsWrapper: "div";
+    helperTextContent: "span";
 }> & {
     variant?: "vertical" | "horizontal";
+    forceVerticalContainerSize?: number;
     fullWidth?: boolean;
     label?: ReactNode;
     required?: boolean;
@@ -24,10 +28,13 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
     helperText?: ReactNode;
+    secondaryHelperText?: ReactNode;
+    helperTextIcon?: ReactNode;
 };
 
 export type FieldContainerClassKey =
     | "root"
+    | "innerContainer"
     | "vertical"
     | "horizontal"
     | "fullWidth"
@@ -42,12 +49,16 @@ export type FieldContainerClassKey =
     | "error"
     | "hasWarning"
     | "warning"
-    | "helperText";
+    | "helperText"
+    | "secondaryHelperText"
+    | "helperTextsWrapper"
+    | "helperTextContent";
 
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
     hasWarning: boolean;
-    forceVertical: boolean;
+    hasLabel: boolean;
+    forceVerticalContainerSize: number;
 };
 
 const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState>({
@@ -55,8 +66,8 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
     slotName: "root",
     classesResolver(ownerState) {
         return [
-            (ownerState.variant === "vertical" || ownerState.forceVertical) && "vertical",
-            ownerState.variant === "horizontal" && !ownerState.forceVertical && "horizontal",
+            ownerState.variant === "vertical" && "vertical",
+            ownerState.variant === "horizontal" && "horizontal",
             ownerState.fullWidth && "fullWidth",
             ownerState.hasError && "hasError",
             ownerState.hasWarning && "hasWarning",
@@ -71,6 +82,13 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
     ({ theme, ownerState }) => css`
         max-width: 100%;
 
+        ${ownerState.fullWidth &&
+        ownerState.variant === "horizontal" &&
+        css`
+            container-type: inline-size;
+            container-name: comet-admin-field-container-root;
+        `}
+
         ${ownerState.fieldMargin !== "never" &&
         css`
             margin-bottom: ${theme.spacing(4)};
@@ -78,15 +96,6 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
             css`
                 margin-right: ${theme.spacing(4)};
             `}
-        `}
-
-        ${ownerState.variant === "horizontal" &&
-        !ownerState.forceVertical &&
-        css`
-            display: flex;
-            flex-direction: row;
-            max-width: 944px;
-            gap: ${theme.spacing(4)};
         `}
 
         ${ownerState.fieldMargin === "onlyIfNotLast" &&
@@ -100,10 +109,31 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
                 `}
             }
         `}
+    `,
+);
+
+const InnerContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerState>({
+    componentName: "FormFieldContainer",
+    slotName: "innerContainer",
+})(
+    ({ theme, ownerState }) => css`
+        ${ownerState.variant === "horizontal" &&
+        css`
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                display: flex;
+                flex-direction: row;
+                max-width: 944px;
+                gap: ${theme.spacing(4)};
+            }
+        `}
 
         ${ownerState.hasError &&
         css`
             [class*="${inputBaseClasses.root}"]:not([class*="${inputBaseClasses.focused}"]) {
+                border-color: ${theme.palette.error.main};
+            }
+
+            [class*="${inputBaseClasses.root}"]:hover:not([class*="${inputBaseClasses.focused}"]) {
                 border-color: ${theme.palette.error.main};
             }
         `}
@@ -111,6 +141,10 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
         ${ownerState.hasWarning &&
         css`
             [class*="${inputBaseClasses.root}"]:not([class*="${inputBaseClasses.focused}"]) {
+                border-color: ${theme.palette.warning.main};
+            }
+
+            [class*="${inputBaseClasses.root}"]:hover:not([class*="${inputBaseClasses.focused}"]) {
                 border-color: ${theme.palette.warning.main};
             }
         `}
@@ -122,14 +156,27 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
     slotName: "label",
 })(
     ({ theme, ownerState }) => css`
-        ${ownerState.variant === "horizontal" &&
-        !ownerState.forceVertical &&
+        ${!ownerState.hasLabel &&
         css`
-            width: calc(100% / 3);
-            flex-shrink: 0;
-            flex-grow: 0;
-            margin-bottom: 0;
-            margin-top: ${theme.spacing(2)};
+            display: none;
+
+            ${ownerState.variant === "horizontal" &&
+            css`
+                @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                    display: block;
+                }
+            `}
+        `}
+
+        ${ownerState.variant === "horizontal" &&
+        css`
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                width: calc(100% / 3);
+                flex-shrink: 0;
+                flex-grow: 0;
+                margin-bottom: 0;
+                margin-top: ${theme.spacing(2)};
+            }
         `}
 
         ${ownerState.hasError &&
@@ -155,18 +202,20 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     ({ ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
-        !ownerState.forceVertical &&
         css`
-            flex-grow: 1;
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                flex-grow: 1;
+            }
         `}
 
         ${ownerState.variant === "horizontal" &&
-        !ownerState.forceVertical &&
         css`
-            min-height: 40px;
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                min-height: 40px;
 
-            > .CometAdminFormFieldContainer-root {
-                margin-bottom: 0;
+                > .CometAdminFormFieldContainer-root {
+                    margin-bottom: 0;
+                }
             }
         `}
 
@@ -176,16 +225,30 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     `,
 );
 
+const getCommonHelperTextStyles = (theme: Theme) => css`
+    display: flex;
+    gap: ${theme.spacing(1)};
+
+    > .${svgIconClasses.root} {
+        width: 12px;
+    }
+`;
+
 const Error = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "error",
-})();
+})(
+    ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
+    `,
+);
 
 const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "warning",
 })(
     ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
         color: ${theme.palette.warning.main};
     `,
 );
@@ -195,13 +258,46 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     slotName: "helperText",
 })(
     ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
         color: ${theme.palette.grey[300]};
     `,
 );
 
+const SecondaryHelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "secondaryHelperText",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[300]};
+        margin-left: auto;
+
+        &.Mui-disabled {
+            color: ${theme.palette.grey[300]};
+        }
+    `,
+);
+
+const HelperTextsWrapper = createComponentSlot("div")<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperTextsWrapper",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: ${theme.spacing(3)};
+    `,
+);
+
+const HelperTextContent = createComponentSlot("span")<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperTextContent",
+})();
+
 export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
+        forceVerticalContainerSize = 600,
         fullWidth: passedFullWidth,
         label,
         error,
@@ -210,6 +306,8 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         children,
         warning,
         helperText,
+        secondaryHelperText,
+        helperTextIcon,
         scrollTo = false,
         fieldMargin = "onlyIfNotLast",
         slotProps,
@@ -221,8 +319,6 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
     const hasWarning = !hasError && !!warning;
 
     const ref = useRef<HTMLDivElement>(null);
-    const rootWidth = useObservedWidth(ref);
-    const forceVertical = rootWidth <= 600;
 
     useEffect(() => {
         if (scrollTo) {
@@ -238,28 +334,43 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         variant,
         hasError,
         hasWarning,
-        forceVertical,
+        hasLabel: Boolean(label),
+        forceVerticalContainerSize,
     };
 
     return (
         <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
-            <>
-                {(label || (variant === "horizontal" && !forceVertical)) && (
-                    <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
-                        {label}
-                    </Label>
-                )}
+            <InnerContainer ownerState={ownerState} {...slotProps?.innerContainer}>
+                <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
+                    {label}
+                </Label>
                 <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
                     {children}
-                    {hasError && (
-                        <Error error {...slotProps?.error}>
-                            {error}
-                        </Error>
-                    )}
-                    {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
-                    {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
+                    <HelperTextsWrapper {...slotProps?.helperTextsWrapper}>
+                        {hasError && (
+                            <Error error {...slotProps?.error}>
+                                {Boolean(helperTextIcon) && helperTextIcon}
+                                <HelperTextContent {...slotProps?.helperTextContent}>{error}</HelperTextContent>
+                            </Error>
+                        )}
+                        {hasWarning && !hasError && (
+                            <Warning {...slotProps?.warning}>
+                                {Boolean(helperTextIcon) && helperTextIcon}
+                                <HelperTextContent {...slotProps?.helperTextContent}>{warning}</HelperTextContent>
+                            </Warning>
+                        )}
+                        {Boolean(helperText) && !hasError && !hasWarning && (
+                            <HelperText {...slotProps?.helperText}>
+                                {Boolean(helperTextIcon) && helperTextIcon}
+                                <HelperTextContent {...slotProps?.helperTextContent}>{helperText}</HelperTextContent>
+                            </HelperText>
+                        )}
+                        {Boolean(secondaryHelperText) && (
+                            <SecondaryHelperText {...slotProps?.secondaryHelperText}>{secondaryHelperText}</SecondaryHelperText>
+                        )}
+                    </HelperTextsWrapper>
                 </InputContainer>
-            </>
+            </InnerContainer>
         </Root>
     );
 };

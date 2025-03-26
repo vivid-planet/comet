@@ -1,5 +1,5 @@
 import { SaveButton } from "@comet/admin";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 export default {
@@ -8,7 +8,7 @@ export default {
 
 export const Basic = {
     render: () => {
-        const [saving, setSaving] = React.useState(false);
+        const [saving, setSaving] = useState(false);
         return (
             <SaveButton
                 saving={saving}

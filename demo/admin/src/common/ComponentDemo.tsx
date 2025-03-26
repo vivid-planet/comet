@@ -1,10 +1,9 @@
 import {
-    CheckboxField,
+    CheckboxListField,
     Field,
-    FieldContainer,
     FinalForm,
-    FinalFormRadio,
     MainContent,
+    RadioGroupField,
     SelectField,
     Stack,
     SwitchField,
@@ -42,7 +41,7 @@ import {
     resolveNewState,
 } from "@comet/blocks-admin";
 import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
-import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
+import { Box, Grid, MenuItem, Typography } from "@mui/material";
 import { ReactNode, useState } from "react";
 
 import { RichTextBlock } from "./blocks/RichTextBlock";
@@ -208,26 +207,58 @@ export function ComponentDemo() {
 
                             <Field name="richText" label="Rich Text" component={FinalFormRichTextBlock} fullWidth />
 
-                            <FieldContainer label="Single choice">
-                                <Field name="single-choice" type="radio" value="Option 1" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 1" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="single-choice" type="radio" value="Option 2" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 2" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="single-choice" type="radio" value="Option 3" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 3" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="single-choice" type="radio" value="Option 4 disabled" fullWidth disabled>
-                                    {(props) => <FormControlLabel label="Option 4 disabled" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                            </FieldContainer>
-                            <FieldContainer label="Multiple choice">
-                                <CheckboxField name="multiple-choice-1" label="Option 1" fullWidth />
-                                <CheckboxField name="multiple-choice-2" label="Option 2" fullWidth />
-                                <CheckboxField name="multiple-choice-3" label="Option 3" fullWidth />
-                                <CheckboxField name="multiple-choice-4-disabled" label="Option 4 disabled" fullWidth disabled />
-                            </FieldContainer>
+                            <RadioGroupField
+                                label="Single choice"
+                                layout="column"
+                                name="single-choice"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option 1",
+                                        value: "Option 1",
+                                    },
+                                    {
+                                        label: "Option 2",
+                                        value: "Option 2",
+                                    },
+                                    {
+                                        label: "Option 3",
+                                        value: "Option 3",
+                                    },
+                                    {
+                                        label: "Option 4 disabled",
+                                        value: "Option 4",
+                                        disabled: true,
+                                    },
+                                ]}
+                            />
+
+                            <CheckboxListField
+                                layout="column"
+                                label="Multiple choice"
+                                variant="horizontal"
+                                name="multiple-choice"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option 1",
+                                        value: "Option 1",
+                                    },
+                                    {
+                                        label: "Option 2",
+                                        value: "Option 2",
+                                    },
+                                    {
+                                        label: "Option 3",
+                                        value: "Option 3",
+                                    },
+                                    {
+                                        label: "Option 4 disabled",
+                                        value: "Option 4",
+                                        disabled: true,
+                                    },
+                                ]}
+                            />
 
                             <SwitchField name="switch" fieldLabel="Switch with label" />
 

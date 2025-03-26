@@ -1,8 +1,9 @@
 import {
+    Button,
     CancelButton,
+    CheckboxField,
     Field,
     FieldContainer,
-    FinalFormCheckbox,
     FinalFormInput,
     FinalFormRadio,
     FinalFormSelect,
@@ -10,21 +11,9 @@ import {
     OkayButton,
 } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControlLabel,
-    Grid,
-    MenuItem,
-    Paper,
-    ThemeProvider,
-    Typography,
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, MenuItem, Paper, ThemeProvider, Typography } from "@mui/material";
 import { styled, StyledEngineProvider } from "@mui/material/styles";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 const fooBarOptions = [
@@ -103,9 +92,7 @@ export const FieldsInSidebar = {
                                         fullWidth
                                         component={FinalFormInput}
                                     />
-                                    <Field name="checkbox" type="checkbox" fullWidth>
-                                        {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                                    </Field>
+                                    <CheckboxField name="checkbox" label="Checkbox" fullWidth />
                                     <FieldContainer label="Radio" fullWidth>
                                         <>
                                             {flavourOptions.map(({ value, label }) => (
@@ -129,7 +116,7 @@ export const FieldsInSidebar = {
 
 export const FieldsInDialog = {
     render: () => {
-        const [showDialog, setShowDialog] = React.useState<boolean>(false);
+        const [showDialog, setShowDialog] = useState<boolean>(false);
 
         return (
             <>
@@ -164,9 +151,7 @@ export const FieldsInDialog = {
                                             fullWidth
                                             component={FinalFormInput}
                                         />
-                                        <Field name="checkbox" type="checkbox" fullWidth>
-                                            {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                                        </Field>
+                                        <CheckboxField name="checkbox" label="Checkbox" fullWidth />
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
@@ -179,9 +164,7 @@ export const FieldsInDialog = {
                 </Dialog>
 
                 <div style={{ textAlign: "center" }}>
-                    <Button variant="contained" color="primary" onClick={() => setShowDialog(true)}>
-                        Show Dialog
-                    </Button>
+                    <Button onClick={() => setShowDialog(true)}>Show Dialog</Button>
                 </div>
             </>
         );
@@ -323,9 +306,7 @@ export const HorizontalFields = {
                                         ))}
                                     </>
                                 </FieldContainer>
-                                <Field name="checkbox" type="checkbox" label="Checkbox">
-                                    {(props) => <FormControlLabel label="" control={<FinalFormCheckbox {...props} />} />}
-                                </Field>
+                                <CheckboxField name="checkbox" fieldLabel="Checkbox" fullWidth />
                             </form>
                         )}
                     />

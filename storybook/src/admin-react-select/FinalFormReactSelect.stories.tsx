@@ -1,7 +1,6 @@
 import { Field, FinalFormInput, FormSection } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Card, CardContent } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 const options = [

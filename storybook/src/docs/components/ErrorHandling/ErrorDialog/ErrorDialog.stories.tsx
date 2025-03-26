@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { useErrorDialog } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
-import * as React from "react";
+import { Button, useErrorDialog } from "@comet/admin";
+import { Typography } from "@mui/material";
+import { useState } from "react";
 
 import { apolloSwapiStoryDecorator } from "../../../../apollo-story.decorator";
 import { errorDialogStoryProviderDecorator } from "./error-dialog-provider.decorator";
@@ -18,8 +18,6 @@ export const ManualErrorDialog = {
             return (
                 <div>
                     <Button
-                        variant="contained"
-                        color="primary"
                         onClick={() => {
                             errorDialog?.showError({
                                 title: "Error",
@@ -40,7 +38,7 @@ export const ManualErrorDialog = {
 export const AutomaticErrorOnGraphqlError = {
     render: () => {
         const Story = () => {
-            const [brokenQuery, setBrokenQuery] = React.useState(false);
+            const [brokenQuery, setBrokenQuery] = useState(false);
             const query = brokenQuery ? "{ allFilms { films { somenotavailablefield } } }" : "{ allFilms { films { title } } }";
             const { data, error } = useQuery(gql`
                 ${query}
@@ -52,8 +50,6 @@ export const AutomaticErrorOnGraphqlError = {
                     </div>
                     <Typography>Query: {query}</Typography>
                     <Button
-                        variant="contained"
-                        color="primary"
                         onClick={() => {
                             setBrokenQuery(!brokenQuery);
                         }}

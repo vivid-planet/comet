@@ -1,6 +1,6 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 
 type StoryProps = {
     noBackground?: boolean;
@@ -24,8 +24,8 @@ const dummyFileDownload = (file: any) => {
 };
 
 const SingleFileSelectStory = ({ noBackground, hasExistingFiles }: StoryProps) => {
-    const [file, setFile] = React.useState<FileSelectItem | undefined>(hasExistingFiles ? dummyFiles[0] : undefined);
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
+    const [file, setFile] = useState<FileSelectItem | undefined>(hasExistingFiles ? dummyFiles[0] : undefined);
+    const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
 
     return (
         <Box padding={4} sx={{ backgroundColor: noBackground ? "transparent" : "white" }}>
@@ -68,8 +68,8 @@ const SingleFileSelectStory = ({ noBackground, hasExistingFiles }: StoryProps) =
 };
 
 const MultipleFileSelectStory = ({ noBackground, hasExistingFiles }: StoryProps) => {
-    const [files, setFiles] = React.useState<FileSelectItem[]>(hasExistingFiles ? dummyFiles : []);
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
+    const [files, setFiles] = useState<FileSelectItem[]>(hasExistingFiles ? dummyFiles : []);
+    const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const maxNumberOfFiles = 4;
 
     return (

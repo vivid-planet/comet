@@ -2,7 +2,7 @@ import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, 
 import { AddNoCircle } from "@comet/admin-icons";
 import { IconButton, TableCell } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
-import * as React from "react";
+import { useState } from "react";
 
 interface IRow {
     id: number;
@@ -11,7 +11,7 @@ interface IRow {
 }
 
 function ExpandableTableRow({ rowProps, ...rest }: ITableRowProps<IRow>) {
-    const [isExpanded, setIsExpanded] = React.useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     return (
         <>
             <TableBodyRow {...rowProps}>

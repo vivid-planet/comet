@@ -21,13 +21,12 @@ import {
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Link, Typography } from "@mui/material";
 import faker from "faker";
-import * as React from "react";
 
 interface ColorFilterFieldProps {
     colors: string[];
 }
 
-const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
+const ColorFilterField = ({ colors }: ColorFilterFieldProps) => {
     const options = colors
         .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index) //filter colorsArray to only have unique values as select options
         .map((color) => {

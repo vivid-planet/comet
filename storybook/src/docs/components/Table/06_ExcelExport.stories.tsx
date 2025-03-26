@@ -2,12 +2,12 @@ import { gql } from "@apollo/client";
 import {
     createOffsetLimitPagingAction,
     ExcelExportButton,
+    FillSpace,
     MainContent,
     Table,
     TableQuery,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
     useExportPagedTableQuery,
@@ -17,7 +17,6 @@ import {
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 
@@ -78,7 +77,7 @@ export const BasicExcelExportTable = () => {
                 <ToolbarItem>
                     <Typography variant="h3">Basic Excel Export</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     {/* step 3 */}
                     <ExcelExportButton exportApi={exportApi} />
@@ -137,7 +136,7 @@ export const ExcelExportAndVisibility = {
                     <ToolbarItem>
                         <Typography variant="h3">Excel Export and Visibility</Typography>
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <ExcelExportButton exportApi={exportApi} />
                     </ToolbarActions>
@@ -201,7 +200,7 @@ export const ExcelExportAndCustomRenderedColumns = {
                     <ToolbarItem>
                         <Typography variant="h3">Excel Export and Custom Rendered Columns</Typography>
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <ExcelExportButton exportApi={exportApi} />
                     </ToolbarActions>
@@ -285,7 +284,7 @@ export const ExcelExportAndPaginationUseExportPagedTableQuery = {
                             <ToolbarItem>
                                 <Typography variant="h3">Export Pages</Typography>
                             </ToolbarItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 <ExcelExportButton exportApi={exportApi}>Export Pages 1 to 3</ExcelExportButton>
                             </ToolbarActions>
@@ -348,7 +347,7 @@ export const ExcelExportAndPaginationUseExportTableQuery = {
                             <ToolbarItem>
                                 <Typography variant="h3">Export Pages</Typography>
                             </ToolbarItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 <ExcelExportButton exportApi={exportApi}>Export Rows 11 to 30</ExcelExportButton>
                             </ToolbarActions>

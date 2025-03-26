@@ -1,8 +1,8 @@
 import {
     AppHeader,
-    AppHeaderFillSpace,
     AppHeaderMenuButton,
     CometLogo,
+    FillSpace,
     MainContent,
     MasterLayout,
     Menu,
@@ -14,7 +14,7 @@ import {
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
-import * as React from "react";
+import { useContext, useEffect } from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -23,8 +23,8 @@ import { storyRouterDecorator } from "../../story-router.decorator";
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
 
-const AppMenu: React.FC = () => {
-    const { open, toggleOpen } = React.useContext(MenuContext);
+const AppMenu = () => {
+    const { open, toggleOpen } = useContext(MenuContext);
     const windowSize = useWindowSize();
     const location = useLocation();
 
@@ -35,7 +35,7 @@ const AppMenu: React.FC = () => {
     }
 
     // Open menu when changing to permanent variant and close when changing to temporary variant.
-    React.useEffect(() => {
+    useEffect(() => {
         if ((useTemporaryMenu && open) || (!useTemporaryMenu && !open)) {
             toggleOpen();
         }
@@ -67,11 +67,11 @@ const AppMenu: React.FC = () => {
     );
 };
 
-const Header: React.FC = () => (
+const Header = () => (
     <AppHeader>
         <AppHeaderMenuButton />
         <CometLogo />
-        <AppHeaderFillSpace />
+        <FillSpace />
     </AppHeader>
 );
 

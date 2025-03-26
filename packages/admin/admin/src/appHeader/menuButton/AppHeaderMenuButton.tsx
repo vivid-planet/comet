@@ -38,11 +38,14 @@ const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
 })(
     ({ theme }) => css`
         color: #fff;
-        margin-left: ${theme.spacing(3)};
-        margin-right: ${theme.spacing(3)};
+        margin: 0 9px;
         padding: 8px;
         border-radius: 4px;
         border: 1px solid ${theme.palette.grey.A200};
+
+        ${theme.breakpoints.up("md")} {
+            margin: 0 14px;
+        }
     `,
 );
 

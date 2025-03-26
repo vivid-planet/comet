@@ -1,9 +1,8 @@
 import { Alert, ErrorBoundary } from "@comet/admin";
 import { Box, Card, CardContent, Link, Typography } from "@mui/material";
 import { Meta } from "@storybook/react";
-import * as React from "react";
 
-const ViewWithNoError: React.FunctionComponent = () => {
+const ViewWithNoError = () => {
     return (
         <div>
             <Typography>View with No Error</Typography>
@@ -11,7 +10,7 @@ const ViewWithNoError: React.FunctionComponent = () => {
     );
 };
 
-const ViewWithError: React.FunctionComponent = () => {
+const ViewWithError = () => {
     throw new Error("Some error occurred");
     return (
         <div>

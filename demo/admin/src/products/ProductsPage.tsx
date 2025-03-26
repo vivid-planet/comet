@@ -1,5 +1,6 @@
 import {
     FieldSet,
+    FillSpace,
     FullHeightContent,
     RouterTab,
     RouterTabs,
@@ -13,7 +14,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
@@ -28,7 +28,7 @@ const FormToolbar = () => (
     <StackToolbar>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
-        <ToolbarFillSpace />
+        <FillSpace />
         <ToolbarActions>
             <SaveBoundarySaveButton />
         </ToolbarActions>
@@ -90,7 +90,7 @@ const ProductsPage = () => {
                                                         <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                                                             <ToolbarBackButton />
                                                             <ToolbarAutomaticTitleItem />
-                                                            <ToolbarFillSpace />
+                                                            <FillSpace />
                                                             <ToolbarActions>
                                                                 <SaveBoundarySaveButton />
                                                             </ToolbarActions>
@@ -114,7 +114,7 @@ const ProductsPage = () => {
                                                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                                                         <ToolbarBackButton />
                                                         <ToolbarAutomaticTitleItem />
-                                                        <ToolbarFillSpace />
+                                                        <FillSpace />
                                                         <ToolbarActions>
                                                             <SaveBoundarySaveButton />
                                                         </ToolbarActions>
@@ -136,7 +136,11 @@ const ProductsPage = () => {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <StackMainContent>
+                            <FieldSet>
+                                <ProductForm />
+                            </FieldSet>
+                        </StackMainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>

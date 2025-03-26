@@ -8,5 +8,12 @@ export interface FileUploadsConfig {
     download?: {
         public?: boolean;
         secret: string;
+        /**
+         * Allows disabling the `downloadUrl` and `imageUrl` field resolvers.
+         * Use this when using file uploads without GraphQL.
+         *
+         * @default true
+         */
+        createFieldResolvers?: boolean;
     };
 }

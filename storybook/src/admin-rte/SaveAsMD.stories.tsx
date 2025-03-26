@@ -2,7 +2,7 @@ import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@
 import { Box, Card, CardContent } from "@mui/material";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
-import * as React from "react";
+import { useState } from "react";
 
 import { PrintAnything } from "./helper";
 
@@ -31,7 +31,7 @@ export default {
 
 export const SaveAsMd = {
     render: () => {
-        const [savableContent, setSavableContent] = React.useState<Markdown>(defaultValue);
+        const [savableContent, setSavableContent] = useState<Markdown>(defaultValue);
 
         const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
             setSavableContent(convertStateToRawContent(innerEditorState));

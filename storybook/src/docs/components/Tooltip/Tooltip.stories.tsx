@@ -1,7 +1,6 @@
 import { Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Grid, IconButton } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/Tooltip",

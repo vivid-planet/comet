@@ -1,7 +1,7 @@
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
 import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
-import * as React from "react";
+import { useState } from "react";
 
 import { PrintAnything } from "./helper";
 
@@ -48,7 +48,7 @@ export default {
 
 export const SaveAsRawDraftJsObject = {
     render: () => {
-        const [savableContent, setSavableContent] = React.useState<RawDraftContentState>(defaultValue);
+        const [savableContent, setSavableContent] = useState<RawDraftContentState>(defaultValue);
 
         const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
             setSavableContent(convertStateToRawContent(innerEditorState));

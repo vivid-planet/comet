@@ -1,5 +1,100 @@
 # @comet/admin-theme
 
+## 7.16.0
+
+### Patch Changes
+
+-   ec1cf3cf8: Adapt styling of `Button` variants to align with Comet DXP design
+    -   @comet/admin-icons@7.16.0
+
+## 7.15.0
+
+### Minor Changes
+
+-   7d8c36e6c: Improve the styling of the filter and columns panels of `DataGrid`
+
+### Patch Changes
+
+-   @comet/admin-icons@7.15.0
+
+## 7.14.0
+
+### Patch Changes
+
+-   9b190db59: Fix spacing for `ListItemIcon` and `ListItemAvatar` to align with Comet DXP design
+-   84e063642: Fix dialog header height for dialogs with no title
+    -   @comet/admin-icons@7.14.0
+
+## 7.13.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   ee597535a: Add styling of `Card` and `CardHeader` to align with Comet DXP design
+
+### Patch Changes
+
+-   47be4ebd3: Adapt styling of `DialogActions`, `DialogContent`, and `DialogTitle` to match the Comet DXP design
+-   af51bb408: Prevent the input value of `GridToolbarQuickFilter` from being truncated too early
+    -   @comet/admin-icons@7.12.0
+
+## 7.11.0
+
+### Minor Changes
+
+-   a4fcdeb51: Enable vertical resizing for `TextAreaField` and other multiline inputs
+-   5ba64aab6: Add support and styling for full screen dialogs using the `fullScreen` prop
+
+    ```tsx
+    <Dialog open fullScreen>
+        <DialogTitle>Dialog Title</DialogTitle>
+        <DialogContent>Dialog content</DialogContent>
+    </Dialog>
+    ```
+
+### Patch Changes
+
+-   9f2a1272b: Fix an issue where setting `defaultProps` of `MuiDataGrid` would override the `defaultProps` defined by `createCometTheme()`
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+    -   @comet/admin-icons@7.11.0
+
+## 7.10.0
+
+### Minor Changes
+
+-   7e94c55f6: Rework `GridFilterPanel` to match the updated Comet CI
+-   22f3d402e: Adapt `Chip` styling to align with Comet DXP design
+
+    -   Fix hover styling
+    -   Add new styling for `<Chip variant="filled" color="info">`
+
+-   589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
+
+    -   `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
+    -   `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
+
+    **Example:**
+
+    ```tsx
+    <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon" secondaryHelperText="0/100">
+        <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+    </FieldContainer>
+    ```
+
+### Patch Changes
+
+-   b51bf6d85: Adapt `Radio` and `Checkbox` styling to Comet DXP design
+
+    Fix colors of disabled states.
+
+-   71876ea69: Adapt size of arrow in `Select` and `Autocomplete` fields according to Comet DXP design
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

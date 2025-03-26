@@ -1,6 +1,19 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
-import { Domain, Search } from "@comet/admin-icons";
-import { Box, Divider, InputAdornment, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader, Typography } from "@mui/material";
+import { Domain, Language, Search } from "@comet/admin-icons";
+import {
+    Box,
+    Divider,
+    InputAdornment,
+    InputBase,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    ListSubheader,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import { capitalCase } from "change-case";
 import { Fragment, ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -29,12 +42,13 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     options,
     searchable,
     groupBy,
-    icon = <Domain />,
+    icon = <Language />,
     renderOption,
     renderSelectedOption,
 }: Props<Value>) {
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
+    const theme = useTheme();
 
     const hasMultipleDimensions = Object.keys(value).length > 1;
 
@@ -84,12 +98,18 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 .map(([, option]) => option.label ?? option.value)
                 .join(" – ");
             const matches = findTextMatches(text, query);
+
             return (
-                <ListItemText
-                    primaryTypographyProps={{ variant: "body2" }}
-                    sx={{ margin: 0 }}
-                    primary={<MarkedMatches text={text} matches={matches} />}
-                />
+                <>
+                    <ListItemIcon>
+                        <Domain />
+                    </ListItemIcon>
+                    <ListItemText
+                        primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
+                        sx={{ margin: 0 }}
+                        primary={<MarkedMatches text={text} matches={matches} />}
+                    />
+                </>
             );
         };
     }
@@ -107,13 +127,77 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
             buttonChildren={renderSelectedOption(selectedOption)}
             startIcon={icon}
             slotProps={{
+                root: {
+                    sx: (theme) => ({
+                        overflow: "hidden",
+                        width: "100%",
+
+                        [theme.breakpoints.up("md")]: {
+                            width: "auto",
+                        },
+                    }),
+                },
+                button: {
+                    slotProps: {
+                        root: {
+                            sx: (theme) => ({
+                                width: "100%",
+                                justifyContent: "start",
+
+                                [theme.breakpoints.up("md")]: {
+                                    justifyContent: "center",
+                                },
+                            }),
+                        },
+                        content: {
+                            sx: (theme) => ({
+                                width: "100%",
+                                justifyContent: "start",
+
+                                [theme.breakpoints.up("md")]: {
+                                    justifyContent: "center",
+                                },
+                            }),
+                        },
+
+                        endIcon: {
+                            sx: (theme) => ({
+                                [theme.breakpoints.up("xs")]: {
+                                    "&:not(:first-of-type)": {
+                                        marginLeft: "auto",
+                                    },
+                                },
+
+                                [theme.breakpoints.up("md")]: {
+                                    "&:not(:first-of-type)": {
+                                        marginLeft: theme.spacing(2),
+                                    },
+                                },
+                            }),
+                        },
+                        typography: {
+                            sx: {
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                            },
+                        },
+                    },
+                },
+
                 popover: {
                     anchorOrigin: { vertical: "bottom", horizontal: "left" },
                     transformOrigin: { vertical: "top", horizontal: "left" },
                     PaperProps: {
-                        sx: {
+                        sx: (theme) => ({
                             minWidth: "350px",
-                        },
+
+                            [theme.breakpoints.down("md")]: {
+                                width: "100%",
+                                maxWidth: "none",
+                                bottom: 0,
+                            },
+                        }),
                     },
                 },
             }}
@@ -122,11 +206,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 <>
                     {searchable && (
                         <>
-                            <Box sx={{ padding: 1 }}>
+                            <Box sx={{ px: 3, py: 2 }}>
                                 <InputBase
                                     startAdornment={
                                         <InputAdornment position="start">
-                                            <Search />
+                                            <Search htmlColor={theme.palette.grey[900]} />
                                         </InputAdornment>
                                     }
                                     placeholder={intl.formatMessage({
@@ -140,6 +224,9 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                             onClick={() => setSearchValue("")}
                                             hasClearableContent={searchValue !== ""}
                                             position="end"
+                                            slotProps={{
+                                                buttonBase: { sx: { fontSize: "16px" } },
+                                            }}
                                         />
                                     }
                                     autoFocus
@@ -149,7 +236,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             <Divider />
                         </>
                     )}
-                    <List>
+                    <List sx={{ paddingTop: 0 }}>
                         {groups.map((group, index) => {
                             const showGroupHeader = hasMultipleDimensions;
                             const showGroupDivider = showGroupHeader && index !== groups.length - 1;
@@ -159,27 +246,46 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             return (
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
-                                        <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
-                                            <Typography variant="overline">
+                                        <ListSubheader
+                                            sx={({ spacing }) => ({
+                                                paddingX: spacing(3),
+                                                paddingTop: spacing(4),
+                                                paddingBottom: spacing(2),
+                                                lineHeight: "inherit",
+                                            })}
+                                        >
+                                            <Typography variant="overline" color={(theme) => theme.palette.grey[500]}>
                                                 {matches ? <MarkedMatches text={groupLabel} matches={matches} /> : groupLabel}
                                             </Typography>
                                         </ListSubheader>
                                     )}
-                                    {group.options.map((option) => (
-                                        <ListItemButton
-                                            key={JSON.stringify(option)}
-                                            onClick={() => {
-                                                hideDropdown();
-                                                onChange(optionToValue<Value>(option));
-                                                setSearchValue("");
-                                            }}
-                                            selected={option === selectedOption}
-                                            sx={{ paddingX: (theme) => theme.spacing(6) }}
-                                        >
-                                            {renderOption?.(option, searchValue)}
-                                        </ListItemButton>
-                                    ))}
-                                    {showGroupDivider && <Divider sx={{ margin: 2, borderColor: "grey.50" }} />}
+                                    {group.options.map((option) => {
+                                        const isSelected = option === selectedOption;
+
+                                        return (
+                                            <ListItemButton
+                                                key={JSON.stringify(option)}
+                                                onClick={() => {
+                                                    hideDropdown();
+                                                    onChange(optionToValue<Value>(option));
+                                                    setSearchValue("");
+                                                }}
+                                                selected={isSelected}
+                                                sx={({ spacing }) => ({
+                                                    paddingX: spacing(6),
+                                                    gap: spacing(2),
+                                                    fontWeight: isSelected ? 600 : 250,
+                                                })}
+                                            >
+                                                {renderOption?.(option, searchValue)}
+                                            </ListItemButton>
+                                        );
+                                    })}
+                                    {showGroupDivider && (
+                                        <Divider
+                                            sx={({ spacing, palette }) => ({ marginX: "8px", marginY: spacing(2), borderColor: palette.grey[50] })}
+                                        />
+                                    )}
                                 </Fragment>
                             );
                         })}

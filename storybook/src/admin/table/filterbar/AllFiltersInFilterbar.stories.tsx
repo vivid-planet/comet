@@ -5,21 +5,20 @@ import {
     FilterBarPopoverFilter,
     FinalFormInput,
     FinalFormRangeInput,
-    FinalFormSwitch,
+    SwitchField,
     Table,
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import faker from "faker";
-import * as React from "react";
 
 interface ColorFilterFieldProps {
     colors: string[];
 }
 
-const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
+const ColorFilterField = ({ colors }: ColorFilterFieldProps) => {
     const options = colors
         .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index) //filter colorsArray to only have unique values as select options
         .map((color) => {
@@ -129,9 +128,7 @@ function Story({ tableData }: StoryProps) {
                             <Box maxWidth={350}>
                                 <Field name="price" component={FinalFormRangeInput} startAdornment="€" fullWidth min={50} max={1000} />
                                 <Divider />
-                                <Field name="expressDelivery" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label="Express delivery" control={<FinalFormSwitch {...props} />} />}
-                                </Field>
+                                <SwitchField name="expressDelivery" label="Express delivery" fullWidth />
                                 <Box paddingBottom={4} paddingLeft={4} paddingRight={4}>
                                     <Typography variant="body2">
                                         Show all articles that can be shipped with express delivery (usually shipped within 2-3 work days)

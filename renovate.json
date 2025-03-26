@@ -11,8 +11,12 @@
             "matchPackageNames": ["/^lodash.*/"]
         },
         {
-            "groupName": "linters",
-            "matchPackageNames": ["/^eslint/", "/^prettier/"]
+            "groupName": "eslint",
+            "matchPackageNames": ["/^eslint/"]
+        },
+        {
+            "groupName": "prettier",
+            "matchPackageNames": ["/^prettier/"]
         },
         {
             "groupName": "typescript",
@@ -51,6 +55,14 @@
             "groupName": "GraphQL Codegen"
         },
         {
+            "matchPackageNames": ["@apollo/server"],
+            "groupName": "@apollo/server"
+        },
+        {
+            "matchPackageNames": ["@apollo/client", "apollo-link-rest", "graphql-anywhere", "graphql-tag"],
+            "groupName": "@apollo/client and related dependencies"
+        },
+        {
             "groupName": "Mikro-ORM",
             "matchPackageNames": ["/^@mikro-orm/*/"]
         },
@@ -63,12 +75,21 @@
             "matchPackageNames": ["/^open-telemetry/*/"]
         },
         {
-            "groupName": "testing-library",
-            "matchPackageNames": ["/^@testing-library/*/"]
+            "groupName": "lodash",
+            "matchPackageNames": ["/^lodash.*/", "/^@types/lodash.*/"]
+        },
+        {
+            "groupName": "node",
+            "matchPackageNames": ["node"],
+            "rangeStrategy": "widen"
         },
         {
             "matchUpdateTypes": ["major"],
             "labels": ["major", "dependencies"]
+        },
+        {
+            "matchDepTypes": ["peerDependencies"],
+            "rangeStrategy": "widen"
         }
     ],
     "rangeStrategy": "bump",

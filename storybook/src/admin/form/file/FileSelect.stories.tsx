@@ -1,7 +1,6 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import { Meta } from "@storybook/react";
-import React from "react";
 
 export default {
     title: "@comet/admin/form/File",

@@ -2,7 +2,6 @@ import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { Copy, Delete, Edit, Online, Paste, Settings } from "@comet/admin-icons";
 import { Divider, Paper } from "@mui/material";
 import { Meta } from "@storybook/react";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/RowActions",

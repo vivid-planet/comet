@@ -1,5 +1,4 @@
 import { createTextLinkBlock } from "@comet/blocks-api";
+import { LinkBlock } from "@src/common/blocks/link.block";
 
-import { LinkBlock } from "./linkBlock/link.block";
-
-export const TextLinkBlock = createTextLinkBlock({ link: LinkBlock }, "DemoTextLink");
+export const TextLinkBlock = createTextLinkBlock({ link: LinkBlock });

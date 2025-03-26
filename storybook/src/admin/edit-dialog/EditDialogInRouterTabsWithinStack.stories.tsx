@@ -1,6 +1,8 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
     IEditDialogApi,
     MainContent,
@@ -18,13 +20,12 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
+import { ReactNode, RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -67,10 +68,10 @@ const stocks = [
 ];
 
 type DialogProps = {
-    dialogApiRef: React.RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi>;
 };
 
-const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -98,7 +99,7 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
-const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddStocksDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -126,7 +127,7 @@ const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -137,7 +138,7 @@ function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
                     />
                 </Typography>
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
@@ -147,9 +148,9 @@ type ProductDetailsProps = {
     productId: string;
 };
 
-export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }: ProductDetailsProps) => {
+export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
     const intl = useIntl();
-    const editDialogApi = React.useRef<IEditDialogApi>(null);
+    const editDialogApi = useRef<IEditDialogApi>(null);
 
     const rows: { id: string; productId: string; amount: string }[] = [];
     stocks.forEach((row) => {
@@ -206,12 +207,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                 componentsProps={{
                                     toolbar: {
                                         toolbarAction: (
-                                            <Button
-                                                startIcon={<Add />}
-                                                onClick={() => editDialogApi.current?.openAddDialog()}
-                                                variant="contained"
-                                                color="primary"
-                                            >
+                                            <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                 <FormattedMessage {...messages.add} />
                                             </Button>
                                         ),
@@ -227,7 +223,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                     <StackToolbar>
                                         <ToolbarBackButton />
                                         <ToolbarAutomaticTitleItem />
-                                        <ToolbarFillSpace />
+                                        <FillSpace />
                                         <ToolbarActions>
                                             <SaveBoundarySaveButton />
                                         </ToolbarActions>
@@ -254,7 +250,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
 export const EditDialogInRouterTabsWithinStack = {
     render: () => {
         const intl = useIntl();
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
             <>
@@ -290,12 +286,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                     componentsProps={{
                                         toolbar: {
                                             toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
+                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     <FormattedMessage {...messages.add} />
                                                 </Button>
                                             ),
@@ -311,7 +302,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                         <StackToolbar>
                                             <ToolbarBackButton />
                                             <ToolbarAutomaticTitleItem />
-                                            <ToolbarFillSpace />
+                                            <FillSpace />
                                             <ToolbarActions>
                                                 <SaveBoundarySaveButton />
                                             </ToolbarActions>
