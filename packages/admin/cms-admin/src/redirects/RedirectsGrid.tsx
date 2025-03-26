@@ -92,7 +92,6 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             },
             sortable: false,
             flex: 2,
-            filterable: false,
         },
         {
             field: "comment",

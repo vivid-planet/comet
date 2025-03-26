@@ -432,17 +432,6 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
-type Link implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: LinkBlockData!
-  createdAt: DateTime!
-  pageTreeNode: PageTreeNode
-}
-
-"""Link root block data"""
-scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type PageTreeNodeScope {
   domain: String!
   language: String!
@@ -488,6 +477,17 @@ enum UserGroup {
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
+  pageTreeNode: PageTreeNode
+}
+
+"""Link root block data"""
+scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type PredefinedPage implements DocumentInterface {
   id: ID!
@@ -872,6 +872,7 @@ enum SlugAvailability {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
