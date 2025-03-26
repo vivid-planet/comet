@@ -15,7 +15,7 @@ export class FileWarningService implements EmitWarningsServiceInterface<FileInte
         private readonly entityManager: EntityManager,
     ) {}
 
-    async *emitWarningsBulk() {
+    async *bulkEmitWarnings() {
         if (!this.config.enableLicenseFeature) return; // license feature not enabled, no warnings
 
         const soonToExpireDate = new Date();

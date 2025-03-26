@@ -22,11 +22,11 @@ export interface EmitWarningsServiceInterface<Entity extends AnyEntity = AnyEnti
      *
      * Ensure all warnings for the entity are reported, because old warnings will be deleted automatically
      */
-    emitWarningsBulk?: EmitWarningsBulkFunction;
+    bulkEmitWarnings?: EmitWarningsBulkFunction;
     /**
      * Emits warnings for a specific entity
      * This function is called whenever an entity is created or updated.
-     * If `emitWarningsBulk` is not defined, it is also invoked by the warning-checker command,
+     * If `bulkEmitWarnings` is not defined, it is also invoked by the warning-checker command,
      */
     emitWarnings: EmitWarningsFunction<Entity>;
 }

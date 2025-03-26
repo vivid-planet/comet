@@ -106,8 +106,8 @@ export class WarningCheckerCommand extends CommandRunner {
                 const repository = this.entityManager.getRepository(entity);
                 const service = this.moduleRef.get(emitWarnings, { strict: false });
 
-                if (service.emitWarningsBulk) {
-                    const warningGenerator = service.emitWarningsBulk();
+                if (service.bulkEmitWarnings) {
+                    const warningGenerator = service.bulkEmitWarnings();
                     for await (const { warnings, tableRowId } of warningGenerator) {
                         for (const warning of warnings) {
                             await this.warningService.saveWarnings({
