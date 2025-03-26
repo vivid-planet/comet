@@ -327,7 +327,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
                 paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
                 textOverflow: "ellipsis",
-                outline: "2px dashed lime",
             },
 
             [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
