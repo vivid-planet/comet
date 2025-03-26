@@ -35,8 +35,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     `;
         generatedFiles.push({ name: `${fileNamePlural}.service.ts`, content: serviceOut, type: "service" });
 
-        const resolverOut = `import { EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/postgresql";
+        const resolverOut = `import { FindOptions, EntityManager } from "@mikro-orm/postgresql";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     

@@ -417,8 +417,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
               .join(",")} }`
         : false;
 
-    const serviceOut = `import { FilterQuery } from "@mikro-orm/postgresql";
-    import { EntityManager, raw } from "@mikro-orm/postgresql";
+    const serviceOut = `import { EntityManager, FilterQuery, raw } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
 
     ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
@@ -929,8 +928,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
     imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
 
-    const resolverOut = `import { EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
+    const resolverOut = `import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { GraphQLResolveInfo } from "graphql";
 
