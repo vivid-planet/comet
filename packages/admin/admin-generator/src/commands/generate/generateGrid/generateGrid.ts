@@ -962,12 +962,7 @@ export function generateGrid(
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
         const rows = ${
-            !hasRowReorderingOnDragField
-                ? `data?.${gridQuery}.nodes`
-                : `data?.${gridQuery}.nodes.map((node) => ({
-            ...node,
-            __reorder__: node.${config.rowReordering?.dragPreviewField},
-        }))`
+            !allowRowReordering ? `data?.${gridQuery}.nodes` : generateRowReorderingRows(gridQuery, fieldList, config.rowReordering?.dragPreviewField)
         } ?? [];
 
         ${generateGridExportApi(config.excelExport, gqlTypePlural, gridQuery)}
@@ -1004,6 +999,16 @@ export function generateGrid(
         gqlDocuments,
     };
 }
+
+const generateRowReorderingRows = (gridQuery: string, fieldList: string, dragPreviewField?: string) => {
+    const fields = fieldList.split(" ");
+    const reorderField = dragPreviewField || fields.find((field) => field === "title" || field === "name") || "id";
+
+    return `data?.${gridQuery}.nodes.map((node) => ({
+        ...node,
+        __reorder__: node.${reorderField}
+    }))`;
+};
 
 const getDefaultActionsColumnWidth = (showCrudContextMenu: boolean, showEdit: boolean) => {
     let numberOfActions = 0;

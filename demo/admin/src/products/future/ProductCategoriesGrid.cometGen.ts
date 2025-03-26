@@ -8,7 +8,6 @@ export const ProductCategoriesGrid: GridConfig<GQLProductCategory> = {
     queryParamsPrefix: "productCategories",
     rowReordering: {
         enabled: true,
-        dragPreviewField: "title",
     },
     columns: [
         {
