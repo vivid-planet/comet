@@ -30,6 +30,7 @@ export interface AccessControlServiceInterface {
 }
 
 export interface UserPermissionsUserServiceInterface {
+    getUserForLogin?: (id: string) => Promise<User> | User;
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
 }
