@@ -39,7 +39,7 @@ export class ProductCategoryResolver {
         @Args() { search, filter, sort, offset, limit }: ProductCategoriesArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProductCategories> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getRepository<ProductCategory>(ProductCategory));
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(ProductCategory));
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];

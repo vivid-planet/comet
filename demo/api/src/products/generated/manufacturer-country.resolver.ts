@@ -22,7 +22,7 @@ export class ManufacturerCountryResolver {
 
     @Query(() => PaginatedManufacturerCountries)
     async manufacturerCountries(@Args() { search, filter, offset, limit }: ManufacturerCountriesArgs): Promise<PaginatedManufacturerCountries> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getRepository<ManufacturerCountry>(ManufacturerCountry));
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(ManufacturerCountry));
 
         const options: FindOptions<ManufacturerCountry> = { offset, limit };
 
