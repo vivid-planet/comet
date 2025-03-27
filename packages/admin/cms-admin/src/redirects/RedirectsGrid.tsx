@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Button,
     DataGridToolbar,
     FillSpace,
     type GridColDef,
@@ -16,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -38,7 +39,7 @@ function RedirectsGridToolbar() {
             <GridToolbarQuickFilter />
             <GridFilterButton />
             <FillSpace />
-            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
             </Button>
         </DataGridToolbar>
@@ -84,7 +85,6 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             },
             sortable: false,
             flex: 2,
-            filterable: false,
         },
         {
             field: "comment",

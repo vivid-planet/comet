@@ -47,6 +47,12 @@
 
 - a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
 
+## 7.17.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.17.0
+
 ## 7.16.0
 
 ### Patch Changes

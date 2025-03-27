@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { Alert, FormSection, useStackApi } from "@comet/admin";
+import { Alert, Button, FormSection, useStackApi } from "@comet/admin";
 import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@comet/admin-icons";
-import { Button, IconButton, List as MuiList, ListItem, ListItemIcon as MuiListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
+import { IconButton, List as MuiList, ListItem, ListItemIcon as MuiListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
@@ -47,7 +47,7 @@ const Duplicates = ({ fileId }: { fileId: string }) => {
         >
             <List disablePadding>
                 <ListItemHeader key="refresh" divider>
-                    <Button size="small" endIcon={<ReloadIcon />} onClick={() => refetch({ id: fileId })} color="info">
+                    <Button size="small" variant="textDark" endIcon={<ReloadIcon />} onClick={() => refetch({ id: fileId })}>
                         <FormattedMessage id="comet.dam.file.duplicates.refresh" defaultMessage="Refresh" />
                     </Button>
                 </ListItemHeader>
