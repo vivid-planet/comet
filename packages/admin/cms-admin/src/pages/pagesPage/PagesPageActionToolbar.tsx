@@ -125,7 +125,7 @@ export const PagesPageActionToolbar = ({
                         label={<FormattedMessage id="comet.pagesPageActionToolbar.selectAll" defaultMessage="Select all" />}
                     />
                 </Grid>
-                <CenterContainer item>
+                <CenterContainer>
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.publish" defaultMessage="Publish" />}>
                         <span>
                             <IconButton

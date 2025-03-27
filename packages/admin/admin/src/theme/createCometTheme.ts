@@ -1,6 +1,6 @@
 import { createTheme, type Theme, type ThemeOptions } from "@mui/material";
 import createPalette, { type PaletteOptions } from "@mui/material/styles/createPalette";
-import createTypography, { type TypographyOptions } from "@mui/material/styles/createTypography";
+import createTypography, { type TypographyVariantsOptions } from "@mui/material/styles/createTypography";
 import muiDefaultZIndex from "@mui/material/styles/zIndex";
 import { type BreakpointsOptions, createBreakpoints, createSpacing } from "@mui/system";
 import { deepmerge } from "@mui/utils";
@@ -29,9 +29,9 @@ export const createCometTheme = (
     const paletteOptions: PaletteOptions = deepmerge<PaletteOptions>(cometPaletteOptions, passedPaletteOptions);
     const palette = createPalette(paletteOptions);
 
-    const passedTypographyOptionsObject: TypographyOptions =
+    const passedTypographyOptionsObject: TypographyVariantsOptions =
         typeof passedTypographyOptions === "function" ? passedTypographyOptions(palette) : passedTypographyOptions;
-    const typographyOptions: TypographyOptions = deepmerge<TypographyOptions>(
+    const typographyOptions: TypographyVariantsOptions = deepmerge<TypographyVariantsOptions>(
         createCometTypographyOptions(breakpoints),
         passedTypographyOptionsObject,
     );

@@ -1,6 +1,6 @@
 import { type Breakpoints, type ComponentNameToClassKey, type ThemeOptions } from "@mui/material";
 import { type Components, type Palette } from "@mui/material/styles";
-import { type Typography } from "@mui/material/styles/createTypography";
+import { type TypographyVariants } from "@mui/material/styles/createTypography";
 import { type Shadows } from "@mui/material/styles/shadows";
 import { type ZIndex } from "@mui/material/styles/zIndex";
 import { type Spacing } from "@mui/system";
@@ -57,7 +57,7 @@ import { getMuiTypography } from "./MuiTypography";
 
 type ThemeData = {
     palette: Palette;
-    typography: Typography;
+    typography: TypographyVariants;
     spacing: Spacing;
     zIndex: ZIndex;
     shadows: Shadows;
