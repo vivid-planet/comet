@@ -1,7 +1,8 @@
-import { Button, CancelButton, SaveButton } from "@comet/admin";
+import { Button, CancelButton, Loading, SaveButton } from "@comet/admin";
 import { Reload } from "@comet/admin-icons";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
 import {
+    Box,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -26,13 +27,14 @@ export const ImportFromPicsum = () => {
     });
 
     const handleOpenDialog = async () => {
+        setIsOpen(true);
         const image = await getRandomPicsumImage();
         setPicsumImage(image);
-        setIsOpen(true);
     };
 
     const handleCloseDialog = () => {
         setIsOpen(false);
+        setPicsumImage(undefined);
     };
 
     const handleSave = async () => {
@@ -59,7 +61,9 @@ export const ImportFromPicsum = () => {
                 <div>
                     <DialogTitle>Import from Picsum</DialogTitle>
                     <DialogContent>
-                        <ImagePreview src={picsumImage?.url} alt="image" />
+                        <Box sx={{ aspectRatio: "16/9", lineHeight: 0 }}>
+                            {picsumImage ? <ImagePreview src={picsumImage?.url} alt="image" /> : <Loading behavior="fillParent" />}
+                        </Box>
                     </DialogContent>
                     <DialogActions>
                         <CancelButton onClick={handleCloseDialog} />

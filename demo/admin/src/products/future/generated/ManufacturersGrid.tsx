@@ -12,8 +12,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
@@ -86,18 +84,12 @@ const createManufacturerMutation = gql`
 function ManufacturersGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -113,14 +105,7 @@ export function ManufacturersGrid() {
     };
 
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
-        {
-            field: "id",
-            headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
-            filterable: false,
-            sortable: false,
-            flex: 1,
-            minWidth: 150,
-        },
+        { field: "id", headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }), sortable: false, flex: 1, minWidth: 150 },
         { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             field: "address_street",

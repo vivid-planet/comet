@@ -18,8 +18,6 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
     useDataGridRemote,
@@ -68,67 +66,59 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
 
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridColumnsButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
+            <GridColumnsButton />
             <FillSpace />
-            <ToolbarActions>
-                <CrudMoreActionsMenu
-                    overallActions={[
-                        {
-                            label: <FormattedMessage {...messages.downloadAsExcel} />,
-                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                            onClick: () => exportApi.exportGrid(),
-                            disabled: exportApi.loading,
+            <CrudMoreActionsMenu
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                    <PublishAllProducts key="publish" />,
+                ]}
+                selectiveActions={[
+                    {
+                        label: "Publish",
+                        icon: <Online htmlColor={theme.palette.success.main} />,
+                        onClick: () => {
+                            for (const id of selectionModel) {
+                                client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: id as string, status: "Published" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: id as string, status: "Published" },
+                                    },
+                                });
+                            }
                         },
-                        <PublishAllProducts key="publish" />,
-                    ]}
-                    selectiveActions={[
-                        {
-                            label: "Publish",
-                            icon: <Online htmlColor={theme.palette.success.main} />,
-                            onClick: () => {
-                                for (const id of selectionModel) {
-                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                        mutation: updateProductStatusMutation,
-                                        variables: { id: id as string, status: "Published" },
-                                        optimisticResponse: {
-                                            __typename: "Mutation",
-                                            updateProduct: { __typename: "Product", id: id as string, status: "Published" },
-                                        },
-                                    });
-                                }
-                            },
+                    },
+                    {
+                        label: "Unpublish",
+                        icon: <Disabled />,
+                        onClick: () => {
+                            for (const id of selectionModel) {
+                                client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: id as string, status: "Unpublished" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
+                                    },
+                                });
+                            }
                         },
-                        {
-                            label: "Unpublish",
-                            icon: <Disabled />,
-                            onClick: () => {
-                                for (const id of selectionModel) {
-                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                        mutation: updateProductStatusMutation,
-                                        variables: { id: id as string, status: "Unpublished" },
-                                        optimisticResponse: {
-                                            __typename: "Mutation",
-                                            updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
-                                        },
-                                    });
-                                }
-                            },
-                        },
-                    ]}
-                    selectionSize={selectionModel.length}
-                />
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
-                </Button>
-            </ToolbarActions>
+                    },
+                ]}
+                selectionSize={selectionModel.length}
+            />
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
+            </Button>
         </DataGridToolbar>
     );
 }

@@ -4,10 +4,10 @@ import { type ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
-import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{

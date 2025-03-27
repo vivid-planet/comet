@@ -581,35 +581,33 @@ export const _CrudMoreActionsMenu = {
             return (
                 <DataGridToolbar>
                     <FillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={selectionModel.length}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
+                    <CrudMoreActionsMenu
+                        selectionSize={selectionModel.length}
+                        overallActions={[
+                            {
+                                label: "Export to excel",
+                                onClick: () => {},
+                            },
+                        ]}
+                        selectiveActions={[
+                            {
+                                label: "Move",
+                                onClick: () => {},
+                                icon: <Move />,
+                            },
+                            {
+                                label: "Delete",
+                                onClick: () => {},
+                                icon: <Delete />,
+                                divider: true,
+                            },
+                            {
+                                label: "Download",
+                                onClick: () => {},
+                                icon: <Download />,
+                            },
+                        ]}
+                    />
                 </DataGridToolbar>
             );
         }

@@ -694,6 +694,36 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 
 The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
 
+### Update usage of `DataGridToolbar`
+
+`DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
+
+The new usage simplifies the component structure - children can now be passed directly without needing to wrap them in `ToolbarItem` and `ToolbarActions` components:
+
+```diff
+- <DataGridToolbar density="compact">
++ <DataGridToolbar>
+-     <ToolbarItem>
+          <GridToolbarQuickFilter />
+-     </ToolbarItem>
+-     <ToolbarItem>
+          <GridFilterButton />
+-     </ToolbarItem>
+-     <ToolbarItem>
+          <GridColumnsButton />
+-     </ToolbarItem>
+      <FillSpace />
+-     <ToolbarActions>
+          <Button responsive variant="outlined">
+              Secondary action
+          </Button>
+          <Button responsive startIcon={<AddIcon />}>
+              Add item
+          </Button>
+-     </ToolbarActions>
+  </DataGridToolbar>
+```
+
 ### Import `Tooltip` from `@comet/admin` package
 
 ```diff
@@ -1159,6 +1189,13 @@ devDependencies: {
     ```
 
 :::
+
+#### API Generator - Removed Special `status` Field Behavior
+
+Previously, if entities specified a `status` enum, it was automatically added to list queries arguments with a default value.
+
+This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
+done with the normal filtering mechanism.
 
 ### Add new package @comet/admin-generator
 
