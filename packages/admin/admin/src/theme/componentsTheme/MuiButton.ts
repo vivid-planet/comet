@@ -3,7 +3,7 @@ import { buttonClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { palette, typography }) => ({
+export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { palette }) => ({
     ...component,
     defaultProps: {
         disableElevation: true,
