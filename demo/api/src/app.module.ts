@@ -17,7 +17,12 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
+<<<<<<< HEAD
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
+=======
+import { MikroOrmModule } from "@mikro-orm/nestjs";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+>>>>>>> main
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
@@ -42,6 +47,7 @@ import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-p
 import { FooterModule } from "./footer/footer.module";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
+import { News } from "./news/entities/news.entity";
 import { NewsModule } from "./news/news.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
@@ -49,6 +55,7 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 
 @Module({})
 export class AppModule {
@@ -124,7 +131,12 @@ export class AppModule {
                     sitePreviewSecret: config.sitePreviewSecret,
                 }),
 
-                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
+                RedirectsModule.register({
+                    imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+                    customTargets: { news: NewsLinkBlock },
+                    Scope: RedirectScope,
+                    TargetUrlService: RedirectTargetUrlService,
+                }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
                 }),

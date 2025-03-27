@@ -1,5 +1,6 @@
 # @comet/cms-admin
 
+<<<<<<< HEAD
 ## 8.0.0-beta.3
 
 ### Patch Changes
@@ -326,6 +327,46 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+=======
+## 7.17.0
+
+### Minor Changes
+
+-   4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+-   ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    -   @comet/admin@7.17.0
+    -   @comet/admin-date-time@7.17.0
+    -   @comet/admin-icons@7.17.0
+    -   @comet/admin-rte@7.17.0
+    -   @comet/admin-theme@7.17.0
+    -   @comet/blocks-admin@7.17.0
+>>>>>>> main
 
 ## 7.16.0
 

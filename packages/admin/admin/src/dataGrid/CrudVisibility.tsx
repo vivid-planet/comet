@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { type MouseEvent, useState } from "react";
+=======
+import { ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { MouseEvent, useState } from "react";
+>>>>>>> main
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { useSnackbarApi } from "../snackbar/SnackbarProvider";
 import { UndoSnackbar } from "../snackbar/UndoSnackbar";
 import { CrudVisibilityIcon } from "./CrudVisibilityIcon";
@@ -46,7 +52,7 @@ export const CrudVisibility = ({ visibility, onUpdateVisibility }: CrudVisibilit
 
     return (
         <>
-            <Button size="small" onClick={handleMenuOpen} startIcon={<CrudVisibilityIcon visibility={visibility} />} color="info">
+            <Button size="small" onClick={handleMenuOpen} startIcon={<CrudVisibilityIcon visibility={visibility} />} variant="textDark">
                 <FormattedMessage
                     id="comet.common.visibility"
                     defaultMessage="{visibility, select, true {Published} false {Unpublished} other {unknown}}"

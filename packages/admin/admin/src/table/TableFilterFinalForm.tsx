@@ -1,10 +1,18 @@
 import { Clear } from "@comet/admin-icons";
+<<<<<<< HEAD
 import { Button, Grid, Typography } from "@mui/material";
 import { type AnyObject } from "final-form";
 import { Component, type ReactNode } from "react";
 import { Form, type FormProps, type FormRenderProps, type RenderableProps } from "react-final-form";
+=======
+import { Grid, Typography } from "@mui/material";
+import { AnyObject } from "final-form";
+import { Component, ReactNode } from "react";
+import { Form, FormProps, FormRenderProps } from "react-final-form";
+>>>>>>> main
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { renderFinalFormChildren } from "../renderFinalFormChildren";
 import { type IFilterApi } from "./useTableQueryFilter";
 
@@ -52,7 +60,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
                                 {this.props.resetButton && (
                                     <Grid item>
                                         <Button
-                                            variant="text"
+                                            variant="textDark"
                                             startIcon={<Clear />}
                                             onClick={() => {
                                                 formRenderProps.form.reset();

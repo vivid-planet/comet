@@ -1,4 +1,5 @@
 import {
+    Button,
     CancelButton,
     CheckboxField,
     createCometTheme,
@@ -10,6 +11,7 @@ import {
     FormSection,
     OkayButton,
 } from "@comet/admin";
+<<<<<<< HEAD
 import {
     Button,
     // eslint-disable-next-line no-restricted-imports
@@ -24,6 +26,10 @@ import {
     ThemeProvider,
     Typography,
 } from "@mui/material";
+=======
+import { createCometTheme } from "@comet/admin-theme";
+import { Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, MenuItem, Paper, ThemeProvider, Typography } from "@mui/material";
+>>>>>>> main
 import { styled, StyledEngineProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -176,9 +182,7 @@ export const FieldsInDialog = {
                 </Dialog>
 
                 <div style={{ textAlign: "center" }}>
-                    <Button variant="contained" color="primary" onClick={() => setShowDialog(true)}>
-                        Show Dialog
-                    </Button>
+                    <Button onClick={() => setShowDialog(true)}>Show Dialog</Button>
                 </div>
             </>
         );

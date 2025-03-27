@@ -1,4 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
+<<<<<<< HEAD
 import { Alert, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
 import {
     Button,
@@ -10,6 +11,11 @@ import {
     DialogTitle,
 } from "@mui/material";
 import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
+=======
+import { Alert, Button, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
+>>>>>>> main
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -93,8 +99,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
             <DialogActions>
                 <CancelButton onClick={() => onClose()} />
                 <Button
-                    variant="contained"
-                    color="primary"
                     disabled={loading || selectionModel.length < 1}
                     startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {

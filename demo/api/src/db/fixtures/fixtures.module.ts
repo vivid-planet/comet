@@ -1,4 +1,4 @@
-import { DependenciesModule } from "@comet/cms-api";
+import { AttachedDocument, DependenciesModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
@@ -8,6 +8,7 @@ import { Link } from "@src/documents/links/entities/link.entity";
 import { LinksModule } from "@src/documents/links/links.module";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PagesModule } from "@src/documents/pages/pages.module";
+import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product } from "@src/products/entities/product.entity";
 
@@ -56,7 +57,18 @@ import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
 @Module({
+<<<<<<< HEAD
     imports: [ConfigModule, PagesModule, LinksModule, DependenciesModule, MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer])],
+=======
+    imports: [
+        ConfigModule,
+        ConsoleModule,
+        PagesModule,
+        LinksModule,
+        DependenciesModule,
+        MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
+    ],
+>>>>>>> main
     providers: [
         FixturesCommand,
         AccordionBlockFixtureService,

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { messages } from "@comet/admin";
 import {
     Box,
@@ -12,6 +13,11 @@ import {
     Typography,
 } from "@mui/material";
 import { type ReactNode, useCallback, useState } from "react";
+=======
+import { Button, messages } from "@comet/admin";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
+import { ReactNode, useCallback, useState } from "react";
+>>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { value: number; message?: ReactNode }) {
@@ -45,7 +51,7 @@ function ProgressDialog(props: { title: ReactNode; progress: number | undefined;
                     </DialogContent>
                     {props.onCancel && (
                         <DialogActions>
-                            <Button onClick={props.onCancel}>
+                            <Button onClick={props.onCancel} variant="textDark">
                                 <FormattedMessage {...messages.cancel} />
                             </Button>
                         </DialogActions>
