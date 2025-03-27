@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { useHistory } from "react-router";
 
-import { useContentScope } from "../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type DependencyInterface } from "../dependencies/types";
 
@@ -15,7 +15,7 @@ interface Props {
         jsonPath: string | null;
         rootColumnName: string | null;
     };
-    scope?: any;
+    scope?: ContentScope;
 }
 
 export function WarningActions({ sourceInfo, scope }: Props) {

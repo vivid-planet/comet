@@ -150,7 +150,6 @@ export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
-export { LatestWarningsDashboardWidget } from "./dashboard/widgets/LatestWarningsDashboardWidget";
 export { createDependencyMethods } from "./dependencies/createDependencyMethods";
 export { createDocumentDependencyMethods } from "./dependencies/createDocumentDependencyMethods";
 export { DependencyList } from "./dependencies/DependencyList";
@@ -201,6 +200,7 @@ export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/
 export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
 export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+export { LatestWarningsDashboardWidget } from "./warnings/LatestWarningsDashboardWidget";
 export { WarningsPage } from "./warnings/WarningsPage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";

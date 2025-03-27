@@ -5,17 +5,17 @@ import { DataGrid } from "@mui/x-data-grid";
 import { type ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { useContentScope } from "../../contentScope/Provider";
-import { WarningActions } from "../../warnings/WarningActions";
-import { WarningMessage } from "../../warnings/WarningMessage";
-import { warningMessages as cometWarningMessages } from "../../warnings/warningMessages";
-import { WarningSeverity } from "../../warnings/WarningSeverity";
-import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
+import { useContentScope } from "../contentScope/Provider";
+import { DashboardWidgetRoot } from "../dashboard/widgets/DashboardWidgetRoot";
 import {
     type GQLLatestWarningsListFragment,
     type GQLLatestWarningsQuery,
     type GQLLatestWarningsQueryVariables,
 } from "./LatestWarningsDashboardWidget.generated";
+import { WarningActions } from "./WarningActions";
+import { WarningMessage } from "./WarningMessage";
+import { warningMessages as cometWarningMessages } from "./warningMessages";
+import { WarningSeverity } from "./WarningSeverity";
 
 interface Props {
     warningMessages?: Record<string, ReactNode>;
