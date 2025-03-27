@@ -113,7 +113,7 @@ export const PagesPageActionToolbar = ({
         <>
             {progressDialog}
             <Root container justifyContent="space-between">
-                <Grid item>
+                <Grid>
                     <SelectAllLabel
                         control={
                             <Checkbox
@@ -227,7 +227,7 @@ export const PagesPageActionToolbar = ({
                         </span>
                     </Tooltip>
                 </CenterContainer>
-                <Grid item>
+                <Grid>
                     <Button
                         disabled={collapseAllDisabled}
                         startIcon={<TreeCollapseAll />}
