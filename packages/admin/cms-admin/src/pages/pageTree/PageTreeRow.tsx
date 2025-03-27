@@ -5,10 +5,11 @@ import { type DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { type DebouncedState } from "use-debounce";
 
+import { InsertInBetweenAction } from "../../common/InsertInBetweenAction";
+import { InsertInBetweenActionButton } from "../../common/InsertInBetweenActionButton";
+import { serializeInitialValues } from "../../form/serializeInitialValues";
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { PageTreeTableRow } from "./common/PageTreeTableRow";
-import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
-import { useButtonHoverStates } from "./InsertInBetweenAction/useButtonHoverStates";
 import PageActions from "./PageActions";
 import PageInfo from "./PageInfo";
 import PageLabel from "./PageLabel";
@@ -16,6 +17,7 @@ import * as sc from "./PageTreeRow.sc";
 import { PageTreeRowDivider } from "./PageTreeRowDivider";
 import { type DropInfo, type PageTreeService } from "./PageTreeService";
 import PageVisibility from "./PageVisibility";
+import { useButtonHoverStates } from "./useButtonHoverStates";
 import { type PageTreePage } from "./usePageTree";
 
 export type DropTarget = "ADD_BEFORE" | "ADD_AFTER" | "ADD_AS_CHILD";
@@ -244,20 +246,23 @@ const PageTreeRow = ({
             {hover && (
                 <sc.AddContainer>
                     <InsertInBetweenAction
+                        addOffsetForUnevenBorders
                         top={
-                            <InsertInBetweenAction.Button
-                                editDialogApi={editDialogApi}
-                                position={insertInBetweenTopPosition}
-                                onMouseOverButton={inBetweenButtonHandle.mouseOverTop}
-                                onMouseOutButton={inBetweenButtonHandle.mouseOutTop}
+                            <InsertInBetweenActionButton
+                                onClick={() => {
+                                    editDialogApi.openAddDialog(serializeInitialValues(insertInBetweenTopPosition));
+                                }}
+                                onMouseOver={inBetweenButtonHandle.mouseOverTop}
+                                onMouseOut={inBetweenButtonHandle.mouseOutTop}
                             />
                         }
                         bottom={
-                            <InsertInBetweenAction.Button
-                                editDialogApi={editDialogApi}
-                                position={insertInBetweenBottomPosition}
-                                onMouseOverButton={inBetweenButtonHandle.mouseOverBottom}
-                                onMouseOutButton={inBetweenButtonHandle.mouseOutBottom}
+                            <InsertInBetweenActionButton
+                                onClick={() => {
+                                    editDialogApi.openAddDialog(serializeInitialValues(insertInBetweenBottomPosition));
+                                }}
+                                onMouseOver={inBetweenButtonHandle.mouseOverBottom}
+                                onMouseOut={inBetweenButtonHandle.mouseOutBottom}
                             />
                         }
                     />

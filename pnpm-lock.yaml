@@ -440,7 +440,7 @@ importers:
         specifier: ^6.6.1
         version: 6.6.1
       '@next/bundle-analyzer':
-        specifier: ^14.2.25
+        specifier: ^14.2.26
         version: 14.2.26
       '@opentelemetry/api':
         specifier: ^1.9.0
@@ -476,7 +476,7 @@ importers:
         specifier: ^11.0.2
         version: 11.0.2
       next:
-        specifier: ^14.2.25
+        specifier: ^14.2.26
         version: 14.2.26(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -579,7 +579,7 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@15.10.1)
       next:
-        specifier: ^14.2.25
+        specifier: ^14.2.26
         version: 14.2.26(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -2040,7 +2040,7 @@ importers:
         specifier: ^9.22.0
         version: 9.22.0
       '@next/eslint-plugin-next':
-        specifier: ^15.2.3
+        specifier: ^15.2.4
         version: 15.2.4
       eslint-config-next:
         specifier: ^15.2.2
@@ -2204,7 +2204,7 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       next:
-        specifier: ^14.2.25
+        specifier: ^14.2.26
         version: 14.2.26(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       npm-run-all2:
         specifier: ^5.0.2
