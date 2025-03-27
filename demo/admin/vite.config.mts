@@ -78,6 +78,13 @@ export default defineConfig(({ mode }) => {
         server: {
             host: true,
             port: Number(process.env.ADMIN_PORT),
+            proxy: {
+                "/api": {
+                    target: new URL(process.env.API_URL_INTERNAL).origin,
+                    changeOrigin: true,
+                    secure: false,
+                },
+            },
         },
         define: {
             // define NODE_ENV for packages using it

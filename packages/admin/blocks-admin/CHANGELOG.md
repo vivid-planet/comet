@@ -1,5 +1,70 @@
 # @comet/blocks-admin
 
+## 7.17.0
+
+### Patch Changes
+
+-   @comet/admin@7.17.0
+-   @comet/admin-icons@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   ed9282b3b: createOneOfBlock: Add support for dynamic display names of child blocks
+
+### Patch Changes
+
+-   9bd499dcd: Remove incorrect clear button from type select in `createOneOfBlock`
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+    -   @comet/admin@7.16.0
+    -   @comet/admin-icons@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   e056e8f3d: Change "Add column" button label in `createColumnsBlock` to "Add item"
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [7d8c36e6c]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [6827982fe]
+    -   @comet/admin@7.15.0
+    -   @comet/admin-icons@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   948e07bba: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+### Patch Changes
+
+-   Updated dependencies [6b75f20e4]
+    -   @comet/admin@7.14.0
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes

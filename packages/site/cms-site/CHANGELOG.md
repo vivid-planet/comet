@@ -1,5 +1,42 @@
 # @comet/cms-site
 
+## 7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   71642aa07: Export `VideoPreviewImage` component
+
+### Patch Changes
+
+-   636326207: Fix preview overlay alignment for blocks that are scrolled into view when selected from the admin block list, e.g., in slider blocks
+-   4ddeeb09e: Prevent unintended horizontal scrolling in the admin's block preview
+
+    This previously occurred when blocks were rendered outside of the viewport width, such as elements of a slider.
+
+## 7.15.0
+
+### Patch Changes
+
+-   75fb1d0d4: Fix block preview not rendering before user interaction
+
+## 7.14.0
+
+### Minor Changes
+
+-   6163b83a4: Play/pause auto-play videos depending on their visibility
+
+    Start videos in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock` when the block is in or enters the viewport.
+    Pause them when the block is leaving the viewport.
+
+-   d07a6da51: Add comment explaining why we omit the `alt`-prop in `PixelImageBlock`
+
+### Patch Changes
+
+-   6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
+-   8e648a757: Set alt attribute to empty string as default in `SvgImageBlock`
+
 ## 7.13.0
 
 ### Minor Changes

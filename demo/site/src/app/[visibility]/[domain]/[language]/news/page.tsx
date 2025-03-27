@@ -1,35 +1,17 @@
 export const dynamic = "error";
 
-import { gql } from "@comet/cms-site";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { VisibilityParam } from "@src/middleware/domainRewrite";
-import { NewsList } from "@src/news/NewsList";
-import { newsListFragment } from "@src/news/NewsList.fragment";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { NewsPage } from "@src/news/NewsPage";
+import { fetchNewsList } from "@src/news/NewsPage.loader";
 import { setVisibilityParam } from "@src/util/ServerContext";
 
-import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./page.generated";
+export type PageParams = {
+    domain: string;
+    language: string;
+    visibility: VisibilityParam;
+};
 
-export default async function NewsIndexPage({
-    params: { domain, language, visibility },
-}: {
-    params: { domain: string; language: string; visibility: VisibilityParam };
-}) {
+export default async function NewsIndexPage({ params: { domain, language, visibility } }: { params: PageParams }) {
     setVisibilityParam(visibility);
-    const graphqlFetch = createGraphQLFetch();
-
-    const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
-        gql`
-            query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!) {
-                newsList(scope: $scope, sort: $sort) {
-                    ...NewsList
-                }
-            }
-
-            ${newsListFragment}
-        `,
-        { scope: { domain, language } as GQLNewsContentScopeInput, sort: [{ field: "createdAt", direction: "DESC" }] },
-    );
-
-    return <NewsList newsList={newsList} />;
+    return <NewsPage initialData={await fetchNewsList({ scope: { domain, language }, limit: 2 })} />;
 }

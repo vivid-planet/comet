@@ -1,8 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { FetchResult } from "@apollo/client/link/core";
-import { SaveButton } from "@comet/admin";
+import { Button, SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
@@ -197,6 +197,7 @@ const MoveDamItemDialogInner = ({
             </DialogContent>
             <DialogActions>
                 <Button
+                    variant="textDark"
                     startIcon={<Reset />}
                     onClick={() => {
                         setSelectedId(undefined);

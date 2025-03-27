@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 export const StandaloneMediaBlock = createCompositeBlock(
     {
         name: "Media",
-        displayName: <FormattedMessage id="standaloneMedia.displayName" defaultMessage="Media" />,
+        displayName: MediaBlock.displayName,
         blocks: {
             media: {
                 block: MediaBlock,

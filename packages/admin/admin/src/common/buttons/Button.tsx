@@ -48,8 +48,8 @@ const variantToMuiProps: Record<Variant, Partial<MuiButtonProps>> = {
     outlined: { variant: "outlined" },
     destructive: { variant: "outlined", color: "error" },
     success: { variant: "contained", color: "success" },
-    textLight: { variant: "text", sx: { color: "white" } },
-    textDark: { variant: "text", sx: { color: "black" } },
+    textLight: { variant: "text" },
+    textDark: { variant: "text" },
 };
 
 const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps, "mobileIcon" | "startIcon" | "endIcon">) => {
@@ -71,6 +71,7 @@ const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps,
 export const Button = forwardRef(<C extends ElementType = "button">(inProps: ButtonProps<C>, ref: ForwardedRef<any>) => {
     const {
         slotProps,
+        sx,
         variant = "primary",
         responsive,
         mobileIcon = "auto",
@@ -96,7 +97,13 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
     };
 
     const commonButtonProps = {
+        disableFocusRipple: true,
+        disableTouchRipple: true,
         ...variantToMuiProps[variant],
+        sx: {
+            ...variantToMuiProps[variant].sx,
+            ...sx,
+        },
         ...restProps,
         ownerState,
         ...slotProps?.root,
@@ -127,10 +134,31 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
         return [ownerState.usingResponsiveBehavior && "usingResponsiveBehavior", ownerState.variant];
     },
 })(
-    ({ ownerState }) => css`
+    ({ ownerState, theme }) => css`
         ${ownerState.usingResponsiveBehavior &&
         css`
             min-width: 0;
+        `}
+
+        ${ownerState.variant === "textLight" &&
+        css`
+            color: ${theme.palette.common.white};
+            &:focus {
+                color: ${theme.palette.primary.main};
+            }
+
+            &.Mui-disabled {
+                color: ${theme.palette.grey[200]};
+            }
+        `}
+
+        ${ownerState.variant === "textDark" &&
+        css`
+            color: ${theme.palette.common.black};
+            &.Mui-disabled {
+                background-color: ${theme.palette.secondary.contrastText};
+                color: ${theme.palette.grey[200]};
+            }
         `}
     `,
 );
