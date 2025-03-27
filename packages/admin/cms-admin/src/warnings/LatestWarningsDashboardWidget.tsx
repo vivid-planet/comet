@@ -1,0 +1,100 @@
+import { gql, useQuery } from "@apollo/client";
+import { dataGridDateTimeColumn, type GridColDef } from "@comet/admin";
+import { Reload } from "@comet/admin-icons";
+import { DataGrid } from "@mui/x-data-grid";
+import { type ReactNode } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+
+import { DashboardWidgetRoot } from "../dashboard/widgets/DashboardWidgetRoot";
+import {
+    type GQLLatestWarningsListFragment,
+    type GQLLatestWarningsQuery,
+    type GQLLatestWarningsQueryVariables,
+} from "./LatestWarningsDashboardWidget.generated";
+import { WarningActions } from "./WarningActions";
+import { WarningMessage } from "./WarningMessage";
+import { warningMessages as cometWarningMessages } from "./warningMessages";
+import { WarningSeverity } from "./WarningSeverity";
+
+interface Props {
+    warningMessages?: Record<string, ReactNode>;
+}
+
+export const LatestWarningsDashboardWidget = ({ warningMessages: projectWarningMessages }: Props) => {
+    const { data, loading, error } = useQuery<GQLLatestWarningsQuery, GQLLatestWarningsQueryVariables>(latestWarningsQuery);
+    const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
+
+    const intl = useIntl();
+    if (error) {
+        throw error;
+    }
+
+    const columns: GridColDef<GQLLatestWarningsListFragment>[] = [
+        {
+            ...disableFieldOptions,
+            field: "message",
+            headerName: intl.formatMessage({ id: "dashboard.latestWarningsWidget.message", defaultMessage: "Message" }),
+            flex: 1,
+            renderCell: (params) => <WarningMessage message={params.value} warningMessages={warningMessages} />,
+        },
+        {
+            ...dataGridDateTimeColumn,
+            field: "createdAt",
+            headerName: intl.formatMessage({ id: "dashboard.latestWarningsWidget.dateTime", defaultMessage: "Date / Time" }),
+            flex: 1,
+        },
+        {
+            ...disableFieldOptions,
+            field: "severity",
+            headerName: intl.formatMessage({ id: "dashboard.latestWarningsWidget.severity", defaultMessage: "Severity" }),
+            renderCell: (params) => <WarningSeverity severity={params.value} />,
+        },
+        {
+            field: "actions",
+            headerName: "",
+            sortable: false,
+            renderCell: ({ row }) => <WarningActions sourceInfo={row.sourceInfo} />,
+        },
+    ];
+
+    return (
+        <DashboardWidgetRoot
+            icon={<Reload />}
+            header={<FormattedMessage id="dashboard.latestWarningsWidget.title" defaultMessage="Latest Warnings" />}
+        >
+            <DataGrid disableColumnMenu hideFooter columns={columns} rows={data?.warnings.nodes ?? []} loading={loading} />
+        </DashboardWidgetRoot>
+    );
+};
+
+const disableFieldOptions = {
+    filterable: false,
+    sortable: false,
+    hideable: false,
+};
+
+const latestWarningsFragments = gql`
+    fragment LatestWarningsList on Warning {
+        id
+        createdAt
+        message
+        severity
+        sourceInfo {
+            rootEntityName
+            jsonPath
+            rootColumnName
+            targetId
+        }
+    }
+`;
+
+const latestWarningsQuery = gql`
+    query LatestWarnings {
+        warnings(limit: 5) {
+            nodes {
+                ...LatestWarningsList
+            }
+        }
+    }
+    ${latestWarningsFragments}
+`;
