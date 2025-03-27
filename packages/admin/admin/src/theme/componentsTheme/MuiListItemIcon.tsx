@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiListItemIcon: GetMuiComponentTheme<"MuiListItemIcon"> = (component, theme) => ({
+export const getMuiListItemIcon: GetMuiComponentTheme<"MuiListItemIcon"> = (component) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiListItemIcon">(component?.styleOverrides, {
         root: {

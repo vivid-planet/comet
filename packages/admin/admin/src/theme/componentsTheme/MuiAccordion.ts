@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiAccordion: GetMuiComponentTheme<"MuiAccordion"> = (component, { palette }) => ({
+export const getMuiAccordion: GetMuiComponentTheme<"MuiAccordion"> = (component) => ({
     ...component,
     defaultProps: {
         square: true,
