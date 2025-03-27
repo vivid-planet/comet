@@ -10,11 +10,11 @@ import { withStatusMiddleware } from "./middleware/status";
 
 export default chain([
     withStatusMiddleware,
-    withCspHeadersMiddleware,
     withAdminRedirectMiddleware,
+    withDamRewriteMiddleware,
+    withCspHeadersMiddleware,
     withPreviewMiddleware,
     withRedirectToMainHostMiddleware,
-    withDamRewriteMiddleware,
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);
