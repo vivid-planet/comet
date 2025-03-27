@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { type MouseEvent, useState } from "react";
-=======
 import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { MouseEvent, useState } from "react";
->>>>>>> main
+import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";

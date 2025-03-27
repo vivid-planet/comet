@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -9,9 +7,6 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-=======
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
->>>>>>> main
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 

@@ -1,4 +1,4 @@
-import { ContentScopeValues } from "../Provider";
+import { type ContentScopeValues } from "../Provider";
 import { defaultCreatePath } from "./defaultCreatePath";
 
 describe("defaultCreatePath", () => {

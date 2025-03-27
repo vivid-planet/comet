@@ -1,13 +1,7 @@
 import { Error, Select } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Box, Button, type ComponentsOverrides, css, type Theme, Typography, useThemeProps } from "@mui/material";
+import { Box, type ComponentsOverrides, css, type Theme, Typography, useThemeProps } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
-=======
-import { Box, ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import { ReactNode, useState } from "react";
-import { DropzoneOptions, useDropzone } from "react-dropzone";
->>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../../common/buttons/Button";

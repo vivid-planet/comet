@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-import { Button, Slide, Snackbar, type SnackbarProps } from "@mui/material";
+import { Slide, Snackbar, type SnackbarProps } from "@mui/material";
 import { type SlideProps } from "@mui/material/Slide/Slide";
 import { type ReactNode } from "react";
-=======
-import { Slide, Snackbar, SnackbarProps } from "@mui/material";
-import { SlideProps } from "@mui/material/Slide/Slide";
-import { ReactNode } from "react";
->>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";

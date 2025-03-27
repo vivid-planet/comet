@@ -17,13 +17,8 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Box, Button, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
+import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import { type ComponentType, type ReactNode, useCallback, useMemo, useRef } from "react";
-=======
-import { Box, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
->>>>>>> main
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { type ContentScopeInterface, createEditPageNode } from "../..";

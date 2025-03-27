@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-import { createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
+import { Button, createComponentSlot, type ThemedComponentBaseProps } from "@comet/admin";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
-import { Box, Button, buttonClasses, type ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
+import { Box, buttonClasses, type ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
 import { css, type Theme, useThemeProps } from "@mui/material/styles";
-=======
-import { Button, createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
-import { Box, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
->>>>>>> main
 import { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 

@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FilterQuery, FindOptions, wrap } from "@mikro-orm/postgresql";
-import { Type } from "@nestjs/common";
-=======
-import { ExtractBlockData } from "@comet/blocks-api";
-import { FilterQuery, FindOptions, wrap } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Type } from "@nestjs/common";
->>>>>>> main
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
+import { type ExtractBlockData } from "../blocks/block";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";

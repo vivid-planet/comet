@@ -1,12 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { Button, useErrorDialog } from "@comet/admin";
 import { ThreeDotSaving, Upload } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Button } from "@mui/material";
 import axios, { type CancelTokenSource } from "axios";
-=======
-import axios, { CancelTokenSource } from "axios";
->>>>>>> main
 import { useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";

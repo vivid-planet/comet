@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { Button, CircularProgress } from "@mui/material";
-import { type PropsWithChildren, type ReactNode } from "react";
-=======
 import { CircularProgress } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
->>>>>>> main
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";

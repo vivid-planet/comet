@@ -164,7 +164,9 @@ export function filterToMikroOrmQuery(
             }
             ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
         }
-<<<<<<< HEAD
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (filterProperty instanceof IdFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -172,8 +174,6 @@ export function filterToMikroOrmQuery(
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
-=======
->>>>>>> main
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
         }

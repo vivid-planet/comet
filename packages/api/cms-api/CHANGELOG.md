@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
@@ -125,12 +124,12 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
-=======
+
 ## 7.17.0
 
 ### Minor Changes
 
--   a1bf43670: Add support for searching/filtering redirects by target
+- a1bf43670: Add support for searching/filtering redirects by target
 
     Add a custom target URL service to resolve the URLs of custom redirect targets:
 
@@ -154,12 +153,11 @@
     }),
     ```
 
--   e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
+- e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
 
 ### Patch Changes
 
--   @comet/blocks-api@7.17.0
->>>>>>> main
+- @comet/blocks-api@7.17.0
 
 ## 7.16.0
 

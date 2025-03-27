@@ -1,9 +1,7 @@
 import { Alert, Button, messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
-<<<<<<< HEAD
 import {
     Box,
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -12,9 +10,6 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-=======
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
->>>>>>> main
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 

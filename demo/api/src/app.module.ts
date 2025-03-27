@@ -17,12 +17,8 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
-<<<<<<< HEAD
-import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
-=======
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
->>>>>>> main
+import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";

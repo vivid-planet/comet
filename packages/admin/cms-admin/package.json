@@ -1,10 +1,6 @@
 {
     "name": "@comet/cms-admin",
-<<<<<<< HEAD
     "version": "8.0.0-beta.3",
-=======
-    "version": "7.17.0",
->>>>>>> main
     "repository": {
         "directory": "packages/admin/cms-admin",
         "type": "git",
@@ -36,25 +32,11 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-<<<<<<< HEAD
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
         "@comet/admin-rte": "workspace:*",
         "axios": "^0.29.0",
-=======
-        "@comet/admin": "workspace:^7.17.0",
-        "@comet/admin-date-time": "workspace:^7.17.0",
-        "@comet/admin-icons": "workspace:^7.17.0",
-        "@comet/admin-rte": "workspace:^7.17.0",
-        "@comet/admin-theme": "workspace:^7.17.0",
-        "@comet/blocks-admin": "workspace:^7.17.0",
-        "@graphql-tools/graphql-file-loader": "^7.5.17",
-        "@graphql-tools/load": "^7.8.14",
-        "@graphql-typed-document-node/core": "^3.1.1",
-        "@mui/lab": "^5.0.0-alpha.76",
-        "axios": "^0.21.0",
->>>>>>> main
         "change-case": "^4.1.2",
         "class-validator": "^0.14.1",
         "date-fns": "^4.1.0",
@@ -82,7 +64,6 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-<<<<<<< HEAD
         "@apollo/client": "^3.13.4",
         "@babel/cli": "^7.26.4",
         "@babel/core": "^7.26.10",
@@ -105,30 +86,6 @@
         "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-touched": "^1.0.3",
         "@types/jest": "^29.5.14",
-=======
-        "@apollo/client": "^3.7.0",
-        "@babel/cli": "^7.17.6",
-        "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.17.0",
-        "@comet/cli": "workspace:^7.17.0",
-        "@comet/eslint-config": "workspace:^7.17.0",
-        "@emotion/react": "^11.5.0",
-        "@emotion/styled": "^11.3.0",
-        "@graphql-codegen/cli": "^2.0.0",
-        "@graphql-codegen/named-operations-object": "^2.0.0",
-        "@graphql-codegen/near-operation-file-preset": "^2.5.0",
-        "@graphql-codegen/typescript": "^2.0.0",
-        "@graphql-codegen/typescript-operations": "^2.0.0",
-        "@mui/lab": "^5.0.0-alpha.76",
-        "@mui/material": "^5.0.0",
-        "@mui/system": "^5.0.0",
-        "@mui/x-data-grid": "^5.0.0",
-        "@testing-library/react-hooks": "^8.0.0",
-        "@types/draft-js": "^0.11.10",
-        "@types/file-saver": "^2.0.0",
-        "@types/final-form-set-field-touched": "^1.0.0",
-        "@types/jest": "^29.5.0",
->>>>>>> main
         "@types/js-cookie": "^3.0.6",
         "@types/lodash.escaperegexp": "^4.1.9",
         "@types/lodash.isequal": "^4.5.8",

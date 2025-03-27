@@ -57,18 +57,13 @@ import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
 @Module({
-<<<<<<< HEAD
-    imports: [ConfigModule, PagesModule, LinksModule, DependenciesModule, MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer])],
-=======
     imports: [
         ConfigModule,
-        ConsoleModule,
         PagesModule,
         LinksModule,
         DependenciesModule,
         MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
     ],
->>>>>>> main
     providers: [
         FixturesCommand,
         AccordionBlockFixtureService,

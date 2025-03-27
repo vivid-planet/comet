@@ -1,8 +1,8 @@
-import { BooleanFilter } from "../common/filter/boolean.filter";
-import { DateTimeFilter } from "../common/filter/date-time.filter";
-import { StringFilter } from "../common/filter/string.filter";
-import { RedirectFilter } from "./dto/redirects.filter";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { type BooleanFilter } from "../common/filter/boolean.filter";
+import { type DateTimeFilter } from "../common/filter/date-time.filter";
+import { type StringFilter } from "../common/filter/string.filter";
+import { type RedirectFilter } from "./dto/redirects.filter";
+import { type RedirectInterface } from "./entities/redirect-entity.factory";
 
 export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt"> & { target?: string };
 

@@ -1,9 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-<<<<<<< HEAD
-import { FillSpace, type GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
-=======
-import { Button, FillSpace, GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
->>>>>>> main
+import { Button, FillSpace, type GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
 import { Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";

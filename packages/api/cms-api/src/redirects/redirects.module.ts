@@ -8,14 +8,9 @@ import { DependenciesResolverFactory } from "../dependencies/dependencies.resolv
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
-<<<<<<< HEAD
 import { ImportRedirectsCommand } from "./import-redirects.command";
-import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
-=======
-import { ImportRedirectsConsole } from "./import-redirects.console";
 import { DefaultRedirectTargetUrlService, RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
 import { REDIRECTS_LINK_BLOCK, REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
->>>>>>> main
 import { createRedirectsResolver } from "./redirects.resolver";
 import { RedirectsService } from "./redirects.service";
 import { RedirectScopeInterface } from "./types";
@@ -62,20 +57,15 @@ export class RedirectsModule {
 
         return {
             module: RedirectsModule,
-<<<<<<< HEAD
-            imports: [mikroOrmModule],
-            providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider, ImportRedirectsCommand],
-=======
             imports: [...(imports ?? []), mikroOrmModule],
             providers: [
                 RedirectsResolver,
                 RedirectsDependenciesResolver,
                 RedirectsService,
                 linkBlockProvider,
-                ImportRedirectsConsole,
+                ImportRedirectsCommand,
                 targetUrlServiceProvider,
             ],
->>>>>>> main
             exports: [RedirectsService, REDIRECTS_LINK_BLOCK, mikroOrmModule],
         };
     }

@@ -1,9 +1,7 @@
 import { Alert, Button } from "@comet/admin";
 import { Duplicate, Forward, Save } from "@comet/admin-icons";
-<<<<<<< HEAD
 import {
     Box,
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -15,9 +13,6 @@ import {
     ListItemText,
     Typography,
 } from "@mui/material";
-=======
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
->>>>>>> main
 import { styled } from "@mui/material/styles";
 import { Fragment, type VoidFunctionComponent } from "react";
 import { FormattedMessage } from "react-intl";

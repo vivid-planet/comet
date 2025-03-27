@@ -1,10 +1,6 @@
 import { Button, messages } from "@comet/admin";
 import {
-<<<<<<< HEAD
-    Button,
     // eslint-disable-next-line no-restricted-imports
-=======
->>>>>>> main
     Dialog,
     DialogActions,
     DialogContent,

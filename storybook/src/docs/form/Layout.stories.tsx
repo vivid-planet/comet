@@ -11,9 +11,7 @@ import {
     FormSection,
     OkayButton,
 } from "@comet/admin";
-<<<<<<< HEAD
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -26,10 +24,6 @@ import {
     ThemeProvider,
     Typography,
 } from "@mui/material";
-=======
-import { createCometTheme } from "@comet/admin-theme";
-import { Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, MenuItem, Paper, ThemeProvider, Typography } from "@mui/material";
->>>>>>> main
 import { styled, StyledEngineProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { Form } from "react-final-form";

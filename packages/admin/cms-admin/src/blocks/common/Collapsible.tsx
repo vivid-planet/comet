@@ -1,11 +1,6 @@
-<<<<<<< HEAD:packages/admin/cms-admin/src/blocks/common/Collapsible.tsx
-import { Button, Collapse } from "@mui/material";
-import { type PropsWithChildren, type ReactNode } from "react";
-=======
 import { Button } from "@comet/admin";
 import { Collapse } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
->>>>>>> main:packages/admin/blocks-admin/src/common/Collapsible.tsx
+import { type PropsWithChildren, type ReactNode } from "react";
 
 interface CollapsibleProps {
     open: boolean;

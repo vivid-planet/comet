@@ -1,11 +1,6 @@
 import { Button, Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Button, FormControlLabel, Switch } from "@mui/material";
-=======
-import { AdminComponentSection } from "@comet/blocks-admin";
 import { FormControlLabel, Switch } from "@mui/material";
->>>>>>> main
 import { styled } from "@mui/material/styles";
 import { type ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";

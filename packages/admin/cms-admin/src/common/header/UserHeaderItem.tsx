@@ -1,13 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
-<<<<<<< HEAD
-import { AppHeaderDropdown, type AppHeaderDropdownProps } from "@comet/admin";
+import { AppHeaderDropdown, type AppHeaderDropdownProps, Button } from "@comet/admin";
 import { Account, ImpersonateUser, Logout, ThreeDotSaving } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, type AvatarProps, Box, Button, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
-=======
-import { AppHeaderDropdown, AppHeaderDropdownProps, Button } from "@comet/admin";
-import { Account, ImpersonateUser, Logout, ThreeDotSaving } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, AvatarProps, Box, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
->>>>>>> main
+import { Avatar, AvatarGroup, type AvatarProps, Box, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";

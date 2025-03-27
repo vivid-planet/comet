@@ -1,11 +1,6 @@
 import { Add, Edit } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Button, IconButton } from "@mui/material";
-import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
-=======
 import { IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
->>>>>>> main
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { screen, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { type ReactNode, type RefObject, useRef } from "react";
@@ -13,12 +8,8 @@ import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render } from "test-utils";
 
-<<<<<<< HEAD
-import { FillSpace } from "./common/FillSpace";
-=======
 import { Button } from "./common/buttons/Button";
-import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
->>>>>>> main
+import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
 import { EditDialog } from "./EditDialog";
 import { type IEditDialogApi } from "./EditDialogApiContext";

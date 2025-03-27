@@ -1,8 +1,6 @@
 import { Button } from "@comet/admin";
 import { Check, Close, Delete, RteLink } from "@comet/admin-icons";
-<<<<<<< HEAD
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -13,9 +11,6 @@ import {
     Grid,
     InputBase,
 } from "@mui/material";
-=======
-import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
->>>>>>> main
 import { EditorState, RichUtils } from "draft-js";
 import { type MouseEvent, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";

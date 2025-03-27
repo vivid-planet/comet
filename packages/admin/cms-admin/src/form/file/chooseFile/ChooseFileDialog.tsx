@@ -1,16 +1,11 @@
 import { Button, StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-<<<<<<< HEAD
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogTitle,
     IconButton,
 } from "@mui/material";
-=======
-import { Dialog, DialogTitle, IconButton, Link } from "@mui/material";
->>>>>>> main
 import { styled } from "@mui/material/styles";
 import { type SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";

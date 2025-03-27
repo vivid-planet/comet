@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { DataGridToolbar, FillSpace, ToolbarTitleItem } from "@comet/admin";
-=======
-import { Button, DataGridToolbar, FillSpace, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
->>>>>>> main
+import { Button, DataGridToolbar, FillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -34,15 +30,7 @@ export const Default = {
                 <DataGridToolbar>
                     <ToolbarTitleItem>DataGrid example</ToolbarTitleItem>
                     <FillSpace />
-<<<<<<< HEAD
-                    <Button variant="contained" startIcon={<Add />}>
-                        Add
-                    </Button>
-=======
-                    <ToolbarActions>
-                        <Button startIcon={<Add />}>Add</Button>
-                    </ToolbarActions>
->>>>>>> main
+                    <Button startIcon={<Add />}>Add</Button>
                 </DataGridToolbar>
             );
         };

@@ -20,11 +20,7 @@ export const Alerts = () => {
                             severity="info"
                             title="Title"
                             action={
-<<<<<<< HEAD
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
-=======
                                 <Button variant="textDark" startIcon={<ArrowRight />}>
->>>>>>> main
                                     Action Text
                                 </Button>
                             }
@@ -38,11 +34,7 @@ export const Alerts = () => {
                             severity="warning"
                             title="Title"
                             action={
-<<<<<<< HEAD
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
-=======
                                 <Button variant="textDark" startIcon={<ArrowRight />}>
->>>>>>> main
                                     Action Text
                                 </Button>
                             }
@@ -58,11 +50,7 @@ export const Alerts = () => {
                             severity="error"
                             title="Title"
                             action={
-<<<<<<< HEAD
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
-=======
                                 <Button variant="textDark" startIcon={<ArrowRight />}>
->>>>>>> main
                                     Action Text
                                 </Button>
                             }
@@ -117,11 +105,7 @@ export const Alerts = () => {
                         <Alert
                             severity="success"
                             action={
-<<<<<<< HEAD
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
-=======
                                 <Button variant="textDark" startIcon={<ArrowRight />}>
->>>>>>> main
                                     Action Text
                                 </Button>
                             }
@@ -148,11 +132,7 @@ export const Alerts = () => {
                         <Alert
                             severity="warning"
                             action={
-<<<<<<< HEAD
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
-=======
                                 <Button variant="textDark" startIcon={<ArrowRight />}>
->>>>>>> main
                                     Action Text
                                 </Button>
                             }
