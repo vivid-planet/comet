@@ -2,7 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory, WarningsModule } from "..";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
@@ -19,6 +19,7 @@ import { createFolderEntity, FolderInterface } from "./files/entities/folder.ent
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { FileValidationService } from "./files/file-validation.service";
+import { FileWarningService } from "./files/file-warning.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
@@ -102,7 +103,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, WarningsModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
@@ -130,6 +131,7 @@ export class DamModule {
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
                 HasValidFilenameConstraint,
+                FileWarningService,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

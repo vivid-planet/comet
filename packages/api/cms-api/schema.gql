@@ -202,10 +202,10 @@ type UserPermissionPaginatedUserList {
 
 type WarningSourceInfo {
   rootEntityName: String!
-  rootColumnName: String!
-  rootPrimaryKey: String!
   targetId: String!
-  jsonPath: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
 }
 
 type Warning {
@@ -382,10 +382,10 @@ type PaginatedDamFolders {
 
 input WarningSourceInfoInput {
   rootEntityName: String!
-  rootColumnName: String!
-  rootPrimaryKey: String!
   targetId: String!
-  jsonPath: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
 }
 
 type Query {

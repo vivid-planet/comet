@@ -10,17 +10,17 @@ export class WarningSourceInfo {
 
     @Property()
     @Field()
-    rootColumnName: string;
+    targetId: string;
+
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    rootColumnName?: string;
 
     @Property()
     @Field()
     rootPrimaryKey: string;
 
-    @Property()
-    @Field()
-    targetId: string;
-
-    @Property()
-    @Field()
-    jsonPath: string;
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    jsonPath?: string;
 }
