@@ -166,6 +166,7 @@ const preview: Preview = {
                     "admin-",
                     "comet-",
                     "stories-",
+                    "component-docs",
                 ];
 
                 const aName = a.id;
