@@ -54,7 +54,7 @@ export type ComponentFormFieldConfig = { type: "component"; component: Component
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
-    | ({ type: "number" } & InputBaseFieldConfig)
+    | ({ type: "number"; decimals?: number } & InputBaseFieldConfig)
     | ({
           type: "numberRange";
           minValue: number;

@@ -194,15 +194,14 @@ export function generateFormField({
         />`;
     } else if (config.type == "number") {
         code = `
-            <Field
+            <NumberField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
                 name="${nameWithPrefix}"
-                component={FinalFormInput}
-                type="number"
                 label={${fieldLabel}}
+                ${config.decimals ? `decimals={${config.decimals}}` : ""}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
