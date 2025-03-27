@@ -6,7 +6,6 @@ import { CreateWarningInput } from "../../warnings/dto/create-warning.input";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "./entities/file.entity";
-import { LicenseType } from "./entities/license.embeddable";
 
 @Injectable()
 export class FileWarningService implements CreateWarningsServiceInterface<FileInterface> {
@@ -77,7 +76,8 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
 
         // if license feature is required, check if licenses are set
         if (this.config.requireLicense) {
-            if (!entity.license?.durationTo && entity.license?.type !== LicenseType.ROYALTY_FREE) {
+            const isLicenseMissing = entity.license?.type === undefined;
+            if (isLicenseMissing) {
                 warnings.push({
                     severity: "high",
                     message: "fileLicenseRequired",
