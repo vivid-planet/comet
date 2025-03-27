@@ -1,13 +1,14 @@
 import { CreateRequestContext, EntityClass, MikroORM } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
-import { CreateWarningsMeta } from "./decorators/create-warnings.decorator";
+import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -104,43 +105,84 @@ export class WarningCheckerCommand extends CommandRunner {
             const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
             if (createWarnings) {
                 const repository = this.entityManager.getRepository(entity);
-                const service = this.moduleRef.get(createWarnings, { strict: false });
 
-                if (service.bulkCreateWarnings) {
-                    const warningGenerator = service.bulkCreateWarnings();
-                    for await (const { warnings, tableRowId } of warningGenerator) {
-                        for (const warning of warnings) {
-                            await this.warningService.saveWarnings({
-                                warnings: await service.createWarnings(warning),
-                                type: "Entity",
-                                sourceInfo: {
-                                    rootEntityName: entity.name,
-                                    rootPrimaryKey: entityMetadata.primaryKeys[0],
-                                    targetId: tableRowId,
-                                },
-                            });
+                if (this.isService(createWarnings)) {
+                    const service = this.moduleRef.get(createWarnings, { strict: false });
+
+                    if (service.bulkCreateWarnings) {
+                        const warningGenerator = service.bulkCreateWarnings();
+                        for await (const { warnings, tableRowId } of warningGenerator) {
+                            for (const warning of warnings) {
+                                await this.warningService.saveWarnings({
+                                    warnings: await service.createWarnings(warning),
+                                    type: "Entity",
+                                    sourceInfo: {
+                                        rootEntityName: entity.name,
+                                        rootPrimaryKey: entityMetadata.primaryKeys[0],
+                                        targetId: tableRowId,
+                                    },
+                                });
+                            }
                         }
-                    }
-                } else {
-                    const rows = await repository.find();
-
-                    for (const row of rows) {
-                        await this.warningService.saveWarnings({
-                            warnings: await service.createWarnings(row),
-                            type: "Entity",
-                            sourceInfo: {
-                                rootEntityName: entity.name,
-                                rootPrimaryKey: entityMetadata.primaryKeys[0],
-                                targetId: row.id,
-                            },
+                    } else {
+                        await this.processEntityWarningsIndividually({
+                            repository,
+                            createWarnings: service.createWarnings,
+                            rootEntityName: entity.name,
+                            rootPrimaryKey: entityMetadata.primaryKeys[0],
                         });
                     }
+                } else {
+                    await this.processEntityWarningsIndividually({
+                        repository,
+                        createWarnings,
+                        rootEntityName: entity.name,
+                        rootPrimaryKey: entityMetadata.primaryKeys[0],
+                    });
                 }
             }
         }
 
         // remove all Entity-Warnings that are not present anymore
         await this.entityManager.nativeDelete(Warning, { type: "Entity", updatedAt: { $lt: startDate } });
+    }
+
+    private async processEntityWarningsIndividually({
+        repository,
+        createWarnings,
+        rootEntityName,
+        rootPrimaryKey,
+    }: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        repository: EntityRepository<any>;
+        createWarnings: CreateWarningsFunction;
+        rootEntityName: string;
+        rootPrimaryKey: string;
+    }) {
+        let rows = [];
+        const limit = 50;
+        let offset = 0;
+        do {
+            rows = await repository.find({}, { limit, offset });
+            offset += limit;
+
+            for (const row of rows) {
+                await this.warningService.saveWarnings({
+                    warnings: await createWarnings(row),
+                    type: "Entity",
+                    sourceInfo: {
+                        rootEntityName,
+                        rootPrimaryKey,
+                        targetId: row[rootPrimaryKey],
+                    },
+                });
+            }
+        } while (rows.length > 0);
+    }
+
+    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
+        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
     }
 
     // Group root block data by tableName and className to reduce database calls.

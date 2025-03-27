@@ -1,10 +1,12 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
-import { CreateWarningsMeta } from "./decorators/create-warnings.decorator";
+import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { CreateWarningInput } from "./dto/create-warning.input";
 import { WarningService } from "./warning.service";
 
 @Injectable()
@@ -81,10 +83,18 @@ export class WarningEventSubscriber implements EventSubscriber {
                 const rows = await repository.find();
 
                 for (const row of rows) {
-                    const service = this.moduleRef.get(createWarnings, { strict: false });
+                    let warnings: CreateWarningInput[] = [];
+                    if (this.isService(createWarnings)) {
+                        const service = this.moduleRef.get(createWarnings, { strict: false });
 
+                        if (service.createWarnings) {
+                            warnings = await service.createWarnings(row);
+                        }
+                    } else {
+                        warnings = await createWarnings(row);
+                    }
                     await this.warningService.saveWarningsAndDeleteOutdated({
-                        warnings: await service.createWarnings(row),
+                        warnings,
                         type: "Entity",
                         sourceInfo: {
                             rootEntityName: entity.name,
@@ -95,5 +105,10 @@ export class WarningEventSubscriber implements EventSubscriber {
                 }
             }
         }
+    }
+
+    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
+        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
     }
 }

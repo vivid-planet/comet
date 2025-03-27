@@ -66,37 +66,6 @@ type PaginatedDependencies {
   totalCount: Int!
 }
 
-type WarningSourceInfo {
-  rootEntityName: String!
-  targetId: String!
-  rootColumnName: String
-  rootPrimaryKey: String!
-  jsonPath: String
-}
-
-type Warning {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  message: String!
-  type: String!
-  severity: WarningSeverity!
-  sourceInfo: WarningSourceInfo!
-  status: WarningStatus!
-}
-
-enum WarningSeverity {
-  high
-  medium
-  low
-}
-
-enum WarningStatus {
-  open
-  resolved
-  ignored
-}
-
 type DamFileLicense {
   type: LicenseType
   details: String
@@ -229,6 +198,37 @@ type FileUpload {
 type UserPermissionPaginatedUserList {
   nodes: [UserPermissionsUser!]!
   totalCount: Int!
+}
+
+type WarningSourceInfo {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  type: String!
+  severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
+  status: WarningStatus!
+}
+
+enum WarningSeverity {
+  high
+  medium
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
 }
 
 type PaginatedWarnings {

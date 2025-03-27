@@ -8,7 +8,7 @@ interface BulkCreateWarningInput {
     tableRowId: string;
 }
 
-type CreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<CreateWarningInput[]>;
+export type CreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<CreateWarningInput[]>;
 type CreateWarningsBulkFunction = () => AsyncGenerator<BulkCreateWarningInput>;
 
 export interface CreateWarningsServiceInterface<Entity extends AnyEntity = AnyEntity> {
