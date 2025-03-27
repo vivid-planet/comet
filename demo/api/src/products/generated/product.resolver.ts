@@ -50,7 +50,7 @@ export class ProductResolver {
 
     @Query(() => PaginatedProducts)
     async products(@Args() { search, filter, sort, offset, limit }: ProductsArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedProducts> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getRepository<Product>(Product));
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(Product));
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
