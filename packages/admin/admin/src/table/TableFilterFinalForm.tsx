@@ -43,15 +43,15 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
             <form onSubmit={formRenderProps.handleSubmit}>
                 <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                     {(this.props.headline || this.props.resetButton) && (
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                                 {this.props.headline && (
-                                    <Grid item>
+                                    <Grid>
                                         <Typography variant="h4">{this.props.headline}</Typography>
                                     </Grid>
                                 )}
                                 {this.props.resetButton && (
-                                    <Grid item>
+                                    <Grid>
                                         <Button
                                             variant="textDark"
                                             startIcon={<Clear />}
@@ -66,9 +66,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Pr
                             </Grid>
                         </Grid>
                     )}
-                    <Grid item xs={12}>
-                        {renderFinalFormChildren(this.props as RenderableProps<FormRenderProps<FilterValues>>, formRenderProps)}
-                    </Grid>
+                    <Grid size={12}>{renderFinalFormChildren(this.props as RenderableProps<FormRenderProps<FilterValues>>, formRenderProps)}</Grid>
                 </Grid>
             </form>
         );

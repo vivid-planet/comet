@@ -16,7 +16,7 @@ export const _Field = () => {
 
     return (
         <Grid container spacing={4} style={{ maxWidth: 800 }}>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Card variant="outlined">
                     <CardContent>
                         <Form
@@ -28,12 +28,12 @@ export const _Field = () => {
                                     <Field name="rteContent" label="Rich Text" component={RteField} disabled={disabled} />
                                     <Field name="somethingElse" label="Something else" component={FinalFormInput} disabled={disabled} />
                                     <Grid container spacing={4}>
-                                        <Grid item>
+                                        <Grid>
                                             <Button variant="secondary" onClick={toggleDisabled}>
                                                 {disabled ? "Enable" : "Disable"} inputs
                                             </Button>
                                         </Grid>
-                                        <Grid item>
+                                        <Grid>
                                             <Button type="submit">Submit</Button>
                                         </Grid>
                                     </Grid>
@@ -43,7 +43,7 @@ export const _Field = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Card variant="outlined">
                     <CardContent>
                         <FormSection title="Readonly Component" disableMarginBottom>

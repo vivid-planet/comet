@@ -233,7 +233,7 @@ export const GridLayout = {
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="select1" label="Select 1" fullWidth>
                                     {(props) => (
                                         <FinalFormSelect {...props}>
@@ -246,7 +246,7 @@ export const GridLayout = {
                                     )}
                                 </Field>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="select2" label="Select 2" fullWidth>
                                     {(props) => (
                                         <FinalFormSelect {...props}>
@@ -259,10 +259,10 @@ export const GridLayout = {
                                     )}
                                 </Field>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="text1" label="Text 1" component={FinalFormInput} fullWidth />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="text2" label="Text 2" component={FinalFormInput} fullWidth />
                             </Grid>
                         </Grid>

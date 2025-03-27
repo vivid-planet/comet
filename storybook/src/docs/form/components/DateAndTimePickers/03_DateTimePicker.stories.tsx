@@ -16,17 +16,32 @@ export const Basic = () => {
 
     return (
         <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
+            <Grid
+                size={{
+                    xs: 12,
+                    md: 6,
+                }}
+            >
                 <FieldContainer label="Date-Time Picker" fullWidth>
                     <DateTimePicker value={dateTimeOne} onChange={setDateTimeOne} />
                 </FieldContainer>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid
+                size={{
+                    xs: 12,
+                    md: 6,
+                }}
+            >
                 <FieldContainer label="Required" fullWidth required>
                     <DateTimePicker value={dateTimeTwo} onChange={setDateTimeTwo} required />
                 </FieldContainer>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid
+                size={{
+                    xs: 12,
+                    md: 6,
+                }}
+            >
                 <FieldContainer label="Custom placeholders" fullWidth>
                     <DateTimePicker
                         value={dateTimeThree}
@@ -38,7 +53,12 @@ export const Basic = () => {
                     />
                 </FieldContainer>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid
+                size={{
+                    xs: 12,
+                    md: 6,
+                }}
+            >
                 <FieldContainer label="Custom date format" fullWidth>
                     <DateTimePicker
                         value={dateTimeFour}
@@ -71,13 +91,28 @@ export const FinalForm = () => {
         <Form<Values> initialValues={{ dateTimeTwo: new Date(), dateTimeFour: new Date() }} onSubmit={() => {}}>
             {() => (
                 <Grid container spacing={4}>
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6,
+                        }}
+                    >
                         <Field name="dateTimeOne" label="Date Picker" fullWidth component={FinalFormDateTimePicker} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6,
+                        }}
+                    >
                         <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6,
+                        }}
+                    >
                         <Field
                             name="dateTimeThree"
                             label="Custom placeholders"
@@ -89,7 +124,12 @@ export const FinalForm = () => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6,
+                        }}
+                    >
                         <Field
                             name="dateTimeFour"
                             label="Custom date format"

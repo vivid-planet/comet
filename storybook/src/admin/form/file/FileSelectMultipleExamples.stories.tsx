@@ -138,16 +138,16 @@ export const FileSelectMultipleExamples = {
         return (
             <div>
                 <Grid container spacing={4}>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <SingleFileSelectStory noBackground={noBackground} />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <MultipleFileSelectStory noBackground={noBackground} />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <SingleFileSelectStory noBackground={noBackground} hasExistingFiles />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <MultipleFileSelectStory noBackground={noBackground} hasExistingFiles />
                     </Grid>
                 </Grid>
