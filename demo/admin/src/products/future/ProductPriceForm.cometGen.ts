@@ -6,5 +6,5 @@ export default defineConfig<GQLProduct>({
     gqlType: "Product",
     mode: "edit",
     fragmentName: "ProductPriceFormDetails", // configurable as it must be unique across project
-    fields: [{ type: "number", name: "price", helperText: "Enter price in this format: 123,45", startAdornment: "€" }],
+    fields: [{ type: "number", name: "price", helperText: "Enter price in this format: 123.45", startAdornment: "€", decimals: 2 }],
 });
