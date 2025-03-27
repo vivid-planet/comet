@@ -25,7 +25,7 @@ import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
-import { configsFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
+import { configFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
@@ -54,7 +54,7 @@ export type ComponentFormFieldConfig = { type: "component"; component: Component
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
-    | ({ type: "number" } & InputBaseFieldConfig)
+    | ({ type: "number"; decimals?: number } & InputBaseFieldConfig)
     | ({
           type: "numberRange";
           minValue: number;
@@ -123,7 +123,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
-type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
+type TabsConfig<T extends { __typename?: string }> = { type: "tabs"; tabs: { name: string; content: GeneratorConfig<T> }[] };
 
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
@@ -184,7 +184,11 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | TabsConfig<T>;
+
+export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
+    return config;
+}
 
 type GQLDocumentConfig = { document: string; export: boolean };
 export type GQLDocumentConfigMap = Record<string, GQLDocumentConfig>;
@@ -206,29 +210,29 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         const targetDirectory = `${dirname(file)}/generated`;
         const baseOutputFilename = basename(file).replace(/\.cometGen\.tsx?$/, "");
 
-        const configs = configsFromSourceFile(morphTsSource(file));
+        console.log(`generating ${file}`);
+
+        const config = configFromSourceFile(morphTsSource(file));
+        const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
+        if (!exportName) throw new Error("Can not determine exportName");
+
         //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
 
-        console.log(`generating ${file}`);
-
-        for (const exportName in configs) {
-            const config = configs[exportName];
-            let generated: GeneratorReturn;
-            if (config.type == "form") {
-                generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
-            } else if (config.type == "grid") {
-                generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
-            } else {
-                throw new Error(`Unknown config type: ${config.type}`);
-            }
-            outputCode += generated.code;
-            for (const queryName in generated.gqlDocuments) {
-                const exportStatement = generated.gqlDocuments[queryName].export ? "export " : "";
-                gqlDocumentsOutputCode += `${exportStatement} const ${queryName} = gql\`${generated.gqlDocuments[queryName].document}\`\n`;
-            }
+        let generated: GeneratorReturn;
+        if (config.type == "form") {
+            generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+        } else if (config.type == "grid") {
+            generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+        } else {
+            throw new Error(`Unknown config type: ${config.type}`);
+        }
+        outputCode += generated.code;
+        for (const queryName in generated.gqlDocuments) {
+            const exportStatement = generated.gqlDocuments[queryName].export ? "export " : "";
+            gqlDocumentsOutputCode += `${exportStatement} const ${queryName} = gql\`${generated.gqlDocuments[queryName].document}\`\n`;
         }
 
         await writeGenerated(codeOuputFilename, outputCode);

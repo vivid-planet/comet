@@ -10,7 +10,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarItem,
     Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
@@ -33,18 +32,12 @@ import { FormattedMessage, useIntl } from "react-intl";
 function ManufacturersGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarItem>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
-                </Button>
-            </ToolbarItem>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
+            </Button>
         </DataGridToolbar>
     );
 }

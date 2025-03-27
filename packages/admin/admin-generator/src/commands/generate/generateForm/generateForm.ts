@@ -300,6 +300,7 @@ export function generateForm(
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
+        NumberField,
         RadioGroupField,
         TextAreaField,
         TextField,

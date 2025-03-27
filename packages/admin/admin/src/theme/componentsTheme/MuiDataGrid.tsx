@@ -93,17 +93,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
             backgroundColor: "white",
-
-            "& [class*='MuiDataGrid-toolbarQuickFilter']": {
-                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
-                    paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
-                    textOverflow: "ellipsis",
-                },
-
-                [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
-                    display: "none", // Prevents the disabled clear-button from overlaying the input value
-                },
-            },
         },
         panelHeader: {
             padding: `4px 4px ${spacing(1)} 4px`,
@@ -188,7 +177,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             flexWrap: "wrap",
             padding: 0,
 
-            [`${breakpoints.up("md")}`]: {
+            [breakpoints.up("md")]: {
                 flexWrap: "nowrap",
                 gap: spacing(1),
             },
@@ -232,7 +221,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             marginBottom: 3,
             justifyContent: "center",
 
-            [`${breakpoints.up("md")}`]: {
+            [breakpoints.up("md")]: {
                 marginRight: 0,
             },
 
@@ -244,7 +233,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             width: filterOperatorInputWidth,
             marginRight: 0,
 
-            [`${breakpoints.up("md")}`]: {
+            [breakpoints.up("md")]: {
                 width: 80,
             },
         },
@@ -253,7 +242,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             paddingLeft: spacing(2),
             boxSizing: "border-box",
 
-            [`${breakpoints.up("md")}`]: {
+            [breakpoints.up("md")]: {
                 width: 199,
                 paddingLeft: 0,
             },
@@ -263,7 +252,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             flexBasis: filterOperatorInputWidth,
             flexGrow: 1,
 
-            [`${breakpoints.up("md")}`]: {
+            [breakpoints.up("md")]: {
                 marginTop: 0,
                 width: 110,
             },
@@ -274,7 +263,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             boxSizing: "border-box",
             marginTop: spacing(3),
 
-            [`${breakpoints.up("md")}`]: {
+            [breakpoints.up("md")]: {
                 width: 199,
                 paddingLeft: 0,
                 marginTop: 0,
@@ -303,10 +292,20 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         // @ts-expect-error This key exists but is missing in the types.
         toolbarQuickFilter: {
             paddingBottom: 0,
+            width: 120,
+
+            [breakpoints.up("sm")]: {
+                width: 150,
+            },
+
+            [breakpoints.up("md")]: {
+                width: "auto",
+            },
 
             [`& .${svgIconClasses.root}`]: {
                 fontSize: 16,
             },
+
             [`& .${buttonBaseClasses.root}`]: {
                 alignSelf: "stretch",
                 color: palette.grey[200],
@@ -320,8 +319,18 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                     fontSize: "inherit",
                 },
             },
+
             [`& .${inputBaseClasses.input}`]: {
                 marginLeft: 0,
+            },
+
+            [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}`]: {
+                paddingRight: 0, // Removes unnecessary spacing to the clear button that already has enough spacing
+                textOverflow: "ellipsis",
+            },
+
+            [`& > .${inputBaseClasses.root} .${inputBaseClasses.input}[value=''] + .${iconButtonClasses.root}`]: {
+                display: "none", // Prevents the disabled clear-button from overlaying the input value
             },
         },
     }),
