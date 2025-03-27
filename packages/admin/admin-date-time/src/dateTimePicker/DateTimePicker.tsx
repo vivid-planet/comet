@@ -1,5 +1,5 @@
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, FormControl } from "@mui/material";
+import { ComponentsOverrides, FormControl, InputBaseProps } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { useRef } from "react";
 import { useIntl } from "react-intl";
@@ -57,10 +57,12 @@ export interface DateTimePickerProps
     onChange?: (value?: Date) => void;
     value?: Date;
     required?: boolean;
+    onBlur?: InputBaseProps["onBlur"];
+    onFocus?: InputBaseProps["onFocus"];
 }
 
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, required, slotProps, ...restProps } = useThemeProps({
+    const { onChange, value, required, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
@@ -108,6 +110,14 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     fullWidth
                     required={required}
                     {...slotProps?.datePicker}
+                    onBlur={(event) => {
+                        onBlur?.(event);
+                        slotProps?.datePicker?.onBlur?.(event);
+                    }}
+                    onFocus={(event) => {
+                        onFocus?.(event);
+                        slotProps?.datePicker?.onFocus?.(event);
+                    }}
                 />
             </DateFormControl>
             <TimeFormControl {...slotProps?.timeFormControl}>
@@ -119,6 +129,14 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     fullWidth
                     required={required}
                     {...slotProps?.timePicker}
+                    onBlur={(event) => {
+                        onBlur?.(event);
+                        slotProps?.timePicker?.onBlur?.(event);
+                    }}
+                    onFocus={(event) => {
+                        onFocus?.(event);
+                        slotProps?.timePicker?.onFocus?.(event);
+                    }}
                 />
             </TimeFormControl>
         </Root>
