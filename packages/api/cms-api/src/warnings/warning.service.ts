@@ -55,27 +55,7 @@ export class WarningService {
         }
     }
 
-    public async saveWarningsAndDeleteOutdated({
-        warnings,
-        type,
-        sourceInfo,
-    }: {
-        warnings: CreateWarningInput[];
-        type: string;
-        sourceInfo: WarningSourceInfo;
-    }): Promise<void> {
-        const startDate = new Date();
-        for (const warning of warnings) {
-            await this.saveWarning({
-                warning,
-                type,
-                sourceInfo,
-            });
-        }
-        this.deleteOutdatedWarnings(startDate, type, sourceInfo);
-    }
-
-    public async deleteOutdatedWarnings(date: Date, type: string, sourceInfo: WarningSourceInfo): Promise<void> {
+    public async deleteOutdatedWarnings({ date, type, sourceInfo }: { date: Date; type: string; sourceInfo: WarningSourceInfo }): Promise<void> {
         await this.entityManager.nativeDelete(Warning, { type, updatedAt: { $lt: date }, sourceInfo });
     }
 }

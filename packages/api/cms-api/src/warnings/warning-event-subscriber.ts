@@ -62,17 +62,20 @@ export class WarningEventSubscriber implements EventSubscriber {
                 for (const node of flatBlocks.depthFirst()) {
                     const warnings = node.block.warnings();
 
-                    await this.warningService.saveWarningsAndDeleteOutdated({
+                    const startDate = new Date();
+                    const sourceInfo = {
+                        rootEntityName: entity.name,
+                        rootColumnName: key,
+                        targetId: args.entity.id,
+                        rootPrimaryKey: args.meta.primaryKeys[0],
+                        jsonPath: node.pathToString(),
+                    };
+                    await this.warningService.saveWarnings({
                         warnings,
                         type: "Block",
-                        sourceInfo: {
-                            rootEntityName: entity.name,
-                            rootColumnName: key,
-                            targetId: args.entity.id,
-                            rootPrimaryKey: args.meta.primaryKeys[0],
-                            jsonPath: node.pathToString(),
-                        },
+                        sourceInfo,
                     });
+                    await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Block", sourceInfo });
                 }
             }
 
@@ -93,15 +96,18 @@ export class WarningEventSubscriber implements EventSubscriber {
                     } else {
                         warnings = await createWarnings(row);
                     }
-                    await this.warningService.saveWarningsAndDeleteOutdated({
+                    const startDate = new Date();
+                    const sourceInfo = {
+                        rootEntityName: entity.name,
+                        rootPrimaryKey: args.meta.primaryKeys[0],
+                        targetId: row.id,
+                    };
+                    await this.warningService.saveWarnings({
                         warnings,
                         type: "Entity",
-                        sourceInfo: {
-                            rootEntityName: entity.name,
-                            rootPrimaryKey: args.meta.primaryKeys[0],
-                            targetId: row.id,
-                        },
+                        sourceInfo,
                     });
+                    await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Entity", sourceInfo });
                 }
             }
         }
