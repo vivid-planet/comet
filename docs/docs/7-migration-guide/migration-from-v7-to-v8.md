@@ -29,7 +29,7 @@ You can re-execute individual upgrade scripts if needed: `npx @comet/upgrade@lat
 
 ## General
 
-### Upgrade Node to v22
+### ✅ Upgrade Node to v22
 
 <details>
 
@@ -84,7 +84,7 @@ Make sure to extend the correct jobs and replace all images and base images.
 
 ## API
 
-### Upgrade peer dependencies
+### ✅ Upgrade peer dependencies
 
 #### NestJS
 
@@ -185,7 +185,7 @@ Make sure to extend the correct jobs and replace all images and base images.
 3.  You may need to update some of your routes to support Express v5.
     See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
 
-#### Add NestJS peer dependencies
+#### ✅ Add NestJS peer dependencies
 
 Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
 
@@ -303,7 +303,7 @@ To upgrade, install the dependencies in your project:
 
     :::
 
-#### class-validator
+#### ✅ class-validator
 
 The class-validator peer dependency has been bumped to v0.14.0.
 
@@ -330,7 +330,7 @@ npx @comet/upgrade v8/update-class-validator.ts
 
 </details>
 
-#### Sentry
+#### ✅ Sentry
 
 The Sentry dependency has been bumped to v9.
 
@@ -373,7 +373,7 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 
 </details>
 
-#### Vite / SWC
+#### ✅ Vite / SWC
 
 <details>
 
@@ -396,7 +396,7 @@ npx @comet/upgrade v8/update-swc-dependencies.ts
 
 </details>
 
-### Add new package @comet/api-generator
+### ✅ Add new package @comet/api-generator
 
 <details>
 
@@ -427,7 +427,7 @@ Previously, if entities specified a `status` enum, it was automatically added to
 This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
 done with the normal filtering mechanism.
 
-### Remove `@comet/blocks-api`
+### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
 
@@ -724,7 +724,7 @@ Import `JwtModule` from `@nestjs/jwt`:
 
 ### Upgrade peer dependencies
 
-#### Recommended: React 18
+#### React
 
 The React dependency has been bumped to v18.
 
@@ -894,7 +894,7 @@ Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid,
     />
 ```
 
-### Add new package @comet/admin-generator
+### ✅ Add new package @comet/admin-generator
 
 <details>
 
@@ -918,7 +918,7 @@ devDependencies: {
 
 </details>
 
-### Remove `@comet/blocks-admin`
+### ✅ Remove `@comet/blocks-admin`
 
 The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
 
@@ -972,7 +972,7 @@ Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateActio
 
 :::
 
-### Remove `@comet/admin-theme`
+### ✅ Remove `@comet/admin-theme`
 
 <details>
 
@@ -998,7 +998,7 @@ The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the
 
 </details>
 
-### Remove `@comet/admin-react-select`
+### ✅ Remove `@comet/admin-react-select`
 
 <details>
 
@@ -1027,7 +1027,7 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
 ```
 
-### Merge providers into `CometConfigProvider`
+### ✅ Merge providers into `CometConfigProvider`
 
 The separate providers for CMS features (e.g, `DamConfigProvider`) have been merged into a `CometConfigProvider`.
 
@@ -1119,7 +1119,7 @@ Remove the `allCategories` prop from `PagesPage`:
 
 :::
 
-### Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
+### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
 <details>
 
@@ -1232,7 +1232,7 @@ The new usage simplifies the component structure - children can now be passed di
   </DataGridToolbar>
 ```
 
-#### Pass columns instead of apiRef to `muiGridSortToGql` Function
+#### ✅ Pass columns instead of apiRef to `muiGridSortToGql` Function
 
 <details>
 
@@ -1308,7 +1308,7 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + <DataGrid /* other props */ >
 ```
 
-#### `useDataGridRemote` Hook - Return Value
+#### ✅ `useDataGridRemote` Hook - Return Value
 
 The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
 
@@ -1323,9 +1323,9 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 :::
 
-### Dialog-related changes
+### ✅ Dialog-related changes
 
-#### Import `Dialog` from `@comet/admin` package
+#### ✅ Import `Dialog` from `@comet/admin` package
 
 <details>
 
@@ -1346,7 +1346,7 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 </details>
 
-#### Add `DialogContent` to `EditDialog`
+#### ✅ Add `DialogContent` to `EditDialog`
 
 <details>
 
@@ -1376,9 +1376,9 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 </details>
 
-### Tooltip-related Changes
+### ✅ Tooltip-related Changes
 
-#### Import `Tooltip` from `@comet/admin` package
+#### ✅ Import `Tooltip` from `@comet/admin` package
 
 <details>
 
@@ -1399,7 +1399,7 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 </details>
 
-#### Remove `trigger` prop from `Tooltip`
+#### ✅ Remove `trigger` prop from `Tooltip`
 
 <details>
 
@@ -1427,7 +1427,7 @@ Example:
 
 ## Site
 
-### Remove `graphQLFetch` from `sitePreviewRoute` calls
+### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
 
 <details>
 
@@ -1450,7 +1450,7 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 
 ## ESLint
 
-### Upgrade ESLint from v8 to v9 with ESM
+### ✅ Upgrade ESLint from v8 to v9 with ESM
 
 <details>
 
@@ -1584,7 +1584,7 @@ It is recommended to perform the following steps separately in the `admin/` and 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
 The codemod does not handle all cases, so manual adjustments may still be necessary.
 
-### Consistent type imports
+### ✅ Consistent type imports
 
 <details>
 
