@@ -54,12 +54,15 @@ async function bootstrap(): Promise<void> {
 
     app.use(
         helmet({
-            contentSecurityPolicy: {
-                directives: {
-                    "default-src": ["'none'"],
-                },
-                useDefaults: false, // Disable default directives
-            },
+            contentSecurityPolicy:
+                process.env.NODE_ENV !== "production"
+                    ? false
+                    : {
+                          directives: {
+                              "default-src": ["'none'"],
+                          },
+                          useDefaults: false, // Disable default directives
+                      },
             xFrameOptions: false, // Disable non-standard header
             strictTransportSecurity: {
                 // Enable HSTS
