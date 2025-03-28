@@ -50,7 +50,8 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
 };
 
 export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
-    [P in keyof S]: { label?: string; value: NonNull<S[P]> };
+    scope: S;
+    label?: { [P in keyof S]?: string };
 }>;
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
