@@ -130,14 +130,14 @@ function LinkDialog(props: {
                 <div>
                     <Grid container spacing={4}>
                         {linkData && (
-                            <Grid item>
+                            <Grid>
                                 <Button startIcon={<Delete />} onClick={handleRemove}>
                                     {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                                     <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />
                                 </Button>
                             </Grid>
                         )}
-                        <Grid item>
+                        <Grid>
                             <Button startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
                                 {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                                 <FormattedMessage id="comet.generic.save" defaultMessage="Save" />

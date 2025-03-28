@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiCardHeader: GetMuiComponentTheme<"MuiCardHeader"> = (component, { spacing, palette }) => ({
+export const getMuiCardHeader: GetMuiComponentTheme<"MuiCardHeader"> = (component, { palette }) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiCardHeader">(component?.styleOverrides, {
         root: {

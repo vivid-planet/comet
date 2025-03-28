@@ -122,7 +122,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                     <DialogFormWrapper onSubmit={handleSubmit}>
                         <DialogTitle>
                             <Grid container justifyContent="space-between">
-                                <Grid item>
+                                <Grid>
                                     <Typography>
                                         <FormattedMessage
                                             id="comet.blocks.image.edit"
@@ -133,7 +133,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                         />
                                     </Typography>
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     <Typography>
                                         <FormattedMessage
                                             id="comet.blocks.image.dimensions"

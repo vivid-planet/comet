@@ -113,7 +113,7 @@ export const PagesPageActionToolbar = ({
         <>
             {progressDialog}
             <Root container justifyContent="space-between">
-                <Grid item>
+                <Grid>
                     <SelectAllLabel
                         control={
                             <Checkbox
@@ -125,7 +125,7 @@ export const PagesPageActionToolbar = ({
                         label={<FormattedMessage id="comet.pagesPageActionToolbar.selectAll" defaultMessage="Select all" />}
                     />
                 </Grid>
-                <CenterContainer item>
+                <CenterContainer>
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.publish" defaultMessage="Publish" />}>
                         <span>
                             <IconButton
@@ -227,7 +227,7 @@ export const PagesPageActionToolbar = ({
                         </span>
                     </Tooltip>
                 </CenterContainer>
-                <Grid item>
+                <Grid>
                     <Button
                         disabled={collapseAllDisabled}
                         startIcon={<TreeCollapseAll />}

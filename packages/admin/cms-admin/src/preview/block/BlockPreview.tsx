@@ -38,15 +38,15 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
         <Root>
             <ActionsContainer>
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" spacing={1}>
-                    <Grid item>
+                    <Grid>
                         <MinimizeButton onClick={handleMinimizeClick}>
                             <Minimize />
                         </MinimizeButton>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <DeviceToggle device={device} onChange={setDevice} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={setShowOnlyVisible} />
                     </Grid>
                 </Grid>

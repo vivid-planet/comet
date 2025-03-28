@@ -771,7 +771,7 @@ The React dependency has been bumped to v18.
 
 #### MUI
 
-The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v6.
+The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
 
 1.  Upgrade your MUI dependencies
 
@@ -793,11 +793,11 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     -       "@mui/material": "^5.0.0",
     -       "@mui/system": "^5.0.0",
     -       "@mui/utils": "^5.0.0",
-    +       "@mui/icons-material": "^6.0.0",
-    +       "@mui/lab": "^6.0.0-beta.10",
-    +       "@mui/material": "^6.0.0",
-    +       "@mui/system": "^6.0.0",
-    +       "@mui/utils": "^6.0.0",
+    +       "@mui/icons-material": "^7.0.0",
+    +       "@mui/lab": "^7.0.0-beta.9",
+    +       "@mui/material": "^7.0.0",
+    +       "@mui/system": "^7.0.0",
+    +       "@mui/utils": "^7.0.0",
     ```
 
     </details>
@@ -817,7 +817,9 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     :::
     </details>
 
-3.  Follow the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) to upgrade.
+3.  Follow the official migration guides to upgrade:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
 
 #### MUI X (DataGrid)
 

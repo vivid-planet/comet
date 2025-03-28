@@ -1,9 +1,5 @@
-import { type Breakpoints, type ComponentNameToClassKey, type ThemeOptions } from "@mui/material";
-import { type Components, type Palette } from "@mui/material/styles";
-import { type Typography } from "@mui/material/styles/createTypography";
-import { type Shadows } from "@mui/material/styles/shadows";
-import { type ZIndex } from "@mui/material/styles/zIndex";
-import { type Spacing } from "@mui/system";
+import { type ComponentNameToClassKey, type ThemeOptions } from "@mui/material";
+import { type Components, type Theme } from "@mui/material/styles";
 
 import { getMuiAccordion } from "./MuiAccordion";
 import { getMuiAlert } from "./MuiAlert";
@@ -55,69 +51,60 @@ import { getMuiToggleButtonGroup } from "./MuiToggleButtonGroup";
 import { getMuiTooltip } from "./MuiTooltip";
 import { getMuiTypography } from "./MuiTypography";
 
-type ThemeData = {
-    palette: Palette;
-    typography: Typography;
-    spacing: Spacing;
-    zIndex: ZIndex;
-    shadows: Shadows;
-    breakpoints: Breakpoints;
-};
-
 export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassKey> = (
     component: Components[ClassesName],
-    themeData: ThemeData,
+    theme: Theme,
 ) => Components[ClassesName];
 
-export const getComponentsTheme = (components: Components, themeData: ThemeData): ThemeOptions["components"] => ({
+export const getComponentsTheme = (components: Components, theme: Theme): ThemeOptions["components"] => ({
     ...components,
-    MuiAccordion: getMuiAccordion(components.MuiAccordion, themeData),
-    MuiAlert: getMuiAlert(components.MuiAlert, themeData),
-    MuiAlertTitle: getMuiAlertTitle(components.MuiAlertTitle, themeData),
-    MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
-    MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
-    MuiBadge: getMuiBadge(components.MuiBadge, themeData),
-    MuiButton: getMuiButton(components.MuiButton, themeData),
-    MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
-    MuiCard: getMuiCard(components.MuiCard, themeData),
-    MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),
-    MuiCardHeader: getMuiCardHeader(components.MuiCardHeader, themeData),
-    MuiCheckbox: getMuiCheckbox(components.MuiCheckbox, themeData),
-    MuiChip: getMuiChip(components.MuiChip, themeData),
-    MuiDataGrid: getMuiDataGrid(components.MuiDataGrid, themeData),
-    MuiDialog: getMuiDialog(components.MuiDialog, themeData),
-    MuiDialogActions: getMuiDialogActions(components.MuiDialogActions, themeData),
-    MuiDialogContent: getMuiDialogContent(components.MuiDialogContent, themeData),
-    MuiDialogContentText: getMuiDialogContentText(components.MuiDialogContentText, themeData),
-    MuiDialogTitle: getMuiDialogTitle(components.MuiDialogTitle, themeData),
-    MuiDrawer: getMuiDrawer(components.MuiDrawer, themeData),
-    MuiFormControlLabel: getMuiFormControlLabel(components.MuiFormControlLabel, themeData),
-    MuiFormHelperText: getMuiFormHelperText(components.MuiFormHelperText, themeData),
-    MuiFormLabel: getMuiFormLabel(components.MuiFormLabel, themeData),
-    MuiIconButton: getMuiIconButton(components.MuiIconButton, themeData),
-    MuiInput: getMuiInput(components.MuiInput, themeData),
-    MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, themeData),
-    MuiInputBase: getMuiInputBase(components.MuiInputBase, themeData),
-    MuiLinearProgress: getMuiLinearProgress(components.MuiLinearProgress, themeData),
-    MuiLink: getMuiLink(components.MuiLink, themeData),
-    MuiListItem: getMuiListItem(components.MuiListItem, themeData),
-    MuiListItemIcon: getMuiListItemIcon(components.MuiListItemIcon, themeData),
-    MuiListItemAvatar: getMuiListItemAvatar(components.MuiListItemAvatar, themeData),
-    MuiMenu: getMuiMenu(components.MuiMenu, themeData),
-    MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, themeData),
-    MuiPaper: getMuiPaper(components.MuiPaper, themeData),
-    MuiPopover: getMuiPopover(components.MuiPopover, themeData),
-    MuiRadio: getMuiRadio(components.MuiRadio, themeData),
-    MuiSelect: getMuiSelect(components.MuiSelect, themeData),
-    MuiSvgIcon: getMuiSvgIcon(components.MuiSvgIcon, themeData),
-    MuiSwitch: getMuiSwitch(components.MuiSwitch, themeData),
-    MuiTab: getMuiTab(components.MuiTab, themeData),
-    MuiTableCell: getMuiTableCell(components.MuiTableCell, themeData),
-    MuiTableRow: getMuiTableRow(components.MuiTableRow, themeData),
-    MuiTabs: getMuiTabs(components.MuiTabs, themeData),
-    MuiToggleButton: getMuiToggleButton(components.MuiToggleButton, themeData),
-    MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, themeData),
-    MuiTooltip: getMuiTooltip(components.MuiTooltip, themeData),
-    MuiTypography: getMuiTypography(components.MuiTypography, themeData),
-    MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, themeData),
+    MuiAccordion: getMuiAccordion(components.MuiAccordion, theme),
+    MuiAlert: getMuiAlert(components.MuiAlert, theme),
+    MuiAlertTitle: getMuiAlertTitle(components.MuiAlertTitle, theme),
+    MuiAppBar: getMuiAppBar(components.MuiAppBar, theme),
+    MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, theme),
+    MuiBadge: getMuiBadge(components.MuiBadge, theme),
+    MuiButton: getMuiButton(components.MuiButton, theme),
+    MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, theme),
+    MuiCard: getMuiCard(components.MuiCard, theme),
+    MuiCardContent: getMuiCardContent(components.MuiCardContent, theme),
+    MuiCardHeader: getMuiCardHeader(components.MuiCardHeader, theme),
+    MuiCheckbox: getMuiCheckbox(components.MuiCheckbox, theme),
+    MuiChip: getMuiChip(components.MuiChip, theme),
+    MuiDataGrid: getMuiDataGrid(components.MuiDataGrid, theme),
+    MuiDialog: getMuiDialog(components.MuiDialog, theme),
+    MuiDialogActions: getMuiDialogActions(components.MuiDialogActions, theme),
+    MuiDialogContent: getMuiDialogContent(components.MuiDialogContent, theme),
+    MuiDialogContentText: getMuiDialogContentText(components.MuiDialogContentText, theme),
+    MuiDialogTitle: getMuiDialogTitle(components.MuiDialogTitle, theme),
+    MuiDrawer: getMuiDrawer(components.MuiDrawer, theme),
+    MuiFormControlLabel: getMuiFormControlLabel(components.MuiFormControlLabel, theme),
+    MuiFormHelperText: getMuiFormHelperText(components.MuiFormHelperText, theme),
+    MuiFormLabel: getMuiFormLabel(components.MuiFormLabel, theme),
+    MuiIconButton: getMuiIconButton(components.MuiIconButton, theme),
+    MuiInput: getMuiInput(components.MuiInput, theme),
+    MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, theme),
+    MuiInputBase: getMuiInputBase(components.MuiInputBase, theme),
+    MuiLinearProgress: getMuiLinearProgress(components.MuiLinearProgress, theme),
+    MuiLink: getMuiLink(components.MuiLink, theme),
+    MuiListItem: getMuiListItem(components.MuiListItem, theme),
+    MuiListItemIcon: getMuiListItemIcon(components.MuiListItemIcon, theme),
+    MuiListItemAvatar: getMuiListItemAvatar(components.MuiListItemAvatar, theme),
+    MuiMenu: getMuiMenu(components.MuiMenu, theme),
+    MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, theme),
+    MuiPaper: getMuiPaper(components.MuiPaper, theme),
+    MuiPopover: getMuiPopover(components.MuiPopover, theme),
+    MuiRadio: getMuiRadio(components.MuiRadio, theme),
+    MuiSelect: getMuiSelect(components.MuiSelect, theme),
+    MuiSvgIcon: getMuiSvgIcon(components.MuiSvgIcon, theme),
+    MuiSwitch: getMuiSwitch(components.MuiSwitch, theme),
+    MuiTab: getMuiTab(components.MuiTab, theme),
+    MuiTableCell: getMuiTableCell(components.MuiTableCell, theme),
+    MuiTableRow: getMuiTableRow(components.MuiTableRow, theme),
+    MuiTabs: getMuiTabs(components.MuiTabs, theme),
+    MuiToggleButton: getMuiToggleButton(components.MuiToggleButton, theme),
+    MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, theme),
+    MuiTooltip: getMuiTooltip(components.MuiTooltip, theme),
+    MuiTypography: getMuiTypography(components.MuiTypography, theme),
+    MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, theme),
 });

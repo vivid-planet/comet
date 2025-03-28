@@ -139,15 +139,15 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                     <BlockAdminComponentPaper disablePadding>
                         <Box padding={3}>
                             <Grid container alignItems="center" spacing={3}>
-                                <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
-                                <Grid item xs>
+                                <Grid>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
+                                <Grid size="grow">
                                     <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                     <Typography variant="body1" color="textSecondary">
                                         <DamPathLazy fileId={state.damFile.id} />
                                     </Typography>
                                 </Grid>
                                 {showMenu && (
-                                    <Grid item>
+                                    <Grid>
                                         <IconButton
                                             onMouseDown={(event) => event.stopPropagation()}
                                             onClick={(event) => {
