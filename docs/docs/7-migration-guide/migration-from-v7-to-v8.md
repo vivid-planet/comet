@@ -832,7 +832,7 @@ In `package.json` update the version of the MUI X packages to `^7.22.3`.
 :::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/mui-x-upgrade.ts
+npx @comet/upgrade v8/update-mui-x-dependencies.ts
 ```
 
 :::
