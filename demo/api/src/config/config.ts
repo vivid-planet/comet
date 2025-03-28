@@ -45,6 +45,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
+            allowedImageSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
         },
         azureAiTranslator:
             envVars.AZURE_AI_TRANSLATOR_ENDPOINT && envVars.AZURE_AI_TRANSLATOR_KEY && envVars.AZURE_AI_TRANSLATOR_REGION

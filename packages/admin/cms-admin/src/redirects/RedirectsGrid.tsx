@@ -11,8 +11,6 @@ import {
     muiGridSortToGql,
     StackLink,
     TableDeleteButton,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -37,18 +35,12 @@ interface Props {
 function RedirectsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
-                </Button>
-            </ToolbarActions>
+            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -134,6 +126,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>

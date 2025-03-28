@@ -1,5 +1,29 @@
 # @comet/cms-api
 
+## 8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 56064fc: Remove `node-fetch` in favor of Node's native Fetch API
+
+    Note: **You need a Node version that supports the Fetch API, preferably Node v22.**
+
+- 23f393b: Protect images in the site preview
+
+    The image URLs in the site preview are now generated as preview URLs.
+    Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
+
+### Patch Changes
+
+- 092e96e: Fix validation error caused by `EmptyDamScope` when uploading a file
+
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0
@@ -100,6 +124,32 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+
+## 7.16.0
+
+### Minor Changes
+
+- 4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+- a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+- @comet/blocks-api@7.16.0
 
 ## 7.15.0
 

@@ -1,7 +1,7 @@
-import { type GridConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { type GQLManufacturer } from "@src/graphql.generated";
 
-export const ManufacturersGrid: GridConfig<GQLManufacturer> = {
+export default defineConfig<GQLManufacturer>({
     type: "grid",
     gqlType: "Manufacturer",
     fragmentName: "ManufacturersGridFuture", // configurable as it must be unique across project
@@ -24,4 +24,4 @@ export const ManufacturersGrid: GridConfig<GQLManufacturer> = {
         { type: "text", name: "addressAsEmbeddable.alternativeAddress.street", headerName: "Alt-Street 2" },
         { type: "number", name: "addressAsEmbeddable.alternativeAddress.streetNumber", headerName: "Alt-Street number 2" },
     ],
-};
+});

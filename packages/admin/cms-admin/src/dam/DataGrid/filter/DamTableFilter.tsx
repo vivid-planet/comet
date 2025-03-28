@@ -34,7 +34,7 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                 {!hideArchiveFilter && (
                     <FilterBarPopoverFilter
                         label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}
-                        sx={{ marginRight: 2, marginLeft: 2 }}
+                        sx={{ marginRight: 2, marginLeft: 2, marginBottom: 0 }}
                     >
                         <SwitchField
                             name="archived"

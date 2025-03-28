@@ -1,5 +1,22 @@
 # @comet/cms-site
 
+## 8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 67ae9df: Fix opacity on `VideoPreviewImage` to only affect the background color
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 23f393b: Protect images in the site preview
+
+    The image URLs in the site preview are now generated as preview URLs.
+    Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
+
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0
@@ -15,6 +32,19 @@
 
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+
+## 7.16.0
+
+### Minor Changes
+
+- 71642aa07: Export `VideoPreviewImage` component
+
+### Patch Changes
+
+- 636326207: Fix preview overlay alignment for blocks that are scrolled into view when selected from the admin block list, e.g., in slider blocks
+- 4ddeeb09e: Prevent unintended horizontal scrolling in the admin's block preview
+
+    This previously occurred when blocks were rendered outside of the viewport width, such as elements of a slider.
 
 ## 7.15.0
 

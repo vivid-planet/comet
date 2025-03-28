@@ -25,7 +25,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
@@ -312,12 +311,8 @@ export const SingleGridFullHeight = {
             console.log("GridToolbar render");
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                 </DataGridToolbar>
             );
         };
@@ -348,12 +343,8 @@ export const SingleGridAutoHeight = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                 </DataGridToolbar>
             );
         };
@@ -407,18 +398,12 @@ export const GridWithFormInADialog = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                     <FillSpace />
-                    <ToolbarActions>
-                        <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -428,6 +413,7 @@ export const GridWithFormInADialog = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: ({ row }) => (
@@ -486,18 +472,12 @@ export const GridWithFormOnAPage = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                     <FillSpace />
-                    <ToolbarActions>
-                        <Button responsive startIcon={<Add />} component={StackLink} pageName="add" payload="add">
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <Button responsive startIcon={<Add />} component={StackLink} pageName="add" payload="add">
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -507,6 +487,7 @@ export const GridWithFormOnAPage = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -598,18 +579,12 @@ export const NestedGridsAndFormsWithTabs = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                     <FillSpace />
-                    <ToolbarActions>
-                        <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -619,6 +594,7 @@ export const NestedGridsAndFormsWithTabs = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -721,18 +697,12 @@ export const NestedFormInGridInTabsInGrid = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                     <FillSpace />
-                    <ToolbarActions>
-                        <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
-                            Add new item
-                        </Button>
-                    </ToolbarActions>
+                    <Button responsive startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
+                        Add new item
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -742,6 +712,7 @@ export const NestedFormInGridInTabsInGrid = {
             { field: "description", headerName: "Description", flex: 2 },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 width: 52,
                 renderCell: (params) => (
@@ -837,40 +808,34 @@ export const GridWithSelectionAndMoreActionsMenu = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                     <FillSpace />
-                    <ToolbarActions>
-                        <CrudMoreActionsMenu
-                            slotProps={{ button: { responsive: true } }}
-                            selectionSize={selectionModel.length}
-                            overallActions={[
-                                {
-                                    label: "Log all items to the console",
-                                    icon: <Html />,
-                                    onClick: () => {
-                                        console.log(
-                                            "IDs of all items",
-                                            rows.map((row) => row.id),
-                                        );
-                                    },
+                    <CrudMoreActionsMenu
+                        slotProps={{ button: { responsive: true } }}
+                        selectionSize={selectionModel.length}
+                        overallActions={[
+                            {
+                                label: "Log all items to the console",
+                                icon: <Html />,
+                                onClick: () => {
+                                    console.log(
+                                        "IDs of all items",
+                                        rows.map((row) => row.id),
+                                    );
                                 },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Log selected items to the console",
-                                    icon: <Html />,
-                                    onClick: () => {
-                                        console.log("IDs of selected items", selectionModel);
-                                    },
+                            },
+                        ]}
+                        selectiveActions={[
+                            {
+                                label: "Log selected items to the console",
+                                icon: <Html />,
+                                onClick: () => {
+                                    console.log("IDs of selected items", selectionModel);
                                 },
-                            ]}
-                        />
-                    </ToolbarActions>
+                            },
+                        ]}
+                    />
                 </DataGridToolbar>
             );
         };
@@ -912,12 +877,8 @@ export const GridWithSelectionInDialog = {
         const GridToolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
                 </DataGridToolbar>
             );
         };

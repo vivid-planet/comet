@@ -7,6 +7,7 @@ export { CometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createBasicAuthService } from "./auth/services/basic.auth-service";
 export { createJwtAuthService } from "./auth/services/jwt.auth-service";
+export { createSitePreviewAuthService } from "./auth/services/site-preview.auth-service";
 export { createStaticUserAuthService } from "./auth/services/static-authed-user.auth-service";
 export { createAuthGuardProviders } from "./auth/util/auth-guard.providers";
 export { AuthServiceInterface } from "./auth/util/auth-service.interface";
@@ -133,6 +134,7 @@ export { DateFilter } from "./common/filter/date.filter";
 export { DateTimeFilter } from "./common/filter/date-time.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
 export { createEnumsFilter } from "./common/filter/enums.filter.factory";
+export { IdFilter } from "./common/filter/id.filter";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
 export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
@@ -248,10 +250,12 @@ export { RequiredPermission } from "./user-permissions/decorators/required-permi
 export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
+export { CurrentUserPermission } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
+export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,

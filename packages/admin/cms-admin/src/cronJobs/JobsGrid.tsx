@@ -128,6 +128,7 @@ export function JobsGrid(props: JobsGridProps) {
                     },
                     {
                         field: "actions",
+                        type: "actions",
                         headerName: "",
                         renderCell: ({ row }) => (
                             <IconButton component={StackLink} pageName="logs" payload={row.name}>

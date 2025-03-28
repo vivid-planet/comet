@@ -1,15 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import {
-    CancelButton,
-    DataGridToolbar,
-    Field,
-    FinalForm,
-    FinalFormSwitch,
-    type GridColDef,
-    SaveButton,
-    ToolbarFillSpace,
-    ToolbarItem,
-} from "@comet/admin";
+import { CancelButton, DataGridToolbar, Field, FillSpace, FinalForm, FinalFormSwitch, type GridColDef, SaveButton } from "@comet/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
@@ -47,10 +37,8 @@ type ContentScope = {
 function OverrideContentScopesDialogGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarFillSpace />
+            <GridToolbarQuickFilter />
+            <FillSpace />
         </DataGridToolbar>
     );
 }

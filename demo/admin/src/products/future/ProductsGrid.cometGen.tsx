@@ -1,5 +1,8 @@
-import { type GridConfig } from "@comet/admin-generator";
+import { GridCellContent } from "@comet/admin";
+import { defineConfig } from "@comet/admin-generator";
 import { type GQLProduct } from "@src/graphql.generated";
+import { type ReactNode } from "react";
+import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "./ManufacturerFilter";
@@ -7,7 +10,7 @@ import { ProductTitle } from "./ProductTitle";
 
 const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
 
-export const ProductsGrid: GridConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "grid",
     gqlType: "Product",
     fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
@@ -25,46 +28,60 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     },
     columns: [
         {
-            type: "combination",
+            type: "virtual",
             name: "overview",
+            queryFields: ["category.title"],
             headerName: "Overview",
             minWidth: 200,
-            primaryText: "title",
-            secondaryText: {
-                // TODO: Change this to use the "group" type instead of "formattedMessage", once implemented (SVK-368)
-                type: "formattedMessage",
-                message: "{price} • {type} • {category} • {inStock}",
-                valueFields: {
-                    price: {
-                        type: "number",
-                        field: "price",
-                        currency: "EUR",
-                        emptyValue: "No price",
-                    },
-                    type: {
-                        type: "staticSelect",
-                        field: "type",
-                        values: typeValues,
-                        emptyValue: "No type",
-                    },
-                    category: {
-                        type: "text",
-                        field: "category.title",
-                        emptyValue: "No category",
-                    },
-                    inStock: {
-                        type: "staticSelect",
-                        field: "inStock",
-                        values: [
-                            { value: true, label: "In stock" },
-                            { value: false, label: "Out of stock" },
-                        ],
-                    },
-                },
+            renderCell: ({ row }) => {
+                const typeLabels: Record<string, ReactNode> = {
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
+                };
+                const inStockLabels: Record<string, ReactNode> = {
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.outOfStock" defaultMessage="Out of stock" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.title ?? "-"}
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.overview.secondaryText"
+                                defaultMessage="{price} • {type} • {category} • {inStock}"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price" />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    type:
+                                        row.type == null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
+                                        ) : (
+                                            (typeLabels[`${row.type}`] ?? row.type)
+                                        ),
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
+                                    ),
+                                    inStock: row.inStock == null ? "-" : (inStockLabels[`${row.inStock}`] ?? row.inStock),
+                                }}
+                            />
+                        }
+                    />
+                );
             },
             visible: "down('md')",
             sortBy: ["title", "price", "type", "category", "inStock"],
-            disableExport: true, // TODO: Implement `valueFormatter` for type "combination"
+            disableExport: true,
         },
         {
             type: "text",
@@ -74,7 +91,6 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             minWidth: 200,
             visible: "down('md')",
         },
-        { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description" },
         // TODO: Allow setting options for `intl.formatNumber` through `valueFormatter` (type "number")
         { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR", visible: "up('md')" },
@@ -121,4 +137,4 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             component: ProductsGridPreviewAction,
         },
     ],
-};
+});

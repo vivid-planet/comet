@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-babel-preset",
-    "version": "8.0.0-beta.1",
+    "version": "8.0.0-beta.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -26,5 +26,8 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     }
 }

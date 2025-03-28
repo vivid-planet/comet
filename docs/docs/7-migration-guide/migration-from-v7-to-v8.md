@@ -22,6 +22,55 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 </details>
 
+## General
+
+### Upgrade Node to v22
+
+#### In development:
+
+```diff title=.nvmrc
+- 20
++ 22
+```
+
+```diff title=package.json
+- "@types/node": "^20.0.0",
++ "@types/node": "^22.0.0",
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/replace-node-with-v22-locally.ts
+```
+
+:::
+
+#### In pipeline and deployment:
+
+Make sure you use Node 22 in your CI files.
+When using Gitlab CI, check all files in the .gitlab-ci folders.
+Make sure to extend the correct jobs and replace all images and base images.
+
+```diff
+- extends: .lint-npm-node20
++ extends: .lint-npm-node22
+
+- BASE_IMAGE: "ubi/s2i-ubi9-nodejs20-minimal"
++ BASE_IMAGE: "ubi/s2i-ubi9-nodejs22-minimal"
+
+- image: eu.gcr.io/vivid-planet/utils/ubi9-nodejs20-minimal:master
++ image: eu.gcr.io/vivid-planet/utils/ubi9-nodejs22-minimal:master
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/replace-node-with-v22-in-gitlab-ci-files.ts
+```
+
+:::
+
 ## API
 
 ### Upgrade peer dependencies
@@ -507,6 +556,7 @@ Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`
 +   ...createAuthGuardProviders(
 +       createBasicAuthService({ ... }),
 +       createJwtAuthService({ ... }),
++       createSitePreviewAuthService({ ... }),
 +       createStaticUserAuthService({ ... }),
 +   ),
 ```
@@ -643,6 +693,36 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 - `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
 
 The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
+
+### Update usage of `DataGridToolbar`
+
+`DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
+
+The new usage simplifies the component structure - children can now be passed directly without needing to wrap them in `ToolbarItem` and `ToolbarActions` components:
+
+```diff
+- <DataGridToolbar density="compact">
++ <DataGridToolbar>
+-     <ToolbarItem>
+          <GridToolbarQuickFilter />
+-     </ToolbarItem>
+-     <ToolbarItem>
+          <GridFilterButton />
+-     </ToolbarItem>
+-     <ToolbarItem>
+          <GridColumnsButton />
+-     </ToolbarItem>
+      <FillSpace />
+-     <ToolbarActions>
+          <Button responsive variant="outlined">
+              Secondary action
+          </Button>
+          <Button responsive startIcon={<AddIcon />}>
+              Add item
+          </Button>
+-     </ToolbarActions>
+  </DataGridToolbar>
+```
 
 ### Import `Tooltip` from `@comet/admin` package
 
@@ -1109,6 +1189,13 @@ devDependencies: {
     ```
 
 :::
+
+#### API Generator - Removed Special `status` Field Behavior
+
+Previously, if entities specified a `status` enum, it was automatically added to list queries arguments with a default value.
+
+This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
+done with the normal filtering mechanism.
 
 ### Add new package @comet/admin-generator
 

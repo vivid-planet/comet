@@ -82,6 +82,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             renderCell: ({ row }) => {

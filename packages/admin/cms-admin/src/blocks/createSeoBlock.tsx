@@ -1,6 +1,6 @@
-import { Field, type FieldProps, FinalFormInput, FinalFormSelect, Loading, messages } from "@comet/admin";
+import { Field, type FieldProps, FinalFormInput, Loading, messages, SelectField } from "@comet/admin";
 import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
-import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
+import { Box, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
 import { useState } from "react";
@@ -128,7 +128,7 @@ export function createSeoBlock(
 
                             <FieldWithContentGeneration
                                 label={intl.formatMessage({
-                                    id: "comet.blocks.seo.html  Title",
+                                    id: "comet.blocks.seo.htmlTitle",
                                     defaultMessage: "HTML Title",
                                 })}
                                 name="htmlTitle"
@@ -223,42 +223,26 @@ export function createSeoBlock(
                                             >
                                                 <Divider />
                                                 <Box padding={4}>
-                                                    <Field
+                                                    <SelectField
                                                         label={intl.formatMessage({
                                                             id: "comet.blocks.seo.sitemap.priority",
                                                             defaultMessage: "Priority",
                                                         })}
                                                         name="priority"
                                                         fullWidth
-                                                    >
-                                                        {(props) => (
-                                                            <FinalFormSelect {...props} fullWidth>
-                                                                {priorityOptions.map((option) => (
-                                                                    <MenuItem value={option.value} key={option.value}>
-                                                                        {option.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </FinalFormSelect>
-                                                        )}
-                                                    </Field>
-                                                    <Field
+                                                        required
+                                                        options={priorityOptions}
+                                                    />
+                                                    <SelectField
                                                         label={intl.formatMessage({
                                                             id: "comet.blocks.seo.sitemap.changeFrequency",
                                                             defaultMessage: "Change Frequency",
                                                         })}
                                                         name="changeFrequency"
                                                         fullWidth
-                                                    >
-                                                        {(props) => (
-                                                            <FinalFormSelect {...props} fullWidth>
-                                                                {changeFrequencyOptions.map((option) => (
-                                                                    <MenuItem value={option.value} key={option.value}>
-                                                                        {option.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </FinalFormSelect>
-                                                        )}
-                                                    </Field>
+                                                        required
+                                                        options={changeFrequencyOptions}
+                                                    />
                                                 </Box>
                                             </Collapsible>
                                         </Paper>
