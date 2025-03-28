@@ -23,10 +23,9 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
 
     const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
         const label = values.find((value) => {
-            return value[scopePart] && value[scopePart]?.value === scope[scopePart];
-        })?.[scopePart].label;
-
-        return label ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
+            return value.scope[scopePart] === scope[scopePart];
+        })?.label;
+        return (label && label[scopePart]) ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
     };
 
     let content: ReactNode;
