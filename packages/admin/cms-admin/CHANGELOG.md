@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.4
+
+### Minor Changes
+
+- 2dc23dd: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+- ec97784: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+- Updated dependencies [72d1a5e]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-date-time@8.0.0-beta.4
+    - @comet/admin-rte@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
