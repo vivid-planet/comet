@@ -1,5 +1,5 @@
 import { useStoredState } from "@comet/admin";
-import { Close, Dashboard, Search } from "@comet/admin-icons";
+import { Close, Search } from "@comet/admin-icons";
 import {
     Checkbox,
     DialogContent,
@@ -11,7 +11,6 @@ import {
     InputBase,
     List,
     ListItemButton,
-    ListItemIcon,
     Paper,
     Typography,
 } from "@mui/material";
@@ -184,10 +183,7 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
                             <Paper elevation={0}>
                                 <List disablePadding>
                                     {category.blocks.map(([type, block]) => (
-                                        <ListItemButton key={type} dense={false} divider onClick={() => handleListItemClick(type)}>
-                                            <ListItemIcon>
-                                                <Dashboard />
-                                            </ListItemIcon>
+                                        <ListItemButton key={type} divider onClick={() => handleListItemClick(type)}>
                                             {block.displayName}
                                         </ListItemButton>
                                     ))}
