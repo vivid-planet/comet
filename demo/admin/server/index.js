@@ -3,7 +3,6 @@ const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
 const fs = require("fs");
-const https = require("node:https");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
