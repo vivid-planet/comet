@@ -11,14 +11,14 @@ export class CsvParsePipe implements ImporterPipe {
     private readonly parserOptions: CsvParserOptions;
 
     constructor(parserOptions: CsvParserOptions, csvColumns: ImportFieldMetadata[]) {
-        this.parserOptions = this.getParserOption(parserOptions, csvColumns);
+        this.parserOptions = this.getParserOptions(parserOptions, csvColumns);
     }
 
     getPipe() {
         return new CsvParser(this.parserOptions);
     }
 
-    private getParserOption(jobRunParserOptions: CsvParserOptions, csvColumns: ImportFieldMetadata[]) {
+    private getParserOptions(jobRunParserOptions: CsvParserOptions, csvColumns: ImportFieldMetadata[]) {
         //check entity metadata for csv headers
         const entityHasOnlyNumericCsvColumnNames = csvColumns.every((column) => typeof column.fieldPath === "number");
         const entityHasOnlyStringCsvColumnNames = csvColumns.every((column) => typeof column.fieldPath === "string");
