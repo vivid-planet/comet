@@ -30,10 +30,14 @@ import { getMuiInputAdornment } from "./MuiInputAdornment";
 import { getMuiInputBase } from "./MuiInputBase";
 import { getMuiLinearProgress } from "./MuiLinearProgress";
 import { getMuiLink } from "./MuiLink";
+import { getMuiList } from "./MuiList";
 import { getMuiListItem } from "./MuiListItem";
 import { getMuiListItemAvatar } from "./MuiListItemAvatar";
+import { getMuiListItemButton } from "./MuiListItemButton";
 import { getMuiListItemIcon } from "./MuiListItemIcon";
+import { getMuiListItemText } from "./MuiListItemText";
 import { getMuiMenu } from "./MuiMenu";
+import { getMuiMenuItem } from "./MuiMenuItem";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
 import { getMuiPaper } from "./MuiPaper";
 import { getMuiPopover } from "./MuiPopover";
@@ -87,10 +91,14 @@ export const getComponentsTheme = (components: Components, theme: Theme): ThemeO
     MuiInputBase: getMuiInputBase(components.MuiInputBase, theme),
     MuiLinearProgress: getMuiLinearProgress(components.MuiLinearProgress, theme),
     MuiLink: getMuiLink(components.MuiLink, theme),
+    MuiList: getMuiList(components.MuiList, theme),
     MuiListItem: getMuiListItem(components.MuiListItem, theme),
+    MuiListItemText: getMuiListItemText(components.MuiListItemText, theme),
+    MuiListItemButton: getMuiListItemButton(components.MuiListItemButton, theme),
     MuiListItemIcon: getMuiListItemIcon(components.MuiListItemIcon, theme),
     MuiListItemAvatar: getMuiListItemAvatar(components.MuiListItemAvatar, theme),
     MuiMenu: getMuiMenu(components.MuiMenu, theme),
+    MuiMenuItem: getMuiMenuItem(components.MuiMenuItem, theme),
     MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, theme),
     MuiPaper: getMuiPaper(components.MuiPaper, theme),
     MuiPopover: getMuiPopover(components.MuiPopover, theme),
