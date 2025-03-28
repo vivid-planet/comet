@@ -4,6 +4,7 @@ const compression = require("compression");
 const helmet = require("helmet");
 const fs = require("fs");
 const https = require("node:https");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 const port = process.env.APP_PORT ?? 3000;
@@ -41,28 +42,11 @@ app.get("/status/health", (req, res) => {
     res.send("OK!");
 });
 
-app.use("/dam", (req, res) => {
-    const targetUrl = new URL(process.env.API_URL);
-
-    const options = {
-        hostname: targetUrl.hostname,
-        path: targetUrl.pathname + req.originalUrl,
-        method: req.method,
-        headers: req.headers,
-    };
-
-    const proxy = https.request(options, (proxyRes) => {
-        res.writeHead(proxyRes.statusCode, proxyRes.headers);
-        proxyRes.pipe(res, { end: true });
-    });
-
-    req.pipe(proxy, { end: true });
-
-    proxy.on("error", (err) => {
-        console.error("Proxy Error:", err);
-        res.status(500).send("Proxy request failed");
-    });
+const proxyMiddleware = createProxyMiddleware({
+    target: process.env.API_URL_INTERNAL + "/dam",
+    changeOrigin: true,
 });
+app.use("/dam", proxyMiddleware);
 
 app.use(
     express.static("./build", {
