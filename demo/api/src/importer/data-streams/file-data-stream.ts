@@ -13,17 +13,21 @@ export interface FileStreamAndSize {
     fileSize?: number;
 }
 
-export abstract class FileDataStream extends DataStream {
-    async getFileStreamResult(fileStreamAndSize: FileStreamAndSize | null) {
-        if (fileStreamAndSize) {
-            return {
-                dataStream: fileStreamAndSize.fileStream,
-                additionalData: {
-                    fileName: fileStreamAndSize.fileName,
-                },
-            };
-        }
+export type FileStreamAndMetadata = {
+    dataStream: FileStream;
+    metadata: {
+        fileName?: string;
+        fileSize?: number;
+    };
+};
 
-        return null;
+export abstract class FileDataStream extends DataStream {
+    getFileStreamResult(fileStreamAndSize: FileStreamAndSize): FileStreamAndMetadata {
+        return {
+            dataStream: fileStreamAndSize.fileStream,
+            metadata: {
+                fileName: fileStreamAndSize.fileName,
+            },
+        };
     }
 }
