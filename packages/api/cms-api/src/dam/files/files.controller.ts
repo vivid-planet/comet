@@ -78,7 +78,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
-            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
@@ -104,7 +103,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             const uploadedFile = await this.filesService.upload(file, { ...transformedBody, folderId, scope });
             const fileUrl = await this.filesService.createFileUrl(uploadedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
-                relativeDamUrls: Boolean(relativeDamUrls),
             });
 
             return { ...uploadedFile, fileUrl };
@@ -117,7 +115,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
-            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
@@ -156,7 +153,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             const fileUrl = await this.filesService.createFileUrl(replacedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
-                relativeDamUrls: Boolean(relativeDamUrls),
             });
 
             return { ...replacedFile, fileUrl };
@@ -169,7 +165,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Body() body: ReplaceFileByIdBody,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
-            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const { fileId, ...transformedBody } = plainToInstance(ReplaceFileByIdBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
@@ -190,7 +185,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             const fileUrl = await this.filesService.createFileUrl(replacedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
-                relativeDamUrls: Boolean(relativeDamUrls),
             });
 
             return { ...replacedFile, fileUrl };

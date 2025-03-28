@@ -79,12 +79,17 @@ export default defineConfig(({ mode }) => {
             port: Number(process.env.ADMIN_PORT),
             proxy: process.env.API_URL_INTERNAL
                 ? {
-                      "/api": {
-                          target: new URL(process.env.API_URL_INTERNAL).origin,
-                          changeOrigin: true,
-                          secure: false,
-                      },
-                  }
+                    "/api": {
+                        target: new URL(process.env.API_URL_INTERNAL).origin,
+                        changeOrigin: true,
+                        secure: false,
+                    },
+                    "/dam": {
+                        target: process.env.API_URL_INTERNAL,
+                        changeOrigin: true,
+                        secure: false,
+                    },
+                }
                 : undefined,
         },
         define: {
