@@ -63,8 +63,8 @@ export function App() {
                     generateAltText: true,
                     generateImageTitle: true,
                 },
+                maxSrcResolution: config.dam.maxSrcResolution,
             }}
-            imgproxy={config.imgproxy}
             dependencies={{
                 entityDependencyMap: {
                     Page,
