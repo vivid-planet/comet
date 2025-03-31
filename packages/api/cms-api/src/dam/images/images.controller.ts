@@ -9,6 +9,8 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { ScaledImagesCacheService } from "../../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
+import { BASIC_TYPES, MODERN_TYPES } from "../../file-utils/images.constants";
+import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "../../file-utils/images.util";
 import { Extension, Gravity, ResizingType } from "../../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
@@ -21,9 +23,7 @@ import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
 import { HashImageParams, ImageParams } from "./dto/image.params";
-import { BASIC_TYPES, MODERN_TYPES } from "./images.constants";
 import { ImagesService } from "./images.service";
-import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "./images.util";
 
 const smartImageUrl = `:fileId/crop\\::focalPoint/resize\\::resizeWidth\\::resizeHeight/:filename`;
 const focusImageUrl = `:fileId/crop\\::cropWidth\\::cropHeight\\::focalPoint\\::cropX\\::cropY/resize\\::resizeWidth\\::resizeHeight/:filename`;

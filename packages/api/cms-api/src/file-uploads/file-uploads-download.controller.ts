@@ -21,9 +21,9 @@ import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.deco
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { ScaledImagesCacheService } from "../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
-import { calculatePartialRanges } from "../dam/files/files.utils";
-import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../dam/images/images.constants";
-import { getSupportedMimeType } from "../dam/images/images.util";
+import { calculatePartialRanges } from "../file-utils/files.utils";
+import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../file-utils/images.constants";
+import { getSupportedMimeType } from "../file-utils/images.util";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";

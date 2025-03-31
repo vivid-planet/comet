@@ -3,6 +3,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { FileValidationService } from "../file-utils/file-validation.service";
 import { ImgProxyModule } from "../imgproxy/imgProxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
@@ -18,7 +19,6 @@ import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
-import { FileValidationService } from "./files/file-validation.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
@@ -114,7 +114,6 @@ export class DamModule {
                 IsValidImageAspectRatioConstraint,
                 FileImagesResolver,
                 CalculateDominantImageColorCommand,
-                FileValidationService,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,

@@ -8,8 +8,8 @@ import { Observable, throwError } from "rxjs";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../common/errors/validation.exception";
-import { FileValidationService } from "../dam/files/file-validation.service";
-import { removeMulterTempFile } from "../dam/files/files.utils";
+import { FileValidationService } from "../file-utils/file-validation.service";
+import { removeMulterTempFile } from "../file-utils/files.utils";
 import { FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
 
 export function FileUploadsFileInterceptor(fieldName: string): Type<NestInterceptor> {
