@@ -137,7 +137,7 @@ export default defineConfig<GQLProduct>({
             name: "tags",
             headerName: "Tags",
             queryFields: ["tags.title"],
-            renderCell: ({ row }) => <>{row.tags.map(tag => tag.title).join(", ")}</>,
+            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
         },
         {
             type: "actions",
