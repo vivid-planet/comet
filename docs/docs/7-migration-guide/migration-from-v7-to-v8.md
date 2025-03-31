@@ -724,6 +724,19 @@ Import `JwtModule` from `@nestjs/jwt`:
 
 The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
 Some structural changes were necessary to achieve this.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+```
+
+:::
+
 You need to modify your `AppModule` as follows:
 
 ```diff title="api/src/app.module.ts"
@@ -752,6 +765,14 @@ You need to modify your `AppModule` as follows:
     }),
 ```
 
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+```
+
+:::
+
 ```diff title="api/src/comet-config.json"
 {
     "dam": {
@@ -769,6 +790,8 @@ You need to modify your `AppModule` as follows:
     }
 }
 ```
+
+</details>
 
 ## Admin
 
