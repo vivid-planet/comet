@@ -1,6 +1,5 @@
 import { Close, Delete, Save, Warning } from "@comet/admin-icons";
 import {
-    Button,
     type ComponentsOverrides,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -15,6 +14,7 @@ import { css, useThemeProps } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
@@ -152,13 +152,7 @@ export function RouterConfirmationDialog(inProps: RouterConfirmationDialogProps)
                     <FormattedMessage {...messages.discard} />
                 </DiscardButton>
                 {showSaveButton && (
-                    <SaveButton
-                        startIcon={<Save />}
-                        color="primary"
-                        variant="contained"
-                        onClick={() => handleClose(PromptAction.Save)}
-                        {...slotProps?.saveButton}
-                    >
+                    <SaveButton startIcon={<Save />} onClick={() => handleClose(PromptAction.Save)} {...slotProps?.saveButton}>
                         <FormattedMessage {...messages.save} />
                     </SaveButton>
                 )}

@@ -1,6 +1,5 @@
-import { messages } from "@comet/admin";
+import { Button, messages } from "@comet/admin";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -29,7 +28,7 @@ export const PageCanNotDeleteDialog = (props: PageCanNotDeleteDialogProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClosePressed} color="primary">
+                <Button onClick={onClosePressed} variant="textDark">
                     <FormattedMessage {...messages.close} />
                 </Button>
             </DialogActions>

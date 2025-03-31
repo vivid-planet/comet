@@ -79,7 +79,7 @@ export const DamSortPopover = ({ onChoose, currentSort }: DamSortPopoverProps) =
                     setAnchorEl(event.currentTarget);
                 }}
                 disableRipple
-                color="info"
+                variant="outlined"
             >
                 <sc.LabelWrapper>
                     <FormattedMessage

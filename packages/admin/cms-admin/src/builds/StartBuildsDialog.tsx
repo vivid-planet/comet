@@ -1,7 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Alert, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
+import { Alert, Button, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
 import {
-    Button,
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
@@ -93,8 +92,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
             <DialogActions>
                 <CancelButton onClick={() => onClose()} />
                 <Button
-                    variant="contained"
-                    color="primary"
                     disabled={loading || selectionModel.length < 1}
                     startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {
