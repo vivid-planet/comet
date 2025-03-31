@@ -10,7 +10,6 @@ export interface ImgproxyConfig {
     salt: string;
     key: string;
     quality: number;
-    maxSrcResolution: number;
 }
 
 @Injectable()

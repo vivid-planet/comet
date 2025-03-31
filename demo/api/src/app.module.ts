@@ -149,7 +149,7 @@ export class AppModule {
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
-                        maxSrcResolution: config.imgproxy.maxSrcResolution,
+                        maxSrcResolution: config.dam.maxSrcResolution,
                     },
                     Scope: DamScope,
                     File: DamFile,
