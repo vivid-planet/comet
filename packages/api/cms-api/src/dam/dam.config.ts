@@ -4,7 +4,7 @@ export interface DamConfig {
     allowedImageSizes: number[];
     allowedAspectRatios: string[];
     filesDirectory: string;
-    cacheDirectory: string;
     acceptedMimeTypes?: string[];
     maxFileSize: number;
+    maxSrcResolution: number;
 }

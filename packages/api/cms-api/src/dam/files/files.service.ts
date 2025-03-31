@@ -14,14 +14,14 @@ import { BlobStorageBackendService } from "../../blob-storage/backends/blob-stor
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
+import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
+import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
-import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
+import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
-import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
-import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
@@ -106,7 +106,6 @@ export class FilesService {
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
-        @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
@@ -624,7 +623,7 @@ export class FilesService {
             image !== undefined &&
             image.width &&
             image.height &&
-            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
+            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.config.maxSrcResolution
         ) {
             throw new CometImageResolutionException(`Maximal image resolution exceeded`);
         }

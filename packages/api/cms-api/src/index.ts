@@ -19,6 +19,7 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
+export { ScaledImagesCacheService } from "./blob-storage/cache/scaled-images-cache.service";
 export {
     Block,
     BlockContext,
@@ -167,12 +168,11 @@ export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
 export { SvgImageBlock } from "./dam/blocks/svg-image.block";
 export { DamVideoBlock } from "./dam/blocks/video/dam-video.block";
-export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
 export { damDefaultAcceptedMimetypes } from "./dam/common/mimeTypes/dam-default-accepted-mimetypes";
 export { DamConfig } from "./dam/dam.config";
-export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
+export { DAM_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { FileUploadInput, FileUploadInterface } from "./dam/files/dto/file-upload.input";
@@ -194,8 +194,6 @@ export { getCenteredPosition, getMaxDimensionsFromArea, ImageDimensionsAndCoordi
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
-export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
-export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
 export { EntityInfo, EntityInfoServiceInterface } from "./dependencies/decorators/entity-info.decorator";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
@@ -209,6 +207,10 @@ export { validateNotModified } from "./document/validateNotModified";
 export { FileUpload } from "./file-uploads/entities/file-upload.entity";
 export { FileUploadsModule } from "./file-uploads/file-uploads.module";
 export { FileUploadsService } from "./file-uploads/file-uploads.service";
+export { IMGPROXY_CONFIG } from "./imgproxy/imgproxy.constants";
+export { Extension, Gravity, ResizingType } from "./imgproxy/imgproxy.enum";
+export { ImgProxyModule } from "./imgproxy/imgProxy.module";
+export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";

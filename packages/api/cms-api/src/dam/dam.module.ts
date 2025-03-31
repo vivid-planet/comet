@@ -3,14 +3,14 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { ImgProxyModule } from "../imgproxy/imgProxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
-import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
-import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
+import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
@@ -33,12 +33,10 @@ import { ImagesService } from "./images/images.service";
 import { IsAllowedImageAspectRatioConstraint } from "./images/validators/is-allowed-aspect-ratio.validator";
 import { IsAllowedImageSizeConstraint } from "./images/validators/is-allowed-image-size.validator";
 import { IsValidImageAspectRatioConstraint } from "./images/validators/is-valid-aspect-ratio.validator";
-import { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 import { DamScopeInterface } from "./types";
 
 interface DamModuleOptions {
     damConfig: DamConfig;
-    imgproxyConfig: ImgproxyConfig;
     Scope?: Type<DamScopeInterface>;
     Folder?: Type<FolderInterface>;
     File?: Type<FileInterface>;
@@ -49,7 +47,6 @@ interface DamModuleOptions {
 export class DamModule {
     static register({
         damConfig,
-        imgproxyConfig,
         Scope,
         Folder = createFolderEntity({ Scope }),
         File = createFileEntity({ Scope, Folder }),
@@ -61,11 +58,6 @@ export class DamModule {
         const damConfigProvider: ValueProvider<DamConfig> = {
             provide: DAM_CONFIG,
             useValue: damConfig,
-        };
-
-        const imgproxyConfigProvider: ValueProvider<ImgproxyConfig> = {
-            provide: IMGPROXY_CONFIG,
-            useValue: imgproxyConfig,
         };
 
         const fileValidationServiceProvider = {
@@ -102,15 +94,13 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, ImgProxyModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
                 DamItemsService,
-                imgproxyConfigProvider,
                 fileValidationServiceProvider,
-                ScaledImagesCacheService,
-                ImgproxyService,
+
                 FilesResolver,
                 FileDependentsResolver,
                 FilesEntityInfoService,
@@ -133,11 +123,9 @@ export class DamModule {
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [
-                ImgproxyService,
                 FilesService,
                 FoldersService,
                 ImagesService,
-                ScaledImagesCacheService,
                 damConfigProvider,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
