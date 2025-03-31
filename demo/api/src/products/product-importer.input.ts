@@ -1,8 +1,9 @@
-import { Collection } from "@mikro-orm/core";
+import { Collection, Ref } from "@mikro-orm/core";
 import { CsvColumn, CsvColumnType } from "@src/importer/decorators/csv-column.decorator";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "./entities/product.entity";
+import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { ProductType } from "./entities/product-type.enum";
 
@@ -33,6 +34,9 @@ export class ProductImporterInput {
     @IsArray()
     @IsEnum(ProductType, { each: true })
     additionalTypes: ProductType[] = [];
+
+    @CsvColumn("articleCategory")
+    category?: Ref<ProductCategory> = undefined;
 
     @CsvColumn("price")
     @IsOptional()
