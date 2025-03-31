@@ -1514,6 +1514,22 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 
 </details>
 
+### Remove `x-relative-dam-urls` header from `graphQLClient`
+
+```diff title="site/src/util/graphQLClient.ts"
+// ...
+return createGraphQLFetchLibrary(
+    createFetchWithDefaults(fetch, {
+        // ...
+        headers: {
+-           "x-relative-dam-urls": "1",
+            // ...
+        },
+    }),
+    `${process.env.API_URL_INTERNAL}/graphql`,
+);
+```
+
 ## ESLint
 
 ### ✅ Upgrade ESLint from v8 to v9 with ESM
