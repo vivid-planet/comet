@@ -230,8 +230,7 @@ export function generateGrid(
         }
     }
 
-    const hasRowReorderingOnDragField =
-        allowRowReordering && typeof config.rowReordering?.dragPreviewField !== "undefined" && !!config.rowReordering?.dragPreviewField;
+    const hasRowReorderingOnDragField = allowRowReordering && typeof config.rowReordering?.dragPreviewField !== "undefined";
 
     if (
         hasRowReorderingOnDragField &&
