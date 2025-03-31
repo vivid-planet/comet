@@ -1119,6 +1119,72 @@ Remove the `allCategories` prop from `PagesPage`:
 
 :::
 
+### Add proxy for `/dam` URLs
+
+The API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title=admin/vite.config.mts
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title=admin/package.json
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title=admin/server/index.js
+// ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+// ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title=deployment/helm/values.tpl.yaml
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
+
 ### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
 <details>
