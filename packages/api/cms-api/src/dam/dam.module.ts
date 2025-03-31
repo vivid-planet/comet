@@ -4,7 +4,7 @@ import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { FileValidationService } from "../file-utils/file-validation.service";
-import { ImgProxyModule } from "../imgproxy/imgProxy.module";
+import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
@@ -94,7 +94,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, ImgProxyModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, ImgproxyModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,

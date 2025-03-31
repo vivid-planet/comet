@@ -11,7 +11,7 @@ import {
     DamModule,
     DependenciesModule,
     FileUploadsModule,
-    ImgProxyModule,
+    ImgproxyModule,
     KubernetesModule,
     PageTreeModule,
     RedirectsModule,
@@ -138,7 +138,7 @@ export class AppModule {
                     backend: config.blob.storage,
                     cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                 }),
-                ImgProxyModule.register({
+                ImgproxyModule.register({
                     imgproxyConfig: config.imgproxy,
                 }),
                 DamModule.register({
