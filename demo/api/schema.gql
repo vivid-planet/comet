@@ -433,17 +433,6 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
-type Link implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: LinkBlockData!
-  createdAt: DateTime!
-  pageTreeNode: PageTreeNode
-}
-
-"""Link root block data"""
-scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type PageTreeNodeScope {
   domain: String!
   language: String!
@@ -489,6 +478,17 @@ enum UserGroup {
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
+  pageTreeNode: PageTreeNode
+}
+
+"""Link root block data"""
+scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type PredefinedPage implements DocumentInterface {
   id: ID!
@@ -835,6 +835,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input UserPermissionsUserSort {
@@ -872,6 +873,7 @@ enum SlugAvailability {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -970,6 +972,7 @@ input NewsCategoryEnumFilter {
 input OneToManyFilter {
   contains: ID
   search: String
+  isAnyOf: [ID!]
 }
 
 input NewsSort {
@@ -1037,6 +1040,7 @@ input NumberFilter {
   lowerThanEqual: Float
   greaterThanEqual: Float
   notEqual: Float
+  isAnyOf: [Float!]
 }
 
 input DateFilter {
@@ -1057,6 +1061,7 @@ input ManyToOneFilter {
 input ManyToManyFilter {
   contains: ID
   search: String
+  isAnyOf: [ID!]
 }
 
 input ProductSort {

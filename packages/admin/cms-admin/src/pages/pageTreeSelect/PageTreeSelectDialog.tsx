@@ -1,8 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
+import { Button, FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -251,12 +250,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <StyledDialogAction>
                 {value && (
                     <Button
+                        variant="textDark"
                         onClick={() => {
                             onChange(null);
                             onClose();
                         }}
                         startIcon={<Delete />}
-                        color="info"
                     >
                         <FormattedMessage id="comet.pages.pageTreeSelect.removeSelection" defaultMessage="Remove Selection" />
                     </Button>

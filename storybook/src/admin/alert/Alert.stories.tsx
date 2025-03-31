@@ -1,6 +1,6 @@
-import { Alert, OkayButton, SaveButton } from "@comet/admin";
+import { Alert, Button, OkayButton, SaveButton } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 
 export default {
@@ -20,7 +20,7 @@ export const Alerts = () => {
                             severity="info"
                             title="Title"
                             action={
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
+                                <Button variant="textDark" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -34,7 +34,7 @@ export const Alerts = () => {
                             severity="warning"
                             title="Title"
                             action={
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
+                                <Button variant="textDark" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -50,7 +50,7 @@ export const Alerts = () => {
                             severity="error"
                             title="Title"
                             action={
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
+                                <Button variant="textDark" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -105,7 +105,7 @@ export const Alerts = () => {
                         <Alert
                             severity="success"
                             action={
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
+                                <Button variant="textDark" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -132,7 +132,7 @@ export const Alerts = () => {
                         <Alert
                             severity="warning"
                             action={
-                                <Button variant="outlined" startIcon={<ArrowRight />}>
+                                <Button variant="textDark" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
