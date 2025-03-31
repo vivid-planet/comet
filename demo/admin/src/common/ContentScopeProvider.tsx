@@ -3,6 +3,7 @@ import {
     ContentScopeProvider as ContentScopeProviderLibrary,
     type ContentScopeProviderProps,
     type ContentScopeValues,
+    StopImpersonationButton,
     useContentScope as useContentScopeLibrary,
     type UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
@@ -35,7 +36,12 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
     }));
 
     if (user.allowedContentScopes.length === 0) {
-        throw new Error("User does not have access to any scopes.");
+        return (
+            <>
+                Error: user does not have access to any scopes.
+                {user.impersonated && <StopImpersonationButton />}
+            </>
+        );
     }
 
     return (
