@@ -7,6 +7,7 @@ import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parse
 import { pipeline, Readable, Transform } from "stream";
 
 import { ProductImporterInput } from "./product-importer.input";
+import { ProductPersistPipe } from "./product-persist.pipe";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
@@ -20,6 +21,7 @@ export class ProductImporter {
         const parsePipes = new CsvParseAndTransformPipes(this.importTarget, this.em).getPipes(this.logger, { encoding: "utf-8" });
         this.transformPipes = [
             ...parsePipes,
+            new ProductPersistPipe(this.em).getPipe(this.logger),
             new Transform({
                 objectMode: true,
                 transform: this.displayData.bind(this),
@@ -53,12 +55,12 @@ export class ProductImporter {
 
     async displayData(row: Record<string, unknown>, encoding: string, callback: (error?: Error | null, data?: object[]) => void): Promise<void> {
         this.logger.log("row: ", JSON.stringify(row, null, 2));
-        for (const key in row) {
-            if (Object.prototype.hasOwnProperty.call(row, key)) {
-                const element = row[key];
-                this.logger.log(`${key}: ${element} (${typeof element})`);
-            }
-        }
+        // for (const key in row) {
+        //     if (Object.prototype.hasOwnProperty.call(row, key)) {
+        //         const element = row[key];
+        //         this.logger.log(`${key}: ${element} (${typeof element})`);
+        //     }
+        // }
         return callback(null);
     }
 }
