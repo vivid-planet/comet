@@ -63,7 +63,6 @@ export function App() {
                     generateAltText: true,
                     generateImageTitle: true,
                 },
-                maxSrcResolution: config.dam.maxSrcResolution,
             }}
             dependencies={{
                 entityDependencyMap: {
