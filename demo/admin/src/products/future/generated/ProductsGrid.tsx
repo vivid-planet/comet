@@ -67,6 +67,9 @@ const productsFragment = gql`
         manufacturer {
             name
         }
+        tags {
+            title
+        }
     }
 `;
 
@@ -316,6 +319,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "tags",
+            headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
+            sortable: false,
+            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
             flex: 1,
             minWidth: 150,
         },
