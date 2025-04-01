@@ -3,7 +3,7 @@ import "@fontsource-variable/roboto-flex/full.css";
 import { DataGridPanel, MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createCometTheme } from "@comet/admin-theme";
-import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
+import { createTheme as createMuiTheme, CssBaseline, GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
 import { Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
@@ -87,6 +87,7 @@ const preview: Preview = {
 
             return (
                 <MuiThemeProvider theme={theme}>
+                    <CssBaseline />
                     <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
                         <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
                             <GlobalStyles styles={previewGlobalStyles} />
