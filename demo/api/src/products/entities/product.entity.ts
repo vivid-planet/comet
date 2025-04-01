@@ -18,7 +18,6 @@ import {
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { ImportTargetInterface } from "@src/importer/import-target.interface";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
-import { Transform } from "class-transformer";
 import { IsNumber } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
@@ -103,7 +102,7 @@ export class Product extends BaseEntity<Product, "id"> implements ImportTargetIn
     @Field(() => ProductStatus)
     status: ProductStatus = ProductStatus.Unpublished;
 
-    @Property()
+    @Property({ unique: true })
     @Field()
     slug: string;
 
@@ -149,19 +148,6 @@ export class Product extends BaseEntity<Product, "id"> implements ImportTargetIn
 
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
-    @Transform(
-        ({ value }) =>
-            DamImageBlock.blockInputFactory({
-                activeType: "pixelImage",
-                attachedBlocks: [
-                    {
-                        props: {},
-                        type: "pixelImage",
-                    },
-                ],
-            }).transformToBlockData(),
-        { toClassOnly: true },
-    )
     image: BlockDataInterface;
 
     @Property({ type: "json" })
