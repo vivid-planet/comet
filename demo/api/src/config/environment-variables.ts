@@ -34,6 +34,7 @@ export class EnvironmentVariables {
     API_URL: string;
 
     @IsString()
+    @MinLength(16)
     BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
 
     @IsString()
