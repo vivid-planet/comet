@@ -140,18 +140,18 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                             <BlockAdminComponentPaper disablePadding>
                                 <Box padding={3}>
                                     <Grid container alignItems="center" spacing={3}>
-                                        <Grid item>
+                                        <Grid>
                                             {/* TODO show thumbnail of video */}
                                             <Video fontSize="large" color="primary" />
                                         </Grid>
-                                        <Grid item xs>
+                                        <Grid size="grow">
                                             <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                             <Typography variant="body1" color="textSecondary">
                                                 <DamPathLazy fileId={state.damFile.id} />
                                             </Typography>
                                         </Grid>
                                         {showMenu && (
-                                            <Grid item>
+                                            <Grid>
                                                 <IconButton
                                                     onMouseDown={(event) => event.stopPropagation()}
                                                     onClick={(event) => {

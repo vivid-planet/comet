@@ -143,7 +143,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
             <IFrameViewer device={device} initialPageUrl={initialPageUrl} />
             <ActionsContainer>
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
-                    <Grid item>
+                    <Grid>
                         <SiteInformation>
                             <LogoWrapper>
                                 {logo}
@@ -170,10 +170,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                             </SiteLinkWrapper>
                         </SiteInformation>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <DeviceToggle device={device} onChange={handleDeviceChange} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
                     </Grid>
                 </Grid>
