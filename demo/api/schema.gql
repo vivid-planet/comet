@@ -589,6 +589,7 @@ type PaginatedNews {
 
 type ManufacturerCountry {
   id: String!
+  label: String!
   used: Float!
 }
 
@@ -1179,6 +1180,7 @@ enum ManufacturerSortField {
 
 input ManufacturerCountryFilter {
   id: StringFilter
+  label: StringFilter
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]
