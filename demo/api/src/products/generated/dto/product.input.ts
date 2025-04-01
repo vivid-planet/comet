@@ -2,6 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { BlockInputInterface, DamImageBlock, isBlockInputInterface, IsNullable, IsSlug, PartialType, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, ID, InputType } from "@nestjs/graphql";
+import { CustomProduct } from "@src/products/custom-product.type";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
@@ -135,6 +136,12 @@ export class ProductInput {
     @IsArray()
     @IsString({ each: true })
     datasheets: string[];
+
+    @IsNullable()
+    @ValidateNested()
+    @Type(() => CustomProduct)
+    @Field(() => CustomProduct, { nullable: true })
+    custom?: CustomProduct;
 }
 
 @InputType()

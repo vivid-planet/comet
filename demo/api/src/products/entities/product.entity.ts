@@ -4,6 +4,7 @@ import {
     Collection,
     Entity,
     Enum,
+    type IType,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -15,6 +16,7 @@ import {
     types,
 } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { CustomProduct, CustomProductType } from "@src/products/custom-product.type";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
@@ -224,4 +226,9 @@ export class Product extends BaseEntity {
     @ManyToMany(() => FileUpload)
     @Field(() => [FileUpload])
     datasheets = new Collection<FileUpload>(this);
+
+    @Property({ type: CustomProductType, nullable: true })
+    @Field(() => CustomProduct, { nullable: true })
+    @CrudField({ inputType: CustomProduct })
+    custom?: IType<CustomProduct, string>;
 }
