@@ -1,4 +1,4 @@
-import { Connection, EntityManager, FilterQuery, IDatabaseDriver } from "@mikro-orm/core";
+import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
 import { ImporterPipe, PipeData, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
 import { plainToInstance } from "class-transformer";
@@ -6,6 +6,7 @@ import { Transform, TransformCallback } from "stream";
 import { v4 } from "uuid";
 
 import { Product } from "./entities/product.entity";
+import { ProductCategory } from "./entities/product-category.entity";
 
 export class ProductPersistPipe implements ImporterPipe {
     constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>) {}
@@ -31,18 +32,22 @@ export class ProductPersist extends Transform {
         try {
             const { data } = inputDataAndMetadata;
             const { category, ...input } = data;
+            const categoryRef = category as Reference<ProductCategory>;
+
             const entityInstance = plainToInstance(Product, input);
             const { colors, tagsWithStatus, variants, createdAt, ...productData } = entityInstance;
-
             const updateQuery: FilterQuery<object> | undefined = { slug: data.slug };
-
             const record: Product | null = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
 
             if (record) {
                 await this.logger.log(`Existing record for ${JSON.stringify(updateQuery)} with id ${record.id} found, updating...`);
                 // keeping the id from the input data (in the DataTransformer plainToInstance always creates a new Entity instance, which is populated with the new id)
                 data.id = record.id;
-                await this.em.nativeUpdate(Product.name, { id: record.id }, { ...productData, id: data.id, updatedAt: new Date() });
+                await this.em.nativeUpdate(
+                    Product.name,
+                    { id: record.id },
+                    { ...productData, category: categoryRef, id: data.id, updatedAt: new Date() },
+                );
             } else {
                 // in case the id is not provided
                 data.id = data?.id || v4();
@@ -53,6 +58,7 @@ export class ProductPersist extends Transform {
                 );
                 await this.em.insert(Product, {
                     ...productData,
+                    category: categoryRef,
                     createdAt: new Date(),
                 });
                 await this.logger.log(`Inserted record with id ${data.id}`, false);
