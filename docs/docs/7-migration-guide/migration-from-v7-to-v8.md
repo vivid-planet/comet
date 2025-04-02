@@ -373,29 +373,6 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 
 </details>
 
-#### ✅ Vite / SWC
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/update-swc-dependencies.ts
-```
-
-:::
-
-```diff
--        "@swc/plugin-emotion": "^3.0.13",
--        "@vitejs/plugin-react-swc": "^3.7.2",
-+        "@swc/plugin-emotion": "^8.7.2",
-+        "@vitejs/plugin-react-swc": "^3.8.0",
-```
-
-</details>
-
 ### ✅ Add new package @comet/api-generator
 
 <details>
@@ -895,6 +872,29 @@ Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid,
         }]
     />
 ```
+
+#### ✅ Vite / SWC
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-swc-dependencies.ts
+```
+
+:::
+
+```diff
+-        "@swc/plugin-emotion": "^3.0.13",
+-        "@vitejs/plugin-react-swc": "^3.7.2",
++        "@swc/plugin-emotion": "^8.7.2",
++        "@vitejs/plugin-react-swc": "^3.8.0",
+```
+
+</details>
 
 ### ✅ Add new package @comet/admin-generator
 
