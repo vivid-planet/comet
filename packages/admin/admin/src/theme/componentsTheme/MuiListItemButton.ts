@@ -2,9 +2,9 @@ import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { commonListItemRootStyles } from "./commonListStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = (component, { spacing }) => ({
+export const getMuiListItemButton: GetMuiComponentTheme<"MuiListItemButton"> = (component) => ({
     ...component,
-    styleOverrides: mergeOverrideStyles<"MuiListItem">(component?.styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiListItemButton">(component?.styleOverrides, {
         root: {
             ...commonListItemRootStyles,
         },
