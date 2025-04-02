@@ -20,5 +20,6 @@
         "paths": {
             "@src/*": ["src/*"]
         }
-    }
+    },
+    "exclude": ["graphiql/"]
 }

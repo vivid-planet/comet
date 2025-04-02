@@ -66,7 +66,7 @@ async function bootstrap(): Promise<void> {
     app.use(compression());
     app.use(cookieParser());
 
-    app.useStaticAssets(resolve(__dirname, "../public"));
+    app.useStaticAssets(resolve(__dirname, "../graphiql/dist"), { prefix: "/graphiql/" });
 
     // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
     if (config.cdn.originCheckSecret) {
