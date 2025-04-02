@@ -8,7 +8,7 @@ export class EndPipe implements ImporterPipe {
     }
 }
 
-export class EndHandler extends Transform {
+class EndHandler extends Transform {
     constructor() {
         super({ writableObjectMode: true, objectMode: true });
     }
