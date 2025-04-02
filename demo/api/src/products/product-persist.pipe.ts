@@ -1,8 +1,8 @@
+import { BlockDataInterface } from "@comet/blocks-api";
 import { DamImageBlock } from "@comet/cms-api";
 import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
 import { ImporterPipe, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
-import { plainToInstance } from "class-transformer";
 import { Transform, TransformCallback } from "stream";
 import { v4 } from "uuid";
 
@@ -11,10 +11,11 @@ import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { ProductImporterInput } from "./product-importer.input";
 
-type ProductData = ProductImporterInput & {
+type ProductData = Omit<ProductImporterInput, "image"> & {
     id: string;
     colors: string;
     category: Reference<ProductCategory>;
+    image: BlockDataInterface;
 };
 
 export class ProductPersistPipe implements ImporterPipe {
@@ -40,12 +41,11 @@ class ProductPersist extends Transform {
     async _transform(inputDataAndMetadata: { data: ProductData; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
         try {
             const { data } = inputDataAndMetadata;
-            const { colors: colorString, category, ...input } = data;
+            const { colors: colorString, category, colors: colorCollection, ...productData } = data;
 
-            const entityInstance = plainToInstance(Product, input);
-            const { tagsWithStatus, variants, createdAt, colors: colorCollection, ...productData } = entityInstance;
             const updateQuery: FilterQuery<object> | undefined = { slug: data.slug };
             const record: Product | null = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
+
             productData.image = DamImageBlock.blockInputFactory({
                 activeType: "pixelImage",
                 attachedBlocks: [
@@ -77,8 +77,10 @@ class ProductPersist extends Transform {
                 );
                 await this.em.insert(Product, {
                     ...productData,
+                    id: data.id,
                     category,
                     createdAt: new Date(),
+                    updatedAt: new Date(),
                 });
                 await this.logger.log(`Inserted record with id ${data.id}`, false);
             }
