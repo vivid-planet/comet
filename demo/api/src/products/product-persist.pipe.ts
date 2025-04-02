@@ -1,12 +1,20 @@
-import { DamImageBlock } from "@comet/cms-api";
-import { Connection, EntityManager, IDatabaseDriver, Reference } from "@mikro-orm/core";
+import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
-import { ImporterPipe, PipeData, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
+import { ImporterPipe, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
 import { plainToInstance } from "class-transformer";
 import { Transform, TransformCallback } from "stream";
+import { v4 } from "uuid";
 
 import { Product } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
+import { ProductColor } from "./entities/product-color.entity";
+import { ProductImporterInput } from "./product-importer.input";
+
+type ProductData = ProductImporterInput & {
+    id: string;
+    colors: string;
+    category: Reference<ProductCategory>;
+};
 
 export class ProductPersistPipe implements ImporterPipe {
     constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>) {}
@@ -16,7 +24,7 @@ export class ProductPersistPipe implements ImporterPipe {
     }
 }
 
-export class ProductPersist extends Transform {
+class ProductPersist extends Transform {
     private persistedEntitiesAmount: number;
 
     constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>, private readonly logger: LoggerService) {
@@ -28,64 +36,64 @@ export class ProductPersist extends Transform {
         return this.persistedEntitiesAmount;
     }
 
-    async _transform(inputDataAndMetadata: { data: PipeData; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
+    async _transform(inputDataAndMetadata: { data: ProductData; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
         try {
             const { data } = inputDataAndMetadata;
-            const { category, ...input } = data;
-            const categoryRef = category as Reference<ProductCategory>;
+            const { colors: colorString, category, ...input } = data;
 
             const entityInstance = plainToInstance(Product, input);
-            const { colors, tagsWithStatus, variants, createdAt, image, ...productData } = entityInstance;
-            // const updateQuery: FilterQuery<object> | undefined = { slug: data.slug };
-            const productInput = {
-                ...productData,
-                image: DamImageBlock.blockInputFactory({
-                    activeType: "pixelImage",
-                    attachedBlocks: [
-                        {
-                            props: {},
-                            type: "pixelImage",
-                        },
-                    ],
-                }).transformToBlockData(),
-                category: categoryRef,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-            console.log("DEBUG productInput: ", productInput);
-            // const product = await this.em.insert(Product, productInput);
-            const product = await this.em.upsert(Product, productInput, {
-                onConflictFields: ["slug"],
-                onConflictAction: "merge",
-                onConflictExcludeFields: ["id", "createdAt"],
-            });
-            console.log("DEBUG product: ", product);
-            // const record: Product | null = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
+            const { tagsWithStatus, variants, createdAt, colors: colorCollection, ...productData } = entityInstance;
+            const updateQuery: FilterQuery<object> | undefined = { slug: data.slug };
+            const record: Product | null = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
+            // TODO: use upsert
+            // const product = await this.em.upsert(Product, productInput, {
+            //     onConflictFields: ["slug"],
+            //     onConflictAction: "merge",
+            //     onConflictExcludeFields: ["id", "createdAt"],
+            // });
+            if (record) {
+                await this.logger.log(`Existing record for ${JSON.stringify(updateQuery)} with id ${record.id} found, updating...`);
+                // keeping the id from the input data (in the DataTransformer plainToInstance always creates a new Entity instance, which is populated with the new id)
+                data.id = record.id;
+                await this.em.nativeUpdate(Product.name, { id: record.id }, { ...productData, category, id: data.id, updatedAt: new Date() });
+            } else {
+                // in case the id is not provided
+                data.id = data?.id || v4();
+                await this.logger.log(
+                    `${updateQuery ? `No record for query ${JSON.stringify(updateQuery)} found` : "No query provided"}, inserting with id ${
+                        data.id
+                    }...`,
+                );
+                await this.em.insert(Product, {
+                    ...productData,
+                    category,
+                    createdAt: new Date(),
+                });
+                await this.logger.log(`Inserted record with id ${data.id}`, false);
+            }
 
-            // if (record) {
-            //     await this.logger.log(`Existing record for ${JSON.stringify(updateQuery)} with id ${record.id} found, updating...`);
-            //     // keeping the id from the input data (in the DataTransformer plainToInstance always creates a new Entity instance, which is populated with the new id)
-            //     data.id = record.id;
-            //     await this.em.nativeUpdate(
-            //         Product.name,
-            //         { id: record.id },
-            //         { ...productData, category: categoryRef, id: data.id, updatedAt: new Date() },
-            //     );
-            // } else {
-            //     // in case the id is not provided
-            //     data.id = data?.id || v4();
-            //     await this.logger.log(
-            //         `${updateQuery ? `No record for query ${JSON.stringify(updateQuery)} found` : "No query provided"}, inserting with id ${
-            //             data.id
-            //         }...`,
-            //     );
-            //     await this.em.insert(Product, {
-            //         ...productData,
-            //         category: categoryRef,
-            //         createdAt: new Date(),
-            //     });
-            //     await this.logger.log(`Inserted record with id ${data.id}`, false);
-            // }
+            let colorsArray: { hex: string; name: string }[] = [];
+            try {
+                colorsArray = JSON.parse(colorString);
+            } catch (error) {
+                await this.logger.warn(`Invalid JSON string for colors: "${colorString}". Defaulting to an empty array.`);
+            }
+
+            await this.em.nativeDelete(ProductColor, { product: data.id });
+
+            if (colorsArray.length > 0) {
+                const productColors = colorsArray.map((color) => ({
+                    id: v4(),
+                    name: color.name,
+                    hexCode: color.hex,
+                    product: data.id,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                }));
+
+                await this.em.insertMany(ProductColor, productColors);
+            }
+
             this.persistedEntitiesAmount++;
             await this.logger.log(`Persisted entities amount: ${this.persistedEntitiesAmount}`);
             // clear entity manager to prevent memory leak
