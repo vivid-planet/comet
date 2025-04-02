@@ -373,6 +373,33 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 
 </details>
 
+#### ✅ `@kubernetes/client-node`
+
+The `@kubernetes/client-node` peer dependency has been bumped to v1.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-kubernetes-client-node.ts
+```
+
+:::
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@kubernetes/client-node": "^0.18.0",
++       "@kubernetes/client-node": "^1.0.0",
+    }
+}
+```
+
+</details>
+
 #### ✅ Vite / SWC
 
 <details>
