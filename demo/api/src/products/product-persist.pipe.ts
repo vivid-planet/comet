@@ -1,3 +1,4 @@
+import { DamImageBlock } from "@comet/cms-api";
 import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
 import { ImporterPipe, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
@@ -45,6 +46,16 @@ class ProductPersist extends Transform {
             const { tagsWithStatus, variants, createdAt, colors: colorCollection, ...productData } = entityInstance;
             const updateQuery: FilterQuery<object> | undefined = { slug: data.slug };
             const record: Product | null = updateQuery ? await this.em.findOne(Product, updateQuery, { fields: ["id"] }) : null;
+            productData.image = DamImageBlock.blockInputFactory({
+                activeType: "pixelImage",
+                attachedBlocks: [
+                    {
+                        props: {},
+                        type: "pixelImage",
+                    },
+                ],
+            }).transformToBlockData();
+
             // TODO: use upsert
             // const product = await this.em.upsert(Product, productInput, {
             //     onConflictFields: ["slug"],
