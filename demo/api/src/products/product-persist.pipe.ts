@@ -116,11 +116,13 @@ class ProductPersist extends Transform {
             const outputData = inputDataAndMetadata;
             outputData.metadata.persistedEntitiesAmount = this.persistedEntitiesAmount;
             this.push(outputData);
-            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            await this.logger.error(`Error parsing Data: ${err}`);
-            this.emit("error", err);
-            return callback(err);
+        } catch (error: unknown) {
+            await this.logger.error(`Error parsing Data: ${error}`);
+            if (error instanceof Error) {
+                callback(error);
+            } else {
+                callback(new Error(`An unknown error occurred: ${error}`));
+            }
         }
 
         callback();
