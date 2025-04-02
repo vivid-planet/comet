@@ -14,6 +14,9 @@ export function createGraphQLFetch() {
     if (process.env.NEXT_RUNTIME === "edge") {
         throw new Error("createGraphQLFetch: cannot use in edge runtime, use createGraphQLFetchMiddleware instead.");
     }
+    if (!process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD) {
+        throw new Error("API_BASIC_AUTH_SYSTEM_USER_PASSWORD is not set");
+    }
 
     let previewData: SitePreviewData | undefined;
     const visibilityParam = getVisibilityParam();
@@ -29,7 +32,7 @@ export function createGraphQLFetch() {
             },
             headers: {
                 "x-relative-dam-urls": "1",
-                authorization: `Basic ${Buffer.from(`vivid:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
+                authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
                 ...convertPreviewDataToHeaders(previewData),
             },
         }),
