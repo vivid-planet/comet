@@ -20,7 +20,7 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { faker } from "@faker-js/faker";
-import { Link, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 interface ColorFilterFieldProps {
     colors: string[];
@@ -216,9 +216,9 @@ export const TableWithFilterbarAndPersistedState = {
                                 name: "detail",
                                 render: ({ id }) => {
                                     return (
-                                        <Link component={StackLink} pageName="detail" payload={String(id)}>
+                                        <StackLink pageName="detail" payload={String(id)}>
                                             Show Details
-                                        </Link>
+                                        </StackLink>
                                     );
                                 },
                             },

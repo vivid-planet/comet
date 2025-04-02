@@ -3,7 +3,6 @@ import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { type GQLCurrentUserPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
 type CurrentUserContext<ContentScope extends ContentScopeInterface = ContentScopeInterface> = {
@@ -16,16 +15,17 @@ export interface CurrentUserInterface<ContentScope extends ContentScopeInterface
     id: string;
     name: string;
     email: string;
-    permissions: GQLCurrentUserPermission[];
+    permissions: {
+        permission: string;
+        contentScopes: ContentScope[];
+    }[];
     authenticatedUser: {
         name: string;
         email: string;
     } | null;
     allowedContentScopes: {
-        [key in keyof ContentScope]: {
-            label: string;
-            value: string;
-        };
+        scope: ContentScope;
+        label: { [key in keyof ContentScope]: string };
     }[];
     impersonated: boolean;
 }
@@ -45,7 +45,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     permission
                     contentScopes
                 }
-                allowedContentScopes
+                allowedContentScopes {
+                    scope
+                    label
+                }
                 impersonated
             }
         }
@@ -62,6 +65,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
             ...data.currentUser,
             impersonated: !!data.currentUser.impersonated,
             authenticatedUser: data.currentUser.authenticatedUser,
+            allowedContentScopes: data.currentUser.allowedContentScopes.map((scope) => ({ scope: scope.scope, label: scope.label })),
         },
         isAllowed:
             isAllowed ??

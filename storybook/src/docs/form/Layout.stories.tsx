@@ -1,4 +1,5 @@
 import {
+    Button,
     CancelButton,
     CheckboxField,
     createCometTheme,
@@ -11,7 +12,6 @@ import {
     OkayButton,
 } from "@comet/admin";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -176,9 +176,7 @@ export const FieldsInDialog = {
                 </Dialog>
 
                 <div style={{ textAlign: "center" }}>
-                    <Button variant="contained" color="primary" onClick={() => setShowDialog(true)}>
-                        Show Dialog
-                    </Button>
+                    <Button onClick={() => setShowDialog(true)}>Show Dialog</Button>
                 </div>
             </>
         );

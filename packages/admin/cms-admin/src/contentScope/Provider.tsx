@@ -1,6 +1,8 @@
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
+import { defaultCreatePath } from "./utils/defaultCreatePath";
+
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
@@ -8,7 +10,7 @@ export interface ContentScopeInterface {
 
 type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
     createPath: (scope: ContentScopeValues<S>) => string | string[];
-    createUrl: (scope: ContentScopeValue<S>) => string;
+    createUrl: (scope: S) => string;
 };
 
 const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
@@ -47,11 +49,10 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     values: ContentScopeValues<S>;
 };
 
-export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<ContentScopeValue<S>>;
-
-type ContentScopeValue<S extends ContentScopeInterface = ContentScopeInterface> = {
-    [P in keyof S]: { label?: string; value: NonNull<S[P]> };
-};
+export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
+    scope: S;
+    label?: { [P in keyof S]?: string };
+}>;
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
 // ... and get rid of "as" type-assertions
@@ -68,33 +69,16 @@ function parseScopeFromRouterMatchParams<S extends ContentScopeInterface = Conte
     }, {} as S);
 }
 
-function formatScopeToRouterMatchParams<S extends ContentScopeInterface = ContentScopeInterface>(scope: ContentScopeValue<S>): NonNullRecord<S> {
+function formatScopeToRouterMatchParams<S extends ContentScopeInterface = ContentScopeInterface>(scope: Partial<S>): NonNullRecord<S> {
     return Object.entries(scope).reduce((a, [key, value]) => {
         return {
             ...a,
-            [key]: !value.value || value.value === null ? NullValueAsString : value.value,
+            [key]: !value || value === null ? NullValueAsString : value,
         };
     }, {} as NonNullRecord<S>);
 }
 
-function defaultCreatePath(values: ContentScopeValues) {
-    const dimensionValues: { [dimension: string]: Set<string> } = {};
-    values.forEach((value) => {
-        Object.keys(value).forEach((dimension) => {
-            if (!dimensionValues[dimension]) {
-                dimensionValues[dimension] = new Set();
-            }
-            dimensionValues[dimension].add(value[dimension].value);
-        });
-    });
-    return Object.keys(dimensionValues).reduce((path, dimension) => {
-        const plainValues = Array.from(dimensionValues[dimension]);
-        const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-        return `${path}/:${dimension}${whiteListedValuesString}`;
-    }, "");
-}
-
-function defaultCreateUrl(scope: ContentScopeValue) {
+function defaultCreateUrl(scope: ContentScopeInterface) {
     const formattedMatchParams = formatScopeToRouterMatchParams(scope);
     return Object.entries(formattedMatchParams).reduce((a, [, value]) => `${a}/${value}`, "");
 }
@@ -133,7 +117,7 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
 }
 
 export interface ContentScopeProviderProps<S extends ContentScopeInterface = ContentScopeInterface> {
-    defaultValue: ContentScopeValue<S>;
+    defaultValue: S;
     values: ContentScopeValues<S>;
     children: (p: { match: match<NonNullRecord<S>> }) => ReactNode;
     location?: ContentScopeLocation<S>;

@@ -2,15 +2,14 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ArgsType, Field, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
-import { GraphQLJSONObject } from "graphql-scalars";
 import isEqual from "lodash.isequal";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { ContentScopeWithLabel } from "./dto/content-scope";
 import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
-import { ContentScopeWithLabel } from "./user-permissions.types";
 
 @ArgsType()
 export class UserPermissionListArgs {
@@ -81,21 +80,22 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsUpdateOverrideContentScopes(
-        @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) input: UserPermissionOverrideContentScopesInput,
+        @Args("input", { type: () => UserPermissionOverrideContentScopesInput })
+        { permissionId, contentScopes: contentScopesWithLabel, overrideContentScopes }: UserPermissionOverrideContentScopesInput,
     ): Promise<UserPermission> {
-        const permission = await this.getPermission(input.permissionId);
-        const contentScopes = input.contentScopes.map((cs) => this.service.removeLabelsFromContentScope(cs));
-        await this.service.checkContentScopes(contentScopes);
-        permission.overrideContentScopes = input.overrideContentScopes;
-        permission.contentScopes = contentScopes;
+        const permission = await this.getPermission(permissionId);
+        await this.service.checkContentScopes(contentScopesWithLabel);
+        permission.overrideContentScopes = overrideContentScopes;
+        permission.contentScopes = contentScopesWithLabel.map((scope) => scope.scope);
         await this.entityManager.persistAndFlush(permission);
+        console.log("Updated permission", permission);
         return permission;
     }
 
-    @ResolveField(() => [GraphQLJSONObject])
-    async contentScopes(@Parent() permission: UserPermission): Promise<ContentScopeWithLabel> {
+    @ResolveField(() => [ContentScopeWithLabel])
+    async contentScopes(@Parent() permission: UserPermission): Promise<ContentScopeWithLabel[]> {
         return (await this.service.getAvailableContentScopes()).filter((availableContentScope) =>
-            permission.contentScopes.some((contentScope) => isEqual(contentScope, this.service.removeLabelsFromContentScope(availableContentScope))),
+            permission.contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)),
         );
     }
 

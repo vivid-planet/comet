@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CancelButton,
+    FillSpace,
     type GridColDef,
     Loading,
     messages,
     SaveBoundary,
     SaveBoundarySaveButton,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
@@ -42,8 +42,14 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                userContentScopes: userPermissionsContentScopes(userId: $userId)
-                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
+                userContentScopes: userPermissionsContentScopes(userId: $userId) {
+                    scope
+                    label
+                }
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true) {
+                    scope
+                    label
+                }
             }
         `,
         {
@@ -66,7 +72,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     <ToolbarTitleItem>
                         <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
                     </ToolbarTitleItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="contained" color="primary">
                             <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Select scopes" />
@@ -74,15 +80,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    <DataGrid
-                        autoHeight={true}
-                        rows={data.userContentScopes ?? []}
-                        columns={columns}
-                        rowCount={data?.userContentScopes.length ?? 0}
-                        loading={false}
-                        getRowHeight={() => "auto"}
-                        getRowId={(row) => JSON.stringify(row)}
-                    />
+                    <DataGrid rows={data.userContentScopes} columns={columns} getRowId={(row) => JSON.stringify(row.scope)} />
                 </CardContent>
             </Card>
             <SaveBoundary
@@ -119,7 +117,7 @@ const CardToolbar = styled(Toolbar)`
 export function generateGridColumnsFromContentScopeProperties(
     data: GQLContentScopesQuery["userContentScopes"] | GQLAvailableContentScopesQuery["availableContentScopes"],
 ): GridColDef[] {
-    const uniquePropertyNames = Array.from(new Set(data.flatMap((item) => Object.keys(item))));
+    const uniquePropertyNames = Array.from(new Set(data.flatMap((item) => Object.keys(item.scope))));
     return uniquePropertyNames.map((propertyName) => {
         return {
             field: propertyName,
@@ -128,9 +126,9 @@ export function generateGridColumnsFromContentScopeProperties(
             sortable: false,
             filterable: true,
             headerName: camelCaseToHumanReadable(propertyName),
-            renderCell: ({ row }) => {
-                if (row[propertyName] != null) {
-                    return <Typography variant="subtitle2">{row[propertyName].label}</Typography>;
+            renderCell: ({ row }: { row: { scope: ContentScope; label: { [key in keyof ContentScope]: string } } }) => {
+                if (row.label[propertyName] != null) {
+                    return <Typography variant="subtitle2">{row.label[propertyName]}</Typography>;
                 } else {
                     return "-";
                 }

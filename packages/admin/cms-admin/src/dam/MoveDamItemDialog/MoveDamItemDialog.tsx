@@ -1,9 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { type FetchResult } from "@apollo/client/link/core";
-import { SaveButton } from "@comet/admin";
+import { Button, SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -204,6 +203,7 @@ const MoveDamItemDialogInner = ({
             </DialogContent>
             <DialogActions>
                 <Button
+                    variant="textDark"
                     startIcon={<Reset />}
                     onClick={() => {
                         setSelectedId(undefined);
@@ -214,13 +214,12 @@ const MoveDamItemDialogInner = ({
                 </Button>
                 <SaveButton
                     startIcon={<Move />}
-                    variant="contained"
                     onClick={async () => {
                         await moveSelected();
                         handleClose();
                     }}
                     disabled={selectedId === undefined}
-                    saving={moving}
+                    loading={moving}
                     hasErrors={hasErrors}
                 >
                     <FormattedMessage

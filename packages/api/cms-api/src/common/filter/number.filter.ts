@@ -32,4 +32,9 @@ export class NumberFilter {
     @IsOptional()
     @IsNumber()
     notEqual?: number;
+
+    @Field(() => [Number], { nullable: true })
+    @IsOptional()
+    @IsNumber(undefined, { each: true })
+    isAnyOf?: number[];
 }

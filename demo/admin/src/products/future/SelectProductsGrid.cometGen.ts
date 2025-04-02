@@ -1,7 +1,7 @@
-import { type GridConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { type GQLProduct } from "@src/graphql.generated";
 
-export const SelectProductsGrid: GridConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "grid",
     gqlType: "Product",
     fragmentName: "SelectProductsGridFuture",
@@ -15,4 +15,4 @@ export const SelectProductsGrid: GridConfig<GQLProduct> = {
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },
     ],
-};
+});

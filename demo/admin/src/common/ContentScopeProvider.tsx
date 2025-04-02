@@ -26,7 +26,7 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
         throw new Error("User does not have access to any scopes.");
     }
     return (
-        <ContentScopeProviderLibrary<ContentScope> values={user.allowedContentScopes} defaultValue={user.allowedContentScopes[0]}>
+        <ContentScopeProviderLibrary<ContentScope> values={user.allowedContentScopes} defaultValue={user.allowedContentScopes[0].scope}>
             {children}
         </ContentScopeProviderLibrary>
     );

@@ -1,15 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import {
-    CancelButton,
-    DataGridToolbar,
-    Field,
-    FinalForm,
-    FinalFormSwitch,
-    type GridColDef,
-    SaveButton,
-    ToolbarFillSpace,
-    ToolbarItem,
-} from "@comet/admin";
+import { CancelButton, DataGridToolbar, Field, FillSpace, FinalForm, FinalFormSwitch, type GridColDef, SaveButton } from "@comet/admin";
 import {
     CircularProgress,
     // eslint-disable-next-line no-restricted-imports
@@ -45,10 +35,8 @@ interface FormProps {
 function OverrideContentScopesDialogGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarFillSpace />
+            <GridToolbarQuickFilter />
+            <FillSpace />
         </DataGridToolbar>
     );
 }
@@ -69,7 +57,9 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                 input: {
                     permissionId,
                     overrideContentScopes: data.overrideContentScopes,
-                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
+                    contentScopes: data.contentScopes
+                        .map((contentScope) => JSON.parse(contentScope))
+                        .map((cs) => ({ scope: cs.scope, label: cs.label })),
                 },
             },
             refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
@@ -80,13 +70,22 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
-                    contentScopes
+                    contentScopes {
+                        scope
+                        label
+                    }
                 }
-                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true) {
+                    scope
+                    label
+                }
             }
         `,
         {
@@ -136,16 +135,13 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                     {(props) => {
                                         return (
                                             <DataGrid
-                                                autoHeight={true}
                                                 rows={
                                                     data.availableContentScopes.filter(
                                                         (obj) => !Object.values(obj).every((value) => value === undefined),
                                                     ) ?? []
                                                 }
                                                 columns={columns}
-                                                rowCount={data.availableContentScopes.length}
                                                 loading={false}
-                                                getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection={!disabled}
                                                 rowSelectionModel={props.input.value}

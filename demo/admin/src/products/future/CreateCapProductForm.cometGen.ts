@@ -1,10 +1,10 @@
-import { type FormConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
 import { validateTitle } from "./validateTitle";
 
-export const CreateCapProductForm: FormConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     mode: "add",
@@ -24,4 +24,4 @@ export const CreateCapProductForm: FormConfig<GQLProduct> = {
         { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
         { type: "block", name: "image", label: "Image", block: DamImageBlock },
     ],
-};
+});

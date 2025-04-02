@@ -120,6 +120,12 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         transformOrigin,
                         anchorOrigin,
                     },
+                    button: {
+                        sx: {
+                            marginLeft: 0,
+                            marginRight: 0,
+                        },
+                    },
                 }}
             />
 

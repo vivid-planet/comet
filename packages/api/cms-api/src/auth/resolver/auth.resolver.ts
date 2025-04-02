@@ -7,11 +7,12 @@ import uniqWith from "lodash.uniqwith";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { DisablePermissionCheck, RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { ContentScopeWithLabel } from "../../user-permissions/dto/content-scope";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
-import { AccessControlServiceInterface, ContentScopeWithLabel } from "../../user-permissions/user-permissions.types";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
 interface AuthResolverConfig {
@@ -54,16 +55,14 @@ export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
             return user.permissions.map((p) => p.permission).filter((permission) => this.accessControlService.isAllowed(user, permission, scope));
         }
 
-        @ResolveField(() => [GraphQLJSONObject])
+        @ResolveField(() => [ContentScopeWithLabel])
         async allowedContentScopes(@Parent() user: CurrentUser): Promise<ContentScopeWithLabel[]> {
             const allowedContentScopes = uniqWith(
                 user.permissions.flatMap((p) => p.contentScopes),
                 isEqual,
             );
             return (await this.service.getAvailableContentScopes()).filter((contentScopeWithLabel) =>
-                allowedContentScopes.some((allowedContentScope) =>
-                    isEqual(this.service.removeLabelsFromContentScope(contentScopeWithLabel), allowedContentScope),
-                ),
+                allowedContentScopes.some((allowedContentScope) => isEqual(contentScopeWithLabel.scope, allowedContentScope)),
             );
         }
     }

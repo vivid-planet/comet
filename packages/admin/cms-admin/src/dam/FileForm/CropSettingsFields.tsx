@@ -1,6 +1,6 @@
-import { Field, FieldContainer, FormSection } from "@comet/admin";
+import { Button, Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
-import { Button, FormControlLabel, Switch } from "@mui/material";
+import { FormControlLabel, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
@@ -96,7 +96,6 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                         y: 0,
                                     });
                                 }}
-                                color="info"
                                 variant="outlined"
                             >
                                 <FormattedMessage id="comet.dam.file.resetCropArea" defaultMessage="Reset crop area" />

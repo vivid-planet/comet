@@ -8,7 +8,7 @@ type UserPermission {
   requestedBy: String
   approvedBy: String
   overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]!
+  contentScopes: [ContentScopeWithLabel!]!
 }
 
 enum UserPermissionSource {
@@ -20,6 +20,11 @@ enum UserPermissionSource {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
 
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
@@ -47,7 +52,7 @@ type CurrentUser {
   impersonated: Boolean
   authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
-  allowedContentScopes: [JSONObject!]!
+  allowedContentScopes: [ContentScopeWithLabel!]!
 }
 
 type Dependency {
@@ -388,8 +393,8 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [ContentScopeWithLabel!]!
+  userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
@@ -407,6 +412,7 @@ enum SortDirection {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -420,6 +426,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input BooleanFilter {
@@ -665,9 +672,14 @@ input UserPermissionInput {
 input UserPermissionOverrideContentScopesInput {
   permissionId: ID!
   overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]! = []
+  contentScopes: [ContentScopeWithLabelInput!]! = []
+}
+
+input ContentScopeWithLabelInput {
+  scope: JSONObject!
+  label: JSONObject!
 }
 
 input UserContentScopesInput {
-  contentScopes: [JSONObject!]! = []
+  contentScopes: [ContentScopeWithLabelInput!]! = []
 }
