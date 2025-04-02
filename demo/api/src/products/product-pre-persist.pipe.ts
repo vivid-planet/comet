@@ -53,7 +53,6 @@ export class ProductPrePersist extends Transform {
             // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         } catch (err: any) {
             await this.logger.error(`Error parsing Data: ${err}`);
-            this.emit("error", err);
             return callback(err);
         }
 
