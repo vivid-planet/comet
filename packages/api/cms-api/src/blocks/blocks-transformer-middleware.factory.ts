@@ -12,7 +12,7 @@ export class BlocksTransformerMiddlewareFactory {
             const fieldValue = await next();
 
             if (isBlockDataInterface(fieldValue)) {
-                const { includeInvisibleBlocks, previewDamUrls, relativeDamUrls } = getRequestContextHeadersFromRequest(context.req);
+                const { includeInvisibleBlocks, previewDamUrls } = getRequestContextHeadersFromRequest(context.req);
 
                 let contextId: ContextId;
 
@@ -34,12 +34,7 @@ export class BlocksTransformerMiddlewareFactory {
                     moduleRef.registerRequestByContextId(context, contextId);
                 }
 
-                return transformToPlain(
-                    fieldValue,
-                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls },
-                    moduleRef,
-                    contextId,
-                );
+                return transformToPlain(fieldValue, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls }, moduleRef, contextId);
             } else {
                 return fieldValue;
             }

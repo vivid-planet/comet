@@ -3,6 +3,7 @@ const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
 const fs = require("fs");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 const port = process.env.APP_PORT ?? 3000;
@@ -39,6 +40,12 @@ app.use(
 app.get("/status/health", (req, res) => {
     res.send("OK!");
 });
+
+const proxyMiddleware = createProxyMiddleware({
+    target: process.env.API_URL_INTERNAL + "/dam",
+    changeOrigin: true,
+});
+app.use("/dam", proxyMiddleware);
 
 app.use(
     express.static("./build", {

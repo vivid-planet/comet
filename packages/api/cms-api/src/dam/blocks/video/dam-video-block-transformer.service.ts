@@ -27,7 +27,7 @@ type TransformResponse = {
 export class DamVideoBlockTransformerService implements BlockTransformerServiceInterface<DamVideoBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
-    async transformToPlain(block: DamVideoBlockData, { previewDamUrls, relativeDamUrls }: BlockContext) {
+    async transformToPlain(block: DamVideoBlockData, { previewDamUrls }: BlockContext) {
         const ret: TraversableTransformBlockResponse = {
             autoplay: block.autoplay,
             loop: block.loop,
@@ -52,7 +52,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 altText: file.altText,
                 archived: file.archived,
                 scope: file.scope,
-                fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls }),
             };
         }
 
