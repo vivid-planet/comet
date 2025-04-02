@@ -57,12 +57,12 @@ export class ProductImporter {
 
     async displayData(row: Record<string, unknown>, encoding: string, callback: (error?: Error | null, data?: object[]) => void): Promise<void> {
         this.logger.log("row: ", JSON.stringify(row, null, 2));
-        // for (const key in row) {
-        //     if (Object.prototype.hasOwnProperty.call(row, key)) {
-        //         const element = row[key];
-        //         this.logger.log(`${key}: ${element} (${typeof element})`);
-        //     }
-        // }
+        for (const key in row) {
+            if (Object.prototype.hasOwnProperty.call(row, key)) {
+                const element = row[key];
+                this.logger.log(`${key}: ${element} (${typeof element})`);
+            }
+        }
         return callback(null);
     }
 }
