@@ -7,6 +7,8 @@ import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parse
 import { pipeline, Readable, Transform } from "stream";
 
 import { ProductImporterInput } from "./product-importer.input";
+import { ProductPersistPipe } from "./product-persist.pipe";
+import { ProductPrePersistPipe } from "./product-pre-persist.pipe";
 
 export class ProductImporter {
     private readonly logger = new Logger(ProductImporter.name);
@@ -20,6 +22,8 @@ export class ProductImporter {
         const parsePipes = new CsvParseAndTransformPipes(this.importTarget, this.em).getPipes(this.logger, { encoding: "utf-8" });
         this.transformPipes = [
             ...parsePipes,
+            new ProductPrePersistPipe(this.em).getPipe(this.logger),
+            new ProductPersistPipe(this.em).getPipe(this.logger),
             new Transform({
                 objectMode: true,
                 transform: this.displayData.bind(this),
