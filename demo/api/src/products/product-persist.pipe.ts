@@ -117,7 +117,7 @@ class ProductPersist extends Transform {
             outputData.metadata.persistedEntitiesAmount = this.persistedEntitiesAmount;
             this.push(outputData);
         } catch (error: unknown) {
-            await this.logger.error(`Error parsing Data: ${error}`);
+            await this.logger.error(`Error persisting Data: ${error}`);
             if (error instanceof Error) {
                 callback(error);
             } else {

@@ -23,11 +23,13 @@ export class DataTransformer extends StreamTransform {
         try {
             const instance = plainToInstance(this.inputClass, inputData.data) as Record<string, unknown>;
             this.push({ data: instance, metadata: inputData.metadata });
-            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            this.logger.error(`Error transforming Data: ${err}`);
-            this.emit("error", err);
-            return callback(err);
+        } catch (error: unknown) {
+            await this.logger.error(`Error transforming Data: ${error}`);
+            if (error instanceof Error) {
+                callback(error);
+            } else {
+                callback(new Error(`An unknown error occurred: ${error}`));
+            }
         }
 
         callback();

@@ -50,10 +50,13 @@ export class ProductPrePersist extends Transform {
             const outputData = { ...inputDataAndMetadata, data: { ...data, category: Reference.create(category) } };
 
             this.push(outputData);
-            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            await this.logger.error(`Error parsing Data: ${err}`);
-            return callback(err);
+        } catch (error: unknown) {
+            await this.logger.error(`Error persisting Data (prePersist): ${error}`);
+            if (error instanceof Error) {
+                callback(error);
+            } else {
+                callback(new Error(`An unknown error occurred: ${error}`));
+            }
         }
 
         callback();
