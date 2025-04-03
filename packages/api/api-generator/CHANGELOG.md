@@ -1,5 +1,20 @@
 # @comet/api-generator
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- 28d572b: Remove special `status` field behavior
+
+### Minor Changes
+
+- 0328fa3: API Generator: Add support for filtering `ID` fields
+
+### Patch Changes
+
+- Updated dependencies [0328fa3]
+    - @comet/cms-api@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
