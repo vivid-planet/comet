@@ -26,10 +26,6 @@ export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: stri
         throw new Error(error.message);
     }
 
-    if (loading || !data) {
-        return <Loading />;
-    }
-
     return (
         <Card>
             <CardToolbar>
@@ -39,28 +35,32 @@ export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: stri
                 <FillSpace />
             </CardToolbar>
             <CardContent>
-                <FinalForm
-                    mode="edit"
-                    initialValues={data.user}
-                    onSubmit={() => {
-                        /* do nothing */
-                    }}
-                >
-                    <Field
-                        variant="horizontal"
-                        name="email"
-                        component={FinalFormInput}
-                        disabled={true}
-                        label={<FormattedMessage id="comet.userPermissions.email" defaultMessage="E-Mail" />}
-                    />
-                    <Field
-                        variant="horizontal"
-                        name="name"
-                        component={FinalFormInput}
-                        disabled={true}
-                        label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
-                    />
-                </FinalForm>
+                {loading || !data ? (
+                    <Loading />
+                ) : (
+                    <FinalForm
+                        mode="edit"
+                        initialValues={data.user}
+                        onSubmit={() => {
+                            /* do nothing */
+                        }}
+                    >
+                        <Field
+                            variant="horizontal"
+                            name="email"
+                            component={FinalFormInput}
+                            disabled={true}
+                            label={<FormattedMessage id="comet.userPermissions.email" defaultMessage="E-Mail" />}
+                        />
+                        <Field
+                            variant="horizontal"
+                            name="name"
+                            component={FinalFormInput}
+                            disabled={true}
+                            label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
+                        />
+                    </FinalForm>
+                )}
             </CardContent>
         </Card>
     );
