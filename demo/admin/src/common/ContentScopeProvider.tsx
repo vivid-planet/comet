@@ -1,4 +1,5 @@
 import {
+    type ContentScope,
     type ContentScopeConfigProps,
     ContentScopeProvider as ContentScopeProviderLibrary,
     type ContentScopeProviderProps,
@@ -8,7 +9,12 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
 } from "@comet/cms-admin";
-import { type ContentScope } from "@src/site-configs";
+import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
+declare module "@comet/cms-admin" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface ContentScope extends BaseContentScope {}
+}
 
 // convenience wrapper for app (Bind Generic)
 export function useContentScope(): UseContentScopeApi<ContentScope> {
@@ -22,7 +28,7 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
 }
 
 export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
-    const user = useCurrentUser<ContentScope>();
+    const user = useCurrentUser();
 
     if (user.allowedContentScopes.length === 0) {
         return (
@@ -32,6 +38,7 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
             </>
         );
     }
+
     return (
         <ContentScopeProviderLibrary<ContentScope> values={user.allowedContentScopes} defaultValue={user.allowedContentScopes[0].scope}>
             {children}

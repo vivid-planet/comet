@@ -2,16 +2,20 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
-type CurrentUserContext<ContentScope extends ContentScopeInterface = ContentScopeInterface> = {
-    currentUser: CurrentUserInterface<ContentScope>;
-    isAllowed: (user: CurrentUserInterface<ContentScope>, permission: string, contentScope?: ContentScope) => boolean;
+export interface ContentScope {
+    [key: string]: unknown;
+}
+
+type CurrentUserContext = {
+    currentUser: CurrentUserInterface;
+    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => boolean;
 };
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
-export interface CurrentUserInterface<ContentScope extends ContentScopeInterface = ContentScopeInterface> {
+export interface CurrentUserInterface {
     id: string;
     name: string;
     email: string;
@@ -69,7 +73,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
         },
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
+            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
                 if (user.email === undefined) return false;
                 return user.permissions.some(
                     (p) =>
@@ -82,10 +86,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     return <CurrentUserContext.Provider value={context}>{children}</CurrentUserContext.Provider>;
 };
 
-export function useCurrentUser<ContentScope extends ContentScopeInterface>(): CurrentUserInterface<ContentScope> {
+export function useCurrentUser(): CurrentUserInterface {
     const ret = useContext(CurrentUserContext);
     if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
-    return ret.currentUser as CurrentUserContext<ContentScope>["currentUser"];
+    return ret.currentUser as CurrentUserContext["currentUser"];
 }
 
 export function useUserPermissionCheck(): (permission: string) => boolean {

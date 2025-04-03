@@ -193,6 +193,7 @@ export { useSiteConfig } from "./siteConfigs/useSiteConfig";
 export { useSiteConfigs } from "./siteConfigs/useSiteConfigs";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
 export { CurrentUserInterface, CurrentUserProvider, useCurrentUser, useUserPermissionCheck } from "./userPermissions/hooks/currentUser";
+export type { ContentScope } from "./userPermissions/hooks/currentUser.tsx";
 export { UserPermissionsUserPageBasicDataPanel } from "./userPermissions/user/basicData/UserBasicData";
 export { StartImpersonationButton, StopImpersonationButton } from "./userPermissions/user/ImpersonationButtons";
 export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/permissions/PermissionsPanel";
