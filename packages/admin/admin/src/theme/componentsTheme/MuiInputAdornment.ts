@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiInputAdornment: GetMuiComponentTheme<"MuiInputAdornment"> = (component, { spacing }) => ({
+export const getMuiInputAdornment: GetMuiComponentTheme<"MuiInputAdornment"> = (component) => ({
     ...component,
     styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
         root: {

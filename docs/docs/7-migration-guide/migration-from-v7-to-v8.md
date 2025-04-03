@@ -373,29 +373,6 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 
 </details>
 
-#### ✅ Vite / SWC
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/update-swc-dependencies.ts
-```
-
-:::
-
-```diff
--        "@swc/plugin-emotion": "^3.0.13",
--        "@vitejs/plugin-react-swc": "^3.7.2",
-+        "@swc/plugin-emotion": "^8.7.2",
-+        "@vitejs/plugin-react-swc": "^3.8.0",
-```
-
-</details>
-
 ### ✅ Add new package @comet/api-generator
 
 <details>
@@ -771,7 +748,7 @@ The React dependency has been bumped to v18.
 
 #### MUI
 
-The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v6.
+The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
 
 1.  Upgrade your MUI dependencies
 
@@ -793,11 +770,11 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     -       "@mui/material": "^5.0.0",
     -       "@mui/system": "^5.0.0",
     -       "@mui/utils": "^5.0.0",
-    +       "@mui/icons-material": "^6.0.0",
-    +       "@mui/lab": "^6.0.0-beta.10",
-    +       "@mui/material": "^6.0.0",
-    +       "@mui/system": "^6.0.0",
-    +       "@mui/utils": "^6.0.0",
+    +       "@mui/icons-material": "^7.0.0",
+    +       "@mui/lab": "^7.0.0-beta.9",
+    +       "@mui/material": "^7.0.0",
+    +       "@mui/system": "^7.0.0",
+    +       "@mui/utils": "^7.0.0",
     ```
 
     </details>
@@ -817,7 +794,9 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     :::
     </details>
 
-3.  Follow the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) to upgrade.
+3.  Follow the official migration guides to upgrade:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
 
 #### MUI X (DataGrid)
 
@@ -893,6 +872,29 @@ Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid,
         }]
     />
 ```
+
+#### ✅ Vite / SWC
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-swc-dependencies.ts
+```
+
+:::
+
+```diff
+-        "@swc/plugin-emotion": "^3.0.13",
+-        "@vitejs/plugin-react-swc": "^3.7.2",
++        "@swc/plugin-emotion": "^8.7.2",
++        "@vitejs/plugin-react-swc": "^3.8.0",
+```
+
+</details>
 
 ### ✅ Add new package @comet/admin-generator
 

@@ -1,6 +1,6 @@
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiInput: GetMuiComponentTheme<"MuiInput"> = (component, { palette, spacing }) => ({
+export const getMuiInput: GetMuiComponentTheme<"MuiInput"> = (component) => ({
     ...component,
     defaultProps: {
         disableUnderline: true,
