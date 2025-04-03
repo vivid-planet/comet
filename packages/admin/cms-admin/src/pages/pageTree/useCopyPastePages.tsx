@@ -4,7 +4,7 @@ import { type ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
 import { usePageTreeConfig } from "../pageTreeConfig";
@@ -17,7 +17,7 @@ export type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument |
 
 export interface PagesClipboard {
     pages: PageClipboard[];
-    scope: ContentScopeInterface;
+    scope: ContentScope;
 }
 
 /**

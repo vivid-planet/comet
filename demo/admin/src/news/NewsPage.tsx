@@ -11,8 +11,7 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
 } from "@comet/admin";
-import { ContentScopeIndicator } from "@comet/cms-admin";
-import { useContentScope } from "@src/common/ContentScopeProvider";
+import { ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
 import { NewsForm } from "./generated/NewsForm";

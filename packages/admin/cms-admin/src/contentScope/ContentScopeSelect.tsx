@@ -19,14 +19,14 @@ import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { type ContentScopeInterface } from "./Provider";
+import { type ContentScope } from "./Provider";
 
-type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
+type Option<Value extends ContentScope = ContentScope> = {
     scope: Value;
     label?: { [Key in keyof Value]?: string };
 };
 
-interface Props<Value extends ContentScopeInterface> {
+interface Props<Value extends ContentScope> {
     value: Value;
     onChange: (value: Value) => void;
     options: Array<Option<Value>>;
@@ -37,7 +37,7 @@ interface Props<Value extends ContentScopeInterface> {
     renderSelectedOption?: (option: Option<Value>) => ReactNode;
 }
 
-export function ContentScopeSelect<Value extends ContentScopeInterface = ContentScopeInterface>({
+export function ContentScopeSelect<Value extends ContentScope = ContentScope>({
     value,
     onChange,
     options,

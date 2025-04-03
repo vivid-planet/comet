@@ -1,9 +1,9 @@
 import { type ReactNode } from "react";
 
 import { ContentScopeSelect } from "./ContentScopeSelect";
-import { type ContentScopeInterface, useContentScope } from "./Provider";
+import { type ContentScope, useContentScope } from "./Provider";
 
-interface ContentScopeControlsProps<Value extends ContentScopeInterface> {
+interface ContentScopeControlsProps<Value extends ContentScope> {
     searchable?: boolean;
     groupBy?: keyof Value;
     icon?: ReactNode;
@@ -11,7 +11,7 @@ interface ContentScopeControlsProps<Value extends ContentScopeInterface> {
 
 // A standard control form for scope
 // Can be easily configured (should fit for 90% of all cases)
-export function ContentScopeControls<S extends ContentScopeInterface = ContentScopeInterface>({
+export function ContentScopeControls<S extends ContentScope = ContentScope>({
     searchable = true,
     icon,
     groupBy,

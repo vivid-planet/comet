@@ -1,8 +1,8 @@
-import { type ContentScopeInterface } from "../contentScope/Provider";
+import { type ContentScope } from "../contentScope/Provider";
 import { useContentLanguageConfig } from "./contentLanguageConfig";
 
 interface UseContentLanguageOptions {
-    scope: ContentScopeInterface;
+    scope: ContentScope;
 }
 
 export function useContentLanguage({ scope }: UseContentLanguageOptions): string {

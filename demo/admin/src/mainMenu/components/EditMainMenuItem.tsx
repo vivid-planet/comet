@@ -24,11 +24,11 @@ import {
     SplitPreview,
     useBlockContext,
     useBlockPreview,
+    useContentScope,
     useSiteConfig,
 } from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";

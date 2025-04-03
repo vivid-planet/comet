@@ -19,10 +19,9 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
+import { BlockPreviewContent, DamImageBlock, useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
