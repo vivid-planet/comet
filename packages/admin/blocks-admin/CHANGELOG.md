@@ -1,5 +1,13 @@
 # @comet/blocks-admin
 
+## 7.18.0
+
+### Patch Changes
+
+-   f496734f8: Prevent the content of `AdminComponentRoot` from being cut off at the top when not rendered inside tabs
+    -   @comet/admin@7.18.0
+    -   @comet/admin-icons@7.18.0
+
 ## 7.17.0
 
 ### Patch Changes
