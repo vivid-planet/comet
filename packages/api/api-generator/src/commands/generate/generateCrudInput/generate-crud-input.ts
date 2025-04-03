@@ -1,4 +1,4 @@
-import { hasCrudFieldFeature } from "@comet/cms-api";
+import { getCrudFieldOption, hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
@@ -383,6 +383,20 @@ export async function generateCrudInput(
             decorators.push(`@Field(() => ID, ${fieldOptions})`);
             decorators.push("@IsUUID()");
             type = "string";
+        } else if (hasCrudFieldFeature(metadata.class, prop.name, "inputType")) {
+            const inputType = getCrudFieldOption(metadata.class, prop.name, "inputType");
+            if (inputType === undefined) {
+                console.warn(`${prop.name}: "inputType" is undefined`);
+                continue;
+            }
+
+            const className = inputType.name;
+            const importPath = findInputClassImportPath(className, `${generatorOptions.targetDirectory}/dto`, metadata);
+            imports.push({ name: className, importPath });
+            decorators.push(`@ValidateNested()`);
+            decorators.push(`@Type(() => ${className})`);
+            decorators.push(`@Field(() => ${className}${prop.nullable ? ", { nullable: true }" : ""})`);
+            type = className;
         } else {
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
