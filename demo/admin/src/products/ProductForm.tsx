@@ -72,9 +72,9 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry"> & {
+type FormValues = Omit<ProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
-    manufacturerCountry?: { id: string };
+    manufacturerCountry?: { id: string; label: string };
 };
 
 // TODO should we use a deep partial here?
@@ -101,15 +101,16 @@ export function ProductForm({ id, width }: FormProps) {
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
-                dimensions: { width },
+                dimensions: width !== undefined ? { width } : undefined,
             };
         }
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
-            manufacturerCountry: filteredData.manufacturerCountry
+            manufacturerCountry: filteredData.manufacturer
                 ? {
-                      id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
+                      id: filteredData.manufacturer?.addressAsEmbeddable.country,
+                      label: filteredData.manufacturer?.addressAsEmbeddable.country,
                   }
                 : undefined,
             lastCheckedAt: filteredData.lastCheckedAt ? new Date(filteredData.lastCheckedAt) : null,
@@ -220,7 +221,7 @@ export function ProductForm({ id, width }: FormProps) {
                                         manufacturerCountries {
                                             nodes {
                                                 id
-                                                used
+                                                label
                                             }
                                         }
                                     }
@@ -229,7 +230,7 @@ export function ProductForm({ id, width }: FormProps) {
 
                             return data.manufacturerCountries.nodes;
                         }}
-                        getOptionLabel={(option) => option.id}
+                        getOptionLabel={(option) => option.label}
                         label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
                         fullWidth
                     />
