@@ -13,7 +13,7 @@ export const BasicStageBlock = withPreview(
     ({ data: { media, heading, text, overlay, alignment, callToActionList } }: PropsWithData<BasicStageBlockData>) => (
         <Root>
             <MediaPhone>
-                <MediaBlock data={media} aspectRatio="1x2" fill />
+                <MediaBlock data={media} aspectRatio="1x2" fill priority />
             </MediaPhone>
             <MediaTablet>
                 <MediaBlock data={media} aspectRatio="1x1" fill />
