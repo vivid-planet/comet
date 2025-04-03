@@ -59,6 +59,7 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
                     active: active,
                 },
             },
+            refetchQueries: ["PaginatedRedirects"],
         });
 
         handleMenuClose();
