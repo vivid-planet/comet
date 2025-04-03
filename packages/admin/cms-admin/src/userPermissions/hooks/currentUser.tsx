@@ -2,13 +2,17 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { type GQLCurrentUserPermission } from "../../graphql.generated";
+import { cleanTypename } from "../../common/cleanTypename";
+import { useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
+
+export interface ContentScope {
+    [key: string]: unknown;
+}
 
 type CurrentUserContext = {
     currentUser: CurrentUserInterface;
-    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => boolean;
+    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => boolean;
 };
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
@@ -16,12 +20,18 @@ export interface CurrentUserInterface {
     id: string;
     name: string;
     email: string;
-    permissions: GQLCurrentUserPermission[];
+    permissions: {
+        permission: string;
+        contentScopes: ContentScope[];
+    }[];
     authenticatedUser: {
         name: string;
         email: string;
     } | null;
-    allowedContentScopes: ContentScopeInterface[];
+    allowedContentScopes: {
+        scope: ContentScope;
+        label: { [key in keyof ContentScope]: string };
+    }[];
     impersonated: boolean;
 }
 
@@ -40,6 +50,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     permission
                     contentScopes
                 }
+                allowedContentScopes {
+                    scope
+                    label
+                }
                 impersonated
             }
         }
@@ -52,15 +66,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: {
-            ...data.currentUser,
-            impersonated: !!data.currentUser.impersonated,
-            authenticatedUser: data.currentUser.authenticatedUser,
-            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
-        },
+        currentUser: cleanTypename(data.currentUser),
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
+            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
                 if (user.email === undefined) return false;
                 return user.permissions.some(
                     (p) =>
