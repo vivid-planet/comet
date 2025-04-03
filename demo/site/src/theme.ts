@@ -57,7 +57,6 @@ export const theme = {
     },
     fontFamily: "Arial, sans-serif",
     breakpoints: {
-        xs: createBreakpoint(0),
         sm: createBreakpoint(600),
         md: createBreakpoint(900),
         lg: createBreakpoint(1200),
