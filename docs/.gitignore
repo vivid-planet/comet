@@ -4,3 +4,4 @@ build
 # Generated files
 .docusaurus
 .cache-loader
+src/generated
