@@ -201,14 +201,7 @@ export const masterMenuData: MasterMenuData = [
         icon: <Snips />,
         route: {
             path: "/user-permissions",
-            render: () => (
-                <UserPermissionsPage
-                    permissionLabels={{
-                        products: <FormattedMessage id="userPermissions.permissions.products" defaultMessage="Products" />,
-                        news: <FormattedMessage id="userPermissions.permissions.news" defaultMessage="News" />,
-                    }}
-                />
-            ),
+            component: UserPermissionsPage,
         },
         requiredPermission: "userPermissions",
     },

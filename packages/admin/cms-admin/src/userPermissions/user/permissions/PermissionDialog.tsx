@@ -8,11 +8,9 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { useContext } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import { LabelsContext } from "../../utils/LabelsContext";
 import {
     type GQLAvailablePermissionsQuery,
     type GQLAvailablePermissionsQueryVariables,
@@ -32,7 +30,6 @@ interface FormProps {
     handleDialogClose: () => void;
 }
 export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: FormProps) => {
-    const { permissionLabels } = useContext(LabelsContext);
     const client = useApolloClient();
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data
@@ -135,11 +132,7 @@ export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: Fo
                                 name="permission"
                                 component={FinalFormSelect}
                                 options={availablePermissionsData.availablePermissions}
-                                getOptionLabel={(permission: string) =>
-                                    permissionLabels && permissionLabels[permission]
-                                        ? permissionLabels[permission]
-                                        : camelCaseToHumanReadable(permission)
-                                }
+                                getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
                                 disabled={disabled}
                                 label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
                             />

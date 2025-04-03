@@ -5,11 +5,10 @@ import { Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import { LabelsContext } from "../../utils/LabelsContext";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import {
@@ -23,7 +22,6 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
     const [permissionId, setPermissionId] = useState<string | "add" | null>(null);
     const [overrideContentScopesId, setOverrideContentScopesId] = useState<string | null>(null);
-    const { permissionLabels } = useContext(LabelsContext);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -57,13 +55,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permission", defaultMessage: "Permission" }),
-            renderCell: ({ row }) => (
-                <Typography variant="subtitle2">
-                    {permissionLabels && permissionLabels[row.permission]
-                        ? permissionLabels[row.permission]
-                        : camelCaseToHumanReadable(row.permission)}
-                </Typography>
-            ),
+            renderCell: ({ row }) => <Typography variant="subtitle2">{camelCaseToHumanReadable(row.permission)}</Typography>,
         },
         {
             field: "source",
