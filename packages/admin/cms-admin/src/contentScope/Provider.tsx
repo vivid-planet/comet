@@ -3,12 +3,12 @@ import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteM
 
 import { defaultCreatePath } from "./utils/defaultCreatePath";
 
-export interface ContentScopeInterface {
+export interface ContentScope {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 }
 
-type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
+type ContentScopeLocation<S extends ContentScope = ContentScope> = {
     createPath: (scope: ContentScopeValues<S>) => string | string[];
     createUrl: (scope: S) => string;
 };
@@ -40,7 +40,7 @@ type NonNullRecord<T> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SetContentScopeAction<S = any> = (state: S) => S;
 
-export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInterface> = {
+export type UseContentScopeApi<S extends ContentScope = ContentScope> = {
     scope: S;
     setScope: (action: SetContentScopeAction<S>) => void;
     match: match;
@@ -49,7 +49,7 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     values: ContentScopeValues<S>;
 };
 
-export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
+export type ContentScopeValues<S extends ContentScope = ContentScope> = Array<{
     scope: S;
     label?: { [P in keyof S]?: string };
 }>;
@@ -60,7 +60,7 @@ const Context = createContext<ContentScopeContext>(defaultContentScopeContext);
 
 const NullValueAsString = "-"; // used to represent null-values in the url
 
-function parseScopeFromRouterMatchParams<S extends ContentScopeInterface = ContentScopeInterface>(params: NonNullRecord<S>): S {
+function parseScopeFromRouterMatchParams<S extends ContentScope = ContentScope>(params: NonNullRecord<S>): S {
     return Object.entries(params).reduce((a, [key, value]) => {
         return {
             ...a,
@@ -69,7 +69,7 @@ function parseScopeFromRouterMatchParams<S extends ContentScopeInterface = Conte
     }, {} as S);
 }
 
-function formatScopeToRouterMatchParams<S extends ContentScopeInterface = ContentScopeInterface>(scope: Partial<S>): NonNullRecord<S> {
+function formatScopeToRouterMatchParams<S extends ContentScope = ContentScope>(scope: Partial<S>): NonNullRecord<S> {
     return Object.entries(scope).reduce((a, [key, value]) => {
         return {
             ...a,
@@ -78,7 +78,7 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
     }, {} as NonNullRecord<S>);
 }
 
-function defaultCreateUrl(scope: ContentScopeInterface) {
+function defaultCreateUrl(scope: ContentScope) {
     const formattedMatchParams = formatScopeToRouterMatchParams(scope);
     return Object.entries(formattedMatchParams).reduce((a, [, value]) => `${a}/${value}`, "");
 }
@@ -86,7 +86,7 @@ function defaultCreateUrl(scope: ContentScopeInterface) {
 // @TODO: scope can no longer be undefined
 // @TODO: remove supported attribute
 // @TODO: provide default empty scope "{}"
-export function useContentScope<S extends ContentScopeInterface = ContentScopeInterface>(): UseContentScopeApi<S> {
+export function useContentScope<S extends ContentScope = ContentScope>(): UseContentScopeApi<S> {
     const context = useContext(Context);
     const history = useHistory();
     const matchContextScope = useRouteMatch<NonNullRecord<S>>(context?.path || "");
@@ -116,14 +116,14 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
     };
 }
 
-export interface ContentScopeProviderProps<S extends ContentScopeInterface = ContentScopeInterface> {
+export interface ContentScopeProviderProps<S extends ContentScope = ContentScope> {
     defaultValue: S;
     values: ContentScopeValues<S>;
     children: (p: { match: match<NonNullRecord<S>> }) => ReactNode;
     location?: ContentScopeLocation<S>;
 }
 
-export function ContentScopeProvider<S extends ContentScopeInterface = ContentScopeInterface>({
+export function ContentScopeProvider<S extends ContentScope = ContentScope>({
     children,
     defaultValue,
     values,
