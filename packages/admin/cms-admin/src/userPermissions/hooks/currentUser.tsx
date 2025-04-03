@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
+import { removeTypenameKeys } from "../../common/removeTypenameKeys";
 import { useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
@@ -65,12 +66,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: {
-            ...data.currentUser,
-            impersonated: !!data.currentUser.impersonated,
-            authenticatedUser: data.currentUser.authenticatedUser,
-            allowedContentScopes: data.currentUser.allowedContentScopes.map((scope) => ({ scope: scope.scope, label: scope.label })),
-        },
+        currentUser: removeTypenameKeys(data.currentUser),
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
@@ -89,7 +85,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
 export function useCurrentUser(): CurrentUserInterface {
     const ret = useContext(CurrentUserContext);
     if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
-    return ret.currentUser as CurrentUserContext["currentUser"];
+    return ret.currentUser;
 }
 
 export function useUserPermissionCheck(): (permission: string) => boolean {
