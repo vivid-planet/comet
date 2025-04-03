@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { removeTypenameKeys } from "../../common/removeTypenameKeys";
+import { cleanTypename } from "../../common/cleanTypename";
 import { useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
@@ -66,7 +66,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: removeTypenameKeys(data.currentUser),
+        currentUser: cleanTypename(data.currentUser),
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
