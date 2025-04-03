@@ -1,5 +1,6 @@
 # @comet/cms-api
 
+<<<<<<< HEAD
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
@@ -124,6 +125,13 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+=======
+## 7.18.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.18.0
+>>>>>>> main
 
 ## 7.17.0
 
