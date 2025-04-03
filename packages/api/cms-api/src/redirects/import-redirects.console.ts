@@ -44,7 +44,7 @@ export class ImportRedirectsConsole {
         let errors = 0;
 
         for (const row of rows) {
-            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"]);
+            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"], { scope: row["scope"] });
 
             const where: FilterQuery<RedirectInterface> = { source: row.source };
             if (row["scope"]) {
