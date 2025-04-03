@@ -592,10 +592,9 @@ export function generateGrid(
         usePersistentColumnState,
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
-    import { BlockPreviewContent } from "@comet/cms-admin";
+    import { BlockPreviewContent, useContentScope } from "@comet/cms-admin";
     import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
     import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-    import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
         GQL${gqlTypePlural}GridQueryVariables,
