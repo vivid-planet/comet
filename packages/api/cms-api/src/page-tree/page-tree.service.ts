@@ -197,6 +197,12 @@ export class PageTreeService {
             newSlug = await this.findNextAvailableSlug(existingNode.slug, input.parentId, existingNode.scope);
         }
 
+        const redirectWithSamePath = await this.redirectsService.isRedirectSourceAvailable(requestedPath, { domain: "main" });
+
+        if (!redirectWithSamePath) {
+            throw new Error("Can't move page as there is an existing redirect for this path");
+        }
+
         const parentId = input.parentId;
 
         if (input.pos !== existingNode.pos || input.parentId !== existingNode.parentId) {
