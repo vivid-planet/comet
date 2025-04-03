@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 8.0.0-beta.4
+
+### Minor Changes
+
+- 0328fa3: API Generator: Add support for filtering `ID` fields
+
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
