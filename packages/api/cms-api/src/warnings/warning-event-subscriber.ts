@@ -1,6 +1,9 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { ModuleRef } from "@nestjs/core";
+import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { WarningService } from "./warning.service";
@@ -11,6 +14,7 @@ export class WarningEventSubscriber implements EventSubscriber {
         readonly entityManager: EntityManager,
         private readonly orm: MikroORM,
         private readonly warningService: WarningService,
+        private readonly moduleRef: ModuleRef,
     ) {
         entityManager.getEventManager().registerSubscriber(this);
     }
@@ -52,7 +56,18 @@ export class WarningEventSubscriber implements EventSubscriber {
                     rootPath: "root",
                 });
                 for (const node of flatBlocks.depthFirst()) {
-                    const warnings = node.block.warnings();
+                    const warningsOrWarningsService = await node.block.warnings();
+                    let warnings: BlockWarning[] = [];
+
+                    if (this.isBlockWarningService(warningsOrWarningsService)) {
+                        const warningsService = warningsOrWarningsService;
+                        const service: BlockWarningsServiceInterface = await this.moduleRef.resolve(warningsService);
+
+                        warnings = await service.warnings(node.block);
+                    } else {
+                        warnings = warningsOrWarningsService;
+                    }
+
                     await this.warningService.updateWarningsForBlock(warnings, {
                         rootEntityName: entity.name,
                         rootColumnName: key,
@@ -63,5 +78,11 @@ export class WarningEventSubscriber implements EventSubscriber {
                 }
             }
         }
+    }
+
+    private isBlockWarningService(
+        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
+    ): transformResponse is Type<BlockWarningsServiceInterface> {
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 }
