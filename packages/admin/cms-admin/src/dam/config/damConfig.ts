@@ -15,6 +15,7 @@ export interface DamConfig {
     };
     uploadsMaxFileSize: number;
     allowedImageAspectRatios: string[];
+    maxSrcResolution: number;
 }
 
 export function useDamConfig(): DamConfig {

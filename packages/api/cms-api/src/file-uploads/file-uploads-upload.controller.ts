@@ -3,7 +3,7 @@ import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@
 import { rimraf } from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
-import { FileUploadInput } from "../dam/files/dto/file-upload.input";
+import { FileUploadInput } from "../file-utils/file-upload.input";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";

@@ -8,7 +8,6 @@ import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import { type GQLLicenseInput } from "../../../graphql.generated";
 import { createHttpClient } from "../../../http/createHttpClient";
-import { useImgproxyConfig } from "../../../imgproxy/imgproxyConfig";
 import { useDamConfig } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
@@ -136,7 +135,6 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]):
 export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
     const { apiUrl } = useCometConfig();
     const damConfig = useDamConfig();
-    const imgproxyConfig = useImgproxyConfig();
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
     const scope = useDamScope();
@@ -443,7 +441,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number } | string>;
 
                     if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
-                        addValidationError(file, <MaxResolutionError maxResolution={imgproxyConfig.maxSrcResolution} />);
+                        addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
                     } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
                         const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
