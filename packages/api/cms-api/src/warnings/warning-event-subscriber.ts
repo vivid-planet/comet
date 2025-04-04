@@ -3,6 +3,7 @@ import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
+import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
@@ -60,9 +61,19 @@ export class WarningEventSubscriber implements EventSubscriber {
                     rootPath: "root",
                 });
                 for (const node of flatBlocks.depthFirst()) {
-                    const warnings = node.block.warnings();
-
                     const startDate = new Date();
+                    const warningsOrWarningsService = await node.block.warnings();
+                    let warnings: BlockWarning[] = [];
+
+                    if (this.isBlockWarningService(warningsOrWarningsService)) {
+                        const warningsService = warningsOrWarningsService;
+                        const service: BlockWarningsServiceInterface = await this.moduleRef.resolve(warningsService);
+
+                        warnings = await service.warnings(node.block);
+                    } else {
+                        warnings = warningsOrWarningsService;
+                    }
+
                     const sourceInfo = {
                         rootEntityName: entity.name,
                         rootColumnName: key,
@@ -70,6 +81,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                         rootPrimaryKey: args.meta.primaryKeys[0],
                         jsonPath: node.pathToString(),
                     };
+
                     await this.warningService.saveWarnings({
                         warnings,
                         type: "Block",
@@ -113,5 +125,10 @@ export class WarningEventSubscriber implements EventSubscriber {
     private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
         // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
         return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
+    }
+    private isBlockWarningService(
+        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
+    ): transformResponse is Type<BlockWarningsServiceInterface> {
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 }
