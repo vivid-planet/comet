@@ -108,7 +108,7 @@ describe("AdminGenerator TsMorph Parse Config", () => {
             });
         `);
         expect(config).toEqual({
-            foo: 123,
+            foo: "__COMET_UNSUPPORTED", //unsupported by ts-morph parser
         });
     });
 

@@ -138,10 +138,12 @@ function astNodeToJson(node: Node, path: string): any {
     } else if (node.getKind() == SyntaxKind.ArrowFunction) {
         if (supportedInlineCodePaths.includes(path)) {
             const body = (node as ArrowFunction).getBody();
-            return {
+            const ret = {
                 code: node.getText(),
                 imports: findUsedImports(body),
             };
+            node.replaceWithText(`"__COMET_CODE"`);
+            return ret;
         } else {
             throw new Error(`Inline Function is not allowed here and calling the function is not supported: ${path}`);
         }
@@ -156,35 +158,27 @@ function astNodeToJson(node: Node, path: string): any {
             for (const reference of referencedSymbol.getReferences()) {
                 const referenceNode = reference.getNode();
                 const importDeclaration = referenceNode.getFirstAncestorByKind(SyntaxKind.ImportDeclaration);
-                const variableDeclaration = referenceNode.getFirstAncestorByKind(SyntaxKind.VariableDeclaration);
                 if (importDeclaration) {
                     for (const namedImport of importDeclaration.getNamedImports()) {
                         if ((namedImport.getAliasNode() || namedImport.getNameNode())?.getText() == referenceNode.getText()) {
                             if (supportedImportPaths.includes(path)) {
-                                return {
+                                const ret = {
                                     name: namedImport.getNameNode().getText(),
                                     import: importDeclaration.getModuleSpecifierValue(),
                                 };
+                                node.replaceWithText(`"__COMET_IMPORT"`);
+                                return ret;
                             } else {
                                 throw new Error(`Following the import is not supported: ${path} ${namedImport.getText()}`);
                             }
                         }
                     }
-                } else if (variableDeclaration) {
-                    if (variableDeclaration.getName() == node.getText()) {
-                        const variableInitializer = variableDeclaration.getInitializer();
-                        if (variableInitializer) {
-                            return astNodeToJson(variableInitializer, path);
-                        } else {
-                            throw new Error(`Initializer is required for variableDeclaration '${variableDeclaration.getName()}'`);
-                        }
-                    }
                 }
             }
         }
-        throw new Error(`Unsupported identifier '${node.getText()}', only imports and are variable declarations with initializer are supported`);
+        return "__COMET_UNSUPPORTED";
     } else {
-        throw new Error(`Unsupported expression Kind ${node.getKindName()}`);
+        return "__COMET_UNSUPPORTED";
     }
 }
 
@@ -198,6 +192,8 @@ function exportedDeclarationToJson(node: ExportedDeclarations): any {
         } else {
             throw new Error(`Initializer is required for variableDeclaration '${variableDeclaration.getName()}'`);
         }
+    } else if (node.getKind() == SyntaxKind.ObjectLiteralExpression) {
+        return astNodeToJson(node, "");
     } else if (node.getKind() == SyntaxKind.CallExpression) {
         const callExpression = node as CallExpression;
         if (callExpression.getExpression().getText() == "defineConfig") {
