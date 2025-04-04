@@ -108,6 +108,7 @@ export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { useBuildInformation } from "./common/header/about/build-information/useBuildInformation";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
+export { LogoutButton } from "./common/logoutButton/LogoutButton";
 export type { TextMatch } from "./common/MarkedMatches";
 export { MarkedMatches } from "./common/MarkedMatches";
 export { findTextMatches } from "./common/MarkedMatches";
