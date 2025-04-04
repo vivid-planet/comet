@@ -35,6 +35,7 @@ import { Page } from "./documents/pages/Page";
 import { getMessages } from "./lang";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
 import { pageTreeCategories } from "./pageTree/pageTreeCategories";
+import { RedirectDependency } from "./redirects/RedirectsDependency";
 
 const GlobalStyle = () => (
     <Global
@@ -95,6 +96,7 @@ export function App() {
                                     Page,
                                     Link,
                                     News: NewsDependency,
+                                    Redirect: RedirectDependency,
                                     DamFile: createDamFileDependency(),
                                 }}
                             >

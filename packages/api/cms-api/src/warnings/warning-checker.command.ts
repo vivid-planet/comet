@@ -4,8 +4,8 @@ import { Injectable, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
-import { Block, BlockData } from "src/blocks/block";
 
+import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
 import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
@@ -72,8 +72,20 @@ export class WarningCheckerCommand extends CommandRunner {
                             rootPath: "root",
                         });
                         for (const node of flatBlocks.depthFirst()) {
-                            await this.warningService.saveWarnings({
-                                warnings: node.block.warnings(),
+                            const warningsOrWarningsService = await node.block.warnings();
+                            let warnings: BlockWarning[] = [];
+
+                            if (this.isBlockWarningService(warningsOrWarningsService)) {
+                                const warningsService = warningsOrWarningsService;
+                                const service: BlockWarningsServiceInterface = await this.moduleRef.resolve(warningsService);
+
+                                warnings = await service.warnings(node.block);
+                            } else {
+                                warnings = warningsOrWarningsService;
+                            }
+
+                            this.warningService.saveWarnings({
+                                warnings,
                                 type: "Block",
                                 sourceInfo: {
                                     rootEntityName: tableName,
@@ -183,6 +195,12 @@ export class WarningCheckerCommand extends CommandRunner {
     private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
         // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
         return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
+    }
+
+    private isBlockWarningService(
+        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
+    ): transformResponse is Type<BlockWarningsServiceInterface> {
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 
     // Group root block data by tableName and className to reduce database calls.
