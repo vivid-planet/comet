@@ -50,7 +50,7 @@ export interface MasterLayoutProps
         contentWrapper: "div";
     }> {
     children: ReactNode;
-    menuComponent: ComponentType;
+    menuComponent?: ComponentType;
     headerComponent?: ComponentType;
     openMenuByDefault?: boolean;
     /**
@@ -101,17 +101,18 @@ export function MasterLayout(inProps: MasterLayoutProps) {
                 <CssBaseline />
                 <Root {...slotProps?.root} {...restProps}>
                     <Header {...slotProps?.header}>
-                        {HeaderComponent ? (
-                            <HeaderComponent />
-                        ) : (
+                        {HeaderComponent && <HeaderComponent />}
+                        {!HeaderComponent && Menu && (
                             <AppHeader>
                                 <AppHeaderMenuButton onClick={toggleOpen} />
                             </AppHeader>
                         )}
                     </Header>
-                    <MenuWrapper {...slotProps?.menuWrapper} ref={menuRef}>
-                        <Menu />
-                    </MenuWrapper>
+                    {Menu && (
+                        <MenuWrapper {...slotProps?.menuWrapper} ref={menuRef}>
+                            <Menu />
+                        </MenuWrapper>
+                    )}
                     <ContentWrapper
                         {...slotProps?.contentWrapper}
                         style={

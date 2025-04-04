@@ -6,9 +6,9 @@ import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 import { useTopOffset } from "../helpers/useTopOffset";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 
-export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
+export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight" | "center";
 
-type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight"> & {
+type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight" | "center"> & {
     topOffset: number;
 };
 
@@ -21,6 +21,7 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
             ownerState.disablePaddingBottom && "disablePaddingBottom",
             ownerState.disablePadding && "disablePadding",
             ownerState.fullHeight && "fullHeight",
+            ownerState.center && "center",
         ];
     },
 })(
@@ -64,6 +65,11 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
                 padding: 0;
             }
         `}
+
+        ${ownerState.center &&
+        css`
+            text-align: center;
+        `}
     `,
 );
 
@@ -73,10 +79,11 @@ export interface MainContentProps extends ThemedComponentBaseProps {
     disablePaddingBottom?: boolean;
     disablePadding?: boolean;
     fullHeight?: boolean;
+    center?: boolean;
 }
 
 export function MainContent(inProps: MainContentProps) {
-    const { children, fullHeight, disablePaddingTop, disablePaddingBottom, disablePadding, ...restProps } = useThemeProps({
+    const { children, fullHeight, disablePaddingTop, disablePaddingBottom, disablePadding, center, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminMainContent",
     });
@@ -87,6 +94,7 @@ export function MainContent(inProps: MainContentProps) {
         disablePaddingTop,
         disablePaddingBottom,
         disablePadding,
+        center,
         topOffset: useTopOffset(mainRef),
     };
 

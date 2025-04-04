@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Loading } from "@comet/admin";
+import { InlineAlert, Loading, MainContent, MasterLayout } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
@@ -46,7 +46,13 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     `);
 
     if (error) {
-        return <>Cannot load user: {error.message}</>;
+        return (
+            <MasterLayout>
+                <MainContent center>
+                    <InlineAlert severity="error" description={error.message} />
+                </MainContent>
+            </MasterLayout>
+        );
     }
 
     if (!data) return <Loading behavior="fillPageHeight" />;
