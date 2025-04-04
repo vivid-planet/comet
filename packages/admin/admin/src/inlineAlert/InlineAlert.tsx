@@ -84,7 +84,7 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
             warning: <FormattedMessage defaultMessage="Warning" id="comet.inlineAlert.warning.title" />,
             info: <FormattedMessage defaultMessage="Info" id="comet.inlineAlert.info.title" />,
         },
-        description,
+        description: _description,
         descriptionMapping = {
             error: (
                 <FormattedMessage
@@ -100,18 +100,18 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
         slotProps = {},
     } = useThemeProps({ props: inProps, name: "CometAdminInlineAlert" });
 
+    const description = _description ?? descriptionMapping[severity];
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             <IconContainer {...slotProps.iconContainer}>{icon ?? iconMapping[severity]}</IconContainer>
-
             <Title variant="h5" {...slotProps.title}>
                 {title ?? titleMapping[severity]}
             </Title>
-
-            <Description variant="body2" {...slotProps.description}>
-                {description ?? descriptionMapping[severity]}
-            </Description>
-
+            {description && (
+                <Description variant="body2" {...slotProps.description}>
+                    {description}
+                </Description>
+            )}
             {actions && <ActionsContainer {...slotProps.actionsContainer}>{actions}</ActionsContainer>}
         </Root>
     );
