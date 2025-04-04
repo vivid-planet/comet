@@ -16,7 +16,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { DataGridPro, type DataGridProProps, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { useIntl } from "react-intl";
+import { FormattedNumber, useIntl } from "react-intl";
 
 import {
     type GQLProductsGridQuery,
@@ -86,6 +86,9 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
             field: "price",
             headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
             type: "number",
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
             flex: 1,
             minWidth: 150,
             maxWidth: 150,
