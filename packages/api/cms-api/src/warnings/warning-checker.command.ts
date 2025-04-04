@@ -1,10 +1,12 @@
 import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { ModuleRef } from "@nestjs/core";
 import { Command, CommandRunner } from "nest-commander";
-import { Block, BlockData } from "src/blocks/block";
 
+import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
 import { Warning } from "./entities/warning.entity";
@@ -34,6 +36,7 @@ export class WarningCheckerCommand extends CommandRunner {
         private readonly entityManager: EntityManager,
         @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
         private readonly warningService: WarningService,
+        private readonly moduleRef: ModuleRef,
     ) {
         super();
     }
@@ -69,7 +72,17 @@ export class WarningCheckerCommand extends CommandRunner {
                             rootPath: "root",
                         });
                         for (const node of flatBlocks.depthFirst()) {
-                            const warnings = node.block.warnings();
+                            const warningsOrWarningsService = await node.block.warnings();
+                            let warnings: BlockWarning[] = [];
+
+                            if (this.isBlockWarningService(warningsOrWarningsService)) {
+                                const warningsService = warningsOrWarningsService;
+                                const service: BlockWarningsServiceInterface = await this.moduleRef.resolve(warningsService);
+
+                                warnings = await service.warnings(node.block);
+                            } else {
+                                warnings = warningsOrWarningsService;
+                            }
 
                             if (warnings.length > 0) {
                                 for (const warning of warnings) {
@@ -96,6 +109,12 @@ export class WarningCheckerCommand extends CommandRunner {
 
         // remove all Block-Warnings that are not present anymore
         await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: startDate } });
+    }
+
+    private isBlockWarningService(
+        transformResponse: Type<BlockWarningsServiceInterface> | BlockWarning[],
+    ): transformResponse is Type<BlockWarningsServiceInterface> {
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
     }
 
     // Group root block data by tableName and className to reduce database calls.
