@@ -1,3 +1,4 @@
+import { InlineAlert, MainContent, MasterLayout } from "@comet/admin";
 import {
     type ContentScopeConfigProps,
     ContentScopeProvider as ContentScopeProviderLibrary,
@@ -10,6 +11,7 @@ import {
     useCurrentUser,
 } from "@comet/cms-admin";
 import { type ContentScope } from "@src/site-configs";
+import { FormattedMessage } from "react-intl";
 
 // convenience wrapper for app (Bind Generic)
 export function useContentScope(): UseContentScopeApi<ContentScope> {
@@ -37,10 +39,17 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
 
     if (user.allowedContentScopes.length === 0) {
         return (
-            <>
-                Error: user does not have access to any scopes.
-                {user.impersonated && <StopImpersonationButton />}
-            </>
+            <MasterLayout>
+                <MainContent center>
+                    <InlineAlert
+                        severity="info"
+                        description={
+                            <FormattedMessage id="contentScopeProvider.noScopes" defaultMessage="User does not have access to any scopes." />
+                        }
+                        actions={user.impersonated && <StopImpersonationButton />}
+                    />
+                </MainContent>
+            </MasterLayout>
         );
     }
 

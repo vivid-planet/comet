@@ -109,8 +109,8 @@ export function App() {
                     <MuiThemeProvider theme={theme}>
                         <DndProvider options={HTML5toTouch}>
                             <SnackbarProvider>
-                                <ErrorDialogHandler />
                                 <CurrentUserProvider>
+                                    <ErrorDialogHandler />
                                     <RouterBrowserRouter>
                                         <GlobalStyle />
                                         <ContentScopeProvider>
