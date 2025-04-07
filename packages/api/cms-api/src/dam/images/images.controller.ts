@@ -9,6 +9,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { ScaledImagesCacheService } from "../../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { BASIC_TYPES, MODERN_TYPES } from "../../file-utils/images.constants";
 import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "../../file-utils/images.util";
 import { Extension, Gravity, ResizingType } from "../../imgproxy/imgproxy.enum";
@@ -17,7 +18,6 @@ import { RequiredPermission } from "../../user-permissions/decorators/required-p
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { FocalPoint } from "../common/enums/focal-point.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";

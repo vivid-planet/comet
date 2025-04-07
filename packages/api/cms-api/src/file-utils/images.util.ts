@@ -1,6 +1,6 @@
 import { mediaType } from "@hapi/accept";
 
-import { FocalPoint } from "../dam/common/enums/focal-point.enum";
+import { FocalPoint } from "./focal-point.enum";
 
 interface ImageDimensions {
     width: number;
