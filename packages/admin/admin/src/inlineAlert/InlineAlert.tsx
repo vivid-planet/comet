@@ -5,7 +5,7 @@ import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { ActionsContainer, Description, IconContainer, Root, Title } from "./InlineAlert.styles";
+import { ActionsContainer, Description, IconContainer, Root, Title } from "./InlineAlert.sc";
 
 export type InlineAlertClassKey = "root" | "iconContainer" | "title" | "description" | "actionsContainer";
 
