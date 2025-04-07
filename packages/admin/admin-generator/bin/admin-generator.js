@@ -2,7 +2,7 @@
 
 require("ts-node").register({
     require: ["tsconfig-paths/register"],
-    transpileOnly: true
+    transpileOnly: true,
 });
 
 require("../lib/adminGenerator");
