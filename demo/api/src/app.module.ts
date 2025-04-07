@@ -138,9 +138,7 @@ export class AppModule {
                     backend: config.blob.storage,
                     cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                 }),
-                ImgproxyModule.register({
-                    imgproxyConfig: config.imgproxy,
-                }),
+                ImgproxyModule.register(config.imgproxy),
                 DamModule.register({
                     damConfig: {
                         apiUrl: config.apiUrl,
