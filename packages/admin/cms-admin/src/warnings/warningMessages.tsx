@@ -5,10 +5,6 @@ export const warningMessages = {
     fileLicenseSoonToExpire: <FormattedMessage id="comet.warnings.file.license.soonToExpire" defaultMessage="File license expires soon" />,
     fileLicenseExpired: <FormattedMessage id="comet.warnings.file.license.expired" defaultMessage="File license has expired" />,
     fileLicenseRequired: <FormattedMessage id="comet.warnings.file.license.required" defaultMessage="File license is missing" />,
-    invalidInternalLinkTarget: (
-        <FormattedMessage id="comet.warnings.internalLinkTargetPageInvalid" defaultMessage="Invalid Target in Page Tree Link" />
-    ),
-    missingInternalLinkTarget: (
-        <FormattedMessage id="comet.warnings.internalLinkTargetPageNotDefined" defaultMessage="Missing Target in Page Tree Link" />
-    ),
+    invalidTarget: <FormattedMessage id="comet.warnings.invalidTarget" defaultMessage="Invalid Target" />,
+    missingTarget: <FormattedMessage id="comet.warnings.missingTarget" defaultMessage="Missing Target" />,
 };
