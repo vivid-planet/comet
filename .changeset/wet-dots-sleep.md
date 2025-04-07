@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Add delete functionality to FileUploadsService
+Add `delete` method to `FileUploadsService`
