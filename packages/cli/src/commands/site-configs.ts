@@ -45,7 +45,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 })),
         };
         str = str.replace(/"({{ site:\/\/configs\/.*\/.* }})"/g, "'$1'"); // convert to single quotes
-        str = await replaceAsync(str, RegExp(`{{ site://configs/(.*)/(.*) }}`, "g"), async (substr, type, env) => {
+        str = await replaceAsync(str, RegExp(`{{ site://configs/(private|public)/([a-z0-9]*) }}`, "g"), async (substr, type, env) => {
             const siteConfigs = await getSiteConfigs(env);
             console.log(`inject-site-configs: - ${substr} (${siteConfigs.length} sites)`);
             if (replacerFunctions[type] == undefined) {
