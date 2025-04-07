@@ -137,7 +137,7 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
             };
         }
 
-        async warnings(): Promise<BlockWarning[]> {
+        warnings(): BlockWarning[] {
             if (!this.htmlTitle) {
                 return [{ severity: "low", message: "missingHtmlTitle" }];
             }

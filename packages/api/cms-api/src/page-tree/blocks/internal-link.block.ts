@@ -32,7 +32,7 @@ class InternalLinkBlockData extends BlockData {
         };
     }
 
-    async warnings() {
+    warnings() {
         return InternalLinkBlockWarningsService;
     }
 }
