@@ -100,7 +100,6 @@ const withFilesSelect = (
 @Injectable()
 export class FilesService {
     protected readonly logger = new Logger(FilesService.name);
-    static readonly UPLOAD_FIELD = "file";
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,

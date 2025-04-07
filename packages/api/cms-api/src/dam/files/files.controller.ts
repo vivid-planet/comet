@@ -72,7 +72,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         ) {}
 
         @Post("upload")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor())
         async upload(
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
@@ -111,7 +111,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @Post("replace-by-filename-and-folder")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor())
         async replaceByFilenameAndFolder(
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
@@ -163,7 +163,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @Post("replace-by-id")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor())
         async replaceById(
             @UploadedFile() file: FileUploadInput,
             @Body() body: ReplaceFileByIdBody,

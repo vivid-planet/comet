@@ -25,7 +25,7 @@ export function createFileUploadsUploadController(options: { public: boolean }):
         ) {}
 
         @Post("upload")
-        @UseInterceptors(FileUploadsFileInterceptor("file"))
+        @UseInterceptors(FileUploadsFileInterceptor())
         async upload(@UploadedFile() file: FileUploadInput): Promise<FileUploadsUploadResponse> {
             const fileUpload = await this.fileUploadsService.upload(file);
 
