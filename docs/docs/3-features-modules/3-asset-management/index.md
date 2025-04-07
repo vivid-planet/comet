@@ -14,4 +14,4 @@ The DAM can be configured to use different storage backends. The following stora
 
 ## Image Optimization
 
-Images are optimized, cropped and resized using [imgproxy](https://imgproxy.net/). The resulting image is stored in the storage backend. The target is to convert each image only once to reduce processing time.
+Images are optimized, cropped, and resized using [imgproxy](https://imgproxy.net/) to provide images optimized for different display sizes and to minimize data transfer. The resulting image is stored in the storage backend. The target is to convert each image only once to reduce processing time.

@@ -2,11 +2,11 @@
 title: Deployment
 ---
 
-Deploying a Comet application requires a couple of [microservices](/docs/#microservices). The following sections describe the necessary services and how to deploy them.
+Deploying a Comet application requires a couple of [microservices](/docs/#microservices). The following sections describe how to deploy them.
 
 ## IDP
 
-Any OIDC-compliant Identity Provider (such as [Auth0](https://auth0.com/)) can be used with Comet DXP.
+Any OIDC-compliant identity provider can be used with Comet DXP. You can either use an existing IDP as SaaS (such as [Auth0](https://auth0.com/)) or self-host your own IDP.
 
 ## Database
 
@@ -22,34 +22,24 @@ For those with budget constraints, the asset storage can be included in the [Doc
 
 ## API, Admin, Site, oauth2-proxy and imgproxy
 
-### oauth2-proxy
-
-The oauth2-proxy is a reverse proxy that authenticates requests using an OIDC-compliant Identity Provider (such as [Auth0](https://auth0.com/)).
-
-### imgproxy
-
-imgproxy is a fast and efficient image proxy service that can be used to optimize and resize images. It is used to optimize images for the DAM.
-
-### Deployment
-
 There are several ways to deploy these microservices. The best deployment method depends on your budget and requirements.
 
-#### Kubernetes
+### Deployment with Kubernetes
 
 Comet DXP is a cloud-native CMS, so Kubernetes is the preferred way to deploy a Comet application, as it provides the most flexibility and supports all enterprise requirements. However, it is usually the most expensive way.
 
 We provide [Helm](https://helm.sh/) Charts, which are available on [GitHub](https://github.com/vivid-planet/comet-charts), for easy deployment.
 
-#### Hosting without Kubernetes
+### Deployment without Kubernetes
 
-Comet applications can also be deployed without Kubernetes. Two options are serverless container platforms (e.g., [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) or [Digital Ocean App Platform](https://docs.digitalocean.com/products/app-platform/)) or [Docker Compose](https://docs.docker.com/compose/).
+Comet applications can also be deployed without Kubernetes. Two possible options are serverless container platforms (e.g., [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) or [Digital Ocean App Platform](https://docs.digitalocean.com/products/app-platform/)) or [Docker Compose](https://docs.docker.com/compose/).
 
 It's important to note that deploying without Kubernetes comes with its own set of limitations. You won't be able to use the `KubernetesModule`. Additionally, [CronJobs](/docs/features-modules/cron-jobs/) must be handled differently and might require an external service. Consequently, you won't be able to use the `CronJobModule`.
 
-##### Serverless
+#### Serverless
 
 Serverless container platforms are a good option for those who want to deploy Comet applications without the complexity of Kubernetes. They are usually cheaper than Kubernetes and provide automatic scaling. An example deployment for the Digital Ocean App Platform can be found [here](https://github.com/vivid-planet/comet-starter/tree/main/.digitalocean).
 
-##### Docker Compose
+#### Docker Compose
 
 For those with budget constraints, Docker Compose can be a viable option for deploying Comet applications. An example deployment for Docker Compose can be found [here](https://github.com/vivid-planet/comet-starter/tree/main/.docker-compose).

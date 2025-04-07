@@ -20,7 +20,7 @@ The following diagram visually highlights these principles.
 
 ![Architecture](./1-getting-started/images/application-baseline.jpg)
 
-A typical COMET DXP application with its microservices is shown in the following diagram.
+A typical COMET DXP application consits of multiple microservices which are shown in the following diagram.
 
 ![Architecture](./1-getting-started/images/architecture.jpg)
 
@@ -32,17 +32,41 @@ Many of the highlighted microservices can be exchanged or omitted.
 
 ## Microservices
 
-A typical COMET DXP Application has an API, an Admin, and optionally multiple sites.
+Some microservices are used as existing solutions and only need to be configured. Others are custom-built for the application.
 
-### API
+### Existing Microservices
+
+The following microservices are existing solutions that are used as-is and only need to be configured.
+
+#### Database
+
+We persist our data in [PostgreSQL](https://www.postgresql.org/) database.
+
+#### Asset Storage
+
+DAM assets and resized images are stored in a storage backend.
+
+#### oauth2-proxy and Identity Provider (IDP)
+
+The [oauth2-proxy](https://oauth2-proxy.github.io/oauth2-proxy/) is a reverse proxy that authenticates requests using an OIDC-compliant Identity Provider.
+
+#### imgproxy
+
+[imgproxy](https://imgproxy.net/) is a fast and efficient image proxy service that can be used to optimize and resize images. It is used to optimize images for the DAM.
+
+### Custom Microservices
+
+The following microservices are custom-built for the application.
+
+#### API
 
 Built with Typescript based on [NestJS](https://nestjs.com/). NestJS is an aggregator for a lot of well-known libraries. NestJS applications are structured in modules and rely heavily on [Dependency Injection](https://inversify.io/) (DI).
 
 Interaction with the API is possible using [GraphQL](https://graphql.org/) except for uploading files where REST is used. We use [ApolloServer](https://www.apollographql.com/) for creating our GraphQL API. The GraphQL schema is generated using a code-first approach, where the schema is defined programmatically.
 
-We persist our data in [PostgreSQL](https://www.postgresql.org/) database. As a connector from our API to the database, we use [MikroORM](https://mikro-orm.io/).
+As a connector from our API to the database, we use [MikroORM](https://mikro-orm.io/).
 
-### Admin
+#### Admin
 
 The admin provides interfaces for managing data. It is built using [React](https://reactjs.org/) with Typescript. We create our admin applications using [MUI](https://mui.com/) design library. For interaction with the API we rely on [ApolloClient](https://www.apollographql.com/docs/react/), the counterpart to ApolloServer.
 
@@ -51,7 +75,7 @@ Other core libraries in use:
 -   [FinalForm](https://final-form.org/react) for creating Forms
 -   [ReactRouter](https://reactrouter.com/) for navigation
 
-### Site
+#### Site
 
 Consumer for the data. This part is optional because we are headless. Also, multiple sites for different clients (e.g., website and mobile app) can coexist.
 
