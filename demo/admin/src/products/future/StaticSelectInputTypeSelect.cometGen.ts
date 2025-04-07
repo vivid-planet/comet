@@ -1,8 +1,8 @@
-import { type FormConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
-export const StaticSelectInputTypeSelect: FormConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     fragmentName: "StaticSelectInputTypeSelect",
@@ -31,4 +31,4 @@ export const StaticSelectInputTypeSelect: FormConfig<GQLProduct> = {
             ],
         },
     ],
-};
+});
