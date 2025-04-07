@@ -17,13 +17,13 @@ export class InternalLinkBlockWarningsService implements BlockWarningsServiceInt
             const linkedPageTreeNode = await this.pageTreeRepository.findOne({ id: block.targetPageId });
             if (!linkedPageTreeNode) {
                 warnings.push({
-                    message: "invalidInternalLinkTarget",
+                    message: "invalidTarget",
                     severity: "high",
                 });
             }
         } else {
             warnings.push({
-                message: "missingInternalLinkTarget",
+                message: "missingTarget",
                 severity: "high",
             });
         }
