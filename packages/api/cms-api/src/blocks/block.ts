@@ -73,7 +73,7 @@ export interface BlockDataInterface {
     transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformBlockResponse>;
     transformToSave(): TraversableTransformBlockResponse;
     indexData(): BlockIndexData;
-    warnings(): Promise<Type<BlockWarningsServiceInterface> | BlockWarning[]>;
+    warnings(): BlockWarning[] | Promise<BlockWarning[]> | Type<BlockWarningsServiceInterface>;
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,7 +95,7 @@ export abstract class BlockData implements BlockDataInterface {
         return {};
     }
 
-    async warnings(): Promise<Type<BlockWarningsServiceInterface> | BlockWarning[]> {
+    warnings(): BlockWarning[] | Promise<BlockWarning[]> | Type<BlockWarningsServiceInterface> {
         return [];
     }
 
