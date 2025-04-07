@@ -8,7 +8,7 @@ export default {
 export const IconUsage = () => {
     return (
         <Grid container spacing={4}>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Card variant="outlined">
                     <CardContent>
                         <Typography variant="h3">Simple Icon rendering</Typography>
@@ -18,7 +18,7 @@ export const IconUsage = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Card variant="outlined">
                     <CardContent>
                         <Typography variant="h3">Icon Sizes</Typography>
@@ -38,7 +38,7 @@ export const IconUsage = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Card variant="outlined">
                     <CardContent>
                         <Typography variant="h3">Colors</Typography>

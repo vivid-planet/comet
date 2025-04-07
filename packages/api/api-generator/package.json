@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.0.0-beta.1",
+    "version": "8.0.0-beta.3",
     "repository": {
         "directory": "packages/api/api-generator",
         "type": "git",
@@ -25,7 +25,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-        "test:watch": "jest --watch"
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
     },
     "dependencies": {
         "@comet/cms-api": "workspace:*",
@@ -36,8 +36,9 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
-        "@mikro-orm/cli": "^6.4.9",
-        "@mikro-orm/postgresql": "^6.4.9",
+        "@mikro-orm/cli": "^6.4.10",
+        "@mikro-orm/core": "^6.4.10",
+        "@mikro-orm/postgresql": "^6.4.10",
         "@nestjs/graphql": "^13.0.3",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.13.10",

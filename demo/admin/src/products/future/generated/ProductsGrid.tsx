@@ -17,8 +17,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
-    ToolbarActions,
-    ToolbarItem,
     Tooltip,
     useBufferedRowCount,
     useDataGridExcelExport,
@@ -56,18 +54,21 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        title
-        price
-        type
         category {
             title
         }
-        inStock
+        title
         description
+        price
+        inStock
+        type
         availableSince
         createdAt
         manufacturer {
             name
+        }
+        tags {
+            title
         }
     }
 `;
@@ -105,31 +106,25 @@ interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
 function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <CrudMoreActionsMenu
-                    slotProps={{
-                        button: {
-                            responsive: true,
-                        },
-                    }}
-                    overallActions={[
-                        {
-                            label: <FormattedMessage {...messages.downloadAsExcel} />,
-                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                            onClick: () => exportApi.exportGrid(),
-                            disabled: exportApi.loading,
-                        },
-                    ]}
-                />
-                {toolbarAction}
-            </ToolbarActions>
+            <CrudMoreActionsMenu
+                slotProps={{
+                    button: {
+                        responsive: true,
+                    },
+                }}
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                ]}
+            />
+            {toolbarAction}
         </DataGridToolbar>
     );
 }
@@ -169,13 +164,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
-                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
-                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="Tie" />,
                 };
                 const inStockLabels: Record<string, ReactNode> = {
-                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
-                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.outOfStock" defaultMessage="Out of stock" />,
                 };
                 return (
                     <GridCellContent
@@ -226,14 +221,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             flex: 1,
             visible: theme.breakpoints.down("md"),
             minWidth: 200,
-        },
-        {
-            field: "title",
-            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
-            flex: 1,
-            visible: theme.breakpoints.up("md"),
-            minWidth: 200,
-            maxWidth: 250,
         },
         {
             field: "description",
@@ -332,6 +319,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "tags",
+            headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
+            sortable: false,
+            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
             flex: 1,
             minWidth: 150,
         },

@@ -10,7 +10,6 @@ import {
     RouterTab,
     RouterTabs,
     TextField,
-    ToolbarActions,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { DialogContent, Typography } from "@mui/material";
@@ -75,7 +74,7 @@ function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
             <FillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            {toolbarAction}
         </DataGridToolbar>
     );
 }

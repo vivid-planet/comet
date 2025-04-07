@@ -37,7 +37,7 @@ interface FormProps {
     slug: string;
 }
 
-export function ProductForm({ id, type, description, slug }: FormProps) {
+export function IdFieldInForm({ id, type, description, slug }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();

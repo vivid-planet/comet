@@ -1,5 +1,29 @@
 # @comet/api-generator
 
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- @comet/cms-api@8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+### Patch Changes
+
+- 0ee3e04: Exit without an error code when no entities are found
+- Updated dependencies [f904b71]
+- Updated dependencies [56064fc]
+- Updated dependencies [23f393b]
+- Updated dependencies [092e96e]
+    - @comet/cms-api@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes

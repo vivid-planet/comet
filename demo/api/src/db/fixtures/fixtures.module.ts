@@ -1,4 +1,4 @@
-import { DependenciesModule } from "@comet/cms-api";
+import { AttachedDocument, DependenciesModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
@@ -8,6 +8,7 @@ import { Link } from "@src/documents/links/entities/link.entity";
 import { LinksModule } from "@src/documents/links/links.module";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PagesModule } from "@src/documents/pages/pages.module";
+import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product } from "@src/products/entities/product.entity";
 
@@ -33,6 +34,7 @@ import { LinkBlockFixtureService } from "./generators/blocks/navigation/link-blo
 import { LinkListBlockFixtureService } from "./generators/blocks/navigation/link-list-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./generators/blocks/navigation/standalone-call-to-action-list-block-fixture.service";
 import { TextLinkBlockFixtureService } from "./generators/blocks/navigation/text-link-block-fixture.service";
+import { SliderBlockFixtureService } from "./generators/blocks/slider-fixture.service";
 import { BasicStageBlockFixtureService } from "./generators/blocks/stage/basic-stage-block-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./generators/blocks/teaser/billboard-teaser-block-fixture.service";
 import { TeaserBlockFixtureService } from "./generators/blocks/teaser/teaser-block-fixture.service";
@@ -55,7 +57,13 @@ import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.
 import { VideoFixtureService } from "./generators/video-fixture.service";
 
 @Module({
-    imports: [ConfigModule, PagesModule, LinksModule, DependenciesModule, MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer])],
+    imports: [
+        ConfigModule,
+        PagesModule,
+        LinksModule,
+        DependenciesModule,
+        MikroOrmModule.forFeature([DamFile, Page, Link, Product, Manufacturer, PageTreeNode, AttachedDocument]),
+    ],
     providers: [
         FixturesCommand,
         AccordionBlockFixtureService,
@@ -87,6 +95,7 @@ import { VideoFixtureService } from "./generators/video-fixture.service";
         ProductsFixtureService,
         RichTextBlockFixtureService,
         SeoBlockFixtureService,
+        SliderBlockFixtureService,
         SpaceBlockFixtureService,
         StageBlockFixtureService,
         SvgImageBlockFixtureService,

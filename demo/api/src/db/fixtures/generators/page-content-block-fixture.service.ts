@@ -1,4 +1,4 @@
-import { ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/cms-api";
+import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
@@ -16,6 +16,7 @@ import { StandaloneMediaBlockFixtureService } from "./blocks/media/standalone-me
 import { AnchorBlockFixtureService } from "./blocks/navigation/anchor-block-fixture.service";
 import { LinkListBlockFixtureService } from "./blocks/navigation/link-list-block-fixture.service";
 import { StandaloneCallToActionListBlockFixtureService } from "./blocks/navigation/standalone-call-to-action-list-block-fixture.service";
+import { SliderBlockFixtureService } from "./blocks/slider-fixture.service";
 import { BillboardTeaserBlockFixtureService } from "./blocks/teaser/billboard-teaser-block-fixture.service";
 import { TeaserBlockFixtureService } from "./blocks/teaser/teaser-block-fixture.service";
 import { KeyFactsBlockFixtureService } from "./blocks/text-and-content/key-facts-block-fixture.service";
@@ -46,9 +47,10 @@ export class PageContentBlockFixtureService {
         private readonly mediaBlockFixtureService: StandaloneMediaBlockFixtureService,
         private readonly teaserBlockFixtureService: TeaserBlockFixtureService,
         private readonly textImageBlockFixtureService: TextImageBlockFixtureService,
+        private readonly sliderBlockFixtureService: SliderBlockFixtureService,
     ) {}
 
-    async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInput<typeof PageContentBlock>> {
+    async generateBlockInput(blockCategory?: BlockCategory): Promise<ExtractBlockInputFactoryProps<typeof PageContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
 
         type SupportedBlocks = (typeof blocks)[number]["type"];
@@ -60,6 +62,7 @@ export class PageContentBlockFixtureService {
             contentGroup: ["layout", this.contentGroupBlockFixtureService],
             layout: ["layout", this.layoutBlockFixtureService],
             space: ["layout", this.spaceBlockFixtureService],
+            slider: ["layout", this.sliderBlockFixtureService],
             fullWidthImage: ["media", this.fullWidthImageBlockFixtureService],
             image: ["media", this.imageBlockFixtureService],
             media: ["media", this.mediaBlockFixtureService],
@@ -91,6 +94,6 @@ export class PageContentBlockFixtureService {
             });
         }
 
-        return PageContentBlock.blockInputFactory({ blocks });
+        return { blocks };
     }
 }

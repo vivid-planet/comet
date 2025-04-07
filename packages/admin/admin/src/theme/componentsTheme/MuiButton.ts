@@ -3,7 +3,7 @@ import { buttonClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { palette, typography }) => ({
+export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { palette }) => ({
     ...component,
     defaultProps: {
         disableElevation: true,
@@ -17,6 +17,15 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             letterSpacing: 0,
             textTransform: "none",
             fontWeight: 250,
+            minWidth: "auto",
+
+            "& .MuiButton-startIcon": {
+                marginRight: "6px",
+            },
+
+            "& .MuiButton-endIcon": {
+                marginLeft: "6px",
+            },
 
             [`&.${buttonClasses.textSizeSmall}`]: {
                 fontSize: 14,
@@ -28,6 +37,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             paddingRight: 15,
             paddingBottom: 12,
             paddingLeft: 15,
+            borderRadius: 4,
 
             [`& .${buttonClasses.startIcon}`]: {
                 marginRight: 5,
@@ -35,6 +45,16 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
 
             [`& .${buttonClasses.endIcon}`]: {
                 marginLeft: 5,
+            },
+
+            "&:hover": {
+                color: palette.primary.main,
+                backgroundColor: "inherit",
+            },
+
+            "&:focus": {
+                outline: `2px solid ${palette.primary.dark}`,
+                outlineOffset: -2,
             },
 
             ...(ownerState.color === "info" && {
@@ -47,14 +67,14 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
         }),
         contained: {
             paddingTop: 12,
-            paddingRight: 14,
+            paddingRight: 15,
             paddingBottom: 12,
-            paddingLeft: 14,
+            paddingLeft: 15,
             borderRadius: 4,
 
-            [`&.${buttonClasses.disabled}`]: {
-                backgroundColor: palette.grey[100],
-                color: palette.grey[300],
+            "&:focus": {
+                outline: `2px solid ${palette.primary.dark}`,
+                outlineOffset: -2,
             },
         },
         containedPrimary: {
@@ -65,6 +85,16 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 backgroundColor: palette.primary.dark,
                 borderColor: palette.primary.dark,
             },
+
+            "&:focus": {
+                backgroundColor: palette.primary.main,
+                outline: `2px solid ${palette.primary.dark}`,
+            },
+
+            [`&.${buttonClasses.disabled}`]: {
+                backgroundColor: palette.grey[100],
+                color: palette.grey[200],
+            },
         },
         containedSecondary: {
             color: palette.secondary.contrastText,
@@ -74,12 +104,36 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 backgroundColor: palette.secondary.dark,
                 borderColor: palette.secondary.dark,
             },
+
+            "&:focus": {
+                outline: `2px solid ${palette.primary.dark}`,
+            },
+
+            [`&.${buttonClasses.disabled}`]: {
+                backgroundColor: palette.grey[100],
+                color: palette.secondary.contrastText,
+            },
+        },
+        containedSuccess: {
+            "&:hover": {
+                backgroundColor: palette.success.dark,
+            },
+
+            "&:focus": {
+                outline: `2px solid ${palette.success.dark}`,
+            },
+
+            [`&.${buttonClasses.disabled}`]: {
+                backgroundColor: palette.secondary.main,
+                color: palette.secondary.contrastText,
+                opacity: 0.2,
+            },
         },
         outlined: {
-            color: palette.grey[900],
+            color: palette.common.black,
             borderWidth: 1,
             borderStyle: "solid",
-            borderColor: palette.grey[200],
+            borderColor: palette.grey[100],
             paddingTop: 11,
             paddingRight: 14,
             paddingBottom: 11,
@@ -87,13 +141,42 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             borderRadius: 4,
 
             ":hover": {
-                backgroundColor: palette.grey[50],
-                borderColor: palette.grey[200],
+                borderColor: palette.grey[900],
+            },
+
+            ":focus": {
+                paddingTop: 10,
+                paddingRight: 13,
+                paddingBottom: 10,
+                paddingLeft: 13,
+                border: `2px solid ${palette.primary.dark}`,
+            },
+
+            [`&.${buttonClasses.disabled}`]: {
+                borderColor: palette.grey[100],
+                color: palette.grey[100],
             },
         },
         outlinedError: {
             color: palette.error.main,
             borderColor: palette.error.main,
+            backgroundColor: palette.common.white,
+
+            "&:hover": {
+                color: palette.error.dark,
+                borderColor: palette.error.dark,
+                backgroundColor: palette.grey[50],
+            },
+
+            "&:focus": {
+                border: `2px solid ${palette.error.main}`,
+            },
+
+            [`&.${buttonClasses.disabled}`]: {
+                borderColor: palette.error.main,
+                color: palette.error.main,
+                opacity: 0.2,
+            },
         },
         startIcon: {
             marginLeft: 0,

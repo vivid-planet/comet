@@ -134,6 +134,7 @@ export { DateFilter } from "./common/filter/date.filter";
 export { DateTimeFilter } from "./common/filter/date-time.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
 export { createEnumsFilter } from "./common/filter/enums.filter.factory";
+export { IdFilter } from "./common/filter/id.filter";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
 export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
@@ -235,6 +236,7 @@ export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { RedirectInterface } from "./redirects/entities/redirect-entity.factory";
+export { RedirectTargetUrlServiceInterface } from "./redirects/redirect-target-url.service";
 export { REDIRECTS_LINK_BLOCK } from "./redirects/redirects.constants";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
 export { RedirectsLinkBlock, RedirectsModule } from "./redirects/redirects.module";
@@ -249,10 +251,12 @@ export { RequiredPermission } from "./user-permissions/decorators/required-permi
 export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
+export { CurrentUserPermission } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
+export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,

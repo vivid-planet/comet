@@ -1,5 +1,5 @@
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { screen, waitFor, within } from "@testing-library/react";
 import { createMemoryHistory } from "history";
@@ -8,6 +8,8 @@ import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render } from "test-utils";
 
+import { Button } from "./common/buttons/Button";
+import { FillSpace } from "./common/FillSpace";
 import { MainContent } from "./common/MainContent";
 import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
 import { ToolbarAutomaticTitleItem } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
@@ -64,8 +66,8 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
     function Toolbar({ toolbarAction }: ToolbarProps) {
         return (
             <DataGridToolbar>
-                <ToolbarFillSpace />
-                <ToolbarActions>{toolbarAction}</ToolbarActions>
+                <FillSpace />
+                {toolbarAction}
             </DataGridToolbar>
         );
     }
@@ -89,6 +91,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                         { field: "id", headerName: "ID", width: 90 },
                                         {
                                             field: "actions",
+                                            type: "actions",
                                             headerName: "",
                                             sortable: false,
                                             filterable: false,
@@ -123,12 +126,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                     slotProps={{
                                         toolbar: {
                                             toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
+                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     Add product
                                                 </Button>
                                             ),

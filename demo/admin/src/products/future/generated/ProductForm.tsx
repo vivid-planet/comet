@@ -8,12 +8,12 @@ import {
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormInput,
     FinalFormRangeInput,
     type FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     messages,
+    NumberField,
     OnChangeField,
     RadioGroupField,
     TextAreaField,
@@ -324,33 +324,27 @@ export function ProductForm({ id }: FormProps) {
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>
-                                            <Field
+                                            <NumberField
                                                 required
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="dimensions.width"
-                                                component={FinalFormInput}
-                                                type="number"
                                                 label={<FormattedMessage id="product.width" defaultMessage="Width" />}
                                             />
 
-                                            <Field
+                                            <NumberField
                                                 required
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="dimensions.height"
-                                                component={FinalFormInput}
-                                                type="number"
                                                 label={<FormattedMessage id="product.height" defaultMessage="Height" />}
                                             />
 
-                                            <Field
+                                            <NumberField
                                                 required
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="dimensions.depth"
-                                                component={FinalFormInput}
-                                                type="number"
                                                 label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
                                             />
                                         </>

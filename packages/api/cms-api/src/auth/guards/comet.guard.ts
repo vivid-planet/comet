@@ -56,7 +56,7 @@ export class CometAuthGuard implements CanActivate {
             } else {
                 user = result.user;
             }
-            request["user"] = await this.service.createCurrentUser(user);
+            request["user"] = await this.service.createCurrentUser(user, request);
         }
 
         return true;

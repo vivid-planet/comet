@@ -1,7 +1,5 @@
-import { CancelButton } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
+import { CancelButton, OkayButton } from "@comet/admin";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -77,17 +75,14 @@ export const ConfirmPageActionDialog = ({ open, onCloseDialog, action, selectedP
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={() => onCloseDialog(false)} />
-                <Button
-                    variant="contained"
-                    color="primary"
+                <OkayButton
                     onClick={() => {
                         onCloseDialog(true);
                     }}
                     autoFocus={true}
-                    startIcon={<Delete />}
                 >
                     <FormattedMessage id="comet.pages.confirmDialog.confirm" defaultMessage="Confirm" />
-                </Button>
+                </OkayButton>
             </DialogActions>
         </Dialog>
     );

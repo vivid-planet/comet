@@ -83,15 +83,17 @@ describe("GenerateCrudInputEmbedded", () => {
                 const cls = classes[0];
                 const structure = cls.getStructure();
 
-                expect(structure.properties?.length).toBe(4);
-                expect(structure.properties?.[0].name).toBe("foo");
-                expect(structure.properties?.[0].type).toBe("StringFilter");
-                expect(structure.properties?.[1].name).toBe("embedded_test");
+                expect(structure.properties?.length).toBe(5);
+                expect(structure.properties?.[0].name).toBe("id");
+                expect(structure.properties?.[0].type).toBe("IdFilter");
+                expect(structure.properties?.[1].name).toBe("foo");
                 expect(structure.properties?.[1].type).toBe("StringFilter");
-                expect(structure.properties?.[2].name).toBe("and");
-                expect(structure.properties?.[2].type).toBe("TestEntityWithEmbeddedFilter[]");
-                expect(structure.properties?.[3].name).toBe("or");
+                expect(structure.properties?.[2].name).toBe("embedded_test");
+                expect(structure.properties?.[2].type).toBe("StringFilter");
+                expect(structure.properties?.[3].name).toBe("and");
                 expect(structure.properties?.[3].type).toBe("TestEntityWithEmbeddedFilter[]");
+                expect(structure.properties?.[4].name).toBe("or");
+                expect(structure.properties?.[4].type).toBe("TestEntityWithEmbeddedFilter[]");
             }
 
             orm.close();
@@ -181,13 +183,15 @@ describe("GenerateCrudInputEmbedded", () => {
                 const cls = classes[0];
                 const structure = cls.getStructure();
 
-                expect(structure.properties?.length).toBe(3);
-                expect(structure.properties?.[0].name).toBe("foo");
-                expect(structure.properties?.[0].type).toBe("StringFilter");
-                expect(structure.properties?.[1].name).toBe("and");
-                expect(structure.properties?.[1].type).toBe("TestEntityWithoutEmbeddedFilter[]");
-                expect(structure.properties?.[2].name).toBe("or");
+                expect(structure.properties?.length).toBe(4);
+                expect(structure.properties?.[0].name).toBe("id");
+                expect(structure.properties?.[0].type).toBe("IdFilter");
+                expect(structure.properties?.[1].name).toBe("foo");
+                expect(structure.properties?.[1].type).toBe("StringFilter");
+                expect(structure.properties?.[2].name).toBe("and");
                 expect(structure.properties?.[2].type).toBe("TestEntityWithoutEmbeddedFilter[]");
+                expect(structure.properties?.[3].name).toBe("or");
+                expect(structure.properties?.[3].type).toBe("TestEntityWithoutEmbeddedFilter[]");
             }
 
             orm.close();

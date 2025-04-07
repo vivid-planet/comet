@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     Alert,
+    Button,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -16,7 +17,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
+import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import { type ComponentType, type ReactNode, useCallback, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -138,8 +139,6 @@ export function PagesPage({
                             </ToolbarItem>
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         editDialogApi.openAddDialog();
@@ -207,12 +206,14 @@ export function PagesPage({
                         </PageTreeContext.Provider>
 
                         <EditDialog>
-                            <EditPageNode
-                                id={editDialogSelection.id || null}
-                                mode={editDialogSelection.mode ?? "add"}
-                                category={category}
-                                documentTypes={documentTypes}
-                            />
+                            <DialogContent>
+                                <EditPageNode
+                                    id={editDialogSelection.id || null}
+                                    mode={editDialogSelection.mode ?? "add"}
+                                    category={category}
+                                    documentTypes={documentTypes}
+                                />
+                            </DialogContent>
                         </EditDialog>
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>

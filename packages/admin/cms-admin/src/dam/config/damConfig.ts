@@ -14,7 +14,6 @@ export interface DamConfig {
         generateImageTitle?: boolean;
     };
     uploadsMaxFileSize: number;
-    allowedImageSizes: number[];
     allowedImageAspectRatios: string[];
 }
 

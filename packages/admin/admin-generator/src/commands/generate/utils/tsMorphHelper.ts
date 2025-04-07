@@ -1,8 +1,8 @@
 import {
     type ArrayLiteralExpression,
     type ArrowFunction,
+    type CallExpression,
     type ExportedDeclarations,
-    type Expression,
     type Identifier,
     type Node,
     type NumericLiteral,
@@ -46,18 +46,21 @@ const supportedInlineCodePaths = [
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
 ];
 
-export function configsFromSourceFile(sourceFile: SourceFile) {
-    const configs: Record<string, GeneratorConfig> = {}; //GeneratorConfig is not fully correct (runtime vs config mismatch), we work around that using type guards
+export function configFromSourceFile(sourceFile: SourceFile) {
     for (const [name, declarations] of Array.from(sourceFile.getExportedDeclarations().entries())) {
-        //console.log(name);
-        if (declarations.length != 1) {
-            throw new Error(`Expected exactly one declaration for ${name}`);
+        if (name == "default") {
+            if (declarations.length != 1) {
+                throw new Error(`Expected exactly one declaration for ${name}`);
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const config = exportedDeclarationToJson(declarations[0]) as GeneratorConfig<any>;
+            //console.dir(config, { depth: 10 });
+            return config;
+        } else {
+            //ignore this export
         }
-        const config = exportedDeclarationToJson(declarations[0]);
-        //console.dir(config, { depth: 10 });
-        configs[name] = config;
     }
-    return configs;
+    throw new Error(`No default export found, please export the GeneratorConfig as default, preferrable using defineConfig helper.`);
 }
 
 function findUsedImports(node: Node) {
@@ -99,7 +102,7 @@ function getTypePropertyFromObjectLiteral(node: ObjectLiteralExpression) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function astExpressionToJson(node: Expression, path: string): any {
+function astNodeToJson(node: Node, path: string): any {
     if (node.getKind() == SyntaxKind.ObjectLiteralExpression) {
         if (path == "") {
             // first entry of path is the type, then property names (. separated) are added
@@ -112,7 +115,7 @@ function astExpressionToJson(node: Expression, path: string): any {
                 const propertyAssignment = property as PropertyAssignment;
                 const propertyAssignmentInitializer = propertyAssignment.getInitializer();
                 if (propertyAssignmentInitializer) {
-                    ret[propertyAssignment.getName()] = astExpressionToJson(propertyAssignmentInitializer, `${path}.${propertyAssignment.getName()}`);
+                    ret[propertyAssignment.getName()] = astNodeToJson(propertyAssignmentInitializer, `${path}.${propertyAssignment.getName()}`);
                 } else {
                     throw new Error(`Initializer is required for propertyAssignment '${propertyAssignment.getName()}'`);
                 }
@@ -145,7 +148,7 @@ function astExpressionToJson(node: Expression, path: string): any {
     } else if (node.getKind() == SyntaxKind.ArrayLiteralExpression) {
         const ret = [] as Array<unknown>;
         for (const element of (node as ArrayLiteralExpression).getElements()) {
-            ret.push(astExpressionToJson(element, path));
+            ret.push(astNodeToJson(element, path));
         }
         return ret;
     } else if (node.getKind() == SyntaxKind.Identifier) {
@@ -171,7 +174,7 @@ function astExpressionToJson(node: Expression, path: string): any {
                     if (variableDeclaration.getName() == node.getText()) {
                         const variableInitializer = variableDeclaration.getInitializer();
                         if (variableInitializer) {
-                            return astExpressionToJson(variableInitializer, path);
+                            return astNodeToJson(variableInitializer, path);
                         } else {
                             throw new Error(`Initializer is required for variableDeclaration '${variableDeclaration.getName()}'`);
                         }
@@ -191,9 +194,20 @@ function exportedDeclarationToJson(node: ExportedDeclarations): any {
         const variableDeclaration = node as VariableDeclaration;
         const initializer = variableDeclaration.getInitializer();
         if (initializer) {
-            return astExpressionToJson(initializer, "");
+            return astNodeToJson(initializer, "");
         } else {
             throw new Error(`Initializer is required for variableDeclaration '${variableDeclaration.getName()}'`);
+        }
+    } else if (node.getKind() == SyntaxKind.CallExpression) {
+        const callExpression = node as CallExpression;
+        if (callExpression.getExpression().getText() == "defineConfig") {
+            const args = callExpression.getArguments();
+            if (args.length != 1) {
+                throw new Error(`Expected exactly one argument for defineConfig`);
+            }
+            return astNodeToJson(args[0], "");
+        } else {
+            throw new Error(`Only direct call to defineConfig is supported`);
         }
     } else {
         throw new Error(`Unsupported declaration kind '${node.getKindName()}'`);

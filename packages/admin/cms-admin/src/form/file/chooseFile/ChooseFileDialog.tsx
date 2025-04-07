@@ -1,12 +1,10 @@
-import { StackLink, SubRoute } from "@comet/admin";
+import { Button, StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogTitle,
     IconButton,
-    Link,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type SyntheticEvent } from "react";
@@ -57,31 +55,32 @@ const TableRowButton = styled(Button)`
     }
 `;
 
+const StyledStackLink = styled(StackLink)`
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: ${({ theme }) => theme.palette.grey[900]};
+`;
+
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
     { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
-        <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
+        <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(row.id)} fullWidth>
             <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
         </TableRowButton>
     ) : (
-        <Link
-            underline="none"
-            component={StackLink}
+        <StyledStackLink
             pageName="folder"
             payload={row.id}
-            sx={{
-                width: "100%",
-                height: "100%",
-            }}
             onClick={() => {
                 filterApi.formApi.change("searchText", undefined);
             }}
         >
             <DamItemLabel asset={row} matches={matches} />
-        </Link>
+        </StyledStackLink>
     );
 };
 

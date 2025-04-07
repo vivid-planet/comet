@@ -85,12 +85,12 @@ interface CustomSelectItemProps {
 function CustomSelectItem({ icon, primary, secondary }: CustomSelectItemProps) {
     return (
         <Grid container spacing={4} alignItems="center">
-            <Grid item>
+            <Grid>
                 <Box display="flex" alignItems="center" paddingLeft={2} color="text.secondary">
                     {icon}
                 </Box>
             </Grid>
-            <Grid item>
+            <Grid>
                 <Typography variant="body2">{primary}</Typography>
                 <Typography variant="body2" color="textSecondary">
                     {secondary}
@@ -112,7 +112,13 @@ export function ComponentDemo() {
         <Stack topLevelTitle="Component demo">
             <MainContent>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} md={6} lg={3}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6,
+                            lg: 3,
+                        }}
+                    >
                         <Typography variant="h2" gutterBottom>
                             Basic Blocks
                         </Typography>
@@ -302,7 +308,13 @@ export function ComponentDemo() {
                             />
                         </FinalForm>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6,
+                            lg: 3,
+                        }}
+                    >
                         <Typography variant="h2" gutterBottom>
                             Action Blocks
                         </Typography>
@@ -360,7 +372,7 @@ export function ComponentDemo() {
                             />
                         </BlockAdminComponentSection>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid size={3}>
                         <Typography variant="h2" gutterBottom>
                             Compounds
                         </Typography>

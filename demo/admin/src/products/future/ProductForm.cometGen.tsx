@@ -1,11 +1,11 @@
-import { type FormConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
 
-export const ProductForm: FormConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
@@ -83,7 +83,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             ],
         },
     ],
-};
+});
 
 /*
 TODO

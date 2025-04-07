@@ -1,7 +1,6 @@
 import objectPath from "object-path";
 
-import { type ActionsGridColumnConfig, type GridColumnConfig } from "../generate-command";
-import { getAllColumnFieldNames, type GridCombinationColumnConfig } from "./combinationColumn";
+import { type ActionsGridColumnConfig, type GridColumnConfig, type VirtualGridColumnConfig } from "../generate-command";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {
@@ -25,13 +24,13 @@ export function generateGqlFieldList({
     columns,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    columns: Array<GridColumnConfig<any> | GridCombinationColumnConfig<string> | ActionsGridColumnConfig>;
+    columns: Array<GridColumnConfig<any> | ActionsGridColumnConfig | VirtualGridColumnConfig<any>>;
 }) {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
         if (field.type !== "actions") {
-            if (field.type === "combination") {
-                getAllColumnFieldNames(field).map((fieldName) => {
-                    objectPath.set(acc, fieldName, true);
+            if (field.type === "virtual") {
+                field.queryFields?.map((queryField) => {
+                    objectPath.set(acc, queryField, true);
                 });
             } else {
                 objectPath.set(acc, field.name, true);
