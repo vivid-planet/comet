@@ -39,12 +39,24 @@ const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>
 const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "datePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 export interface DateTimePickerProps
     extends ThemedComponentBaseProps<{
