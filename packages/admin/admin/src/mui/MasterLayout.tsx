@@ -1,6 +1,6 @@
 import { ComponentsOverrides, CssBaseline } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ComponentType, CSSProperties, ReactNode, useState } from "react";
+import { ComponentType, CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
@@ -9,7 +9,7 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 import { MenuContext } from "./menu/Context";
 
-export type MasterLayoutClassKey = "root" | "header" | "contentWrapper";
+export type MasterLayoutClassKey = "root" | "header" | "menuWrapper" | "contentWrapper";
 
 const Root = createComponentSlot("div")<MasterLayoutClassKey>({
     componentName: "MasterLayout",
@@ -28,18 +28,25 @@ const Header = createComponentSlot("div")<MasterLayoutClassKey>({
     `,
 );
 
+const MenuWrapper = createComponentSlot("div")<MasterLayoutClassKey>({
+    componentName: "MasterLayout",
+    slotName: "menuWrapper",
+})();
+
 const ContentWrapper = createComponentSlot("div")<MasterLayoutClassKey>({
     componentName: "MasterLayout",
     slotName: "contentWrapper",
 })(css`
     flex-grow: 1;
     padding-top: var(--comet-admin-master-layout-content-top-spacing);
+    width: calc(100% - var(--comet-admin-master-layout-menu-width));
 `);
 
 export interface MasterLayoutProps
     extends ThemedComponentBaseProps<{
         root: "div";
         header: "div";
+        menuWrapper: "div";
         contentWrapper: "div";
     }> {
     children: ReactNode;
@@ -65,6 +72,24 @@ export function MasterLayout(inProps: MasterLayoutProps) {
 
     const [open, setOpen] = useState(openMenuByDefault);
     const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
+    const [menuWidth, setMenuWidth] = useState(0);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!menuRef.current) return;
+
+        const resizeObserver = new ResizeObserver(([entry]) => {
+            if (entry) {
+                setMenuWidth(entry.contentRect.width);
+            }
+        });
+
+        resizeObserver.observe(menuRef.current);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
 
     const toggleOpen = () => {
         setOpen(!open);
@@ -84,10 +109,17 @@ export function MasterLayout(inProps: MasterLayoutProps) {
                             </AppHeader>
                         )}
                     </Header>
-                    <Menu />
+                    <MenuWrapper {...slotProps?.menuWrapper} ref={menuRef}>
+                        <Menu />
+                    </MenuWrapper>
                     <ContentWrapper
                         {...slotProps?.contentWrapper}
-                        style={{ "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px` } as CSSProperties}
+                        style={
+                            {
+                                "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px`,
+                                "--comet-admin-master-layout-menu-width": `${menuWidth}px`,
+                            } as CSSProperties
+                        }
                     >
                         {children}
                     </ContentWrapper>

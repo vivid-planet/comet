@@ -206,6 +206,7 @@ export async function writeCrudGrid(
 
     const out = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
+        Button,
         CrudContextMenu,
         DataGridToolbar,
         GridColDef,
@@ -223,7 +224,7 @@ export async function writeCrudGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
+    import { Alert, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -307,7 +308,7 @@ export async function writeCrudGrid(
                 ${
                     hasCreateMutation
                         ? `<ToolbarActions>
-                    <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                    <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                         <FormattedMessage id="${instanceEntityName}.new${entityName}" defaultMessage="New ${entityName}" />
                     </Button>
                 </ToolbarActions>`

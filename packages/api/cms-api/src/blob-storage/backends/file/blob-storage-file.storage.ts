@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Stream } from "stream";
+import { Readable, Stream } from "stream";
 
 import { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "../blob-storage-backend.interface";
 import { BlobStorageFileConfig } from "./blob-storage-file.config";
@@ -76,11 +76,11 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         ]);
     }
 
-    async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+    async getFile(folderName: string, fileName: string): Promise<Readable> {
         return fs.createReadStream(`${this.path}/${folderName}/${fileName}`);
     }
 
-    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable> {
         return fs.createReadStream(`${this.path}/${folderName}/${fileName}`, {
             start: offset,
             end: offset + length - 1,

@@ -20,12 +20,14 @@ import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProductVariants } from "./dto/paginated-product-variants";
 import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-variant.input";
 import { ProductVariantsArgs } from "./dto/product-variants.args";
+import { ProductVariantsService } from "./product-variants.service";
 
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
     constructor(
         private readonly entityManager: EntityManager,
+        private readonly productVariantsService: ProductVariantsService,
         @InjectRepository(ProductVariant) private readonly repository: EntityRepository<ProductVariant>,
         @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
         private readonly blocksTransformer: BlocksTransformerService,
@@ -75,10 +77,18 @@ export class ProductVariantResolver {
         @Args("product", { type: () => ID }) product: string,
         @Args("input", { type: () => ProductVariantInput }) input: ProductVariantInput,
     ): Promise<ProductVariant> {
+        const lastPosition = await this.productVariantsService.getLastPosition({ product });
+        let position = input.position;
+        if (position !== undefined && position < lastPosition + 1) {
+            await this.productVariantsService.incrementPositions({ product }, position);
+        } else {
+            position = lastPosition + 1;
+        }
+
         const { image: imageInput, ...assignInput } = input;
         const productVariant = this.repository.create({
             ...assignInput,
-
+            position,
             product: Reference.create(await this.productRepository.findOneOrFail(product)),
 
             image: imageInput.transformToBlockData(),
@@ -96,6 +106,18 @@ export class ProductVariantResolver {
         @Args("input", { type: () => ProductVariantUpdateInput }) input: ProductVariantUpdateInput,
     ): Promise<ProductVariant> {
         const productVariant = await this.repository.findOneOrFail(id);
+
+        if (input.position !== undefined) {
+            const lastPosition = await this.productVariantsService.getLastPosition({ product: productVariant.product.id });
+            if (input.position > lastPosition + 1) {
+                input.position = lastPosition + 1;
+            }
+            if (productVariant.position < input.position) {
+                await this.productVariantsService.decrementPositions({ product: productVariant.product.id }, productVariant.position, input.position);
+            } else if (productVariant.position > input.position) {
+                await this.productVariantsService.incrementPositions({ product: productVariant.product.id }, input.position, productVariant.position);
+            }
+        }
 
         const { image: imageInput, ...assignInput } = input;
         productVariant.assign({
@@ -116,6 +138,7 @@ export class ProductVariantResolver {
     async deleteProductVariant(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productVariant = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productVariant);
+        await this.productVariantsService.decrementPositions({ product: productVariant.product.id }, productVariant.position);
         await this.entityManager.flush();
         return true;
     }

@@ -33,6 +33,14 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiPort: envVars.API_PORT,
         adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
+        auth: {
+            useAuthProxy: envVars.USE_AUTHPROXY,
+            systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
+            idpClientId: envVars.IDP_CLIENT_ID,
+            idpJwksUri: envVars.IDP_JWKS_URI,
+            idpEndSessionEndpoint: envVars.IDP_END_SESSION_ENDPOINT,
+            postLogoutRedirectUri: envVars.POST_LOGOUT_REDIRECT_URI,
+        },
         imgproxy: {
             ...cometConfig.imgproxy,
             salt: envVars.IMGPROXY_SALT,
@@ -89,6 +97,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
         },
         sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
+        siteConfigs: envVars.PRIVATE_SITE_CONFIGS,
     };
 }
 

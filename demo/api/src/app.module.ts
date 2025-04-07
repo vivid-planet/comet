@@ -17,6 +17,7 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
@@ -25,35 +26,39 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
-import { LinksModule } from "@src/links/links.module";
-import { PagesModule } from "@src/pages/pages.module";
+import { LinksModule } from "@src/documents/links/links.module";
+import { PagesModule } from "@src/documents/pages/pages.module";
 import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
-import { AuthModule } from "./auth/auth.module";
+import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
+import { Link } from "./documents/links/entities/link.entity";
+import { Page } from "./documents/pages/entities/page.entity";
 import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
-import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
+import { News } from "./news/entities/news.entity";
 import { NewsModule } from "./news/news.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
-import { Page } from "./pages/entities/page.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 
 @Module({})
 export class AppModule {
     static forRoot(config: Config): DynamicModule {
+        const authModule = AuthModule.forRoot(config);
+
         return {
             module: AppModule,
             imports: [
@@ -80,6 +85,7 @@ export class AppModule {
                             credentials: true,
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
+                        useGlobalPrefix: true,
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
@@ -88,20 +94,21 @@ export class AppModule {
                     }),
                     inject: [ModuleRef],
                 }),
-                AuthModule,
+                authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                            { domain: "secondary", language: "de" },
-                        ],
+                        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+                            siteConfig.scope.languages.map((language) => ({
+                                domain: siteConfig.scope.domain,
+                                language,
+                            })),
+                        ),
                         userService,
                         accessControlService,
+                        systemUsers: [SYSTEM_USER_NAME],
                     }),
                     inject: [UserService, AccessControlService],
-                    imports: [AuthModule],
+                    imports: [authModule],
                 }),
                 BlocksModule,
                 DependenciesModule,
@@ -121,7 +128,12 @@ export class AppModule {
                     sitePreviewSecret: config.sitePreviewSecret,
                 }),
 
-                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
+                RedirectsModule.register({
+                    imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+                    customTargets: { news: NewsLinkBlock },
+                    Scope: RedirectScope,
+                    TargetUrlService: RedirectTargetUrlService,
+                }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
                 }),

@@ -41,6 +41,7 @@ export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInte
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
+export { ExceptionFilter } from "./common/errors/exception.filter";
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
@@ -88,7 +89,7 @@ export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
-export { FileUploadInterface } from "./dam/files/dto/file-upload.input";
+export { FileUploadInput, FileUploadInterface } from "./dam/files/dto/file-upload.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
@@ -157,6 +158,7 @@ export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { RedirectInterface } from "./redirects/entities/redirect-entity.factory";
+export { RedirectTargetUrlServiceInterface } from "./redirects/redirect-target-url.service";
 export { REDIRECTS_LINK_BLOCK } from "./redirects/redirects.constants";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
 export { RedirectsLinkBlock, RedirectsModule } from "./redirects/redirects.module";
@@ -171,10 +173,12 @@ export { RequiredPermission } from "./user-permissions/decorators/required-permi
 export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
+export { CurrentUserPermission } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
+export { UserPermissionsPublicService as UserPermissionsService } from "./user-permissions/user-permissions.public.service";
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,

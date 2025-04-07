@@ -1,5 +1,83 @@
 # @comet/eslint-config
 
+## 7.18.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.18.0
+
+## 7.17.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.17.0
+
+## 7.16.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.15.0
+
+## 7.14.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.14.0
+
+## 7.13.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.13.0
+
+## 7.12.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.12.0
+
+## 7.11.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.11.0
+
+## 7.10.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.10.0
+
+## 7.9.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.9.0
+
+## 7.8.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.7.0
+
+## 7.6.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.6.0
+
 ## 7.5.0
 
 ### Patch Changes

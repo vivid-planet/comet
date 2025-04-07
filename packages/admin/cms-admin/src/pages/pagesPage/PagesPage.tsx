@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     Alert,
+    Button,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -10,12 +11,13 @@ import {
     StackSwitch,
     Toolbar,
     ToolbarActions,
+    ToolbarItem,
     useEditDialog,
     useFocusAwarePolling,
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
+import { Box, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -138,15 +140,17 @@ export function PagesPage({
                 <StackSwitch>
                     <StackPage name="table">
                         <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
-                            <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
-                            <FormControlLabel
-                                control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
-                                label={<FormattedMessage id="comet.pages.pages.archivedItems" defaultMessage="Archived items" />}
-                            />
+                            <ToolbarItem sx={{ flexGrow: 1 }}>
+                                <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <FormControlLabel
+                                    control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
+                                    label={<FormattedMessage id="comet.pages.pages.archivedItems" defaultMessage="Archived items" />}
+                                />
+                            </ToolbarItem>
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         editDialogApi.openAddDialog();

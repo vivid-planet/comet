@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
-import { useStackApi } from "@comet/admin";
+import { Button, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
-import { Button, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
 import { ReactNode, useState } from "react";
@@ -24,15 +24,12 @@ import { DefaultFilePreview } from "./previews/DefaultFilePreview";
 import { ImagePreview } from "./previews/ImagePreview";
 import { PdfPreview } from "./previews/PdfPreview";
 import { VideoPreview } from "./previews/VideoPreview";
+import { ReplaceFileButton } from "./ReplaceFileButton";
 
 const ActionsContainer = styled("div")`
     background-color: ${({ theme }) => theme.palette.grey["A400"]};
     display: flex;
     justify-content: center;
-`;
-
-const ActionButton = styled(Button)`
-    color: white;
 `;
 
 const FileWrapper = styled(Paper)`
@@ -79,20 +76,19 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
 
     return (
         <FilePreviewWrapper>
-            {/*// @TODO: Add functionality for these buttons*/}
             <ActionsContainer>
-                <ActionButton
+                <Button
+                    variant="textLight"
                     startIcon={<Download />}
                     onClick={() => {
                         saveAs(file.fileUrl, file.name);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />
-                </ActionButton>
-                {/*<ActionButton startIcon={<Upload />}>*/}
-                {/*    <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />*/}
-                {/*</ActionButton>*/}
-                <ActionButton
+                </Button>
+                <ReplaceFileButton file={file} />
+                <Button
+                    variant="textLight"
                     startIcon={file.archived ? <Restore /> : <Archive />}
                     onClick={() => {
                         if (file.archived) {
@@ -113,15 +109,16 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     ) : (
                         <FormattedMessage id="comet.dam.file.archive" defaultMessage="Archive" />
                     )}
-                </ActionButton>
-                <ActionButton
+                </Button>
+                <Button
+                    variant="textLight"
                     startIcon={<Delete />}
                     onClick={() => {
                         setDeleteDialogOpen(true);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.delete" defaultMessage="Delete" />
-                </ActionButton>
+                </Button>
             </ActionsContainer>
             <FileWrapper>{preview}</FileWrapper>
             <ConfirmDeleteDialog

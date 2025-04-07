@@ -30,7 +30,7 @@ export class SitePreviewResolver {
             },
         })
             .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime("1 day")
+            .setExpirationTime("10 seconds")
             .sign(new TextEncoder().encode(this.config.secret));
     }
 }

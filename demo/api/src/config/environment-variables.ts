@@ -1,6 +1,7 @@
 import { BlobStorageConfig } from "@comet/cms-api";
+import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -31,6 +32,31 @@ export class EnvironmentVariables {
 
     @IsString()
     API_URL: string;
+
+    @IsOptional()
+    @IsBoolean()
+    @Transform(({ value }) => value === "true")
+    USE_AUTHPROXY: boolean;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    IDP_CLIENT_ID: string;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    IDP_JWKS_URI: string;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    IDP_END_SESSION_ENDPOINT: string;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    POST_LOGOUT_REDIRECT_URI: string;
+
+    @IsString()
+    @MinLength(16)
+    BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
 
     @IsString()
     ADMIN_URL: string;
@@ -76,23 +102,23 @@ export class EnvironmentVariables {
     @IsString()
     BLOB_STORAGE_DIRECTORY_PREFIX: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_REGION: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_ENDPOINT: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_ACCESS_KEY_ID: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_SECRET_ACCESS_KEY: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
 
@@ -140,4 +166,8 @@ export class EnvironmentVariables {
     @MinLength(16)
     @ValidateIf(() => process.env.NODE_ENV === "production")
     SITE_PREVIEW_SECRET: string;
+
+    @IsArray()
+    @Transform(({ value }) => JSON.parse(Buffer.from(value, "base64").toString()))
+    PRIVATE_SITE_CONFIGS: PrivateSiteConfig[];
 }

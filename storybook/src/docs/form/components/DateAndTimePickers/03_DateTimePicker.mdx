@@ -1,0 +1,24 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as DateTimePickerStories from "./03_DateTimePicker.stories";
+import DatePickerLocalisation from "./common/DatePickerLocalization.mdx";
+
+<Meta of={DateTimePickerStories} />
+
+# Date-Time Picker
+
+To use the `DateTimePicker` and `FinalFormDateTimePicker` components, install the `@comet/admin-date-time` package.
+
+## Value type
+
+The `value` prop and the value returned by `onChange` are of type `Date`.
+
+<DatePickerLocalisation />
+
+## Basic usage
+
+<Canvas of={DateTimePickerStories.Basic} />
+
+## Usage inside a Final Form
+
+<Canvas of={DateTimePickerStories.FinalForm} />

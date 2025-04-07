@@ -1,4 +1,5 @@
 import { BaseEntity, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { Field, InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -55,11 +56,12 @@ describe("GenerateCrudInputEmbedded", () => {
         let orm: MikroORM;
         beforeEach(async () => {
             LazyMetadataStorage.load();
-            orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithEmbedded, TestEmbedded],
-            });
+            orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithEmbedded, TestEmbedded],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmbedded"));
             lintedOut = await lintGeneratedFiles(out);
@@ -151,11 +153,12 @@ describe("GenerateCrudInputEmbedded", () => {
         let orm: MikroORM;
         beforeEach(async () => {
             LazyMetadataStorage.load();
-            orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithoutEmbedded, TestWithoutEmbedded],
-            });
+            orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithoutEmbedded, TestWithoutEmbedded],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithoutEmbedded"));
             lintedOut = await lintGeneratedFiles(out);

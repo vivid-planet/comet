@@ -7,6 +7,9 @@ const config = createConfig(process.env);
 const bootstrap = new BootstrapConsole({
     module: AppModule.forRoot(config),
     useDecorators: true,
+    contextOptions: {
+        logger: ["error", "warn", "log"],
+    },
 });
 
 bootstrap.init().then(async (app) => {

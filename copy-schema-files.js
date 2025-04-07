@@ -16,5 +16,9 @@ const fs = require("fs");
         fs.promises.copyFile("demo/api/src/comet-config.json", "demo/site/src/comet-config.json"),
         fs.promises.copyFile("demo/api/src/comet-config.json", "demo/site-pages/src/comet-config.json"),
         fs.promises.copyFile("demo/api/src/comet-config.json", "demo/admin/src/comet-config.json"),
+
+        fs.promises.copyFile("demo/site-configs/site-configs.d.ts", "demo/api/src/site-configs.d.ts"),
+        fs.promises.copyFile("demo/site-configs/site-configs.d.ts", "demo/admin/src/site-configs.d.ts"),
+        fs.promises.copyFile("demo/site-configs/site-configs.d.ts", "demo/site/src/site-configs.d.ts"),
     ]);
 })();

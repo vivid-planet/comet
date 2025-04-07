@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 import { GQLFilenameResponse } from "../../../graphql.generated";
 import { useDamScope } from "../../config/useDamScope";
@@ -9,7 +9,7 @@ import { ManuallyHandleDuplicatedFilenamesDialog } from "./ManuallyHandleDuplica
 
 export interface ManualDuplicatedFilenamesHandlerApi {
     checkForDuplicates: (fileData: FilenameData[]) => Promise<GQLFilenameResponse[]>;
-    letUserHandleDuplicates: (fileData: FilenameData[]) => Promise<FilenameData[]>;
+    letUserHandleDuplicates: (fileData: FilenameData[]) => Promise<{ filenames: FilenameData[]; duplicateAction: DuplicateAction }>;
 }
 
 export interface FilenameData {
@@ -23,13 +23,16 @@ export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenames
     return useContext(ManualDuplicatedFilenamesHandlerContext);
 };
 
-export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: { children?: ReactNode }) => {
+export type DuplicateAction = "replace" | "copy" | "skip";
+
+export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent = ({ children }) => {
     const client = useApolloClient();
     const scope = useDamScope();
 
     const [occupiedFilenames, setOccupiedFilenames] = useState<FilenameData[]>([]);
     const [unoccupiedFilenames, setUnoccupiedFilenames] = useState<FilenameData[]>([]);
-    const [callback, setCallback] = useState<(newFilenames: FilenameData[]) => unknown>();
+    const [callback, setCallback] =
+        useState<({ newFilenames, duplicateAction }: { newFilenames: FilenameData[]; duplicateAction: DuplicateAction }) => unknown>();
 
     const checkForDuplicates = useCallback(
         async (filenameData: FilenameData[]) => {
@@ -51,7 +54,7 @@ export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: { 
     );
 
     const letUserHandleDuplicates = useCallback(
-        async (fileData: FilenameData[]): Promise<FilenameData[]> => {
+        async (fileData: FilenameData[]): Promise<{ filenames: FilenameData[]; duplicateAction: DuplicateAction }> => {
             const potentialDuplicates = await checkForDuplicates(fileData);
 
             const occupiedFilenames: FilenameData[] = [];
@@ -67,28 +70,36 @@ export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: { 
             }
 
             if (occupiedFilenames.length === 0) {
-                return unoccupiedFilenames;
+                return { filenames: unoccupiedFilenames, duplicateAction: "skip" };
             }
 
             setOccupiedFilenames(occupiedFilenames);
             setUnoccupiedFilenames(unoccupiedFilenames);
 
-            const finalFilenameData = await new Promise<FilenameData[]>((resolve) => {
-                setCallback(() => (fileData: FilenameData[]) => resolve(fileData));
+            const { newFilenames: finalFilenameData, duplicateAction } = await new Promise<{
+                newFilenames: FilenameData[];
+                duplicateAction: "replace" | "copy" | "skip";
+            }>((resolve) => {
+                setCallback(() => (data: { newFilenames: FilenameData[]; duplicateAction: "replace" | "copy" | "skip" }) => resolve(data));
             });
 
-            return finalFilenameData;
+            return { filenames: finalFilenameData, duplicateAction };
         },
         [checkForDuplicates],
     );
 
     const onSkip = () => {
-        callback?.(unoccupiedFilenames);
+        callback?.({ newFilenames: unoccupiedFilenames, duplicateAction: "skip" });
         setOccupiedFilenames([]);
     };
 
     const onUpload = () => {
-        callback?.([...unoccupiedFilenames, ...occupiedFilenames]);
+        callback?.({ newFilenames: [...unoccupiedFilenames, ...occupiedFilenames], duplicateAction: "copy" });
+        setOccupiedFilenames([]);
+    };
+
+    const onReplace = () => {
+        callback?.({ newFilenames: [...unoccupiedFilenames, ...occupiedFilenames], duplicateAction: "replace" });
         setOccupiedFilenames([]);
     };
 
@@ -105,6 +116,7 @@ export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: { 
                 filenameData={occupiedFilenames}
                 onSkip={onSkip}
                 onUpload={onUpload}
+                onReplace={onReplace}
             />
         </ManualDuplicatedFilenamesHandlerContext.Provider>
     );

@@ -1,6 +1,6 @@
 import { FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest } from "@comet/admin-icons";
 import { AdminComponentSection } from "@comet/blocks-admin";
-import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { GQLFocalPoint } from "../../graphql.generated";
@@ -12,7 +12,10 @@ interface ChooseFocalPointProps {
 
 export const ChooseFocalPoint = ({ focalPoint, onChangeFocalPoint }: ChooseFocalPointProps) => {
     return (
-        <AdminComponentSection title={<FormattedMessage id="comet.blocks.image.focalPoint" defaultMessage="Set manual focus point" />}>
+        <AdminComponentSection
+            title={<FormattedMessage id="comet.blocks.image.focalPoint" defaultMessage="Set manual focus point" />}
+            disableBottomMargin
+        >
             <ToggleButtonGroup
                 value={focalPoint}
                 onChange={(event, newFocalPoint: GQLFocalPoint) => {
@@ -40,12 +43,6 @@ export const ChooseFocalPoint = ({ focalPoint, onChangeFocalPoint }: ChooseFocal
                     <FocusPointSoutheast />
                 </ToggleButton>
             </ToggleButtonGroup>
-            <Typography variant="body2" component="p" color="textSecondary">
-                <FormattedMessage
-                    id="comet.blocks.image.hintSelectFocalPoint"
-                    defaultMessage="You can also select the focus point by clicking on the bullets in the image."
-                />
-            </Typography>
         </AdminComponentSection>
     );
 };

@@ -1,11 +1,12 @@
 "use client";
 
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -16,11 +17,10 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     const regExp =
         /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
     const match = value.match(regExp);
-    const youtubeId = value.length === EXPECTED_YT_ID_LENGTH ? value : match && match[8].length == EXPECTED_YT_ID_LENGTH ? match[8] : null;
+    const youtubeId = value.length === EXPECTED_YT_ID_LENGTH ? value : match && match[8].length === EXPECTED_YT_ID_LENGTH ? match[8] : null;
 
     return youtubeId ?? undefined;
 };
-
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
@@ -40,23 +40,46 @@ export const YouTubeVideoBlock = withPreview(
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
+        const iframeRef = useRef<HTMLIFrameElement | null>(null);
+        const inViewRef = useRef(null);
+
+        const pauseYouTubeVideo = () => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
+            }
+        };
+
+        const playYouTubeVideo = () => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
+            }
+        };
+
+        useIsElementInViewport(inViewRef, (inView: boolean) => {
+            if (autoplay) {
+                if (inView) {
+                    playYouTubeVideo();
+                } else {
+                    pauseYouTubeVideo();
+                }
+            }
+        });
 
         if (!youtubeIdentifier) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);
         const searchParams = new URLSearchParams();
         searchParams.append("modestbranding", "1");
+        searchParams.append("rel", "0");
+        searchParams.append("enablejsapi", "1");
 
-        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
-            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
         if (autoplay) searchParams.append("mute", "1");
 
         if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
 
         if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
-        // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
         if (loop && identifier) searchParams.append("playlist", identifier);
 
         const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
@@ -86,8 +109,8 @@ export const YouTubeVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
+                    <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                        <YouTubeContainer ref={iframeRef} src={youtubeUrl.toString()} />
                     </VideoContainer>
                 )}
             </>

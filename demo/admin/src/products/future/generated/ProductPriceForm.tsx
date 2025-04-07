@@ -3,6 +3,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Field, filterByFragment, FinalForm, FinalFormInput, Loading, useFormApiRef } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -94,6 +95,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
                         component={FinalFormInput}
                         type="number"
                         label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                        startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                     />
                 </>

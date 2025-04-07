@@ -1,19 +1,21 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { useGridApiContext } from "@mui/x-data-grid";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Toolbar, ToolbarProps } from "./Toolbar";
 
-export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
+export type DataGridToolbarClassKey = "root" | "standard" | "comfortable" | "compact";
 
-export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
-    ThemedComponentBaseProps<{
-        root: typeof Toolbar;
-    }>;
+export type DataGridToolbarProps = {
+    /** @deprecated The `density` prop is deprecated. The density is now used from the DataGrid. */
+    density?: "standard" | "comfortable" | "compact";
+} & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
+    ThemedComponentBaseProps<{ root: typeof Toolbar }>;
 
 type OwnerState = {
-    density: "standard" | "comfortable";
+    density: "standard" | "comfortable" | "compact";
 };
 
 const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
@@ -24,6 +26,18 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     },
 })(
     ({ ownerState, theme }) => css`
+        [class*="MuiDataGrid-toolbarQuickFilter"] {
+            width: 120px;
+
+            ${theme.breakpoints.up("sm")} {
+                width: 150px;
+            }
+
+            ${theme.breakpoints.up("md")} {
+                width: "auto";
+            }
+        }
+
         ${ownerState.density === "comfortable" &&
         css`
             min-height: 80px;
@@ -41,10 +55,13 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
 );
 
 export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
-    const { density = "standard", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+    const { density, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+
+    const apiRef = useGridApiContext();
+    const gridDensity = apiRef.current?.state?.density.value;
 
     const ownerState: OwnerState = {
-        density,
+        density: density || gridDensity,
     };
 
     return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} />;

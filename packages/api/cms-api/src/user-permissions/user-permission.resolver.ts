@@ -1,5 +1,6 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
@@ -22,6 +23,7 @@ export class UserPermissionResolver {
     constructor(
         private readonly service: UserPermissionsService,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Query(() => [UserPermission])
@@ -47,7 +49,7 @@ export class UserPermissionResolver {
         this.service.getUser(userId); //validate user exists
         permission.userId = userId;
         permission.assign(input);
-        await this.permissionRepository.persistAndFlush(permission);
+        await this.entityManager.persistAndFlush(permission);
         return permission;
     }
 
@@ -64,14 +66,14 @@ export class UserPermissionResolver {
     ): Promise<UserPermission> {
         const permission = await this.getPermission(id);
         permission.assign(input);
-        await this.permissionRepository.persistAndFlush(permission);
+        await this.entityManager.persistAndFlush(permission);
         return permission;
     }
 
     @Mutation(() => Boolean)
     @SkipBuild()
     async userPermissionsDeletePermission(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        this.permissionRepository.removeAndFlush(await this.getPermission(id));
+        this.entityManager.removeAndFlush(await this.getPermission(id));
         return true;
     }
 
@@ -83,7 +85,7 @@ export class UserPermissionResolver {
         await this.service.checkContentScopes(input.contentScopes);
         permission.overrideContentScopes = input.overrideContentScopes;
         permission.contentScopes = input.contentScopes;
-        await this.permissionRepository.persistAndFlush(permission);
+        await this.entityManager.persistAndFlush(permission);
         return permission;
     }
 

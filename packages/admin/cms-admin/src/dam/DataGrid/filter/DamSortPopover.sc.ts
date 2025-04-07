@@ -1,4 +1,5 @@
-import { Button, Popover } from "@mui/material";
+import { Button } from "@comet/admin";
+import { Popover } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 interface WrapperProps {
@@ -8,23 +9,19 @@ interface WrapperProps {
 export const Wrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$active" })<WrapperProps>`
     width: fit-content;
     position: relative;
-    border: 1px solid ${({ theme, $active }) => ($active ? theme.palette.grey[400] : theme.palette.grey[100])};
+    border-radius: 2px;
 `;
 
 export const SortByButton = styled(Button)`
     position: relative;
     align-items: center;
-    padding: 10px 15px;
+    padding: 11px 14px;
     cursor: pointer;
     display: flex;
     margin: 0;
 
     & [class*="muisvgicon-root"] {
         font-size: 12px;
-    }
-
-    &:hover {
-        background: initial;
     }
 `;
 

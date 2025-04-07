@@ -16,14 +16,12 @@ export const productFormFragment = gql`
         datasheets {
             ...FinalFormFileUpload
         }
-        manufacturerCountry: manufacturer {
-            addressAsEmbeddable {
-                country
-            }
-        }
         manufacturer {
             id
             name
+            addressAsEmbeddable {
+                country
+            }
         }
         category {
             id
@@ -36,6 +34,12 @@ export const productFormFragment = gql`
         priceRange {
             min
             max
+        }
+        lastCheckedAt
+        dimensions {
+            width
+            height
+            depth
         }
     }
     ${finalFormFileUploadFragment}

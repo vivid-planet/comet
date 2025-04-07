@@ -1,5 +1,544 @@
 # @comet/cms-admin
 
+## 7.18.0
+
+### Minor Changes
+
+-   2dc23dd6d: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+-   ec9778450: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+-   0acf80d30: User Permissions: Allow permission-specific content scopes to override by-rule content scopes
+-   Updated dependencies [e6092df34]
+-   Updated dependencies [f496734f8]
+-   Updated dependencies [e6092df34]
+    -   @comet/admin-date-time@7.18.0
+    -   @comet/blocks-admin@7.18.0
+    -   @comet/admin@7.18.0
+    -   @comet/admin-icons@7.18.0
+    -   @comet/admin-rte@7.18.0
+    -   @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+-   4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+-   ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    -   @comet/admin@7.17.0
+    -   @comet/admin-date-time@7.17.0
+    -   @comet/admin-icons@7.17.0
+    -   @comet/admin-rte@7.17.0
+    -   @comet/admin-theme@7.17.0
+    -   @comet/blocks-admin@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+-   ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+-   ea014c5e3: Set the correct icon for the button to confirm page actions
+-   e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+-   Updated dependencies [9bd499dcd]
+-   Updated dependencies [ed9282b3b]
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+-   Updated dependencies [5b7c6b4a7]
+    -   @comet/blocks-admin@7.16.0
+    -   @comet/admin-theme@7.16.0
+    -   @comet/admin@7.16.0
+    -   @comet/admin-date-time@7.16.0
+    -   @comet/admin-icons@7.16.0
+    -   @comet/admin-rte@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   46ab330da: Adapt styling of the dashboard header to match the Comet DXP design
+-   Updated dependencies [e056e8f3d]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [7d8c36e6c]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [6827982fe]
+-   Updated dependencies [7d8c36e6c]
+    -   @comet/blocks-admin@7.15.0
+    -   @comet/admin@7.15.0
+    -   @comet/admin-theme@7.15.0
+    -   @comet/admin-date-time@7.15.0
+    -   @comet/admin-icons@7.15.0
+    -   @comet/admin-rte@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   97cd0a3dd: User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+-   c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   Updated dependencies [6b75f20e4]
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+-   Updated dependencies [948e07bba]
+-   Updated dependencies [bb041f7a7]
+-   Updated dependencies [7f72e82fc]
+    -   @comet/admin@7.14.0
+    -   @comet/admin-theme@7.14.0
+    -   @comet/blocks-admin@7.14.0
+    -   @comet/admin-rte@7.14.0
+    -   @comet/admin-date-time@7.14.0
+    -   @comet/admin-icons@7.14.0
+
+## 7.13.0
+
+### Patch Changes
+
+-   f49370a9e: Improve SVG validation
+
+    Following tags are banned in SVGs:
+
+    -   script
+    -   \[new\] foreignObject
+    -   \[new\] use
+    -   \[new\] image
+    -   \[new\] animate
+    -   \[new\] animateMotion
+    -   \[new\] animateTransform
+    -   \[new\] set
+
+    Following attributes are banned:
+
+    -   Event handlers (`onload`, `onclick`, ...)
+    -   \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
+
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [5c06e4bee]
+-   Updated dependencies [bd562d325]
+-   Updated dependencies [b918c810b]
+-   Updated dependencies [86c1d5996]
+    -   @comet/admin@7.13.0
+    -   @comet/blocks-admin@7.13.0
+    -   @comet/admin-rte@7.13.0
+    -   @comet/admin-date-time@7.13.0
+    -   @comet/admin-icons@7.13.0
+    -   @comet/admin-theme@7.13.0
+
+## 7.12.0
+
+### Minor Changes
+
+-   604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+### Patch Changes
+
+-   64173b513: Fix page tree node slug validation to prevent URL encoded characters
+-   0837c4c64: Hide the "Dependents" tab in the DAM for users without the permission `dependencies`
+-   cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    -   `video/avi` doesn't actually exist
+    -   `image/psd` doesn't exist / is non-standard
+    -   `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+        instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+-   cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+-   02dd20ac4: Export `useDamScope` hook
+
+    This allows accessing the DAM scope in the application. This might be necessary when developing integrations with a third-party DAM.
+
+-   954635630: Update default icon of `ContentScopeSelect` and fix mobile styling for `AppHeader` components
+
+    -   Update the default icon in `ContentScopeSelect` from `<Domain />` to `<Language />`
+    -   Fix mobile styling of `BuildEntry` and `ContentScopeSelect` and `UserHeaderItem`
+
+-   Updated dependencies [af51bb408]
+-   Updated dependencies [92b3255d2]
+-   Updated dependencies [47be4ebd3]
+-   Updated dependencies [86479e770]
+-   Updated dependencies [954635630]
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [4f6e6b011]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [ee597535a]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [7da81fa2e]
+-   Updated dependencies [3ddc2278b]
+-   Updated dependencies [af350d086]
+-   Updated dependencies [86479e770]
+-   Updated dependencies [0bb181a52]
+-   Updated dependencies [af51bb408]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-theme@7.12.0
+    -   @comet/blocks-admin@7.12.0
+    -   @comet/admin-date-time@7.12.0
+    -   @comet/admin-icons@7.12.0
+    -   @comet/admin-rte@7.12.0
+
+## 7.11.0
+
+### Minor Changes
+
+-   3acbb04d4: Update design of the user menu in the header and add information about the impersonated user
+
+### Patch Changes
+
+-   94cc411a6: Adapt styling of `ContentScopeSelect` to match the Comet design
+-   6778c4e97: Prevent the creation of a second home page
+-   7992a9a9e: Enable setting `importSourceId` and `importSourceType` for each individual file in the `useDamFileUpload#uploadFiles` function
+-   Updated dependencies [b8b8e2747]
+-   Updated dependencies [9f2a1272b]
+-   Updated dependencies [1e01cca21]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [a4fcdeb51]
+-   Updated dependencies [5ba64aab6]
+-   Updated dependencies [20f63417e]
+-   Updated dependencies [e9f547d95]
+-   Updated dependencies [8114a6ae7]
+    -   @comet/admin@7.11.0
+    -   @comet/admin-theme@7.11.0
+    -   @comet/admin-date-time@7.11.0
+    -   @comet/admin-icons@7.11.0
+    -   @comet/admin-rte@7.11.0
+    -   @comet/blocks-admin@7.11.0
+
+## 7.10.0
+
+### Minor Changes
+
+-   2b9fac2cf: Add support for passing title and alt text to `useDamFileUpload`
+
+    This can be useful when importing files from an external DAM.
+
+### Patch Changes
+
+-   d210ef74a: Remove vertical and horizontal scroll bars from block preview iframe
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [8f924d591]
+-   Updated dependencies [aa02ca13f]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [bf6b03fe0]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin@7.10.0
+    -   @comet/admin-date-time@7.10.0
+    -   @comet/admin-icons@7.10.0
+    -   @comet/admin-rte@7.10.0
+    -   @comet/blocks-admin@7.10.0
+
+## 7.9.0
+
+### Minor Changes
+
+-   7cea765fe: Add UI for Impersonation Feature
+
+    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    -   Add button to allow users to switch on impersonation in the `UserGrid`
+    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    -   Add `ImpersonateUser` icon
+
+### Patch Changes
+
+-   6d6131b16: Use consistent date and time formatting across the Admin UI
+-   27510c22f: Prevent `ContentScopeIndicator` from crashing when a scope part is `undefined`
+-   8ed5795a1: Don't add non-existing scope parts to the `DamScope` as `undefined`
+-   7ce4b0f0a: Fix DAM license duration input when no values are provided
+-   Updated dependencies [6d6131b16]
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [92f9d078f]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [047b9d17b]
+-   Updated dependencies [0919e3ba6]
+-   Updated dependencies [55d40ef08]
+-   Updated dependencies [9aa6947b7]
+-   Updated dependencies [59b4b6f77]
+    -   @comet/admin@7.9.0
+    -   @comet/admin-icons@7.9.0
+    -   @comet/blocks-admin@7.9.0
+    -   @comet/admin-theme@7.9.0
+    -   @comet/admin-date-time@7.9.0
+    -   @comet/admin-rte@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   b721ac044: Harmonize the size and alignment of the DAM filters
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+-   4037b4d8c: Rework the DAM crop/focus settings UI
+-   059636aba: Pass the `graphQLApiUrl` for `useBlockPreviewFetch` through the `IFrameBridge`
+
+    It's not necessary to set it in the site anymore. To migrate, remove the argument from `useBlockPreviewFetch()`:
+
+    ```diff
+    const PreviewPage = () => {
+        const iFrameBridge = useIFrameBridge();
+
+    -   const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    +   const { fetch, graphQLFetch } = useBlockPreviewFetch();
+
+        const [blockData, setBlockData] = useState<PageContentBlockData>();
+        useEffect(() => {
+            async function load() {
+    +           if (!graphQLFetch) {
+    +               return;
+    +           }
+                if (!iFrameBridge.block) {
+                    setBlockData(undefined);
+                    return;
+                }
+                const newData = await recursivelyLoadBlockData({
+                    blockType: "PageContent",
+                    blockData: iFrameBridge.block,
+                    graphQLFetch,
+                    fetch,
+                    pageTreeNodeId: undefined, //we don't have a pageTreeNodeId in preview
+                });
+                setBlockData(newData);
+            }
+            load();
+        }, [iFrameBridge.block, fetch, graphQLFetch]);
+
+        return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
+    };
+    ```
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   62ead06fa: Master Menu: render collapsible or grouped menu items only when at least one item of the submenu is allowed.
+-   Updated dependencies [139616be6]
+-   Updated dependencies [d8fca0522]
+-   Updated dependencies [a168e5514]
+-   Updated dependencies [e16ad1a02]
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+-   Updated dependencies [139616be6]
+-   Updated dependencies [eefb0546f]
+-   Updated dependencies [795ec73d9]
+-   Updated dependencies [8617c3bcd]
+-   Updated dependencies [d8298d59a]
+-   Updated dependencies [059636aba]
+-   Updated dependencies [daacf1ea6]
+-   Updated dependencies [4338a6c07]
+-   Updated dependencies [9cc75c141]
+    -   @comet/admin@7.8.0
+    -   @comet/admin-icons@7.8.0
+    -   @comet/blocks-admin@7.8.0
+    -   @comet/admin-date-time@7.8.0
+    -   @comet/admin-rte@7.8.0
+    -   @comet/admin-theme@7.8.0
+
+## 7.7.0
+
+### Minor Changes
+
+-   6cb498f51: Add search results highlighting to `ContentScopeSelect`
+
+    Also, add the helper function `findTextMatches`, which can be used to add search highlighting to a custom `renderOption` implementation:
+
+    ```tsx
+    <ContentScopeSelect
+        renderOption={(option, query) => {
+            const text = `${option.domain.label} – ${option.language.label}`;
+            const matches = findTextMatches(text, query);
+            return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   bb9215f25: Don't move files to a folder called "." when uploading them to the DAM
+
+    This bug only occurred in projects with a `react-dropzone` version >= 14.3.2.
+
+-   Updated dependencies [8ffc90eb1]
+-   Updated dependencies [a9d2e2e25]
+    -   @comet/blocks-admin@7.7.0
+    -   @comet/admin@7.7.0
+    -   @comet/admin-date-time@7.7.0
+    -   @comet/admin-icons@7.7.0
+    -   @comet/admin-rte@7.7.0
+    -   @comet/admin-theme@7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+-   1f5c29ce8: Show the number of permissions and content scopes in the User Permissions Admin panel
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+-   d54a8c9f8: Add support for multiple paths in `ContentScopeProvider`
+
+    This enables using different paths for scopes with non-overlapping dimensions.
+    The `location.createPath` and `location.createUrl` functions can be used to override the default behavior.
+
+    **Example**
+
+    ```tsx
+    <ContentScopeProvider
+        location={{
+            createPath: () => ["/organization/:organizationId", "/channel/:channelId"],
+            createUrl: (scope) => {
+                if (scope.organizationId) {
+                    return `/organization/${scope.organizationId}`;
+                } else if (scope.channelId) {
+                    return `/channel/${scope.channelId}`;
+                } else {
+                    throw new Error("Invalid scope");
+                }
+            },
+        }}
+    />
+    ```
+
+-   05058fc1b: Export components to allow customization of User Permissions Admin panel
+
+    The application can provide a custom UserPermissionsPage based on the [default UserPermissionsPage](https://github.com/vivid-planet/comet/blob/main/packages/admin/cms-admin/src/userPermissions/UserPermissionsPage.tsx).
+
+-   0589ef554: Add `displayName` prop to `createTextLinkBlock` factory to support setting a custom display name
+
+### Patch Changes
+
+-   11ce320e9: Fix validation of empty `PhoneLinkBlock`
+
+    Previously, the default phone value was an empty string, meaning `@IsOptional()` didn't prevent validation.
+    Since an empty string is not a valid phone number, the validation failed.
+
+    This change sets the default value to `undefined`.
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   18a9f22a7: Keep current location when changing scope on publisher and user permissions page
+-   6a43beebc: Display global `ContentScopeIndicator` if redirects are scoped globally
+
+    Previously, an empty `ContentScopeIndicator` was displayed if no `scopeParts` were passed to `createRedirectsPage`.
+
+-   1cf01f70f: Fix `ContentScopeIndicator` for scope with optional dimensions
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [37d71a89a]
+-   Updated dependencies [cf2ee898f]
+-   Updated dependencies [03afcd073]
+-   Updated dependencies [00d7ddae1]
+-   Updated dependencies [fe8909404]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-date-time@7.6.0
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-rte@7.6.0
+    -   @comet/admin-theme@7.6.0
+    -   @comet/blocks-admin@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes

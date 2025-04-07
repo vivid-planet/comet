@@ -1,7 +1,7 @@
 import { GridColDef } from "@comet/admin";
 import { FormattedNumber } from "react-intl";
 
-import { BaseColumnConfig } from "../generator";
+import { BaseColumnConfig, ImportReference } from "../generator";
 import { getFormattedMessageNode } from "../utils/intl";
 
 type AbstractField<FieldName extends string> = {
@@ -56,6 +56,7 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     name: string;
     primaryText?: Field<FieldName>;
     secondaryText?: Field<FieldName>;
+    filterOperators?: ImportReference;
 } & BaseColumnConfig &
     Pick<GridColDef, "sortBy">;
 

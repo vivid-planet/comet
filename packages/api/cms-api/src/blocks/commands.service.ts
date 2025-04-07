@@ -1,4 +1,4 @@
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -11,7 +11,7 @@ export class CommandsService {
     constructor(
         private readonly dependenciesService: DependenciesService,
         private readonly blockMigrateService: BlockMigrateService,
-        // orm is necessary, otherwise @UseRequestContext() doesn't work
+        // orm is necessary, otherwise @CreateRequestContext() doesn't work
         private readonly orm: MikroORM,
     ) {}
 
@@ -41,7 +41,7 @@ export class CommandsService {
             },
         ],
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async refreshBlockIndexViews(args: { force: boolean }): Promise<void> {
         await this.dependenciesService.refreshViews({ awaitRefresh: true, force: args.force });
     }

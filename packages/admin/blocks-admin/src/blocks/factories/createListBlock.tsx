@@ -85,23 +85,28 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
-export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
-    name,
-    block,
-    displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
-    itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
-    itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
-    minVisibleBlocks,
-    maxVisibleBlocks,
-    createDefaultListEntry,
-    additionalItemFields,
-    AdditionalItemContextMenuItems,
-    AdditionalItemContent,
-}: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
-    ListBlockFragment<AdditionalItemFields>,
-    ListBlockState<T, AdditionalItemFields>,
-    ListBlockOutput<AdditionalItemFields>
-> {
+export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
+    {
+        name,
+        block,
+        displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
+        itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
+        itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
+        minVisibleBlocks,
+        maxVisibleBlocks,
+        createDefaultListEntry,
+        additionalItemFields,
+        AdditionalItemContextMenuItems,
+        AdditionalItemContent,
+    }: CreateListBlockOptions<T, AdditionalItemFields>,
+    override?: (
+        block: BlockInterface<
+            ListBlockFragment<AdditionalItemFields>,
+            ListBlockState<T, AdditionalItemFields>,
+            ListBlockOutput<AdditionalItemFields>
+        >,
+    ) => BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>>,
+): BlockInterface<ListBlockFragment<AdditionalItemFields>, ListBlockState<T, AdditionalItemFields>, ListBlockOutput<AdditionalItemFields>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
     if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
         throw new Error(
@@ -205,7 +210,11 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                         return {
                             key: child.key,
                             visible: child.visible,
-                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            props: block.createPreviewState(child.props, {
+                                ...previewCtx,
+                                parentUrlSubRoute: undefined,
+                                parentUrl: blockAdminRoute,
+                            }),
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                             ...(Object.keys(additionalItemFields ?? {}).reduce(
                                 (fields, field) => ({ ...fields, [field]: child[field] }),
@@ -273,7 +282,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
             return (
                 <SelectPreviewComponent>
-                    <StackSwitch>
+                    <StackSwitch disableForcePromptRoute>
                         <StackPage name="table">
                             <StackSwitchApiContext.Consumer>
                                 {(stackApi) => {
@@ -525,7 +534,22 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            const content = state.blocks.reduce<string[]>((content, child) => {
+                if (!child.visible && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
+            }, []);
+            return content;
+        },
     };
+    if (override) {
+        return override(BlockListBlock);
+    }
     return BlockListBlock;
 }
 

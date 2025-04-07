@@ -1,7 +1,9 @@
-type User {
+type UserPermissionsUser {
   id: String!
   name: String!
   email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
 }
 
 type CurrentUserPermission {
@@ -20,7 +22,7 @@ type CurrentUser {
   email: String!
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
-  authenticatedUser: User
+  authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -149,6 +151,13 @@ enum KubernetesJobStatus {
   failed
 }
 
+type SeoTags {
+  htmlTitle: String!
+  metaDescription: String!
+  openGraphTitle: String!
+  openGraphDescription: String!
+}
+
 type KubernetesCronJob {
   id: ID!
   name: String!
@@ -189,12 +198,12 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  downloadUrl: String
+  downloadUrl: String!
   imageUrl(resizeWidth: Int!): String
 }
 
-type PaginatedUserList {
-  nodes: [User!]!
+type UserPermissionPaginatedUserList {
+  nodes: [UserPermissionsUser!]!
   totalCount: Int!
 }
 
@@ -373,8 +382,8 @@ type Query {
   kubernetesJob(name: String!): KubernetesJob!
   kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
-  userPermissionsUserById(id: String!): User!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsUserById(id: String!): UserPermissionsUser!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
@@ -397,6 +406,7 @@ enum SortDirection {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -410,6 +420,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input BooleanFilter {
@@ -492,20 +503,20 @@ enum SlugAvailability {
   Reserved
 }
 
-input UserFilter {
+input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  and: [UserFilter!]
-  or: [UserFilter!]
+  and: [UserPermissionsUserFilter!]
+  or: [UserPermissionsUserFilter!]
 }
 
-input UserSort {
-  field: UserSortField!
+input UserPermissionsUserSort {
+  field: UserPermissionsUserSortField!
   direction: SortDirection! = ASC
 }
 
-enum UserSortField {
+enum UserPermissionsUserSortField {
   name
   email
   status
@@ -550,8 +561,9 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
-  generateAltText(fileId: String!): String!
-  generateImageTitle(fileId: String!): String!
+  generateAltText(fileId: String!, language: String): String!
+  generateImageTitle(fileId: String!, language: String): String!
+  generateSeoTags(content: String!, language: String!): SeoTags!
 }
 
 input CreateBuildsInput {

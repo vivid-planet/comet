@@ -3,7 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
-import { News } from "../entities/news.entity";
+import type { News } from "../entities/news.entity";
 import { NewsLinkBlockData } from "./news-link.block";
 
 type TransformResponse = {
@@ -19,7 +19,7 @@ type TransformResponse = {
 
 @Injectable()
 export class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
-    constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+    constructor(@InjectRepository("News") private readonly repository: EntityRepository<News>) {}
 
     async transformToPlain(block: NewsLinkBlockData) {
         if (!block.id) {

@@ -1,5 +1,6 @@
 import { V1CronJob } from "@kubernetes/client-node";
 import { getRepositoryToken } from "@mikro-orm/nestjs";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { KubernetesModule } from "../kubernetes/kubernetes.module";
@@ -60,6 +61,7 @@ describe("BuildsService", () => {
                 { provide: getRepositoryToken(ChangesSinceLastBuild), useValue: {} },
                 { provide: BuildTemplatesService, useValue: mockedBuildTemplatesService },
                 { provide: ACCESS_CONTROL_SERVICE, useValue: {} },
+                { provide: EntityManager, useValue: {} },
             ],
         }).compile();
 

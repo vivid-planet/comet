@@ -1,5 +1,6 @@
 import { orange, yellow } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
+import escapeRegExp from "lodash.escaperegexp";
 import { Fragment, ReactNode } from "react";
 
 export type TextMatch = { start: number; end: number; focused: boolean };
@@ -39,3 +40,24 @@ const Mark = styled("mark")<{ focused: boolean }>`
     color: ${({ theme }) => theme.palette.common.black};
     background-color: ${({ focused }) => (focused ? orange[500] : yellow[500])};
 `;
+
+export const findTextMatches = (text: string, query?: string): Array<TextMatch> => {
+    const matches: Array<TextMatch> = [];
+    if (!query) {
+        return matches;
+    }
+
+    const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        matches.push({
+            start: match.index,
+            end: match.index + query.length - 1,
+            focused: false,
+        });
+    }
+
+    return matches;
+};

@@ -59,13 +59,12 @@ interface CreateColumnsBlockOptions<T extends BlockInterface> {
     layouts: ColumnsBlockLayout[];
 }
 
-export function createColumnsBlock<T extends BlockInterface>({
-    name,
-    displayName,
-    category = BlockCategory.Layout,
-    contentBlock,
-    layouts,
-}: CreateColumnsBlockOptions<T>): BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>> {
+export function createColumnsBlock<T extends BlockInterface>(
+    { name, displayName, category = BlockCategory.Layout, contentBlock, layouts }: CreateColumnsBlockOptions<T>,
+    override?: (
+        block: BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>>,
+    ) => BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>>,
+): BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>> {
     if (layouts.length === 0) {
         throw new Error(`Number of layouts must be greater than 0!`);
     }
@@ -165,7 +164,11 @@ export function createColumnsBlock<T extends BlockInterface>({
                     return {
                         key: column.key,
                         visible: column.visible,
-                        props: contentBlock.createPreviewState(column.props, { ...previewContext, parentUrl: blockAdminRoute }),
+                        props: contentBlock.createPreviewState(column.props, {
+                            ...previewContext,
+                            parentUrlSubRoute: undefined,
+                            parentUrl: blockAdminRoute,
+                        }),
                         adminRoute: blockAdminRoute,
                         adminMeta: { route: blockAdminRoute },
                     };
@@ -233,7 +236,7 @@ export function createColumnsBlock<T extends BlockInterface>({
 
             return (
                 <>
-                    <StackSwitch initialPage="list">
+                    <StackSwitch initialPage="list" disableForcePromptRoute>
                         <StackPage name="list">
                             <BlocksFinalForm<{ layout: ColumnsBlockLayout; columns: number }>
                                 onSubmit={({ layout, columns }) => {
@@ -381,10 +384,7 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                             <LargeAddButtonContent>
                                                                 <LargeAddButtonIcon />
                                                                 <Typography>
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.columns.addColumn"
-                                                                        defaultMessage="Add column"
-                                                                    />
+                                                                    <FormattedMessage id="comet.blocks.columns.addItem" defaultMessage="Add item" />
                                                                 </Typography>
                                                             </LargeAddButtonContent>
                                                         </AdminComponentButton>
@@ -399,7 +399,7 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                 size="large"
                                                                 startIcon={<Add />}
                                                             >
-                                                                <FormattedMessage id="comet.blocks.columns.addColumn" defaultMessage="Add column" />
+                                                                <FormattedMessage id="comet.blocks.columns.addItem" defaultMessage="Add item" />
                                                             </AdminComponentButton>
                                                         </AdminComponentStickyFooter>
                                                     )}
@@ -461,7 +461,23 @@ export function createColumnsBlock<T extends BlockInterface>({
             const childPath = contentBlock.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
+
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            return state.columns.reduce<string[]>((content, column) => {
+                if (!column.visible && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(contentBlock.extractTextContents?.(column.props, options) ?? [])];
+            }, []);
+        },
     };
+
+    if (override) {
+        return override(ColumnsBlock);
+    }
 
     return ColumnsBlock;
 }

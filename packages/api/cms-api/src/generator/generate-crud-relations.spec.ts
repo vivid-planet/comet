@@ -1,5 +1,5 @@
 import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -50,11 +50,12 @@ describe("GenerateCrudRelations", () => {
     describe("resolver class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategory],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityCategory],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -78,11 +79,12 @@ describe("GenerateCrudRelations", () => {
 
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategory],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityCategory],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityCategory"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -106,11 +108,12 @@ describe("GenerateCrudRelations", () => {
 
         it("input type to category relation should be string with uuid validator", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategory],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityCategory],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
             const lintedOut = await lintGeneratedFiles(out);

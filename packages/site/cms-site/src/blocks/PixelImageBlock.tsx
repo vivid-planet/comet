@@ -11,11 +11,15 @@ import { PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio: string | number | "inherit";
+    /**
+     * Do not set an `alt` attribute. The alt text is set in the DAM.
+     */
+    alt?: never;
 }
 
 export const PixelImageBlock = withPreview(
     ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
-        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} />;
+        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
 
         // If we have a crop area set, DAM setting are overwritten, so we use that
         const usedCropArea = cropArea ?? damFile.image.cropArea;

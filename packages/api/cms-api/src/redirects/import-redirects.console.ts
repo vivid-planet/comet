@@ -1,5 +1,5 @@
 import * as csv from "@fast-csv/parse";
-import { EntityManager, EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/core";
 import type { FilterQuery } from "@mikro-orm/core/typings";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
@@ -8,6 +8,7 @@ import * as fs from "fs";
 import { Command, Console } from "nestjs-console";
 
 import { PageTreeService } from "../page-tree/page-tree.service";
+import { PageTreeReadApiOptions } from "../page-tree/page-tree-read-api";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
@@ -27,7 +28,7 @@ interface Row {
 export class ImportRedirectsConsole {
     constructor(
         private readonly orm: MikroORM,
-        private readonly em: EntityManager,
+        private readonly entityManager: EntityManager,
         @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
         @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
         @Inject(REDIRECTS_LINK_BLOCK) private readonly linkBlock: RedirectsLinkBlock,
@@ -37,14 +38,18 @@ export class ImportRedirectsConsole {
         command: "import-redirects [filepath] [comment]",
         description: "Import redirects from csv file",
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async execute(filepath: string, comment = "Imported"): Promise<void> {
         const rows = await this.readRedirectsCsv(filepath);
         let successes = 0;
         let errors = 0;
 
         for (const row of rows) {
-            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"]);
+            const options: PageTreeReadApiOptions = {};
+            if (row["scope"]) {
+                options.scope = row["scope"];
+            }
+            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"], options);
 
             const where: FilterQuery<RedirectInterface> = { source: row.source };
             if (row["scope"]) {
@@ -96,7 +101,7 @@ export class ImportRedirectsConsole {
 
                     successes++;
 
-                    this.repository.persist(redirect);
+                    this.entityManager.persist(redirect);
                 }
             } else if (row["target_type"] === "external") {
                 if (existingRedirect) {
@@ -143,7 +148,7 @@ export class ImportRedirectsConsole {
                     });
 
                     successes++;
-                    this.repository.persist(redirect);
+                    this.entityManager.persist(redirect);
                 }
             } else {
                 console.log(`Error for Redirect ${row["source"]}`);
@@ -151,7 +156,7 @@ export class ImportRedirectsConsole {
             }
         }
 
-        await this.repository.flush();
+        await this.entityManager.flush();
         console.log(`\nSuccess: ${successes}`);
         console.log(`Error: ${errors}`);
     }

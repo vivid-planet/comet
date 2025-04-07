@@ -89,8 +89,15 @@ export interface MasterMenuProps {
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): boolean =>
-        !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): boolean => {
+        if (!item.requiredPermission) {
+            if (item.type === "collapsible" || item.type === "group") {
+                return (item.items || []).some(checkPermission);
+            }
+            return true;
+        }
+        return isAllowed(item.requiredPermission);
+    };
 
     const mapFn = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): MenuItem => {
         if (item.type === "externalLink") {

@@ -1,5 +1,5 @@
 import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -38,11 +38,12 @@ describe("GenerateCrud dedicatedResolverArg", () => {
     describe("resolver class", () => {
         it("input type must not include product relation", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityProductVariant],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityProductVariant],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProductVariant"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -62,11 +63,12 @@ describe("GenerateCrud dedicatedResolverArg", () => {
         });
         it("query list must include product arg", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityProductVariant],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityProductVariant],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProductVariant"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -87,11 +89,12 @@ describe("GenerateCrud dedicatedResolverArg", () => {
         });
         it("create mutation must include product arg", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityProductVariant],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityProductVariant],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProductVariant"));
             const lintedOut = await lintGeneratedFiles(out);

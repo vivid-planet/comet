@@ -1,9 +1,10 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormCheckbox, FinalFormSwitch, SaveButton } from "@comet/admin";
+import { CancelButton, DataGridToolbar, Field, FinalForm, FinalFormSwitch, SaveButton, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage } from "react-intl";
 
-import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
     GQLOverrideContentScopesMutation,
     GQLOverrideContentScopesMutationVariables,
@@ -24,6 +25,17 @@ interface FormProps {
 type ContentScope = {
     [key: string]: string;
 };
+
+function OverrideContentScopesDialogGridToolbar() {
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarFillSpace />
+        </DataGridToolbar>
+    );
+}
 
 export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialogClose }: FormProps) => {
     const client = useApolloClient();
@@ -51,13 +63,14 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
 
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
-            query PermissionContentScopes($permissionId: ID!, $userId: String) {
+            query PermissionContentScopes($permissionId: ID!, $userId: String!) {
                 availableContentScopes: userPermissionsAvailableContentScopes
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
                     contentScopes
                 }
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
         `,
         {
@@ -79,8 +92,10 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     };
     const disabled = data && data.permission.source === "BY_RULE";
 
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+
     return (
-        <Dialog maxWidth="sm" open={true}>
+        <Dialog maxWidth="lg" open={true}>
             <FinalForm<FormSubmitData>
                 mode="edit"
                 onSubmit={submit}
@@ -100,25 +115,36 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 type="checkbox"
                                 disabled={disabled}
                             />
-                            {values.overrideContentScopes &&
-                                data.availableContentScopes.map((contentScope: ContentScope) => (
-                                    <Field
-                                        disabled={disabled}
-                                        key={JSON.stringify(contentScope)}
-                                        name="contentScopes"
-                                        fullWidth
-                                        variant="horizontal"
-                                        type="checkbox"
-                                        component={FinalFormCheckbox}
-                                        value={JSON.stringify(contentScope)}
-                                        label={Object.entries(contentScope).map(([scope, value]) => (
-                                            <>
-                                                {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                                <br />
-                                            </>
-                                        ))}
-                                    />
-                                ))}
+                            {values.overrideContentScopes && (
+                                <Field name="contentScopes" fullWidth>
+                                    {(props) => {
+                                        return (
+                                            <DataGrid
+                                                autoHeight={true}
+                                                rows={
+                                                    data.availableContentScopes.filter(
+                                                        (obj) => !Object.values(obj).every((value) => value === undefined),
+                                                    ) ?? []
+                                                }
+                                                columns={columns}
+                                                rowCount={data.availableContentScopes.length}
+                                                loading={false}
+                                                getRowHeight={() => "auto"}
+                                                getRowId={(row) => JSON.stringify(row)}
+                                                checkboxSelection={!disabled}
+                                                selectionModel={props.input.value}
+                                                onSelectionModelChange={(selectionModel) => {
+                                                    props.input.onChange(selectionModel.map((id) => String(id)));
+                                                }}
+                                                components={{
+                                                    Toolbar: OverrideContentScopesDialogGridToolbar,
+                                                }}
+                                                pageSize={25}
+                                            />
+                                        );
+                                    }}
+                                </Field>
+                            )}
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => handleDialogClose()}>

@@ -2,7 +2,7 @@ import { SitePreviewData } from "../sitePreview/SitePreviewUtils";
 
 type Fetch = typeof fetch;
 
-function graphQLHeaders(previewData?: SitePreviewData) {
+export function convertPreviewDataToHeaders(previewData?: SitePreviewData) {
     const { includeInvisibleBlocks, includeInvisiblePages } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
@@ -53,7 +53,7 @@ export const gql = (chunks: TemplateStringsArray, ...variables: unknown[]): stri
 };
 
 export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: SitePreviewData): Fetch {
-    const defaultHeaders = graphQLHeaders(previewData);
+    const defaultHeaders = convertPreviewDataToHeaders(previewData);
     return createFetchWithDefaults(fetch, { headers: defaultHeaders });
 }
 

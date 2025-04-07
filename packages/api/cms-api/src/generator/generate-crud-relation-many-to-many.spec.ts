@@ -1,4 +1,5 @@
 import { BaseEntity, Collection, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Property, Ref, types } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -44,11 +45,12 @@ describe("GenerateCrud Relation n:m with additional column", () => {
     let orm: MikroORM;
     beforeEach(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [Product, ProductToCategory, Category],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [Product, ProductToCategory, Category],
+            }),
+        );
 
         const out = await generateCrud(
             { targetDirectory: __dirname, create: false, update: true, delete: false },
