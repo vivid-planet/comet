@@ -1,7 +1,7 @@
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { plural } from "pluralize";
 
-export function classNameToInstanceName(className: string): string {
+function classNameToInstanceName(className: string): string {
     return className[0].toLocaleLowerCase() + className.slice(1);
 }
 
