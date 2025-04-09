@@ -639,6 +639,7 @@ type Redirect {
   target: JSONObject!
   comment: String
   active: Boolean!
+  activatedAt: DateTime
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
