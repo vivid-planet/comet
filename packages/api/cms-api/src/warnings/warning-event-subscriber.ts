@@ -1,8 +1,12 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
 import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { ModuleRef, Reflector } from "@nestjs/core";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
+import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { WarningData } from "./dto/warning-data";
 import { WarningService } from "./warning.service";
 
 @Injectable()
@@ -11,22 +15,26 @@ export class WarningEventSubscriber implements EventSubscriber {
         readonly entityManager: EntityManager,
         private readonly orm: MikroORM,
         private readonly warningService: WarningService,
+        private reflector: Reflector,
+        private readonly moduleRef: ModuleRef,
     ) {
         entityManager.getEventManager().registerSubscriber(this);
     }
 
     getSubscribedEntities(): EntityName<unknown>[] {
-        const rootBlockEntities: EntityName<unknown>[] = [];
+        const subscribedEntities: EntityName<unknown>[] = [];
 
         const entities = this.orm.config.get("entities") as EntityClass<unknown>[];
         for (const entity of entities) {
             const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
 
-            if (rootBlockEntityOptions) {
-                rootBlockEntities.push(entity);
+            if (rootBlockEntityOptions || createWarnings) {
+                subscribedEntities.push(entity);
             }
         }
-        return rootBlockEntities;
+
+        return subscribedEntities;
     }
 
     async afterUpdate(args: EventArgs<unknown>): Promise<void> {
@@ -53,15 +61,57 @@ export class WarningEventSubscriber implements EventSubscriber {
                 });
                 for (const node of flatBlocks.depthFirst()) {
                     const warnings = node.block.warnings();
-                    await this.warningService.updateWarningsForBlock(warnings, {
+
+                    const startDate = new Date();
+                    const sourceInfo = {
                         rootEntityName: entity.name,
                         rootColumnName: key,
                         targetId: args.entity.id,
                         rootPrimaryKey: args.meta.primaryKeys[0],
                         jsonPath: node.pathToString(),
+                    };
+                    await this.warningService.saveWarnings({
+                        warnings,
+                        type: "Block",
+                        sourceInfo,
                     });
+                    await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Block", sourceInfo });
+                }
+            }
+
+            const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
+            if (createWarnings) {
+                const repository = this.entityManager.getRepository(entity);
+
+                const rows = await repository.find();
+
+                for (const row of rows) {
+                    let warnings: WarningData[] = [];
+                    if (this.isService(createWarnings)) {
+                        const service = this.moduleRef.get(createWarnings, { strict: false });
+                        warnings = await service.createWarnings(row);
+                    } else {
+                        warnings = await createWarnings(row);
+                    }
+                    const startDate = new Date();
+                    const sourceInfo = {
+                        rootEntityName: entity.name,
+                        rootPrimaryKey: args.meta.primaryKeys[0],
+                        targetId: row.id,
+                    };
+                    await this.warningService.saveWarnings({
+                        warnings,
+                        type: "Entity",
+                        sourceInfo,
+                    });
+                    await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Entity", sourceInfo });
                 }
             }
         }
+    }
+
+    private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
+        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
     }
 }
