@@ -12,17 +12,21 @@ import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
 
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>;
+    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectLinkBlock to create a custom link block for the redirects
     scopeParts?: string[];
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType {
-    const linkBlock = createOneOfBlock({
+export function createRedirectLinkBlock(customTargets?: Record<string, BlockInterface>) {
+    return createOneOfBlock({
         supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
         displayName: <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
         allowEmpty: false,
     });
+}
+
+function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType {
+    const linkBlock = createRedirectLinkBlock(customTargets);
 
     function Redirects(): JSX.Element {
         const intl = useIntl();

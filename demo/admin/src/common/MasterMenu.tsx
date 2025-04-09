@@ -1,6 +1,7 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
+    createRedirectLinkBlock,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
@@ -45,7 +46,13 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Page,
     Link,
 };
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
+
+const customTargets = {
+    news: NewsLinkBlock,
+};
+export const RedirectLinkBlock = createRedirectLinkBlock(customTargets);
+// TODO: instead of passing customTargets here, we should use the createRedirectLinkBlock function to create a custom link block for the redirects. Needs a rework in the library before this is possible.
+const RedirectsPage = createRedirectsPage({ customTargets, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {
