@@ -2,6 +2,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
+import isEqual from "lodash.isequal";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
@@ -29,13 +30,16 @@ export class WarningResolver {
 
     @Query(() => PaginatedWarnings)
     async warnings(
-        @Args() { status, search, filter, sort, offset, limit }: WarningsArgs,
+        @Args() { status, search, filter, scopes, sort, offset, limit }: WarningsArgs,
         @GetCurrentUser() user: CurrentUser,
     ): Promise<PaginatedWarnings> {
-        // TODO: Discuss, should this part be in admin or api? (niko mentioned that it is unusual to have an API request that delivers different data based on the user)
-        const scopes = user.permissions.find(({ permission }) => permission === "warnings")?.contentScopes;
-        if (!scopes) {
-            throw new UnauthorizedException("User does not have the necessary permissions to view warnings");
+        // check if there are any scopes that the user does not have permission to
+        const allowedScopesForUser = user.permissions.find(({ permission }) => permission === "warnings")?.contentScopes;
+
+        for (const scope of scopes) {
+            if (!allowedScopesForUser?.find((allowedScope) => isEqual(allowedScope, scope))) {
+                throw new UnauthorizedException("Scopes were passed that the user does not have permission to");
+            }
         }
 
         const standardFilter = filter;
@@ -51,19 +55,19 @@ export class WarningResolver {
         if (scope) {
             if (scope?.equal) {
                 const scopeEqual = scope.equal;
-                if (!scopes.find((scope) => JSON.stringify(scope) === JSON.stringify(scopeEqual))) {
-                    throw new UnauthorizedException("User does not have the necessary permissions to view warnings");
+                if (!scopes.find((scope) => isEqual(scope, scopeEqual))) {
+                    throw new UnauthorizedException();
                 }
 
                 where.$or = [{ scope: { $eq: scopeEqual } }];
             } else if (scope.notEqual) {
                 const scopeNotEqual = scope.notEqual;
 
-                where.$or = [{ scope: { $in: scopes.filter((scope) => JSON.stringify(scope) !== JSON.stringify(scopeNotEqual)) } }];
+                where.$or = [{ scope: { $in: scopes.filter((scope) => !isEqual(scope, scopeNotEqual)) } }];
             } else if (scope.isAnyOf) {
-                for (const scopeItem of scope.isAnyOf) {
-                    if (!scopes.find((scope) => JSON.stringify(scope) === JSON.stringify(scopeItem))) {
-                        throw new UnauthorizedException("User does not have the necessary permissions to view warnings");
+                for (const scopeItemInIsAnyOf of scope.isAnyOf) {
+                    if (!scopes.find((scope) => isEqual(scope, scopeItemInIsAnyOf))) {
+                        throw new UnauthorizedException();
                     }
                 }
 
@@ -72,8 +76,6 @@ export class WarningResolver {
         } else {
             where.$or = [{ scope: { $in: scopes } }, { scope: { $eq: null } }];
         }
-
-        // TODO: Adaptions for datagrid pro, currently it works only for $and filters
 
         const options: FindOptions<Warning> = { offset, limit };
 
