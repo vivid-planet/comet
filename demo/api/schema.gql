@@ -865,7 +865,7 @@ type Query {
   manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
   warning(id: ID!): Warning!
-  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input UserPermissionsUserFilter {
