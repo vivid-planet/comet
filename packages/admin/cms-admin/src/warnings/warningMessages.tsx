@@ -5,4 +5,6 @@ export const warningMessages = {
     fileLicenseSoonToExpire: <FormattedMessage id="comet.warnings.file.license.soonToExpire" defaultMessage="File license expires soon" />,
     fileLicenseExpired: <FormattedMessage id="comet.warnings.file.license.expired" defaultMessage="File license has expired" />,
     fileLicenseRequired: <FormattedMessage id="comet.warnings.file.license.required" defaultMessage="File license is missing" />,
+    invalidTarget: <FormattedMessage id="comet.warnings.invalidTarget" defaultMessage="Invalid Target" />,
+    missingTarget: <FormattedMessage id="comet.warnings.missingTarget" defaultMessage="Missing Target" />,
 };
