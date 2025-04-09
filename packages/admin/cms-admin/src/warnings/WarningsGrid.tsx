@@ -88,13 +88,6 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const { values } = useContentScope();
 
     const scopeValueOptions = values.map((item) => {
-        const keys = Object.keys(item);
-        const firstKey = keys[0];
-        const secondKey = keys[1];
-
-        const firstValue = item[firstKey].value;
-        const secondLabel = item[secondKey].label;
-
         const scope = Object.fromEntries(
             Object.entries(item).map(([key, value]) => {
                 if (typeof value === "object" && value !== null) {
@@ -104,9 +97,13 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             }),
         );
 
+        const objectValues = Object.values(scope);
+        // Format the values: first value stays as is, values after get " / " added
+        const formattedValues = objectValues.map((val, index) => (index === 0 ? val : ` / ${val}`));
+
         return {
             value: JSON.stringify(scope),
-            label: `${firstValue} / ${secondLabel}`,
+            label: formattedValues.join(""),
         };
     });
 
