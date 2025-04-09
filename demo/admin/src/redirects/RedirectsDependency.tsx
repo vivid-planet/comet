@@ -1,5 +1,5 @@
 import { createDependencyMethods, type DependencyInterface } from "@comet/cms-admin";
-import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { RedirectLinkBlock } from "@src/common/MasterMenu";
 import { FormattedMessage } from "react-intl";
 
 export const RedirectDependency: DependencyInterface = {
@@ -8,7 +8,7 @@ export const RedirectDependency: DependencyInterface = {
         rootQueryName: "redirect",
         rootBlocks: {
             target: {
-                block: LinkBlock,
+                block: RedirectLinkBlock,
             },
         },
         basePath: ({ id }) => `/system/redirects/${id}/edit`,
