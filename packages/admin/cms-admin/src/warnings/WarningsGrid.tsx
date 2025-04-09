@@ -46,8 +46,8 @@ const warningsFragment = gql`
 `;
 
 const warningsQuery = gql`
-    query WarningsGrid($offset: Int, $limit: Int, $sort: [WarningSort!], $search: String, $filter: WarningFilter) {
-        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+    query WarningsGrid($offset: Int, $limit: Int, $sort: [WarningSort!], $search: String, $filter: WarningFilter, $scopes: [JSONObject!]!) {
+        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scopes: $scopes) {
             nodes {
                 ...WarningsList
             }
@@ -85,25 +85,18 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const entityDependencyMap = useDependenciesConfig();
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
-    const { values } = useContentScope();
+    const { values: scopeValues } = useContentScope();
 
-    const scopeValueOptions = values.map((item) => {
-        const scope = Object.fromEntries(
-            Object.entries(item).map(([key, value]) => {
-                if (typeof value === "object" && value !== null) {
-                    return [key, value.value];
-                }
-                return [key, value];
-            }),
-        );
+    const scopes = scopeValues.map((item) => Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value])));
+    const scopeValueOptions = scopeValues.map((item) => {
+        const scopeNameArray = Object.entries(item).map(([key, value]) => {
+            return value.label ?? value.value;
+        });
 
-        const objectValues = Object.values(scope);
-        // Format the values: first value stays as is, values after get " / " added
-        const formattedValues = objectValues.map((val, index) => (index === 0 ? val : ` / ${val}`));
-
+        const scope = Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value]));
         return {
             value: JSON.stringify(scope),
-            label: formattedValues.join(""),
+            label: scopeNameArray.join(" / "),
         };
     });
 
@@ -271,6 +264,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
 
     const { data, loading, error } = useQuery<GQLWarningsGridQuery, GQLWarningsGridQueryVariables>(warningsQuery, {
         variables: {
+            scopes,
             filter: gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,

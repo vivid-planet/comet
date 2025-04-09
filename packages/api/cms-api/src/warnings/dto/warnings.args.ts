@@ -1,8 +1,10 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { WarningStatus } from "../entities/warning-status.enum";
 import { WarningFilter } from "./warning.filter";
 import { WarningSort } from "./warning.sort";
@@ -17,6 +19,10 @@ export class WarningsArgs extends OffsetBasedPaginationArgs {
     @IsOptional()
     @IsString()
     search?: string;
+
+    @Field(() => [GraphQLJSONObject])
+    @IsOptional()
+    scopes: ContentScope[];
 
     @Field(() => WarningFilter, { nullable: true })
     @ValidateNested()

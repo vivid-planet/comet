@@ -431,7 +431,7 @@ type Query {
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
   warning(id: ID!): Warning!
-  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input RedirectScopeInput {
