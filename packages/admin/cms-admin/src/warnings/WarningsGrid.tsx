@@ -85,7 +85,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const entityDependencyMap = useDependenciesConfig();
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
-    const { values: scopeValues } = useContentScope();
+    const { values: scopeValues, createUrl } = useContentScope();
 
     const scopes = scopeValues.map((item) => Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value])));
     const scopeValueOptions = scopeValues.map((item) => {
@@ -208,8 +208,8 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                         apolloClient,
                         id: row.sourceInfo.targetId,
                     });
-                    // TODO: adapt contentScope.match to allow content scope switches
-                    return contentScope.match.url + path;
+                    const scopeUrl = row.scope ? createUrl(row.scope) : contentScope.match;
+                    return scopeUrl + path;
                 };
 
                 return (
