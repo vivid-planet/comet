@@ -5,7 +5,7 @@ import { type WarningData } from "../dto/warning-data";
 
 interface BulkCreateWarningData {
     warnings: WarningData[];
-    tableRowId: string;
+    targetId: string;
 }
 
 export type CreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<WarningData[]>;

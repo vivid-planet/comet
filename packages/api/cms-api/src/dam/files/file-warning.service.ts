@@ -46,7 +46,7 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
 
             for (const file of files) {
                 const warnings = await this.createWarnings(file);
-                yield { warnings, tableRowId: file.id };
+                yield { warnings, targetId: file.id };
             }
             offset += limit;
         } while (files.length > 0);

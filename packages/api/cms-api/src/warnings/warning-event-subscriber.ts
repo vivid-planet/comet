@@ -89,10 +89,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                     let warnings: WarningData[] = [];
                     if (this.isService(createWarnings)) {
                         const service = this.moduleRef.get(createWarnings, { strict: false });
-
-                        if (service.createWarnings) {
-                            warnings = await service.createWarnings(row);
-                        }
+                        warnings = await service.createWarnings(row);
                     } else {
                         warnings = await createWarnings(row);
                     }

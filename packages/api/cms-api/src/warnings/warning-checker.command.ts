@@ -111,7 +111,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
                     if (service.bulkCreateWarnings) {
                         const warningGenerator = service.bulkCreateWarnings();
-                        for await (const { warnings, tableRowId } of warningGenerator) {
+                        for await (const { warnings, targetId } of warningGenerator) {
                             for (const warning of warnings) {
                                 await this.warningService.saveWarnings({
                                     warnings: await service.createWarnings(warning),
@@ -119,7 +119,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                     sourceInfo: {
                                         rootEntityName: entity.name,
                                         rootPrimaryKey: entityMetadata.primaryKeys[0],
-                                        targetId: tableRowId,
+                                        targetId,
                                     },
                                 });
                             }
