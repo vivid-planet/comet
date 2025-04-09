@@ -1,6 +1,6 @@
 import { type WarningSeverity } from "../entities/warning-severity.enum";
 
-export interface CreateWarningInput {
+export interface WarningData {
     message: string;
     severity: `${WarningSeverity}`;
 }

@@ -6,7 +6,7 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
-import { CreateWarningInput } from "./dto/create-warning.input";
+import { WarningData } from "./dto/warning-data";
 import { WarningService } from "./warning.service";
 
 @Injectable()
@@ -86,7 +86,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                 const rows = await repository.find();
 
                 for (const row of rows) {
-                    let warnings: CreateWarningInput[] = [];
+                    let warnings: WarningData[] = [];
                     if (this.isService(createWarnings)) {
                         const service = this.moduleRef.get(createWarnings, { strict: false });
 

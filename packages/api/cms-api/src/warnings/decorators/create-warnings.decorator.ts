@@ -1,15 +1,15 @@
 import { type AnyEntity } from "@mikro-orm/postgresql";
 import { type CustomDecorator, SetMetadata, type Type } from "@nestjs/common";
 
-import { type CreateWarningInput } from "../dto/create-warning.input";
+import { type WarningData } from "../dto/warning-data";
 
-interface BulkCreateWarningInput {
-    warnings: CreateWarningInput[];
+interface BulkCreateWarningData {
+    warnings: WarningData[];
     tableRowId: string;
 }
 
-export type CreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<CreateWarningInput[]>;
-type CreateWarningsBulkFunction = () => AsyncGenerator<BulkCreateWarningInput>;
+export type CreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<WarningData[]>;
+type CreateWarningsBulkFunction = () => AsyncGenerator<BulkCreateWarningData>;
 
 export interface CreateWarningsServiceInterface<Entity extends AnyEntity = AnyEntity> {
     /**
