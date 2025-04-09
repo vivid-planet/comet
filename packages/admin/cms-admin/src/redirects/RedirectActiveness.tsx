@@ -17,6 +17,7 @@ export const updateRedirectActivenessMutation = gql`
         updateRedirectActiveness(id: $id, input: $input) {
             id
             active
+            activatedAt
         }
     }
 `;
@@ -57,9 +58,9 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
                     __typename: "Redirect",
                     id: redirect.id,
                     active: active,
+                    activatedAt: new Date(),
                 },
             },
-            refetchQueries: ["PaginatedRedirects"],
         });
 
         handleMenuClose();
