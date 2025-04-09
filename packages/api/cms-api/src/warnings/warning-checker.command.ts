@@ -8,7 +8,7 @@ import { Block, BlockData } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
-import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { BulkCreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -155,7 +155,7 @@ export class WarningCheckerCommand extends CommandRunner {
     }: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         repository: EntityRepository<any>;
-        createWarnings: CreateWarningsFunction;
+        createWarnings: BulkCreateWarningsFunction;
         rootEntityName: string;
         rootPrimaryKey: string;
     }) {

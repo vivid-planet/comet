@@ -8,7 +8,7 @@ interface BulkCreateWarningData {
     targetId: string;
 }
 
-export type CreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<WarningData[]>;
+export type BulkCreateWarningsFunction<Entity extends AnyEntity = AnyEntity> = (item: Entity) => Promise<WarningData[]>;
 type CreateWarningsBulkFunction = () => AsyncGenerator<BulkCreateWarningData>;
 
 export interface CreateWarningsServiceInterface<Entity extends AnyEntity = AnyEntity> {
@@ -28,10 +28,12 @@ export interface CreateWarningsServiceInterface<Entity extends AnyEntity = AnyEn
      * This function is called whenever an entity is created or updated.
      * If `bulkCreateWarnings` is not defined, it is also invoked by the warning-checker command,
      */
-    createWarnings: CreateWarningsFunction<Entity>;
+    createWarnings: BulkCreateWarningsFunction<Entity>;
 }
 
-export type CreateWarningsMeta<Entity extends AnyEntity = AnyEntity> = CreateWarningsFunction<Entity> | Type<CreateWarningsServiceInterface<Entity>>;
+export type CreateWarningsMeta<Entity extends AnyEntity = AnyEntity> =
+    | BulkCreateWarningsFunction<Entity>
+    | Type<CreateWarningsServiceInterface<Entity>>;
 
 export function CreateWarnings<Entity extends AnyEntity = AnyEntity>(value: CreateWarningsMeta<Entity>): CustomDecorator<string> {
     return SetMetadata<string, CreateWarningsMeta<Entity>>("createWarnings", value);
