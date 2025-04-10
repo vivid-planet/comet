@@ -1269,6 +1269,42 @@ The new usage simplifies the component structure - children can now be passed di
 
 :::note Handled by following upgrade script
 
+```diff
+<Tooltip
+- trigger="hover"
+></Tooltip>
+```
+
+### Import `Button` from `@comet/admin` package
+
+```diff
+- import { Button } from "@mui/material";
++ import { Button } from "@comet/admin";
+```
+
+### Import `Dialog` from `@comet/admin` package
+
+```diff
+- import { Dialog } from "@mui/material";
++ import { Dialog } from "@comet/admin";
+```
+
+### Update MUI - X Packages
+
+In `package.json` update the version of the MUI X packages to `^7.22.3`.
+
+```diff
+- "@mui/x-data-grid": "^5.x.x",
+- "@mui/x-data-grid-pro": "^5.x.x",
+- "@mui/x-data-grid-premium": "^5.x.x",
+
++ "@mui/x-data-grid": "^7.22.3",
++ "@mui/x-data-grid-pro": "^7.22.3",
++ "@mui/x-data-grid-premium": "^7.22.3",
+```
+
+:::note Codemod
+
 ```sh
 npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
 ```

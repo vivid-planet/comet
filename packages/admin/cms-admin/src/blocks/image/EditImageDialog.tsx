@@ -5,6 +5,7 @@ import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/a
 import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
+    // eslint-disable-next-line no-restricted-imports
     Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,

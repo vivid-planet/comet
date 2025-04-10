@@ -1,4 +1,5 @@
 import { ArrowLeft } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonClassKey, type ButtonProps, type ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";

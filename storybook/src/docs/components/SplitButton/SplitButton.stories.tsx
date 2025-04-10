@@ -1,5 +1,6 @@
 import { SplitButton } from "@comet/admin";
 import { Home } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 

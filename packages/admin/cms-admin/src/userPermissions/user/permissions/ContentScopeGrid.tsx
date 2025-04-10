@@ -12,6 +12,7 @@ import {
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
 import {
+    // eslint-disable-next-line no-restricted-imports
     Button,
     Card,
     CardContent,

@@ -84,6 +84,11 @@ const config = [
                         },
                         {
                             name: "@mui/material",
+                            importNames: ["Button"],
+                            message: "Please use Button from @comet/admin instead",
+                        },
+                        {
+                            name: "@mui/material",
                             importNames: ["Dialog"],
                             message: "Please use Dialog from @comet/admin instead",
                         },

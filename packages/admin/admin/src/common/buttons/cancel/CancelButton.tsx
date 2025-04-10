@@ -1,4 +1,5 @@
 import { Clear } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonClassKey } from "@mui/material";
 import { type ButtonProps } from "@mui/material/Button";
 import { type Theme, useThemeProps } from "@mui/material/styles";

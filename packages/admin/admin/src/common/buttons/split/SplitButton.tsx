@@ -1,5 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
 import {
+    // eslint-disable-next-line no-restricted-imports
     Button,
     ButtonGroup as MuiButtonGroup,
     type ButtonGroupProps,
