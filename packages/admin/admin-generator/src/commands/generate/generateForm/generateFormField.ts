@@ -533,7 +533,13 @@ export function generateFormField({
             finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
         }
 
-        formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
+        if (!config.virtual) {
+            if (!required) {
+                formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+            } else {
+                formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+            }
+        }
 
         imports.push({
             name: `GQL${queryName}Query`,
