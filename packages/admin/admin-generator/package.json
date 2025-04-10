@@ -24,13 +24,13 @@
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
-        "test": "jest --passWithNoTests",
-        "test:watch": "jest --watch"
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests",
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
     },
     "dependencies": {
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
-        "chalk": "^5.4.1",
+        "chalk": "^4.1.2",
         "change-case": "^4.1.2",
         "commander": "^9.5.0",
         "glob": "^10.4.5",
