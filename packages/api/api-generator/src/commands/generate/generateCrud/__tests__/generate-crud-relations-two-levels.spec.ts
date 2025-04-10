@@ -88,8 +88,7 @@ describe("generate-crud relations two levels", () => {
                     imports.push(namedImport.getNameNode().getText());
                 }
             }
-            expect(imports).toContain("ProductData"); //import for repository
-            expect(imports).toContain("ProductVariant"); //import for repository
+            expect(imports).toContain("EntityManager");
         }
 
         {
