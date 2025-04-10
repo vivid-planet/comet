@@ -1,5 +1,13 @@
 # @comet/blocks-admin
 
+## 7.18.1
+
+### Patch Changes
+
+-   17b79b581: Undeprecate `category` option in `createCompositeBlock`
+    -   @comet/admin@7.18.1
+    -   @comet/admin-icons@7.18.1
+
 ## 7.18.0
 
 ### Patch Changes
