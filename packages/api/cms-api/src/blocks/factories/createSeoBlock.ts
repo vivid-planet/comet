@@ -138,8 +138,8 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         }
 
         warnings(): BlockWarning[] {
-            if (!this.htmlTitle) {
-                return [{ severity: "low", message: "missingHtmlTitle" }];
+            if (!this.htmlTitle || !this.metaDescription) {
+                return [{ severity: "low", message: "missingSeoMetadata" }];
             }
             return [];
         }
