@@ -15,20 +15,24 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
     ) {}
 
     async *bulkCreateWarnings() {
-        if (!this.config.enableLicenseFeature) return; // license feature not enabled, no warnings
-
-        const soonToExpireDate = new Date();
-        soonToExpireDate.setDate(soonToExpireDate.getDate() + 30);
-
         const filterQuery: FilterQuery<FileInterface> = [
             {
+                altText: null,
+            },
+        ];
+
+        if (this.config.enableLicenseFeature) {
+            const soonToExpireDate = new Date();
+            soonToExpireDate.setDate(soonToExpireDate.getDate() + 30);
+            filterQuery.push({
                 license: {
                     durationTo: {
                         $lt: soonToExpireDate,
                     },
                 },
-            },
-        ];
+            });
+        }
+
         if (this.config.requireLicense) {
             filterQuery.push({ license: null });
         }
@@ -53,9 +57,16 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
     }
 
     async createWarnings(entity: FileInterface) {
-        if (!this.config.enableLicenseFeature) return []; // license feature not enabled, no warnings
-
         const warnings: WarningData[] = [];
+
+        if (!entity.altText) {
+            warnings.push({
+                severity: "low",
+                message: "missingAltText",
+            });
+        }
+
+        if (!this.config.enableLicenseFeature) return warnings; // license feature not enabled, no warnings
 
         if (entity.license?.durationTo) {
             const soonToExpireDate = new Date();
