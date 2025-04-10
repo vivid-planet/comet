@@ -133,6 +133,7 @@ export function ProductForm({ id }: FormProps) {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+            description: formValues.description ?? "",
             category: formValues.category?.id,
             dimensions:
                 dimensionsEnabled && formValues.dimensions
@@ -246,7 +247,6 @@ export function ProductForm({ id }: FormProps) {
                             />
 
                             <TextAreaField
-                                required
                                 variant="horizontal"
                                 fullWidth
                                 name="description"
