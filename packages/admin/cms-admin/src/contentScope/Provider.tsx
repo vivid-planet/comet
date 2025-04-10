@@ -45,6 +45,7 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     supported: boolean;
     values: ContentScopeValues<S>;
+    createUrl: (scope: ContentScopeInterface) => string;
 };
 
 export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
@@ -127,6 +128,7 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
         values: context.values as ContentScopeValues<S>, // @TODO:
+        createUrl: context.location.createUrl,
     };
 }
 
