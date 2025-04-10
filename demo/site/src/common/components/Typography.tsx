@@ -209,7 +209,7 @@ export const Typography = styled.div
         css`
             margin-bottom: 0;
 
-            ${theme.breakpoints.xs.mediaQuery} {
+            ${theme.breakpoints.sm.mediaQuery} {
                 margin-bottom: 0;
             }
         `};
