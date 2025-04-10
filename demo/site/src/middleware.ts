@@ -7,9 +7,11 @@ import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withPreviewMiddleware } from "./middleware/preview";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
 import { withSitePreviewMiddleware } from "./middleware/sitePreview";
+import { withSkipMiddleware } from "./middleware/skip";
 import { withStatusMiddleware } from "./middleware/status";
 
 export default chain([
+    withSkipMiddleware,
     withStatusMiddleware,
     withSitePreviewMiddleware,
     withRedirectToMainHostMiddleware,
@@ -22,18 +24,7 @@ export default chain([
 ]);
 
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico, favicon.svg, favicon.png
-         * - manifest.json
-         * - assets (assets from /public folder)
-         * - robots.txt
-         */
-        "/((?!_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json|assets/|robots.txt).*)",
-    ],
+    matcher: ["/(.*)"],
     // TODO find a better solution for this (https://nextjs.org/docs/messages/edge-dynamic-code-evaluation)
     unstable_allowDynamic: [
         "/node_modules/graphql/**",
