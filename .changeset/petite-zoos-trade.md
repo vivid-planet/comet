@@ -4,4 +4,6 @@
 
 Use ContentScope interface augmentation in admin
 
-The export `ContentScopeInterface` has been renamed to `ContentScope`. However, this was hardly used in favor of generics.
+The export `ContentScopeInterface` has been renamed to `ContentScope`.
+Also, generics have been removed from `ContentScopeSelect`, `ContentScopeControls` and `useContentScope`.
+All these things hardly were used in projects.
