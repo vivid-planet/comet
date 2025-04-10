@@ -212,7 +212,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                     totalCount
                 }
                 availablePermissions: userPermissionsAvailablePermissions
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
             }
             fragment UserForGrid on UserPermissionsUser {
                 id

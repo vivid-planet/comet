@@ -8,6 +8,7 @@ import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { ContentScopeWithLabel } from "./dto/content-scope";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
@@ -17,6 +18,7 @@ import { User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
+    AvailableContentScope,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
@@ -34,14 +36,43 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    async getAvailableContentScopes(): Promise<ContentScope[]> {
+    async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
+        let contentScopes: AvailableContentScope[] = [];
         if (this.options.availableContentScopes) {
             if (typeof this.options.availableContentScopes === "function") {
-                return this.options.availableContentScopes();
+                contentScopes = await this.options.availableContentScopes();
+            } else {
+                contentScopes = this.options.availableContentScopes;
             }
-            return this.options.availableContentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
         }
-        return [];
+
+        function camelCaseToHumanReadable(s: string | number) {
+            const words = s.toString().match(/[A-Za-z0-9][a-z0-9]*/g) || [];
+            return words.map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(" ");
+        }
+
+        return contentScopes
+            .map((contentScope) =>
+                "scope" in contentScope
+                    ? contentScope
+                    : {
+                          scope: contentScope,
+                      },
+            )
+            .map((contentScope) => ({
+                scope: contentScope.scope,
+                label: Object.fromEntries(
+                    Object.entries(contentScope.scope).map(([key, value]) => [
+                        key,
+                        contentScope.label && key in contentScope.label
+                            ? (contentScope.label as Record<string, string>)[key]
+                            : camelCaseToHumanReadable(value),
+                    ]),
+                ),
+            }));
+
+        // TODO contentScopes = contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
+        // TODO make unique
     }
 
     async getAvailablePermissions(): Promise<string[]> {
@@ -76,11 +107,11 @@ export class UserPermissionsService {
         return this.userService.findUsers(args);
     }
 
-    async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
+    async checkContentScopes(contentScopes: ContentScopeWithLabel[]): Promise<void> {
         const availableContentScopes = await this.getAvailableContentScopes();
         contentScopes.forEach((scope) => {
             if (!availableContentScopes.some((cs) => isEqual(cs, scope))) {
-                throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
+                throw new Error(`ContentScope does not exist: ${JSON.stringify(scope.scope)}.`);
             }
         });
     }
@@ -120,7 +151,7 @@ export class UserPermissionsService {
 
     async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
-        const availableContentScopes = await this.getAvailableContentScopes();
+        const availableContentScopes = (await this.getAvailableContentScopes()).map((cs) => cs.scope);
 
         if (this.accessControlService.getContentScopesForUser) {
             const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
@@ -139,12 +170,6 @@ export class UserPermissionsService {
         }
 
         return contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
-    }
-
-    normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
-        return [...new Set(contentScopes.map((cs) => JSON.stringify(cs)))] // Make values unique
-            .map((cs) => JSON.parse(cs))
-            .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
@@ -173,7 +198,6 @@ export class UserPermissionsService {
     }
 
     async getPermissionsAndContentScopes(user: User): Promise<CurrentUserPermission[]> {
-        const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
         return (await this.getPermissions(user))
             .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
@@ -189,10 +213,6 @@ export class UserPermissionsService {
                     });
                 }
                 return acc;
-            }, [])
-            .map((p) => {
-                p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
-                return p;
-            });
+            }, []);
     }
 }
