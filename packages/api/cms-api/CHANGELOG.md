@@ -1,5 +1,16 @@
 # @comet/cms-api
 
+## 7.18.1
+
+### Patch Changes
+
+-   eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+
+    Previously, the scope wasn't considered when loading the node.
+    This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
+
+    -   @comet/blocks-api@7.18.1
+
 ## 7.18.0
 
 ### Patch Changes

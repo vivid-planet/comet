@@ -1,5 +1,11 @@
 # @comet/admin-theme
 
+## 7.18.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.18.1
+
 ## 7.18.0
 
 ### Patch Changes

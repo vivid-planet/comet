@@ -1,5 +1,18 @@
 # @comet/cms-admin
 
+## 7.18.1
+
+### Patch Changes
+
+-   ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+-   Updated dependencies [17b79b581]
+    -   @comet/blocks-admin@7.18.1
+    -   @comet/admin@7.18.1
+    -   @comet/admin-date-time@7.18.1
+    -   @comet/admin-icons@7.18.1
+    -   @comet/admin-rte@7.18.1
+    -   @comet/admin-theme@7.18.1
+
 ## 7.18.0
 
 ### Minor Changes
