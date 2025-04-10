@@ -1,4 +1,5 @@
 import { Check, Reset } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps, type ComponentsOverrides, Popover as MuiPopover, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { type ComponentType, type MouseEvent, type PropsWithChildren, useState } from "react";
