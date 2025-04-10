@@ -8,9 +8,9 @@ export interface ContentScope {
     [key: string]: any;
 }
 
-type ContentScopeLocation<S extends ContentScope = ContentScope> = {
-    createPath: (scope: ContentScopeValues<S>) => string | string[];
-    createUrl: (scope: S) => string;
+type ContentScopeLocation = {
+    createPath: (scope: ContentScopeValues) => string | string[];
+    createUrl: (scope: ContentScope) => string;
 };
 
 const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
@@ -37,21 +37,20 @@ type NonNullRecord<T> = {
     [P in keyof T]: NonNull<T[P]>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SetContentScopeAction<S = any> = (state: S) => S;
+type SetContentScopeAction = (state: ContentScope) => ContentScope;
 
-export type UseContentScopeApi<S extends ContentScope = ContentScope> = {
-    scope: S;
-    setScope: (action: SetContentScopeAction<S>) => void;
+export type UseContentScopeApi = {
+    scope: ContentScope;
+    setScope: (action: SetContentScopeAction) => void;
     match: match;
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     supported: boolean;
-    values: ContentScopeValues<S>;
+    values: ContentScopeValues;
 };
 
-export type ContentScopeValues<S extends ContentScope = ContentScope> = Array<{
-    scope: S;
-    label?: { [P in keyof S]?: string };
+export type ContentScopeValues = Array<{
+    scope: ContentScope;
+    label?: { [P in keyof ContentScope]?: string };
 }>;
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
@@ -60,22 +59,22 @@ const Context = createContext<ContentScopeContext>(defaultContentScopeContext);
 
 const NullValueAsString = "-"; // used to represent null-values in the url
 
-function parseScopeFromRouterMatchParams<S extends ContentScope = ContentScope>(params: NonNullRecord<S>): S {
+function parseScopeFromRouterMatchParams(params: NonNullRecord<ContentScope>): ContentScope {
     return Object.entries(params).reduce((a, [key, value]) => {
         return {
             ...a,
             [key]: !value || value === NullValueAsString ? null : value,
         };
-    }, {} as S);
+    }, {} as ContentScope);
 }
 
-function formatScopeToRouterMatchParams<S extends ContentScope = ContentScope>(scope: Partial<S>): NonNullRecord<S> {
+function formatScopeToRouterMatchParams(scope: Partial<ContentScope>): NonNullRecord<ContentScope> {
     return Object.entries(scope).reduce((a, [key, value]) => {
         return {
             ...a,
             [key]: !value || value === null ? NullValueAsString : value,
         };
-    }, {} as NonNullRecord<S>);
+    }, {} as NonNullRecord<ContentScope>);
 }
 
 function defaultCreateUrl(scope: ContentScope) {
@@ -86,15 +85,15 @@ function defaultCreateUrl(scope: ContentScope) {
 // @TODO: scope can no longer be undefined
 // @TODO: remove supported attribute
 // @TODO: provide default empty scope "{}"
-export function useContentScope<S extends ContentScope = ContentScope>(): UseContentScopeApi<S> {
+export function useContentScope(): UseContentScopeApi {
     const context = useContext(Context);
     const history = useHistory();
-    const matchContextScope = useRouteMatch<NonNullRecord<S>>(context?.path || "");
+    const matchContextScope = useRouteMatch<NonNullRecord<ContentScope>>(context?.path || "");
     const matchDefault = useRouteMatch();
     const match = matchContextScope || matchDefault;
 
     const matchParamsString = JSON.stringify(match.params); // convert matchParams to string, like this we can memoize or callbacks more easily
-    const scope = useMemo(() => parseScopeFromRouterMatchParams<S>(JSON.parse(matchParamsString)), [matchParamsString]);
+    const scope = useMemo(() => parseScopeFromRouterMatchParams(JSON.parse(matchParamsString)), [matchParamsString]);
     const redirectPath = context.redirectPathAfterChange;
     const setScope = useCallback(
         (action: SetContentScopeAction) => {
@@ -112,26 +111,21 @@ export function useContentScope<S extends ContentScope = ContentScope>(): UseCon
         match,
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
-        values: context.values as ContentScopeValues<S>, // @TODO:
+        values: context.values as ContentScopeValues, // @TODO:
     };
 }
 
-export interface ContentScopeProviderProps<S extends ContentScope = ContentScope> {
-    defaultValue: S;
-    values: ContentScopeValues<S>;
-    children: (p: { match: match<NonNullRecord<S>> }) => ReactNode;
-    location?: ContentScopeLocation<S>;
+export interface ContentScopeProviderProps {
+    defaultValue: ContentScope;
+    values: ContentScopeValues;
+    children: (p: { match: match<NonNullRecord<ContentScope>> }) => ReactNode;
+    location?: ContentScopeLocation;
 }
 
-export function ContentScopeProvider<S extends ContentScope = ContentScope>({
-    children,
-    defaultValue,
-    values,
-    location = defaultContentScopeLocation,
-}: ContentScopeProviderProps<S>) {
+export function ContentScopeProvider({ children, defaultValue, values, location = defaultContentScopeLocation }: ContentScopeProviderProps) {
     const path = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
-    const match = useRouteMatch<NonNullRecord<S>>(path);
+    const match = useRouteMatch<NonNullRecord<ContentScope>>(path);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<string>();
     const currentLocation = useLocation();
 
