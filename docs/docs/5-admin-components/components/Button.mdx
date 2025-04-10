@@ -1,0 +1,73 @@
+import { AdminComponentStory } from "../../../src/components/AdminComponentStory";
+import CodeBlock from "@theme/CodeBlock";
+
+# Button
+
+## Basic usage
+
+<AdminComponentStory componentName="button" storyName="basic-example" />
+
+## All variants with advanced usage examples
+
+<AdminComponentStory componentName="button" storyName="advanced-examples" />
+
+## Usage rules
+
+_Coming soon (should UX write this?)_
+
+## Responsive buttons
+
+To save space, e.g. inside a toolbar on mobile devices, you can set the `responsive` prop. <br/>
+This will only show the icon by default and the text content will be added as a tooltip around the `Button`.
+
+An icon is required for the responsive behavior to work, use either the `startIcon`, `endIcon` or `mobileIcon` prop.
+
+_Make your browser window smaller to see the responsive behavior._
+
+<AdminComponentStory componentName="button" storyName="responsive-example" />
+
+### Example with a toolbar
+
+<AdminComponentStory componentName="button" storyName="responsive-example-in-toolbar" />
+
+## The `FeedbackButton` component
+
+Use the `FeedbackButton` for buttons that should give feedback to the user, after clicked. <br/>
+Simply pass in an async function to `onClick` will show a loading state, followed by a success or error tooltip.
+
+An icon is required for the feedback tooltip to be shown, use either `startIcon` or `endIcon`.
+
+The messages displayed in the feedback can be customized using the `tooltipSuccessMessage` and `tooltipErrorMessage` props.
+
+<AdminComponentStory componentName="button" storyName="feedback-button-example" />
+
+### Controlled state
+
+Alternatively, you can control the state of the button manually, using the `loading` and `hasErrors` props.
+
+<AdminComponentStory componentName="button" storyName="feedback-button-controlled-state" />
+
+## The `SaveButton` component
+
+_Coming soon (waiting for https://github.com/vivid-planet/comet/pull/3589 to be merged)_
+
+<AdminComponentStory componentName="button" storyName="save-button-example" />
+
+## The `FinalFormSaveButton` component
+
+Used to submit a form created with `final-form`.
+
+<AdminComponentStory componentName="button" storyName="final-form-save-button-example" />
+
+## The `SaveBoundarySaveButton` component
+
+Used to submit a form created with `save-boundary`.
+
+<AdminComponentStory componentName="button" storyName="save-boundary-save-button-example" />
+
+## Predefined button components
+
+A few commonly used buttons have been predefined to make it easier to create consistent UIs. <br />
+They don't have any logic, they only set values for their variant, icon and text.
+
+<AdminComponentStory componentName="button" storyName="predefined-buttons-example" />
