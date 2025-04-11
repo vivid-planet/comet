@@ -1,3 +1,5 @@
+import { type Type } from "@nestjs/common";
+
 export interface CrudGeneratorOptions {
     targetDirectory: string;
     requiredPermission?: string[] | string;
@@ -46,6 +48,7 @@ export interface CrudFieldOptions {
     filter?: boolean;
     sort?: boolean;
     input?: boolean;
+    inputType?: Type; //only for custom input types
 }
 
 export function CrudField({
@@ -55,12 +58,13 @@ export function CrudField({
     filter = true,
     sort = true,
     input = true,
+    inputType,
 }: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
         Reflect.defineMetadata(
             `data:crudField`,
-            { resolveField, dedicatedResolverArg, search, filter, sort, input },
+            { resolveField, dedicatedResolverArg, search, filter, sort, input, inputType },
             target.constructor,
             propertyKey,
         );
