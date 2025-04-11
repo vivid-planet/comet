@@ -42,6 +42,7 @@ export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps) 
                     // Trigger file input with button click
                     fileInputRef.current?.click();
                 }}
+                responsive
             >
                 <FormattedMessage id="comet.pages.dam.uploadFiles" defaultMessage="Upload files" />
             </Button>
