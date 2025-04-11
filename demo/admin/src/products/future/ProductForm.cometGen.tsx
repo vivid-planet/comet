@@ -21,13 +21,13 @@ export default defineConfig<GQLProduct>({
                     type: "text",
                     name: "title",
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
-                    required: true, // default is inferred from gql schema
+                    required: true,
                     validate: (value: string) =>
                         value.length < 3 ? (
                             <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />
                         ) : undefined,
                 },
-                { type: "text", name: "slug" },
+                { type: "text", name: "slug", required: true },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
                 {
