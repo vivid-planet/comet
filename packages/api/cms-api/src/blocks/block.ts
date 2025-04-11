@@ -310,7 +310,6 @@ export function getRegisteredBlocks(): Block[] {
 export interface BlockContext {
     includeInvisibleContent?: boolean;
     previewDamUrls?: boolean;
-    relativeDamUrls?: boolean;
 }
 
 export function transformToBlockSave(block: BlockDataInterface): TraversableTransformBlockResponse {
