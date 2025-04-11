@@ -246,7 +246,6 @@ export function ProductForm({ id }: FormProps) {
                             />
 
                             <TextAreaField
-                                required
                                 variant="horizontal"
                                 fullWidth
                                 name="description"

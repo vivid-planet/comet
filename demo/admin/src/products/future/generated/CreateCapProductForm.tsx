@@ -103,7 +103,6 @@ export function CreateCapProductForm({ type }: FormProps) {
                     />
 
                     <TextAreaField
-                        required
                         variant="horizontal"
                         fullWidth
                         name="description"
