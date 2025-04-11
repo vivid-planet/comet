@@ -31,11 +31,11 @@ export class ManufacturerFilter {
     @Type(() => NumberFilter)
     addressAsEmbeddable_streetNumber?: NumberFilter;
 
-    @Field(() => NumberFilter, { nullable: true })
+    @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => NumberFilter)
-    addressAsEmbeddable_zip?: NumberFilter;
+    @Type(() => StringFilter)
+    addressAsEmbeddable_zip?: StringFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
@@ -55,11 +55,11 @@ export class ManufacturerFilter {
     @Type(() => NumberFilter)
     addressAsEmbeddable_alternativeAddress_streetNumber?: NumberFilter;
 
-    @Field(() => NumberFilter, { nullable: true })
+    @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => NumberFilter)
-    addressAsEmbeddable_alternativeAddress_zip?: NumberFilter;
+    @Type(() => StringFilter)
+    addressAsEmbeddable_alternativeAddress_zip?: StringFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
