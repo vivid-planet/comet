@@ -3,7 +3,7 @@ import { defaultCreatePath } from "./defaultCreatePath";
 
 describe("defaultCreatePath", () => {
     it("should create paths from content scope values", () => {
-        const values: ContentScopeValues<{ domain: string; language: string } | { country: string }> = [
+        const values: ContentScopeValues = [
             { scope: { domain: "main", language: "de" }, label: { language: "DE" } },
             { scope: { domain: "main", language: "en" }, label: { language: "EN" } },
             { scope: { domain: "secondary", language: "en" }, label: { language: "EN" } },

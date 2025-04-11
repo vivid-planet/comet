@@ -10,9 +10,7 @@ export default {
 };
 
 export const OptionalDimensions = function () {
-    type ContentScope = { organizationId?: string; channelId?: string };
-
-    const values: ContentScopeValues<ContentScope> = [
+    const values: ContentScopeValues = [
         { scope: { organizationId: "organization-1" }, label: { organizationId: "Organization 1" } },
         { scope: { organizationId: "organization-2" }, label: { organizationId: "Organization 2" } },
         { scope: { channelId: "channel-1" }, label: { channelId: "Channel 1" } },

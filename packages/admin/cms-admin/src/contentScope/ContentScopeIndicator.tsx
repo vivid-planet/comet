@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { type ContentScopeInterface, useContentScope } from "./Provider";
+import { type ContentScope, useContentScope } from "./Provider";
 
 const capitalizeString = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -13,7 +13,7 @@ const capitalizeString = (string: string) => {
 
 interface ContentScopeIndicatorProps {
     global?: boolean;
-    scope?: ContentScopeInterface;
+    scope?: ContentScope;
 }
 
 export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: PropsWithChildren<ContentScopeIndicatorProps>) => {
@@ -21,7 +21,7 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
     const { scope: contentScope, values } = useContentScope();
     const scope = passedScope ?? contentScope;
 
-    const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
+    const findLabelForScopePart = (scopePart: keyof ContentScope) => {
         const label = values.find((value) => {
             return value.scope[scopePart] === scope[scopePart];
         })?.label;

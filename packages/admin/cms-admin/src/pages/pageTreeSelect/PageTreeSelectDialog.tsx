@@ -16,7 +16,7 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { type Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -69,8 +69,8 @@ const PageSearchContainer = styled("div")`
 `;
 
 interface PageTreeSelectProps {
-    value: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | undefined | null;
-    onChange: (newValue: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | null) => void;
+    value: (GQLSelectedPageFragment & { scope?: ContentScope }) | undefined | null;
+    onChange: (newValue: (GQLSelectedPageFragment & { scope?: ContentScope }) | null) => void;
     open: boolean;
     onClose: () => void;
     defaultCategory: string;

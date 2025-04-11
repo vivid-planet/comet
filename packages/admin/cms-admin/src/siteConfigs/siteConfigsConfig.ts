@@ -1,4 +1,4 @@
-import { type ContentScopeInterface } from "../contentScope/Provider";
+import { type ContentScope } from "../contentScope/Provider";
 
 export interface SiteConfig {
     url: string;
@@ -9,5 +9,5 @@ export interface SiteConfig {
 
 export interface SiteConfigsConfig<Configs = unknown> {
     configs: Configs;
-    resolveSiteConfigForScope: (configs: Configs, scope: ContentScopeInterface) => SiteConfig;
+    resolveSiteConfigForScope: (configs: Configs, scope: ContentScope) => SiteConfig;
 }

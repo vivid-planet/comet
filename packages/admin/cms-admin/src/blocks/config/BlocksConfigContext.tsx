@@ -1,6 +1,6 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { type ContentScopeInterface } from "../../contentScope/Provider";
+import { type ContentScope } from "../../contentScope/Provider";
 import { type BlockInterface } from "../types";
 
 export type BlocksConfig = {
@@ -11,7 +11,7 @@ export type BlocksConfig = {
      * @param scope The current content scope.
      * @returns {boolean} True if the block is supported in the current scope.
      */
-    isBlockSupported?: (block: BlockInterface, scope: ContentScopeInterface) => boolean;
+    isBlockSupported?: (block: BlockInterface, scope: ContentScope) => boolean;
 };
 
 const BlocksConfigContext = createContext<BlocksConfig>({});
