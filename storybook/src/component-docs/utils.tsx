@@ -16,7 +16,7 @@ export const createComponentDocsStory = (componentName: string) => {
     };
 };
 
-const componentDocsDecorator = (): Decorator => {
+export const componentDocsDecorator = (): Decorator => {
     return (Story) => {
         return (
             <Box p={4}>
@@ -26,7 +26,7 @@ const componentDocsDecorator = (): Decorator => {
     };
 };
 
-const heightCommunicationDecorator = (): Decorator => {
+export const heightCommunicationDecorator = (): Decorator => {
     return (Story) => {
         useEffect(() => {
             const sendHeightToParent = () => {

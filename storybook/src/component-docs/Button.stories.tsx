@@ -30,7 +30,6 @@ import { createComponentDocsStory } from "./utils";
 
 export default {
     ...createComponentDocsStory("Button"),
-    tags: ["!autodocs"],
 };
 
 export const BasicExample = {
