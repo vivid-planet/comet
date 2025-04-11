@@ -204,7 +204,7 @@ export type PageConfig<T extends { __typename?: string }> = {
     editForm?: Partial<PageFormConfig>;
 };
 
-export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | PageConfig<any> | TabsConfig<T>;
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | PageConfig<T> | TabsConfig<T>;
 
 export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
     return config;
