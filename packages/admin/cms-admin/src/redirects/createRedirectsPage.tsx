@@ -12,11 +12,11 @@ import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
 
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectLinkBlock to create a custom link block for the redirects
+    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectsLinkBlock to create a custom link block for the redirects
     scopeParts?: string[];
 }
 
-export function createRedirectLinkBlock(customTargets?: Record<string, BlockInterface>) {
+export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInterface>) {
     return createOneOfBlock({
         supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
@@ -26,7 +26,7 @@ export function createRedirectLinkBlock(customTargets?: Record<string, BlockInte
 }
 
 function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType {
-    const linkBlock = createRedirectLinkBlock(customTargets);
+    const linkBlock = createRedirectsLinkBlock(customTargets);
 
     function Redirects(): JSX.Element {
         const intl = useIntl();

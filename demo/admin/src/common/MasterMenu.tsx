@@ -1,8 +1,6 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
-    createRedirectLinkBlock,
-    createRedirectsPage,
     CronJobsPage,
     DamPage,
     type DocumentInterface,
@@ -22,7 +20,6 @@ import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
-import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
@@ -34,6 +31,7 @@ import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
@@ -46,13 +44,6 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Page,
     Link,
 };
-
-const customTargets = {
-    news: NewsLinkBlock,
-};
-export const RedirectLinkBlock = createRedirectLinkBlock(customTargets);
-// TODO: instead of passing customTargets here, we should use the createRedirectLinkBlock function to create a custom link block for the redirects. Needs a rework in the library before this is possible.
-const RedirectsPage = createRedirectsPage({ customTargets, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {

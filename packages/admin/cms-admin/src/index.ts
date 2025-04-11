@@ -197,7 +197,7 @@ export type { BlockPreviewApi } from "./preview/block/useBlockPreview";
 export { useBlockPreview } from "./preview/block/useBlockPreview";
 export { openPreviewWindow, openSitePreviewWindow } from "./preview/openSitePreviewWindow";
 export { SitePreview } from "./preview/site/SitePreview";
-export { createRedirectLinkBlock, createRedirectsPage } from "./redirects/createRedirectsPage";
+export { createRedirectsLinkBlock, createRedirectsPage } from "./redirects/createRedirectsPage";
 export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
