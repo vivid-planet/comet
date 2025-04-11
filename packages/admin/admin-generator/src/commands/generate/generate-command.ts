@@ -24,6 +24,7 @@ import { type ComponentType } from "react";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
+import { generatePage } from "./generatePage/generatePage";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { configFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
@@ -184,7 +185,22 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | TabsConfig<T>;
+export type PageFormConfig = {
+    component: ComponentType;
+    pageTitle?: string;
+};
+
+export type PageConfig<T extends { __typename?: string }> = {
+    type: "page";
+    topLevelTitle?: string;
+    gqlType: T["__typename"];
+    grid: ComponentType;
+    forms?: PageFormConfig;
+    addForm?: Partial<PageFormConfig>;
+    editForm?: Partial<PageFormConfig>;
+};
+
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | PageConfig<T> | TabsConfig<T>;
 
 export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
     return config;
@@ -226,6 +242,8 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
             generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
         } else if (config.type == "grid") {
             generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+        } else if (config.type == "page") {
+            generated = generatePage(config);
         } else {
             throw new Error(`Unknown config type: ${config.type}`);
         }

@@ -33,6 +33,11 @@ const supportedImportPaths = [
     "[type=grid].columns.component",
     // TODO implement in generator "[type=grid].columns.renderCell",
 
+    "[type=page].grid",
+    "[type=page].forms.component",
+    "[type=page].addForm.component",
+    "[type=page].editForm.component",
+
     //support in up to 5 levels of nested fields (eg. fieldSet)
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.validate`),
     ...Array.from(Array(5).keys()).map((i) => `[type=form]${".fields".repeat(i + 1)}.block`),
