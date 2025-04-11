@@ -39,17 +39,21 @@ const manufacturersFragment = gql`
         address {
             street
             streetNumber
+            zip
             alternativeAddress {
                 street
                 streetNumber
+                zip
             }
         }
         addressAsEmbeddable {
             street
             streetNumber
+            zip
             alternativeAddress {
                 street
                 streetNumber
+                zip
             }
         }
     }
@@ -130,6 +134,15 @@ export function ManufacturersGrid() {
             minWidth: 150,
         },
         {
+            field: "address_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Zip" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.zip,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
             field: "address_alternativeAddress_street",
             renderHeader: () => (
                 <>
@@ -189,6 +202,29 @@ export function ManufacturersGrid() {
             minWidth: 150,
         },
         {
+            field: "address_alternativeAddress_zip",
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle
+                        label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" })}
+                        columnWidth={150}
+                    />
+                    <Tooltip
+                        title={
+                            <FormattedMessage id="manufacturer.address.alternativeAddress.zip.tooltip" defaultMessage="Zip of alternative address" />
+                        }
+                    >
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
             field: "addressAsEmbeddable_street",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
             valueGetter: (params, row) => row.addressAsEmbeddable?.street,
@@ -203,6 +239,13 @@ export function ManufacturersGrid() {
             renderCell: ({ value }) => {
                 return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
             },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "addressAsEmbeddable_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.zip", defaultMessage: "Zip 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
             flex: 1,
             minWidth: 150,
         },
@@ -224,6 +267,13 @@ export function ManufacturersGrid() {
             renderCell: ({ value }) => {
                 return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
             },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "addressAsEmbeddable_alternativeAddress_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip", defaultMessage: "Alt-Zip 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
             flex: 1,
             minWidth: 150,
         },
