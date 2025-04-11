@@ -724,6 +724,79 @@ Import `JwtModule` from `@nestjs/jwt`:
 +   imports: [JwtModule],
 ```
 
+### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
+
+The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
+Some structural changes were necessary to achieve this.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+```
+
+:::
+
+You need to modify your `AppModule` as follows:
+
+```diff title="api/src/app.module.ts"
+    BlobStorageModule.register({
+        backend: config.blob.storage,
++       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+    }),
++   ImgproxyModule.register({
++       imgproxyConfig: config.imgproxy,
++   }),
+    DamModule.register({
+        damConfig: {
+            apiUrl: config.apiUrl,
+            secret: config.dam.secret,
+            allowedImageSizes: config.dam.allowedImageSizes,
+            allowedAspectRatios: config.dam.allowedImageAspectRatios,
+            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+-           cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+            maxFileSize: config.dam.uploadsMaxFileSize,
++           maxSrcResolution: config.dam.maxSrcResolution,
+        },
+-       imgproxyConfig: config.imgproxy,
+        Scope: DamScope,
+        File: DamFile,
+        Folder: DamFolder,
+    }),
+```
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+```
+
+:::
+
+```diff title="api/src/comet-config.json"
+{
+    "dam": {
+        "allowedImageAspectRatios": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
++       "maxSrcResolution": 70,
+        "uploadsMaxFileSize": 500
+    },
+    "images": {
+        "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        "imageSizes": [16, 32, 48, 64, 96, 128, 256, 320, 384]
+    },
+    "imgproxy": {
+-       "maxSrcResolution": 70,
+        "quality": 80
+    }
+}
+```
+
+</details>
+
 ## Admin
 
 ### Upgrade peer dependencies
