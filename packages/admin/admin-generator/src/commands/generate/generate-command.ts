@@ -185,10 +185,6 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-type PageGridConfig = {
-    component: ComponentType;
-};
-
 export type PageFormConfig = {
     component: ComponentType;
     pageTitle?: string;
@@ -198,7 +194,7 @@ export type PageConfig<T extends { __typename?: string }> = {
     type: "page";
     topLevelTitle?: string;
     gqlType: T["__typename"];
-    grid: PageGridConfig;
+    grid: ComponentType;
     forms?: PageFormConfig;
     addForm?: Partial<PageFormConfig>;
     editForm?: Partial<PageFormConfig>;

@@ -68,9 +68,9 @@ export function generatePage(config: PageConfig<any>): GeneratorReturn {
 
     const pagesCodetoRender: string[] = [];
 
-    if (isGeneratorConfigImport(gridConfig.component)) {
-        addImport(gridConfig.component);
-        pagesCodetoRender.push(generateGridPageCode({ component: gridConfig.component, renderInsideStackPage: hasMultiplePagesToRender }));
+    if (isGeneratorConfigImport(gridConfig)) {
+        addImport(gridConfig);
+        pagesCodetoRender.push(generateGridPageCode({ component: gridConfig, renderInsideStackPage: hasMultiplePagesToRender }));
     }
 
     if (isGeneratorConfigImport(addFormConfig.component)) {

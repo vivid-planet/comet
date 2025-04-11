@@ -7,9 +7,7 @@ import { ManufacturersGrid } from "./generated/ManufacturersGrid";
 export default defineConfig<GQLManufacturer>({
     type: "page",
     gqlType: "Manufacturer",
-    grid: {
-        component: ManufacturersGrid,
-    },
+    grid: ManufacturersGrid,
     forms: {
         component: ManufacturerForm, // TODO: Use custom/generated form: "./generated/ManufacturerForm",
     },

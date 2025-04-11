@@ -33,7 +33,7 @@ const supportedImportPaths = [
     "[type=grid].columns.component",
     // TODO implement in generator "[type=grid].columns.renderCell",
 
-    "[type=page].grid.component",
+    "[type=page].grid",
     "[type=page].forms.component",
     "[type=page].addForm.component",
     "[type=page].editForm.component",
