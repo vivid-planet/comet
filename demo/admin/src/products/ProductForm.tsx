@@ -135,7 +135,7 @@ export function ProductForm({ id, width }: FormProps) {
             description: formValues.description ?? "",
             image: rootBlocks.image.state2Output(formValues.image),
             type: formValues.type as GQLProductType,
-            category: formValues.category?.id,
+            category: formValues.category ? formValues.category.id : null,
             tags: formValues.tags.map((i) => i.id),
             articleNumbers: [],
             discounts: [],

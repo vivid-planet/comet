@@ -134,7 +134,7 @@ export function ProductForm({ id }: FormProps) {
         const output = {
             ...formValues,
             description: formValues.description ?? "",
-            category: formValues.category?.id,
+            category: formValues.category ? formValues.category.id : null,
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
@@ -143,7 +143,7 @@ export function ProductForm({ id }: FormProps) {
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
-            manufacturer: formValues.manufacturer?.id,
+            manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
