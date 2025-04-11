@@ -21,10 +21,10 @@ import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 import { type ComponentType } from "react";
 
-import { generateCrudPage } from "./generateCrudPage/generateCrudPage";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
+import { generatePage } from "./generatePage/generatePage";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { configFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
@@ -185,26 +185,26 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-type CrudPageGridConfig = {
+type PageGridConfig = {
     component: ComponentType;
 };
 
-export type CrudPageFormConfig = {
+export type PageFormConfig = {
     component: ComponentType;
     pageTitle?: string;
 };
 
-export type CrudPageConfig<T extends { __typename?: string }> = {
-    type: "crudPage";
+export type PageConfig<T extends { __typename?: string }> = {
+    type: "page";
     topLevelTitle?: string;
     gqlType: T["__typename"];
-    grid: CrudPageGridConfig;
-    forms?: CrudPageFormConfig;
-    addForm?: Partial<CrudPageFormConfig>;
-    editForm?: Partial<CrudPageFormConfig>;
+    grid: PageGridConfig;
+    forms?: PageFormConfig;
+    addForm?: Partial<PageFormConfig>;
+    editForm?: Partial<PageFormConfig>;
 };
 
-export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | CrudPageConfig<any> | TabsConfig<T>;
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | PageConfig<any> | TabsConfig<T>;
 
 export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
     return config;
@@ -246,8 +246,8 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
             generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
         } else if (config.type == "grid") {
             generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
-        } else if (config.type == "crudPage") {
-            generated = generateCrudPage(config);
+        } else if (config.type == "page") {
+            generated = generatePage(config);
         } else {
             throw new Error(`Unknown config type: ${config.type}`);
         }

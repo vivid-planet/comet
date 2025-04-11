@@ -2,7 +2,7 @@ import { camelCase, capitalCase, pascalCase } from "change-case";
 import { plural } from "pluralize";
 import { type ComponentType } from "react";
 
-import { type CrudPageConfig, type CrudPageFormConfig, type GeneratorReturn } from "../generate-command";
+import { type GeneratorReturn, type PageConfig, type PageFormConfig } from "../generate-command";
 import { convertConfigImport } from "../utils/convertConfigImport";
 import { getFormattedMessageString } from "../utils/intl";
 import { isGeneratorConfigImport } from "../utils/runtimeTypeGuards";
@@ -11,7 +11,7 @@ import { generateFormPageCode } from "./generateFormPageCode";
 import { generateGridPageCode } from "./generateGridPageCode";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function generateCrudPage(config: CrudPageConfig<any>): GeneratorReturn {
+export function generatePage(config: PageConfig<any>): GeneratorReturn {
     const gqlTypePlural = plural(config.gqlType);
     const componentName = pascalCase(`${gqlTypePlural}Page`);
     const topLevelTitle = config.topLevelTitle ?? capitalCase(gqlTypePlural);
@@ -20,12 +20,12 @@ export function generateCrudPage(config: CrudPageConfig<any>): GeneratorReturn {
 
     const gridConfig = config.grid;
 
-    const addFormConfig: Partial<CrudPageFormConfig> = {
+    const addFormConfig: Partial<PageFormConfig> = {
         ...config.forms,
         ...config.addForm,
     };
 
-    const editFormConfig: Partial<CrudPageFormConfig> = {
+    const editFormConfig: Partial<PageFormConfig> = {
         ...config.forms,
         ...config.editForm,
     };
