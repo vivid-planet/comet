@@ -1,5 +1,5 @@
 import { CreateRequestContext, EntityClass, MikroORM } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
@@ -8,7 +8,7 @@ import { Block, BlockData } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
-import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
+import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
 
@@ -125,52 +125,59 @@ export class WarningCheckerCommand extends CommandRunner {
                             }
                         }
                     } else {
-                        let rows = [];
-                        const limit = 50;
-                        let offset = 0;
-                        do {
-                            rows = await repository.find({}, { limit, offset });
-                            offset += limit;
-
-                            for (const row of rows) {
-                                await this.warningService.saveWarnings({
-                                    warnings: await service.createWarnings(row),
-                                    type: "Entity",
-                                    sourceInfo: {
-                                        rootEntityName: entity.name,
-                                        rootPrimaryKey: entityMetadata.primaryKeys[0],
-                                        targetId: row[entityMetadata.primaryKeys[0]],
-                                    },
-                                });
-                            }
-                        } while (rows.length > 0);
+                        await this.processEntityWarningsIndividually({
+                            repository,
+                            createWarnings: (entity) => service.createWarnings(entity),
+                            rootEntityName: entity.name,
+                            rootPrimaryKey: entityMetadata.primaryKeys[0],
+                        });
                     }
                 } else {
-                    let rows = [];
-                    const limit = 50;
-                    let offset = 0;
-                    do {
-                        rows = await repository.find({}, { limit, offset });
-                        offset += limit;
-
-                        for (const row of rows) {
-                            await this.warningService.saveWarnings({
-                                warnings: await createWarnings(row),
-                                type: "Entity",
-                                sourceInfo: {
-                                    rootEntityName: entity.name,
-                                    rootPrimaryKey: entityMetadata.primaryKeys[0],
-                                    targetId: row[entityMetadata.primaryKeys[0]],
-                                },
-                            });
-                        }
-                    } while (rows.length > 0);
+                    await this.processEntityWarningsIndividually({
+                        repository,
+                        createWarnings,
+                        rootEntityName: entity.name,
+                        rootPrimaryKey: entityMetadata.primaryKeys[0],
+                    });
                 }
             }
         }
 
         // remove all Entity-Warnings that are not present anymore
         await this.entityManager.nativeDelete(Warning, { type: "Entity", updatedAt: { $lt: startDate } });
+    }
+
+    private async processEntityWarningsIndividually({
+        repository,
+        createWarnings,
+        rootEntityName,
+        rootPrimaryKey,
+    }: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        repository: EntityRepository<any>;
+        createWarnings: CreateWarningsFunction;
+        rootEntityName: string;
+        rootPrimaryKey: string;
+    }) {
+        let rows = [];
+        const limit = 50;
+        let offset = 0;
+        do {
+            rows = await repository.find({}, { limit, offset });
+            offset += limit;
+
+            for (const row of rows) {
+                await this.warningService.saveWarnings({
+                    warnings: await createWarnings(row),
+                    type: "Entity",
+                    sourceInfo: {
+                        rootEntityName,
+                        rootPrimaryKey,
+                        targetId: row[rootPrimaryKey],
+                    },
+                });
+            }
+        } while (rows.length > 0);
     }
 
     private isService(meta: CreateWarningsMeta): meta is Type<CreateWarningsServiceInterface> {
