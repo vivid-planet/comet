@@ -7,6 +7,7 @@ import hasha from "hasha";
 import { basename, extname, parse } from "path";
 
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
 import { FileUploadInput } from "../dam/files/dto/file-upload.input";
 import { slugifyFilename } from "../dam/files/files.utils";
 import { ALL_TYPES } from "../dam/images/images.constants";
@@ -92,8 +93,9 @@ export class FileUploadsService {
     }
 
     async delete(fileUpload: FileUpload): Promise<void> {
-        if (await this.blobStorageBackendService.fileExists(this.config.directory, fileUpload.name)) {
-            await this.blobStorageBackendService.removeFile(this.config.directory, fileUpload.name);
+        const filePath = createHashedPath(fileUpload.contentHash);
+        if (await this.blobStorageBackendService.fileExists(this.config.directory, filePath)) {
+            await this.blobStorageBackendService.removeFile(this.config.directory, filePath);
         }
 
         this.entityManager.remove(fileUpload);
