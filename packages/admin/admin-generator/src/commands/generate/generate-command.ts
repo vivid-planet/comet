@@ -21,11 +21,11 @@ import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 import { type ComponentType } from "react";
 
+import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
-import { configFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
@@ -212,14 +212,13 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = configFromSourceFile(morphTsSource(file));
-        const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
-        if (!exportName) throw new Error("Can not determine exportName");
-
-        //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
+        const config = await parseConfig(file);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
+
+        const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
+        if (!exportName) throw new Error("Can not determine exportName");
 
         let generated: GeneratorReturn;
         if (config.type == "form") {
@@ -247,6 +246,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
         }
+        console.log("");
     }
 }
 
