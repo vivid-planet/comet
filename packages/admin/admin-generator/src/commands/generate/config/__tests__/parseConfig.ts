@@ -2,10 +2,10 @@ import { promises as fs } from "fs";
 
 import { parseConfig } from "../parseConfig";
 
-describe("configParser", () => {
+describe("parseConfig", () => {
     it("parses a simple file", async () => {
         const configString = `
-            import { defineConfig } from "../generate-command";
+            import { defineConfig } from "../../generate-command";
             type GQLProduct = {
                 __typename?: "Product";
                 id: string;
@@ -25,7 +25,7 @@ describe("configParser", () => {
 
     it("executes strings", async () => {
         const configString = `
-            import { defineConfig } from "../generate-command";
+            import { defineConfig } from "../../generate-command";
             type GQLProduct = {
                 __typename?: "Product";
                 id: string;
@@ -46,7 +46,7 @@ describe("configParser", () => {
 
     it("uses local variable in config", async () => {
         const configString = `
-            import { defineConfig } from "../generate-command";
+            import { defineConfig } from "../../generate-command";
             type GQLProduct = {
                 __typename?: "Product";
                 id: string;
@@ -74,7 +74,7 @@ describe("configParser", () => {
 
     it("executes code with local variable", async () => {
         const configString = `
-            import { defineConfig } from "../generate-command";
+            import { defineConfig } from "../../generate-command";
             type GQLProduct = {
                 __typename?: "Product";
                 id: string;
@@ -106,7 +106,7 @@ describe("configParser", () => {
 
     it("uses import without executing", async () => {
         const configString = `
-            import { defineConfig } from "../generate-command";
+            import { defineConfig } from "../../generate-command";
             import { validateName } from "xxx";
 
             type GQLProduct = {
@@ -136,7 +136,7 @@ describe("configParser", () => {
 
     it("uses an arrow function as code", async () => {
         const configString = `
-            import { defineConfig } from "../generate-command";
+            import { defineConfig } from "../../generate-command";
             type GQLProduct = {
                 __typename?: "Product";
                 id: string;
