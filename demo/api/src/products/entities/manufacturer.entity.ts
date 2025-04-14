@@ -1,4 +1,4 @@
-import { CrudField, CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
+import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
 import { BaseEntity, Embeddable, Embedded, Entity, IType, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsObject, IsString } from "class-validator";
@@ -102,7 +102,6 @@ export class Manufacturer extends BaseEntity {
 
     @Property({ type: CoordinatesType, nullable: true })
     @Field(() => Coordinates, { nullable: true })
-    @CrudField({ inputType: Coordinates })
     coordinates?: IType<Coordinates, string>;
 
     @Property({ onUpdate: () => new Date() })
