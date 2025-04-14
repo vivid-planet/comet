@@ -1,4 +1,4 @@
-import { getCrudFieldOption, hasCrudFieldFeature } from "@comet/cms-api";
+import { hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
@@ -13,6 +13,7 @@ import {
     findEnumName,
     findInputClassImportPath,
     findValidatorImportPath,
+    getFieldDecoratorClassName,
     morphTsProperty,
 } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
@@ -383,14 +384,9 @@ export async function generateCrudInput(
             decorators.push(`@Field(() => ID, ${fieldOptions})`);
             decorators.push("@IsUUID()");
             type = "string";
-        } else if (hasCrudFieldFeature(metadata.class, prop.name, "inputType")) {
-            const inputType = getCrudFieldOption(metadata.class, prop.name, "inputType");
-            if (inputType === undefined) {
-                console.warn(`${prop.name}: "inputType" is undefined`);
-                continue;
-            }
-
-            const className = inputType.name;
+        } else if (getFieldDecoratorClassName(prop.name, metadata)) {
+            //for custom mikro-orm type
+            const className = getFieldDecoratorClassName(prop.name, metadata) as string;
             const importPath = findInputClassImportPath(className, `${generatorOptions.targetDirectory}/dto`, metadata);
             imports.push({ name: className, importPath });
             decorators.push(`@ValidateNested()`);

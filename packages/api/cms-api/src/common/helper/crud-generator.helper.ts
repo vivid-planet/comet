@@ -5,14 +5,8 @@ import { type CrudFieldOptions } from "../decorators/crud-generator.decorator";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasCrudFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
     const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
-    const defaultValue = ["dedicatedResolverArg", "inputType"].includes(option) ? false : true;
+    const defaultValue = option == "dedicatedResolverArg" ? false : true;
     return !!(crudField[option] ?? defaultValue);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getCrudFieldOption<O extends CrudFieldOptions, K extends keyof O>(metadataClass: any, propName: string, option: K): O[K] {
-    const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as O;
-    return crudField[option];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
