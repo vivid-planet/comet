@@ -69,7 +69,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.kind === "m:1" ||
-                prop.type === "EnumArrayType"),
+                prop.type === "EnumArrayType" ||
+                prop.enum),
     );
     const hasSortArg = crudSortProps.length > 0;
 
