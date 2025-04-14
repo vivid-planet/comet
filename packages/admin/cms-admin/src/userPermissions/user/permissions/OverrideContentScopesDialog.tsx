@@ -12,6 +12,7 @@ import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
+import { type ContentScopeInterface } from "../../../contentScope/Provider";
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
     type GQLOverrideContentScopesMutation,
@@ -30,9 +31,6 @@ interface FormProps {
     userId: string;
     handleDialogClose: () => void;
 }
-type ContentScope = {
-    [key: string]: string;
-};
 
 function OverrideContentScopesDialogGridToolbar() {
     return (
@@ -59,7 +57,9 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                 input: {
                     permissionId,
                     overrideContentScopes: data.overrideContentScopes,
-                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
+                    contentScopes: data.contentScopes
+                        .map((contentScope) => JSON.parse(contentScope))
+                        .map((cs) => ({ scope: cs.scope, label: cs.label })),
                 },
             },
             refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
@@ -70,13 +70,22 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
-                    contentScopes
+                    contentScopes {
+                        scope
+                        label
+                    }
                 }
-                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true) {
+                    scope
+                    label
+                }
             }
         `,
         {
@@ -98,7 +107,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     };
     const disabled = data && data.permission.source === "BY_RULE";
 
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+    const columns: GridColDef<ContentScopeInterface>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
 
     return (
         <Dialog maxWidth="lg" open={true}>
@@ -126,16 +135,13 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                     {(props) => {
                                         return (
                                             <DataGrid
-                                                autoHeight={true}
                                                 rows={
                                                     data.availableContentScopes.filter(
                                                         (obj) => !Object.values(obj).every((value) => value === undefined),
                                                     ) ?? []
                                                 }
                                                 columns={columns}
-                                                rowCount={data.availableContentScopes.length}
                                                 loading={false}
-                                                getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection={!disabled}
                                                 rowSelectionModel={props.input.value}
@@ -147,7 +153,9 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 }}
                                                 initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                                                 isRowSelectable={(params) => {
-                                                    return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
+                                                    return !data.userContentScopesSkipManual.some((cs: ContentScopeInterface) =>
+                                                        isEqual(cs, params.row),
+                                                    );
                                                 }}
                                             />
                                         );
