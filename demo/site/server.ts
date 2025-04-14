@@ -90,7 +90,7 @@ app.prepare().then(() => {
             console.error(err);
             process.exit(1);
         })
-        .listen(port, () => {
+        .listen(port, "localhost", () => {
             // eslint-disable-next-line no-console
             console.log(`> Ready on http://localhost:${port}`);
         });
