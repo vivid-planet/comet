@@ -12,6 +12,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .requiredOption("-o, --out-file <file>", "Write the injected template to a file.")
     .option("-d --dotenv", "dotenv compatibility") // https://github.com/motdotla/dotenv/issues/521#issuecomment-999016064
     .option("--base64", "use base64 encoding")
+    .option("--plain", "use plain JSON encoding (do not escape backslashes)")
     .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
         const configFile = `${process.cwd()}/${options.siteConfigFile || "site-configs.ts"}`;
@@ -53,6 +54,9 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 return substr;
             }
             const str = replacerFunctions[type](siteConfigs, env);
+            if (options.plain) {
+                return JSON.stringify(str);
+            }
             if (options.base64) {
                 return Buffer.from(JSON.stringify(str)).toString("base64");
             }
