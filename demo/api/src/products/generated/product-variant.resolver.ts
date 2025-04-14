@@ -9,8 +9,7 @@ import {
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, FindOptions, Reference } from "@mikro-orm/postgresql";
+import { EntityManager, FindOptions, Reference } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
@@ -27,15 +26,13 @@ export class ProductVariantResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly productVariantsService: ProductVariantsService,
-        @InjectRepository(ProductVariant) private readonly repository: EntityRepository<ProductVariant>,
-        @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
         private readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
     @Query(() => ProductVariant)
     @AffectedEntity(ProductVariant)
     async productVariant(@Args("id", { type: () => ID }) id: string): Promise<ProductVariant> {
-        const productVariant = await this.repository.findOneOrFail(id);
+        const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
         return productVariant;
     }
 
@@ -45,7 +42,7 @@ export class ProductVariantResolver {
         @Args() { product, search, filter, sort, offset, limit }: ProductVariantsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProductVariants> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getRepository<ProductVariant>(ProductVariant));
 
         where.product = product;
 
@@ -66,7 +63,7 @@ export class ProductVariantResolver {
             });
         }
 
-        const [entities, totalCount] = await this.repository.findAndCount(where, options);
+        const [entities, totalCount] = await this.entityManager.findAndCount(ProductVariant, where, options);
         return new PaginatedProductVariants(entities, totalCount);
     }
 
@@ -85,10 +82,10 @@ export class ProductVariantResolver {
         }
 
         const { image: imageInput, ...assignInput } = input;
-        const productVariant = this.repository.create({
+        const productVariant = this.entityManager.create(ProductVariant, {
             ...assignInput,
             position,
-            product: Reference.create(await this.productRepository.findOneOrFail(product)),
+            product: Reference.create(await this.entityManager.findOneOrFail(Product, product)),
 
             image: imageInput.transformToBlockData(),
         });
@@ -104,7 +101,7 @@ export class ProductVariantResolver {
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ProductVariantUpdateInput }) input: ProductVariantUpdateInput,
     ): Promise<ProductVariant> {
-        const productVariant = await this.repository.findOneOrFail(id);
+        const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
 
         if (input.position !== undefined) {
             const lastPosition = await this.productVariantsService.getLastPosition({ product: productVariant.product.id });
@@ -135,7 +132,7 @@ export class ProductVariantResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(ProductVariant)
     async deleteProductVariant(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        const productVariant = await this.repository.findOneOrFail(id);
+        const productVariant = await this.entityManager.findOneOrFail(ProductVariant, id);
         this.entityManager.remove(productVariant);
         await this.productVariantsService.decrementPositions({ product: productVariant.product.id }, productVariant.position);
         await this.entityManager.flush();
