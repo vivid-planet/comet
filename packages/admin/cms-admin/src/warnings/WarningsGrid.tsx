@@ -208,7 +208,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                         apolloClient,
                         id: row.sourceInfo.targetId,
                     });
-                    const scopeUrl = row.scope ? createUrl(row.scope) : contentScope.match;
+                    const scopeUrl = row.scope ? createUrl(row.scope) : contentScope.match.url;
                     return scopeUrl + path;
                 };
 
