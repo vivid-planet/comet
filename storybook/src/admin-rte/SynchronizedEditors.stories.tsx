@@ -22,7 +22,7 @@ export const SynchronizedRtEs = {
 
         return (
             <Grid container spacing={4}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Typography variant="h4" gutterBottom>
                         Left Editor
                     </Typography>
@@ -36,7 +36,7 @@ export const SynchronizedRtEs = {
                         ref={leftEditorRef}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Typography variant="h4" gutterBottom>
                         Right Editor
                     </Typography>
@@ -49,7 +49,7 @@ export const SynchronizedRtEs = {
                         }}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <PrintEditorState editorState={editorState} />
                 </Grid>
             </Grid>

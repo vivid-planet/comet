@@ -270,7 +270,7 @@ export function createSeoBlock(
                                             <>
                                                 {fields.map((link, i) => (
                                                     <Grid key={i} container spacing={2} sx={{ marginBottom: 2 }}>
-                                                        <Grid item xs={3}>
+                                                        <Grid size={3}>
                                                             <Field
                                                                 label={
                                                                     <FormattedMessage
@@ -283,7 +283,7 @@ export function createSeoBlock(
                                                                 placeholder="en-US"
                                                             />
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid size="grow">
                                                             <Field
                                                                 label={<FormattedMessage {...messages.url} />}
                                                                 name={`${link}.url`}
@@ -292,7 +292,7 @@ export function createSeoBlock(
                                                                 validate={(url) => validateUrl(url)}
                                                             />
                                                         </Grid>
-                                                        <Grid item alignSelf="flex-start">
+                                                        <Grid alignSelf="flex-start">
                                                             <DeleteButtonWrapper>
                                                                 <IconButton onClick={() => fields.remove(i)} size="large">
                                                                     <Delete />

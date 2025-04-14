@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiFormHelperText: GetMuiComponentTheme<"MuiFormHelperText"> = (component, { palette, typography, spacing }) => ({
+export const getMuiFormHelperText: GetMuiComponentTheme<"MuiFormHelperText"> = (component, { palette, typography }) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiFormHelperText">(component?.styleOverrides, {
         root: {

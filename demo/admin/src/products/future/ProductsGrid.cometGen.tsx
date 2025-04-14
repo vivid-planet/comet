@@ -133,6 +133,13 @@ export default defineConfig<GQLProduct>({
             filterOperators: ManufacturerFilterOperators,
         },
         {
+            type: "virtual",
+            name: "tags",
+            headerName: "Tags",
+            queryFields: ["tags.title"],
+            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+        },
+        {
             type: "actions",
             component: ProductsGridPreviewAction,
         },
