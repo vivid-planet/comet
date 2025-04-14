@@ -12,11 +12,9 @@ export const generateCommand = new Command("generate")
     .action(async (options: GenerateOptions) => {
         if (options.watch) {
             await generateFiles();
-            console.log("API generator in watch mode ...");
-
+            console.log("Watching for modified entities...");
             await watchMode();
         } else {
-            console.log(`API generator in ${options.file ? "file mode" : "all mode"}...`);
             generateFiles(options.file);
         }
     })

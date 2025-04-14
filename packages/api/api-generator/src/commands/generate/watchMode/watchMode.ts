@@ -5,6 +5,14 @@ import { watch } from "chokidar";
 
 import { handleChildProcess } from "./handleChildProcess";
 
+const waitForExit = (proc: ReturnType<typeof spawn>) => {
+    return new Promise<{ code: number | null; signal: NodeJS.Signals | null }>((resolve) => {
+        proc.on("exit", (code, signal) => {
+            resolve({ code, signal });
+        });
+    });
+};
+
 /**
  * Watch mode for the generator.
  *
@@ -33,8 +41,9 @@ export const watchMode = async () => {
             // Kill running processes for the changed file
             if (childProcesses[path]) {
                 if (childProcesses[path].exitCode == null) {
-                    console.log("💀 Killed running process for file: ", path);
                     childProcesses[path].kill();
+                    await waitForExit(childProcesses[path]);
+                    console.log("💀 Killed running process for file: ", path);
                 }
                 delete childProcesses[path];
             }
