@@ -1,6 +1,5 @@
 ---
 "@comet/api-generator": minor
-"@comet/cms-api": minor
 ---
 
-Allow passing custom InputType for CrudField
+Add input support for custom mikro-orm types, the `@Field` type must also be an `@InputType`
