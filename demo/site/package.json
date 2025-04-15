@@ -4,7 +4,8 @@
     "private": true,
     "scripts": {
         "build": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && next build",
-        "dev": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node dist/server.js",
+        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
+        "dev": "$npm_execpath check-node-version && run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node dist/server.js",
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
@@ -70,6 +71,7 @@
         "@types/react-dom": "^18.2.22",
         "@types/react-is": "^17.0.0",
         "@types/react-select": "^4.0.0",
+        "check-node-version": "^4.2.1",
         "chokidar-cli": "^2.0.0",
         "cosmiconfig-toml-loader": "^1.0.0",
         "dotenv-cli": "^4.0.0",
