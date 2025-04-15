@@ -1,14 +1,17 @@
+import { FullPageAlert } from "@comet/admin";
 import {
     type ContentScopeConfigProps,
     ContentScopeProvider as ContentScopeProviderLibrary,
     type ContentScopeProviderProps,
     type ContentScopeValues,
+    StopImpersonationButton,
     useContentScope as useContentScopeLibrary,
     type UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
 } from "@comet/cms-admin";
 import { type ContentScope } from "@src/site-configs";
+import { FormattedMessage } from "react-intl";
 
 // convenience wrapper for app (Bind Generic)
 export function useContentScope(): UseContentScopeApi<ContentScope> {
@@ -35,7 +38,13 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
     }));
 
     if (user.allowedContentScopes.length === 0) {
-        throw new Error("User does not have access to any scopes.");
+        return (
+            <FullPageAlert
+                severity="info"
+                description={<FormattedMessage id="contentScopeProvider.noScopes" defaultMessage="User does not have access to any scopes." />}
+                actions={user.impersonated && <StopImpersonationButton />}
+            />
+        );
     }
 
     return (
