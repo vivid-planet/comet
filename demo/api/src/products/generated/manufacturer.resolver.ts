@@ -2,14 +2,13 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
-import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-import { GraphQLResolveInfo } from "graphql";
+import { FindOptions } from "@mikro-orm/postgresql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ManufacturerInput, ManufacturerUpdateInput } from "./dto/manufacturer.input";
 import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 import { ManufacturersArgs } from "./dto/manufacturers.args";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { AffectedEntity, BlocksTransformerService, RequiredPermission, RootBlockDataScalar, SortDirection, extractGraphqlFields, gqlArgsToMikroOrmQuery, validateNotModified } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 @Resolver(() => Manufacturer)
 @RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerResolver {

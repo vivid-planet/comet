@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
+import { FindOptions, Reference } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { ProductCategoriesService } from "./product-categories.service";
@@ -11,7 +11,7 @@ import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
-import { AffectedEntity, BlocksTransformerService, RequiredPermission, RootBlockDataScalar, SortDirection, extractGraphqlFields, gqlArgsToMikroOrmQuery, validateNotModified } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 @Resolver(() => ProductCategory)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryResolver {

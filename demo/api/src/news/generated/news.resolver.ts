@@ -2,14 +2,14 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
+import { FindOptions } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { PaginatedNews } from "./dto/paginated-news";
 import { NewsListArgs } from "./dto/news-list.args";
 import { NewsComment } from "../entities/news-comment.entity";
-import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, SortDirection, extractGraphqlFields, gqlArgsToMikroOrmQuery, validateNotModified } from "@comet/cms-api";
+import { AffectedEntity, BlocksTransformerService, DamImageBlock, RequiredPermission, RootBlockDataScalar, extractGraphqlFields, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { News, NewsContentScope } from "../entities/news.entity";
 @Resolver(() => News)

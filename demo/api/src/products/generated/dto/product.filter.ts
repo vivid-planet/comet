@@ -3,9 +3,8 @@
 import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, IdFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
 import { ProductStatus } from "../../entities/product.entity";
-import { ProductType } from "../../entities/product-type.enum";
 import { ProductType } from "../../entities/product-type.enum";
 @InputType()
 class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {

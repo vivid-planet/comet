@@ -2,14 +2,12 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-import { FindOptions } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { RequiredPermission } from "@comet/cms-api";
 import { Footer } from "../entities/footer.entity";
 import { FooterScope } from "../dto/footer-scope";
 import { FootersService } from "./footers.service";
 import { FooterInput } from "./dto/footer.input";
-import { PaginatedFooters } from "./dto/paginated-footers";
 @Resolver(() => Footer)
 @RequiredPermission(["pageTree"])
 export class FooterResolver {

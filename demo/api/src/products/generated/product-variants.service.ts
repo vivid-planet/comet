@@ -5,8 +5,6 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, EntityManager, raw } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { ProductVariant } from "../entities/product-variant.entity";
-import { Product } from "../entities/product.entity";
-import { ProductVariantFilter } from "./dto/product-variant.filter";
 @Injectable()
 export class ProductVariantsService {
     constructor(private readonly entityManager: EntityManager, 
