@@ -70,7 +70,7 @@ const Root = styled.div`
     display: flex;
     flex-direction: column;
     gap: 40px;
-    max-width: 350px;
+    max-width: 500px;
 `;
 
 const ItemWrapper = styled.div`
@@ -109,4 +109,5 @@ const FixedHeightAutoWidthWrapper = styled.span`
     position: relative;
     width: auto;
     height: 200px;
+    flex-shrink: 0;
 `;

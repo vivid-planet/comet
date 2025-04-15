@@ -94,7 +94,7 @@ function createDominantImageDataUrl(w: number, h: number, dominantColor = "#ffff
 
 const ImageContainer = styled.div<{ $aspectRatio: number }>`
     position: relative;
-    width: 100%;
+    height: 100%; // fixes issue
     aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
     outline: 2px solid magenta; // Used for debugging
 `;
