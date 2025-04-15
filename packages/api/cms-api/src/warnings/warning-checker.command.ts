@@ -100,7 +100,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
                             if (this.isBlockWarningService(warningsOrWarningsService)) {
                                 const warningsService = warningsOrWarningsService;
-                                const service: BlockWarningsServiceInterface = await this.moduleRef.resolve(warningsService);
+                                const service: BlockWarningsServiceInterface = this.moduleRef.get(warningsService, { strict: false });
 
                                 warnings = await service.warnings(node.block);
                             } else {
