@@ -69,7 +69,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.kind === "m:1" ||
-                prop.type === "EnumArrayType"),
+                prop.type === "EnumArrayType" ||
+                prop.enum),
     );
     const hasSortArg = crudSortProps.length > 0;
 
@@ -120,7 +121,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     const { classNameSingular } = buildNameVariants(metadata);
     const { crudFilterProps } = buildOptions(metadata, generatorOptions);
 
-    let importsOut = "";
+    const imports: Imports = [];
     let enumFiltersOut = "";
 
     const generatedEnumNames = new Set<string>();
@@ -134,7 +135,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                 enumFiltersOut += `@InputType()
                     class ${enumName}EnumsFilter extends createEnumsFilter(${enumName}) {}
                 `;
-                importsOut += `import { ${enumName} } from "${importPath}";`;
+                imports.push({ name: enumName, importPath });
             }
         } else if (prop.enum) {
             const enumName = findEnumName(prop.name, metadata);
@@ -144,7 +145,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                 enumFiltersOut += `@InputType()
                     class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
                 `;
-                importsOut += `import { ${enumName} } from "${importPath}";`;
+                imports.push({ name: enumName, importPath });
             }
         }
     });
@@ -153,7 +154,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-    ${importsOut}
+    ${generateImportsCode(imports)}
 
     ${enumFiltersOut}
 
