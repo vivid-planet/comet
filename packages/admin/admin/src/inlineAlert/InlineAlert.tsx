@@ -107,7 +107,7 @@ export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
             <Title variant="h5" {...slotProps.title}>
                 {title ?? titleMapping[severity]}
             </Title>
-            {description && (
+            {Boolean(description) && (
                 <Description variant="body2" {...slotProps.description}>
                     {description}
                 </Description>
