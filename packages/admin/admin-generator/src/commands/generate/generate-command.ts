@@ -123,8 +123,6 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
-type TabsConfig<T extends { __typename?: string }> = { type: "tabs"; tabs: { name: string; content: GeneratorConfig<T> }[] };
-
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
@@ -184,7 +182,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     selectionProps?: "multiSelect" | "singleSelect";
 };
 
-export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | TabsConfig<T>;
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
 
 export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
     return config;
