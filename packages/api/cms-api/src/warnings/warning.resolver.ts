@@ -9,6 +9,7 @@ import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
@@ -74,7 +75,26 @@ export class WarningResolver {
                 where.$or = [{ scope: { $in: scope.isAnyOf } }];
             }
         } else {
-            where.$or = [{ scope: { $in: scopes } }, { scope: { $eq: null } }];
+            // A scope can be for example { domain: "main", language: "en" } but it should also query scopes that are only { domain: "main" }.
+            // These additional scopes are calculated here.
+            const additionalScopes: ContentScope[] = [];
+
+            const keyValueMap: Record<string, Set<string | number>> = {};
+            for (const scope of scopes) {
+                for (const key of Object.keys(scope)) {
+                    if (!keyValueMap[key]) {
+                        keyValueMap[key] = new Set();
+                    }
+                    keyValueMap[key].add(scope[key as keyof ContentScope]);
+                }
+            }
+            for (const key of Object.keys(keyValueMap)) {
+                for (const value of keyValueMap[key]) {
+                    additionalScopes.push({ [key]: value });
+                }
+            }
+
+            where.$or = [{ scope: { $in: scopes.concat(additionalScopes) } }, { scope: { $eq: null } }];
         }
 
         const options: FindOptions<Warning> = { offset, limit };

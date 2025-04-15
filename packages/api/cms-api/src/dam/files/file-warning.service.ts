@@ -50,7 +50,7 @@ export class FileWarningService implements CreateWarningsServiceInterface<FileIn
 
             for (const file of files) {
                 const warnings = await this.createWarnings(file);
-                yield { warnings, targetId: file.id };
+                yield { warnings, targetId: file.id, scope: file.scope };
             }
             offset += limit;
         } while (files.length > 0);
