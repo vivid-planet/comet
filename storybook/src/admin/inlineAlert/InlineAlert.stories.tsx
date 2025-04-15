@@ -8,6 +8,12 @@ type Story = StoryObj<typeof InlineAlert>;
 const config: Meta<typeof InlineAlert> = {
     component: InlineAlert,
     title: "@comet/admin/inlineAlert/Inline Alert",
+    argTypes: {
+        severity: {
+            control: "select",
+            options: [undefined, "error", "warning", "info"],
+        },
+    },
 };
 
 export default config;
