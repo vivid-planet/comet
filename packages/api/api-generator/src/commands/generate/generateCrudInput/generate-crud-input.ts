@@ -99,6 +99,7 @@ export async function generateCrudInput(
             const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
             isOptional = true;
             decorators.push(`@IsOptional()`);
+            imports.push({ name: "Min", importPath: "class-validator" });
             decorators.push(`@Min(1)`);
             decorators.push("@IsInt()");
             decorators.push(`@Field(() => Int, ${fieldOptions})`);
@@ -423,7 +424,7 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
