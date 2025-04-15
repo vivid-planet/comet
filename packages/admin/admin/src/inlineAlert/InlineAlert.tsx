@@ -26,7 +26,7 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
     /**
      * A mapping of descriptions for each error variant.
      */
-    descriptionMapping?: Record<InlineAlertSeverity, ReactNode>;
+    descriptionMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
 
     /**
      * Custom icon to be displayed next to the error message.
@@ -37,7 +37,7 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
     /**
      * A mapping of icons for each error variant.
      */
-    iconMapping?: Record<InlineAlertSeverity, ReactNode>;
+    iconMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
 
     /**
      * Defines the type of error message displayed.
@@ -61,7 +61,30 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
     /**
      * A mapping of titles for each error variant.
      */
-    titleMapping?: Record<InlineAlertSeverity, ReactNode>;
+    titleMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
+};
+
+const defaultIconMapping: Record<InlineAlertSeverity, ReactNode> = {
+    error: <Error sx={{ fontSize: "32px" }} color="error" />,
+    warning: <Warning sx={{ fontSize: "32px" }} color="warning" />,
+    info: <Info sx={{ fontSize: "32px" }} color="info" />,
+};
+
+const defaultTitleMapping: Record<InlineAlertSeverity, ReactNode> = {
+    error: <FormattedMessage defaultMessage="Error" id="comet.inlineAlert.error.title" />,
+    warning: <FormattedMessage defaultMessage="Warning" id="comet.inlineAlert.warning.title" />,
+    info: <FormattedMessage defaultMessage="Info" id="comet.inlineAlert.info.title" />,
+};
+
+const defaultDescriptionMapping: Record<InlineAlertSeverity, ReactNode> = {
+    error: (
+        <FormattedMessage
+            defaultMessage="An error occurred. Please try again later or contact the support."
+            id="comet.inlineAlert.error.description"
+        />
+    ),
+    warning: null,
+    info: null,
 };
 
 /**
@@ -71,36 +94,24 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
 export const InlineAlert: FunctionComponent<InlineAlertProps> = (inProps) => {
     const {
         icon,
-        iconMapping = {
-            error: <Error sx={{ fontSize: "32px" }} color="error" />,
-            warning: <Warning sx={{ fontSize: "32px" }} color="warning" />,
-            info: <Info sx={{ fontSize: "32px" }} color="info" />,
-        },
+        iconMapping: passedIconMapping = {},
         actions,
         severity = "error",
         title,
-        titleMapping = {
-            error: <FormattedMessage defaultMessage="Error" id="comet.inlineAlert.error.title" />,
-            warning: <FormattedMessage defaultMessage="Warning" id="comet.inlineAlert.warning.title" />,
-            info: <FormattedMessage defaultMessage="Info" id="comet.inlineAlert.info.title" />,
-        },
+        titleMapping: passedTitleMapping = {},
         description: _description,
-        descriptionMapping = {
-            error: (
-                <FormattedMessage
-                    defaultMessage="An error occurred. Please try again later or contact the support."
-                    id="comet.inlineAlert.error.description"
-                />
-            ),
-            warning: null,
-            info: null,
-        },
+        descriptionMapping: passedDescriptionMapping = {},
         sx,
         className,
         slotProps = {},
     } = useThemeProps({ props: inProps, name: "CometAdminInlineAlert" });
 
+    const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
+    const titleMapping = { ...defaultTitleMapping, ...passedTitleMapping };
+    const descriptionMapping = { ...defaultDescriptionMapping, ...passedDescriptionMapping };
+
     const description = _description ?? descriptionMapping[severity];
+
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             <IconContainer {...slotProps.iconContainer}>{icon ?? iconMapping[severity]}</IconContainer>
