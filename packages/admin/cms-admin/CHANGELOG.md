@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 7.19.0
+
+### Minor Changes
+
+-   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+-   ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+-   Updated dependencies [3544127ad]
+-   Updated dependencies [17b79b581]
+    -   @comet/admin@7.19.0
+    -   @comet/blocks-admin@7.19.0
+    -   @comet/admin-date-time@7.19.0
+    -   @comet/admin-icons@7.19.0
+    -   @comet/admin-rte@7.19.0
+    -   @comet/admin-theme@7.19.0
+
 ## 7.18.0
 
 ### Minor Changes
