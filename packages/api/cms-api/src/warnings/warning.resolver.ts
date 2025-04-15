@@ -1,10 +1,15 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
+import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
+import isEqual from "lodash.isequal";
 
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { PaginatedWarnings } from "./dto/paginated-warnings";
 import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
@@ -25,9 +30,72 @@ export class WarningResolver {
     }
 
     @Query(() => PaginatedWarnings)
-    async warnings(@Args() { status, search, filter, sort, offset, limit }: WarningsArgs): Promise<PaginatedWarnings> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+    async warnings(
+        @Args() { status, search, filter, scopes, sort, offset, limit }: WarningsArgs,
+        @GetCurrentUser() user: CurrentUser,
+    ): Promise<PaginatedWarnings> {
+        // check if there are any scopes that the user does not have permission to
+        const allowedScopesForUser = user.permissions.find(({ permission }) => permission === "warnings")?.contentScopes;
+
+        for (const scope of scopes) {
+            if (!allowedScopesForUser?.find((allowedScope) => isEqual(allowedScope, scope))) {
+                throw new UnauthorizedException("Scopes were passed that the user does not have permission to");
+            }
+        }
+
+        const standardFilter = filter;
+        const scope = filter?.and?.find((item) => item.scope !== undefined)?.scope;
+
+        if (filter?.and) {
+            filter.and = filter.and.filter((item) => item.scope === undefined);
+        }
+
+        const where = gqlArgsToMikroOrmQuery({ search, filter: standardFilter }, this.repository);
         where.status = { $in: status };
+
+        if (scope) {
+            if (scope?.equal) {
+                const scopeEqual = scope.equal;
+                if (!scopes.find((scope) => isEqual(scope, scopeEqual))) {
+                    throw new UnauthorizedException();
+                }
+
+                where.$or = [{ scope: { $eq: scopeEqual } }];
+            } else if (scope.notEqual) {
+                const scopeNotEqual = scope.notEqual;
+
+                where.$or = [{ scope: { $in: scopes.filter((scope) => !isEqual(scope, scopeNotEqual)) } }];
+            } else if (scope.isAnyOf) {
+                for (const scopeItemInIsAnyOf of scope.isAnyOf) {
+                    if (!scopes.find((scope) => isEqual(scope, scopeItemInIsAnyOf))) {
+                        throw new UnauthorizedException();
+                    }
+                }
+
+                where.$or = [{ scope: { $in: scope.isAnyOf } }];
+            }
+        } else {
+            // A scope can be for example { domain: "main", language: "en" } but it should also query scopes that are only { domain: "main" }.
+            // These additional scopes are calculated here.
+            const additionalScopes: ContentScope[] = [];
+
+            const keyValueMap: Record<string, Set<string | number>> = {};
+            for (const scope of scopes) {
+                for (const key of Object.keys(scope)) {
+                    if (!keyValueMap[key]) {
+                        keyValueMap[key] = new Set();
+                    }
+                    keyValueMap[key].add(scope[key as keyof ContentScope]);
+                }
+            }
+            for (const key of Object.keys(keyValueMap)) {
+                for (const value of keyValueMap[key]) {
+                    additionalScopes.push({ [key]: value });
+                }
+            }
+
+            where.$or = [{ scope: { $in: scopes.concat(additionalScopes) } }, { scope: { $eq: null } }];
+        }
 
         const options: FindOptions<Warning> = { offset, limit };
 

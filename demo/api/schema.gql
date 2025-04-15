@@ -221,6 +221,7 @@ type Warning {
   severity: WarningSeverity!
   sourceInfo: WarningSourceInfo!
   status: WarningStatus!
+  scope: JSONObject
 }
 
 enum WarningSeverity {
@@ -864,7 +865,7 @@ type Query {
   manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
   warning(id: ID!): Warning!
-  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input UserPermissionsUserFilter {
@@ -1233,6 +1234,7 @@ input WarningFilter {
   type: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
+  scope: ScopeFilter
   and: [WarningFilter!]
   or: [WarningFilter!]
 }
@@ -1247,6 +1249,12 @@ input WarningStatusEnumFilter {
   isAnyOf: [WarningStatus!]
   equal: WarningStatus
   notEqual: WarningStatus
+}
+
+input ScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
 }
 
 input WarningSort {
