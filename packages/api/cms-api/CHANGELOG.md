@@ -1,5 +1,17 @@
 # @comet/cms-api
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- 412bbf2: Bump `@kubernetes/client-node` peer dependency to v1
+
+    To upgrade, install `@kubernetes/client-node` v1.0.0 or later.
+
+### Minor Changes
+
+- 0328fa3: API Generator: Add support for filtering `ID` fields
+
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
