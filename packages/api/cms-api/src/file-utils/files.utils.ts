@@ -11,8 +11,8 @@ import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { type FileUploadInput } from "./dto/file-upload.input";
-import { FilesService } from "./files.service";
+import { type FileUploadInput } from "./file-upload.input";
+import { FILE_UPLOAD_FIELD } from "./files.constants";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -139,7 +139,7 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
     const filenameWithoutExtension = basename(url, extname(url));
 
     return {
-        fieldname: FilesService.UPLOAD_FIELD,
+        fieldname: FILE_UPLOAD_FIELD,
         originalname: `${filenameWithoutExtension}.${fileType?.ext}`,
         encoding: "utf8",
         mimetype: fileType?.mime as string,
