@@ -225,7 +225,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         } else if (config.type == "grid") {
             generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
         } else {
-            throw new Error(`Unknown config type: ${config.type}`);
+            throw new Error(`Unknown config type`);
         }
         outputCode += generated.code;
         for (const queryName in generated.gqlDocuments) {
