@@ -29,24 +29,24 @@ export class ProductsFixtureService {
                 address: {
                     street: faker.location.street(),
                     streetNumber: Number(faker.location.buildingNumber()),
-                    zip: Number(faker.location.zipCode("####")),
+                    zip: faker.location.zipCode("####"),
                     country: faker.location.country(),
                     alternativeAddress: {
                         street: faker.location.street(),
                         streetNumber: Number(faker.location.buildingNumber()),
-                        zip: Number(faker.location.zipCode("####")),
+                        zip: faker.location.zipCode("####"),
                         country: faker.location.country(),
                     },
                 },
                 addressAsEmbeddable: {
                     street: faker.location.street(),
                     streetNumber: Number(faker.location.buildingNumber()),
-                    zip: Number(faker.location.zipCode("####")),
+                    zip: faker.location.zipCode("####"),
                     country: faker.location.country(),
                     alternativeAddress: {
                         street: faker.location.street(),
                         streetNumber: Number(faker.location.buildingNumber()),
-                        zip: Number(faker.location.zipCode("####")),
+                        zip: faker.location.zipCode("####"),
                         country: faker.location.country(),
                     },
                 },
