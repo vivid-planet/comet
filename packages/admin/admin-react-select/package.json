@@ -1,14 +1,10 @@
 {
-    "name": "@comet/admin-color-picker",
-<<<<<<< HEAD
-    "version": "8.0.0-beta.3",
-=======
+    "name": "@comet/admin-react-select",
     "version": "7.19.0",
->>>>>>> main
     "repository": {
-        "directory": "packages/admin/admin-color-picker",
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet"
+        "url": "https://github.com/vivid-planet/comet",
+        "directory": "packages/admin/admin-react-select"
     },
     "license": "BSD-2-Clause",
     "main": "lib/index.js",
@@ -22,7 +18,7 @@
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "run-p start:babel start:types",
@@ -30,38 +26,9 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-<<<<<<< HEAD
-        "@comet/admin": "workspace:*",
-        "@comet/admin-icons": "workspace:*",
-        "react-colorful": "^5.6.1",
-        "tinycolor2": "^1.6.0",
-        "use-debounce": "^10.0.4"
-    },
-    "devDependencies": {
-        "@babel/cli": "^7.26.4",
-        "@babel/core": "^7.26.10",
-        "@comet/admin-babel-preset": "workspace:*",
-        "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.0.0",
-        "@types/react": "^18.3.20",
-        "@types/react-dom": "^18.3.5",
-        "@types/tinycolor2": "^1.4.6",
-        "eslint": "^9.22.0",
-        "final-form": "^4.20.10",
-        "npm-run-all2": "^5.0.2",
-        "prettier": "^3.5.3",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-final-form": "^6.5.9",
-        "react-intl": "^7.1.10",
-        "rimraf": "^6.0.1",
-        "typescript": "^5.7.3"
-=======
         "@comet/admin": "workspace:^7.19.0",
         "@comet/admin-icons": "workspace:^7.19.0",
-        "react-colorful": "^5.5.1",
-        "tinycolor2": "^1.4.1",
-        "use-debounce": "^6.0.0"
+        "classnames": "^2.2.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
@@ -71,28 +38,25 @@
         "@mui/material": "^5.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
-        "@types/tinycolor2": "^1.4.2",
+        "@types/react-select": "^3.1.2",
         "eslint": "^8.0.0",
-        "final-form": "^4.0.0",
+        "final-form": "^4.16.1",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
         "react": "^17.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
-        "react-intl": "^6.0.0",
+        "react-select": "^3.0.4",
         "rimraf": "^3.0.2",
         "typescript": "^4.0.0"
->>>>>>> main
     },
     "peerDependencies": {
-        "@mui/material": "^7.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0",
+        "@mui/material": "^5.0.0",
+        "final-form": "^4.16.1",
+        "react": "^17.0",
+        "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
-        "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
-    },
-    "engines": {
-        "node": ">=22.0.0"
+        "react-select": "^3.0.4"
     },
     "publishConfig": {
         "access": "public",

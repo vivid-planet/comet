@@ -45,6 +45,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
                             "name": "scope",
                             "kind": "Json",
                             "nullable": true
