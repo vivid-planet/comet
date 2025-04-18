@@ -2,7 +2,12 @@ import "@fontsource-variable/roboto-flex/full.css";
 
 import { createCometTheme, MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
+<<<<<<< HEAD
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
+=======
+import { createCometTheme } from "@comet/admin-theme";
+import { createTheme as createMuiTheme, CssBaseline, GlobalStyles } from "@mui/material";
+>>>>>>> main
 import type { Preview } from "@storybook/react";
 import { type Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
@@ -76,8 +81,14 @@ const preview: Preview = {
 
             return (
                 <MuiThemeProvider theme={theme}>
+<<<<<<< HEAD
                     <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
                         <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
+=======
+                    <CssBaseline />
+                    <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
+                        <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
+>>>>>>> main
                             <GlobalStyles styles={previewGlobalStyles} />
                             <>
                                 {context.parameters.layout === "padded" ? (
