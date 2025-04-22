@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 import { parse } from "path";
 
-import { FocalPoint } from "../common/enums/focal-point.enum";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { ImageInterface } from "./dto/image.interface";

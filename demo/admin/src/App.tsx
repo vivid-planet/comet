@@ -64,7 +64,6 @@ export function App() {
                     generateImageTitle: true,
                 },
             }}
-            imgproxy={config.imgproxy}
             dependencies={{
                 entityDependencyMap: {
                     Page,
