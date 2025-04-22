@@ -1,9 +1,9 @@
 import { Lock } from "@comet/admin-icons";
-import { FormLabel } from "@mui/material";
 import { css } from "@mui/material/styles";
 import { FunctionComponent, ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ReadOnlyFieldLabel } from "./ReadOnlyFieldLabel";
 
 export const ReadOnlyTextField: FunctionComponent<{
     label?: ReactNode;
@@ -11,7 +11,7 @@ export const ReadOnlyTextField: FunctionComponent<{
     className?: string;
 }> = ({ label, value, className }) => (
     <Wrapper className={className}>
-        {label && <Label>{label}</Label>}
+        {label && <ReadOnlyFieldLabel label={label} />}
         {value && (
             <Box>
                 <TextContent>{value}</TextContent>
@@ -29,21 +29,6 @@ const Wrapper = createComponentSlot("div")({
         display: flex;
         flex-direction: column;
         gap: 4px;
-    `,
-);
-
-const Label = createComponentSlot(FormLabel)({
-    componentName: "ReadOnlyTextField",
-    slotName: "label",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        font-family: ${theme.typography.fontFamily};
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: 0px;
     `,
 );
 
