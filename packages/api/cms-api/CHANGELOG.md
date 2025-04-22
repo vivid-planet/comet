@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
@@ -125,28 +124,27 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
-=======
+
 ## 7.19.0
 
 ### Minor Changes
 
--   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+- 91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
 
 ### Patch Changes
 
--   eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+- eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
 
     Previously, the scope wasn't considered when loading the node.
     This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
 
-    -   @comet/blocks-api@7.19.0
+    - @comet/blocks-api@7.19.0
 
 ## 7.18.0
 
 ### Patch Changes
 
--   @comet/blocks-api@7.18.0
->>>>>>> main
+- @comet/blocks-api@7.18.0
 
 ## 7.17.0
 

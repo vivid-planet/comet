@@ -40,12 +40,8 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
             const retFile: Omit<File, "fileUrl"> = {
                 id: file.id,
                 name: file.name,
-<<<<<<< HEAD
                 size: file.size,
-=======
-                size: Number(file.size),
                 mimetype: file.mimetype,
->>>>>>> main
                 scope: file.scope,
                 altText: file.altText,
                 title: file.title,

@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { type NextRequest, NextResponse } from "next/server";
-=======
 import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
-import { NextRequest, NextResponse } from "next/server";
->>>>>>> main
+import { type NextRequest, NextResponse } from "next/server";
 
 import { type CustomMiddleware } from "./chain";
 
