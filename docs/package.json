@@ -8,6 +8,7 @@
         "clear": "docusaurus clear",
         "deploy": "docusaurus deploy",
         "docusaurus": "docusaurus",
+        "generate-component-docs": "ts-node --project tsconfig.ts-node.json src/utils/generateComponentDocs.ts",
         "lint": "run-p lint:prettier lint:eslint lint:spelling",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
@@ -80,6 +81,8 @@
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "sucrase": "^3.35.0",
+        "ts-morph": "^25.0.1",
+        "ts-node": "^10.9.2",
         "typescript": "5.7.3",
         "webpack": "^5.100.0"
     },
