@@ -1,5 +1,61 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- a9d4b70: Change type of the `values` prop of ContentScopeProvider
+
+    **Before**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "English", value: "en" },
+        },
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "German", value: "de" },
+        },
+        {
+            domain: { label: "Secondary", value: "secondary" },
+            language: { label: "English", value: "en" },
+        },
+    ];
+    ```
+
+    **Now**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            scope: { domain: "main", language: "en" },
+            label: { domain: "Main", language: "English" },
+        },
+        {
+            scope: { domain: "main", language: "de" },
+            label: { domain: "Main", language: "German" },
+        },
+        {
+            scope: { domain: "secondary", language: "en" },
+            label: { domain: "Secondary", language: "English" },
+        },
+    ];
+    ```
+
+- b039dcb: Remove `imgproxyConfig` from `CometConfigProvider` and move `maxSrcResolution` to `damConfig`
+
+### Patch Changes
+
+- Updated dependencies [a93455f]
+- Updated dependencies [72d1a5e]
+- Updated dependencies [1c62e87]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-date-time@8.0.0-beta.4
+    - @comet/admin-rte@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes

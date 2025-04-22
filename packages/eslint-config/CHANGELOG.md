@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.4
+
+### Patch Changes
+
+- 6ec43c9: Use recommended config from eslint-plugin-package-json correctly
+    - @comet/eslint-plugin@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
