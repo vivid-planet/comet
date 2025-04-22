@@ -799,6 +799,9 @@ importers:
       change-case:
         specifier: ^5.4.4
         version: 5.4.4
+      chokidar-cli:
+        specifier: ^3.0.0
+        version: 3.0.0
       cspell:
         specifier: ^8.17.5
         version: 8.17.5
