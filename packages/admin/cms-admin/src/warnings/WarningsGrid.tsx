@@ -209,17 +209,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                         id: row.sourceInfo.targetId,
                     });
 
-                    // Check current scope, check if it is the same as row.scope but allow that a key is missing in row.scope
-                    // because when for example scope { domain: "main" } is passed to createUrl, it defaults to language "en" and would result to a unnecessary scope switch
-                    let switchToAnotherScope = false;
-                    for (const key in contentScope.scope) {
-                        if (row.scope[key] && contentScope.scope[key] !== row.scope[key]) {
-                            switchToAnotherScope = true;
-                            break;
-                        }
-                    }
-
-                    const scopeUrl = row.scope && switchToAnotherScope ? createUrl(row.scope) : contentScope.match.url;
+                    const scopeUrl = row.scope ? createUrl({ ...contentScope.scope, ...row.scope }) : contentScope.match.url;
                     return scopeUrl + path;
                 };
 
