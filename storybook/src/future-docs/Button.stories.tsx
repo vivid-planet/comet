@@ -27,8 +27,11 @@ import { styled } from "@mui/material/styles";
 import { type Decorator } from "@storybook/react";
 import { useState } from "react";
 
+import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+
 export default {
     title: "Future Docs/Button",
+    decorators: [heightCommunicationDecorator()],
 };
 
 export const BasicExample = {

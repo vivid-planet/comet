@@ -814,6 +814,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.23)
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
       cspell:
         specifier: ^8.19.4
         version: 8.19.4
