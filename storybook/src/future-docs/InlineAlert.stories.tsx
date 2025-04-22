@@ -3,6 +3,8 @@ import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } fro
 import { Box, Button } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+
 type Story = StoryObj<typeof InlineAlert>;
 
 const config: Meta<typeof InlineAlert> = {
@@ -14,6 +16,7 @@ const config: Meta<typeof InlineAlert> = {
             options: [undefined, "error", "warning", "info"],
         },
     },
+    decorators: [heightCommunicationDecorator()],
 };
 
 export default config;
