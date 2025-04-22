@@ -133,6 +133,7 @@ export function ProductForm({ id, width }: FormProps) {
 
         const output = {
             ...formValues,
+            description: formValues.description ?? "",
             image: rootBlocks.image.state2Output(formValues.image),
             type: formValues.type as GQLProductType,
             category: formValues.category ? formValues.category.id : null,
@@ -199,12 +200,7 @@ export function ProductForm({ id, width }: FormProps) {
                         startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         disableSlider
                     />
-                    <TextAreaField
-                        required
-                        fullWidth
-                        name="description"
-                        label={<FormattedMessage id="product.description" defaultMessage="Description" />}
-                    />
+                    <TextAreaField fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description" />} />
                     <DateField
                         required
                         fullWidth

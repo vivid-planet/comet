@@ -1148,6 +1148,72 @@ Remove the `allCategories` prop from `PagesPage`:
 
 :::
 
+### Add proxy for `/dam` URLs
+
+The API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title=admin/vite.config.mts
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title=admin/package.json
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title=admin/server/index.js
+// ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+// ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title=deployment/helm/values.tpl.yaml
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
+
 ### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
 <details>
@@ -1476,6 +1542,22 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 ```
 
 </details>
+
+### Remove `x-relative-dam-urls` header from `graphQLClient`
+
+```diff title="site/src/util/graphQLClient.ts"
+// ...
+return createGraphQLFetchLibrary(
+    createFetchWithDefaults(fetch, {
+        // ...
+        headers: {
+-           "x-relative-dam-urls": "1",
+            // ...
+        },
+    }),
+    `${process.env.API_URL_INTERNAL}/graphql`,
+);
+```
 
 ## ESLint
 

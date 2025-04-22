@@ -25,7 +25,7 @@ type TransformResponse = {
 export class DamFileDownloadLinkBlockTransformerService implements BlockTransformerServiceInterface<DamFileDownloadLinkBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
-    async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
+    async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls }: BlockContext) {
         const ret: TransformResponse = {
             openFileType: block.openFileType,
         };
@@ -54,12 +54,12 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
             if (block.openFileType === "NewTab") {
                 ret.file = {
                     ...retFile,
-                    fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                    fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls }),
                 };
             } else if (block.openFileType === "Download") {
                 ret.file = {
                     ...retFile,
-                    fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
+                    fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls }),
                 };
             }
         }
