@@ -7,11 +7,10 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
-    Tooltip,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit, ImpersonateUser } from "@comet/admin-icons";
+import { Edit } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -20,10 +19,7 @@ import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsCompon
 import { type ReactNode, useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
-import { useCurrentUser } from "./hooks/currentUser";
 import { type GQLUserForGridFragment, type GQLUserGridQuery, type GQLUserGridQueryVariables } from "./UserGrid.generated";
-import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
     toolbarAction: ReactNode;
@@ -49,8 +45,6 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
-    const currentUser = useCurrentUser();
-    const isImpersonated = currentUser.impersonated;
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -155,50 +149,16 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             align: "right",
             pinned: "right",
             disableExport: true,
-            renderCell: (params) => {
-                const isCurrentUser = params.row.id === currentUser.id;
-                return (
-                    <>
-                        <Tooltip
-                            title={
-                                isCurrentUser ? (
-                                    <FormattedMessage
-                                        id="comet.userPermissions.cannotImpersonateYourself"
-                                        defaultMessage="You can't impersonate yourself"
-                                    />
-                                ) : (
-                                    commonImpersonationMessages.impersonate
-                                )
-                            }
-                        >
-                            {/* span is needed for the tooltip to trigger even if the button is disabled*/}
-                            <span>
-                                <IconButton
-                                    disabled={isCurrentUser && !isImpersonated}
-                                    onClick={() => {
-                                        if (!isCurrentUser) {
-                                            startImpersonation(params.row.id.toString());
-                                        }
-                                        if (isCurrentUser && isImpersonated) {
-                                            stopImpersonation();
-                                        }
-                                    }}
-                                >
-                                    <ImpersonateUser />
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                        <IconButton
-                            onClick={() => {
-                                stackApi.activatePage("edit", params.id.toString());
-                            }}
-                            color="primary"
-                        >
-                            <Edit />
-                        </IconButton>
-                    </>
-                );
-            },
+            renderCell: (params) => (
+                <IconButton
+                    onClick={() => {
+                        stackApi.activatePage("edit", params.id.toString());
+                    }}
+                    color="primary"
+                >
+                    <Edit />
+                </IconButton>
+            ),
         },
     ];
 

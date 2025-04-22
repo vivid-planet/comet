@@ -4,12 +4,14 @@ import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { useUserPermissionCheck } from "./hooks/currentUser";
 import { UserPermissionsUserPageBasicDataPanel } from "./user/basicData/UserBasicData";
 import { UserPermissionsUserPagePermissionsPanel } from "./user/permissions/PermissionsPanel";
 import { UserPermissionsUserPageToolbar } from "./user/UserPageToolbar";
 import { UserPermissionsUserGrid } from "./UserGrid";
 
 export const UserPermissionsPage = () => {
+    const isAllowed = useUserPermissionCheck();
     return (
         <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Permissions" />}>
             <StackSwitch>
@@ -34,12 +36,14 @@ export const UserPermissionsPage = () => {
                                     <RouterTab path="" label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}>
                                         <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                     </RouterTab>
-                                    <RouterTab
-                                        path="/permissions"
-                                        label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
-                                    >
-                                        <UserPermissionsUserPagePermissionsPanel userId={userId} />
-                                    </RouterTab>
+                                    {isAllowed("userPermissions") && (
+                                        <RouterTab
+                                            path="/permissions"
+                                            label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
+                                        >
+                                            <UserPermissionsUserPagePermissionsPanel userId={userId} />
+                                        </RouterTab>
+                                    )}
                                 </RouterTabs>
                             </MainContent>
                         </>

@@ -1,7 +1,9 @@
 import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -10,7 +12,7 @@ import { UserPermissionsService } from "./user-permissions.service";
 class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsUser) {}
 
 @Resolver(() => UserPermissionsUser)
-@RequiredPermission(["userPermissions"], { skipScopeCheck: true })
+@RequiredPermission(["userPermissions", "impersonation"], { skipScopeCheck: true })
 export class UserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
 
@@ -33,5 +35,10 @@ export class UserResolver {
     @ResolveField(() => Int)
     async contentScopesCount(@Parent() user: UserPermissionsUser): Promise<number> {
         return (await this.userService.getContentScopes(user)).length;
+    }
+
+    @ResolveField(() => Boolean)
+    async impersonationAllowed(@Parent() user: UserPermissionsUser, @GetCurrentUser() currentUser: CurrentUser): Promise<boolean> {
+        return currentUser.id !== user.id && this.userService.hasEqualOrMorePermissions(currentUser, user);
     }
 }

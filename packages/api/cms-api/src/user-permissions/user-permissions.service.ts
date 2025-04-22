@@ -152,7 +152,10 @@ export class UserPermissionsService {
             const permissions = await this.getPermissions(authenticatedUser);
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
-                    return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
+                    const user = await this.getUser(request?.cookies["comet-impersonate-user-id"]);
+                    if (await this.hasEqualOrMorePermissions(authenticatedUser, user)) {
+                        return user;
+                    }
                 } catch {
                     return undefined;
                 }
@@ -194,5 +197,24 @@ export class UserPermissionsService {
                 p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
                 return p;
             });
+    }
+
+    async hasEqualOrMorePermissions(user: User | CurrentUser, targetUser: User): Promise<boolean> {
+        const permissions = "permissions" in user ? user.permissions : await this.getPermissionsAndContentScopes(user);
+        const targetPermissions = await this.getPermissionsAndContentScopes(targetUser);
+        for (const permission of targetPermissions) {
+            const currentUserPermission = permissions.find((p) => p.permission === permission.permission);
+            if (!currentUserPermission) {
+                console.log("Permission not found", permission.permission);
+                return false;
+            }
+            for (const contentScope of permission.contentScopes) {
+                if (!currentUserPermission.contentScopes.find((cs) => isEqual(cs, contentScope))) {
+                    console.log("ContentScope not found", contentScope);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
