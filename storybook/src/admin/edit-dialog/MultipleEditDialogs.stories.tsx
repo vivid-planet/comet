@@ -1,4 +1,4 @@
-import { Button, useEditDialog } from "@comet/admin";
+import { Button, SubRoute, useEditDialog } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons/lib";
 import { Stack, Typography } from "@mui/material";
 
@@ -74,10 +74,14 @@ const SecondComponent = () => {
 export const MultipleEditDialogs = () => {
     return (
         <div style={{ display: "flex", gap: "20px", flexDirection: "column" }}>
-            <Typography variant="h3">MutipleEditDialogs</Typography>
+            <Typography variant="h3">MutipleEditDialogs2</Typography>
 
-            <FirstComponent />
-            <SecondComponent />
+            <SubRoute path="./first">
+                <FirstComponent />
+            </SubRoute>
+            <SubRoute path="./second">
+                <SecondComponent />
+            </SubRoute>
         </div>
     );
 };
