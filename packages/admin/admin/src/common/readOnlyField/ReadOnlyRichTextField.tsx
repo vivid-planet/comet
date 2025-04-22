@@ -1,8 +1,8 @@
-import { FormLabel } from "@mui/material";
 import { css } from "@mui/material/styles";
 import { FunctionComponent, ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ReadOnlyFieldLabel } from "./ReadOnlyFieldLabel";
 
 export const ReadOnlyRichTextField: FunctionComponent<{
     label?: ReactNode;
@@ -11,7 +11,7 @@ export const ReadOnlyRichTextField: FunctionComponent<{
 }> = ({ label, value, className }) => {
     return (
         <Wrapper className={className}>
-            {label && <Label>{label}</Label>}
+            {label && <ReadOnlyFieldLabel label={label} />}
             {value && <InnerBox dangerouslySetInnerHTML={{ __html: value }} />}
         </Wrapper>
     );
@@ -25,21 +25,6 @@ const Wrapper = createComponentSlot("div")({
         display: flex;
         flex-direction: column;
         gap: 4px;
-    `,
-);
-
-const Label = createComponentSlot(FormLabel)({
-    componentName: "ReadOnlyRichTextField",
-    slotName: "label",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        font-family: ${theme.typography.fontFamily};
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: 0px;
     `,
 );
 

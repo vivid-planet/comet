@@ -1,19 +1,19 @@
 import { Lock } from "@comet/admin-icons";
-import { FormLabel } from "@mui/material";
 import { css } from "@mui/material/styles";
 import MuiSwitch from "@mui/material/Switch";
 import { FunctionComponent, ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ReadOnlyFieldLabel } from "./ReadOnlyFieldLabel";
 
-export const ReadOnlyBooleanField: FunctionComponent<{
+export const ReadOnlySwitchField: FunctionComponent<{
     label?: ReactNode;
     value?: boolean;
     className?: string;
 }> = ({ label, value, className }) => {
     return (
         <Wrapper className={className}>
-            {label && <Label>{label}</Label>}
+            {label && <ReadOnlyFieldLabel label={label} />}
             <Box>
                 <MuiSwitch checked={!!value} readOnly />
                 <Lock fontSize="small" />
@@ -23,7 +23,7 @@ export const ReadOnlyBooleanField: FunctionComponent<{
 };
 
 const Wrapper = createComponentSlot("div")({
-    componentName: "ReadOnlyBooleanField",
+    componentName: "ReadOnlySwitchField",
     slotName: "wrapper",
 })(
     css`
@@ -32,23 +32,8 @@ const Wrapper = createComponentSlot("div")({
     `,
 );
 
-const Label = createComponentSlot(FormLabel)({
-    componentName: "ReadOnlyBooleanField",
-    slotName: "label",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        font-family: ${theme.typography.fontFamily};
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: 0px;
-    `,
-);
-
 const Box = createComponentSlot("div")({
-    componentName: "ReadOnlyBooleanField",
+    componentName: "ReadOnlySwitchField",
     slotName: "box",
 })(
     () => css`

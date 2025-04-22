@@ -1,10 +1,10 @@
 import { Download } from "@comet/admin-icons";
-import { FormLabel } from "@mui/material";
 import { css } from "@mui/material/styles";
 import { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ReadOnlyFieldLabel } from "./ReadOnlyFieldLabel";
 
 export const ReadOnlyFileField: FunctionComponent<{
     label?: ReactNode;
@@ -15,7 +15,7 @@ export const ReadOnlyFileField: FunctionComponent<{
 
     return (
         <Wrapper className={className}>
-            {label && <Label>{label}</Label>}
+            {label && <ReadOnlyFieldLabel label={label} />}
             <Box>
                 {files.length > 0 ? (
                     <FileList>
@@ -59,21 +59,6 @@ const Wrapper = createComponentSlot("div")({
         display: flex;
         flex-direction: column;
         gap: 4px;
-    `,
-);
-
-const Label = createComponentSlot(FormLabel)({
-    componentName: "ReadOnlyFileField",
-    slotName: "label",
-})(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        font-family: ${theme.typography.fontFamily};
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: 0px;
     `,
 );
 

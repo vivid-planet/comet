@@ -1,17 +1,17 @@
 import { FunctionComponent, ReactNode } from "react";
 
 import { ReadOnlyBlockField } from "./ReadOnlyBlockField";
-import { ReadOnlyBooleanField } from "./ReadOnlyBooleanField";
 import { ReadOnlyDateField } from "./ReadOnlyDateField";
 import { ReadOnlyFileField } from "./ReadOnlyFileField";
 import { ReadOnlyMultiSelectField } from "./ReadOnlyMultiSelectField";
 import { ReadOnlyNumberField } from "./ReadOnlyNumberField";
 import { ReadOnlyRichTextField } from "./ReadOnlyRichTextField";
 import { ReadOnlySelectField } from "./ReadOnlySelectField";
+import { ReadOnlySwitchField } from "./ReadOnlySwitchField";
 import { ReadOnlyTextAreaField } from "./ReadOnlyTextAreaField";
 import { ReadOnlyTextField } from "./ReadOnlyTextField";
 
-export type ReadOnlyFieldType = "text" | "textarea" | "richtext" | "number" | "boolean" | "date" | "file" | "block" | "select" | "multiselect";
+export type ReadOnlyFieldType = "text" | "textarea" | "richtext" | "number" | "switch" | "date" | "file" | "block" | "select" | "multiselect";
 
 const isSelectOption = (val: unknown): val is { label: ReactNode; value: string | number } =>
     !!val && typeof val === "object" && "label" in val && "value" in val;
@@ -24,7 +24,7 @@ const inferType = (value: unknown): ReadOnlyFieldType => {
     if (isSelectOption(value)) return "select";
     if (value instanceof Date) return "date";
     if (value instanceof File) return "file";
-    if (typeof value === "boolean") return "boolean";
+    if (typeof value === "boolean") return "switch";
     if (typeof value === "number") return "number";
     if (typeof value === "string") return "text";
     return "block";
@@ -50,8 +50,8 @@ export const ReadOnlyField: FunctionComponent<ReadOnlyFieldProps> = ({ label, va
             return <ReadOnlyRichTextField {...restProps} />;
         case "number":
             return <ReadOnlyNumberField {...restProps} />;
-        case "boolean":
-            return <ReadOnlyBooleanField {...restProps} />;
+        case "switch":
+            return <ReadOnlySwitchField {...restProps} />;
         case "date":
             return <ReadOnlyDateField {...restProps} />;
         case "file":
