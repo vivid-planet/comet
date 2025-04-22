@@ -38,7 +38,7 @@ export const TwoLevelValidationWarningAndError = {
     render: () => {
         return (
             <Grid container spacing={4} style={{ maxWidth: 800 }}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FinalForm
                         mode="add"
                         onSubmit={() => {}}
@@ -102,7 +102,7 @@ export const TwoLevelValidationWarningAndError = {
                         )}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FinalForm<{ input1: number }>
                         mode="add"
                         onSubmit={() => {}}

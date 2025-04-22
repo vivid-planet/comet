@@ -307,6 +307,21 @@
 - Updated dependencies [682a674]
     - @comet/admin-icons@8.0.0-beta.0
 
+## 7.19.0
+
+### Patch Changes
+
+- 3544127ad: Remove unintended white background on `Button` with `textDark` variant when disabled
+    - @comet/admin-icons@7.19.0
+    - @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/admin-icons@7.18.0
+- @comet/admin-theme@7.18.0
+
 ## 7.17.0
 
 ### Patch Changes

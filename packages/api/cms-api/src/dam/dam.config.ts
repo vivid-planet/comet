@@ -1,5 +1,4 @@
 export interface DamConfig {
-    apiUrl: string;
     secret: string;
     allowedImageSizes: number[];
     allowedAspectRatios: string[];

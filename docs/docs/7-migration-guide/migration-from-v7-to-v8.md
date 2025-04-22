@@ -373,7 +373,9 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 
 </details>
 
-#### ✅ Vite / SWC
+#### ✅ `@kubernetes/client-node`
+
+The `@kubernetes/client-node` peer dependency has been bumped to v1.
 
 <details>
 
@@ -382,16 +384,18 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 :::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/update-swc-dependencies.ts
+npx @comet/upgrade v8/update-kubernetes-client-node.ts
 ```
 
 :::
 
-```diff
--        "@swc/plugin-emotion": "^3.0.13",
--        "@vitejs/plugin-react-swc": "^3.7.2",
-+        "@swc/plugin-emotion": "^8.7.2",
-+        "@vitejs/plugin-react-swc": "^3.8.0",
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@kubernetes/client-node": "^0.18.0",
++       "@kubernetes/client-node": "^1.0.0",
+    }
+}
 ```
 
 </details>
@@ -844,7 +848,7 @@ The React dependency has been bumped to v18.
 
 #### MUI
 
-The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v6.
+The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
 
 1.  Upgrade your MUI dependencies
 
@@ -866,11 +870,11 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     -       "@mui/material": "^5.0.0",
     -       "@mui/system": "^5.0.0",
     -       "@mui/utils": "^5.0.0",
-    +       "@mui/icons-material": "^6.0.0",
-    +       "@mui/lab": "^6.0.0-beta.10",
-    +       "@mui/material": "^6.0.0",
-    +       "@mui/system": "^6.0.0",
-    +       "@mui/utils": "^6.0.0",
+    +       "@mui/icons-material": "^7.0.0",
+    +       "@mui/lab": "^7.0.0-beta.9",
+    +       "@mui/material": "^7.0.0",
+    +       "@mui/system": "^7.0.0",
+    +       "@mui/utils": "^7.0.0",
     ```
 
     </details>
@@ -890,7 +894,9 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     :::
     </details>
 
-3.  Follow the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) to upgrade.
+3.  Follow the official migration guides to upgrade:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
 
 #### MUI X (DataGrid)
 
@@ -966,6 +972,29 @@ Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid,
         }]
     />
 ```
+
+#### ✅ Vite / SWC
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-swc-dependencies.ts
+```
+
+:::
+
+```diff
+-        "@swc/plugin-emotion": "^3.0.13",
+-        "@vitejs/plugin-react-swc": "^3.7.2",
++        "@swc/plugin-emotion": "^8.7.2",
++        "@vitejs/plugin-react-swc": "^3.8.0",
+```
+
+</details>
 
 ### ✅ Add new package @comet/admin-generator
 
@@ -1191,6 +1220,72 @@ Remove the `allCategories` prop from `PagesPage`:
     Review the result carefully.
 
 :::
+
+### Add proxy for `/dam` URLs
+
+The API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title=admin/vite.config.mts
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title=admin/package.json
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title=admin/server/index.js
+// ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+// ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title=deployment/helm/values.tpl.yaml
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
 
 ### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
@@ -1520,6 +1615,22 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 ```
 
 </details>
+
+### Remove `x-relative-dam-urls` header from `graphQLClient`
+
+```diff title="site/src/util/graphQLClient.ts"
+// ...
+return createGraphQLFetchLibrary(
+    createFetchWithDefaults(fetch, {
+        // ...
+        headers: {
+-           "x-relative-dam-urls": "1",
+            // ...
+        },
+    }),
+    `${process.env.API_URL_INTERNAL}/graphql`,
+);
+```
 
 ## ESLint
 

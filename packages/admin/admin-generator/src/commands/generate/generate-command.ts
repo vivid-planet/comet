@@ -151,7 +151,7 @@ export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentTy
 export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     type: "virtual";
     name: string;
-    queryFields?: UsableFields<T>[];
+    queryFields?: UsableFields<T, true>[];
     renderCell: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
 } & Pick<GridColDef, "sortBy"> &
     BaseColumnConfig;
