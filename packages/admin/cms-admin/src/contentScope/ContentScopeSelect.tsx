@@ -193,7 +193,7 @@ export function ContentScopeSelect({
                     PaperProps: {
                         sx: (theme) => ({
                             minWidth: "350px",
-
+                            maxHeight: "calc(100vh - 60px)",
                             [theme.breakpoints.down("md")]: {
                                 width: "100%",
                                 maxWidth: "none",

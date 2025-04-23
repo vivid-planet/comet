@@ -9,7 +9,6 @@ export interface RequestContextInterface {
     includeInvisiblePages?: Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished>;
     includeInvisibleBlocks?: boolean;
     previewDamUrls: boolean;
-    relativeDamUrls: boolean;
 }
 
 export const getRequestContextHeadersFromRequest = (request: { headers: IncomingHttpHeaders }): RequestContextInterface => {
@@ -19,7 +18,6 @@ export const getRequestContextHeadersFromRequest = (request: { headers: Incoming
         includeInvisiblePages,
         includeInvisibleBlocks,
         previewDamUrls: !!request.headers["x-preview-dam-urls"],
-        relativeDamUrls: !!request.headers["x-relative-dam-urls"],
     };
 };
 

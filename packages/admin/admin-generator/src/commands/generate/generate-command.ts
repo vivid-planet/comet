@@ -123,8 +123,6 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
-type TabsConfig<T extends { __typename?: string }> = { type: "tabs"; tabs: { name: string; content: GeneratorConfig<T> }[] };
-
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
@@ -182,9 +180,13 @@ export type GridConfig<T extends { __typename?: string }> = {
     newEntryText?: string;
     rowActionProp?: boolean;
     selectionProps?: "multiSelect" | "singleSelect";
+    rowReordering?: {
+        enabled: boolean;
+        dragPreviewField?: UsableFields<T>;
+    };
 };
 
-export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | TabsConfig<T>;
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
 
 export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
     return config;
@@ -227,7 +229,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         } else if (config.type == "grid") {
             generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
         } else {
-            throw new Error(`Unknown config type: ${config.type}`);
+            throw new Error(`Unknown config type`);
         }
         outputCode += generated.code;
         for (const queryName in generated.gqlDocuments) {
