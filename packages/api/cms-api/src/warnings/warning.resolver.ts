@@ -53,48 +53,38 @@ export class WarningResolver {
         const where = gqlArgsToMikroOrmQuery({ search, filter: standardFilter }, this.repository);
         where.status = { $in: status };
 
+        // A scope can be for example { domain: "main", language: "en" } but it should also query scopes that are only { domain: "main" }.
+        // These additional scopes are calculated here.
+        const additionalScopes: ContentScope[] = [];
+
+        const keyValueMap: Record<string, Set<string | number>> = {};
+        for (const scope of scopes) {
+            for (const key of Object.keys(scope)) {
+                if (!keyValueMap[key]) {
+                    keyValueMap[key] = new Set();
+                }
+                keyValueMap[key].add(scope[key as keyof ContentScope]);
+            }
+        }
+        for (const key of Object.keys(keyValueMap)) {
+            for (const value of keyValueMap[key]) {
+                additionalScopes.push({ [key]: value });
+            }
+        }
+        const allowedScopes = scopes.concat(additionalScopes);
+
         if (scope) {
+            where.scope = { $in: allowedScopes };
             if (scope?.equal) {
                 const scopeEqual = scope.equal;
-                if (!scopes.find((scope) => isEqual(scope, scopeEqual))) {
-                    throw new UnauthorizedException();
-                }
-
                 where.$or = [{ scope: { $eq: scopeEqual } }];
             } else if (scope.notEqual) {
-                const scopeNotEqual = scope.notEqual;
-
-                where.$or = [{ scope: { $in: scopes.filter((scope) => !isEqual(scope, scopeNotEqual)) } }];
+                where.$or = [{ scope: { $ne: scope.notEqual } }];
             } else if (scope.isAnyOf) {
-                for (const scopeItemInIsAnyOf of scope.isAnyOf) {
-                    if (!scopes.find((scope) => isEqual(scope, scopeItemInIsAnyOf))) {
-                        throw new UnauthorizedException();
-                    }
-                }
-
                 where.$or = [{ scope: { $in: scope.isAnyOf } }];
             }
         } else {
-            // A scope can be for example { domain: "main", language: "en" } but it should also query scopes that are only { domain: "main" }.
-            // These additional scopes are calculated here.
-            const additionalScopes: ContentScope[] = [];
-
-            const keyValueMap: Record<string, Set<string | number>> = {};
-            for (const scope of scopes) {
-                for (const key of Object.keys(scope)) {
-                    if (!keyValueMap[key]) {
-                        keyValueMap[key] = new Set();
-                    }
-                    keyValueMap[key].add(scope[key as keyof ContentScope]);
-                }
-            }
-            for (const key of Object.keys(keyValueMap)) {
-                for (const value of keyValueMap[key]) {
-                    additionalScopes.push({ [key]: value });
-                }
-            }
-
-            where.$or = [{ scope: { $in: scopes.concat(additionalScopes) } }, { scope: { $eq: null } }];
+            where.$or = [{ scope: { $in: allowedScopes } }, { scope: { $eq: null } }];
         }
 
         const options: FindOptions<Warning> = { offset, limit };
