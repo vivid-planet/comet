@@ -1,5 +1,7 @@
 # @comet/admin-babel-preset
 
+## 8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
@@ -18,6 +20,10 @@
 ### Minor Changes
 
 - 682a674: Add support for React 18
+
+## 7.19.0
+
+## 7.18.0
 
 ## 7.17.0
 

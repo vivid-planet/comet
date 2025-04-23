@@ -183,14 +183,14 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                         <BlockAdminComponentPaper disablePadding>
                             <ContentRoot component="div" onClick={() => setOpen(true)}>
                                 <Grid container alignItems="center" spacing={3}>
-                                    <Grid item>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
-                                    <Grid item xs>
+                                    <Grid>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
+                                    <Grid size="grow">
                                         <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                         <Typography variant="body1" color="textSecondary">
                                             <DamPathLazy fileId={state.damFile.id} />
                                         </Typography>
                                     </Grid>
-                                    <Grid item>
+                                    <Grid>
                                         <IconButton
                                             onMouseDown={(event) => event.stopPropagation()}
                                             onClick={(event) => {
