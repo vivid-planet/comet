@@ -1,10 +1,11 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
+import { Readable } from "node:stream";
 
 import { Logger } from "@nestjs/common";
 import path from "path";
 
-import { DataStreamAndMetadata } from "./data-stream";
-import { FileDataStream } from "./file-data-stream";
+import { StreamChunkAndMetadata } from "./data-stream";
+import { FileDataStream, FileStreamAndMetadata } from "./file-data-stream";
 
 export class LocalFileDataStream extends FileDataStream {
     private readonly logger = new Logger();
@@ -15,9 +16,23 @@ export class LocalFileDataStream extends FileDataStream {
         this.fileKey = fileKey;
     }
 
-    async getDataStreamAndMetadata(): Promise<DataStreamAndMetadata | null> {
+    async getDataStreamAndMetadata() {
         const dataStreamAndSize = await this.getFileStreamAndSizeOfLocalFile({ filePath: this.fileKey });
-        return this.getFileStreamResult(dataStreamAndSize);
+        if (!dataStreamAndSize) {
+            return null;
+        }
+        const fileStreamAndMetadata = await this.getFileStreamResult(dataStreamAndSize);
+
+        return Readable.from(this.generateFileIterator(fileStreamAndMetadata));
+    }
+
+    private async *generateFileIterator(fileStreamAndMetadata: FileStreamAndMetadata) {
+        const { dataStream, metadata } = fileStreamAndMetadata;
+
+        for await (const chunk of dataStream) {
+            const chunkAndMetadata: StreamChunkAndMetadata = { chunk, metadata };
+            yield chunkAndMetadata;
+        }
     }
 
     protected async getFileStreamAndSizeOfLocalFile({ filePath, encoding }: { filePath?: string; encoding?: BufferEncoding }) {
