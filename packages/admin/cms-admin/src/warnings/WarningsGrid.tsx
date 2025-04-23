@@ -15,6 +15,8 @@ import {
 import { ArrowRight, OpenNewTab, WarningSolid } from "@comet/admin-icons";
 import { Chip, IconButton } from "@mui/material";
 import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { capitalCase } from "change-case";
+import isEqual from "lodash.isequal";
 import { type ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
@@ -90,7 +92,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const scopes = scopeValues.map((item) => Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value])));
     const scopeValueOptions = scopeValues.map((item) => {
         const scopeNameArray = Object.entries(item).map(([key, value]) => {
-            return value.label ?? value.value;
+            return value.label ?? capitalCase(value.value);
         });
 
         const scope = Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value]));
@@ -161,14 +163,22 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             valueOptions: scopeValueOptions,
             valueFormatter: (value) => {
                 if (typeof value === "object" && value !== null) {
-                    const objectValues = Object.values(value);
+                    // Check if there is a scope value in the options, if so, return the label
+                    const scope = scopeValueOptions.find((scope) => {
+                        return isEqual(JSON.parse(scope.value), value);
+                    });
+                    if (scope) {
+                        return scope.label;
+                    }
 
-                    // Format the values: first value stays as is, values after get " / " added
-                    const formattedValues = objectValues.map((val, index) => (index === 0 ? val : ` / ${val}`));
-                    return formattedValues.join("");
+                    // Otherwise if it's still an object, format it with capitalCase
+                    // This might be the case if the scope is only partially defined (for a scope with domain/language, only domain is defined)
+                    const objectValues = Object.values(value);
+                    const formattedValues = objectValues.map((value) => (typeof value === "string" ? capitalCase(value) : value)).join(" / ");
+                    return formattedValues;
                 }
 
-                return value;
+                return value ? capitalCase(value) : undefined;
             },
         },
         {
