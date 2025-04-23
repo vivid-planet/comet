@@ -2,4 +2,4 @@
 "@comet/cms-api": major
 ---
 
-Pass Entity Metadata directly instead of Repository for MikroOrm Query
+Directly pass the entity metadata instead of the repository in `gqlArgsToMikroOrmQuery`
