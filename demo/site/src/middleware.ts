@@ -6,13 +6,13 @@ import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withPreviewMiddleware } from "./middleware/preview";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
-import { withSkipMiddleware } from "./middleware/skip";
+import { withSkipRewriteMiddleware } from "./middleware/skipRewrite";
 import { withStatusMiddleware } from "./middleware/status";
 
 export default chain([
-    withSkipMiddleware,
     withStatusMiddleware,
     withAdminRedirectMiddleware,
+    withSkipRewriteMiddleware,
     withDamRewriteMiddleware,
     withCspHeadersMiddleware,
     withPreviewMiddleware,

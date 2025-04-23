@@ -2,9 +2,9 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { type CustomMiddleware } from "./chain";
 
-export function withSkipMiddleware(middleware: CustomMiddleware) {
-    const skipFiles = ["/favicon.ico", "/icon.svg", "/apple-icon.png", "/manifest.json"];
-    const skipPaths = ["/_next/static", "/_next/image", "/assets"];
+export function withSkipRewriteMiddleware(middleware: CustomMiddleware) {
+    const skipFiles = ["/favicon.ico", "/apple-icon.png", "/icon.svg", "/manifest.json", "/robots.txt"];
+    const skipPaths = ["/_next/static/", "/_next/image/", "/assets/"];
 
     return async (request: NextRequest) => {
         if (skipFiles.some((file) => request.nextUrl.pathname === file)) {
