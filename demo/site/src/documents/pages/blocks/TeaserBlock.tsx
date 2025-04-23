@@ -28,7 +28,7 @@ const ItemWrapper = styled.div`
 
     ${({ theme }) =>
         css`
-            ${theme.breakpoints.sm.mediaQuery} {
+            ${theme.breakpoints.md.mediaQuery} {
                 grid-template-columns: repeat(4, 1fr);
             }
         `}
