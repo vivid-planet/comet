@@ -13,10 +13,10 @@ export const OptionalDimensions = function () {
     type ContentScope = { organizationId?: string; channelId?: string };
 
     const values: ContentScopeValues<ContentScope> = [
-        { organizationId: { value: "organization-1", label: "Organization 1" } },
-        { organizationId: { value: "organization-2", label: "Organization 2" } },
-        { channelId: { value: "channel-1", label: "Channel 1" } },
-        { channelId: { value: "channel-2", label: "Channel 2" } },
+        { scope: { organizationId: "organization-1" }, label: { organizationId: "Organization 1" } },
+        { scope: { organizationId: "organization-2" }, label: { organizationId: "Organization 2" } },
+        { scope: { channelId: "channel-1" }, label: { channelId: "Channel 1" } },
+        { scope: { channelId: "channel-2" }, label: { channelId: "Channel 2" } },
     ];
 
     function PrintContentScope() {

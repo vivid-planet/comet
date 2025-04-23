@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "8.0.0-beta.3",
+    "version": "8.0.0-beta.4",
     "repository": {
         "directory": "packages/admin/cms-admin",
         "type": "git",
@@ -90,7 +90,7 @@
         "@types/lodash.escaperegexp": "^4.1.9",
         "@types/lodash.isequal": "^4.5.8",
         "@types/mime-db": "^1.43.5",
-        "@types/node": "^22.13.10",
+        "@types/node": "^22.14.0",
         "@types/react": "^18.3.20",
         "@types/react-dom": "^18.3.5",
         "@types/react-image-crop": "^8.1.6",
@@ -113,7 +113,7 @@
         "react-dnd-html5-backend": "^16.0.1",
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
-        "react-intl": "^7.1.6",
+        "react-intl": "^7.1.10",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "ts-jest": "^29.2.6",

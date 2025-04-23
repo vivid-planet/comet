@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 
-import { type FileUploadInput } from "./dto/file-upload.input";
+import { type FileUploadInput } from "./file-upload.input";
 import { getValidExtensionsForMimetype, isValidSvg } from "./files.utils";
 
 export class FileValidationService {

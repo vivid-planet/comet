@@ -373,7 +373,9 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 
 </details>
 
-#### ✅ Vite / SWC
+#### ✅ `@kubernetes/client-node`
+
+The `@kubernetes/client-node` peer dependency has been bumped to v1.
 
 <details>
 
@@ -382,16 +384,18 @@ None of the other breaking changes in `@sentry/node` should affect us. If you st
 :::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/update-swc-dependencies.ts
+npx @comet/upgrade v8/update-kubernetes-client-node.ts
 ```
 
 :::
 
-```diff
--        "@swc/plugin-emotion": "^3.0.13",
--        "@vitejs/plugin-react-swc": "^3.7.2",
-+        "@swc/plugin-emotion": "^8.7.2",
-+        "@vitejs/plugin-react-swc": "^3.8.0",
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@kubernetes/client-node": "^0.18.0",
++       "@kubernetes/client-node": "^1.0.0",
+    }
+}
 ```
 
 </details>
@@ -720,6 +724,79 @@ Import `JwtModule` from `@nestjs/jwt`:
 +   imports: [JwtModule],
 ```
 
+### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
+
+The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
+Some structural changes were necessary to achieve this.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+```
+
+:::
+
+You need to modify your `AppModule` as follows:
+
+```diff title="api/src/app.module.ts"
+    BlobStorageModule.register({
+        backend: config.blob.storage,
++       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+    }),
++   ImgproxyModule.register({
++       imgproxyConfig: config.imgproxy,
++   }),
+    DamModule.register({
+        damConfig: {
+            apiUrl: config.apiUrl,
+            secret: config.dam.secret,
+            allowedImageSizes: config.dam.allowedImageSizes,
+            allowedAspectRatios: config.dam.allowedImageAspectRatios,
+            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+-           cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+            maxFileSize: config.dam.uploadsMaxFileSize,
++           maxSrcResolution: config.dam.maxSrcResolution,
+        },
+-       imgproxyConfig: config.imgproxy,
+        Scope: DamScope,
+        File: DamFile,
+        Folder: DamFolder,
+    }),
+```
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+```
+
+:::
+
+```diff title="api/src/comet-config.json"
+{
+    "dam": {
+        "allowedImageAspectRatios": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
++       "maxSrcResolution": 70,
+        "uploadsMaxFileSize": 500
+    },
+    "images": {
+        "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        "imageSizes": [16, 32, 48, 64, 96, 128, 256, 320, 384]
+    },
+    "imgproxy": {
+-       "maxSrcResolution": 70,
+        "quality": 80
+    }
+}
+```
+
+</details>
+
 ## Admin
 
 ### Upgrade peer dependencies
@@ -895,6 +972,29 @@ Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid,
         }]
     />
 ```
+
+#### ✅ Vite / SWC
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-swc-dependencies.ts
+```
+
+:::
+
+```diff
+-        "@swc/plugin-emotion": "^3.0.13",
+-        "@vitejs/plugin-react-swc": "^3.7.2",
++        "@swc/plugin-emotion": "^8.7.2",
++        "@vitejs/plugin-react-swc": "^3.8.0",
+```
+
+</details>
 
 ### ✅ Add new package @comet/admin-generator
 
@@ -1120,6 +1220,72 @@ Remove the `allCategories` prop from `PagesPage`:
     Review the result carefully.
 
 :::
+
+### Add proxy for `/dam` URLs
+
+The API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title=admin/vite.config.mts
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title=admin/package.json
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title=admin/server/index.js
+// ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+// ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title=deployment/helm/values.tpl.yaml
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
 
 ### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
@@ -1449,6 +1615,22 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 ```
 
 </details>
+
+### Remove `x-relative-dam-urls` header from `graphQLClient`
+
+```diff title="site/src/util/graphQLClient.ts"
+// ...
+return createGraphQLFetchLibrary(
+    createFetchWithDefaults(fetch, {
+        // ...
+        headers: {
+-           "x-relative-dam-urls": "1",
+            // ...
+        },
+    }),
+    `${process.env.API_URL_INTERNAL}/graphql`,
+);
+```
 
 ## ESLint
 
