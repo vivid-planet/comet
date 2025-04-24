@@ -27,11 +27,10 @@ export class ProductPersistPipe implements ImporterPipe {
 }
 
 class ProductPersist extends Transform {
-    private persistedEntitiesAmount: number;
+    private persistedEntitiesAmount = 0;
 
     constructor(private readonly em: EntityManager<IDatabaseDriver<Connection>>, private readonly logger: LoggerService) {
         super({ writableObjectMode: true, objectMode: true });
-        this.persistedEntitiesAmount = 0;
     }
 
     getPersistedEntitiesAmount() {
