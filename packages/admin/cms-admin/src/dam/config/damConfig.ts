@@ -16,6 +16,7 @@ export interface DamConfig {
     uploadsMaxFileSize: number;
     allowedImageAspectRatios: string[];
     maxSrcResolution: number;
+    basePath: string;
 }
 
 export function useDamConfig(): DamConfig {
@@ -25,5 +26,8 @@ export function useDamConfig(): DamConfig {
         throw new Error("No DAM configuration found. Make sure to set `dam` in `CometConfigProvider`.");
     }
 
-    return cometConfig.dam;
+    return {
+        ...cometConfig.dam,
+        basePath: cometConfig.dam.basePath ?? "dam",
+    };
 }

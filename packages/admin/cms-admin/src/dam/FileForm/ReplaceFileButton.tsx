@@ -52,6 +52,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     apiClient: createHttpClient(apiUrl),
                     data: { file: acceptedFiles[0], fileId: file.id },
                     cancelToken: cancelUpload.current.token,
+                    damBasePath: damConfig.basePath,
                 });
 
                 if (response.status === 201 && response.data) {

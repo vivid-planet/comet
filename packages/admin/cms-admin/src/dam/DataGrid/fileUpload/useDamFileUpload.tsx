@@ -430,6 +430,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         data: uploadConfig,
                         cancelToken: cancelUpload.current.token,
                         options: { onUploadProgress },
+                        damBasePath: damConfig.basePath,
                     };
 
                     const response: { data: { id: string } } =

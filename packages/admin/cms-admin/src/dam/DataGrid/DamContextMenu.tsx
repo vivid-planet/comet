@@ -9,6 +9,7 @@ import { FormattedMessage } from "react-intl";
 import { UnknownError } from "../../common/errors/errorMessages";
 import { useCometConfig } from "../../config/CometConfigContext";
 import { type GQLDamFile, type GQLDamFolder } from "../../graphql.generated";
+import { useDamConfig } from "../config/damConfig";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { type GQLDeleteDamFolderMutation, type GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
@@ -32,6 +33,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
     const { apiUrl } = useCometConfig();
+    const damConfig = useDamConfig();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -58,7 +60,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
         }
     };
 
-    const downloadUrl = `${apiUrl}/dam/folders/${folder.id}/zip`;
+    const downloadUrl = `${apiUrl}/${damConfig.basePath}/folders/${folder.id}/zip`;
 
     return (
         <>
