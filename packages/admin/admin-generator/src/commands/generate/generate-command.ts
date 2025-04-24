@@ -137,7 +137,7 @@ export type StaticSelectLabelCellContent = {
 
 export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "text"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
-    | { type: "number"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | { type: "number"; currency?: string; decimals?: number; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "boolean"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "date"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
