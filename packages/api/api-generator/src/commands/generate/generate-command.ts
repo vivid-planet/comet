@@ -19,4 +19,4 @@ export const generateCommand = new Command("generate")
         }
     })
     .option("-f, --file <file>", "path to entity file")
-    .option("--watch", "Watch for changes");
+    .option("-w, --watch", "Watch for changes");
