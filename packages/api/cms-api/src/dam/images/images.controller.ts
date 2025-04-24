@@ -268,5 +268,3 @@ export const createImagesController = ({ damBasePath }: { damBasePath: string })
     }
     return ImagesController;
 };
-
-export const ImagesController = createImagesController({ damBasePath: "dam" });
