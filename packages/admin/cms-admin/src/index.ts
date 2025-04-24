@@ -108,7 +108,6 @@ export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { useBuildInformation } from "./common/header/about/build-information/useBuildInformation";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
-export { SignOutButton } from "./common/signOutButton/SignOutButton";
 export type { TextMatch } from "./common/MarkedMatches";
 export { MarkedMatches } from "./common/MarkedMatches";
 export { findTextMatches } from "./common/MarkedMatches";
@@ -119,6 +118,7 @@ export { MasterMenuRoutes, useRoutePropsFromMasterMenuData } from "./common/Mast
 export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
+export { SignOutButton } from "./common/signOutButton/SignOutButton";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
 export type { CometConfig } from "./config/CometConfigContext";
