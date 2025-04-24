@@ -24,7 +24,7 @@ export const SignOutButton: FunctionComponent<PropsWithChildren<SignOutButtonPro
                 }
             }}
         >
-            {children ?? <FormattedMessage id="comet.logoutButton.title" defaultMessage="Logout" />}
+            {children ?? <FormattedMessage id="comet.signOutButton.title" defaultMessage="Logout" />}
         </Button>
     );
 };
