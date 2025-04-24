@@ -4,13 +4,13 @@ import { Button, type ButtonProps as MuiButtonProps } from "@mui/material";
 import { type FunctionComponent, type PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { signOutMutation } from "./LogoutButton.gql";
-import { type GQLSignOutMutation } from "./LogoutButton.gql.generated";
+import { signOutMutation } from "./SignOutButton.gql";
+import { type GQLSignOutMutation, type GQLSignOutMutationVariables } from "./SignOutButton.gql.generated";
 
-type ButtonProps = Omit<MuiButtonProps, "onClick">;
+type SignOutButtonProps = Omit<MuiButtonProps, "onClick">;
 
-export const LogoutButton: FunctionComponent<PropsWithChildren<ButtonProps>> = ({ children, ...restProps }) => {
-    const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
+export const SignOutButton: FunctionComponent<PropsWithChildren<SignOutButtonProps>> = ({ children, ...restProps }) => {
+    const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation, GQLSignOutMutationVariables>(signOutMutation);
 
     return (
         <Button

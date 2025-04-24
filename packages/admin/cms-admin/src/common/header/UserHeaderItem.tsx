@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 
 import { version } from "../..";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
-import { LogoutButton } from "../logoutButton/LogoutButton";
+import { SignOutButton } from "../signOutButton/SignOutButton";
 import { AboutModal } from "./about/AboutModal";
 import { ImpersonationInlay } from "./ImpersonationInlay";
 
@@ -67,7 +67,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                     </>
                 )}
                 <Box padding={4}>
-                    <LogoutButton fullWidth variant="contained" />
+                    <SignOutButton fullWidth variant="contained" />
                     <MenuFooter>
                         <Typography variant="caption" color={theme.palette.grey[400]}>{`Version: v${version}`}</Typography>
                         <Typography variant="caption">

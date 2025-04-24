@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Add LogoutButton Component
+Add SignOutButton Component
