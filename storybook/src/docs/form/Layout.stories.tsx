@@ -1,4 +1,5 @@
 import {
+    Button,
     CancelButton,
     CheckboxField,
     createCometTheme,
@@ -11,7 +12,6 @@ import {
     OkayButton,
 } from "@comet/admin";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -176,9 +176,7 @@ export const FieldsInDialog = {
                 </Dialog>
 
                 <div style={{ textAlign: "center" }}>
-                    <Button variant="contained" color="primary" onClick={() => setShowDialog(true)}>
-                        Show Dialog
-                    </Button>
+                    <Button onClick={() => setShowDialog(true)}>Show Dialog</Button>
                 </div>
             </>
         );
@@ -235,7 +233,7 @@ export const GridLayout = {
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="select1" label="Select 1" fullWidth>
                                     {(props) => (
                                         <FinalFormSelect {...props}>
@@ -248,7 +246,7 @@ export const GridLayout = {
                                     )}
                                 </Field>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="select2" label="Select 2" fullWidth>
                                     {(props) => (
                                         <FinalFormSelect {...props}>
@@ -261,10 +259,10 @@ export const GridLayout = {
                                     )}
                                 </Field>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="text1" label="Text 1" component={FinalFormInput} fullWidth />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={3}>
                                 <Field name="text2" label="Text 2" component={FinalFormInput} fullWidth />
                             </Grid>
                         </Grid>

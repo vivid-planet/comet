@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
-import { Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { Button, Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
-import { Button, Checkbox, Grid, IconButton, useTheme } from "@mui/material";
+import { Checkbox, Grid, IconButton, useTheme } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -113,7 +113,7 @@ export const PagesPageActionToolbar = ({
         <>
             {progressDialog}
             <Root container justifyContent="space-between">
-                <Grid item>
+                <Grid>
                     <SelectAllLabel
                         control={
                             <Checkbox
@@ -125,7 +125,7 @@ export const PagesPageActionToolbar = ({
                         label={<FormattedMessage id="comet.pagesPageActionToolbar.selectAll" defaultMessage="Select all" />}
                     />
                 </Grid>
-                <CenterContainer item>
+                <CenterContainer>
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.publish" defaultMessage="Publish" />}>
                         <span>
                             <IconButton
@@ -227,8 +227,14 @@ export const PagesPageActionToolbar = ({
                         </span>
                     </Tooltip>
                 </CenterContainer>
-                <Grid item>
-                    <Button disabled={collapseAllDisabled} startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
+                <Grid>
+                    <Button
+                        disabled={collapseAllDisabled}
+                        startIcon={<TreeCollapseAll />}
+                        onClick={onCollapseAllPressed}
+                        size="small"
+                        variant="textDark"
+                    >
                         <FormattedMessage id="comet.pages.pages.collapseAll" defaultMessage="Collapse all" />
                     </Button>
                 </Grid>

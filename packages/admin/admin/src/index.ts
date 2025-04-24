@@ -18,7 +18,7 @@ export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardBu
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
 export { FeedbackButton, FeedbackButtonClassKey, FeedbackButtonProps } from "./common/buttons/feedback/FeedbackButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
-export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/save/SaveButton";
+export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/SaveButton";
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
@@ -201,6 +201,7 @@ export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
+export { InlineAlert, InlineAlertClassKey, InlineAlertProps } from "./inlineAlert/InlineAlert";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";

@@ -1,6 +1,8 @@
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
+import { defaultCreatePath } from "./utils/defaultCreatePath";
+
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
@@ -48,7 +50,8 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
 };
 
 export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
-    [P in keyof S]: { label?: string; value: NonNull<S[P]> };
+    scope: S;
+    label?: { [P in keyof S]?: string };
 }>;
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
@@ -73,23 +76,6 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
             [key]: !value || value === null ? NullValueAsString : value,
         };
     }, {} as NonNullRecord<S>);
-}
-
-function defaultCreatePath(values: ContentScopeValues) {
-    const dimensionValues: { [dimension: string]: Set<string> } = {};
-    values.forEach((value) => {
-        Object.keys(value).forEach((dimension) => {
-            if (!dimensionValues[dimension]) {
-                dimensionValues[dimension] = new Set();
-            }
-            dimensionValues[dimension].add(value[dimension].value);
-        });
-    });
-    return Object.keys(dimensionValues).reduce((path, dimension) => {
-        const plainValues = Array.from(dimensionValues[dimension]);
-        const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-        return `${path}/:${dimension}${whiteListedValuesString}`;
-    }, "");
 }
 
 function defaultCreateUrl(scope: ContentScopeInterface) {

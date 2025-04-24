@@ -2,6 +2,7 @@ import console from "node:console";
 
 import type { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "@comet/cms-api";
 import { CLIHelper } from "@mikro-orm/cli";
+import { type MikroORM } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 
 import { generateCrud } from "./generateCrud/generate-crud";
@@ -22,39 +23,45 @@ export const generateFiles = async (
      */
     file?: string,
 ) => {
-    const orm = await CLIHelper.getORM(undefined, undefined, {
-        dbName: "generator",
-    });
-    const entities = orm.em.getMetadata().getAll();
-    LazyMetadataStorage.load();
-
-    for (const name in entities) {
-        const entity = entities[name];
-        if (!entity.class) {
-            // Ignore e.g. relation entities that don't have a class
-            continue;
-        }
-        if (file == null || entity.path === `./${file}`) {
-            {
-                const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
-                if (generatorOptions) {
-                    console.log(`🚀 start generateCrud for Entity ${entity.path}`);
-                    const files = await generateCrud(generatorOptions, entity);
-                    await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
-                }
-            }
-            {
-                const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as
-                    | CrudSingleGeneratorOptions
-                    | undefined;
-                if (generatorOptions) {
-                    console.log(`🚀 start generateCrudSingle for Entity ${entity.path}`);
-                    const files = await generateCrudSingle(generatorOptions, entity);
-                    await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
-                }
-            }
-        }
+    let orm: MikroORM | null = null;
+    try {
+        orm = await CLIHelper.getORM(undefined, undefined, { dbName: "generator" });
+    } catch (e) {
+        console.warn(e);
     }
 
-    await orm.close(true);
+    if (orm != null) {
+        const entities = orm.em.getMetadata().getAll();
+        LazyMetadataStorage.load();
+
+        for (const name in entities) {
+            const entity = entities[name];
+            if (!entity.class) {
+                // Ignore e.g. relation entities that don't have a class
+                continue;
+            }
+            if (file == null || entity.path === `./${file}`) {
+                {
+                    const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
+                    if (generatorOptions) {
+                        console.log(`🚀 start generateCrud for Entity ${entity.path}`);
+                        const files = await generateCrud(generatorOptions, entity);
+                        await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
+                    }
+                }
+                {
+                    const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as
+                        | CrudSingleGeneratorOptions
+                        | undefined;
+                    if (generatorOptions) {
+                        console.log(`🚀 start generateCrudSingle for Entity ${entity.path}`);
+                        const files = await generateCrudSingle(generatorOptions, entity);
+                        await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
+                    }
+                }
+            }
+        }
+
+        await orm.close(true);
+    }
 };

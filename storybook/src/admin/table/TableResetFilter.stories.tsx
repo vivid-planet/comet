@@ -80,7 +80,7 @@ export const ResetFilter = () => {
                 <>
                     <TableFilterFinalForm filterApi={filterApi} resetButton>
                         <Grid container>
-                            <Grid item xs={2}>
+                            <Grid size={2}>
                                 <AutocompleteField
                                     name="selectQuery"
                                     options={[

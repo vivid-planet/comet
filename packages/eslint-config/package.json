@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "8.0.0-beta.1",
+    "version": "8.0.0-beta.4",
     "repository": {
         "directory": "packages/eslint-config",
         "type": "git",
@@ -30,13 +30,13 @@
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
         "@comet/eslint-plugin": "workspace:*",
-        "@eslint/js": "^9.21.0",
-        "@next/eslint-plugin-next": "^15.2.1",
-        "eslint-config-next": "^15.2.1",
-        "eslint-config-prettier": "^10.0.2",
+        "@eslint/js": "^9.22.0",
+        "@next/eslint-plugin-next": "^15.2.4",
+        "eslint-config-next": "^15.2.2",
+        "eslint-config-prettier": "^10.1.1",
         "eslint-plugin-formatjs": "^5.2.14",
         "eslint-plugin-jsonc": "^2.19.1",
-        "eslint-plugin-package-json": "^0.26.2",
+        "eslint-plugin-package-json": "^0.26.4",
         "eslint-plugin-prettier": "^5.2.3",
         "eslint-plugin-react": "^7.37.4",
         "eslint-plugin-react-hooks": "^5.2.0",
@@ -47,7 +47,7 @@
         "typescript-eslint": "^8.24.1"
     },
     "devDependencies": {
-        "eslint": "^9.21.0",
+        "eslint": "^9.22.0",
         "prettier": "^3.5.3",
         "typescript": "^5.7.3"
     },
@@ -59,6 +59,9 @@
         "next": {
             "optional": true
         }
+    },
+    "engines": {
+        "node": ">=22.0.0"
     },
     "publishConfig": {
         "access": "public",

@@ -330,6 +330,7 @@ export const _CrudContextMenu = {
             },
             {
                 field: "actions",
+                type: "actions",
                 headerName: "",
                 sortable: false,
                 filterable: false,
@@ -580,35 +581,33 @@ export const _CrudMoreActionsMenu = {
             return (
                 <DataGridToolbar>
                     <FillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={selectionModel.length}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
+                    <CrudMoreActionsMenu
+                        selectionSize={selectionModel.length}
+                        overallActions={[
+                            {
+                                label: "Export to excel",
+                                onClick: () => {},
+                            },
+                        ]}
+                        selectiveActions={[
+                            {
+                                label: "Move",
+                                onClick: () => {},
+                                icon: <Move />,
+                            },
+                            {
+                                label: "Delete",
+                                onClick: () => {},
+                                icon: <Delete />,
+                                divider: true,
+                            },
+                            {
+                                label: "Download",
+                                onClick: () => {},
+                                icon: <Download />,
+                            },
+                        ]}
+                    />
                 </DataGridToolbar>
             );
         }
@@ -617,6 +616,7 @@ export const _CrudMoreActionsMenu = {
             <Box height={600}>
                 <DataGrid
                     {...dataGridProps}
+                    paginationMode="client"
                     rows={exampleRows}
                     columns={exampleColumns}
                     checkboxSelection

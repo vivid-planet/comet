@@ -6,6 +6,7 @@ import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
 import { type EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
 import { type EnumsFilterInterface, isEnumsFilter } from "./enums.filter.factory";
+import { IdFilter } from "./id.filter";
 import { ManyToManyFilter } from "./many-to-many.filter";
 import { ManyToOneFilter } from "./many-to-one.filter";
 import { NumberFilter } from "./number.filter";
@@ -22,8 +23,12 @@ export function filterToMikroOrmQuery(
         | DateTimeFilter
         | DateFilter
         | BooleanFilter
+        | ManyToOneFilter
+        | OneToManyFilter
+        | ManyToManyFilter
         | EnumFilterInterface<unknown>
-        | EnumsFilterInterface<unknown>,
+        | EnumsFilterInterface<unknown>
+        | IdFilter,
     propertyName: string,
     metadata?: EntityMetadata,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,6 +61,9 @@ export function filterToMikroOrmQuery(
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -74,6 +82,9 @@ export function filterToMikroOrmQuery(
         }
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
         }
     } else if (filterProperty instanceof DateTimeFilter || filterProperty instanceof DateFilter) {
         if (filterProperty.equal !== undefined) {
@@ -129,6 +140,9 @@ export function filterToMikroOrmQuery(
             }
             ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
         }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (filterProperty instanceof ManyToManyFilter) {
         if (filterProperty.contains !== undefined) {
             ret.id = {
@@ -149,6 +163,19 @@ export function filterToMikroOrmQuery(
                 throw new Error("targetMeta is not defined");
             }
             ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
+    } else if (filterProperty instanceof IdFilter) {
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
+        }
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
         }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {

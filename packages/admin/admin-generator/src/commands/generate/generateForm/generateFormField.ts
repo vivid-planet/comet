@@ -172,6 +172,7 @@ export function generateFormField({
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
     if (config.type == "text") {
+        const required = config.required !== undefined ? config.required : false; // don't use inferred from gql here, non-nullable textinput allows empty string
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
         <${TextInputComponent}
@@ -192,17 +193,19 @@ export function generateFormField({
             }
             ${validateCode}
         />`;
+        if (!config.virtual && !required && !config.readOnly) {
+            formValueToGqlInputCode = `${name}: formValues.${name} ?? "",`;
+        }
     } else if (config.type == "number") {
         code = `
-            <Field
+            <NumberField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
                 name="${nameWithPrefix}"
-                component={FinalFormInput}
-                type="number"
                 label={${fieldLabel}}
+                ${config.decimals ? `decimals={${config.decimals}}` : ""}
                 ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
@@ -534,7 +537,13 @@ export function generateFormField({
             finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
         }
 
-        formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
+        if (!config.virtual) {
+            if (!required) {
+                formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+            } else {
+                formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+            }
+        }
 
         imports.push({
             name: `GQL${queryName}Query`,

@@ -8,7 +8,7 @@ import { type RouteComponentProps, useHistory, useLocation } from "react-router"
 
 import { type ExternalLinkBlockData } from "../../blocks.generated";
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
@@ -143,7 +143,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
             <IFrameViewer device={device} initialPageUrl={initialPageUrl} />
             <ActionsContainer>
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
-                    <Grid item>
+                    <Grid>
                         <SiteInformation>
                             <LogoWrapper>
                                 {logo}
@@ -170,10 +170,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                             </SiteLinkWrapper>
                         </SiteInformation>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <DeviceToggle device={device} onChange={handleDeviceChange} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
                     </Grid>
                 </Grid>

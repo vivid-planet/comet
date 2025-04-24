@@ -3,10 +3,12 @@ import axios, { type AxiosError, type CancelTokenSource } from "axios";
 import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { type Accept, type FileRejection } from "react-dropzone";
 
-import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
+import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import { type GQLLicenseInput } from "../../../graphql.generated";
+import { createHttpClient } from "../../../http/createHttpClient";
+import { useDamConfig } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -131,7 +133,8 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]):
 };
 
 export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
-    const context = useCmsBlockContext(); // TODO create separate CmsContext?
+    const { apiUrl } = useCometConfig();
+    const damConfig = useDamConfig();
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
     const scope = useDamScope();
@@ -152,7 +155,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     const totalSize = Object.values(totalSizes).length > 0 ? Object.values(totalSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
     const uploadedSize = Object.values(uploadedSizes).length > 0 ? Object.values(uploadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
 
-    const maxFileSizeInMegabytes = context.damConfig.maxFileSize;
+    const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
     const cancelUpload = useRef<CancelTokenSource>();
 
@@ -423,7 +426,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     };
 
                     const uploadParams = {
-                        apiClient: context.damConfig.apiClient,
+                        apiClient: createHttpClient(apiUrl),
                         data: uploadConfig,
                         cancelToken: cancelUpload.current.token,
                         options: { onUploadProgress },
@@ -438,7 +441,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number } | string>;
 
                     if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometImageResolutionException") {
-                        addValidationError(file, <MaxResolutionError maxResolution={context.damConfig.maxSrcResolution} />);
+                        addValidationError(file, <MaxResolutionError maxResolution={damConfig.maxSrcResolution} />);
                     } else if (hasObjectErrorData(typedErr) && typedErr.response?.data.error === "CometValidationException") {
                         const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;

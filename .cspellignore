@@ -9,6 +9,8 @@ exceljs
 exif
 GraphQLJSONObject
 imgproxy
+kubernetes
+libvips
 Logische
 Mikro
 Mimetypes
@@ -23,3 +25,4 @@ subcomponent
 subpage
 Traefik
 typesafe
+Undeprecate

@@ -29,12 +29,12 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps) {
         <Dialog open={open} onClose={onClose} maxWidth={false}>
             <DialogTitle>
                 <Grid container>
-                    <Grid item>
+                    <Grid>
                         <IconContainer>
                             <Domain />
                         </IconContainer>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <Typography>
                             <FormattedMessage id="comet.preview.openLink.title" defaultMessage="Open Link" />
                         </Typography>

@@ -48,7 +48,15 @@ const IconsGrid = ({ searchQuery }: { searchQuery: string }) => {
                     const Icon = (icons as Record<string, ComponentType<SvgIconProps>>)[key];
 
                     return (
-                        <Grid item key={key} xs={12} sm={6} md={4} lg={3}>
+                        <Grid
+                            key={key}
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                                md: 4,
+                                lg: 3,
+                            }}
+                        >
                             <IconContainer>
                                 <IconWrapper>
                                     <Icon fontSize="large" />

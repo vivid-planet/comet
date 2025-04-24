@@ -1,14 +1,13 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
-import { Save } from "@comet/admin-icons";
 import {
     BlockAdminComponentRoot,
     BlockPreviewWithTabs,
     type BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
+    useBlockContext,
     useBlockPreview,
-    useCmsBlockContext,
     useContentScopeConfig,
     useSaveConflictQuery,
     useSiteConfig,
@@ -39,7 +38,7 @@ export function EditFooterPage(): JSX.Element | null {
     const [referenceContent, setReferenceContent] = useState<FooterContentBlockInput | null>(null);
     const match = useRouteMatch();
     const previewApi = useBlockPreview();
-    const blockContext = useCmsBlockContext();
+    const blockContext = useBlockContext();
 
     useContentScopeConfig({ redirectPathAfterChange: "/project-snips/footer" });
 
@@ -105,7 +104,7 @@ export function EditFooterPage(): JSX.Element | null {
         }
 
         const input = { content: FooterContentBlock.state2Output(footerState) };
-        return update({
+        await update({
             variables: { input, scope },
         });
     };
@@ -136,17 +135,7 @@ export function EditFooterPage(): JSX.Element | null {
                 </ToolbarTitleItem>
                 <FillSpace />
                 <ToolbarActions>
-                    <SaveButton
-                        disabled={!hasChanges}
-                        color="primary"
-                        variant="contained"
-                        saving={saving}
-                        hasErrors={hasSaveErrors != null}
-                        onClick={handleSavePage}
-                        startIcon={<Save />}
-                    >
-                        <FormattedMessage {...messages.save} />
-                    </SaveButton>
+                    <SaveButton disabled={!hasChanges} loading={saving} hasErrors={hasSaveErrors != null} onClick={handleSavePage} />
                 </ToolbarActions>
             </StackToolbar>
             <MainContent disablePaddingBottom>

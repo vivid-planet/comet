@@ -2,29 +2,28 @@ import { BadRequestException, Controller, ForbiddenException, forwardRef, Get, H
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 import mime from "mime";
-import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { ScaledImagesCacheService } from "../../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
+import { BASIC_TYPES, MODERN_TYPES } from "../../file-utils/images.constants";
+import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "../../file-utils/images.util";
+import { Extension, Gravity, ResizingType } from "../../imgproxy/imgproxy.enum";
+import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
-import { FocalPoint } from "../common/enums/focal-point.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
-import { Extension, Gravity, ResizingType } from "../imgproxy/imgproxy.enum";
-import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { HashImageParams, ImageParams } from "./dto/image.params";
-import { BASIC_TYPES, MODERN_TYPES } from "./images.constants";
 import { ImagesService } from "./images.service";
-import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "./images.util";
 
 const smartImageUrl = `:fileId/crop\\::focalPoint/resize\\::resizeWidth\\::resizeHeight/:filename`;
 const focusImageUrl = `:fileId/crop\\::cropWidth\\::cropHeight\\::focalPoint\\::cropX\\::cropY/resize\\::resizeWidth\\::resizeHeight/:filename`;
@@ -224,17 +223,22 @@ export class ImagesController {
         const cache = await this.cacheService.get(file.contentHash, path);
         if (!cache) {
             const response = await fetch(this.imgproxyService.getSignedUrl(path));
+            if (response.body === null) {
+                throw new Error("Response body is null");
+            }
+
             const headers: Record<string, string> = {};
             for (const [key, value] of response.headers.entries()) {
                 headers[key] = value;
             }
-
             res.writeHead(response.status, { ...headers, ...overrideHeaders });
-            response.body.pipe(new PassThrough()).pipe(res);
+
+            const readableBody = Readable.fromWeb(response.body);
+            readableBody.pipe(new PassThrough()).pipe(res);
 
             if (response.ok) {
                 await this.cacheService.set(file.contentHash, path, {
-                    file: response.body.pipe(new PassThrough()),
+                    file: readableBody.pipe(new PassThrough()),
                     metaData: {
                         size: Number(headers["content-length"]),
                         headers,

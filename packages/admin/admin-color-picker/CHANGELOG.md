@@ -1,5 +1,44 @@
 # @comet/admin-color-picker
 
+## 8.0.0-beta.4
+
+### Patch Changes
+
+- Updated dependencies [a93455f]
+- Updated dependencies [72d1a5e]
+- Updated dependencies [1c62e87]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- @comet/admin@8.0.0-beta.3
+- @comet/admin-icons@8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+### Patch Changes
+
+- Updated dependencies [d99602a]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [f904b71]
+- Updated dependencies [15c6fa0]
+- Updated dependencies [535476e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [43eb598]
+    - @comet/admin@8.0.0-beta.2
+    - @comet/admin-icons@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes
@@ -47,6 +86,37 @@
 - Updated dependencies [682a674]
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
+
+## 7.19.0
+
+### Patch Changes
+
+- Updated dependencies [3544127ad]
+    - @comet/admin@7.19.0
+    - @comet/admin-icons@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/admin@7.18.0
+- @comet/admin-icons@7.18.0
+
+## 7.17.0
+
+### Patch Changes
+
+- @comet/admin@7.17.0
+- @comet/admin-icons@7.17.0
+
+## 7.16.0
+
+### Patch Changes
+
+- Updated dependencies [ec1cf3cf8]
+- Updated dependencies [bf7b89ffc]
+    - @comet/admin@7.16.0
+    - @comet/admin-icons@7.16.0
 
 ## 7.15.0
 

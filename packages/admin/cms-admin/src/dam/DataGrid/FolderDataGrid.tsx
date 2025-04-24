@@ -6,13 +6,14 @@ import {
     type GridColDef,
     type IFilterApi,
     type ISelectionApi,
+    MainContent,
     PrettyBytes,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { Slide, type SlideProps, Snackbar } from "@mui/material";
+import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -20,8 +21,8 @@ import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
 import { type GQLDamItemType } from "../../graphql.generated";
+import { useDamConfig } from "../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
-import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { type DamConfig, type DamFilter } from "../DamTable";
 import { licenseTypeLabels } from "../FileForm/licenseType";
@@ -522,9 +523,12 @@ const FolderDataGrid = ({
             disableColumnMenu: true,
         },
         {
-            field: "contextMenu",
+            field: "actions",
             headerName: "",
-            align: "center",
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: 52,
             renderCell: ({ row }) => {
                 return isFile(row) ? (
                     <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
@@ -543,7 +547,7 @@ const FolderDataGrid = ({
         throw error;
     }
     return (
-        <sc.FolderWrapper>
+        <MainContent>
             <FolderHead
                 isSearching={isSearching}
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
@@ -581,10 +585,10 @@ const FolderDataGrid = ({
             >
                 {({ selectedId, selectionMode }) => {
                     return (
-                        <>
+                        <DialogContent>
                             {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
                             {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
-                        </>
+                        </DialogContent>
                     );
                 }}
             </EditDialog>
@@ -596,7 +600,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </sc.FolderWrapper>
+        </MainContent>
     );
 };
 

@@ -1,8 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, FillSpace, MainContent, StackLink, Toolbar, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
+import { Button, CancelButton, FillSpace, MainContent, StackLink, Toolbar, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -137,6 +136,7 @@ export function CronJobsGrid() {
                     },
                     {
                         field: "actions",
+                        type: "actions",
                         headerName: "",
                         renderCell: ({ row }) => (
                             <>
@@ -176,7 +176,6 @@ export function CronJobsGrid() {
                     <CancelButton onClick={closeDialog} />
 
                     <Button
-                        variant="contained"
                         startIcon={<Play />}
                         onClick={async () => {
                             if (cronJobToStart) {

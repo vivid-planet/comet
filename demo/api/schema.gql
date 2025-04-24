@@ -279,14 +279,14 @@ scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publi
 type AlternativeAddress {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type Address {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddress
 }
@@ -294,14 +294,14 @@ type Address {
 type AlternativeAddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type AddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddable!
 }
@@ -433,17 +433,6 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
-type Link implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: LinkBlockData!
-  createdAt: DateTime!
-  pageTreeNode: PageTreeNode
-}
-
-"""Link root block data"""
-scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type PageTreeNodeScope {
   domain: String!
   language: String!
@@ -489,6 +478,17 @@ enum UserGroup {
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
+  pageTreeNode: PageTreeNode
+}
+
+"""Link root block data"""
+scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type PredefinedPage implements DocumentInterface {
   id: ID!
@@ -590,6 +590,7 @@ type PaginatedNews {
 
 type ManufacturerCountry {
   id: String!
+  label: String!
   used: Float!
 }
 
@@ -693,14 +694,14 @@ input DamScopeInput {
 input AlternativeAddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressInput
 }
@@ -708,14 +709,14 @@ input AddressInput {
 input AlternativeAddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddableInput!
 }
@@ -793,7 +794,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -807,7 +808,7 @@ type Query {
   kubernetesJobLogs(name: String!): String!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
@@ -835,6 +836,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input UserPermissionsUserSort {
@@ -872,6 +874,7 @@ enum SlugAvailability {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -936,6 +939,7 @@ input FolderFilterInput {
 }
 
 input NewsFilter {
+  id: IdFilter
   slug: StringFilter
   title: StringFilter
   status: NewsStatusEnumFilter
@@ -946,6 +950,12 @@ input NewsFilter {
   updatedAt: DateTimeFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input IdFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
 }
 
 input NewsStatusEnumFilter {
@@ -963,6 +973,7 @@ input NewsCategoryEnumFilter {
 input OneToManyFilter {
   contains: ID
   search: String
+  isAnyOf: [ID!]
 }
 
 input NewsSort {
@@ -981,6 +992,7 @@ enum NewsSortField {
 }
 
 input ProductFilter {
+  id: IdFilter
   title: StringFilter
   status: ProductStatusEnumFilter
   slug: StringFilter
@@ -1029,6 +1041,7 @@ input NumberFilter {
   lowerThanEqual: Float
   greaterThanEqual: Float
   notEqual: Float
+  isAnyOf: [Float!]
 }
 
 input DateFilter {
@@ -1049,6 +1062,7 @@ input ManyToOneFilter {
 input ManyToManyFilter {
   contains: ID
   search: String
+  isAnyOf: [ID!]
 }
 
 input ProductSort {
@@ -1076,6 +1090,7 @@ enum ProductSortField {
 }
 
 input ProductCategoryFilter {
+  id: IdFilter
   title: StringFilter
   slug: StringFilter
   products: OneToManyFilter
@@ -1099,6 +1114,7 @@ enum ProductCategorySortField {
 }
 
 input ProductTagFilter {
+  id: IdFilter
   title: StringFilter
   products: ManyToManyFilter
   productsWithStatus: OneToManyFilter
@@ -1120,6 +1136,7 @@ enum ProductTagSortField {
 }
 
 input ProductVariantFilter {
+  id: IdFilter
   name: StringFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1141,14 +1158,15 @@ enum ProductVariantSortField {
 }
 
 input ManufacturerFilter {
+  id: IdFilter
   name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
-  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_zip: StringFilter
   addressAsEmbeddable_country: StringFilter
   addressAsEmbeddable_alternativeAddress_street: StringFilter
   addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
-  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: StringFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
   updatedAt: DateTimeFilter
   and: [ManufacturerFilter!]
@@ -1175,6 +1193,7 @@ enum ManufacturerSortField {
 
 input ManufacturerCountryFilter {
   id: StringFilter
+  label: StringFilter
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]

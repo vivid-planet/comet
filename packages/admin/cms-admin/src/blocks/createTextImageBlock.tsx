@@ -3,6 +3,7 @@ import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/mate
 import { FormattedMessage } from "react-intl";
 
 import { type TextImageBlockData, type TextImageBlockInput } from "../blocks.generated";
+import { useDamConfig } from "../dam/config/damConfig";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { type RichTextBlock, type RichTextBlockState } from "./createRichTextBlock";
@@ -12,7 +13,6 @@ import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { type ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
 import { BlockCategory, type BlockInterface } from "./types";
-import { useCmsBlockContext } from "./useCmsBlockContext";
 
 interface State {
     text: RichTextBlockState;
@@ -56,7 +56,7 @@ const createTextImageBlock = (
                 state,
                 updateState: decomposeUpdateStateAction(updateState, ["text", "image"]),
             });
-            const context = useCmsBlockContext();
+            const { allowedImageAspectRatios } = useDamConfig();
 
             return (
                 <>
@@ -96,7 +96,7 @@ const createTextImageBlock = (
                             }}
                             fullWidth
                         >
-                            {context.damConfig.allowedImageAspectRatios.map((aspectRatio) => (
+                            {allowedImageAspectRatios.map((aspectRatio) => (
                                 <MenuItem key={aspectRatio} value={aspectRatio}>
                                     {aspectRatio}
                                 </MenuItem>

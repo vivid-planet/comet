@@ -1,11 +1,11 @@
-import { type FormConfig } from "@comet/admin-generator";
+import { defineConfig } from "@comet/admin-generator";
 import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
 
-export const ProductForm: FormConfig<GQLProduct> = {
+export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
@@ -21,15 +21,15 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     type: "text",
                     name: "title",
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
-                    required: true, // default is inferred from gql schema
+                    required: true,
                     validate: (value: string) =>
                         value.length < 3 ? (
                             <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />
                         ) : undefined,
                 },
-                { type: "text", name: "slug" },
+                { type: "text", name: "slug", required: true },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
-                { type: "text", name: "description", label: "Description", multiline: true },
+                { type: "text", name: "description", label: "Description", multiline: true, required: false },
                 {
                     type: "staticSelect",
                     name: "type",
@@ -83,7 +83,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             ],
         },
     ],
-};
+});
 
 /*
 TODO

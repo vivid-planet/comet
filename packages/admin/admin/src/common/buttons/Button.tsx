@@ -48,8 +48,8 @@ const variantToMuiProps: Record<Variant, Partial<MuiButtonProps>> = {
     outlined: { variant: "outlined" },
     destructive: { variant: "outlined", color: "error" },
     success: { variant: "contained", color: "success" },
-    textLight: { variant: "text", sx: { color: "white" } },
-    textDark: { variant: "text", sx: { color: "black" } },
+    textLight: { variant: "text" },
+    textDark: { variant: "text" },
 };
 
 const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps, "mobileIcon" | "startIcon" | "endIcon">) => {
@@ -97,6 +97,8 @@ export const Button = forwardRef(<C extends ElementType = "button">(inProps: But
     };
 
     const commonButtonProps = {
+        disableFocusRipple: true,
+        disableTouchRipple: true,
         ...variantToMuiProps[variant],
         sx: {
             ...variantToMuiProps[variant].sx,
@@ -132,10 +134,30 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
         return [ownerState.usingResponsiveBehavior && "usingResponsiveBehavior", ownerState.variant];
     },
 })(
-    ({ ownerState }) => css`
+    ({ ownerState, theme }) => css`
         ${ownerState.usingResponsiveBehavior &&
         css`
             min-width: 0;
+        `}
+
+        ${ownerState.variant === "textLight" &&
+        css`
+            color: ${theme.palette.common.white};
+            &:focus {
+                color: ${theme.palette.primary.main};
+            }
+
+            &.Mui-disabled {
+                color: ${theme.palette.grey[200]};
+            }
+        `}
+
+        ${ownerState.variant === "textDark" &&
+        css`
+            color: ${theme.palette.common.black};
+            &.Mui-disabled {
+                color: ${theme.palette.grey[200]};
+            }
         `}
     `,
 );

@@ -1,4 +1,5 @@
-import { Button, Collapse } from "@mui/material";
+import { Button } from "@comet/admin";
+import { Collapse } from "@mui/material";
 import { type PropsWithChildren, type ReactNode } from "react";
 
 interface CollapsibleProps {
@@ -15,7 +16,7 @@ export const Collapsible = ({ header, children, open, onChange }: PropsWithChild
                 onClick={() => {
                     onChange(!open);
                 }}
-                color="info"
+                variant="textDark"
             >
                 {header}
             </Button>

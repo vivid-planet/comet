@@ -1,10 +1,11 @@
 export const dynamic = "error";
 
 import { gql } from "@comet/cms-site";
-import { type ExternalLinkBlockData, type InternalLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { type VisibilityParam } from "@src/middleware/domainRewrite";
+import { createSitePath } from "@src/util/createSitePath";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { setVisibilityParam } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
@@ -74,15 +75,26 @@ export default async function Page({ params }: PageProps) {
                     case "internal": {
                         const internalLink = target.block.props as InternalLinkBlockData;
                         if (internalLink.targetPage) {
-                            destination = `/${(internalLink.targetPage.scope as GQLPageTreeNodeScope).language}/${internalLink.targetPage.path}`;
+                            destination = createSitePath({
+                                path: internalLink.targetPage.path,
+                                scope: internalLink.targetPage.scope as GQLPageTreeNodeScope,
+                            });
                         }
                         break;
                     }
                     case "external":
                         destination = (target.block.props as ExternalLinkBlockData).targetUrl;
                         break;
+                    case "news": {
+                        const newsLink = target.block.props as NewsLinkBlockData;
+                        if (newsLink.news) {
+                            destination = `/${newsLink.news.scope.language}/news/${newsLink.news.slug}`;
+                        }
+                        break;
+                    }
                 }
             }
+
             if (destination) {
                 redirect(destination);
             }

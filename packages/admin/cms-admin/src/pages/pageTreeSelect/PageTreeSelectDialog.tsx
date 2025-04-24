@@ -1,8 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
+import { Button, FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import {
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -17,7 +16,6 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { type Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -30,6 +28,7 @@ import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { type PageTreePage, usePageTree } from "../pageTree/usePageTree";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
@@ -78,7 +77,7 @@ interface PageTreeSelectProps {
 }
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
-    const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
+    const { categories, additionalPageTreeNodeFragment } = usePageTreeConfig();
     const { scope } = useContentScope();
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
@@ -207,14 +206,14 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
-                    {pageTreeCategories && (
+                    {categories && (
                         <Select
                             value={category}
                             onChange={(event) => {
                                 setCategory(event.target.value as string);
                             }}
                         >
-                            {pageTreeCategories.map(({ category, label }) => (
+                            {categories.map(({ category, label }) => (
                                 <MenuItem key={category} value={category}>
                                     {label}
                                 </MenuItem>
@@ -230,9 +229,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
                     value={{
-                        allCategories: pageTreeCategories,
                         currentCategory: category,
-                        documentTypes: pageTreeDocumentTypes,
                         tree,
                         query: pagesQuery,
                     }}
@@ -253,12 +250,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <StyledDialogAction>
                 {value && (
                     <Button
+                        variant="textDark"
                         onClick={() => {
                             onChange(null);
                             onClose();
                         }}
                         startIcon={<Delete />}
-                        color="info"
                     >
                         <FormattedMessage id="comet.pages.pageTreeSelect.removeSelection" defaultMessage="Remove Selection" />
                     </Button>

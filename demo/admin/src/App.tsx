@@ -3,23 +3,10 @@ import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import {
-    BlocksConfigProvider,
-    BuildInformationProvider,
-    CmsBlockContextProvider,
-    createDamFileDependency,
-    createHttpClient,
-    CurrentUserProvider,
-    DamConfigProvider,
-    DependenciesConfigProvider,
-    LocaleProvider,
-    MasterMenuRoutes,
-    SitePreview,
-    SitesConfigProvider,
-} from "@comet/cms-admin";
+import { CometConfigProvider, createDamFileDependency, CurrentUserProvider, MasterMenuRoutes, SitePreview } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import { ConfigProvider, createConfig } from "@src/config";
+import { createConfig } from "@src/config";
 import { type ContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
@@ -52,132 +39,110 @@ const GlobalStyle = () => (
 );
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
-const apiClient = createHttpClient(config.apiUrl);
 
 export function App() {
     return (
-        <ConfigProvider config={config}>
-            <ApolloProvider client={apolloClient}>
-                <BuildInformationProvider value={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}>
-                    <SitesConfigProvider
-                        value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope) => {
-                                const siteConfig = configs.find((config) => {
-                                    return config.scope.domain === scope.domain;
-                                });
+        <CometConfigProvider
+            {...config}
+            graphQLApiUrl={`${config.apiUrl}/graphql`}
+            pageTree={{
+                categories: pageTreeCategories,
+                documentTypes: pageTreeDocumentTypes,
+                additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
+            }}
+            dam={{
+                ...config.dam,
+                scopeParts: ["domain"],
+                additionalToolbarItems: <ImportFromPicsum />,
+                importSources: {
+                    picsum: {
+                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
+                    },
+                },
+                contentGeneration: {
+                    generateAltText: true,
+                    generateImageTitle: true,
+                },
+            }}
+            dependencies={{
+                entityDependencyMap: {
+                    Page,
+                    Link,
+                    News: NewsDependency,
+                    DamFile: createDamFileDependency(),
+                },
+            }}
+            siteConfigs={{
+                configs: config.siteConfigs,
+                resolveSiteConfigForScope: (configs, scope) => {
+                    const siteConfig = configs.find((config) => {
+                        return config.scope.domain === scope.domain;
+                    });
 
-                                if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
-                                return {
-                                    url: siteConfig.url,
-                                    preloginEnabled: siteConfig.preloginEnabled || false,
-                                    blockPreviewBaseUrl:
-                                        siteConfig.scope.domain === "secondary"
-                                            ? `${siteConfig.url}/block-preview`
-                                            : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
-                                    sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
-                                };
-                            },
-                        }}
-                    >
-                        <DamConfigProvider
-                            value={{
-                                scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromPicsum />,
-                                importSources: {
-                                    picsum: {
-                                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
-                                    },
-                                },
-                                contentGeneration: {
-                                    generateAltText: true,
-                                    generateImageTitle: true,
-                                },
-                            }}
-                        >
-                            <DependenciesConfigProvider
-                                entityDependencyMap={{
-                                    Page,
-                                    Link,
-                                    News: NewsDependency,
-                                    DamFile: createDamFileDependency(),
-                                }}
-                            >
-                                <IntlProvider locale="en" messages={getMessages()}>
-                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
-                                        <BlocksConfigProvider
-                                            isBlockSupported={(block, scope) => {
-                                                if (scope.domain === "main") {
-                                                    return true;
-                                                } else {
-                                                    return (
-                                                        block.name !== NewsDetailBlock.name &&
-                                                        block.name !== NewsListBlock.name &&
-                                                        block.name !== NewsLinkBlock.name
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            <MuiThemeProvider theme={theme}>
-                                                <DndProvider options={HTML5toTouch}>
-                                                    <SnackbarProvider>
-                                                        <CmsBlockContextProvider
-                                                            damConfig={{
-                                                                apiUrl: config.apiUrl,
-                                                                apiClient,
-                                                                maxFileSize: config.dam.uploadsMaxFileSize,
-                                                                maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                                allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
-                                                            }}
-                                                            pageTreeCategories={pageTreeCategories}
-                                                            pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                            additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                        >
-                                                            <ErrorDialogHandler />
-                                                            <CurrentUserProvider>
-                                                                <RouterBrowserRouter>
-                                                                    <GlobalStyle />
-                                                                    <ContentScopeProvider>
-                                                                        {({ match }) => (
-                                                                            <Switch>
-                                                                                <Route
-                                                                                    path={`${match.path}/preview`}
-                                                                                    render={(props) => (
-                                                                                        <SitePreview
-                                                                                            resolvePath={(path: string, scope) => {
-                                                                                                return `/${scope.language}${path}`;
-                                                                                            }}
-                                                                                            {...props}
-                                                                                        />
-                                                                                    )}
-                                                                                />
-                                                                                <Route
-                                                                                    render={() => (
-                                                                                        <MasterLayout
-                                                                                            headerComponent={MasterHeader}
-                                                                                            menuComponent={AppMasterMenu}
-                                                                                        >
-                                                                                            <MasterMenuRoutes menu={masterMenuData} />
-                                                                                        </MasterLayout>
-                                                                                    )}
-                                                                                />
-                                                                            </Switch>
-                                                                        )}
-                                                                    </ContentScopeProvider>
-                                                                </RouterBrowserRouter>
-                                                            </CurrentUserProvider>
-                                                        </CmsBlockContextProvider>
-                                                    </SnackbarProvider>
-                                                </DndProvider>
-                                            </MuiThemeProvider>
-                                        </BlocksConfigProvider>
-                                    </LocaleProvider>
-                                </IntlProvider>
-                            </DependenciesConfigProvider>
-                        </DamConfigProvider>
-                    </SitesConfigProvider>
-                </BuildInformationProvider>
+                    if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                    return {
+                        url: siteConfig.url,
+                        preloginEnabled: siteConfig.preloginEnabled || false,
+                        blockPreviewBaseUrl:
+                            siteConfig.scope.domain === "secondary"
+                                ? `${siteConfig.url}/block-preview`
+                                : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                        sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
+                    };
+                },
+            }}
+            buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
+            contentLanguage={{ resolveContentLanguageForScope: (scope: ContentScope) => scope.language }}
+            blocks={{
+                isBlockSupported: (block, scope) => {
+                    if (scope.domain === "main") {
+                        return true;
+                    } else {
+                        return block.name !== NewsDetailBlock.name && block.name !== NewsListBlock.name && block.name !== NewsLinkBlock.name;
+                    }
+                },
+            }}
+        >
+            <ApolloProvider client={apolloClient}>
+                <IntlProvider locale="en" messages={getMessages()}>
+                    <MuiThemeProvider theme={theme}>
+                        <DndProvider options={HTML5toTouch}>
+                            <SnackbarProvider>
+                                <ErrorDialogHandler />
+                                <CurrentUserProvider>
+                                    <RouterBrowserRouter>
+                                        <GlobalStyle />
+                                        <ContentScopeProvider>
+                                            {({ match }) => (
+                                                <Switch>
+                                                    <Route
+                                                        path={`${match.path}/preview`}
+                                                        render={(props) => (
+                                                            <SitePreview
+                                                                resolvePath={(path: string, scope) => {
+                                                                    return `/${scope.language}${path}`;
+                                                                }}
+                                                                {...props}
+                                                            />
+                                                        )}
+                                                    />
+                                                    <Route
+                                                        render={() => (
+                                                            <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                <MasterMenuRoutes menu={masterMenuData} />
+                                                            </MasterLayout>
+                                                        )}
+                                                    />
+                                                </Switch>
+                                            )}
+                                        </ContentScopeProvider>
+                                    </RouterBrowserRouter>
+                                </CurrentUserProvider>
+                            </SnackbarProvider>
+                        </DndProvider>
+                    </MuiThemeProvider>
+                </IntlProvider>
             </ApolloProvider>
-        </ConfigProvider>
+        </CometConfigProvider>
     );
 }

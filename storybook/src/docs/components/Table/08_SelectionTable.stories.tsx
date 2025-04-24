@@ -73,7 +73,7 @@ export const SelectionTable = () => {
             {/* step 2 */}
             <TableQuery api={api} loading={loading} error={error}>
                 <Grid container spacing={4}>
-                    <Grid item>
+                    <Grid>
                         <Table
                             {...tableData}
                             // step 3
@@ -88,7 +88,7 @@ export const SelectionTable = () => {
                             ]}
                         />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid size={4}>
                         {/* step 4 */}
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
                             {(user, { selectionMode: selectedSelectionMode }) => {

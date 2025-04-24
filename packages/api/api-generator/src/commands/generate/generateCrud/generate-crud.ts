@@ -5,10 +5,10 @@ import * as path from "path";
 import { singular } from "pluralize";
 
 import { generateCrudInput } from "../generateCrudInput/generate-crud-input";
-import { buildNameVariants, classNameToInstanceName } from "../utils/build-name-variants";
+import { buildNameVariants } from "../utils/build-name-variants";
 import { integerTypes } from "../utils/constants";
 import { generateImportsCode, type Imports } from "../utils/generate-imports-code";
-import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "../utils/ts-morph-helper";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
 
 // TODO move into own file
@@ -30,32 +30,6 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
     const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
     const hasSearchArg = crudSearchPropNames.length > 0;
 
-    let statusProp = metadata.props.find((prop) => prop.name == "status");
-    if (statusProp) {
-        if (!statusProp.enum) {
-            console.warn(`${metadata.className} status prop must be an enum to be supported by crud generator`);
-            statusProp = undefined;
-        } else if (statusProp.nullable) {
-            console.warn(`${metadata.className} status prop must not be nullable to be supported by crud generator`);
-            statusProp = undefined;
-        } else if (morphTsProperty(statusProp.name, metadata).getInitializer()?.getText() == "") {
-            console.warn(`${metadata.className} status prop must have a default value to be supported by crud generator`);
-            statusProp = undefined;
-        }
-    }
-    let statusActiveItems: Array<string | number> | undefined = undefined;
-    if (statusProp) {
-        if (!statusProp.items) throw new Error("Status enum prop has not items");
-        statusActiveItems = statusProp.items.filter((item) => {
-            if (typeof item == "number") {
-                console.warn(`${metadata.className} status prop must not have numeric items to be supported by crud generator`);
-                return false;
-            }
-            return ["Active", "Visible", "Invisible", "Published", "Unpublished"].includes(item);
-        });
-    }
-    const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
-
     const crudFilterProps = metadata.props.filter(
         (prop) =>
             hasCrudFieldFeature(metadata.class, prop.name, "filter") &&
@@ -75,7 +49,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.kind === "m:1" ||
                 prop.kind === "1:m" ||
                 prop.kind === "m:n" ||
-                prop.type === "EnumArrayType") &&
+                prop.type === "EnumArrayType" ||
+                prop.type === "uuid") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
     const hasFilterArg = crudFilterProps.length > 0;
@@ -94,7 +69,8 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.kind === "m:1" ||
-                prop.type === "EnumArrayType"),
+                prop.type === "EnumArrayType" ||
+                prop.enum),
     );
     const hasSortArg = crudSortProps.length > 0;
 
@@ -132,9 +108,6 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         hasSlugProp,
         hasPositionProp,
         positionGroupProps,
-        statusProp,
-        statusActiveItems,
-        hasStatusFilter,
         scopeProp,
         skipScopeCheck,
         argsClassName,
@@ -177,7 +150,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, IdFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -263,6 +236,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => ManyToManyFilter)
                     ${prop.name}?: ManyToManyFilter;
                     `;
+                } else if (prop.type == "uuid") {
+                    return `@Field(() => IdFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => IdFilter)
+                    ${prop.name}?: IdFilter;
+                    `;
                 } else {
                     //unsupported type TODO support more
                 }
@@ -338,38 +318,10 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const {
-        scopeProp,
-        argsClassName,
-        hasSearchArg,
-        hasSortArg,
-        hasFilterArg,
-        statusProp,
-        statusActiveItems,
-        hasStatusFilter,
-        dedicatedResolverArgProps,
-    } = buildOptions(metadata, generatorOptions);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
-    }
-
-    let statusFilterClassName: string | undefined = undefined;
-    let statusFilterDefaultValue;
-    if (hasStatusFilter && statusProp) {
-        statusFilterClassName = findEnumName(statusProp.name, metadata);
-
-        const importPath = findEnumImportPath(statusFilterClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
-        imports.push({
-            name: statusFilterClassName,
-            importPath,
-        });
-
-        if (statusActiveItems && statusActiveItems.length > 1) {
-            statusFilterDefaultValue = `[${statusActiveItems.map((i) => `${statusFilterClassName}.${i}`).join(", ")}]`;
-        } else {
-            statusFilterDefaultValue = `[${morphTsProperty(statusProp.name, metadata).getInitializer()?.getText()}]`;
-        }
     }
 
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
@@ -408,16 +360,6 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
                 }
             })
             .join("")}
-
-        ${
-            hasStatusFilter
-                ? `
-        @Field(() => [${statusFilterClassName}], { defaultValue: ${statusFilterDefaultValue} })
-        @IsEnum(${statusFilterClassName}, { each: true })
-        status: ${statusFilterClassName}[];
-        `
-                : ""
-        }
 
         ${
             hasSearchArg
@@ -476,9 +418,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
               .join(",")} }`
         : false;
 
-    const serviceOut = `import { FilterQuery } from "@mikro-orm/postgresql";
-    import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository, EntityManager, raw } from "@mikro-orm/postgresql";
+    const serviceOut = `import { EntityManager, FilterQuery, raw } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
 
     ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
@@ -498,7 +438,6 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
             hasPositionProp
                 ? `constructor(
                     private readonly entityManager: EntityManager,
-                    @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
                 ) {}`
                 : ""
         }
@@ -510,7 +449,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                     positionGroupProps.length ? `group: ${positionGroupType},` : ``
                 }lowestPosition: number, highestPosition?: number) {
                     // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
-                    await this.repository.nativeUpdate(
+                    await this.entityManager.nativeUpdate(${metadata.className},
                     ${
                         positionGroupProps.length
                             ? `{
@@ -529,7 +468,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                     positionGroupProps.length ? `group: ${positionGroupType},` : ``
                 }lowestPosition: number, highestPosition?: number) {
                     // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
-                    await this.repository.nativeUpdate(
+                    await this.entityManager.nativeUpdate(${metadata.className},
                     ${
                         positionGroupProps.length
                             ? `{
@@ -545,7 +484,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                 }
 
                 async getLastPosition(${positionGroupProps.length ? `group: ${positionGroupType}` : ``}) {
-                    return this.repository.count(${positionGroupProps.length ? `this.getPositionGroupCondition(group)` : `{}`});
+                    return this.entityManager.count(${metadata.className}, ${positionGroupProps.length ? `this.getPositionGroupCondition(group)` : `{}`});
                 }
 
                 ${
@@ -576,11 +515,9 @@ function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
     generatorOptions: CrudGeneratorOptions,
-): { code: string; injectRepositories: EntityMetadata<any>[] } {
+): { code: string } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
-
-    const injectRepositories: EntityMetadata<any>[] = [];
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -598,13 +535,11 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
-                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
             };
         });
 
@@ -613,13 +548,11 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
-                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
                 targetMeta,
             };
         });
@@ -628,13 +561,11 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
-                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
                 orphanRemoval: prop.orphanRemoval,
                 targetMeta,
             };
@@ -642,7 +573,6 @@ function generateInputHandling(
 
     function innerGenerateInputHandling(...args: Parameters<typeof generateInputHandling>) {
         const ret = generateInputHandling(...args);
-        injectRepositories.push(...ret.injectRepositories);
         return ret.code;
     }
 
@@ -660,9 +590,7 @@ function generateInputHandling(
             options.mode == "create"
                 ? dedicatedResolverArgProps
                       .map((dedicatedResolverArgProp) => {
-                          return `${dedicatedResolverArgProp.name}: Reference.create(await this.${classNameToInstanceName(
-                              dedicatedResolverArgProp.type,
-                          )}Repository.findOneOrFail(${dedicatedResolverArgProp.name})), `;
+                          return `${dedicatedResolverArgProp.name}: Reference.create(await this.entityManager.findOneOrFail(${dedicatedResolverArgProp.type}, ${dedicatedResolverArgProp.name})), `;
                       })
                       .join("")
                 : ""
@@ -672,9 +600,7 @@ function generateInputHandling(
                 ? inputRelationManyToOneProps
                       .map(
                           (prop) =>
-                              `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.${
-                                  prop.repositoryName
-                              }.findOneOrFail(${prop.name}Input))${prop.nullable ? ` : undefined` : ""}, `,
+                              `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.entityManager.findOneOrFail(${prop.type}, ${prop.name}Input))${prop.nullable ? ` : undefined` : ""}, `,
                       )
                       .join("")
                 : ""
@@ -693,8 +619,8 @@ ${inputRelationToManyProps
                     mode: "updateNested",
                     inputName: `${prop.singularName}Input`,
 
-                    // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
-                    assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
+                    // alternative `return this.entityManager.create(${prop.type}, {` requires back relation to be set
+                    assignEntityCode: `return this.entityManager.assign(new ${prop.type}(), {`,
 
                     excludeFields: prop.targetMeta.props
                         .filter((prop) => prop.kind == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
@@ -717,7 +643,7 @@ ${inputRelationToManyProps
         } else {
             return `
             if (${prop.name}Input) {
-                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
+                const ${prop.name} = await this.entityManager.find(${prop.type}, { id: ${prop.name}Input });
                 if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that were passed as input");
                 await ${instanceNameSingular}.${prop.name}.loadItems();
                 ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
@@ -739,7 +665,7 @@ ${inputRelationOneToOneProps
                     {
                         mode: "updateNested",
                         inputName: `${prop.name}Input`,
-                        assignEntityCode: `this.${prop.repositoryName}.assign(${prop.singularName}, {`,
+                        assignEntityCode: `this.entityManager.assign(${prop.singularName}, {`,
                         excludeFields: prop.targetMeta.props
                             .filter((prop) => prop.kind == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
                             .map((prop) => prop.name),
@@ -757,7 +683,7 @@ ${
                   (prop) => `if (${prop.name}Input !== undefined) {
                         ${instanceNameSingular}.${prop.name} =
                             ${prop.nullable ? `${prop.name}Input ? ` : ""}
-                            Reference.create(await this.${prop.repositoryName}.findOneOrFail(${prop.name}Input))
+                            Reference.create(await this.entityManager.findOneOrFail(${prop.type}, ${prop.name}Input))
                             ${prop.nullable ? ` : undefined` : ""};
                         }`,
               )
@@ -778,7 +704,7 @@ ${
 }
     `;
 
-    return { code, injectRepositories };
+    return { code };
 }
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
@@ -940,8 +866,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasFilterArg,
         hasPositionProp,
         positionGroupProps,
-        statusProp,
-        hasStatusFilter,
         dedicatedResolverArgProps,
     } = buildOptions(metadata, generatorOptions);
 
@@ -955,27 +879,21 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const imports: Imports = [];
-    const injectRepositories = new Array<EntityMetadata<any>>();
 
-    const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
-        { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
+    const { code: createInputHandlingCode } = generateInputHandling(
+        {
+            mode: "create",
+            inputName: "input",
+            assignEntityCode: `const ${instanceNameSingular} = this.entityManager.create(${metadata.className}, {`,
+        },
         metadata,
         generatorOptions,
     );
-    injectRepositories.push(...createInputHandlingInjectRepositories);
 
-    const { code: updateInputHandlingCode, injectRepositories: updateInputHandlingInjectRepositories } = generateInputHandling(
+    const { code: updateInputHandlingCode } = generateInputHandling(
         { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
         metadata,
         generatorOptions,
-    );
-    injectRepositories.push(...updateInputHandlingInjectRepositories);
-
-    injectRepositories.push(
-        ...dedicatedResolverArgProps.map((prop) => {
-            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
-            return prop.targetMeta;
-        }),
     );
 
     const {
@@ -992,16 +910,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
-    }
-    imports.push(...injectRepositories.map((meta) => generateEntityImport(meta, generatorOptions.targetDirectory)));
-
-    if (statusProp) {
-        const enumName = findEnumName(statusProp.name, metadata);
-        const importPath = findEnumImportPath(enumName, generatorOptions.targetDirectory, metadata);
-        imports.push({
-            name: enumName,
-            importPath,
-        });
     }
 
     function generateIdArg(name: string, metadata: EntityMetadata<any>): string {
@@ -1021,9 +929,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
     imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
 
-    const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
+    const resolverOut = `import { EntityManager, FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { GraphQLResolveInfo } from "graphql";
 
@@ -1040,16 +946,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             private readonly entityManager: EntityManager,${
                 hasPositionProp ? `private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
             }
-            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
-            ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
-                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
-                .join("")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
+            ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
         async ${instanceNameSingular}(${generateIdArg("id", metadata)}): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
             return ${instanceNameSingular};
         }
 
@@ -1061,7 +964,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @Args("slug") slug: string
             ${scopeProp ? `, @Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type}` : ""}
         ): Promise<${metadata.className} | null> {
-            const ${instanceNameSingular} = await this.repository.findOne({ slug${scopeProp ? `, scope` : ""}});
+            const ${instanceNameSingular} = await this.entityManager.findOne(${metadata.className}, { slug${scopeProp ? `, scope` : ""}});
 
             return ${instanceNameSingular} ?? null;
         }
@@ -1088,7 +991,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     },
                     {} as Record<string, boolean>,
                 ),
-                status: !!hasStatusFilter,
                 search: !!hasSearchArg,
                 filter: !!hasFilterArg,
                 sort: !!hasSortArg,
@@ -1102,10 +1004,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
-                    ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.repository);`
+                    ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.entityManager.getRepository<${metadata.className}>(${metadata.className}));`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
-            ${hasStatusFilter ? `where.status = { $in: status };` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
             ${dedicatedResolverArgProps
                 .map((dedicatedResolverArgProp) => {
@@ -1145,7 +1046,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     : ""
             }
 
-            const [entities, totalCount] = await this.repository.findAndCount(where, options);
+            const [entities, totalCount] = await this.entityManager.findAndCount(${metadata.className}, where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
         }
         `
@@ -1228,7 +1129,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${generateIdArg("id", metadata)},
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
         ): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
 
             ${
                 hasPositionProp
@@ -1302,7 +1203,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
-            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
             this.entityManager.remove(${instanceNameSingular});${
                 hasPositionProp
                     ? `await this.${instanceNamePlural}Service.decrementPositions(${

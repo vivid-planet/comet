@@ -1,5 +1,154 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- a9d4b70: Change type of the `values` prop of ContentScopeProvider
+
+    **Before**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "English", value: "en" },
+        },
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "German", value: "de" },
+        },
+        {
+            domain: { label: "Secondary", value: "secondary" },
+            language: { label: "English", value: "en" },
+        },
+    ];
+    ```
+
+    **Now**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            scope: { domain: "main", language: "en" },
+            label: { domain: "Main", language: "English" },
+        },
+        {
+            scope: { domain: "main", language: "de" },
+            label: { domain: "Main", language: "German" },
+        },
+        {
+            scope: { domain: "secondary", language: "en" },
+            label: { domain: "Secondary", language: "English" },
+        },
+    ];
+    ```
+
+- b039dcb: Remove `imgproxyConfig` from `CometConfigProvider` and move `maxSrcResolution` to `damConfig`
+
+### Patch Changes
+
+- Updated dependencies [a93455f]
+- Updated dependencies [72d1a5e]
+- Updated dependencies [1c62e87]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-date-time@8.0.0-beta.4
+    - @comet/admin-rte@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- 8f58741: Remove unused field `allowedImageSizes` from DamConfig
+    - @comet/admin@8.0.0-beta.3
+    - @comet/admin-date-time@8.0.0-beta.3
+    - @comet/admin-icons@8.0.0-beta.3
+    - @comet/admin-rte@8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- b10c4f9: Merge providers into new `CometConfigProvider`
+
+    Previously, each module (e.g., DAM) had its own provider used for configuration.
+    This led to crowding the application since most applications use multiple CMS features.
+    A new `CometConfigProvider` provider is introduced to use instead.
+
+    **Example**
+
+    ```tsx
+    <CometConfigProvider
+        apiUrl={config.apiUrl}
+        graphQLApiUrl={`${config.apiUrl}/graphql`}
+        adminUrl={config.adminUrl}
+        // Config for the page tree module
+        pageTree={{
+            categories: pageTreeCategories,
+            documentTypes: pageTreeDocumentTypes,
+        }}
+        // Config for the DAM module
+        dam={{
+            ...config.dam,
+            scopeParts: ["domain"],
+            contentGeneration: {
+                generateAltText: true,
+                generateImageTitle: true,
+            },
+        }}
+        // Additional modules...
+    >
+        {/* Application */}
+    </CometConfigProvider>
+    ```
+
+    **Breaking changes**
+
+    - Multiple exports have been removed: `CmsBlockContext`, `CmsBlockContextProvider`, `useCmsBlockContext`, `BuildInformationProvider`, `DamConfigProvider`, `useDamConfig`, `DependenciesConfigProvider`, `useDependenciesConfig`, `LocaleProvider`, `SitesConfigProvider`
+    - `useLocale` has been renamed to `useContentLanguage`
+    - `useSitesConfig` has been renamed to `useSiteConfigs`
+
+    **How to upgrade**
+
+    1. Add the `CometConfigProvider` to `src/App.tsx`
+    2. Move configs for used modules to the new provider
+    3. Remove the old config providers
+
+### Minor Changes
+
+- 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
+
+    This applies to:
+
+    - `FinalFormSaveButton`
+    - `FinalFormSaveCancelButtonsLegacy`
+    - `FinalFormSaveSplitButton`
+    - The save button inside `TableLocalChangesToolbar`
+    - The save button inside the `useSaveState` hook
+    - The save button inside `MoveDamItemDialog`
+    - The save button inside `createUsePage`
+
+### Patch Changes
+
+- Updated dependencies [d99602a]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [f904b71]
+- Updated dependencies [15c6fa0]
+- Updated dependencies [535476e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [43eb598]
+    - @comet/admin@8.0.0-beta.2
+    - @comet/admin-date-time@8.0.0-beta.2
+    - @comet/admin-icons@8.0.0-beta.2
+    - @comet/admin-rte@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes
@@ -233,6 +382,111 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+
+## 7.19.0
+
+### Minor Changes
+
+- 91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+- ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+- Updated dependencies [3544127ad]
+- Updated dependencies [17b79b581]
+    - @comet/admin@7.19.0
+    - @comet/blocks-admin@7.19.0
+    - @comet/admin-date-time@7.19.0
+    - @comet/admin-icons@7.19.0
+    - @comet/admin-rte@7.19.0
+    - @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Minor Changes
+
+- 2dc23dd6d: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+- ec9778450: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+- 0acf80d30: User Permissions: Allow permission-specific content scopes to override by-rule content scopes
+- Updated dependencies [e6092df34]
+- Updated dependencies [f496734f8]
+- Updated dependencies [e6092df34]
+    - @comet/admin-date-time@7.18.0
+    - @comet/blocks-admin@7.18.0
+    - @comet/admin@7.18.0
+    - @comet/admin-icons@7.18.0
+    - @comet/admin-rte@7.18.0
+    - @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+- 4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+- a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+- ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    - @comet/admin@7.17.0
+    - @comet/admin-date-time@7.17.0
+    - @comet/admin-icons@7.17.0
+    - @comet/admin-rte@7.17.0
+    - @comet/admin-theme@7.17.0
+    - @comet/blocks-admin@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+- 997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+- ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+- ea014c5e3: Set the correct icon for the button to confirm page actions
+- e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+- Updated dependencies [9bd499dcd]
+- Updated dependencies [ed9282b3b]
+- Updated dependencies [ec1cf3cf8]
+- Updated dependencies [bf7b89ffc]
+- Updated dependencies [5b7c6b4a7]
+    - @comet/blocks-admin@7.16.0
+    - @comet/admin-theme@7.16.0
+    - @comet/admin@7.16.0
+    - @comet/admin-date-time@7.16.0
+    - @comet/admin-icons@7.16.0
+    - @comet/admin-rte@7.16.0
 
 ## 7.15.0
 

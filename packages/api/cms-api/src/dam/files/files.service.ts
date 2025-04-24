@@ -6,7 +6,6 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
@@ -15,24 +14,24 @@ import { BlobStorageBackendService } from "../../blob-storage/backends/blob-stor
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
+import { FileUploadInput } from "../../file-utils/file-upload.input";
+import { slugifyFilename } from "../../file-utils/files.utils";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
+import { Extension, ResizingType } from "../../imgproxy/imgproxy.enum";
+import { ImgproxyService } from "../../imgproxy/imgproxy.service";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
-import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
+import { DAM_CONFIG } from "../dam.constants";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
-import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
-import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
-import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
@@ -101,13 +100,11 @@ const withFilesSelect = (
 @Injectable()
 export class FilesService {
     protected readonly logger = new Logger(FilesService.name);
-    static readonly UPLOAD_FIELD = "file";
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
-        @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
@@ -539,13 +536,10 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(
-        file: FileInterface,
-        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
-    ): Promise<string> {
+    async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files`];
+        const baseUrl = [`/dam/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
@@ -564,19 +558,19 @@ export class FilesService {
     async getFileAsBase64String(file: FileInterface) {
         const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
 
-        const buffer = await new Response(fileStream).buffer();
-        const base64String = buffer.toString("base64");
+        const chunks: Buffer[] = [];
+        for await (const chunk of fileStream) {
+            chunks.push(chunk);
+        }
 
+        const base64String = Buffer.concat(chunks).toString("base64");
         return `data:${file.mimetype};base64,${base64String}`;
     }
 
-    async createFileDownloadUrl(
-        file: FileInterface,
-        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
-    ): Promise<string> {
+    async createFileDownloadUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
+        const baseUrl = [`/dam/files/download`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
@@ -622,7 +616,7 @@ export class FilesService {
             image !== undefined &&
             image.width &&
             image.height &&
-            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
+            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.config.maxSrcResolution
         ) {
             throw new CometImageResolutionException(`Maximal image resolution exceeded`);
         }
