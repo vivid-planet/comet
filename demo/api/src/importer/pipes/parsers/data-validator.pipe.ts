@@ -36,7 +36,7 @@ export class DataValidator extends StreamTransform {
             }
             this.push(inputDataAndMetadata);
         } catch (error: unknown) {
-            await this.logger.error(`Error validating Data: ${error}`);
+            this.logger.error(`Error validating Data: ${error}`);
             if (error instanceof Error) {
                 callback(error);
             } else {
