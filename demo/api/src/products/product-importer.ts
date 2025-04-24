@@ -2,6 +2,7 @@ import { EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
 import { DataStream } from "@src/importer/data-streams/data-stream";
 import { ImporterInputClass } from "@src/importer/importer-input.type";
+import { EndPipe } from "@src/importer/pipes/end.pipe";
 import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Readable, Transform } from "stream";
 
@@ -23,6 +24,7 @@ export class ProductImporter {
                 objectMode: true,
                 transform: this.displayData.bind(this),
             }),
+            new EndPipe().getPipe(),
         ];
     }
 
