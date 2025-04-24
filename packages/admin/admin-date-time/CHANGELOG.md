@@ -1,5 +1,15 @@
 # @comet/admin-date-time
 
+## 8.0.0-beta.4
+
+### Patch Changes
+
+- Updated dependencies [a93455f]
+- Updated dependencies [72d1a5e]
+- Updated dependencies [1c62e87]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
@@ -76,6 +86,28 @@
 - Updated dependencies [682a674]
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
+
+## 7.19.0
+
+### Patch Changes
+
+- Updated dependencies [3544127ad]
+    - @comet/admin@7.19.0
+    - @comet/admin-icons@7.19.0
+
+## 7.18.0
+
+### Minor Changes
+
+- e6092df34: Add support for `onBlur` and `onFocus` props to the `DateTimePicker`
+
+    These events will be triggered when either of the date or time picker is focused or blurred.
+
+### Patch Changes
+
+- e6092df34: Fix selection of a date where the month/year differs from the current selection in `DateTimeField` and `FinalFormDateTimePicker`
+    - @comet/admin@7.18.0
+    - @comet/admin-icons@7.18.0
 
 ## 7.17.0
 

@@ -1,5 +1,38 @@
 # @comet/cms-api
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- b039dcb: Separate `FileUploadsModule` completely from `DamModule`
+
+    Multiple changes were necessary to achieve this:
+
+    - `ScaledImagesCacheService` was moved to `BlobStorageModule`
+    - You must now pass the `cacheDirectory` config option to `BlobStorageModule` (instead of `DamModule`)
+    - `ImgproxyService` was moved to its own `ImgproxyModule`
+    - You must add the `ImgproxyModule` to your `AppModule`
+    - In the `DamModule` config, the `maxSrcResolution` option was moved from the `imgproxyConfig` to the `damConfig`
+
+- 412bbf2: Bump `@kubernetes/client-node` peer dependency to v1
+
+    To upgrade, install `@kubernetes/client-node` v1.0.0 or later.
+
+- 0fa9b84: Remove absolute DAM URLs
+
+    Until now, the API returned absolute URLs for DAM assets by default.
+    You could optionally get relative URLs by setting the `x-relative-dam-urls` header.
+    This regularly caused confusion regarding the handling of DAM URLs in the site and admin.
+
+    Now, the API will always return relative URLs for DAM assets.
+    The `x-relative-dam-urls` header is not supported anymore.
+
+    A proxy should be set up in site and admin to proxy the relative /dam URLs to the API.
+
+### Minor Changes
+
+- 0328fa3: API Generator: Add support for filtering `ID` fields
+
 ## 8.0.0-beta.3
 
 ## 8.0.0-beta.2
@@ -124,6 +157,27 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+
+## 7.19.0
+
+### Minor Changes
+
+- 91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+- eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+
+    Previously, the scope wasn't considered when loading the node.
+    This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
+
+    - @comet/blocks-api@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/blocks-api@7.18.0
 
 ## 7.17.0
 

@@ -201,6 +201,7 @@ export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
+export { InlineAlert, InlineAlertClassKey, InlineAlertProps } from "./inlineAlert/InlineAlert";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";

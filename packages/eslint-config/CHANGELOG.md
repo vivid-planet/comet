@@ -1,5 +1,12 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.4
+
+### Patch Changes
+
+- 6ec43c9: Use recommended config from eslint-plugin-package-json correctly
+    - @comet/eslint-plugin@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
@@ -46,6 +53,18 @@
 ### Minor Changes
 
 - a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
+
+## 7.19.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.18.0
 
 ## 7.17.0
 

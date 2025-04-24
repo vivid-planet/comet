@@ -172,6 +172,7 @@ export function generateFormField({
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
     if (config.type == "text") {
+        const required = config.required !== undefined ? config.required : false; // don't use inferred from gql here, non-nullable textinput allows empty string
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
         <${TextInputComponent}
@@ -192,6 +193,9 @@ export function generateFormField({
             }
             ${validateCode}
         />`;
+        if (!config.virtual && !required && !config.readOnly) {
+            formValueToGqlInputCode = `${name}: formValues.${name} ?? "",`;
+        }
     } else if (config.type == "number") {
         code = `
             <NumberField
