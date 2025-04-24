@@ -43,7 +43,5 @@ export const generateCommand = new Command("generate").action(async (options) =>
                 }
             }
         }
-
-        await orm.close(true);
     }
 });
