@@ -16,7 +16,7 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } from "@mui/x-data-grid-pro";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
     type GQLCreateProductCategoryMutation,
@@ -128,6 +128,9 @@ export function ProductCategoriesGrid() {
             type: "number",
             filterable: false,
             sortable: false,
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
             flex: 1,
             minWidth: 150,
         },
