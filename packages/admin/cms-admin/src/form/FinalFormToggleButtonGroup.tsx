@@ -8,6 +8,9 @@ interface Props<FieldValue> extends FieldRenderProps<FieldValue, HTMLDivElement>
     optionsPerRow?: number;
 }
 
+/**
+ * @deprecated Use `ToggleButtonGroupField` instead.
+ */
 export function FinalFormToggleButtonGroup<FieldValue = unknown>({ input: { value, onChange }, options, optionsPerRow }: Props<FieldValue>) {
     return (
         <Root $optionsPerRow={optionsPerRow}>
