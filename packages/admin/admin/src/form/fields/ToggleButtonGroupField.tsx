@@ -1,7 +1,8 @@
 import { Field, type FieldProps } from "../Field";
 import { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from "../FinalFormToggleButtonGroup";
 
-export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTMLSelectElement> & FinalFormToggleButtonGroupProps<FieldValue>;
+export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTMLSelectElement> &
+    Omit<FinalFormToggleButtonGroupProps<FieldValue>, "input" | "meta">;
 
 /**
  * The `ToggleButtonGroupField` is a form field component intended to be used to switch between sections in a form.
