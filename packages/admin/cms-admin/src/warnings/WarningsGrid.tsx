@@ -5,6 +5,7 @@ import {
     type GridColDef,
     GridFilterButton,
     MainContent,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarItem,
@@ -178,7 +179,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                     return formattedValues;
                 }
 
-                return value ? capitalCase(value) : undefined;
+                return intl.formatMessage(messages.globalContentScope);
             },
         },
         {
