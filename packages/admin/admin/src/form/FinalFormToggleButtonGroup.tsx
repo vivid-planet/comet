@@ -1,7 +1,30 @@
 import { ButtonBase } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
+import { type ReactNode } from "react";
+import { type FieldRenderProps } from "react-final-form";
 
-export const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerRow" })<{ $optionsPerRow?: number }>`
+export interface FinalFormToggleButtonGroupProps<FieldValue> extends FieldRenderProps<FieldValue, HTMLDivElement> {
+    options: Array<{ value: FieldValue; label: ReactNode }>;
+    optionsPerRow?: number;
+}
+
+export function FinalFormToggleButtonGroup<FieldValue = unknown>({
+    input: { value, onChange },
+    options,
+    optionsPerRow,
+}: FinalFormToggleButtonGroupProps<FieldValue>) {
+    return (
+        <Root $optionsPerRow={optionsPerRow}>
+            {options.map(({ value: optionValue, label }, index) => (
+                <Button key={index} $selected={value === optionValue} onClick={() => onChange(optionValue)} focusRipple>
+                    {label}
+                </Button>
+            ))}
+        </Root>
+    );
+}
+
+const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerRow" })<{ $optionsPerRow?: number }>`
     display: inline-flex;
     border: 1px solid ${({ theme }) => theme.palette.divider};
     background-color: ${({ theme }) => theme.palette.divider};
@@ -17,7 +40,7 @@ export const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$opti
         `}
 `;
 
-export const Button = styled(ButtonBase, { shouldForwardProp: (prop) => prop !== "$selected" })<{ $selected?: boolean }>`
+const Button = styled(ButtonBase, { shouldForwardProp: (prop) => prop !== "$selected" })<{ $selected?: boolean }>`
     padding: ${({ theme }) => theme.spacing(3)};
     background-color: ${({ theme }) => theme.palette.background.paper};
 

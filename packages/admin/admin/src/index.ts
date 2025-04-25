@@ -182,6 +182,16 @@ export {
      */
     FinalFormSelectProps,
 } from "./form/FinalFormSelect";
+export {
+    /**
+     * @deprecated Use `<ToggleButtonGroupField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormToggleButtonGroup />`
+     */
+    FinalFormToggleButtonGroup,
+    /**
+     * @deprecated Use `<ToggleButtonGroupField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormToggleButtonGroup />`
+     */
+    FinalFormToggleButtonGroupProps,
+} from "./form/FinalFormToggleButtonGroup";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
