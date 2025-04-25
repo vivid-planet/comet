@@ -12,8 +12,7 @@ export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTM
  * The `ToggleButtonGroupField` is a form field component intended to be used to switch between sections in a form.
  *
  * This is especially useful when the user needs to choose between different types
- * of input for the same conceptual field — for example, selecting between a physical address
- * form and a coordinate input form.
+ * of input for the same conceptual field — for example, selecting between an address or coordinate.
  */
 export function ToggleButtonGroupField<FieldValue = unknown>({ options, optionsPerRow, ...restProps }: ToggleButtonGroupFieldProps<FieldValue>) {
     return (
