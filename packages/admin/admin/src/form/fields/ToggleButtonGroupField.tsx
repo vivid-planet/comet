@@ -1,12 +1,7 @@
-import { type ReactNode } from "react";
-
 import { Field, type FieldProps } from "../Field";
-import { Button, Root } from "./ToggleButtonGroupField.sc";
+import { FinalFormToggleButtonGroup, type FinalFormToggleButtonGroupProps } from "../FinalFormToggleButtonGroup";
 
-export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTMLSelectElement> & {
-    options: Array<{ value: FieldValue; label: ReactNode }>;
-    optionsPerRow?: number;
-};
+export type ToggleButtonGroupFieldProps<FieldValue> = FieldProps<FieldValue, HTMLSelectElement> & FinalFormToggleButtonGroupProps<FieldValue>;
 
 /**
  * The `ToggleButtonGroupField` is a form field component intended to be used to switch between sections in a form.
@@ -18,20 +13,7 @@ export function ToggleButtonGroupField<FieldValue = unknown>({ options, optionsP
     return (
         <Field {...restProps}>
             {(fieldProps) => {
-                return (
-                    <Root $optionsPerRow={optionsPerRow}>
-                        {options.map(({ value: optionValue, label }, index) => (
-                            <Button
-                                key={index}
-                                $selected={fieldProps.input.value === optionValue}
-                                onClick={() => fieldProps.input.onChange(optionValue)}
-                                focusRipple
-                            >
-                                {label}
-                            </Button>
-                        ))}
-                    </Root>
-                );
+                return <FinalFormToggleButtonGroup input={fieldProps.input} meta={fieldProps.meta} options={options} optionsPerRow={optionsPerRow} />;
             }}
         </Field>
     );
