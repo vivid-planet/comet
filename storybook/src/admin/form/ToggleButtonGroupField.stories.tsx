@@ -73,6 +73,72 @@ export const ToggleButtonFieldStory: Story = {
 };
 
 /**
+ * Sometimes it is necessary to show more options, which do not fit into one row, with the `optionsPerRow` prop it is possible to
+ * define how many options should be shown in one row.
+ */
+export const MultipleRowsExample: Story = {
+    storyName: "ToggleButtonGroupField",
+    render: () => {
+        type SampleType = "value-1" | "value-2" | "value-3" | "value-4" | "value-5" | "value-6";
+        interface FormValues {
+            type: SampleType;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{ type: "value-1" }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <ToggleButtonGroupField<SampleType>
+                                label="Sample Type"
+                                name="type"
+                                optionsPerRow={3}
+                                options={[
+                                    {
+                                        label: "Value 1",
+                                        value: "value-1",
+                                    },
+                                    {
+                                        label: "Value 2",
+                                        value: "value-2",
+                                    },
+                                    {
+                                        label: "Value 3",
+                                        value: "value-3",
+                                    },
+                                    {
+                                        label: "Value 4",
+                                        value: "value-4",
+                                    },
+                                    {
+                                        label: "Value 5",
+                                        value: "value-5",
+                                    },
+                                    {
+                                        label: "Value 6",
+                                        value: "value-6",
+                                    },
+                                ]}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
  * This story demonstrates the usage of the `ToggleButtonGroupField` component with a more complex form.
  *
  * The `ToggleButtonGroupField` Component is typically used to switch between two or more options, which additionally shows/hides different parts of the form.
