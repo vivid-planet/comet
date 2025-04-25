@@ -1863,7 +1863,6 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 
 </details>
 
-
 ### `FinalFormToggleButtonGroup` deprecated
 
 `FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
