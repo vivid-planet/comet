@@ -71,9 +71,9 @@ export function generateImageUrl({ src, width }: { src: string; width: number },
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
 
-type Props = ImgHTMLAttributes<HTMLImageElement> & { aspectRatio: string; src: string; width: string | number };
+export type ImageProps = ImgHTMLAttributes<HTMLImageElement> & { aspectRatio: string | number; src: string; width: string | number };
 
-export function Image({ aspectRatio, src, width, ...imgProps }: Props) {
+export function Image({ aspectRatio, src, width, ...imgProps }: ImageProps) {
     const usedAspectRatio = parseAspectRatio(aspectRatio);
     const imageUrl = generateImageUrl({ src, width: Number(width) }, usedAspectRatio);
 
