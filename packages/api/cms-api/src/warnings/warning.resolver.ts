@@ -72,18 +72,17 @@ export class WarningResolver {
         }
         const allowedScopes = scopes.concat(additionalScopes);
 
+        where.$or = [{ scope: { $in: allowedScopes } }, { scope: { $eq: null } }];
         if (scope) {
-            where.scope = { $in: allowedScopes };
+            where.$and = where.$and || [];
             if (scope?.equal) {
                 const scopeEqual = scope.equal;
-                where.$or = [{ scope: { $eq: scopeEqual } }];
+                where.$and.push({ scope: { $eq: scopeEqual } });
             } else if (scope.notEqual) {
-                where.$or = [{ scope: { $ne: scope.notEqual } }];
+                where.$and.push({ scope: { $ne: scope.notEqual } });
             } else if (scope.isAnyOf) {
-                where.$or = [{ scope: { $in: scope.isAnyOf } }];
+                where.$and.push({ scope: { $in: scope.isAnyOf } });
             }
-        } else {
-            where.$or = [{ scope: { $in: allowedScopes } }, { scope: { $eq: null } }];
         }
 
         const options: FindOptions<Warning> = { offset, limit };
