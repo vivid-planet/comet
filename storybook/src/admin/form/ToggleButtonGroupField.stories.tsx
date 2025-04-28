@@ -1,6 +1,7 @@
 import { Alert, FinalForm, NumberField, TextField, ToggleButtonGroupField } from "@comet/admin";
-import { Info } from "@comet/admin-icons";
+import { Image, Info, Video, Vimeo, YouTube } from "@comet/admin-icons";
 import { Box, Divider } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react";
 
 type Story = StoryObj<typeof ToggleButtonGroupField>;
@@ -51,7 +52,7 @@ export const ToggleButtonFieldStory: Story = {
                                     },
                                     {
                                         label: (
-                                            <Box display="flex" gap={2}>
+                                            <Box display="flex" gap={2} alignItems="center" component="span">
                                                 <Info />
                                                 Icon and Label
                                             </Box>
@@ -79,13 +80,13 @@ export const ToggleButtonFieldStory: Story = {
 export const MultipleRowsExample: Story = {
     storyName: "ToggleButtonGroupField",
     render: () => {
-        type SampleType = "value-1" | "value-2" | "value-3" | "value-4" | "value-5" | "value-6";
+        type SampleType = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
         interface FormValues {
             type: SampleType;
         }
         return (
             <FinalForm<FormValues>
-                initialValues={{ type: "value-1" }}
+                initialValues={{ type: "top-left" }}
                 mode="edit"
                 onSubmit={() => {
                     // not handled
@@ -101,28 +102,28 @@ export const MultipleRowsExample: Story = {
                                 optionsPerRow={3}
                                 options={[
                                     {
-                                        label: "Value 1",
-                                        value: "value-1",
+                                        label: "top left",
+                                        value: "top-left",
                                     },
                                     {
-                                        label: "Value 2",
-                                        value: "value-2",
+                                        label: "top center",
+                                        value: "top-center",
                                     },
                                     {
-                                        label: "Value 3",
-                                        value: "value-3",
+                                        label: "top right",
+                                        value: "top-right",
                                     },
                                     {
-                                        label: "Value 4",
-                                        value: "value-4",
+                                        label: "bottom left",
+                                        value: "bottom-left",
                                     },
                                     {
-                                        label: "Value 5",
-                                        value: "value-5",
+                                        label: "bottom center",
+                                        value: "bottom-center",
                                     },
                                     {
-                                        label: "Value 6",
-                                        value: "value-6",
+                                        label: "bottom right",
+                                        value: "bottom-right",
                                     },
                                 ]}
                             />
@@ -210,6 +211,137 @@ export const ToggleButtonFieldAddressSample: Story = {
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>
                         </Box>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const MediaType: Story = {
+    render: () => {
+        type SampleType = "image" | "video" | "vimeo" | "youtube";
+        interface FormValues {
+            type: SampleType;
+        }
+
+        return (
+            <FinalForm<FormValues>
+                initialValues={{ type: "image" }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <ToggleButtonGroupField<SampleType>
+                                label="Media Type"
+                                name="type"
+                                options={[
+                                    {
+                                        label: <Image />,
+                                        value: "image",
+                                    },
+                                    {
+                                        label: <Video />,
+                                        value: "video",
+                                    },
+                                    {
+                                        label: <Vimeo />,
+                                        value: "vimeo",
+                                    },
+                                    {
+                                        label: <YouTube />,
+                                        value: "youtube",
+                                    },
+                                ]}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const MediaTypeWithText: Story = {
+    render: () => {
+        type SampleType = "image" | "video" | "vimeo" | "youtube";
+        interface FormValues {
+            type: SampleType;
+        }
+        const ButtonContent = styled(Box)`
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        `;
+
+        return (
+            <FinalForm<FormValues>
+                initialValues={{ type: "image" }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <ToggleButtonGroupField<SampleType>
+                                label="Media Type"
+                                name="type"
+                                options={[
+                                    {
+                                        label: (
+                                            <ButtonContent>
+                                                <Image />
+                                                Image
+                                            </ButtonContent>
+                                        ),
+                                        value: "image",
+                                    },
+                                    {
+                                        label: (
+                                            <ButtonContent>
+                                                <Video />
+                                                Video
+                                            </ButtonContent>
+                                        ),
+                                        value: "video",
+                                    },
+                                    {
+                                        label: (
+                                            <ButtonContent>
+                                                <Vimeo />
+                                                Vimeo
+                                            </ButtonContent>
+                                        ),
+                                        value: "vimeo",
+                                    },
+                                    {
+                                        label: (
+                                            <ButtonContent>
+                                                <YouTube />
+                                                YouTube
+                                            </ButtonContent>
+                                        ),
+                                        value: "youtube",
+                                    },
+                                ]}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
                     );
                 }}
             </FinalForm>
