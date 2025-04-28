@@ -1,6 +1,6 @@
 import theme, { Theme } from "@src/theme";
 
-export function createNextImageSizes(
+export function createImageSizes(
     breakpointWidths: Partial<Record<keyof Theme["breakpoints"], string | number>>,
     defaultWidth: string | number = "100vw",
 ) {

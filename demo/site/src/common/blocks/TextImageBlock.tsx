@@ -2,7 +2,7 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { TextImageBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import { createNextImageSizes } from "@src/util/createNextImageSizes";
+import { createImageSizes } from "@src/util/createImageSizes";
 import styled, { css } from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
@@ -14,7 +14,7 @@ export const TextImageBlock = withPreview(
             <PageLayout>
                 <Root $imagePosition={imagePosition}>
                     <ImageContainer $imageAspectRatio={imageAspectRatio.replace("x", "/")}>
-                        <DamImageBlock data={image} aspectRatio={imageAspectRatio} fill sizes={createNextImageSizes({ md: "100vw" }, "30vw")} />
+                        <DamImageBlock data={image} aspectRatio={imageAspectRatio} fill sizes={createImageSizes({ md: "100vw" }, "30vw")} />
                     </ImageContainer>
                     <TextContainer>
                         <RichTextBlock data={text} />
