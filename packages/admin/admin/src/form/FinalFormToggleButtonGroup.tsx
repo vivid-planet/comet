@@ -1,4 +1,4 @@
-import { ButtonBase } from "@mui/material";
+import { ButtonBase, Typography, type TypographyProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
@@ -17,15 +17,23 @@ export function FinalFormToggleButtonGroup<FieldValue = unknown>({
         <Root $optionsPerRow={optionsPerRow}>
             {options.map(({ value: optionValue, label }, index) => (
                 <Button key={index} $selected={value === optionValue} onClick={() => onChange(optionValue)} focusRipple>
-                    {label}
+                    <Label component="span" variant="body2">
+                        {label}
+                    </Label>
                 </Button>
             ))}
         </Root>
     );
 }
 
+const Label = styled(Typography)<{ component: TypographyProps["component"] }>`
+    display: flex;
+    align-items: center;
+`;
+
 const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerRow" })<{ $optionsPerRow?: number }>`
     display: inline-flex;
+    min-height: 40px;
     border: 1px solid ${({ theme }) => theme.palette.divider};
     background-color: ${({ theme }) => theme.palette.divider};
     border-radius: 2px;
@@ -41,7 +49,10 @@ const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerR
 `;
 
 const Button = styled(ButtonBase, { shouldForwardProp: (prop) => prop !== "$selected" })<{ $selected?: boolean }>`
-    padding: ${({ theme }) => theme.spacing(3)};
+    padding-left: ${({ theme }) => theme.spacing(3)};
+    padding-right: ${({ theme }) => theme.spacing(3)};
+    padding-top: ${({ theme }) => theme.spacing(1.8)};
+    padding-bottom: ${({ theme }) => theme.spacing(1.8)};
     background-color: ${({ theme }) => theme.palette.background.paper};
 
     :hover {
