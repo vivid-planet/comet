@@ -1,24 +1,15 @@
-type Breakpoints = {
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-};
+import theme, { Theme } from "@src/theme";
 
-const breakpointMapping: Record<keyof Breakpoints, number> = {
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1600,
-};
-
-export function createNextImageSizes(breakpointWidths: Partial<Record<keyof Breakpoints, string | number>>, defaultWidth: string | number = "100vw") {
+export function createNextImageSizes(
+    breakpointWidths: Partial<Record<keyof Theme["breakpoints"], string | number>>,
+    defaultWidth: string | number = "100vw",
+) {
     const sizes: string[] = [];
-    const breakpoints: (keyof Breakpoints)[] = ["sm", "md", "lg", "xl"];
+    const breakpoints = Object.entries(theme.breakpoints);
 
-    breakpoints.forEach((breakpoint) => {
-        const width = breakpointWidths[breakpoint];
-        const maxWidth = breakpointMapping[breakpoint];
+    breakpoints.forEach(([breakpointKey, breakpointValue]) => {
+        const width = breakpointWidths[breakpointKey];
+        const maxWidth = breakpointValue.value;
 
         if (width !== undefined) {
             sizes.push(`(max-width: ${maxWidth}px) ${typeof width === "string" ? width : `${width}px`}`);
