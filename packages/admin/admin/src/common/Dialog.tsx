@@ -25,7 +25,7 @@ export type DialogProps = ThemedComponentBaseProps<{
     iconMapping?: {
         closeIcon?: ReactNode;
     };
-} & MuiDialogProps;
+} & Omit<MuiDialogProps, "title">;
 
 type OwnerState = {
     hasCloseButton: boolean;
