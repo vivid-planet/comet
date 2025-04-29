@@ -71,7 +71,7 @@ async function bootstrap(): Promise<void> {
     }
 
     const port = config.apiPort;
-    const host = process.env.SERVER_HOST ?? "localhost";
+    const host = config.serverHost;
     await app.listen(port, host);
     console.log(`Application is running on: http://${host}:${port}/`);
 }
