@@ -1,3 +1,4 @@
+import { isUUID } from "class-validator";
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
@@ -138,10 +139,20 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     let defaultRedirectPathAfterChange: string | undefined;
 
     if (match) {
-        // Location: /main/en/dashboard
-        // Match: /main/en
-        // Page: Location - Match = /dashboard
-        defaultRedirectPathAfterChange = currentLocation.pathname.replace(match.url, "");
+        defaultRedirectPathAfterChange = "";
+
+        for (const segment of currentLocation.pathname.replace(match.url, "").split("/")) {
+            if (segment === "") {
+                continue;
+            }
+
+            // Likely a detail page -> break
+            if (isUUID(segment)) {
+                break;
+            }
+
+            defaultRedirectPathAfterChange += `/${segment}`;
+        }
     }
 
     return (
