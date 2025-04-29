@@ -156,5 +156,10 @@ describe("configParser", () => {
         const config = await parseConfig(`${__dirname}/.test6.cometGen.tsx`);
         expect(config.fields[0].validate).toEqual({ code: "() => true", imports: [] });
     });
-    //fs.rm(`${__dirname}/.test.cometGen.tsx`, { force: true });
+
+    afterAll(async () => {
+        for await (const file of fs.glob(`${__dirname}/.test*.cometGen.tsx`)) {
+            await fs.rm(file);
+        }
+    });
 });
