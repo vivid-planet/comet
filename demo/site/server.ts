@@ -5,12 +5,12 @@ import { parse } from "url";
 import { withMetrics } from "./opentelemetry-metrics";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
+const host = process.env.SERVER_HOST ?? "localhost";
 const port = parseInt(process.env.PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname, port });
+const app = next({ dev, hostname: host, port });
 
 app.prepare().then(() => {
     if (process.env.TRACING == "production") {
@@ -90,8 +90,8 @@ app.prepare().then(() => {
             console.error(err);
             process.exit(1);
         })
-        .listen(port, "localhost", () => {
+        .listen(port, host, () => {
             // eslint-disable-next-line no-console
-            console.log(`> Ready on http://localhost:${port}`);
+            console.log(`> Ready on http://${host}:${port}`);
         });
 });
