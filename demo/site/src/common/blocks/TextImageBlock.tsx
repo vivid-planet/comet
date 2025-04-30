@@ -8,12 +8,12 @@ import styled, { css } from "styled-components";
 import { DamImageBlock } from "./DamImageBlock";
 import { RichTextBlock } from "./RichTextBlock";
 
-const TextImageBlock = withPreview(
+export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
             <Root $imagePosition={imagePosition}>
-                <ImageContainer $imageAspectRatio={imageAspectRatio.replace("x", "/")}>
-                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} fill sizes={createImageSizes({ xs: "100vw", md: "30vw" })} />
+                <ImageContainer>
+                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes={createImageSizes({ xs: "100vw", md: "30vw" })} />
                 </ImageContainer>
                 <TextContainer>
                     <RichTextBlock data={text} />
@@ -46,10 +46,9 @@ const Root = styled.div<{ $imagePosition: TextImageBlockData["imagePosition"] }>
         `}
 `;
 
-const ImageContainer = styled.div<{ $imageAspectRatio: TextImageBlockData["imageAspectRatio"] }>`
+const ImageContainer = styled.div`
     position: relative;
     flex: 1;
-    aspect-ratio: ${({ $imageAspectRatio }) => $imageAspectRatio};
 `;
 
 const TextContainer = styled.div`
