@@ -6,4 +6,5 @@ export interface DamConfig {
     acceptedMimeTypes?: string[];
     maxFileSize: number;
     maxSrcResolution: number;
+    basePath: string;
 }

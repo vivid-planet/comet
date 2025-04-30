@@ -48,7 +48,7 @@ import { FoldersService } from "./folders.service";
 
 const fileUrl = `:fileId/:filename`;
 
-export function createFilesController({ Scope: PassedScope }: { Scope?: Type<DamScopeInterface> }): Type<unknown> {
+export function createFilesController({ Scope: PassedScope, damBasePath }: { Scope?: Type<DamScopeInterface>; damBasePath: string }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -58,7 +58,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
     const UploadFileBody = createUploadFileBody({ Scope });
 
-    @Controller("dam/files")
+    @Controller(`${damBasePath}/files`)
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
         private readonly logger = new Logger(FilesController.name);

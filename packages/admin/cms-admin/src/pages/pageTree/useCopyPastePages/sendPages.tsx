@@ -73,6 +73,7 @@ interface SendPagesDependencies {
     apiUrl: string;
     damScope: Record<string, unknown>;
     currentCategory: string;
+    damBasePath: string;
 }
 
 /**
@@ -94,7 +95,7 @@ export async function sendPages(
     parentId: string | null,
     { pages, scope: sourceContentScope }: PagesClipboard,
     options: SendPagesOptions,
-    { client, scope: targetContentScope, documentTypes, apiUrl, damScope: targetDamScope, currentCategory }: SendPagesDependencies,
+    { client, scope: targetContentScope, documentTypes, apiUrl, damScope: targetDamScope, currentCategory, damBasePath }: SendPagesDependencies,
     updateProgress: (progress: number, message: ReactNode) => void,
 ): Promise<void> {
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
@@ -297,7 +298,7 @@ export async function sendPages(
                             if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
 
                             const apiClient = createHttpClient(apiUrl);
-                            const response: { data: { id: string } } = await apiClient.post(`/dam/files/upload`, formData, {
+                            const response: { data: { id: string } } = await apiClient.post(`/${damBasePath}/files/upload`, formData, {
                                 // cancelToken, //TODO support cancel?
                                 headers: {
                                     "Content-Type": "multipart/form-data",

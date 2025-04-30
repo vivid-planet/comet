@@ -141,6 +141,7 @@ export class AppModule {
                 ImgproxyModule.register(config.imgproxy),
                 DamModule.register({
                     damConfig: {
+                        ...config.dam,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,

@@ -8,7 +8,7 @@ import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
-const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
+const IGNORED_PATHS = [`/images/:hash/:fileId`, `/files/:hash/:fileId`, `/images/preview/:fileId`, `/files/preview/:fileId`];
 
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
