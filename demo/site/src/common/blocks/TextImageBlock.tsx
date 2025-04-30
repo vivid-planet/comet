@@ -13,7 +13,7 @@ const TextImageBlock = withPreview(
         return (
             <Root $imagePosition={imagePosition}>
                 <ImageContainer $imageAspectRatio={imageAspectRatio.replace("x", "/")}>
-                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} fill sizes={createImageSizes({ md: "30vw" }, "100vw")} />
+                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} fill sizes={createImageSizes({ xs: "100vw", md: "30vw" })} />
                 </ImageContainer>
                 <TextContainer>
                     <RichTextBlock data={text} />
