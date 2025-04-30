@@ -5,14 +5,14 @@ export function createImageSizes(
     defaultWidth: string | number = "100vw",
 ) {
     const sizes: string[] = [];
-    const breakpoints = Object.entries(theme.breakpoints);
+    const breakpoints = Object.entries(theme.breakpoints).reverse();
 
     breakpoints.forEach(([breakpointKey, breakpointValue]) => {
         const width = breakpointWidths[breakpointKey];
-        const maxWidth = breakpointValue.value;
+        const minWidth = breakpointValue.value;
 
         if (width !== undefined) {
-            sizes.push(`(max-width: ${maxWidth}px) ${typeof width === "string" ? width : `${width}px`}`);
+            sizes.push(`(min-width: ${minWidth}px) ${typeof width === "string" ? width : `${width}px`}`);
         }
     });
 
