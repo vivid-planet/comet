@@ -74,6 +74,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
                 "content-length": file.size,
+                "cache-control": options.public ? "max-age=86400, public" : "max-age=31536000, private", // same as DAM
             };
 
             // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
