@@ -249,7 +249,8 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                     toolbarAction: null,
                 } as UserPermissionsUserGridToolbarProps,
             }}
-            showToolbar />
+            showToolbar
+        />
     );
 };
 

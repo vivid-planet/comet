@@ -46,7 +46,7 @@ export function ColumnsIcon({ columns, ...svgProps }: ColumnsIconProps): JSX.Ele
 
     return columns > rectangleAttributesMatrices.length ? (
         // Fallback for cases where column number is too high to display it with svgs
-        (<span>{columns}</span>)
+        <span>{columns}</span>
     ) : (
         <SvgIcon viewBox="0 0 48 48" {...svgProps}>
             {rectangleAttributesMatrices[columns - 1].map((c, i) => (

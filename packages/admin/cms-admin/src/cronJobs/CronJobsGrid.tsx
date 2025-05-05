@@ -158,7 +158,8 @@ export function CronJobsGrid() {
                 ]}
                 disableColumnSelector
                 slots={{ toolbar: CronJobsToolbar }}
-                showToolbar />
+                showToolbar
+            />
             <Dialog open={dialogOpen} onClose={closeDialog}>
                 <DialogTitle>
                     <FormattedMessage id="comet.pages.cronjob.dialog.title" defaultMessage="Start cron job now?" />

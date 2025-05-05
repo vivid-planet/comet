@@ -140,7 +140,8 @@ export function JobsGrid(props: JobsGridProps) {
                 ]}
                 disableColumnSelector
                 slots={{ toolbar: () => <JobsToolbar cronJobName={cronJob} /> }}
-                showToolbar />
+                showToolbar
+            />
         </MainContent>
     );
 }
