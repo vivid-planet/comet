@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
+import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
@@ -72,20 +73,19 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         localeText: {
-            // TODO: check typing
-            paginationDisplayedRows: ({ from, to, count }) => "todo",
-            // (
-            //     <FormattedMessage
-            //         id="dataGrid.pagination.labelDisplayedRows"
-            //         defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
-            //         values={{
-            //             from: <FormattedNumber value={from} />,
-            //             to: <FormattedNumber value={to} />,
-            //             formattedCount: <FormattedNumber value={count} />,
-            //             count,
-            //         }}
-            //     />
-            // ),
+            paginationDisplayedRows: ({ from, to, count }) =>
+                (
+                    <FormattedMessage
+                        id="dataGrid.pagination.labelDisplayedRows"
+                        defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
+                        values={{
+                            from: <FormattedNumber value={from} />,
+                            to: <FormattedNumber value={to} />,
+                            formattedCount: <FormattedNumber value={count} />,
+                            count,
+                        }}
+                    />
+                ) as unknown as string,
             ...component?.defaultProps?.localeText,
         },
     },
