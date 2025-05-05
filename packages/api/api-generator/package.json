@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@comet/cms-api": "workspace:*",
+        "chokidar": "^4.0.3",
         "commander": "^9.5.0",
         "pluralize": "^8.0.0",
         "ts-morph": "^25.0.1",

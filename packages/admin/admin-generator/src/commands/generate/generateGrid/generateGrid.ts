@@ -383,6 +383,12 @@ export function generateGrid(
             gridColumnType = "...dataGridDateColumn,";
         } else if (type == "number") {
             gridType = "number";
+            const defaultDecimals = column.currency ? 2 : 0;
+            const decimals = typeof column.decimals === "number" ? column.decimals : defaultDecimals;
+            const currencyProps = column.currency ? `style="currency" currency="${column.currency}"` : "";
+            renderCell = `({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} ${currencyProps} minimumFractionDigits={${decimals}} maximumFractionDigits={${decimals}} /> : "";
+            }`;
         } else if (type == "boolean") {
             gridType = "boolean";
             valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;

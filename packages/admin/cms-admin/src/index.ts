@@ -118,6 +118,7 @@ export { MasterMenuRoutes, useRoutePropsFromMasterMenuData } from "./common/Mast
 export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
+export { SignOutButton } from "./common/signOutButton/SignOutButton";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
 export type { CometConfig } from "./config/CometConfigContext";
