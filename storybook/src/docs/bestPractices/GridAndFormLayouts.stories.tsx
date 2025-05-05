@@ -329,12 +329,7 @@ export const SingleGridFullHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid
-                        columns={columns}
-                        rows={rows}
-                        loading={loading}
-                        slots={{ toolbar: GridToolbar }}
-                        showToolbar />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} showToolbar />
                 </StackMainContent>
             </>
         );
@@ -366,13 +361,7 @@ export const SingleGridAutoHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent>
-                    <DataGrid
-                        columns={columns}
-                        rows={rows}
-                        loading={loading}
-                        slots={{ toolbar: GridToolbar }}
-                        autoHeight
-                        showToolbar />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight showToolbar />
                 </StackMainContent>
             </>
         );
@@ -442,12 +431,7 @@ export const GridWithFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        loading={loading}
-                        slots={{ toolbar: GridToolbar }}
-                        showToolbar />
+                    <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} showToolbar />
                 </StackMainContent>
                 <EditDialog title={mode === "add" ? "Add new item" : `${rows.find((row) => row.id === selectedId)?.title}`}>
                     <DialogContent>
@@ -533,12 +517,7 @@ export const GridWithFormOnAPage = {
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
                     <StackMainContent fullHeight>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            loading={loading}
-                            slots={{ toolbar: GridToolbar }}
-                            showToolbar />
+                        <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} showToolbar />
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add">
@@ -651,12 +630,7 @@ export const NestedGridsAndFormsWithTabs = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                loading={loading}
-                                slots={{ toolbar: GridToolbar }}
-                                showToolbar />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} showToolbar />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -769,12 +743,7 @@ export const NestedFormInGridInTabsInGrid = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                loading={loading}
-                                slots={{ toolbar: GridToolbar }}
-                                showToolbar />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} showToolbar />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -834,7 +803,7 @@ export const NestedFormInGridInTabsInGrid = {
 export const GridWithSelectionAndMoreActionsMenu = {
     render: () => {
         const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
-            type: 'include',
+            type: "include",
             ids: new Set([]),
         });
         const { rows, loading } = useData();
@@ -847,7 +816,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                     <FillSpace />
                     <CrudMoreActionsMenu
                         slotProps={{ button: { responsive: true } }}
-                        selectionSize={selectionModel.length}
+                        selectionSize={selectionModel.ids.size}
                         overallActions={[
                             {
                                 label: "Log all items to the console",
@@ -894,7 +863,8 @@ export const GridWithSelectionAndMoreActionsMenu = {
                         checkboxSelection
                         rowSelectionModel={selectionModel}
                         onRowSelectionModelChange={setSelectionModel}
-                        showToolbar />
+                        showToolbar
+                    />
                 </StackMainContent>
             </>
         );
@@ -904,7 +874,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
 export const GridWithSelectionInDialog = {
     render: () => {
         const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
-            type: 'include',
+            type: "include",
             ids: new Set([]),
         });
         const { rows, loading } = useData();
@@ -938,13 +908,13 @@ export const GridWithSelectionInDialog = {
                     </ToolbarActions>
                 </StackToolbar>
                 <StackMainContent>
-                    {selectionModel.length > 0 ? (
+                    {selectionModel.ids.size > 0 ? (
                         <>
                             <Typography variant="h4" gutterBottom>
                                 Selected items
                             </Typography>
 
-                            {selectionModel.map((id) => {
+                            {Array.from(selectionModel.ids).map((id) => {
                                 const row = rows.find((row) => row.id === id);
 
                                 return (
@@ -970,7 +940,8 @@ export const GridWithSelectionInDialog = {
                         autoHeight
                         rowSelectionModel={selectionModel}
                         onRowSelectionModelChange={setSelectionModel}
-                        showToolbar />
+                        showToolbar
+                    />
                 </EditDialog>
             </>
         );

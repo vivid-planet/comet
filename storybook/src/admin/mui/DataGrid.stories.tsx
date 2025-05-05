@@ -44,7 +44,8 @@ export const Default = {
                     slots={{
                         toolbar: ToolbarForGrid,
                     }}
-                    showToolbar />
+                    showToolbar
+                />
             </Box>
         );
     },

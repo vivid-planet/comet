@@ -218,7 +218,8 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                         ),
                                     } as ToolbarProps,
                                 }}
-                                showToolbar />
+                                showToolbar
+                            />
                         </MainContent>
                     </StackPage>
                     <StackPage name="stocksEdit" title={intl.formatMessage({ id: "products.editStocks", defaultMessage: "Edit Stocks" })}>
@@ -297,7 +298,8 @@ export const EditDialogInRouterTabsWithinStack = {
                                             ),
                                         } as ToolbarProps,
                                     }}
-                                    showToolbar />
+                                    showToolbar
+                                />
                             </MainContent>
                         </StackPage>
                         <StackPage name="productEdit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product" })}>
