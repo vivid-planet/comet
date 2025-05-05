@@ -7,6 +7,7 @@ Embeddables
 exif
 GraphQLJSONObject
 imgproxy
+libvips
 Logische
 Mikro
 Mimetypes
@@ -19,3 +20,4 @@ subcomponent
 subpage
 Traefik
 typesafe
+Undeprecate

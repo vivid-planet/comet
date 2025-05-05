@@ -1,5 +1,43 @@
 # @comet/blocks-admin
 
+## 7.19.0
+
+### Patch Changes
+
+-   17b79b581: Undeprecate `category` option in `createCompositeBlock`
+-   Updated dependencies [3544127ad]
+    -   @comet/admin@7.19.0
+    -   @comet/admin-icons@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+-   f496734f8: Prevent the content of `AdminComponentRoot` from being cut off at the top when not rendered inside tabs
+    -   @comet/admin@7.18.0
+    -   @comet/admin-icons@7.18.0
+
+## 7.17.0
+
+### Patch Changes
+
+-   @comet/admin@7.17.0
+-   @comet/admin-icons@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   ed9282b3b: createOneOfBlock: Add support for dynamic display names of child blocks
+
+### Patch Changes
+
+-   9bd499dcd: Remove incorrect clear button from type select in `createOneOfBlock`
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+    -   @comet/admin@7.16.0
+    -   @comet/admin-icons@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes

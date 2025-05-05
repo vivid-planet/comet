@@ -8,5 +8,8 @@ export const breadcrumbsFragment = gql`
             name
             path
         }
+        scope {
+            language
+        }
     }
 `;

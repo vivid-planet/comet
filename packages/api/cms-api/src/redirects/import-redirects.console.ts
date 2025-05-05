@@ -8,6 +8,7 @@ import * as fs from "fs";
 import { Command, Console } from "nestjs-console";
 
 import { PageTreeService } from "../page-tree/page-tree.service";
+import { PageTreeReadApiOptions } from "../page-tree/page-tree-read-api";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
@@ -44,7 +45,11 @@ export class ImportRedirectsConsole {
         let errors = 0;
 
         for (const row of rows) {
-            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"]);
+            const options: PageTreeReadApiOptions = {};
+            if (row["scope"]) {
+                options.scope = row["scope"];
+            }
+            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"], options);
 
             const where: FilterQuery<RedirectInterface> = { source: row.source };
             if (row["scope"]) {

@@ -1,5 +1,86 @@
 # @comet/cms-api
 
+## 7.19.0
+
+### Minor Changes
+
+-   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+-   eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+
+    Previously, the scope wasn't considered when loading the node.
+    This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
+
+    -   @comet/blocks-api@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+-   e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
+
+### Patch Changes
+
+-   @comet/blocks-api@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+-   a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+-   @comet/blocks-api@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes

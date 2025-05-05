@@ -1,5 +1,110 @@
 # @comet/cms-admin
 
+## 7.19.0
+
+### Minor Changes
+
+-   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+-   ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+-   Updated dependencies [3544127ad]
+-   Updated dependencies [17b79b581]
+    -   @comet/admin@7.19.0
+    -   @comet/blocks-admin@7.19.0
+    -   @comet/admin-date-time@7.19.0
+    -   @comet/admin-icons@7.19.0
+    -   @comet/admin-rte@7.19.0
+    -   @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Minor Changes
+
+-   2dc23dd6d: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+-   ec9778450: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+-   0acf80d30: User Permissions: Allow permission-specific content scopes to override by-rule content scopes
+-   Updated dependencies [e6092df34]
+-   Updated dependencies [f496734f8]
+-   Updated dependencies [e6092df34]
+    -   @comet/admin-date-time@7.18.0
+    -   @comet/blocks-admin@7.18.0
+    -   @comet/admin@7.18.0
+    -   @comet/admin-icons@7.18.0
+    -   @comet/admin-rte@7.18.0
+    -   @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+-   4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+-   ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    -   @comet/admin@7.17.0
+    -   @comet/admin-date-time@7.17.0
+    -   @comet/admin-icons@7.17.0
+    -   @comet/admin-rte@7.17.0
+    -   @comet/admin-theme@7.17.0
+    -   @comet/blocks-admin@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+-   ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+-   ea014c5e3: Set the correct icon for the button to confirm page actions
+-   e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+-   Updated dependencies [9bd499dcd]
+-   Updated dependencies [ed9282b3b]
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+-   Updated dependencies [5b7c6b4a7]
+    -   @comet/blocks-admin@7.16.0
+    -   @comet/admin-theme@7.16.0
+    -   @comet/admin@7.16.0
+    -   @comet/admin-date-time@7.16.0
+    -   @comet/admin-icons@7.16.0
+    -   @comet/admin-rte@7.16.0
+
 ## 7.15.0
 
 ### Patch Changes
