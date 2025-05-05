@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
@@ -53,14 +52,15 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             return getDensityHeightValue("standard");
         },
         slots: {
-            quickFilterIcon: Search,
-            quickFilterClearIcon: Clear,
-            filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
-            booleanCellTrueIcon: Check,
-            booleanCellFalseIcon: Close,
-            columnSortedAscendingIcon: ArrowUp,
-            columnSortedDescendingIcon: ArrowDown,
-            columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
+            // as any typing is necessary according to the migration guide: https://mui.com/x/migration/migration-data-grid-v7/#:~:text=The%20icon%20slots%20now%20require%20material%20icons%20to%20be%20passed%20like%20Icon%20as%20any
+            quickFilterIcon: Search as any,
+            quickFilterClearIcon: Clear as any,
+            filterPanelDeleteIcon: ((props: SvgIconProps) => <Delete {...props} fontSize="medium" />) as any,
+            booleanCellTrueIcon: Check as any,
+            booleanCellFalseIcon: Close as any,
+            columnSortedAscendingIcon: ArrowUp as any,
+            columnSortedDescendingIcon: ArrowDown as any,
+            columnMenuIcon: ((props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />) as any,
             panel: DataGridPanel,
             ...component?.defaultProps?.slots,
         },
@@ -72,21 +72,20 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         localeText: {
-            MuiTablePagination: {
-                labelDisplayedRows: ({ from, to, count }) => (
-                    <FormattedMessage
-                        id="dataGrid.pagination.labelDisplayedRows"
-                        defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
-                        values={{
-                            from: <FormattedNumber value={from} />,
-                            to: <FormattedNumber value={to} />,
-                            formattedCount: <FormattedNumber value={count} />,
-                            count,
-                        }}
-                    />
-                ),
-                ...component?.defaultProps?.localeText?.MuiTablePagination,
-            },
+            // TODO: check typing
+            paginationDisplayedRows: ({ from, to, count }) => "todo",
+            // (
+            //     <FormattedMessage
+            //         id="dataGrid.pagination.labelDisplayedRows"
+            //         defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
+            //         values={{
+            //             from: <FormattedNumber value={from} />,
+            //             to: <FormattedNumber value={to} />,
+            //             formattedCount: <FormattedNumber value={count} />,
+            //             count,
+            //         }}
+            //     />
+            // ),
             ...component?.defaultProps?.localeText,
         },
     },
@@ -124,10 +123,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 outline: "none",
             },
         }),
-        pinnedColumns: {
-            backgroundColor: "white",
-            boxShadow: shadows[2],
-        },
         cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
@@ -289,7 +284,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             padding: spacing(2),
             borderTop: `1px solid ${palette.divider}`,
         },
-        // @ts-expect-error This key exists but is missing in the types.
         toolbarQuickFilter: {
             paddingBottom: 0,
             width: 120,
