@@ -20,7 +20,8 @@
         "lint:tsc": "tsc --project .",
         "lint:generated-files-not-modified": "$npm_execpath admin-generator && git diff --exit-code HEAD -- src/**/generated",
         "serve": "node server",
-        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.site-configs -- vite"
+        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
+        "start": "$npm_execpath check-node-version && run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.site-configs -- vite"
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
@@ -118,6 +119,7 @@
         "@types/uuid": "^7.0.0",
         "@types/zen-observable": "^0.8.0",
         "@vitejs/plugin-react-swc": "^3.6.0",
+        "check-node-version": "^4.2.1",
         "chokidar-cli": "^2.0.0",
         "cosmiconfig-toml-loader": "^1.0.0",
         "dotenv-cli": "^4.0.0",
