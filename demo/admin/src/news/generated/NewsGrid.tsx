@@ -210,6 +210,6 @@ export function NewsGrid() {
             slots={{
                 toolbar: NewsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-        />
+            showToolbar />
     );
 }

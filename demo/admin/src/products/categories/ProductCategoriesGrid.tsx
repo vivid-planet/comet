@@ -199,6 +199,6 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
             rowReordering
             onRowOrderChange={handleRowOrderChange}
             hideFooterPagination
-        />
+            showToolbar />
     );
 }

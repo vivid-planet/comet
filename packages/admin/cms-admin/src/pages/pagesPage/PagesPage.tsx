@@ -188,7 +188,7 @@ export function PagesPage({
                                                 <LinearProgress />
                                             ) : (
                                                 /* Placeholder to avoid content jumping when the loading bar appears */
-                                                <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
+                                                (<Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />)
                                             )}
                                             <PageTree
                                                 ref={refPageTree}

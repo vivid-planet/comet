@@ -119,7 +119,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             } as ToolbarProps,
                         }}
                         disableVirtualization
-                    />
+                        showToolbar />
                 </RouterTab>
             </RouterTabs>
         );

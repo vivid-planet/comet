@@ -47,7 +47,10 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         refetchQueries: ["Builds"],
     });
 
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+        type: 'include',
+        ids: new Set([]),
+    });
 
     const rows = data?.buildTemplates ?? [];
 

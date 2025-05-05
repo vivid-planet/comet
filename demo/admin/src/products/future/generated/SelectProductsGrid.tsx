@@ -156,6 +156,6 @@ export function ProductsGrid({ rowSelectionModel, onRowSelectionModelChange }: P
             slots={{
                 toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-        />
+            showToolbar />
     );
 }

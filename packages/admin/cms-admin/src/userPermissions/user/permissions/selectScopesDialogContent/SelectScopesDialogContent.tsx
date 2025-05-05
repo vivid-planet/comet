@@ -109,7 +109,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                                 toolbar: SelectScopesDialogContentGridToolbar,
                             }}
                             initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
-                        />
+                            showToolbar />
                     );
                 }}
             </Field>

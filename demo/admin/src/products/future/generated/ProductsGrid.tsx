@@ -426,6 +426,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             slotProps={{
                 toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
-        />
+            showToolbar />
     );
 }

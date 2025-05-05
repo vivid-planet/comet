@@ -203,6 +203,6 @@ export function ProductCategoriesGrid() {
             rowReordering
             onRowOrderChange={handleRowOrderChange}
             hideFooterPagination
-        />
+            showToolbar />
     );
 }

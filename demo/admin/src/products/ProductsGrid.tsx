@@ -130,7 +130,10 @@ export function ProductsGrid() {
     const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+        type: 'include',
+        ids: new Set([]),
+    });
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -401,7 +404,7 @@ export function ProductsGrid() {
             onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
-        />
+            showToolbar />
     );
 }
 

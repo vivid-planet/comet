@@ -110,7 +110,7 @@ export const EditDialogInRouterTabs = {
                                     ),
                                 } as ToolbarProps,
                             }}
-                        />
+                            showToolbar />
                     </MainContent>
                 </RouterTab>
             </RouterTabs>

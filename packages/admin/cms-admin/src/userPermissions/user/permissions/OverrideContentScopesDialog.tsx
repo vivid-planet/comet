@@ -149,7 +149,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 isRowSelectable={(params) => {
                                                     return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                                                 }}
-                                            />
+                                                showToolbar />
                                         );
                                     }}
                                 </Field>

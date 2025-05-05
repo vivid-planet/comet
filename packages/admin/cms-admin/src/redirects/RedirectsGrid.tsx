@@ -177,7 +177,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 columns={columns}
                 loading={loading}
                 slots={{ toolbar: RedirectsGridToolbar }}
-            />
+                showToolbar />
         </MainContent>
     );
 }
