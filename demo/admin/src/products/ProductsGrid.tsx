@@ -85,7 +85,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
                         label: "Publish",
                         icon: <Online htmlColor={theme.palette.success.main} />,
                         onClick: () => {
-                            for (const id of selectionModel) {
+                            for (const id of selectionModel.ids) {
                                 client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
                                     mutation: updateProductStatusMutation,
                                     variables: { id: id as string, status: "Published" },
@@ -101,7 +101,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
                         label: "Unpublish",
                         icon: <Disabled />,
                         onClick: () => {
-                            for (const id of selectionModel) {
+                            for (const id of selectionModel.ids) {
                                 client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
                                     mutation: updateProductStatusMutation,
                                     variables: { id: id as string, status: "Unpublished" },
@@ -114,7 +114,7 @@ function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarP
                         },
                     },
                 ]}
-                selectionSize={selectionModel.length}
+                selectionSize={selectionModel.ids.size}
             />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
                 <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
@@ -131,7 +131,7 @@ export function ProductsGrid() {
     const intl = useIntl();
     const theme = useTheme();
     const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
-        type: 'include',
+        type: "include",
         ids: new Set([]),
     });
 
@@ -404,7 +404,8 @@ export function ProductsGrid() {
             onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
-            showToolbar />
+            showToolbar
+        />
     );
 }
 

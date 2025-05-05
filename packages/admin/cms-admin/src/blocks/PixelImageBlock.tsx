@@ -3,7 +3,7 @@ import { Field } from "@comet/admin";
 import { Crop, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 

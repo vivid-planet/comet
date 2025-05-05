@@ -2,7 +2,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
