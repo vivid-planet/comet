@@ -127,7 +127,7 @@ export { useContentLanguage } from "./contentLanguage/useContentLanguage";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
 export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";
 export { ContentScopeControls } from "./contentScope/Controls";
-export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValues, UseContentScopeApi } from "./contentScope/Provider";
+export type { ContentScope, ContentScopeProviderProps, ContentScopeValues, UseContentScopeApi } from "./contentScope/Provider";
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
