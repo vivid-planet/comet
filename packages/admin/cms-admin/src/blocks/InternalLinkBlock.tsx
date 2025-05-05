@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
 import { Box, Divider, MenuItem } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
+import { deepClone } from "@mui/x-data-grid/internals";
 import { FormattedMessage } from "react-intl";
 
 import { type InternalLinkBlockData, type InternalLinkBlockInput } from "../blocks.generated";

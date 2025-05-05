@@ -118,7 +118,7 @@ function ProductCategoriesTable() {
             slots={{
                 toolbar: ProductCategoriesTableToolbar,
             }}
-        />
+            showToolbar />
     );
 }
 

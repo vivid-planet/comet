@@ -180,6 +180,6 @@ export function ProductVariantsGrid({ product }: Props) {
             slots={{
                 toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-        />
+            showToolbar />
     );
 }

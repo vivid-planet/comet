@@ -47,7 +47,10 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         refetchQueries: ["Builds"],
     });
 
-    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+        type: "include",
+        ids: new Set([]),
+    });
 
     const rows = data?.buildTemplates ?? [];
 
@@ -92,11 +95,11 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
             <DialogActions>
                 <CancelButton onClick={() => onClose()} />
                 <Button
-                    disabled={loading || selectionModel.length < 1}
+                    disabled={loading || selectionModel.ids.size < 1}
                     startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {
                         await startBuilds({
-                            variables: { input: { names: rows.filter((row) => selectionModel.includes(row.id)).map((row) => row.name) } },
+                            variables: { input: { names: rows.filter((row) => selectionModel.ids.has(row.id)).map((row) => row.name) } },
                         });
                         onClose();
                     }}

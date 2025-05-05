@@ -218,6 +218,7 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                         ),
                                     } as ToolbarProps,
                                 }}
+                                showToolbar
                             />
                         </MainContent>
                     </StackPage>
@@ -297,6 +298,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                             ),
                                         } as ToolbarProps,
                                     }}
+                                    showToolbar
                                 />
                             </MainContent>
                         </StackPage>
@@ -319,7 +321,6 @@ export const EditDialogInRouterTabsWithinStack = {
                         </StackPage>
                     </StackSwitch>
                 </Stack>
-
                 <AddProductDialog dialogApiRef={editDialogApi} />
             </>
         );

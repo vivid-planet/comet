@@ -140,7 +140,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 checkboxSelection={!disabled}
                                                 rowSelectionModel={props.input.value}
                                                 onRowSelectionModelChange={(selectionModel) => {
-                                                    props.input.onChange(selectionModel.map((id) => String(id)));
+                                                    props.input.onChange(Array.from(selectionModel.ids).map((id) => String(id)));
                                                 }}
                                                 slots={{
                                                     toolbar: OverrideContentScopesDialogGridToolbar,
@@ -149,6 +149,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 isRowSelectable={(params) => {
                                                     return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                                                 }}
+                                                showToolbar
                                             />
                                         );
                                     }}

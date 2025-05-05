@@ -175,7 +175,7 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar,
             }}
-        />
+            showToolbar />
     );
 }
 

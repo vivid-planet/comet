@@ -66,9 +66,9 @@ export const NewsListBlock: BlockInterface<NewsListBlockData, State, NewsListBlo
                     loading={loading}
                     checkboxSelection
                     keepNonExistentRowsSelected
-                    rowSelectionModel={state.ids}
+                    rowSelectionModel={{ type: "include", ids: new Set(state.ids) }}
                     onRowSelectionModelChange={(newSelection) => {
-                        updateState({ ids: newSelection as string[] });
+                        updateState({ ids: Array.from(newSelection.ids).map((id) => String(id)) });
                     }}
                 />
             </Box>

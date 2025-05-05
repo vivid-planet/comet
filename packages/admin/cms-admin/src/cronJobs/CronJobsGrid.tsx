@@ -158,6 +158,7 @@ export function CronJobsGrid() {
                 ]}
                 disableColumnSelector
                 slots={{ toolbar: CronJobsToolbar }}
+                showToolbar
             />
             <Dialog open={dialogOpen} onClose={closeDialog}>
                 <DialogTitle>

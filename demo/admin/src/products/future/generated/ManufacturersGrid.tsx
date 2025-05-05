@@ -343,6 +343,6 @@ export function ManufacturersGrid() {
             slots={{
                 toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
-        />
+            showToolbar />
     );
 }

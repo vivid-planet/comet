@@ -187,6 +187,7 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                         </GridToolbar>
                     ),
                 }}
+                showToolbar
             />
             {overrideContentScopesId && (
                 <OverrideContentScopesDialog

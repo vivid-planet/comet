@@ -123,7 +123,7 @@ function ProductTagsTable() {
                 slots={{
                     toolbar: ProductTagsTableToolbar,
                 }}
-            />
+                showToolbar />
         </Box>
     );
 }
