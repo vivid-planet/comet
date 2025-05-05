@@ -1,5 +1,6 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
+import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
@@ -38,7 +39,7 @@ export class WarningResolver {
 
         for (const scope of scopes) {
             if (!allowedScopesForUser?.find((allowedScope) => isEqual(allowedScope, scope))) {
-                throw new Error("Scopes were passed that the user does not have permission to");
+                throw new UnauthorizedException("Scopes were passed that the user does not have permission to");
             }
         }
 
