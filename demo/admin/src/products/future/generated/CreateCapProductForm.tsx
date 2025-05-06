@@ -70,7 +70,7 @@ export function CreateCapProductForm({ type }: FormProps) {
             if (id) {
                 setTimeout(() => {
                     stackSwitchApi.activatePage(`edit`, id);
-                });
+                }, 100);
             }
         }
     };

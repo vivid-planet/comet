@@ -94,7 +94,7 @@ export function IdFieldInForm({ id, type, description, slug }: FormProps) {
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
+                    }, 100);
                 }
             }
         }

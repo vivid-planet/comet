@@ -458,7 +458,7 @@ export function generateForm(
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage(\`edit\`, id);
-                        });
+                        }, 100);
                     }
                 }
                 `
