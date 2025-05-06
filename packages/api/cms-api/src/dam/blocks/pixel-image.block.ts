@@ -172,7 +172,7 @@ class Meta extends AnnotationBlockMeta {
             {
                 name: "urlTemplate",
                 kind: BlockMetaFieldKind.String,
-                nullable: false,
+                nullable: true,
             },
         );
         return ret;
