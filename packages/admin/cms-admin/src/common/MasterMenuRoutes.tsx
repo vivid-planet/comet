@@ -7,38 +7,45 @@ import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItem, parent?: MasterMenuItem): boolean => {
+    const checkPermission = (item: MasterMenuItem, ancestors: MasterMenuItem[]): boolean => {
         if (item.requiredPermission) {
             return isAllowed(item.requiredPermission);
-        } else if (parent?.requiredPermission) {
-            return isAllowed(parent.requiredPermission);
-        } else {
-            return true;
         }
+
+        for (const ancestor of ancestors) {
+            if (ancestor.requiredPermission) {
+                return isAllowed(ancestor.requiredPermission);
+            }
+        }
+
+        return true;
     };
 
     const flat = (
         routes: RouteProps[],
         item: MasterMenuItem & { icon?: ReactNode },
-        parent?: MasterMenuItem & { icon?: ReactNode },
+        ancestors: Array<MasterMenuItem & { icon?: ReactNode }>,
     ): RouteProps[] => {
         if (item.type === "externalLink") {
             return routes;
         }
         if (item.type === "group") {
-            return routes.concat(item.items.reduce((routes, child) => flat(routes, child, item), [] as RouteProps[]));
+            return routes.concat(item.items.reduce((routes, child) => flat(routes, child, [...ancestors, item]), [] as RouteProps[]));
         }
-        if (item.route && checkPermission(item, parent)) {
+        if (item.route && checkPermission(item, ancestors)) {
             return routes.concat(item.route);
         }
         if (item.type === "collapsible" && !!item.items?.length) {
             return routes.concat(
-                (item.items as Array<MasterMenuItem & { icon?: ReactNode }>).reduce((routes, child) => flat(routes, child, item), [] as RouteProps[]),
+                (item.items as Array<MasterMenuItem & { icon?: ReactNode }>).reduce(
+                    (routes, child) => flat(routes, child, [...ancestors, item]),
+                    [] as RouteProps[],
+                ),
             );
         }
         return routes;
     };
-    return items.reduce((routes, item) => flat(routes, item), [] as RouteProps[]);
+    return items.reduce((routes, item) => flat(routes, item, []), [] as RouteProps[]);
 }
 
 export interface MasterMenuRoutesProps {
