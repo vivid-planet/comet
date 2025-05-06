@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { type BlockDependency, type ReplaceDependencyObject } from "../../../blocks/types";
-import { type ContentScopeInterface } from "../../../contentScope/Provider";
+import { type ContentScope } from "../../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { type GQLDamFile } from "../../../graphql.generated";
 import { createHttpClient } from "../../../http/createHttpClient";
@@ -68,7 +68,7 @@ export interface SendPagesOptions {
 
 interface SendPagesDependencies {
     client: ApolloClient<unknown>;
-    scope: ContentScopeInterface;
+    scope: ContentScope;
     documentTypes: PageTreeConfig["documentTypes"];
     apiUrl: string;
     damScope: Record<string, unknown>;

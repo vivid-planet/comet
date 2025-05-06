@@ -2,14 +2,14 @@ import { styled } from "@mui/material/styles";
 import { type ReactNode } from "react";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { type ContentScopeInterface, useContentScope } from "../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../contentScope/Provider";
 import { useDamConfig } from "./config/damConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
 import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
 type Props = {
-    renderContentScopeIndicator?: (scope: ContentScopeInterface) => ReactNode;
+    renderContentScopeIndicator?: (scope: ContentScope) => ReactNode;
     /**
      * @deprecated Use `additionalToolbarItems` option in `DamConfigProvider` instead
      */

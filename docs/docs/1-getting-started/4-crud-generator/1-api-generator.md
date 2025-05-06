@@ -86,6 +86,28 @@ Now you can run the generator with `npm run api-generator`. The generated files 
 Although this is generated code, it should still be checked into the repository. This enables a quick start of the API.
 :::
 
+### Watch Mode
+
+The api-generator script also supports the `-w` or `--watch` flag. This will watch for changes in the .entity.ts files and regenerate the corresponding files.
+
+```json
+{
+  ...
+  "scripts": {
+    "api-generator:watch": "rimraf 'src/*/generated' && comet-api-generator --watch",
+    ...
+  }
+}
+```
+
+### Generate only for specific entities
+
+If you want to generate only for specific entities, you can pass a file path to an .entity.ts file with the `-f` or `--file` flag
+
+```sh
+npm exec comet-api-generator -f src/products/entities/product.entity.ts
+```
+
 ## Register generated resolvers and services
 
 The resolvers and services created by the API Generator must be registered in the corresponding module:

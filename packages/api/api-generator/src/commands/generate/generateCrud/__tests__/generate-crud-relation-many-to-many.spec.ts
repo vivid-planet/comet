@@ -79,22 +79,6 @@ describe("GenerateCrud Relation n:m with additional column", () => {
         orm.close();
     });
 
-    it("should inject 2 nested deep repository", async () => {
-        const source = parseSource(file.content);
-        const classes = source.getClasses();
-        expect(classes.length).toBe(1);
-
-        const cls = source.getClassOrThrow("ProductResolver");
-        const structure = cls.getStructure();
-        if (!structure.ctors) throw new Error("Constructor not found");
-
-        const ctor = structure.ctors[0];
-        const params = ctor.parameters?.map((param) => {
-            return param.name;
-        });
-        expect(params).toContain("categoryRepository");
-    });
-
     it("should call loadItems on collection", async () => {
         const source = parseSource(file.content);
         const classes = source.getClasses();

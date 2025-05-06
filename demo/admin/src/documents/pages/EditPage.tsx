@@ -13,10 +13,10 @@ import {
     PageName,
     useBlockContext,
     useBlockPreview,
+    useContentScope,
     useSiteConfig,
 } from "@comet/cms-admin";
 import { IconButton, Stack } from "@mui/material";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 

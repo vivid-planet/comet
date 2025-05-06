@@ -423,14 +423,14 @@ export function ProductForm({ id }: FormProps) {
                                 name="priceList"
                                 label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
                                 variant="horizontal"
-                                maxFileSize={1024 * 1024 * 4}
+                                maxFileSize={4194304}
                             />
                             <FileUploadField
                                 name="datasheets"
                                 label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
                                 variant="horizontal"
                                 multiple
-                                maxFileSize={1024 * 1024 * 4}
+                                maxFileSize={4194304}
                             />
                             <DateTimeField
                                 variant="horizontal"

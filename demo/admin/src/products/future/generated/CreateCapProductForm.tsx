@@ -56,6 +56,7 @@ export function CreateCapProductForm({ type }: FormProps) {
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         const output = {
             ...formValues,
+            description: formValues.description ?? "",
             category: formValues.category ? formValues.category.id : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
@@ -103,7 +104,6 @@ export function CreateCapProductForm({ type }: FormProps) {
                     />
 
                     <TextAreaField
-                        required
                         variant="horizontal"
                         fullWidth
                         name="description"

@@ -136,6 +136,12 @@ module.exports = {
             group: ["demo-api", "demo"],
         },
         {
+            name: "demo-api-generator",
+            script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
+            group: ["demo-api", "demo"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "packages/api/api-generator/lib/apiGenerator.js"],
+        },
+        {
             name: "demo-api",
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
