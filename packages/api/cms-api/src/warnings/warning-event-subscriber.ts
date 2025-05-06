@@ -6,6 +6,8 @@ import { ModuleRef, Reflector } from "@nestjs/core";
 import { BlockWarning, BlockWarningsServiceInterface } from "src/blocks/block";
 
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
+import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { WarningData } from "./dto/warning-data";
 import { WarningService } from "./warning.service";
@@ -49,9 +51,26 @@ export class WarningEventSubscriber implements EventSubscriber {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private async handleUpdateAndCreate(args: EventArgs<any>): Promise<void> {
         const entity = args.meta.class;
+        const definedProperties = args.meta.definedProperties;
 
         if (entity) {
             const keys = Reflect.getMetadata(`keys:rootBlock`, entity.prototype) || [];
+            let scope: ContentScope | undefined = "scope" in definedProperties ? definedProperties.scope : undefined;
+
+            if (!scope) {
+                const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [entity]);
+
+                if (scoped) {
+                    const service = this.moduleRef.get(scoped, { strict: false });
+                    const scopedEntityScope = await service.getEntityScope(args.entity);
+                    if (Array.isArray(scopedEntityScope)) {
+                        throw new Error("Multiple scopes are not supported for warnings");
+                    } else {
+                        scope = scopedEntityScope;
+                    }
+                }
+            }
+
             for (const key of keys) {
                 const block = Reflect.getMetadata(`data:rootBlock`, entity.prototype, key);
 
@@ -86,6 +105,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                         warnings,
                         type: "Block",
                         sourceInfo,
+                        scope,
                     });
                     await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Block", sourceInfo });
                 }

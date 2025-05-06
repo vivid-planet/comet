@@ -5,6 +5,7 @@ import {
     type GridColDef,
     GridFilterButton,
     MainContent,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     ToolbarItem,
@@ -14,7 +15,9 @@ import {
 } from "@comet/admin";
 import { ArrowRight, OpenNewTab, WarningSolid } from "@comet/admin-icons";
 import { Chip, IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { capitalCase } from "change-case";
+import isEqual from "lodash.isequal";
 import { type ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
@@ -41,12 +44,13 @@ const warningsFragment = gql`
             targetId
             jsonPath
         }
+        scope
     }
 `;
 
 const warningsQuery = gql`
-    query WarningsGrid($offset: Int, $limit: Int, $sort: [WarningSort!], $search: String, $filter: WarningFilter) {
-        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+    query WarningsGrid($offset: Int, $limit: Int, $sort: [WarningSort!], $search: String, $filter: WarningFilter, $scopes: [JSONObject!]!) {
+        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, scopes: $scopes) {
             nodes {
                 ...WarningsList
             }
@@ -84,6 +88,20 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     const entityDependencyMap = useDependenciesConfig();
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
+    const { values: scopeValues, createUrl } = useContentScope();
+
+    const scopes = scopeValues.map((item) => Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value])));
+    const scopeValueOptions = scopeValues.map((item) => {
+        const scopeNameArray = Object.entries(item).map(([key, value]) => {
+            return value.label ?? capitalCase(value.value);
+        });
+
+        const scope = Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value]));
+        return {
+            value: JSON.stringify(scope),
+            label: scopeNameArray.join(" / "),
+        };
+    });
 
     const columns: GridColDef<GQLWarningsListFragment>[] = [
         {
@@ -139,6 +157,32 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             },
         },
         {
+            field: "scope",
+            headerName: intl.formatMessage({ id: "warning.scope", defaultMessage: "Scope" }),
+            type: "singleSelect",
+            sortable: false,
+            valueOptions: scopeValueOptions,
+            valueFormatter: (value) => {
+                if (typeof value === "object" && value !== null) {
+                    // Check if there is a scope value in the options, if so, return the label
+                    const scope = scopeValueOptions.find((scope) => {
+                        return isEqual(JSON.parse(scope.value), value);
+                    });
+                    if (scope) {
+                        return scope.label;
+                    }
+
+                    // Otherwise if it's still an object, format it with capitalCase
+                    // This might be the case if the scope is only partially defined (for a scope with domain/language, only domain is defined)
+                    const objectValues = Object.values(value);
+                    const formattedValues = objectValues.map((value) => (typeof value === "string" ? capitalCase(value) : value)).join(" / ");
+                    return formattedValues;
+                }
+
+                return intl.formatMessage(messages.globalContentScope);
+            },
+        },
+        {
             field: "status",
             headerName: intl.formatMessage({ id: "warning.status", defaultMessage: "Status" }),
             type: "singleSelect",
@@ -153,6 +197,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
             field: "actions",
             headerName: "",
             sortable: false,
+            filterable: false,
             renderCell: ({ row }) => {
                 const dependencyObject = entityDependencyMap[row.sourceInfo.rootEntityName] as DependencyInterface | undefined;
 
@@ -174,7 +219,9 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
                         apolloClient,
                         id: row.sourceInfo.targetId,
                     });
-                    return contentScope.match.url + path;
+
+                    const scopeUrl = row.scope ? createUrl({ ...contentScope.scope, ...row.scope }) : contentScope.match.url;
+                    return scopeUrl + path;
                 };
 
                 return (
@@ -202,10 +249,34 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
         },
     ];
 
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    function gridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel) {
+        // Create a custom filter model by transforming the filterModel's items
+        const customFilterModel = {
+            ...filterModel,
+            items:
+                filterModel?.items.map((item) => {
+                    if (item.field === "scope") {
+                        if (typeof item.value === "string") {
+                            return { ...item, value: JSON.parse(item.value) };
+                        }
+
+                        if (typeof item.value === "object" && Array.isArray(item.value)) {
+                            return { ...item, value: item.value.map((value) => JSON.parse(value)) };
+                        }
+                    }
+
+                    return item;
+                }) ?? [],
+        };
+
+        return muiGridFilterToGql(columns, customFilterModel);
+    }
+
+    const { filter: gqlFilter, search: gqlSearch } = gridFilterToGql(columns, dataGridProps.filterModel);
 
     const { data, loading, error } = useQuery<GQLWarningsGridQuery, GQLWarningsGridQueryVariables>(warningsQuery, {
         variables: {
+            scopes,
             filter: gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,

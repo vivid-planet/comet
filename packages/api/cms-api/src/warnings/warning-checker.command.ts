@@ -8,6 +8,8 @@ import { Command, CommandRunner } from "nest-commander";
 import { Block, BlockData, BlockWarning, BlockWarningsServiceInterface } from "../blocks/block";
 import { FlatBlocks } from "../blocks/flat-blocks/flat-blocks";
 import { DiscoverService } from "../dependencies/discover.service";
+import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { CreateWarningsFunction, CreateWarningsMeta, CreateWarningsServiceInterface } from "./decorators/create-warnings.decorator";
 import { Warning } from "./entities/warning.entity";
 import { WarningService } from "./warning.service";
@@ -16,6 +18,7 @@ interface RootBlockEntityData {
     primaryKey: string;
     tableName: string;
     className: string;
+    hasScope: boolean;
     rootBlockData: Array<{ block: Block; column: string }>;
 }
 
@@ -47,14 +50,17 @@ export class WarningCheckerCommand extends CommandRunner {
 
         // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
         for (const data of this.groupRootBlockDataByEntity()) {
-            const { tableName, className, rootBlockData } = data;
+            const { tableName, className, rootBlockData, hasScope } = data;
 
             const queryBuilderLimit = 100;
             const baseQueryBuilder = this.entityManager.createQueryBuilder(className);
-            baseQueryBuilder
-                .select([`${data.primaryKey} as id`, ...rootBlockData.map(({ column }) => column)])
-                .from(tableName)
-                .limit(queryBuilderLimit);
+
+            const selectFields = [`${data.primaryKey} as id`, ...rootBlockData.map(({ column }) => column)];
+            if (hasScope) {
+                selectFields.push("scope");
+            }
+
+            baseQueryBuilder.select(selectFields).from(tableName).limit(queryBuilderLimit);
             let rootBlocks: RootBlockData[] = [];
             let offset = 0;
 
@@ -62,9 +68,26 @@ export class WarningCheckerCommand extends CommandRunner {
                 const queryBuilder = baseQueryBuilder.clone();
                 queryBuilder.offset(offset);
                 rootBlocks = (await queryBuilder.getResult()) as RootBlockData[];
+
                 for (const { column, block } of rootBlockData) {
                     for (const rootBlock of rootBlocks) {
+                        let scope: ContentScope | undefined = hasScope ? rootBlock["scope"] : undefined;
                         const blockData = rootBlock[column] as BlockData;
+
+                        if (!scope) {
+                            const entity = this.orm.getMetadata().get(className).class;
+                            const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [entity]);
+
+                            if (scoped) {
+                                const service = this.moduleRef.get(scoped, { strict: false });
+                                const scopedEntityScope = await service.getEntityScope(rootBlock);
+                                if (Array.isArray(scopedEntityScope)) {
+                                    throw new Error("Multiple scopes are not supported for warnings");
+                                } else {
+                                    scope = scopedEntityScope;
+                                }
+                            }
+                        }
 
                         const flatBlocks = new FlatBlocks(blockData, {
                             name: block.name,
@@ -87,6 +110,7 @@ export class WarningCheckerCommand extends CommandRunner {
                             this.warningService.saveWarnings({
                                 warnings,
                                 type: "Block",
+                                scope,
                                 sourceInfo: {
                                     rootEntityName: tableName,
                                     rootColumnName: column,
@@ -123,7 +147,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
                     if (service.bulkCreateWarnings) {
                         const warningGenerator = service.bulkCreateWarnings();
-                        for await (const { warnings, targetId } of warningGenerator) {
+                        for await (const { warnings, targetId, scope } of warningGenerator) {
                             for (const warning of warnings) {
                                 await this.warningService.saveWarnings({
                                     warnings: await service.createWarnings(warning),
@@ -133,6 +157,7 @@ export class WarningCheckerCommand extends CommandRunner {
                                         rootPrimaryKey: entityMetadata.primaryKeys[0],
                                         targetId,
                                     },
+                                    scope,
                                 });
                             }
                         }
@@ -187,6 +212,7 @@ export class WarningCheckerCommand extends CommandRunner {
                         rootPrimaryKey,
                         targetId: row[rootPrimaryKey],
                     },
+                    scope: row.scope,
                 });
             }
         } while (rows.length > 0);
@@ -209,7 +235,7 @@ export class WarningCheckerCommand extends CommandRunner {
         const rootBlockEntityData = new Map<string, RootBlockEntityData>();
 
         for (const {
-            metadata: { tableName, className, primaryKeys },
+            metadata: { tableName, className, primaryKeys, definedProperties },
             block,
             column,
         } of this.discoverService.discoverRootBlocks()) {
@@ -219,6 +245,7 @@ export class WarningCheckerCommand extends CommandRunner {
                 rootBlockEntityData.set(key, {
                     tableName,
                     className,
+                    hasScope: "scope" in definedProperties,
                     rootBlockData: [],
                     primaryKey: primaryKeys[0],
                 });

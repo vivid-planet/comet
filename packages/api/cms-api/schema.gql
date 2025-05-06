@@ -217,6 +217,7 @@ type Warning {
   severity: WarningSeverity!
   sourceInfo: WarningSourceInfo!
   status: WarningStatus!
+  scope: JSONObject
 }
 
 enum WarningSeverity {
@@ -430,7 +431,7 @@ type Query {
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
   warning(id: ID!): Warning!
-  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input RedirectScopeInput {
@@ -571,6 +572,7 @@ input WarningFilter {
   type: StringFilter
   severity: WarningSeverityEnumFilter
   status: WarningStatusEnumFilter
+  scope: ScopeFilter
   and: [WarningFilter!]
   or: [WarningFilter!]
 }
@@ -585,6 +587,12 @@ input WarningStatusEnumFilter {
   isAnyOf: [WarningStatus!]
   equal: WarningStatus
   notEqual: WarningStatus
+}
+
+input ScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
 }
 
 input WarningSort {
