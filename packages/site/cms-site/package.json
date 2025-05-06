@@ -13,8 +13,8 @@
         "lib/*"
     ],
     "scripts": {
-        "build:vite": "vite build",
-        "build": "$npm_execpath run clean && npm run generate-block-types && tsc --project tsconfig.build.json",
+        "build": "$npm_execpath run clean && npm run generate-block-types && vite build",
+        "build:old": "$npm_execpath run clean && npm run generate-block-types && tsc --project tsconfig.build.json",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
         "dev": "$npm_execpath generate-block-types && tsc --watch --preserveWatchOutput --project tsconfig.build.json",
         "generate-block-types": "comet generate-block-types",

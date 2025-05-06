@@ -7,9 +7,9 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
     // cssInjectedByJsPlugin injects the css in css modules into the js files -> no extra css file import necessary
     // dts generates the types for the library
-    plugins: [react(), cssInjectedByJsPlugin(), dts()],
+    plugins: [react(), cssInjectedByJsPlugin({ relativeCSSInjection: true }), dts()],
     build: {
-        cssCodeSplit: false,
+        cssCodeSplit: true,
         outDir: "lib",
         lib: {
             entry: "./src/index.ts",
