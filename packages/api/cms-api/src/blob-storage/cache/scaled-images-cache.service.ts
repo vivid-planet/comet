@@ -2,16 +2,16 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import hasha from "hasha";
 import { sep } from "path";
 
-import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
-import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
-import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
+import { BlobStorageBackendService } from "../backends/blob-storage-backend.service";
+import { BlobStorageConfig } from "../blob-storage.config";
+import { BLOB_STORAGE_CONFIG } from "../blob-storage.constants";
+import { createHashedPath } from "../utils/create-hashed-path.util";
 import { FileCache } from "./dto/file-cache.interface";
 
 @Injectable()
 export class ScaledImagesCacheService {
     constructor(
-        @Inject(DAM_CONFIG) private readonly config: DamConfig,
+        @Inject(BLOB_STORAGE_CONFIG) private readonly config: BlobStorageConfig,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
     ) {}
 

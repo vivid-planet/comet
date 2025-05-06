@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { type RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { type ExternalLinkBlockData } from "../../blocks.generated";
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
@@ -21,7 +21,7 @@ import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLin
 
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
-    resolvePath?: (path: string, scope: ContentScopeInterface) => string;
+    resolvePath?: (path: string, scope: ContentScope) => string;
     logo?: ReactNode;
 }
 
@@ -143,7 +143,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
             <IFrameViewer device={device} initialPageUrl={initialPageUrl} />
             <ActionsContainer>
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
-                    <Grid item>
+                    <Grid>
                         <SiteInformation>
                             <LogoWrapper>
                                 {logo}
@@ -170,10 +170,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                             </SiteLinkWrapper>
                         </SiteInformation>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <DeviceToggle device={device} onChange={handleDeviceChange} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
                     </Grid>
                 </Grid>

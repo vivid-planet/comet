@@ -1,9 +1,8 @@
 import { gql } from "@apollo/client";
 import { MainContent, StackLink, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useTableQuery } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { ContentScopeIndicator, useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage } from "react-intl";
 
 import { type GQLMainMenuQuery, type GQLMainMenuQueryVariables } from "./MainMenuItems.generated";

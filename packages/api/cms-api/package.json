@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "8.0.0-beta.3",
+    "version": "8.0.0-beta.4",
     "repository": {
         "directory": "packages/api/cms-api",
         "type": "git",
@@ -29,7 +29,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.758.0",
+        "@aws-sdk/client-s3": "^3.787.0",
         "@azure-rest/ai-translation-text": "^1.0.1",
         "@azure/storage-blob": "^12.26.0",
         "@fast-csv/parse": "^4.3.6",
@@ -67,7 +67,7 @@
         "uuid-by-string": "^4.0.0"
     },
     "devDependencies": {
-        "@aws-sdk/types": "^3.734.0",
+        "@aws-sdk/types": "^3.775.0",
         "@comet/eslint-config": "workspace:*",
         "@golevelup/ts-jest": "^0.6.2",
         "@kubernetes/client-node": "^1.0.0",
@@ -75,12 +75,12 @@
         "@mikro-orm/migrations": "^6.4.10",
         "@mikro-orm/nestjs": "^6.1.1",
         "@mikro-orm/postgresql": "^6.4.10",
-        "@nestjs/common": "^11.0.12",
-        "@nestjs/core": "^11.0.12",
-        "@nestjs/graphql": "^13.0.3",
+        "@nestjs/common": "^11.0.19",
+        "@nestjs/core": "^11.0.19",
+        "@nestjs/graphql": "^13.1.0",
         "@nestjs/jwt": "^11.0.0",
-        "@nestjs/platform-express": "^11.0.12",
-        "@nestjs/testing": "^11.0.12",
+        "@nestjs/platform-express": "^11.0.19",
+        "@nestjs/testing": "^11.0.19",
         "@sentry/node": "^9.5.0",
         "@types/draft-js": "^0.11.18",
         "@types/express": "^5.0.1",
@@ -90,7 +90,7 @@
         "@types/mime": "^2.0.3",
         "@types/mime-db": "^1.43.5",
         "@types/multer": "^1.4.12",
-        "@types/node": "^22.13.10",
+        "@types/node": "^22.14.0",
         "@types/probe-image-size": "^7.2.5",
         "@types/request-ip": "^0.0.41",
         "chokidar-cli": "^3.0.0",
@@ -111,7 +111,7 @@
         "typescript": "^5.7.3"
     },
     "peerDependencies": {
-        "@kubernetes/client-node": ">=0.18.0",
+        "@kubernetes/client-node": "^1.0.0",
         "@mikro-orm/core": "^6.0.0",
         "@mikro-orm/migrations": "^6.0.0",
         "@mikro-orm/nestjs": "^6.0.0",

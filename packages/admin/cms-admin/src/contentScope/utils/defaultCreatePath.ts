@@ -13,12 +13,12 @@ export function defaultCreatePath(values: ContentScopeValues) {
 
     groupObjectsIntoArrays(values).forEach((value) => {
         const dimensionValues: { [dimension: string]: Set<string> } = {};
-        value.forEach((innerValue: { [x: string]: { value: string } }) => {
-            Object.keys(innerValue).forEach((dimension) => {
+        value.forEach((innerValue: { scope: { [x: string]: string } }) => {
+            Object.keys(innerValue.scope).forEach((dimension) => {
                 if (!dimensionValues[dimension]) {
                     dimensionValues[dimension] = new Set();
                 }
-                dimensionValues[dimension].add(innerValue[dimension].value);
+                dimensionValues[dimension].add(innerValue.scope[dimension]);
             });
         });
         const path = createPathFromDimensionValues(dimensionValues);

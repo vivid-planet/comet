@@ -22,8 +22,8 @@ export class AlternativeAddress {
 
     @Field()
     @Property()
-    @IsNumber()
-    zip: number;
+    @IsString()
+    zip: string;
 
     @Field()
     @Property()
@@ -59,8 +59,8 @@ export class AlternativeAddressAsEmbeddable {
 
     @Field()
     @Property()
-    @IsNumber()
-    zip: number;
+    @IsString()
+    zip: string;
 
     @Field()
     @Property()

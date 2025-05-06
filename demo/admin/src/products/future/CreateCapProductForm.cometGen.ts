@@ -17,7 +17,7 @@ export default defineConfig<GQLProduct>({
             required: true, // default is inferred from gql schema
             validate: validateTitle,
         },
-        { type: "text", name: "slug" },
+        { type: "text", name: "slug", required: true },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "boolean", name: "inStock" },

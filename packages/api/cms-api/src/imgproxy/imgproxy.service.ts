@@ -2,15 +2,14 @@ import { Inject, Injectable } from "@nestjs/common";
 import base64url from "base64url";
 import { createHmac } from "crypto";
 
-import { IMGPROXY_CONFIG } from "../dam.constants";
 import { ImgproxyBuilder } from "./imgproxy.builder";
+import { IMGPROXY_CONFIG } from "./imgproxy.constants";
 
 export interface ImgproxyConfig {
     url: string;
     salt: string;
     key: string;
     quality: number;
-    maxSrcResolution: number;
 }
 
 @Injectable()

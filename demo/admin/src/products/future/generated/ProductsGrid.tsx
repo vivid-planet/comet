@@ -67,6 +67,9 @@ const productsFragment = gql`
         manufacturer {
             name
         }
+        tags {
+            title
+        }
     }
 `;
 
@@ -236,6 +239,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 </>
             ),
             type: "number",
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? (
+                    <FormattedNumber value={value} style="currency" currency="EUR" minimumFractionDigits={2} maximumFractionDigits={2} />
+                ) : (
+                    ""
+                );
+            },
             flex: 1,
             visible: theme.breakpoints.up("md"),
             minWidth: 150,
@@ -316,6 +326,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "tags",
+            headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
+            sortable: false,
+            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
             flex: 1,
             minWidth: 150,
         },

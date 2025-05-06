@@ -24,8 +24,8 @@ import { type ComponentType } from "react";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
+import { parseConfig } from "./parseConfig";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
-import { configFromSourceFile, morphTsSource } from "./utils/tsMorphHelper";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
@@ -123,8 +123,6 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: (FormFieldConfig<T> | FormLayoutConfig<T> | ComponentFormFieldConfig)[];
 };
 
-type TabsConfig<T extends { __typename?: string }> = { type: "tabs"; tabs: { name: string; content: GeneratorConfig<T> }[] };
-
 type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
@@ -139,7 +137,7 @@ export type StaticSelectLabelCellContent = {
 
 export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "text"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
-    | { type: "number"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | { type: "number"; currency?: string; decimals?: number; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "boolean"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "date"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
@@ -151,7 +149,7 @@ export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentTy
 export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     type: "virtual";
     name: string;
-    queryFields?: UsableFields<T>[];
+    queryFields?: UsableFields<T, true>[];
     renderCell: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
 } & Pick<GridColDef, "sortBy"> &
     BaseColumnConfig;
@@ -182,9 +180,13 @@ export type GridConfig<T extends { __typename?: string }> = {
     newEntryText?: string;
     rowActionProp?: boolean;
     selectionProps?: "multiSelect" | "singleSelect";
+    rowReordering?: {
+        enabled: boolean;
+        dragPreviewField?: UsableFields<T>;
+    };
 };
 
-export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T> | TabsConfig<T>;
+export type GeneratorConfig<T extends { __typename?: string }> = FormConfig<T> | GridConfig<T>;
 
 export function defineConfig<T extends { __typename?: string }>(config: GeneratorConfig<T>) {
     return config;
@@ -212,14 +214,13 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
 
         console.log(`generating ${file}`);
 
-        const config = configFromSourceFile(morphTsSource(file));
-        const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
-        if (!exportName) throw new Error("Can not determine exportName");
-
-        //const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
+        const config = await parseConfig(file);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.tsx?$/, ""))}.tsx`;
         await fs.rm(codeOuputFilename, { force: true });
+
+        const exportName = file.match(/([^/]+)\.cometGen\.tsx?$/)?.[1];
+        if (!exportName) throw new Error("Can not determine exportName");
 
         let generated: GeneratorReturn;
         if (config.type == "form") {
@@ -227,7 +228,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
         } else if (config.type == "grid") {
             generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
         } else {
-            throw new Error(`Unknown config type: ${config.type}`);
+            throw new Error(`Unknown config type`);
         }
         outputCode += generated.code;
         for (const queryName in generated.gqlDocuments) {
