@@ -42,7 +42,7 @@ export class ProductVariantResolver {
         @Args() { product, search, filter, sort, offset, limit }: ProductVariantsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProductVariants> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getRepository<ProductVariant>(ProductVariant));
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(ProductVariant));
 
         where.product = product;
 

@@ -1004,7 +1004,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
-                    ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.entityManager.getRepository<${metadata.className}>(${metadata.className}));`
+                    ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.entityManager.getMetadata(${metadata.className}));`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${scopeProp ? `where.scope = scope;` : ""}
