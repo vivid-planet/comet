@@ -383,6 +383,12 @@ export function generateGrid(
             gridColumnType = "...dataGridDateColumn,";
         } else if (type == "number") {
             gridType = "number";
+            const defaultDecimals = column.currency ? 2 : 0;
+            const decimals = typeof column.decimals === "number" ? column.decimals : defaultDecimals;
+            const currencyProps = column.currency ? `style="currency" currency="${column.currency}"` : "";
+            renderCell = `({ value }) => {
+                return (typeof value === "number") ? <FormattedNumber value={value} ${currencyProps} minimumFractionDigits={${decimals}} maximumFractionDigits={${decimals}} /> : "";
+            }`;
         } else if (type == "boolean") {
             gridType = "boolean";
             valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;
@@ -616,10 +622,9 @@ export function generateGrid(
         usePersistentColumnState,
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
-    import { BlockPreviewContent } from "@comet/cms-admin";
+    import { BlockPreviewContent, useContentScope } from "@comet/cms-admin";
     import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
     import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
-    import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
         GQL${gqlTypePlural}GridQueryVariables,

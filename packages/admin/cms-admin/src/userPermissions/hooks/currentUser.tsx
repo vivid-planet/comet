@@ -2,13 +2,13 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
 type CurrentUserContext = {
     currentUser: CurrentUserInterface;
-    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => boolean;
+    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => boolean;
 };
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
@@ -21,7 +21,7 @@ export interface CurrentUserInterface {
         name: string;
         email: string;
     } | null;
-    allowedContentScopes: ContentScopeInterface[];
+    allowedContentScopes: ContentScope[];
     impersonated: boolean;
 }
 
@@ -60,7 +60,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
         },
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
+            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
                 if (user.email === undefined) return false;
                 return user.permissions.some(
                     (p) =>
