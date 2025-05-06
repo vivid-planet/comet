@@ -2,4 +2,4 @@
 "@comet/admin-generator": patch
 ---
 
-Create Form triggered Dirtyhandler on successfull submit
+Create Form triggered Dirty-handler on successful submit
