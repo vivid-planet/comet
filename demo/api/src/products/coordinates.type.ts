@@ -13,7 +13,7 @@ export class Coordinates {
 
 export class CoordinatesType extends Type<Coordinates | null, string | null> {
     convertToDatabaseValue(value: Coordinates | null): string | null {
-        if (value === null) {
+        if (!value) {
             return null;
         }
 
@@ -21,7 +21,7 @@ export class CoordinatesType extends Type<Coordinates | null, string | null> {
     }
 
     convertToJSValue(value: string): Coordinates | null {
-        if (value === null) {
+        if (!value) {
             return null;
         }
 
