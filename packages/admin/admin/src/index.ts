@@ -18,7 +18,7 @@ export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardBu
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
 export { FeedbackButton, FeedbackButtonClassKey, FeedbackButtonProps } from "./common/buttons/feedback/FeedbackButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
-export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/save/SaveButton";
+export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/SaveButton";
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
@@ -54,6 +54,7 @@ export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "
 export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuContext, CrudMoreActionsMenuItem, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { DataGridPanel, DataGridPanelClassKey, DataGridPanelProps } from "./dataGrid/DataGridPanel";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
@@ -200,6 +201,7 @@ export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
+export { InlineAlert, InlineAlertClassKey, InlineAlertProps } from "./inlineAlert/InlineAlert";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";
@@ -317,6 +319,12 @@ export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 export { RouterTab, RouterTabs, RouterTabsClassKey } from "./tabs/RouterTabs";
 export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+export { breakpointsOptions, breakpointValues } from "./theme/breakpointsOptions";
+export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette, warningPalette } from "./theme/colors";
+export { createCometTheme } from "./theme/createCometTheme";
+export { paletteOptions } from "./theme/paletteOptions";
+export { shadows } from "./theme/shadows";
+export { createTypographyOptions } from "./theme/typographyOptions";
 export { BaseTranslationDialog } from "./translator/BaseTranslationDialog";
 export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
 export { useContentTranslationService } from "./translator/useContentTranslationService";

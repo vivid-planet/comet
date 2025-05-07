@@ -1,5 +1,294 @@
 # @comet/cms-api
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- b039dcb: Separate `FileUploadsModule` completely from `DamModule`
+
+    Multiple changes were necessary to achieve this:
+
+    - `ScaledImagesCacheService` was moved to `BlobStorageModule`
+    - You must now pass the `cacheDirectory` config option to `BlobStorageModule` (instead of `DamModule`)
+    - `ImgproxyService` was moved to its own `ImgproxyModule`
+    - You must add the `ImgproxyModule` to your `AppModule`
+    - In the `DamModule` config, the `maxSrcResolution` option was moved from the `imgproxyConfig` to the `damConfig`
+
+- 412bbf2: Bump `@kubernetes/client-node` peer dependency to v1
+
+    To upgrade, install `@kubernetes/client-node` v1.0.0 or later.
+
+- 0fa9b84: Remove absolute DAM URLs
+
+    Until now, the API returned absolute URLs for DAM assets by default.
+    You could optionally get relative URLs by setting the `x-relative-dam-urls` header.
+    This regularly caused confusion regarding the handling of DAM URLs in the site and admin.
+
+    Now, the API will always return relative URLs for DAM assets.
+    The `x-relative-dam-urls` header is not supported anymore.
+
+    A proxy should be set up in site and admin to proxy the relative /dam URLs to the API.
+
+### Minor Changes
+
+- 0328fa3: API Generator: Add support for filtering `ID` fields
+
+## 8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 56064fc: Remove `node-fetch` in favor of Node's native Fetch API
+
+    Note: **You need a Node version that supports the Fetch API, preferably Node v22.**
+
+- 23f393b: Protect images in the site preview
+
+    The image URLs in the site preview are now generated as preview URLs.
+    Authorization is handled via the new `createSitePreviewAuthService`, which validates the site preview cookie.
+
+### Patch Changes
+
+- 092e96e: Fix validation error caused by `EmptyDamScope` when uploading a file
+
+## 8.0.0-beta.1
+
+## 8.0.0-beta.0
+
+### Major Changes
+
+- 04b8692: Add `class-transformer`, `reflect-metadata`, and `rxjs` as peer dependencies
+
+    To upgrade, install the latest versions of the packages in your project.
+
+- 3562a94: Bump MikroORM peer dependency to v6
+
+    Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+
+- abbe4af: Bump NestJS peer dependency to v11
+
+    Follow the official [migration guide](https://docs.nestjs.com/migration-guide) to upgrade.
+
+- bc5f831: Merge `@comet/blocks-api` into `@comet/cms-api`
+
+    The dedicated `@comet/blocks-api` package was originally introduced to support projects without CMS parts.
+    It turned out that this is never the case, so the separation doesn't make sense anymore.
+    Therefore, the `@comet/blocks-api` is merged into this package.
+
+    **Breaking changes**
+
+    - The `@comet/blocks-api` package doesn't exist anymore
+    - The `getFieldKeys` function has been removed from the public API
+    - Multiple exports that were too generic have been renamed
+        - `getMostSignificantPreviewImageUrlTemplate` -> `getMostSignificantPreviewImageUrlTemplateFromBlock`
+        - `getPreviewImageUrlTemplates` -> `getPreviewImageUrlTemplatesFromBlock`
+        - `getSearchText` -> `getSearchTextFromBlock`
+        - `inputToData` -> `blockInputToData`
+        - `TransformResponse` -> `TransformBlockResponse`
+        - `TransformResponseArray` -> `TransformBlockResponseArray`
+        - `transformToSave` -> `transformToBlockSave`
+        - `transformToSaveIndex` -> `transformToBlockSaveIndex`
+        - `TraversableTransformResponse` -> `TraversableTransformBlockResponse`
+        - `TraversableTransformResponseArray` -> `TraversableTransformBlockResponseArray`
+        - `typesafeMigrationPipe` -> `typeSafeBlockMigrationPipe`
+
+    **How to upgrade**
+
+    To upgrade, perform the following changes:
+
+    1. Uninstall the `@comet/blocks-api` package
+    2. Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+    3. Remove usages of `getFieldKeys` (probably none)
+    4. Update imports that have been renamed
+
+- e8f4b07: Bump class-validator peer dependency to v0.14.0
+
+    To upgrade, install class-validator v0.14.10 or later.
+
+- 9cb98ee: PageTreeModule: sitePreviewSecret now is mandatory
+- a567f60: `createAuthResolver` does not support the `currentUser` config option anymore
+- 0d210fe: Replace passport with auth services
+
+    See the migration guide to upgrade.
+
+- 4c48918: Bump `@sentry/node` peer dependency to v8
+- 678bb0b: Move API Generator into separate `@comet/api-generator` package
+
+    It can be run with the same `comet-api-generator` command as before.
+
+- 8552e1b: Remove `createUserFromIdToken` from `UserPermissionsUserServiceInterface`
+
+    `createUserFromRequest` (available since Comet v7.6.0) should be used instead.
+
+- 52b0410: Replace nestjs-console with nest-commander
+
+    The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
+    We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
+
+    To upgrade, perform the following steps:
+
+    1. Uninstall `nestjs-console`
+    2. Install `nest-commander` and `@types/inquirer`
+    3. Update `api/src/console.ts` to use `nest-commander`
+    4. Update your commands to the new `nest-commander` syntax
+
+    See the migration guide for more information.
+
+### Patch Changes
+
+- b8817b8: Add `BlocksBlockInputInterface` to the public API
+- cf1a829: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    - `video/avi` doesn't actually exist
+    - `image/psd` doesn't exist / is non-standard
+    - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+      instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+- 58a99bb: Fix input validation for missing child blocks
+- 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
+- f20ec6c: Make class-validator a peer dependency
+
+## 7.19.0
+
+### Minor Changes
+
+- 91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+- eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+
+    Previously, the scope wasn't considered when loading the node.
+    This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
+
+    - @comet/blocks-api@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/blocks-api@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+- a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+- e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
+
+### Patch Changes
+
+- @comet/blocks-api@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+- 4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+- a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+- @comet/blocks-api@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+- 83b8111d6: Allow `use` tag in SVG again
+
+    `use` can be used to define paths once in a SVG and then integrating them multiple times via anchor links: `<use xlink:href="#path-id" />`. This should not be prohibited.
+
+    It's still not possible to use `use` to reference external files, since we still prohibit `href` and `xlink:href` attributes starting with `http://`, `https://` and `javascript:`.
+
+- e6f9641db: Add fallback values for users created via ID token
+    - @comet/blocks-api@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+- 99ff0357b: Pass available permissions to `AccessControlService.getPermissionsForUser`
+- a84d88cf9: Ignore filters in `@AffectedEntity` check
+
+    When using the `@AffectedEntity` decorator we possibly also want to check entities which are filtered by default. Since we don't know how the entity is handled in the resolver we ignore the filters completely.
+
+- 3c47c089e: Allow passing a language to `generateAltText` and `generateImageTitle`
+- bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    - HTML title
+    - Meta description
+    - Open Graph title
+    - Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+- 7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    - if the state is a string: the string itself
+    - otherwise: an empty array
+
+### Patch Changes
+
+- 0233d486b: Export `FileUploadInput`
+- 7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+- Updated dependencies [7e7a4aae1]
+    - @comet/blocks-api@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes

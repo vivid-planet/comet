@@ -5,7 +5,7 @@ import scrollIntoView from "scroll-into-view-if-needed";
 import styled from "styled-components";
 
 import { useIFrameBridge } from "./useIFrameBridge";
-import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE } from "./utils";
+import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
 interface Props extends PropsWithChildren {
     adminRoute: string;
@@ -48,6 +48,10 @@ export const Preview = ({ adminRoute, children, label, enabledAutoScrolling = tr
                             inline: "nearest",
                             behavior: "smooth",
                         });
+
+                        setTimeout(() => {
+                            previewElementContainerRef.current?.dispatchEvent(new Event(PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT));
+                        }, 600);
                     }
                 }
             }

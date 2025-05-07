@@ -14,17 +14,14 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
+import { BlockPreviewContent, DamImageBlock, useContentScope } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
@@ -78,18 +75,12 @@ const createNewsMutation = gql`
 function NewsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
+            </Button>
         </DataGridToolbar>
     );
 }

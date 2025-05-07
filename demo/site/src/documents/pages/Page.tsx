@@ -123,7 +123,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
     }
     if (document.__typename != "Page") throw new Error(`invalid document type`);
 
-    [document.content, document.seo] = await Promise.all([
+    [document.content, document.seo, document.stage] = await Promise.all([
         recursivelyLoadBlockData({
             blockType: "PageContent",
             blockData: document.content,
@@ -151,7 +151,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             )}
             <TopNavigation data={data.topMenu} />
             <Header header={data.header} />
-            <Breadcrumbs {...data.pageContent} />
+            <Breadcrumbs {...data.pageContent} scope={scope} />
             <main>
                 <StageBlock data={document.stage} />
                 <PageContentBlock data={document.content} />

@@ -39,7 +39,7 @@ It's up to the application code to pass filterModel, sortModel and page/pageSize
 
 <Canvas of={DataGridStories.UseDataGridRemoteInitialFilter} />
 
-## usePersistentColumnState
+### usePersistentColumnState
 
 Returns props for DataGrid that persists all column states into localStorage, DataGrid will have a controlled state for those.
 
@@ -60,7 +60,7 @@ Supported states:
 
 <Canvas of={DataGridStories.UsePersistentColumnState} />
 
-## useBufferedRowCount
+### useBufferedRowCount
 
 Small hook that can be used to prevent rowCount from being undefined during the loading.
 
@@ -68,7 +68,7 @@ Small hook that can be used to prevent rowCount from being undefined during the 
 const rowCount = useBufferedRowCount(data?.products.totalCount);
 ```
 
-## useDataGridExcelExport
+### useDataGridExcelExport
 
 Hook for excel export functionality. To use it, the following steps are necessary:
 
@@ -78,6 +78,21 @@ Hook for excel export functionality. To use it, the following steps are necessar
 Typical Usage Example:
 
 <Canvas of={DataGridStories.UseDataGridExcelExport} />
+
+## Column definitions
+
+Use the existing column-type helpers to make sure columns of certain types are rendered consistently.
+
+```ts
+import { GridColDef, dataGridDateColumn, dataGridDateTimeColumn } from "@comet/admin";
+
+const columns: GridColDef[] = [
+    { ...dataGridDateColumn, field: "createdAt" },
+    { ...dataGridDateTimeColumn, field: "updatedAt" },
+];
+```
+
+<Canvas of={DataGridStories.GridColumnTypes} />
 
 ## Responsive column visibility
 
@@ -137,7 +152,7 @@ Comet Admin comes with three helpers that convert MUI DataGrid state to standard
 
 Typical Usage Example:
 
-```
+```ts
 const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 const sortModel = dataGridProps.sortModel;
 const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
@@ -147,5 +162,4 @@ const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQ
         sort: muiGridSortToGql(sortModel),
     },
 });
-
 ```

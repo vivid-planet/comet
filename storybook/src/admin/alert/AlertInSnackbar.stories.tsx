@@ -1,5 +1,5 @@
-import { Alert } from "@comet/admin";
-import { Button, Snackbar } from "@mui/material";
+import { Alert, Button } from "@comet/admin";
+import { Snackbar } from "@mui/material";
 import { useState } from "react";
 
 export default {
@@ -15,6 +15,7 @@ export const AlertInSnackbar = {
                     onClick={() => {
                         setShowSnackbar(true);
                     }}
+                    variant="textDark"
                 >
                     Show snackbar
                 </Button>

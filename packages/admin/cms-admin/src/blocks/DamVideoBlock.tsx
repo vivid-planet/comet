@@ -8,10 +8,9 @@ import { FormattedMessage } from "react-intl";
 
 import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { type CmsBlockContext } from "./CmsBlockContextProvider";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
 import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
@@ -46,7 +45,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         showControls: state.showControls,
     }),
 
-    output2State: async (output, context: CmsBlockContext) => {
+    output2State: async (output, context) => {
         if (!output.damFileId) {
             return { previewImage: await PixelImageBlock.output2State(output.previewImage, context) };
         }
@@ -125,9 +124,9 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         const isInPaper = useBlockAdminComponentPaper();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
+        const { entityDependencyMap } = useDependenciesConfig();
 
-        const showMenu = Boolean(dependencyMap["DamFile"]);
+        const showMenu = Boolean(entityDependencyMap["DamFile"]);
 
         const handleMenuClose = () => {
             setAnchorEl(null);
@@ -141,18 +140,18 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                             <BlockAdminComponentPaper disablePadding>
                                 <Box padding={3}>
                                     <Grid container alignItems="center" spacing={3}>
-                                        <Grid item>
+                                        <Grid>
                                             {/* TODO show thumbnail of video */}
                                             <Video fontSize="large" color="primary" />
                                         </Grid>
-                                        <Grid item xs>
+                                        <Grid size="grow">
                                             <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                             <Typography variant="body1" color="textSecondary">
                                                 <DamPathLazy fileId={state.damFile.id} />
                                             </Typography>
                                         </Grid>
                                         {showMenu && (
-                                            <Grid item>
+                                            <Grid>
                                                 <IconButton
                                                     onMouseDown={(event) => event.stopPropagation()}
                                                     onClick={(event) => {
@@ -173,12 +172,15 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                 </BlockAdminComponentButton>
                                 {showMenu && (
                                     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                        {dependencyMap["DamFile"] && state.damFile?.id && (
+                                        {entityDependencyMap["DamFile"] && state.damFile?.id && (
                                             <MenuItem
                                                 onClick={async () => {
-                                                    // id is checked three lines above
-                                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                                    const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                                    const path = await entityDependencyMap["DamFile"].resolvePath({
+                                                        apolloClient,
+                                                        // id is checked three lines above
+                                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                        id: state.damFile!.id,
+                                                    });
                                                     const url = contentScope.match.url + path;
                                                     window.open(url, "_blank");
                                                 }}
@@ -194,7 +196,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                             </BlockAdminComponentPaper>
                         </FieldContainer>
                     ) : (
-                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
+                        <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
                     <VideoOptionsFields />
                     <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
@@ -211,4 +213,13 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     },
 
     previewContent: (state) => (state.damFile ? [{ type: "text", content: state.damFile.name }] : []),
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.damFile?.altText) contents.push(state.damFile.altText);
+        if (state.damFile?.title) contents.push(state.damFile.title);
+
+        return contents;
+    },
 };

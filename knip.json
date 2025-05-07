@@ -41,10 +41,6 @@
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro"]
         },
-        "packages/admin/admin-theme": {
-            "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
-        },
         "packages/admin/admin-color-picker": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
@@ -61,17 +57,25 @@
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
+        "packages/admin/admin-generator": {
+            "entry": ["./src/adminGenerator.ts", "./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
         "packages/api/cms-api": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./src/**/migrations/*.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@sentry/node"]
+        },
+        "packages/api/api-generator": {
+            "entry": ["./src/apiGenerator.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/cms-site": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "demo/admin": {
-            "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
+            "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/generated/**", "./src/products/future/AssignProductsGrid.tsx"],
             "ignoreDependencies": ["@swc/plugin-emotion", "cosmiconfig-toml-loader", "@babel/core"]

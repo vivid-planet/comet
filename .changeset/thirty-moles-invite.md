@@ -4,7 +4,6 @@
 "@comet/admin-date-time": minor
 "@comet/admin-icons": minor
 "@comet/admin-rte": minor
-"@comet/admin-theme": minor
 "@comet/admin": minor
 "@comet/cms-admin": minor
 ---

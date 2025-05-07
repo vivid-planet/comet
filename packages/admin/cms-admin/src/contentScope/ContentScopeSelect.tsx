@@ -19,24 +19,25 @@ import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { type ContentScopeInterface } from "./Provider";
+import { type ContentScope } from "./Provider";
 
-type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
-    [Key in keyof Value]: { label?: string; value: Value[Key] };
+type Option = {
+    scope: ContentScope;
+    label?: { [Key in keyof ContentScope]?: string };
 };
 
-interface Props<Value extends ContentScopeInterface> {
-    value: Value;
-    onChange: (value: Value) => void;
-    options: Array<Option<Value>>;
+interface Props {
+    value: ContentScope;
+    onChange: (value: ContentScope) => void;
+    options: Array<Option>;
     searchable?: boolean;
-    groupBy?: keyof Value;
+    groupBy?: keyof ContentScope;
     icon?: ReactNode;
-    renderOption?: (option: Option<Value>, query?: string) => ReactNode;
-    renderSelectedOption?: (option: Option<Value>) => ReactNode;
+    renderOption?: (option: Option, query?: string) => ReactNode;
+    renderSelectedOption?: (option: Option) => ReactNode;
 }
 
-export function ContentScopeSelect<Value extends ContentScopeInterface = ContentScopeInterface>({
+export function ContentScopeSelect({
     value,
     onChange,
     options,
@@ -45,7 +46,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     icon = <Language />,
     renderOption,
     renderSelectedOption,
-}: Props<Value>) {
+}: Props) {
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
@@ -56,23 +57,24 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
     if (searchable) {
         filteredOptions = options.filter((option) => {
-            return Object.values(option).some(({ label, value }) => {
-                return value.toLowerCase().includes(searchValue.toLowerCase()) || label?.toLowerCase().includes(searchValue.toLowerCase());
-            });
+            return (
+                Object.values(option.scope).some((value) => value.toLowerCase().includes(searchValue.toLowerCase())) ||
+                Object.values(option.label || []).some((value) => value?.toLowerCase().includes(searchValue.toLowerCase()))
+            );
         });
     }
 
-    let groups: Array<{ value: string; label: string | undefined; options: Option<Value>[] }> = [];
+    let groups: Array<{ value: string; label: string | undefined; options: Option[] }> = [];
 
     if (groupBy) {
         if (hasMultipleDimensions) {
             for (const option of filteredOptions) {
-                const groupForOption = groups.find((group) => group.value === option[groupBy].value);
+                const groupForOption = groups.find((group) => group.value === option.scope[groupBy]);
 
                 if (groupForOption) {
                     groupForOption.options.push(option);
                 } else {
-                    groups.push({ value: option[groupBy].value, label: option[groupBy].label, options: [option] });
+                    groups.push({ value: option.scope[groupBy], label: option.label ? option.label[groupBy] : undefined, options: [option] });
                 }
             }
         } else {
@@ -84,7 +86,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     const selectedOption = options.find((option) => {
-        return Object.keys(option).every((key) => value[key] === option[key].value);
+        return Object.keys(option.scope).every((key) => value[key] === option.scope[key]);
     });
 
     if (!selectedOption) {
@@ -93,15 +95,15 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
     if (!renderOption) {
         renderOption = (option, query) => {
-            const text = Object.entries(option)
+            const text = Object.entries(option.scope)
                 .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
-                .map(([, option]) => option.label ?? option.value)
+                .map(([key, value]) => (option.label && option.label[key]) ?? value)
                 .join(" – ");
             const matches = findTextMatches(text, query);
 
             return (
                 <>
-                    <ListItemIcon sx={{ minWidth: "none" }}>
+                    <ListItemIcon>
                         <Domain />
                     </ListItemIcon>
                     <ListItemText
@@ -116,8 +118,8 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
     if (!renderSelectedOption) {
         renderSelectedOption = (option) => {
-            return Object.values(option)
-                .map((option) => humanReadableLabel(option))
+            return Object.keys(option.scope)
+                .map((key) => humanReadableLabel({ label: option.label ? option.label[key] : undefined, value: option.scope[key] }))
                 .join(" / ");
         };
     }
@@ -191,7 +193,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                     PaperProps: {
                         sx: (theme) => ({
                             minWidth: "350px",
-
+                            maxHeight: "calc(100vh - 60px)",
                             [theme.breakpoints.down("md")]: {
                                 width: "100%",
                                 maxWidth: "none",
@@ -267,7 +269,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                                 key={JSON.stringify(option)}
                                                 onClick={() => {
                                                     hideDropdown();
-                                                    onChange(optionToValue<Value>(option));
+                                                    onChange(option.scope);
                                                     setSearchValue("");
                                                 }}
                                                 selected={isSelected}
@@ -299,16 +301,6 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
             )}
         </AppHeaderDropdown>
     );
-}
-
-function optionToValue<Value extends ContentScopeInterface = ContentScopeInterface>(option: Option<Value>): Value {
-    const value: Record<string, unknown> = {};
-
-    Object.keys(option).forEach((key) => {
-        value[key] = option[key].value;
-    });
-
-    return value as Value;
 }
 
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {

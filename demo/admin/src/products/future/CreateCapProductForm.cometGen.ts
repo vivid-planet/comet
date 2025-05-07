@@ -1,7 +1,10 @@
-import { type future_FormConfig as FormConfig } from "@comet/cms-admin";
+import { defineConfig } from "@comet/admin-generator";
+import { DamImageBlock } from "@comet/cms-admin";
 import { type GQLProduct } from "@src/graphql.generated";
 
-export const CreateCapProductForm: FormConfig<GQLProduct> = {
+import { validateTitle } from "./validateTitle";
+
+export default defineConfig<GQLProduct>({
     type: "form",
     gqlType: "Product",
     mode: "add",
@@ -12,13 +15,13 @@ export const CreateCapProductForm: FormConfig<GQLProduct> = {
             name: "title",
             label: "Titel", // default is generated from name (camelCaseToHumanReadable)
             required: true, // default is inferred from gql schema
-            validate: { name: "validateTitle", import: "./validateTitle" },
+            validate: validateTitle,
         },
-        { type: "text", name: "slug" },
+        { type: "text", name: "slug", required: true },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "boolean", name: "inStock" },
         { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
-        { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+        { type: "block", name: "image", label: "Image", block: DamImageBlock },
     ],
-};
+});

@@ -11,6 +11,18 @@ import { useContentScope } from "../contentScope/Provider";
 import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
 
+const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
+    ...InternalLinkBlock,
+    previewContent: (state) => (state.targetPage ? [{ type: "text", content: state.targetPage.path }] : []),
+    dynamicDisplayName: (state) => state.targetPage?.name ?? InternalLinkBlock.displayName,
+};
+
+const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
+    ...ExternalLinkBlock,
+    previewContent: (state) => (state.targetUrl ? [{ type: "text", content: ExternalLinkBlock.displayName }] : []),
+    dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
+};
+
 interface CreateRedirectsPageOptions {
     customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectsLinkBlock to create a custom link block for the redirects
     scopeParts?: string[];
@@ -18,7 +30,7 @@ interface CreateRedirectsPageOptions {
 
 export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInterface>) {
     return createOneOfBlock({
-        supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
+        supportedBlocks: { internal: RedirectsInternalLinkBlock, external: RedirectsExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
         displayName: <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
         allowEmpty: false,

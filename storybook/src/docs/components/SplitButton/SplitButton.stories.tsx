@@ -10,7 +10,7 @@ export default {
 export const Uncontrolled = {
     render: () => {
         return (
-            <SplitButton variant="contained" color="primary">
+            <SplitButton>
                 <Button
                     onClick={() => {
                         alert("primary clicked");
@@ -35,8 +35,6 @@ export const Controlled = {
         const [selectedIndex, setSelectedIndex] = useState(1);
         return (
             <SplitButton
-                variant="contained"
-                color="secondary"
                 selectedIndex={selectedIndex}
                 onSelectIndex={(index: number) => {
                     setSelectedIndex(index);

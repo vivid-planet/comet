@@ -50,7 +50,7 @@ export class WarningResolver {
             filter.and = filter.and.filter((item) => item.scope === undefined);
         }
 
-        const where = gqlArgsToMikroOrmQuery({ search, filter: standardFilter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter: standardFilter }, this.entityManager.getMetadata(Warning));
         where.status = { $in: status };
 
         // A scope can be for example { domain: "main", language: "en" } but it should also query scopes that are only { domain: "main" }.

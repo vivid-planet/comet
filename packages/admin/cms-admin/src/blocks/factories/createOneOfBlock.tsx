@@ -2,11 +2,13 @@ import { Field, RadioGroupField, SelectField } from "@comet/admin";
 import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { type Dispatch, type ReactNode, type SetStateAction, useCallback } from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
+import { useBlocksConfig } from "../config/BlocksConfigContext";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
@@ -113,17 +115,6 @@ export const createOneOfBlock = <T extends boolean = boolean>(
             type: activeBlockState.type,
         };
     }
-
-    const options: Array<{ value: string; label: ReactNode }> = allowEmpty
-        ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
-        : [];
-
-    Object.entries(supportedBlocks).forEach(([blockType, block]) => {
-        options.push({
-            value: blockType,
-            label: block.displayName,
-        });
-    });
 
     const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
@@ -279,6 +270,34 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         AdminComponent: ({ state, updateState }) => {
             const isInPaper = useBlockAdminComponentPaper();
 
+            const { scope } = useContentScope();
+            const { isBlockSupported } = useBlocksConfig();
+
+            const options = useMemo(() => {
+                let filteredSupportedBlocks;
+
+                if (isBlockSupported) {
+                    filteredSupportedBlocks = Object.fromEntries(
+                        Object.entries(supportedBlocks).filter(([, block]) => isBlockSupported(block, scope)),
+                    );
+                } else {
+                    filteredSupportedBlocks = supportedBlocks;
+                }
+
+                const options: Array<{ value: string; label: ReactNode }> = allowEmpty
+                    ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
+                    : [];
+
+                Object.entries(filteredSupportedBlocks).forEach(([blockType, block]) => {
+                    options.push({
+                        value: blockType,
+                        label: block.displayName,
+                    });
+                });
+
+                return options;
+            }, [scope, isBlockSupported]);
+
             const handleBlockSelect = useCallback(
                 (blockType: string) => {
                     updateState((prevState) => {
@@ -370,7 +389,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <SelectField name="blockType" options={options} fullWidth required={!allowEmpty} />
+                                            <SelectField name="blockType" options={options} fullWidth required />
                                         </Box>
                                         {isInPaper && activeBlock.block && <Divider />}
                                     </>
@@ -436,13 +455,31 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         },
 
         dynamicDisplayName: (state) => {
-            const { block } = getActiveBlock(state);
+            const { block, state: blockState } = getActiveBlock(state);
 
             if (block != null) {
-                return block.displayName;
+                return block.dynamicDisplayName?.(blockState.props) ?? block.displayName;
             } else {
                 return displayName;
             }
+        },
+
+        extractTextContents: (state, options) => {
+            const includeInvisibleContent = options?.includeInvisibleContent ?? false;
+
+            const content = state.attachedBlocks.reduce<string[]>((content, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+
+                if (child.type !== state.activeType && !includeInvisibleContent) {
+                    return content;
+                }
+
+                return [...content, ...(block.extractTextContents?.(child.props, options) ?? [])];
+            }, []);
+            return content;
         },
     };
     if (override) {

@@ -8,7 +8,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -34,18 +33,12 @@ import {
 function ProductVariantsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarItem>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="products.newVariant" defaultMessage="New Variant" />
-                </Button>
-            </ToolbarItem>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="products.newVariant" defaultMessage="New Variant" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -84,6 +77,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         */
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,

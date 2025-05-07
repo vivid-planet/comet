@@ -12,7 +12,7 @@ import {
 import { HeadingBlock } from "@src/common/blocks/heading.block";
 import { IsEnum } from "class-validator";
 
-enum TextAlignment {
+export enum TextAlignment {
     left = "left",
     center = "center",
 }

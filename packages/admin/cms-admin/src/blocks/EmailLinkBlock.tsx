@@ -46,4 +46,8 @@ export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockDa
     previewContent: (state) => {
         return state.email ? [{ type: "text", content: state.email }] : [];
     },
+
+    extractTextContents: (state) => {
+        return state.email ? [state.email] : [];
+    },
 };

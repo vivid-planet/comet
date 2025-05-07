@@ -1,6 +1,8 @@
 import { type ComponentType, type Dispatch, type ReactElement, type ReactNode, type SetStateAction } from "react";
 import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
+import { type BlockContext } from "./context/BlockContext";
+
 export interface BlockPreviewContext {
     showVisibleOnly?: boolean;
     parentUrl: string;
@@ -29,9 +31,6 @@ export interface BlockAdminComponentPart {
     label: ReactNode;
     content: ReactNode;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BlockContext = any;
 
 interface PreviewImage {
     src: string;
@@ -69,16 +68,17 @@ export interface BlockMethods<
     defaultValues: () => State;
     input2State: (v: InputApi) => State;
     state2Output: (v: State) => OutputApi;
-    output2State: (output: OutputApi, context?: BlockContext) => Promise<State>;
+    output2State: (output: OutputApi, context: BlockContext) => Promise<State>;
     createPreviewState: (v: State, previewCtx: BlockPreviewContext & BlockContext) => PreviewState;
     isValid: (state: State) => Promise<boolean> | boolean;
     childBlockCount?: (state: State) => number;
-    previewContent: (state: State, context?: BlockContext) => PreviewContent[];
+    previewContent: (state: State, context: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => ReactNode;
     anchors?: (state: State) => string[];
     dependencies?: (state: State) => BlockDependency[];
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
     resolveDependencyPath: (state: State, jsonPath: string) => string;
+    extractTextContents?: (state: State, options: { includeInvisibleContent: boolean }) => string[];
 }
 
 export interface AnonymousBlockInterface<
@@ -93,6 +93,7 @@ export interface AnonymousBlockInterface<
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
     definesOwnTitle?: boolean;
+    extractTextContents?: BlockMethods<InputApi, State, OutputApi, PreviewState>["extractTextContents"];
 }
 
 export interface BlockInterface<

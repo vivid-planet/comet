@@ -10,7 +10,7 @@
         "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
         "build:storybook": "pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm --recursive --filter '@comet/*' run build",
-        "build:docs": "pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
+        "build:docs": "pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter '!@comet/admin-generator' --filter 'comet-docs' run build",
         "clean": "pnpm --recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
         "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
@@ -24,7 +24,7 @@
         "dev:demo:api": "dev-pm start @demo-api",
         "dev:demo:site": "dev-pm start @demo-site",
         "dev:docs": "dev-pm start docs",
-        "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
+        "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
         "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
         "lint:eslint": "pnpm --recursive run lint:eslint",
@@ -42,26 +42,26 @@
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.27.12",
+        "@changesets/cli": "^2.28.1",
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
-        "@formatjs/cli": "^6.6.1",
-        "@types/node": "^22.13.5",
-        "knip": "^5.44.5",
+        "@formatjs/cli": "^6.6.3",
+        "@types/node": "^22.14.0",
+        "knip": "^5.46.0",
         "cspell": "^8.17.5",
         "dotenv-cli": "^7.4.4",
         "husky": "^9.1.7",
-        "lint-staged": "^15.4.3",
+        "lint-staged": "^15.5.0",
         "npm-run-all2": "^7.0.2",
         "open-cli": "^8.0.0",
-        "prettier": "^3.5.2",
+        "prettier": "^3.5.3",
         "rimraf": "^6.0.1",
         "typescript": "^5.7.3",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@9.15.5",
+    "packageManager": "pnpm@9.15.9",
     "engines": {
         "node": "22",
-        "pnpm": "9.15.5"
+        "pnpm": "9.15.9"
     }
 }

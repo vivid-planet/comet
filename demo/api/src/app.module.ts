@@ -11,6 +11,7 @@ import {
     DamModule,
     DependenciesModule,
     FileUploadsModule,
+    ImgproxyModule,
     KubernetesModule,
     PageTreeModule,
     RedirectsModule,
@@ -18,6 +19,7 @@ import {
     UserPermissionsModule,
     WarningsModule,
 } from "@comet/cms-api";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
@@ -43,6 +45,7 @@ import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-p
 import { FooterModule } from "./footer/footer.module";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
+import { News } from "./news/entities/news.entity";
 import { NewsModule } from "./news/news.module";
 import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
@@ -50,6 +53,7 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
 
 @Module({})
 export class AppModule {
@@ -82,6 +86,7 @@ export class AppModule {
                             credentials: true,
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
+                        useGlobalPrefix: true,
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
@@ -124,21 +129,26 @@ export class AppModule {
                     sitePreviewSecret: config.sitePreviewSecret,
                 }),
 
-                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
+                RedirectsModule.register({
+                    imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+                    customTargets: { news: NewsLinkBlock },
+                    Scope: RedirectScope,
+                    TargetUrlService: RedirectTargetUrlService,
+                }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
+                    cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                 }),
+                ImgproxyModule.register(config.imgproxy),
                 DamModule.register({
                     damConfig: {
-                        apiUrl: config.apiUrl,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
-                        cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
+                        maxSrcResolution: config.dam.maxSrcResolution,
                     },
-                    imgproxyConfig: config.imgproxy,
                     Scope: DamScope,
                     File: DamFile,
                     Folder: DamFolder,

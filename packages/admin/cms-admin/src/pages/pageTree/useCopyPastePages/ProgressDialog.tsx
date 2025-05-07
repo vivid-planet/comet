@@ -1,7 +1,6 @@
-import { messages } from "@comet/admin";
+import { Button, messages } from "@comet/admin";
 import {
     Box,
-    Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
@@ -45,7 +44,7 @@ function ProgressDialog(props: { title: ReactNode; progress: number | undefined;
                     </DialogContent>
                     {props.onCancel && (
                         <DialogActions>
-                            <Button onClick={props.onCancel}>
+                            <Button onClick={props.onCancel} variant="textDark">
                                 <FormattedMessage {...messages.cancel} />
                             </Button>
                         </DialogActions>

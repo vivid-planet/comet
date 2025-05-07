@@ -1,5 +1,95 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.4
+
+### Patch Changes
+
+- 6ec43c9: Use recommended config from eslint-plugin-package-json correctly
+    - @comet/eslint-plugin@8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+### Patch Changes
+
+- Updated dependencies [f904b71]
+    - @comet/eslint-plugin@8.0.0-beta.2
+
+## 8.0.0-beta.1
+
+### Patch Changes
+
+- 649297e: Readd `@comet/eslint-plugin` dependency that was mistakenly removed
+    - @comet/eslint-plugin@8.0.0-beta.1
+
+## 8.0.0-beta.0
+
+### Major Changes
+
+- ceaf99d: Bump ESLint peer dependency to v9
+- 4d0d820: Prevent `@mui/material` tooltip imports
+
+    Tooltips used in Comet DXP applications should match the Comet CI.
+    Use tooltips from `@comet/admin` instead.
+
+- c6d87a2: Bump Prettier peer dependency to v3
+- 9509f97: Enable rule to restrict barrel React imports
+
+    Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+    Use individual named imports instead, e.g, `import { useState } from "react"`.
+
+### Minor Changes
+
+- a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
+
+## 7.19.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.18.0
+
+## 7.17.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.17.0
+
+## 7.16.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.15.0
+
+## 7.14.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
