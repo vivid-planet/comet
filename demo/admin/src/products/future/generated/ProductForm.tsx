@@ -165,7 +165,7 @@ export function ProductForm({ id }: FormProps) {
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
+                    }, 100);
                 }
             }
         }
