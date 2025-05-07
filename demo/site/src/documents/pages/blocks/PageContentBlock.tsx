@@ -11,7 +11,7 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { PageContentStandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { PageContentStandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
-import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
+import { PageContentTextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/BillboardTeaserBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
@@ -42,7 +42,7 @@ const supportedBlocks: SupportedBlocks = {
     newsDetail: (props) => <NewsDetailBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     layout: (props) => <LayoutBlock data={props} />,
-    textImage: (props) => <TextImageBlock data={props} />,
+    textImage: (props) => <PageContentTextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
 };
 
