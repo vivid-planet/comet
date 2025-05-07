@@ -214,8 +214,16 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       '@vitejs/plugin-react-swc':
+<<<<<<< HEAD
         specifier: ^3.8.1
         version: 3.8.1(@swc/helpers@0.5.5)(vite@5.4.15(@types/node@22.14.0)(terser@5.36.0))
+=======
+        specifier: ^3.6.0
+        version: 3.6.0(vite@5.1.6)
+      check-node-version:
+        specifier: ^4.2.1
+        version: 4.2.1
+>>>>>>> main
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -409,6 +417,18 @@ importers:
       '@types/response-time':
         specifier: ^2.3.8
         version: 2.3.8
+<<<<<<< HEAD
+=======
+      '@types/rimraf':
+        specifier: ^3.0.0
+        version: 3.0.2
+      '@types/uuid':
+        specifier: ^8.0.0
+        version: 8.3.4
+      check-node-version:
+        specifier: ^4.2.1
+        version: 4.2.1
+>>>>>>> main
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -525,6 +545,51 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(graphql@15.10.1)
       '@graphql-codegen/typescript':
+<<<<<<< HEAD
+=======
+        specifier: ^2.0.0
+        version: 2.8.7(graphql@15.9.0)
+      '@graphql-codegen/typescript-operations':
+        specifier: ^2.0.0
+        version: 2.5.12(graphql@15.9.0)
+      '@types/fs-extra':
+        specifier: ^9.0.0
+        version: 9.0.13
+      '@types/google.maps':
+        specifier: ^3.0.0
+        version: 3.51.0
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.10.5
+      '@types/react':
+        specifier: ^18.2.66
+        version: 18.3.18
+      '@types/react-dom':
+        specifier: ^18.2.22
+        version: 18.3.5(@types/react@18.3.18)
+      '@types/react-is':
+        specifier: ^17.0.0
+        version: 17.0.3
+      '@types/react-select':
+        specifier: ^4.0.0
+        version: 4.0.18
+      check-node-version:
+        specifier: ^4.2.1
+        version: 4.2.1
+      chokidar-cli:
+        specifier: ^2.0.0
+        version: 2.1.0
+      cosmiconfig-toml-loader:
+        specifier: ^1.0.0
+        version: 1.0.0
+      dotenv-cli:
+        specifier: ^4.0.0
+        version: 4.1.1
+      eslint:
+        specifier: ^8.0.0
+        version: 8.57.1
+      npm-run-all:
+>>>>>>> main
         specifier: ^4.1.5
         version: 4.1.5(@babel/core@7.26.10)(graphql@15.10.1)
       '@graphql-codegen/typescript-operations':
@@ -9098,7 +9163,24 @@ packages:
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
 
+<<<<<<< HEAD
   cheerio-select@2.1.0:
+=======
+  /check-node-version@4.2.1:
+    resolution: {integrity: sha512-YYmFYHV/X7kSJhuN/QYHUu998n/TRuDe8UenM3+m5NrkiH670lb9ILqHIvBencvJc4SDh+XcbXMR4b+TtubJiw==}
+    engines: {node: '>=8.3.0'}
+    hasBin: true
+    dependencies:
+      chalk: 3.0.0
+      map-values: 1.0.1
+      minimist: 1.2.8
+      object-filter: 1.0.2
+      run-parallel: 1.2.0
+      semver: 6.3.1
+    dev: true
+
+  /cheerio-select@2.1.0:
+>>>>>>> main
     resolution: {integrity: sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==}
 
   cheerio@0.22.0:
@@ -31059,7 +31141,37 @@ snapshots:
 
   markdown-extensions@2.0.0: {}
 
+<<<<<<< HEAD
   markdown-table@2.0.0:
+=======
+  /map-obj@4.3.0:
+    resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /map-values@1.0.1:
+    resolution: {integrity: sha512-BbShUnr5OartXJe1GeccAWtfro11hhgNJg6G9/UtWKjVGvV5U4C09cg5nk8JUevhXODaXY+hQ3xxMUKSs62ONQ==}
+    dev: true
+
+  /mapcap@1.0.0:
+    resolution: {integrity: sha512-KcNlZSlFPx+r1jYZmxEbTVymG+dIctf10WmWkuhrhrblM+KMoF77HelwihL5cxYlORye79KoR4IlOOk99lUJ0g==}
+    dev: false
+
+  /markdown-escapes@1.0.4:
+    resolution: {integrity: sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==}
+    dev: false
+
+  /markdown-table@3.0.4:
+    resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
+    dev: true
+
+  /material-design-icons@3.0.1:
+    resolution: {integrity: sha512-t19Z+QZBwSZulxptEu05kIm+UyfIdJY1JDwI+nx02j269m6W414whiQz9qfvQIiLrdx71RQv+T48nHhuQXOCIQ==}
+    dev: false
+
+  /mdast-squeeze-paragraphs@4.0.0:
+    resolution: {integrity: sha512-zxdPn69hkQ1rm4J+2Cs2j6wDEv7O17TfXTJ33tl/+JPIoEmtV9t2ZzBM5LPHE8QlHsmVD8t3vPKCyY3oH+H8MQ==}
+>>>>>>> main
     dependencies:
       repeat-string: 1.6.1
 
@@ -31684,7 +31796,13 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
+<<<<<<< HEAD
   minimist@1.2.7: {}
+=======
+  /minimist@1.2.7:
+    resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
+    dev: true
+>>>>>>> main
 
   minimist@1.2.8: {}
 
@@ -31973,7 +32091,45 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
+<<<<<<< HEAD
   nth-check@2.1.1:
+=======
+  /nullthrows@1.1.1:
+    resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}
+    dev: true
+
+  /nwsapi@2.2.2:
+    resolution: {integrity: sha512-90yv+6538zuvUMnN+zCr8LuV6bPFdq50304114vJYJ8RDyK8D5O9Phpbd6SZWgI7PwzmmfN1upeOJlvybDSgCw==}
+    dev: true
+
+  /oauth-sign@0.9.0:
+    resolution: {integrity: sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==}
+
+  /object-assign@4.1.1:
+    resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
+    engines: {node: '>=0.10.0'}
+
+  /object-filter-sequence@1.0.0:
+    resolution: {integrity: sha512-CsubGNxhIEChNY4cXYuA6KXafztzHqzLLZ/y3Kasf3A+sa3lL9thq3z+7o0pZqzEinjXT6lXDPAfVWI59dUyzQ==}
+    dev: false
+
+  /object-filter@1.0.2:
+    resolution: {integrity: sha512-NahvP2vZcy1ZiiYah30CEPw0FpDcSkSePJBMpzl5EQgCmISijiGuJm3SPYp7U+Lf2TljyaIw3E5EgkEx/TNEVA==}
+    dev: true
+
+  /object-hash@2.2.0:
+    resolution: {integrity: sha512-gScRMn0bS5fH+IuwyIFgnh9zBdo4DV+6GhygmWM9HyNJSgS0hScp1f5vjtm7oIIOiT9trXrShAkLFSc2IqKNgw==}
+    engines: {node: '>= 6'}
+    requiresBuild: true
+    optional: true
+
+  /object-hash@3.0.0:
+    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
+    engines: {node: '>= 6'}
+
+  /object-identity-map@1.0.2:
+    resolution: {integrity: sha512-a2XZDGyYTngvGS67kWnqVdpoaJWsY7C1GhPJvejWAFCsUioTAaiTu8oBad7c6cI4McZxr4CmvnZeycK05iav5A==}
+>>>>>>> main
     dependencies:
       boolbase: 1.0.0
 
@@ -34965,6 +35121,18 @@ snapshots:
     dependencies:
       json5: 2.2.3
       minimist: 1.2.8
+<<<<<<< HEAD
+=======
+      strip-bom: 3.0.0
+    dev: true
+
+  /tsconfig-paths@4.2.0:
+    resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
+    engines: {node: '>=6'}
+    dependencies:
+      json5: 2.2.3
+      minimist: 1.2.8
+>>>>>>> main
       strip-bom: 3.0.0
 
   tslib@1.14.1: {}
