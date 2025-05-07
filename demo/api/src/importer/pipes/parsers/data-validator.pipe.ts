@@ -35,11 +35,13 @@ export class DataValidator extends StreamTransform {
                 return callback(new Error("Too many validation errors"));
             }
             this.push(inputDataAndMetadata);
-            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            this.logger.error(`Error transforming Data: ${err}`);
-            this.emit("error", err);
-            return callback(err);
+        } catch (error: unknown) {
+            this.logger.error(`Error validating Data: ${error}`);
+            if (error instanceof Error) {
+                callback(error);
+            } else {
+                callback(new Error(`An unknown error occurred: ${error}`));
+            }
         }
 
         callback();

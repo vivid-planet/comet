@@ -102,7 +102,7 @@ export class Product extends BaseEntity<Product, "id"> implements ImportTargetIn
     @Field(() => ProductStatus)
     status: ProductStatus = ProductStatus.Unpublished;
 
-    @Property()
+    @Property({ unique: true })
     @Field()
     slug: string;
 
