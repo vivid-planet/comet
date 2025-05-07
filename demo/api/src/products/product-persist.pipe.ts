@@ -1,8 +1,7 @@
 import { BlockDataInterface } from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+import { DamImageBlock, ImporterPipe, PipeMetadata } from "@comet/cms-api";
 import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
-import { ImporterPipe, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
 import { Transform, TransformCallback } from "stream";
 import { v4 } from "uuid";
 
