@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
@@ -112,7 +112,7 @@ export const YouTubeVideoBlock = withPreview(
                 ) : (
                     <div
                         ref={inViewRef}
-                        className={classNames(styles.videoContainer, { [styles.fill]: fill })}
+                        className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { aspectRatio: aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.youtubeContainer} src={youtubeUrl.toString()} />

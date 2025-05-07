@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import { type ReactNode } from "react";
 
 import { type PixelImageBlockData } from "../../blocks.generated";
@@ -17,7 +17,7 @@ export interface VideoPreviewImageProps {
 
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon />, className }: VideoPreviewImageProps) => {
     return (
-        <div className={classNames(styles.root, { [styles.fill]: fill }, className)}>
+        <div className={clsx(styles.root, fill && styles.fill, className)}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
             <button className={styles.iconWrapper} onClick={onPlay}>
                 {icon}

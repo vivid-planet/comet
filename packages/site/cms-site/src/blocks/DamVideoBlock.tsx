@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { type DamVideoBlockData } from "../blocks.generated";
@@ -73,9 +73,7 @@ export const DamVideoBlock = withPreview(
                         playsInline
                         muted={autoplay}
                         ref={videoRef}
-                        className={classNames(styles.video, {
-                            [styles.fill]: fill,
-                        })}
+                        className={clsx(styles.video, fill && styles.fill)}
                         style={!fill ? { aspectRatio: aspectRatio.replace("x", " / ") } : undefined}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
