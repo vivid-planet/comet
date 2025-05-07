@@ -1,0 +1,8 @@
+.video {
+    width: 100%;
+    object-fit: cover;
+}
+
+.fill {
+    height: 100%;
+}
