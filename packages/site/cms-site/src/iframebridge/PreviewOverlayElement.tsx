@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 
 import { type OverlayElementData } from "./IFrameBridge";
 import styles from "./PreviewOverlayElement.module.css";
@@ -17,11 +17,12 @@ export const PreviewOverlayElement = ({ element }: Props) => {
     return (
         <div
             key={element.adminRoute}
-            className={classNames(styles.root, {
-                [styles.showBlockOutlines]: iFrameBridge.showOutlines && !isHovered,
-                [styles.blockIsSelected]: isSelected,
-                [styles.isHoveredInBlockList]: isHovered,
-            })}
+            className={clsx(
+                styles.root,
+                iFrameBridge.showOutlines && !isHovered && styles.showBlockOutlines,
+                isSelected && styles.blockIsSelected,
+                isHovered && styles.isHoveredInBlockList,
+            )}
             title={element.label}
             onClick={() => {
                 iFrameBridge.sendSelectComponent(element.adminRoute);

@@ -1,5 +1,5 @@
 "use client";
-import classNames from "classnames";
+import clsx from "clsx";
 import { type ReactNode, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
@@ -103,7 +103,7 @@ export const VimeoVideoBlock = withPreview(
                 ) : (
                     <div
                         ref={inViewRef}
-                        className={classNames(styles.videoContainer, { [styles.fill]: fill })}
+                        className={clsx(styles.videoContainer, fill && styles.fill)}
                         style={!fill ? { aspectRatio: aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
