@@ -48,7 +48,6 @@ export class WarningCheckerCommand extends CommandRunner {
     async run(): Promise<void> {
         let startDate = new Date();
 
-        // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
         for (const data of this.groupRootBlockDataByEntity()) {
             const { tableName, className, rootBlockData, hasScope } = data;
 
