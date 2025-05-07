@@ -22,8 +22,8 @@ import { useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
 import { WarningActions } from "./WarningActions";
+import { useWarningConfig } from "./warningConfig";
 import { WarningMessage } from "./WarningMessage";
-import { warningMessages as cometWarningMessages } from "./warningMessages";
 import { WarningSeverity } from "./WarningSeverity";
 import { type GQLWarningsGridQuery, type GQLWarningsGridQueryVariables, type GQLWarningsListFragment } from "./WarningsGrid.generated";
 
@@ -81,7 +81,7 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
         ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
         ...usePersistentColumnState("WarningsGrid"),
     };
-    const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
+    const { warningMessages } = useWarningConfig();
     const { values: scopeValues } = useContentScope();
     const scopes = scopeValues.map((item) => item.scope);
 

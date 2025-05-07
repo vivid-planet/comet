@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { dataGridDateTimeColumn, type GridColDef } from "@comet/admin";
 import { Reload } from "@comet/admin-icons";
 import { DataGrid } from "@mui/x-data-grid";
-import { type ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
@@ -13,22 +12,18 @@ import {
     type GQLLatestWarningsQueryVariables,
 } from "./LatestWarningsDashboardWidget.generated";
 import { WarningActions } from "./WarningActions";
+import { useWarningConfig } from "./warningConfig";
 import { WarningMessage } from "./WarningMessage";
-import { warningMessages as cometWarningMessages } from "./warningMessages";
 import { WarningSeverity } from "./WarningSeverity";
 
-interface Props {
-    warningMessages?: Record<string, ReactNode>;
-}
-
-export const LatestWarningsDashboardWidget = ({ warningMessages: projectWarningMessages }: Props) => {
+export const LatestWarningsDashboardWidget = () => {
     const { values: scopeValues } = useContentScope();
+    const { warningMessages } = useWarningConfig();
     const scopes = scopeValues.map((item) => item.scope);
 
     const { data, loading, error } = useQuery<GQLLatestWarningsQuery, GQLLatestWarningsQueryVariables>(latestWarningsQuery, {
         variables: { scopes },
     });
-    const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
 
     const intl = useIntl();
     if (error) {
