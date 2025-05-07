@@ -40,6 +40,7 @@ export const LatestWarningsDashboardWidget = () => {
         },
         {
             ...dataGridDateTimeColumn,
+            ...disableFieldOptions,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "dashboard.latestWarningsWidget.dateTime", defaultMessage: "Date / Time" }),
             flex: 1,
@@ -91,7 +92,7 @@ const latestWarningsFragments = gql`
 
 const latestWarningsQuery = gql`
     query LatestWarnings($scopes: [JSONObject!]!) {
-        warnings(limit: 5, scopes: $scopes) {
+        warnings(limit: 5, scopes: $scopes, sort: { field: createdAt, direction: DESC }) {
             nodes {
                 ...LatestWarningsList
             }
