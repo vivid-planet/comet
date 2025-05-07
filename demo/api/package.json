@@ -15,7 +15,7 @@
         "dev:reload": "rimraf src/reload.ts && chokidar \"node_modules/@comet/cms-api/lib/**\" -s -c \"echo '// change' >> src/reload.ts\"",
         "fixtures": "$npm_execpath console fixtures --",
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
-        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint": "$npm_execpath run api-generator && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
