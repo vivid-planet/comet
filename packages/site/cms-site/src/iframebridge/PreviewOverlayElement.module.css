@@ -20,9 +20,17 @@
     outline-style: solid;
 }
 
+.root:hover:after {
+    background-color: #29b6f6;
+}
+
 .isHoveredInBlockList {
     outline-color: #29b6f6;
     outline-style: solid;
+}
+
+.isHoveredInBlockList:after {
+    background-color: #29b6f6;
 }
 
 .showBlockOutlines:not(:hover) {
