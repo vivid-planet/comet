@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-plugin",
-    "version": "7.13.0",
+    "version": "8.0.0-beta.4",
     "main": "lib/index.js",
     "scripts": {
         "build": "$npm_execpath run clean && tsc",
@@ -14,27 +14,30 @@
         "test:watch": "jest --watch"
     },
     "devDependencies": {
-        "@eslint/js": "^9.21.0",
+        "@eslint/js": "^9.22.0",
         "@types/jest": "^29.5.14",
-        "eslint": "^9.20.1",
-        "eslint-config-prettier": "^10.0.1",
+        "eslint": "^9.22.0",
+        "eslint-config-prettier": "^10.1.1",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-jsonc": "^2.19.1",
-        "eslint-plugin-package-json": "^0.26.0",
+        "eslint-plugin-package-json": "^0.29.0",
         "eslint-plugin-prettier": "^5.2.3",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
         "globals": "^15.15.0",
         "jest": "^29.7.0",
         "npm-run-all2": "^5.0.2",
-        "prettier": "^3.5.2",
-        "ts-jest": "^29.2.5",
+        "prettier": "^3.5.3",
+        "ts-jest": "^29.2.6",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.24.1"
     },
     "peerDependencies": {
         "eslint": ">=9",
         "prettier": ">=3"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     },
     "publishConfig": {
         "access": "public",

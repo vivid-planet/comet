@@ -1,8 +1,11 @@
 import { MikroORM } from "@mikro-orm/postgresql";
+import { Logger } from "@nestjs/common";
 import { Command, CommandRunner } from "nest-commander";
 
 @Command({ name: "migrate", description: "Runs all migrations" })
 export class MigrateCommand extends CommandRunner {
+    private readonly logger = new Logger(MigrateCommand.name);
+
     constructor(private readonly orm: MikroORM) {
         super();
     }
@@ -14,7 +17,7 @@ export class MigrateCommand extends CommandRunner {
     }
 
     async run(): Promise<void> {
-        console.log("Running migrations...");
+        this.logger.log("Running migrations...");
         const em = this.orm.em.fork();
 
         try {
@@ -24,32 +27,32 @@ export class MigrateCommand extends CommandRunner {
             const connection = em.getConnection();
             // we can't use MikroORM's migrations table as lock object, because it does not exist on first run, so we bring our own lock object
             await connection.execute(
-                `CREATE TABLE IF NOT EXISTS "migrations_lock" ("id" int NOT NULL, PRIMARY KEY ("id"))`,
+                `CREATE TABLE IF NOT EXISTS "MigrationsLock" ("id" int NOT NULL, PRIMARY KEY ("id"))`,
                 undefined,
                 undefined,
                 em.getTransactionContext(),
             );
 
             let lockTries = 0;
-            let lockAquired = false;
-            while (!lockAquired) {
+            let lockAcquired = false;
+            while (!lockAcquired) {
                 try {
-                    // we lock in exclusive mode, so any other transactions fails immediatly (NOWAIT)
+                    // we lock in exclusive mode, so any other transactions fails immediately (NOWAIT)
                     // lock gets automatically released on commit or rollback
                     await connection.execute(
-                        `LOCK TABLE "migrations_lock" IN EXCLUSIVE MODE NOWAIT`,
+                        `LOCK TABLE "MigrationsLock" IN EXCLUSIVE MODE NOWAIT`,
                         undefined,
                         undefined,
                         em.getTransactionContext(),
                     );
-                    lockAquired = true;
+                    lockAcquired = true;
                 } catch (error) {
                     await em.rollback();
-                    console.warn(error);
-                    console.warn(`Cannot aquire lock for table migrations_lock (try ${++lockTries})`);
+                    this.logger.warn(error);
+                    this.logger.warn(`Cannot acquire lock for table MigrationsLock (try ${++lockTries})`);
                     if (lockTries > 3600) {
-                        console.error(`Giving up...`);
-                        throw new Error("Could not aquire lock for table migrations_locks");
+                        this.logger.error(`Giving up...`);
+                        throw new Error("Could not acquire lock for table MigrationsLock");
                     }
                     await this.sleep(1);
                     await em.begin(em.getTransactionContext());
@@ -61,14 +64,14 @@ export class MigrateCommand extends CommandRunner {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any); // https://mikro-orm.io/docs/migrations/#providing-transaction-context
 
-            console.log(`Executed migrations. Trying to commit...`);
+            this.logger.log(`Executed migrations. Trying to commit...`);
             await em.commit();
-            console.log("Migrations successfully committed");
+            this.logger.log("Migrations successfully committed");
         } catch (error) {
-            console.error(error);
+            this.logger.error(error);
             await em.rollback();
 
-            // we need to fail with non-zero exit-code, so migrations will be retried by kubernetes with exponantial back-off
+            // we need to fail with non-zero exit-code, so migrations will be retried by kubernetes with exponential back-off
             process.exit(-1);
         }
     }

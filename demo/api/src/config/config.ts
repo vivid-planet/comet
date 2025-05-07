@@ -33,7 +33,12 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
         auth: {
+            useAuthProxy: envVars.USE_AUTHPROXY,
             systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
+            idpClientId: envVars.IDP_CLIENT_ID,
+            idpJwksUri: envVars.IDP_JWKS_URI,
+            idpEndSessionEndpoint: envVars.IDP_END_SESSION_ENDPOINT,
+            postLogoutRedirectUri: envVars.POST_LOGOUT_REDIRECT_URI,
         },
         imgproxy: {
             ...cometConfig.imgproxy,
@@ -45,6 +50,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
+            allowedImageSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
         },
         azureAiTranslator:
             envVars.AZURE_AI_TRANSLATOR_ENDPOINT && envVars.AZURE_AI_TRANSLATOR_KEY && envVars.AZURE_AI_TRANSLATOR_REGION

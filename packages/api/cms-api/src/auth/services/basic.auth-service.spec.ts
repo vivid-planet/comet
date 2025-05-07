@@ -1,5 +1,4 @@
-import { UnauthorizedException } from "@nestjs/common";
-
+import { SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 import { createBasicAuthService } from "./basic.auth-service";
 
 describe("createBasicAuthService", () => {
@@ -14,35 +13,36 @@ describe("createBasicAuthService", () => {
         expect(() => createService("", "")).toThrowError();
     });
 
-    it("returns undefined on unknown header", async () => {
+    it("returns skip authentication on unknown header", async () => {
         const service = instantianteService("vivid", "planet");
-        expect(service.authenticateUser(mockRequest("Bearer"))).toBeUndefined();
-        expect(service.authenticateUser(mockRequest("Bearer xxx"))).toBeUndefined();
-        expect(service.authenticateUser(mockRequest("BasicAuth xxx"))).toBeUndefined();
-        expect(service.authenticateUser(mockRequest(""))).toBeUndefined();
+        expect(service.authenticateUser(mockRequest("Bearer"))).toBe(SKIP_AUTH_SERVICE);
+        expect(service.authenticateUser(mockRequest("Bearer xxx"))).toBe(SKIP_AUTH_SERVICE);
+        expect(service.authenticateUser(mockRequest("BasicAuth xxx"))).toBe(SKIP_AUTH_SERVICE);
+        expect(service.authenticateUser(mockRequest(""))).toBe(SKIP_AUTH_SERVICE);
     });
 
-    it("returns undefined on non decodable payload", async () => {
+    it("returns skip authentication on non decodable payload", async () => {
         const service = instantianteService("vivid", "planet");
-        expect(service.authenticateUser(mockRequest("Basic #"))).toBeUndefined();
+        expect(service.authenticateUser(mockRequest("Basic #"))).toBe(SKIP_AUTH_SERVICE);
     });
 
-    it("returns undefined on wrong username", async () => {
+    it("returns skips authentication on wrong username", async () => {
         const service = instantianteService("vivid", "planet");
-        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivit:planet")}`))).toBeUndefined();
-        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivit:planed")}`))).toBeUndefined();
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivit:planet")}`))).toBe(SKIP_AUTH_SERVICE);
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivit:planed")}`))).toBe(SKIP_AUTH_SERVICE);
     });
 
-    it("throws UnauthorizedException on wrong password", async () => {
+    it("returns authenticationError on wrong password", async () => {
         const service = instantianteService("vivid", "planet");
-        expect(() => service.authenticateUser(mockRequest(`Basic ${btoa("vivid:foo")}`))).toThrow(UnauthorizedException);
-        expect(() => service.authenticateUser(mockRequest(`Basic ${btoa("vivid::")}`))).toThrow(UnauthorizedException);
-        expect(() => service.authenticateUser(mockRequest(`Basic ${btoa("vivid")}`))).toThrow(UnauthorizedException);
-        expect(() => service.authenticateUser(mockRequest(`Basic ${btoa("vivid:planetfoo")}`))).toThrow(UnauthorizedException);
+        const authenticationError = expect.objectContaining({ authenticationError: expect.any(String) });
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivid:foo")}`))).toEqual(authenticationError);
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivid::")}`))).toEqual(authenticationError);
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivid")}`))).toEqual(authenticationError);
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivid:planetfoo")}`))).toEqual(authenticationError);
     });
 
     it("returns username on correct authentication", async () => {
         const service = instantianteService("vivid", "planet");
-        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivid:planet")}`))).toBe("vivid");
+        expect(service.authenticateUser(mockRequest(`Basic ${btoa("vivid:planet")}`))).toStrictEqual({ systemUser: "vivid" });
     });
 });

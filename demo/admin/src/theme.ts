@@ -1,3 +1,3 @@
-import { createCometTheme } from "@comet/admin-theme";
+import { createCometTheme } from "@comet/admin";
 
 export const theme = createCometTheme();

@@ -8,7 +8,9 @@ import { useCallback } from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { useDamConfig } from "../config/useDamConfig";
+import { useContentLanguage } from "../../contentLanguage/useContentLanguage";
+import { useContentScope } from "../../contentScope/Provider";
+import { useDamConfig } from "../config/damConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
@@ -42,6 +44,9 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const damConfig = useDamConfig();
     const formApi = useForm();
     const { contentGeneration } = useDamConfig();
+    const contentScope = useContentScope();
+    const language = useContentLanguage(contentScope);
+
     const damIsFilenameOccupied = useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
@@ -139,7 +144,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
-                                    const { data } = await generateAltText({ variables: { fileId: file.id } });
+                                    const { data } = await generateAltText({ variables: { fileId: file.id, language } });
                                     formApi.change("altText", data?.generateAltText);
                                 }}
                             >
@@ -162,7 +167,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
-                                    const { data } = await generateImageTitle({ variables: { fileId: file.id } });
+                                    const { data } = await generateImageTitle({ variables: { fileId: file.id, language } });
                                     formApi.change("title", data?.generateImageTitle);
                                 }}
                             >

@@ -8,12 +8,12 @@ import {
     FieldSet,
     filterByFragment,
     FinalForm,
-    FinalFormInput,
     FinalFormRangeInput,
     type FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     messages,
+    NumberField,
     OnChangeField,
     RadioGroupField,
     TextAreaField,
@@ -42,7 +42,6 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../../helpers/FutureProductNotice";
-import { validateTitle } from "../validateTitle";
 import {
     type GQLManufacturersSelectQuery,
     type GQLManufacturersSelectQueryVariables,
@@ -134,7 +133,8 @@ export function ProductForm({ id }: FormProps) {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            category: formValues.category?.id,
+            description: formValues.description ?? "",
+            category: formValues.category ? formValues.category.id : null,
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
@@ -143,7 +143,7 @@ export function ProductForm({ id }: FormProps) {
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
-            manufacturer: formValues.manufacturer?.id,
+            manufacturer: formValues.manufacturer ? formValues.manufacturer.id : null,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -191,7 +191,7 @@ export function ProductForm({ id }: FormProps) {
                     {saveConflict.dialogs}
                     <>
                         <FieldSet
-                            initiallyExpanded
+                            initiallyExpanded={true}
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
                             supportText={
                                 mode === "edit" && (
@@ -213,7 +213,14 @@ export function ProductForm({ id }: FormProps) {
                                 fullWidth
                                 name="title"
                                 label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
-                                validate={validateTitle}
+                                validate={(value: string) =>
+                                    value.length < 3 ? (
+                                        <FormattedMessage
+                                            id="product.validate.titleMustBe3CharsLog"
+                                            defaultMessage="Title must be at least 3 characters long"
+                                        />
+                                    ) : undefined
+                                }
                             />
 
                             <TextField
@@ -240,7 +247,6 @@ export function ProductForm({ id }: FormProps) {
                             />
 
                             <TextAreaField
-                                required
                                 variant="horizontal"
                                 fullWidth
                                 name="description"
@@ -318,33 +324,27 @@ export function ProductForm({ id }: FormProps) {
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>
-                                            <Field
+                                            <NumberField
                                                 required
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="dimensions.width"
-                                                component={FinalFormInput}
-                                                type="number"
                                                 label={<FormattedMessage id="product.width" defaultMessage="Width" />}
                                             />
 
-                                            <Field
+                                            <NumberField
                                                 required
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="dimensions.height"
-                                                component={FinalFormInput}
-                                                type="number"
                                                 label={<FormattedMessage id="product.height" defaultMessage="Height" />}
                                             />
 
-                                            <Field
+                                            <NumberField
                                                 required
                                                 variant="horizontal"
                                                 fullWidth
                                                 name="dimensions.depth"
-                                                component={FinalFormInput}
-                                                type="number"
                                                 label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
                                             />
                                         </>

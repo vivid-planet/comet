@@ -151,6 +151,13 @@ enum KubernetesJobStatus {
   failed
 }
 
+type SeoTags {
+  htmlTitle: String!
+  metaDescription: String!
+  openGraphTitle: String!
+  openGraphDescription: String!
+}
+
 type KubernetesCronJob {
   id: ID!
   name: String!
@@ -446,6 +453,7 @@ enum SortDirection {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -459,6 +467,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input BooleanFilter {
@@ -643,8 +652,9 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
-  generateAltText(fileId: String!): String!
-  generateImageTitle(fileId: String!): String!
+  generateAltText(fileId: String!, language: String): String!
+  generateImageTitle(fileId: String!, language: String): String!
+  generateSeoTags(content: String!, language: String!): SeoTags!
 }
 
 input CreateBuildsInput {

@@ -3,9 +3,9 @@
 import { OffsetBasedPaginationArgs } from "@comet/cms-api";
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
 
-import { NewsContentScope, NewsStatus } from "../../entities/news.entity";
+import { NewsContentScope } from "../../entities/news.entity";
 import { NewsFilter } from "./news.filter";
 import { NewsSort } from "./news.sort";
 
@@ -15,10 +15,6 @@ export class NewsListArgs extends OffsetBasedPaginationArgs {
     @ValidateNested()
     @Type(() => NewsContentScope)
     scope: NewsContentScope;
-
-    @Field(() => [NewsStatus], { defaultValue: [NewsStatus.Active] })
-    @IsEnum(NewsStatus, { each: true })
-    status: NewsStatus[];
 
     @Field({ nullable: true })
     @IsOptional()

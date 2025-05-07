@@ -1,5 +1,4 @@
 ---
-"@comet/admin-theme": major
 "@comet/cms-admin": major
 "@comet/admin": major
 ---

@@ -20,10 +20,9 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
 import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -82,17 +81,19 @@ const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="name" label="Name" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="name" label="Name" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
@@ -110,17 +111,19 @@ const AddStocksDialog = ({ dialogApiRef }: DialogProps) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="amount" label="Amount" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="amount" label="Amount" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
@@ -134,16 +137,14 @@ interface ToolbarProps extends GridToolbarProps {
 function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <Typography>
-                    <FormattedMessage
-                        id="toolbar.helperText"
-                        defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
-                    />
-                </Typography>
-            </ToolbarItem>
+            <Typography>
+                <FormattedMessage
+                    id="toolbar.helperText"
+                    defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
+                />
+            </Typography>
             <FillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            {toolbarAction}
         </DataGridToolbar>
     );
 }

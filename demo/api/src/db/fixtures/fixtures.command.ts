@@ -2,26 +2,27 @@ import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, 
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
-import { Inject } from "@nestjs/common";
+import { Inject, Logger } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
-import { Link } from "@src/documents/links/entities/link.entity";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import { StageBlock } from "@src/documents/pages/blocks/stage.block";
 import { PageInput } from "@src/documents/pages/dto/page.input";
 import { Page } from "@src/documents/pages/entities/page.entity";
-import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
+import { MultiBar, Options, Presets } from "cli-progress";
 import { Command, CommandRunner } from "nest-commander";
 import slugify from "slugify";
 
+import { DocumentGeneratorService } from "./generators/document-generator.service";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
-import { generateLinks } from "./generators/links.generator";
+import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
+import { VideoFixtureService } from "./generators/video-fixture.service";
 
 export interface PageTreeNodesFixtures {
     home?: PageTreeNodeInterface;
@@ -45,190 +46,92 @@ const getDefaultPageInput = (): PageInput => {
     description: "Create fixtures with faker.js",
 })
 export class FixturesCommand extends CommandRunner {
+    private readonly logger = new Logger(FixturesCommand.name);
+
+    barOptions: Options = {
+        format: `{bar} {percentage}% | {value}/{total} {title} | ETA: {eta_formatted} | Duration: {duration_formatted}`,
+        noTTYOutput: true,
+    };
+
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
-        private readonly pageTreeService: PageTreeService,
-        private readonly orm: MikroORM,
-        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
-        @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
-        private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
-        private readonly fileUploadsFixtureService: FileUploadsFixtureService,
-        private readonly redirectsFixtureService: RedirectsFixtureService,
+        private readonly documentGeneratorService: DocumentGeneratorService,
         private readonly dependenciesService: DependenciesService,
         private readonly entityManager: EntityManager,
         private readonly productsFixtureService: ProductsFixtureService,
+        private readonly fileUploadsFixtureService: FileUploadsFixtureService,
+        private readonly imageFixtureService: ImageFixtureService,
+        private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
+        private readonly orm: MikroORM,
+        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
+        private readonly pageTreeService: PageTreeService,
+        private readonly redirectsFixtureService: RedirectsFixtureService,
+        private readonly videoFixtureService: VideoFixtureService,
     ) {
         super();
     }
 
     @CreateRequestContext()
     async run(): Promise<void> {
-        const pageTreeNodes: PageTreeNodesFixtures = {};
         // ensure repeatable runs
         faker.seed(123456);
 
+        this.logger.log("Drop tables...");
+        const connection = this.orm.em.getConnection();
+        const tables = await connection.execute(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' ORDER BY tablename;`);
+
+        for (const table of tables) {
+            await connection.execute(`DROP TABLE IF EXISTS "${table.tablename}" CASCADE`);
+        }
+
+        this.logger.log("Clear storage...");
         const damFilesDirectory = `${this.config.blob.storageDirectoryPrefix}-files`;
         if (await this.blobStorageBackendService.folderExists(damFilesDirectory)) {
             await this.blobStorageBackendService.removeFolder(damFilesDirectory);
         }
         await this.blobStorageBackendService.createFolder(damFilesDirectory);
-        console.log("Storage cleared");
 
-        const generator = this.orm.getSchemaGenerator();
-        console.log(`Drop and recreate schema...`);
-        await generator.dropSchema({ dropDb: false, dropMigrationsTable: true });
-
-        console.log(`Run migrations...`);
+        this.logger.log("Run migrations...");
         const migrator = this.orm.getMigrator();
         await migrator.up();
 
-        const scope: PageTreeNodeScope = {
-            domain: "main",
-            language: "en",
-        };
+        const scope = { domain: "main", language: "en" };
 
-        const attachedDocumentIds = [
-            "b0bf3927-e080-4d4e-997b-d7f18b051e0f",
-            "4ff8707a-4bb7-45ab-b06d-72a3e94286c7",
-            "729c37f5-c28b-45d4-88a8-a89abc579c07",
-            "46ce964c-f029-46f0-9961-ef436e2391f2",
-            "dc956c9a-729b-4d8e-9ed4-f1be1dad6dd3",
-        ];
+        const multiBar = new MultiBar(this.barOptions, Presets.shades_classic);
 
-        let node = await this.pageTreeService.createNode(
-            {
-                name: "Home",
-                slug: "home",
-                attachedDocument: {
-                    id: attachedDocumentIds[0],
-                    type: "Page",
-                },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
+        this.logger.log("Generate Images...");
+        await this.imageFixtureService.generateImages(5, { domain: "main" });
+
+        this.logger.log("Generate Videos...");
+        await this.videoFixtureService.generateVideos({ domain: "main" });
+
+        this.logger.log("Generate Pages...");
+        await this.documentGeneratorService.generatePage({ name: "Home", scope });
+        const blockCategoriesPage = await this.documentGeneratorService.generatePage({ name: "Fixtures: Blocks", scope });
+
+        await this.documentGeneratorService.generatePage({ name: "Layout", scope, blockCategory: "layout", parentId: blockCategoriesPage.id });
+        await this.documentGeneratorService.generatePage({ name: "Media", scope, blockCategory: "media", parentId: blockCategoriesPage.id });
+        await this.documentGeneratorService.generatePage({
+            name: "Navigation",
             scope,
-        );
-        pageTreeNodes.home = node;
-
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
-
-        node = await this.pageTreeService.createNode(
-            {
-                id: "aaa585d3-eca1-47c9-8852-9370817b49ac",
-                name: "Sub",
-                slug: "sub",
-                parentId: node.id,
-                attachedDocument: { id: attachedDocumentIds[1], type: "Page" },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
+            blockCategory: "navigation",
+            parentId: blockCategoriesPage.id,
+        });
+        await this.documentGeneratorService.generatePage({ name: "Teaser", scope, blockCategory: "teaser", parentId: blockCategoriesPage.id });
+        await this.documentGeneratorService.generatePage({
+            name: "Text and Content",
             scope,
-        );
-        pageTreeNodes.sub = node;
+            blockCategory: "textAndContent",
+            parentId: blockCategoriesPage.id,
+        });
 
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
-
-        node = await this.pageTreeService.createNode(
-            {
-                name: "Test 2",
-                slug: "test2",
-                attachedDocument: {
-                    id: attachedDocumentIds[2],
-                    type: "Page",
-                },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
-            scope,
-        );
-        pageTreeNodes.test2 = node;
-
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
-
-        node = await this.pageTreeService.createNode(
-            {
-                name: "Test 3",
-                slug: "test3",
-                attachedDocument: {
-                    type: "Page",
-                },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
-            scope,
-        );
-        pageTreeNodes.test3 = node;
-
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
-
-        node = await this.pageTreeService.createNode(
-            {
-                name: "Link1",
-                slug: "link",
-                attachedDocument: {
-                    id: attachedDocumentIds[3],
-                    type: "Link",
-                },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
-            scope,
-        );
-        pageTreeNodes.link1 = node;
-
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
-
-        node = await this.pageTreeService.createNode(
-            {
-                name: "Test Site visibility",
-                slug: "test-site-visibility",
-                attachedDocument: {
-                    id: attachedDocumentIds[4],
-                    type: "Page",
-                },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
-            scope,
-        );
-        pageTreeNodes.testSiteVisibility = node;
-
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
-
-        for (const attachedDocumentId of attachedDocumentIds) {
-            const pageInput = getDefaultPageInput();
-
-            await this.entityManager.persistAndFlush(
-                this.pagesRepository.create({
-                    id: attachedDocumentId,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    content: pageInput.content.transformToBlockData(),
-                    seo: pageInput.seo.transformToBlockData(),
-                    stage: pageInput.stage.transformToBlockData(),
-                }),
-            );
-        }
-
-        console.log("generate links");
-        await generateLinks(this.linksRepository, pageTreeNodes);
-        console.log("links generated");
-
-        console.log("generate many images test page");
+        this.logger.log("Generate Many Images Test Page...");
         await this.manyImagesTestPageFixtureService.execute();
-        console.log("many images test page created");
+        this.logger.log("Many Images Test Page created");
 
-        console.log("generate lorem ispum fixtures");
-
+        this.logger.log("Generate Lorem Ispum Fixtures...");
         const NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT = 0; // Increase number to generate lorum ipsum fixtures
-
         for (let domainNum = 0; domainNum < NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT; domainNum++) {
             const domain = domainNum === 0 ? "secondary" : `${faker.lorem.word().toLowerCase()}.com`;
             let pagesCount = 0;
@@ -282,12 +185,16 @@ export class FixturesCommand extends CommandRunner {
 
                 pages.push(pagesForLevel);
             }
-            console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
+            this.logger.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
         }
 
+        this.logger.log("Generate File Uploads...");
         await this.fileUploadsFixtureService.generateFileUploads();
 
+        this.logger.log("Generate Redirects...");
         await this.redirectsFixtureService.generateRedirects();
+
+        multiBar.stop();
 
         await this.dependenciesService.createViews();
 

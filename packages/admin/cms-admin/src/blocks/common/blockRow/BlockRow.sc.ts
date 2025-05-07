@@ -28,7 +28,7 @@ const slideInAnimation = keyframes`
 export const BlockWrapper = styled("div")`
     position: relative;
 
-    :hover ${AddContainer} {
+    &:hover ${`${AddContainer}`} {
         display: block;
     }
 `;

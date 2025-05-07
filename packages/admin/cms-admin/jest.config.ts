@@ -7,13 +7,6 @@ export default {
     // Indicates which provider should be used to instrument code for coverage
     coverageProvider: "v8",
 
-    // A set of global variables that need to be available in all test environments
-    globals: {
-        "ts-jest": {
-            tsconfig: "tsconfig.test.json",
-        },
-    },
-
     // A preset that is used as a base for Jest's configuration
     preset: "ts-jest",
 
@@ -36,5 +29,16 @@ export default {
 
     moduleNameMapper: {
         "^react-dnd$": "<rootDir>/testing/stub-file.ts",
+        "@mui/material/styles/createPalette": "<rootDir>/testing/stub-file.ts",
+        "@mui/material/styles/createTypography": "<rootDir>/testing/stub-file.ts",
+        "@mui/material/styles/zIndex": "<rootDir>/testing/stub-file.ts",
+    },
+    transform: {
+        "^.+\\.tsx?$": [
+            "ts-jest",
+            {
+                tsconfig: "tsconfig.test.json",
+            },
+        ],
     },
 };

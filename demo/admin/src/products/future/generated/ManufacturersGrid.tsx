@@ -12,8 +12,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
@@ -22,7 +20,7 @@ import {
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
     type GQLCreateManufacturerMutation,
@@ -41,17 +39,21 @@ const manufacturersFragment = gql`
         address {
             street
             streetNumber
+            zip
             alternativeAddress {
                 street
                 streetNumber
+                zip
             }
         }
         addressAsEmbeddable {
             street
             streetNumber
+            zip
             alternativeAddress {
                 street
                 streetNumber
+                zip
             }
         }
     }
@@ -86,18 +88,12 @@ const createManufacturerMutation = gql`
 function ManufacturersGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
-                </Button>
-            </ToolbarActions>
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="manufacturer.manufacturersGridFuture.newEntry" defaultMessage="Add Manufacturer" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -113,14 +109,7 @@ export function ManufacturersGrid() {
     };
 
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
-        {
-            field: "id",
-            headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
-            filterable: false,
-            sortable: false,
-            flex: 1,
-            minWidth: 150,
-        },
+        { field: "id", headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }), sortable: false, flex: 1, minWidth: 150 },
         { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             field: "address_street",
@@ -138,6 +127,18 @@ export function ManufacturersGrid() {
             filterable: false,
             sortable: false,
             valueGetter: (params, row) => row.address?.streetNumber,
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "address_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.address.zip", defaultMessage: "Zip" }),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.zip,
             flex: 1,
             minWidth: 150,
         },
@@ -194,6 +195,32 @@ export function ManufacturersGrid() {
             filterable: false,
             sortable: false,
             valueGetter: (params, row) => row.address?.alternativeAddress?.streetNumber,
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "address_alternativeAddress_zip",
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle
+                        label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" })}
+                        columnWidth={150}
+                    />
+                    <Tooltip
+                        title={
+                            <FormattedMessage id="manufacturer.address.alternativeAddress.zip.tooltip" defaultMessage="Zip of alternative address" />
+                        }
+                    >
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
+            filterable: false,
+            sortable: false,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
             flex: 1,
             minWidth: 150,
         },
@@ -209,6 +236,16 @@ export function ManufacturersGrid() {
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
             type: "number",
             valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "addressAsEmbeddable_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.zip", defaultMessage: "Zip 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
             flex: 1,
             minWidth: 150,
         },
@@ -227,6 +264,16 @@ export function ManufacturersGrid() {
             }),
             type: "number",
             valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "addressAsEmbeddable_alternativeAddress_zip",
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.zip", defaultMessage: "Alt-Zip 2" }),
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
             flex: 1,
             minWidth: 150,
         },

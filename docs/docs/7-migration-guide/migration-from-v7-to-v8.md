@@ -5,32 +5,102 @@ sidebar_position: -8
 
 # Migrating from v7 to v8
 
-First, execute `npx @comet/upgrade@latest v8` in the root of your project.
-It automatically installs the new versions of all `@comet` libraries, runs an ESLint autofix and handles some of the necessary renames.
+:::warning Use the upgrade scripts
+
+Start by executing the upgrade script in the root of your project:
+
+```sh
+npx @comet/upgrade@latest v8
+```
+
+That handles most of the necessary changes.
+
+:::
+
+The following sections go over all necessary changes.
+All changes handled by the upgrade script are hidden in closed accordions.
+Refer to the hidden content if you face issues with the upgrade scripts.
+
+:::info
+
+You can re-execute individual upgrade scripts if needed: `npx @comet/upgrade@latest v8/[upgrade-script-name].ts`
+
+:::
+
+## General
+
+### ✅ Upgrade Node to v22
 
 <details>
 
-<summary>Changes handled by @comet/upgrade</summary>
+<summary>Handled by @comet/upgrade</summary>
 
-- Upgrade MUI packages to v6
-- Run MUI codemods
-- Upgrade MUI X packages to v6
-- Upgrade NestJS packages to v10
-- Upgrade Prettier to v3
-- Remove all passport-related dependencies (we don't use passport anymore)
-- Add @nestjs/jwt dependency
+#### In development:
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/replace-node-with-v22-locally.ts
+```
+
+:::
+
+```diff title=.nvmrc
+- 20
++ 22
+```
+
+```diff title=package.json
+- "@types/node": "^20.0.0",
++ "@types/node": "^22.0.0",
+```
+
+#### In pipeline and deployment:
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/replace-node-with-v22-in-gitlab-ci-files.ts
+```
+
+:::
+
+Make sure you use Node 22 in your CI files.
+When using Gitlab CI, check all files in the .gitlab-ci folders.
+Make sure to extend the correct jobs and replace all images and base images.
+
+```diff
+- extends: .lint-npm-node20
++ extends: .lint-npm-node22
+
+- BASE_IMAGE: "ubi/s2i-ubi9-nodejs20-minimal"
++ BASE_IMAGE: "ubi/s2i-ubi9-nodejs22-minimal"
+
+- image: eu.gcr.io/vivid-planet/utils/ubi9-nodejs20-minimal:master
++ image: eu.gcr.io/vivid-planet/utils/ubi9-nodejs22-minimal:master
+```
 
 </details>
 
 ## API
 
-### Upgrade peer dependencies
+### ✅ Upgrade peer dependencies
 
 #### NestJS
 
-The NestJS peer dependency has been bumped to v10.
+1.  Upgrade all your dependencies to support NestJS v11
 
-1.  Upgrade all your dependencies to support NestJS v10:
+    <details>
+
+    <summary>Handled by @comet/upgrade</summary>
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/update-nest-dependencies.ts
+    ```
+
+    :::
 
     ```diff title=api/package.json
     {
@@ -43,37 +113,47 @@ The NestJS peer dependency has been bumped to v10.
     -       "@nestjs/graphql": "^10.0.0",
     -       "@nestjs/passport": "^9.0.0",
     -       "@nestjs/platform-express": "^9.0.0",
-    +       "@nestjs/apollo": "^12.0.0",
-    +       "@nestjs/common": "^10.0.0",
-    +       "@nestjs/core": "^10.0.0",
-    +       "@nestjs/graphql": "^12.0.0",
-    +       "@nestjs/passport": "^10.0.0",
-    +       "@nestjs/platform-express": "^10.0.0",
+    +       "@nestjs/apollo": "^13.0.0",
+    +       "@nestjs/common": "^11.0.0",
+    +       "@nestjs/core": "^11.0.0",
+    +       "@nestjs/graphql": "^13.0.0",
+    +       "@nestjs/passport": "^11.0.0",
+    +       "@nestjs/platform-express": "^11.0.0",
     -       "apollo-server-core": "^3.0.0",
     -       "apollo-server-express": "^3.0.0",
+    -       "express": "^4.0.0",
+    +       "express": "^5.0.0",
     -       "graphql": "^15.0.0",
-    +       "graphql": "^16.6.0",
+    +       "graphql": "^16.10.0",
         },
         "devDependencies": {
     -       "@nestjs/cli": "^9.0.0",
     -       "@nestjs/schematics": "^9.0.0",
     -       "@nestjs/testing": "^9.0.0",
-    +       "@nestjs/cli": "^10.0.0",
-    +       "@nestjs/schematics": "^10.0.0",
-    +       "@nestjs/testing": "^10.0.0"
+    +       "@nestjs/cli": "^11.0.0",
+    +       "@nestjs/schematics": "^11.0.0",
+    +       "@nestjs/testing": "^11.0.0",
+    -       "@types/express": "^4.0.0",
+    +       "@types/express": "^5.0.0",
         }
     }
     ```
 
-    :::note Codemod available
+    </details>
+
+2.  Update the custom `formatError` function to hide GraphQL field suggestions
+
+    <details>
+
+    <summary>Handled by @comet/upgrade</summary>
+
+    :::note Handled by following upgrade script
 
     ```sh
-    npx @comet/upgrade v8/update-nest-dependencies.ts
+    npx @comet/upgrade v8/update-graphql-format-error.ts
     ```
 
     :::
-
-2.  Update the custom `formatError` function to hide GraphQL field suggestions:
 
     ```diff title=api/src/app.module.ts
     - import { ValidationError } from "apollo-server-express";
@@ -100,19 +180,58 @@ The NestJS peer dependency has been bumped to v10.
     }),
     ```
 
-    :::note Codemod available
+    </details>
 
-    ```sh
-    npx @comet/upgrade v8/update-graphql-format-error.ts
-    ```
+3.  You may need to update some of your routes to support Express v5.
+    See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
 
-    :::
+#### ✅ Add NestJS peer dependencies
+
+Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/nest-peer-dependencies.ts
+```
+
+:::
+
+To upgrade, install the dependencies in your project:
+
+```diff title=api/package.json
+{
+    "dependencies": {
++       "class-transformer": "^0.5.1",
+-       "reflect-metadata": "^0.1.13",
++       "reflect-metadata": "^0.2.2",
+-       "rxjs": "^7.0.0",
++       "rxjs": "^7.8.1",
+    }
+}
+```
+
+</details>
 
 #### MikroORM
 
-The MikroORM peer dependency has been bumped to v6.
-
 1.  Upgrade all your dependencies:
+
+    <details>
+
+    <summary>Handled by @comet/upgrade</summary>
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/update-mikro-orm-dependencies.ts
+    ```
+
+    :::
 
     ```diff title=api/package.json
     {
@@ -131,20 +250,18 @@ The MikroORM peer dependency has been bumped to v6.
     }
     ```
 
-    :::note Codemod available
-
-    ```sh
-    npx @comet/upgrade v8/update-mikro-orm-dependencies.ts
-    ```
-
-    :::
+    </details>
 
 2.  Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
 
-    :::note Codemods available
+    :::note Partially handled by upgrade scripts
 
     We provide upgrade scripts for basic migrations.
     Please note that these scripts might not cover all necessary migrations.
+
+    <details>
+
+    <summary>Changes handled by @comet/upgrade</summary>
 
     Remove generic from `BaseEntity`:
 
@@ -182,11 +299,25 @@ The MikroORM peer dependency has been bumped to v6.
     npx @comet/upgrade v8/mikro-orm-ormconfig.ts
     ```
 
+    </details>
+
     :::
 
-#### class-validator
+#### ✅ class-validator
 
-The class-validator peer dependency has been bumped to v0.14.0:
+The class-validator peer dependency has been bumped to v0.14.0.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-class-validator.ts
+```
+
+:::
 
 ```diff title=api/package.json
 {
@@ -197,15 +328,23 @@ The class-validator peer dependency has been bumped to v0.14.0:
 }
 ```
 
-:::note Codemod available
+</details>
+
+#### ✅ Sentry
+
+The Sentry dependency has been bumped to v9.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/update-class-validator.ts
+npx @comet/upgrade v8/update-sentry.ts
 ```
 
 :::
-
-#### Sentry
 
 1. Upgrade the "@sentry/node" dependency in your `package.json` file:
 
@@ -213,7 +352,7 @@ npx @comet/upgrade v8/update-class-validator.ts
 {
     "dependencies": {
 -       "@sentry/node": "^7.0.0",
-+       "@sentry/node": "^8.0.0",
++       "@sentry/node": "^9.0.0",
     },
 }
 ```
@@ -227,43 +366,84 @@ npx @comet/upgrade v8/update-class-validator.ts
 +   Sentry.setupExpressErrorHandler(app);
 ```
 
-### NestJS peer dependencies
+None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
 
-Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
-To upgrade, install the dependencies in your project:
+- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
+- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
 
-```diff title=api/package.json
-{
-    "dependencies": {
-+       "class-transformer": "^0.5.1",
--       "reflect-metadata": "^0.1.13",
-+       "reflect-metadata": "^0.2.2",
--       "rxjs": "^7.0.0",
-+       "rxjs": "^7.8.1",
-    }
-}
-```
+</details>
 
-:::note Codemod available
+#### ✅ `@kubernetes/client-node`
+
+The `@kubernetes/client-node` peer dependency has been bumped to v1.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/nest-peer-dependencies.ts
+npx @comet/upgrade v8/update-kubernetes-client-node.ts
 ```
 
 :::
 
-### Remove `@comet/blocks-api`
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@kubernetes/client-node": "^0.18.0",
++       "@kubernetes/client-node": "^1.0.0",
+    }
+}
+```
+
+</details>
+
+### ✅ Add new package @comet/api-generator
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
+    ```
+
+:::
+
+The API Generator has been moved into a separate package `@comet/api-generator`.
+
+```diff title="api/package.json"
+devDependencies: {
++  "@comet/api-generator": "^8.0.0",
+}
+```
+
+</details>
+
+### API Generator - Removed Special `status` Field Behavior
+
+Previously, if entities specified a `status` enum, it was automatically added to list queries arguments with a default value.
+
+This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
+done with the normal filtering mechanism.
+
+### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
 To upgrade, perform the following steps:
 
 1.  Remove the package:
 
-    ```diff title="api/package.json"
-    - "@comet/blocks-api": "^7.x.x",
-    ```
-
-    :::note Codemod available
+    :::note Handled by following upgrade script
 
     ```sh
     npx @comet/upgrade v8/remove-blocks-packages.ts
@@ -271,9 +451,13 @@ To upgrade, perform the following steps:
 
     :::
 
+    ```diff title="api/package.json"
+    - "@comet/blocks-api": "^7.x.x",
+    ```
+
 2.  Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
 
-    :::note Codemod available
+    :::note Handled by following upgrade script
 
     ```sh
     npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
@@ -283,7 +467,7 @@ To upgrade, perform the following steps:
 
 3.  Update imports that have been renamed
 
-    :::note Codemod available
+    :::note Handled by following upgrade script
 
     ```sh
     npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
@@ -293,16 +477,34 @@ To upgrade, perform the following steps:
 
 4.  Remove usages of removed export `getFieldKeys` (probably none)
 
+</details>
+
 ### Replace nestjs-console with nest-commander
 
 The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
 We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
 
-To upgrade, perform the following steps:
+The upgrade script will remove the `nestjs-console` package and install `nest-commander` and `@types/inquirer`.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
+```
+
+:::
 
 1. Uninstall `nestjs-console`
 2. Install `nest-commander` and `@types/inquirer`
-3. Update `api/src/console.ts` to use `nest-commander`. Minimum example:
+ </details>
+
+You have to perform the following steps manually:
+
+1. Update `api/src/console.ts` to use `nest-commander`. Minimum example:
 
     ```ts title="api/src/console.ts2
     import { CommandFactory } from "nest-commander";
@@ -328,17 +530,7 @@ To upgrade, perform the following steps:
     bootstrap();
     ```
 
-4. Update your commands to the new `nest-commander` syntax
-
-:::note Codemod available
-
-The first two steps can be achieved using a codemod:
-
-```sh
-npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
-```
-
-:::
+2. Update your commands to the new `nest-commander` syntax
 
 #### Migrating nestjs-console commands to nest-commander
 
@@ -466,6 +658,20 @@ This section highlights the necessary changes to convert a nestjs-console comman
 
 ### Remove passport
 
+The passport dependencies were removed by the upgrade script.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/remove-passport.ts
+```
+
+:::
+
 Remove all passport-dependencies and add @nestjs/jwt
 
 ```diff title=api/package.json
@@ -478,13 +684,9 @@ Remove all passport-dependencies and add @nestjs/jwt
 }
 ```
 
-:::note Codemod available
+</details>
 
-```sh
-npx @comet/upgrade v8/remove-passport.ts
-```
-
-:::
+Following steps must be done manually:
 
 Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`:
 
@@ -495,11 +697,12 @@ Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`
 +   ...createAuthGuardProviders(
 +       createBasicAuthService({ ... }),
 +       createJwtAuthService({ ... }),
++       createSitePreviewAuthService({ ... }),
 +       createStaticUserAuthService({ ... }),
 +   ),
 ```
 
-::: note Configuration changes
+:::note Configuration changes
 The configuration of the AuthServices have changed slightly compared to the strategies, however they remain similar. Consulting the code completion should help to adapt.
 :::
 
@@ -521,16 +724,100 @@ Import `JwtModule` from `@nestjs/jwt`:
 +   imports: [JwtModule],
 ```
 
+### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
+
+The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
+Some structural changes were necessary to achieve this.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+```
+
+:::
+
+You need to modify your `AppModule` as follows:
+
+```diff title="api/src/app.module.ts"
+    BlobStorageModule.register({
+        backend: config.blob.storage,
++       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+    }),
++   ImgproxyModule.register({
++       imgproxyConfig: config.imgproxy,
++   }),
+    DamModule.register({
+        damConfig: {
+            apiUrl: config.apiUrl,
+            secret: config.dam.secret,
+            allowedImageSizes: config.dam.allowedImageSizes,
+            allowedAspectRatios: config.dam.allowedImageAspectRatios,
+            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+-           cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+            maxFileSize: config.dam.uploadsMaxFileSize,
++           maxSrcResolution: config.dam.maxSrcResolution,
+        },
+-       imgproxyConfig: config.imgproxy,
+        Scope: DamScope,
+        File: DamFile,
+        Folder: DamFolder,
+    }),
+```
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+```
+
+:::
+
+```diff title="api/src/comet-config.json"
+{
+    "dam": {
+        "allowedImageAspectRatios": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
++       "maxSrcResolution": 70,
+        "uploadsMaxFileSize": 500
+    },
+    "images": {
+        "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        "imageSizes": [16, 32, 48, 64, 96, 128, 256, 320, 384]
+    },
+    "imgproxy": {
+-       "maxSrcResolution": 70,
+        "quality": 80
+    }
+}
+```
+
+</details>
+
 ## Admin
 
 ### Upgrade peer dependencies
 
-#### Recommended: React 18
+#### React
 
-Support for React 18 has been added.
-While optional, it is recommended to upgrade to React 18 in the project.
+The React dependency has been bumped to v18.
 
-1. Upgrade all your dependencies:
+1. Upgrade all your dependencies
+
+    <details>
+
+     <summary>Handled by @comet/upgrade</summary>
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/update-react-dependencies.ts
+    ```
+
+    :::
 
     ```diff title=admin/package.json
     {
@@ -549,13 +836,7 @@ While optional, it is recommended to upgrade to React 18 in the project.
     }
     ```
 
-    :::note Codemod available
-
-    ```sh
-    npx @comet/upgrade v8/update-react-dependencies.ts
-    ```
-
-    :::
+     </details>
 
 2. Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
 
@@ -564,6 +845,486 @@ While optional, it is recommended to upgrade to React 18 in the project.
     Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
 
     :::
+
+#### MUI
+
+The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
+
+1.  Upgrade your MUI dependencies
+
+     <details>
+
+     <summary>Handled by @comet/upgrade</summary>
+
+    :::note Handled by following upgrade script
+
+         ```sh
+         npx @comet/upgrade v8/update-mui-dependencies.ts
+         ```
+
+    :::
+
+    ```diff
+    -       "@mui/icons-material": "^5.0.0",
+    -       "@mui/lab": "^5.0.0-alpha.76",
+    -       "@mui/material": "^5.0.0",
+    -       "@mui/system": "^5.0.0",
+    -       "@mui/utils": "^5.0.0",
+    +       "@mui/icons-material": "^7.0.0",
+    +       "@mui/lab": "^7.0.0-beta.9",
+    +       "@mui/material": "^7.0.0",
+    +       "@mui/system": "^7.0.0",
+    +       "@mui/utils": "^7.0.0",
+    ```
+
+    </details>
+
+2.  Execute MUI codemods to update your code
+
+     <details>
+
+     <summary>Handled by @comet/upgrade</summary>
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/mui-codemods.ts
+    ```
+
+    :::
+    </details>
+
+3.  Follow the official migration guides to upgrade:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+
+#### MUI X (DataGrid)
+
+The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to v7.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+In `package.json` update the version of the MUI X packages to `^7.22.3`.
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-mui-x-dependencies.ts
+```
+
+:::
+
+```diff
+- "@mui/x-data-grid": "^5.x.x",
+- "@mui/x-data-grid-pro": "^5.x.x",
+- "@mui/x-data-grid-premium": "^5.x.x",
+
++ "@mui/x-data-grid": "^7.22.3",
++ "@mui/x-data-grid-pro": "^7.22.3",
++ "@mui/x-data-grid-premium": "^7.22.3",
+```
+
+A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/mui-x-codemods.ts
+    ```
+
+:::
+
+</details>
+
+:::warning
+
+Be aware if you have a date in the data grid, you will need to add a `valueGetter`
+
+:::
+
+```diff
+    <DataGrid
+        //other props
+        columns=[
+        {
+            field: "updatedAt",
+            type: "dateTime",
++           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+        }]
+    />
+```
+
+Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+```diff
+    <DataGrid
+        //other props
+        columns=[
+        {
+            field: "updatedAt",
+            type: "dateTime",
+-           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
++           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+-           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
++           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+        }]
+    />
+```
+
+#### ✅ Vite / SWC
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-swc-dependencies.ts
+```
+
+:::
+
+```diff
+-        "@swc/plugin-emotion": "^3.0.13",
+-        "@vitejs/plugin-react-swc": "^3.7.2",
++        "@swc/plugin-emotion": "^8.7.2",
++        "@vitejs/plugin-react-swc": "^3.8.0",
+```
+
+</details>
+
+### ✅ Add new package @comet/admin-generator
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
+    ```
+
+:::
+
+The Admin Generator has been moved into a separate package `@comet/admin-generator`.
+
+```diff title="admin/package.json"
+devDependencies: {
++  "@comet/admin-generator": "^8.0.0",
+}
+```
+
+</details>
+
+### ✅ Remove `@comet/blocks-admin`
+
+The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+To upgrade, perform the following steps:
+
+1.  Remove the package:
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/remove-blocks-packages.ts
+    ```
+
+    :::
+
+    ```diff title="admin/package.json"
+    - "@comet/blocks-admin": "^7.x.x",
+    ```
+
+2.  Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+3.  Update imports that have been renamed
+
+    :::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+</details>
+
+Manually remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
+
+:::tip
+
+Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateAction`.
+
+:::
+
+### ✅ Remove `@comet/admin-theme`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/merge-admin-theme-into-admin.ts
+npx @comet/upgrade v8/remove-admin-theme-package.ts
+```
+
+:::
+
+The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the imports accordingly:
+
+```diff
+- import { createCometTheme } from "@comet/admin-theme";
++ import { createCometTheme } from "@comet/admin";
+
+  const theme = createCometTheme();
+```
+
+</details>
+
+### ✅ Remove `@comet/admin-react-select`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/remove-comet-admin-react-select-dependency.ts
+```
+
+:::
+
+```diff
+- "@comet/admin-react-select": "^7.x.x",
+```
+
+</details>
+
+It is recommended to use the `AutocompleteField` or the `SelectField` components from `@comet/admin` instead:
+
+```diff
+- import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
+- <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
++ import { AutocompleteField } from "@comet/admin";
++ <AutocompleteField name="color" label="Color" options={options} fullWidth />;
+```
+
+### ✅ Merge providers into `CometConfigProvider`
+
+The separate providers for CMS features (e.g, `DamConfigProvider`) have been merged into a `CometConfigProvider`.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/comet-config-provider.ts
+    ```
+
+    **Note:** This upgrade script is experimental and might not work as expected in your application.
+    Review the result carefully.
+
+:::
+
+Wrap your application with the `CometConfigProvider`:
+
+```tsx title="src/App.tsx"
+import { CometConfigProvider } from "@comet/cms-admin";
+
+function App() {
+    return (
+        <CometConfigProvider
+            apiUrl={config.apiUrl}
+            graphQLApiUrl={`${config.apiUrl}/graphql`}
+            adminUrl={config.adminUrl}
+        >
+            {/* Application */}
+        </CometConfigProvider>
+    );
+}
+```
+
+Move module configs to the new provider:
+
+```diff
+ <CometConfigProvider
+     apiUrl={config.apiUrl}
+     graphQLApiUrl={`${config.apiUrl}/graphql`}
+     adminUrl={config.adminUrl}
++    dam={{
++        ...config.dam,
++        scopeParts: ["domain"],
++        contentGeneration: {
++            generateAltText: true,
++            generateImageTitle: true,
++        },
++    }}
+ >
+     {/* Application */}
+ </CometConfigProvider>
+```
+
+Remove the old config providers:
+
+```diff
+- <DamConfigProvider>
+      {/* Application */}
+- </DamConfigProvider>
+```
+
+Update usages of renamed exports:
+
+- `useSitesConfig()` -> `useSiteConfigs()`
+- `useLocale()` -> `useContentLanguage()`
+- `useCmsBlockContext()` -> `useBlockContext()`
+
+Remove the `allCategories` prop from `PagesPage`:
+
+```diff
+ <PagesPage
+     path="/pages/pagetree/main-navigation"
+-    allCategories={pageTreeCategories}
+     documentTypes={pageTreeDocumentTypes}
+     category="MainNavigation"
+     renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
+ />
+```
+
+</details>
+
+:::warning Experimental upgrade script
+
+    This upgrade script is experimental and might not work as expected in your application.
+    Review the result carefully.
+
+:::
+
+### Add proxy for `/dam` URLs
+
+The API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title=admin/vite.config.mts
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title=admin/package.json
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title=admin/server/index.js
+// ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+// ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title=deployment/helm/values.tpl.yaml
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
+
+### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/rename-menu-components-in-admin.ts
+    ```
+
+:::
+
+To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
+
+- `Menu` → `MainNavigation`
+- `MenuProps` → `MainNavigationProps`
+- `MenuClassKey` → `MainNavigationClassKey`
+- `MenuItem` → `MainNavigationItem`
+- `MenuItemProps` → `MainNavigationItemProps`
+- `MenuItemClassKey` → `MainNavigationItemClassKey`
+- `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
+- `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
+- `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
+- `IWithMenu` → `WithMainNavigation`
+- `withMenu` → `withMainNavigation`
+- `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
+- `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
+- `MenuItemGroup` → `MainNavigationItemGroup`
+- `MenuItemGroupClassKey` → `MainNavigationItemGroupClassKey`
+- `MenuItemGroupProps` → `MainNavigationItemGroupProps`
+- `MenuItemRouterLink` → `MainNavigationItemRouterLink`
+- `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
+
+The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
+
+</details>
 
 ### Stay on same page after changing scope
 
@@ -607,126 +1368,53 @@ Perform the following changes:
     }
     ```
 
-### Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
+### DataGrid-related changes
 
-To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
+### Update usage of `DataGridToolbar`
 
-- `Menu` → `MainNavigation`
-- `MenuProps` → `MainNavigationProps`
-- `MenuClassKey` → `MainNavigationClassKey`
-- `MenuItem` → `MainNavigationItem`
-- `MenuItemProps` → `MainNavigationItemProps`
-- `MenuItemClassKey` → `MainNavigationItemClassKey`
-- `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
-- `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
-- `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
-- `IWithMenu` → `WithMainNavigation`
-- `withMenu` → `withMainNavigation`
-- `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
-- `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
-- `MenuItemGroup` → `MainNavigationItemGroup`
-- `MenuItemGroupClassKey` → `MainNavigationItemGroupClassKey`
-- `MenuItemGroupProps` → `MainNavigationItemGroupProps`
-- `MenuItemRouterLink` → `MainNavigationItemRouterLink`
-- `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
+`DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
 
-The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
-
-### Import `Tooltip` from `@comet/admin` package
+The new usage simplifies the component structure - children can now be passed directly without needing to wrap them in `ToolbarItem` and `ToolbarActions` components:
 
 ```diff
-- import { Tooltip } from "@mui/material";
-+ import { Tooltip } from "@comet/admin";
+- <DataGridToolbar density="compact">
++ <DataGridToolbar>
+-     <ToolbarItem>
+          <GridToolbarQuickFilter />
+-     </ToolbarItem>
+-     <ToolbarItem>
+          <GridFilterButton />
+-     </ToolbarItem>
+-     <ToolbarItem>
+          <GridColumnsButton />
+-     </ToolbarItem>
+      <FillSpace />
+-     <ToolbarActions>
+          <Button responsive variant="outlined">
+              Secondary action
+          </Button>
+          <Button responsive startIcon={<AddIcon />}>
+              Add item
+          </Button>
+-     </ToolbarActions>
+  </DataGridToolbar>
 ```
 
-### Remove `trigger` prop from `Tooltip`
+#### ✅ Pass columns instead of apiRef to `muiGridSortToGql` Function
 
-The `trigger` prop has been removed. The combined `hover`/`focus` trigger is now the only supported behavior.
+<details>
 
-Example:
+<summary>Handled by @comet/upgrade</summary>
 
-```diff
-<Tooltip
-- trigger="hover"
-></Tooltip>
-```
-
-### Import `Dialog` from `@comet/admin` package
-
-```diff
-- import { Dialog } from "@mui/material";
-+ import { Dialog } from "@comet/admin";
-```
-
-### Update MUI - X Packages
-
-In `package.json` update the version of the MUI X packages to `^7.22.3`.
-
-```diff
-- "@mui/x-data-grid": "^5.x.x",
-- "@mui/x-data-grid-pro": "^5.x.x",
-- "@mui/x-data-grid-premium": "^5.x.x",
-
-+ "@mui/x-data-grid": "^7.22.3",
-+ "@mui/x-data-grid-pro": "^7.22.3",
-+ "@mui/x-data-grid-premium": "^7.22.3",
-```
-
-:::note Codemod
+:::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/mui-x-upgrade.ts
+npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
 ```
+
+**Note:** This upgrade script will naively change the second argument of `muiGridSortToGql` function to `columns`, assuming that `columns` is available in the current scope.
 
 :::
-
-A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
-
-! As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
-
-```diff
-    <DataGrid
-        //other props
-        columns=[
-        {
-            field: "updatedAt",
-            type: "dateTime",
-+            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
-        }]
-    />
-```
-
-Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
-
-```diff
-    <DataGrid
-        //other props
-        columns=[
-        {
-            field: "updatedAt",
-            type: "dateTime",
--           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
-+           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
--           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-+           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-        }]
-    />
-```
-
-```sh
-npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
-```
-
-#### `useDataGridRemote` Hook - Return Value
-
-The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
-
-```diff
-- const { pageSize, page, onPageSizeChange } = useDataGridRemote();
-+ const { paginationModel, onPaginationModelChange } = useDataGridRemote();
-```
-
-#### `muiGridSortToGql` Function
 
 The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
 
@@ -739,29 +1427,39 @@ const persistentColumnState = usePersistentColumnState("persistent_column_state"
 +  muiGridSortToGql(dataGridRemote.sortModel, columns);
 ```
 
-:::note Codemod
+</details>
 
-```sh
-npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
-```
+:::warning Naive upgrade script
 
-**Note:** Be aware, this will naively change the second argument of `muiGridSortToGql` function to columns variable, attempting that this variable is available in the current scope.
+     This upgrade script will naively change the second argument of `muiGridSortToGql` function to `columns`, assuming that `columns` is available in the current scope.
 
 :::
 
-#### MUI removed error prop on DataGrid
+#### Remove `error` prop from DataGrid
 
 > The error and onError props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the error boundary. The components.ErrorOverlay slot was also removed.
 >
 > – [MUI migration guide](https://mui.com/x/migration/migration-data-grid-v5/#removed-props)
 
-:::note Codemod
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
 
 ```sh
 npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
 ```
 
-**Note:** error handling must be implemented manually, the codemod simple removes all usages of the error prop on DataGrids and adds a TODO: comment.
+**Note:** Error handling must be implemented manually, the upgrade script simply removes all usages of the error prop on DataGrids and adds a TODO: comment.
+
+:::
+
+</details>
+
+:::warning Error handling must be implemented manually
+
+     This upgrade script simply removes all usages of the error prop on DataGrids and adds a TODO: comment. Error handling must be implemented manually.
 
 :::
 
@@ -778,71 +1476,177 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + <DataGrid /* other props */ >
 ```
 
-### Remove @comet/admin-react-select
+#### ✅ `useDataGridRemote` Hook - Return Value
+
+The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
 
 ```diff
-- "@comet/admin-react-select": "^7.x.x",
+- const { pageSize, page, onPageSizeChange } = useDataGridRemote();
++ const { paginationModel, onPaginationModelChange } = useDataGridRemote();
 ```
 
-It is recommended to use the `AutocompleteField` or the `SelectField` components from `@comet/admin` instead:
+:::warning `rowCount` must be passed
+
+Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGridRemote` hook. Otherwise, the pagination component will show a `NaN` value when used with server-side pagination.
+
+:::
+
+### ✅ Dialog-related changes
+
+#### ✅ Import `Dialog` from `@comet/admin` package
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/update-import-of-dialog.ts
+    ```
+
+:::
 
 ```diff
-- import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-- <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
-+ import { AutocompleteField } from "@comet/admin";
-+ <AutocompleteField name="color" label="Color" options={options} fullWidth />;
+- import { Dialog } from "@mui/material";
++ import { Dialog } from "@comet/admin";
 ```
 
-### Remove `@comet/blocks-admin`
+</details>
 
-The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
-To upgrade, perform the following steps:
+#### ✅ Add `DialogContent` to `EditDialog`
 
-1.  Remove the package:
+<details>
 
-    ```diff title="admin/package.json"
-    - "@comet/blocks-admin": "^7.x.x",
-    ```
+<summary>Handled by @comet/upgrade</summary>
 
-    :::note Codemod available
+:::note Handled by following upgrade script
 
     ```sh
-    npx @comet/upgrade v8/remove-blocks-packages.ts
+    npx @comet/upgrade v8/add-dialog-content-to-edit-dialog.ts
     ```
 
-    :::
+:::
 
-2.  Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
+The `DialogContent` inside `EditDialog` has been removed.
+To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent` to ensure proper spacing.
+For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
 
-    :::note Codemod available
+```diff
+    <EditDialog>
+    //...
++       <DialogContent>
++           //...
++       </DialogContent>
+    // ...
+    </EditDialog>
+```
+
+</details>
+
+### ✅ Tooltip-related Changes
+
+#### ✅ Import `Tooltip` from `@comet/admin` package
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
 
     ```sh
-    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    npx @comet/upgrade v8/tooltip-1-update-import.ts
     ```
 
-    :::
+:::
 
-3.  Update imports that have been renamed
+```diff
+- import { Tooltip } from "@mui/material";
++ import { Tooltip } from "@comet/admin";
+```
 
-    :::note Codemod available
+</details>
+
+#### ✅ Remove `trigger` prop from `Tooltip`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
 
     ```sh
-    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    npx @comet/upgrade v8/tooltip-2-remove-trigger-prop.ts
     ```
 
-    :::
+:::
 
-4.  Remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
+The `trigger` prop has been removed. The combined `hover`/`focus` trigger is now the only supported behavior.
 
-    :::tip
+Example:
 
-    Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateAction`.
+```diff
+<Tooltip
+- trigger="hover"
+></Tooltip>
+```
 
-    :::
+</details>
+
+## Site
+
+### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
+```
+
+:::
+
+```diff title="site/src/app/site-preview/route.ts"
+-    return sitePreviewRoute(request, createGraphQLFetch());
++    return sitePreviewRoute(request);
+```
+
+</details>
+
+### Remove `x-relative-dam-urls` header from `graphQLClient`
+
+```diff title="site/src/util/graphQLClient.ts"
+// ...
+return createGraphQLFetchLibrary(
+    createFetchWithDefaults(fetch, {
+        // ...
+        headers: {
+-           "x-relative-dam-urls": "1",
+            // ...
+        },
+    }),
+    `${process.env.API_URL_INTERNAL}/graphql`,
+);
+```
 
 ## ESLint
 
-### ESLint upgrade from v8 to v9 with ESM
+### ✅ Upgrade ESLint from v8 to v9 with ESM
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/eslint-dev-dependencies.ts
+```
+
+:::
 
 Update ESLint to v9
 
@@ -912,6 +1716,35 @@ export default config;
 
 ```
 
+</details>
+
+:::warning Custom rules
+
+If you have custom rules in your `.eslintrc.json`, you need to manually move them to the new ESLint flat configuration `eslint.config.mjs`.
+
+:::
+
+### Upgrade Prettier from v2 to v3
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/prettier-dev-dependencies.ts
+```
+
+:::
+
+```diff
+-        "prettier": "^2.8.1",
++        "prettier": "^3.4.2",
+```
+
+</details>
+
 ### Remove React barrel imports
 
 Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
@@ -935,7 +1768,15 @@ It is recommended to perform the following steps separately in the `admin/` and 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
 The codemod does not handle all cases, so manual adjustments may still be necessary.
 
-### Consistent type imports
+### ✅ Consistent type imports
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+The upgrade script runs eslint with the `--fix` option. That will automatically update the imports.
+
+#### What is the change?
 
 To improve code consistency and readability, we now enforce the ESLint rule [@typescript-eslint/consistent-type-imports](https://typescript-eslint.io/rules/consistent-type-imports/) with the following configuration:
 
@@ -964,10 +1805,4 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Circular dependencies can cause hard-to-debug issues in TypeScript projects.
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
-#### Migration Steps
-
-Run ESLint with the --fix option to automatically update imports:
-
-```bash
-npm run lint:eslint --fix
-```
+</details>

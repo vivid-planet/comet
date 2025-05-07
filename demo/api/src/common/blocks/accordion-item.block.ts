@@ -17,7 +17,7 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-c
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { IsBoolean, IsString } from "class-validator";
 
-const AccordionContentBlock = createBlocksBlock(
+export const AccordionContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
             richtext: RichTextBlock,

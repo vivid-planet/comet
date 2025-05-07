@@ -49,6 +49,8 @@ export const createSpaceBlock = <T extends string | number>({
         previewContent: ({ spacing }) => {
             return [{ type: "text", content: options.find((option) => option.value === spacing)?.label }];
         },
+
+        extractTextContents: () => [],
     };
 
     return SpaceBlock;

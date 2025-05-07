@@ -6,7 +6,6 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { type CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
@@ -36,7 +35,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         openFileType: state.openFileType,
     }),
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<DamFileDownloadLinkBlockData> => {
+    output2State: async (output, { apolloClient }): Promise<DamFileDownloadLinkBlockData> => {
         const ret: DamFileDownloadLinkBlockData = {
             openFileType: output.openFileType,
         };
@@ -53,6 +52,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         name
                         fileUrl
                         size
+                        mimetype
                     }
                 }
             `,
@@ -66,6 +66,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             name: damFile.name,
             fileUrl: damFile.fileUrl,
             size: damFile.size,
+            mimetype: damFile.mimetype,
         };
 
         return ret;
@@ -154,5 +155,14 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                 </BlockAdminComponentPaper>
             </BlocksFinalForm>
         );
+    },
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.file?.altText) contents.push(state.file.altText);
+        if (state.file?.title) contents.push(state.file.title);
+
+        return contents;
     },
 };

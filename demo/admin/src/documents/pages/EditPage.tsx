@@ -6,16 +6,17 @@ import {
     BlockAdminComponentRoot,
     BlockAdminTabLabel,
     BlockPreviewWithTabs,
+    ContentGenerationConfigProvider,
     ContentScopeIndicator,
     createUsePage,
     openSitePreviewWindow,
     PageName,
+    useBlockContext,
     useBlockPreview,
-    useCmsBlockContext,
+    useContentScope,
     useSiteConfig,
 } from "@comet/cms-admin";
 import { IconButton, Stack } from "@mui/material";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
@@ -86,7 +87,7 @@ export const EditPage = ({ id }: Props) => {
     const siteConfig = useSiteConfig({ scope });
     const previewApi = useBlockPreview();
 
-    const blockContext = useCmsBlockContext();
+    const blockContext = useBlockContext();
 
     const tabRouteMatch = useRouteMatch<{ tab: string }>(`${match.path}/:tab`);
 
@@ -119,95 +120,105 @@ export const EditPage = ({ id }: Props) => {
 
     return (
         <AzureAiTranslatorProvider showApplyTranslationDialog={true} enabled={true}>
-            {hasChanges && (
-                <RouterPrompt
-                    message={(location) => {
-                        if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                        return intl.formatMessage({
-                            id: "editPage.discardChanges",
-                            defaultMessage: "Discard unsaved changes?",
-                        });
-                    }}
-                    saveAction={async () => {
-                        try {
-                            await handleSavePage();
-                            return true;
-                        } catch {
-                            return false;
-                        }
-                    }}
-                />
-            )}
-            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
-                <ToolbarItem>
-                    <IconButton onClick={stackApi?.goBack} size="large">
-                        <ArrowLeft />
-                    </IconButton>
-                </ToolbarItem>
-                <PageName pageId={id} />
-                <FillSpace />
-                <ToolbarActions>
-                    <Stack direction="row" spacing={1}>
-                        <Button
-                            startIcon={<Preview />}
-                            variant="textDark"
-                            disabled={!pageState}
-                            onClick={() => {
-                                openSitePreviewWindow(pageState.path, contentScopeMatch.url);
-                            }}
-                        >
-                            <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
-                        </Button>
-                        {pageSaveButton}
-                    </Stack>
-                </ToolbarActions>
-            </Toolbar>
-            <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={previewUrl} previewState={previewState} previewApi={previewApi}>
-                    {[
-                        {
-                            key: "content",
-                            label: (
-                                <BlockAdminTabLabel isValid={rootBlocksApi.content.isValid}>
-                                    <FormattedMessage id="generic.blocks" defaultMessage="Blocks" />
-                                </BlockAdminTabLabel>
-                            ),
-                            content: (
-                                <BlockAdminComponentRoot
-                                    title={intl.formatMessage({ id: "pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
-                                >
-                                    {rootBlocksApi.content.adminUI}
-                                </BlockAdminComponentRoot>
-                            ),
-                        },
-                        {
-                            key: "stage",
-                            label: (
-                                <BlockAdminTabLabel isValid={rootBlocksApi.stage.isValid}>
-                                    <FormattedMessage id="pages.page.edit.stage" defaultMessage="Stage" />
-                                </BlockAdminTabLabel>
-                            ),
-                            content: (
-                                <BlockAdminComponentRoot
-                                    title={intl.formatMessage({ id: "pages.pages.page.edit.stage.title", defaultMessage: "Stage" })}
-                                >
-                                    {rootBlocksApi.stage.adminUI}
-                                </BlockAdminComponentRoot>
-                            ),
-                        },
-                        {
-                            key: "config",
-                            label: (
-                                <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
-                                </BlockAdminTabLabel>
-                            ),
-                            content: rootBlocksApi.seo.adminUI,
-                        },
-                    ]}
-                </BlockPreviewWithTabs>
-            </MainContent>
-            {dialogs}
+            <ContentGenerationConfigProvider
+                seo={{
+                    getRelevantContent: () => {
+                        if (!pageState || !pageState.document) return [];
+
+                        return PageContentBlock.extractTextContents?.(pageState.document.content, { includeInvisibleContent: false }) ?? [];
+                    },
+                }}
+            >
+                {hasChanges && (
+                    <RouterPrompt
+                        message={(location) => {
+                            if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                            return intl.formatMessage({
+                                id: "editPage.discardChanges",
+                                defaultMessage: "Discard unsaved changes?",
+                            });
+                        }}
+                        saveAction={async () => {
+                            try {
+                                await handleSavePage();
+                                return true;
+                            } catch {
+                                return false;
+                            }
+                        }}
+                    />
+                )}
+                <Toolbar scopeIndicator={<ContentScopeIndicator />}>
+                    <ToolbarItem>
+                        <IconButton onClick={stackApi?.goBack} size="large">
+                            <ArrowLeft />
+                        </IconButton>
+                    </ToolbarItem>
+                    <PageName pageId={id} />
+                    <FillSpace />
+                    <ToolbarActions>
+                        <Stack direction="row" spacing={1}>
+                            <Button
+                                startIcon={<Preview />}
+                                variant="textDark"
+                                disabled={!pageState}
+                                onClick={() => {
+                                    openSitePreviewWindow(pageState.path, contentScopeMatch.url);
+                                }}
+                            >
+                                <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                            </Button>
+                            {pageSaveButton}
+                        </Stack>
+                    </ToolbarActions>
+                </Toolbar>
+                <MainContent disablePaddingBottom>
+                    <BlockPreviewWithTabs previewUrl={previewUrl} previewState={previewState} previewApi={previewApi}>
+                        {[
+                            {
+                                key: "content",
+                                label: (
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.content.isValid}>
+                                        <FormattedMessage id="generic.blocks" defaultMessage="Blocks" />
+                                    </BlockAdminTabLabel>
+                                ),
+                                content: (
+                                    <BlockAdminComponentRoot
+                                        title={intl.formatMessage({ id: "pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
+                                    >
+                                        {rootBlocksApi.content.adminUI}
+                                    </BlockAdminComponentRoot>
+                                ),
+                            },
+                            {
+                                key: "stage",
+                                label: (
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.stage.isValid}>
+                                        <FormattedMessage id="pages.page.edit.stage" defaultMessage="Stage" />
+                                    </BlockAdminTabLabel>
+                                ),
+                                content: (
+                                    <BlockAdminComponentRoot
+                                        title={intl.formatMessage({ id: "pages.pages.page.edit.stage.title", defaultMessage: "Stage" })}
+                                    >
+                                        {rootBlocksApi.stage.adminUI}
+                                    </BlockAdminComponentRoot>
+                                ),
+                            },
+                            {
+                                key: "config",
+                                label: (
+                                    <BlockAdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                        <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
+                                    </BlockAdminTabLabel>
+                                ),
+                                content: rootBlocksApi.seo.adminUI,
+                            },
+                        ]}
+                    </BlockPreviewWithTabs>
+                </MainContent>
+                {dialogs}
+            </ContentGenerationConfigProvider>
         </AzureAiTranslatorProvider>
     );
 };

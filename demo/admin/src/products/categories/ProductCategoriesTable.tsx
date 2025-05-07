@@ -11,7 +11,6 @@ import {
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
@@ -35,18 +34,12 @@ import {
 function ProductCategoriesTableToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
             <FillSpace />
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
-                </Button>
-            </ToolbarItem>
+            <GridFilterButton />
+            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -59,6 +52,7 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
     },
     {
         field: "actions",
+        type: "actions",
         headerName: "",
         sortable: false,
         filterable: false,

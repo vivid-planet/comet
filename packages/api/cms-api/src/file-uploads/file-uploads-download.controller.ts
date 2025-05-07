@@ -15,18 +15,17 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import mime from "mime";
-import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
+import { ScaledImagesCacheService } from "../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
-import { ScaledImagesCacheService } from "../dam/cache/scaled-images-cache.service";
-import { calculatePartialRanges } from "../dam/files/files.utils";
-import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../dam/images/images.constants";
-import { getSupportedMimeType } from "../dam/images/images.util";
-import { Extension, ResizingType } from "../dam/imgproxy/imgproxy.enum";
-import { ImgproxyService } from "../dam/imgproxy/imgproxy.service";
+import { calculatePartialRanges } from "../file-utils/files.utils";
+import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../file-utils/images.constants";
+import { getSupportedMimeType } from "../file-utils/images.util";
+import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
+import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { DownloadParams, HashDownloadParams, HashImageParams, ImageParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
@@ -152,17 +151,22 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
                 const response = await fetch(this.imgproxyService.getSignedUrl(path));
+                if (response.body === null) {
+                    throw new Error("Response body is null");
+                }
+
                 const headers: Record<string, string> = {};
                 for (const [key, value] of response.headers.entries()) {
                     headers[key] = value;
                 }
-
                 res.writeHead(response.status, headers);
-                response.body.pipe(new PassThrough()).pipe(res);
+
+                const readableBody = Readable.fromWeb(response.body);
+                readableBody.pipe(new PassThrough()).pipe(res);
 
                 if (response.ok) {
                     await this.cacheService.set(file.contentHash, path, {
-                        file: response.body.pipe(new PassThrough()),
+                        file: readableBody.pipe(new PassThrough()),
                         metaData: {
                             size: Number(headers["content-length"]),
                             headers,

@@ -1,5 +1,456 @@
 # @comet/admin
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- 72d1a5e: New usage of `DataGridToolbar` component
+
+    `DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
+
+    The new usage simplifies the component structure - children can now be passed directly without needing to wrap them in `ToolbarItem` and `ToolbarActions` components:
+
+    ```diff
+    - <DataGridToolbar density="compact">
+    + <DataGridToolbar>
+    -     <ToolbarItem>
+              <GridToolbarQuickFilter />
+    -     </ToolbarItem>
+    -     <ToolbarItem>
+              <GridFilterButton />
+    -     </ToolbarItem>
+    -     <ToolbarItem>
+              <GridColumnsButton />
+    -     </ToolbarItem>
+          <FillSpace />
+    -     <ToolbarActions>
+              <Button responsive variant="outlined">
+                  Secondary action
+              </Button>
+              <Button responsive startIcon={<AddIcon />}>
+                  Add item
+              </Button>
+    -     </ToolbarActions>
+      </DataGridToolbar>
+    ```
+
+### Minor Changes
+
+- a93455f: Adapt styling of MUI's List and Menu components according to the Comet DXP design
+
+    This affects the following components: `List`, `Menu`, `ListItem`, `MenuItem`, `ListItemButton`, `ListItemIcon`, `ListItemText`.
+
+- 1c62e87: Add `InlineAlert` component
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- 5b8fe2e: Update props and usage of `FeedbackButton` to be consistent with the new Comet `Button`
+
+    - The `variant` prop now replaces its old values and the now removed `color` prop.
+    - The `responsive` prop is now supported to move the button's text to a tooltip on smaller devices.
+    - The previous values of `slotProps` have been removed, they can now be set through the `slotProps` of the `root` slot.
+
+    ```diff
+    - <FeedbackButton variant="contained" color="primary">
+    + <FeedbackButton>
+          Okay
+      </FeedbackButton>
+    - <FeedbackButton variant="contained" color="error">
+    + <FeedbackButton variant="destructive">
+          Delete
+      </FeedbackButton>
+    ```
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- 15c6fa0: Remove `DialogContent` from `EditDialog` as spacing inside a dialog is not always needed in the Comet DXP design
+
+    To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent`. This ensures proper spacing.
+    For grids or other elements that already handle their own spacing (e.g., `DataGrid`), adding `DialogContent` is not necessary.
+
+    ```diff
+        <EditDialog>
+        //...
+    +       <DialogContent>
+    +           //...
+    +       </DialogContent>
+        // ...
+        </EditDialog>
+    ```
+
+- 5b8fe2e: Adapt `SaveButton` and `SaveBoundarySaveButton` to look like the standard `FeedbackButton` in order to match the Comet DXP design
+
+    Their props have been updated to match those of `FeedbackButton`:
+
+    - `saving` has been renamed to `loading`.
+    - `saveIcon` has been renamed to `startIcon`.
+    - `hasConflict` has been removed. Use `hasErrors` instead and optionally provide a `tooltipErrorMessage` to show a more precise error message in the tooltip.
+    - The following icon-props have been removed, as the `startIcon` is now shown in all states: `savingIcon`, `successIcon`, `errorIcon`, `conflictIcon`.
+    - The following props used for the text-content have been removed as now the default text is shown in all states: `savingItem`, `successItem`, `errorItem`, `conflictItem`.
+
+### Minor Changes
+
+- d99602a: Adapt styling of MUI's `Link` according to the Comet DXP design
+
+    Use `Link` only for links in continuous text or as standalone text links. Replace all other usages with better fitting components (e.g., `RouterLink`, `StackLink`, or `Button`).
+
+- 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
+
+    This applies to:
+
+    - `FinalFormSaveButton`
+    - `FinalFormSaveCancelButtonsLegacy`
+    - `FinalFormSaveSplitButton`
+    - The save button inside `TableLocalChangesToolbar`
+    - The save button inside the `useSaveState` hook
+    - The save button inside `MoveDamItemDialog`
+    - The save button inside `createUsePage`
+
+- 535476e: Format numbers in `DataGrid` pagination depending on the current locale
+- 43eb598: Set the custom `DataGridPanel` as default in the theme of the `DataGrid` component
+
+    If set, the `DataGridPanel` can now be removed from the project's theme, e.g., in `admin/src/theme.ts`:
+
+    ```diff
+    - import { DataGridPanel } from "@comet/admin";
+      import { createCometTheme } from "@comet/admin-theme";
+    - import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    - export const theme = createCometTheme({
+    -     components: {
+    -         MuiDataGrid: {
+    -             defaultProps: {
+    -                 components: {
+    -                     Panel: DataGridPanel,
+    -                 },
+    -             },
+    -         },
+    -     },
+    - });
+    + export const theme = createCometTheme();
+    ```
+
+### Patch Changes
+
+- Updated dependencies [f904b71]
+    - @comet/admin-icons@8.0.0-beta.2
+
+## 8.0.0-beta.1
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.1
+
+## 8.0.0-beta.0
+
+### Major Changes
+
+- 7ce585d: Prevent the selection of DataGrid rows by clicking on them
+
+    According to the Comet design guidelines, rows should be selected using checkboxes, with the `checkboxSelection` prop, where required.
+
+    ```tsx
+    <DataGrid
+        checkboxSelection
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+            setRowSelectionModel(newRowSelectionModel);
+        }}
+        rowSelectionModel={rowSelectionModel}
+        // ...
+    />
+    ```
+
+    To restore the previous behavior, set the `disableRowSelectionOnClick` prop to `false` in the individual `DataGrid` component or globally, using the theme's `defaultProps`.
+
+    ```tsx
+    <DataGrid
+        disableRowSelectionOnClick
+        // ...
+    />
+    ```
+
+    ```tsx
+    const theme = createCometTheme({
+        components: {
+            MuiDataGrid: {
+                defaultProps: {
+                    disableRowSelectionOnClick: false,
+                },
+            },
+        },
+    });
+    ```
+
+- f7429bd: Rename menu components
+
+    To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
+
+    - `Menu` → `MainNavigation`
+    - `MenuProps` → `MainNavigationProps`
+    - `MenuClassKey` → `MainNavigationClassKey`
+    - `MenuItem` → `MainNavigationItem`
+    - `MenuItemProps` → `MainNavigationItemProps`
+    - `MenuItemClassKey` → `MainNavigationItemClassKey`
+    - `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
+    - `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
+    - `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
+    - `IWithMenu` → `WithMainNavigation`
+    - `withMenu` → `withMainNavigation`
+    - `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
+    - `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
+    - `MenuItemGroup` → `MainNavigationItemGroup`
+    - `MenuItemGroupClassKey` → `MainNavigationItemGroupClassKey`
+    - `MenuItemGroupProps` → `MainNavigationItemGroupProps`
+    - `MenuItemRouterLink` → `MainNavigationItemRouterLink`
+    - `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
+
+    Remove `MenuContext`, use the `useMainNavigation()` hook instead.
+
+- b374300: Adapt the styling of `Alert` to match the updated Comet design
+
+    Remove styling for the `text` variant of buttons used in `Alert`.
+    Use buttons with the `outlined` variant instead to adhere to the Comet design guidelines.
+
+    ```diff
+     <Alert
+         // ...
+         action={
+    -        <Button variant="text" startIcon={<ArrowRight />}>
+    +        <Button variant="outlined" startIcon={<ArrowRight />}>
+                 Action Text
+             </Button>
+         }
+         // ...
+     >
+    ```
+
+- 717ede6: Merge `@comet/admin-theme` into `@comet/admin`
+
+    This affects the following exports: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
+
+    **Migrating your project**
+
+    1. Remove the `@comet/admin-theme` dependency from your project
+    2. Change all imports from `@comet/admin-theme` to `@comet/admin`
+
+    ```diff
+    -import { createCometTheme } from "@comet/admin-theme";
+    +import { createCometTheme } from "@comet/admin";
+
+     const theme = createCometTheme();
+    ```
+
+    3. Remove the no longer required type overrides that were previously required for the custom `Typography` variants, typically located in `admin/src/vendors.d.ts`
+
+    ```diff
+    -/// <reference types="@comet/admin-theme" />
+    ```
+
+- de6d677: Bump @mui/x-data-grid peer dependency to v7
+
+    This has breaking changes in DataGrid.
+    Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v6/)>) to upgrade.
+
+    As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    +            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+            }]
+        />
+    ```
+
+    Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    -           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+    -           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+    +           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            }]
+        />
+    ```
+
+- 04e308a: Upgrade to MUI v6
+
+    This only causes minimal breaking changes, see the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) for details.
+
+    It is recommended to run the following codemods in your application:
+
+    ```sh
+    npx @mui/codemod@latest v6.0.0/list-item-button-prop admin/src
+    npx @mui/codemod@latest v6.0.0/styled admin/src
+    npx @mui/codemod@latest v6.0.0/sx-prop admin/src
+    npx @mui/codemod@latest v6.0.0/theme-v6 admin/src/theme.ts
+    ```
+
+- a8c737b: Redesign the `ToolbarBreadcrumbs` component
+
+    Due to internal changes, including the props and class keys, custom usages and styling may need to be adjusted.
+
+- cfa2f85: Bump @mui/x-data-grid peer dependency to v6
+
+    This has breaking changes in DataGrid.
+    Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v5)>) to upgrade.
+
+    The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
+
+    ```diff
+    - const { pageSize, page, onPageSizeChange } = useDataGridRemote();
+    + const { paginationModel, onPaginationModelChange } = useDataGridRemote();
+    ```
+
+    The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
+
+    ```diff
+    const columns : GridColDef[] = [/* column definitions */];
+    const dataGridRemote = useDataGridRemote();
+    const persistentColumnState = usePersistentColumnState("persistent_column_state");
+
+    -  muiGridSortToGql(dataGridRemote.sortModel, persistentColumnState.apiRef);
+    +  muiGridSortToGql(dataGridRemote.sortModel, columns);
+    ```
+
+- c5d9a47: Remove custom `secondary` color styling from `Checkbox` and `Radio`
+- 4828880: Remove `trigger` prop from `Tooltip`
+
+### Minor Changes
+
+- 682a674: Add support for React 18
+
+### Patch Changes
+
+- 400dd1e: Adapt `height` of elements in `DataGrid` depending on the `density`-prop to match the Comet DXP design
+- b8817b8: Add `AppHeaderFillSpaceProps`, `ClearInputAdornmentClassKey`, `ToolbarActionButtonClassKey`, `ToolbarActionButton`, `CrudMoreActionsMenuClassKey`, `GridActionsColDef`, `GridBaseColDef`, `GridSingleSelectColDef`, and `TableDndOrderClassKey` to the public API
+- eeb21ce: Allow non-full-width fields in `FieldSet`
+- Updated dependencies [04e308a]
+- Updated dependencies [682a674]
+    - @comet/admin-icons@8.0.0-beta.0
+
+## 7.19.0
+
+### Patch Changes
+
+- 3544127ad: Remove unintended white background on `Button` with `textDark` variant when disabled
+    - @comet/admin-icons@7.19.0
+    - @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/admin-icons@7.18.0
+- @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Patch Changes
+
+- @comet/admin-icons@7.17.0
+- @comet/admin-theme@7.17.0
+
+## 7.16.0
+
+### Patch Changes
+
+- ec1cf3cf8: Adapt styling of `Button` variants to align with Comet DXP design
+- bf7b89ffc: Adapt styling of `FieldSet` to align with Comet DXP design
+- Updated dependencies [ec1cf3cf8]
+    - @comet/admin-theme@7.16.0
+    - @comet/admin-icons@7.16.0
+
+## 7.15.0
+
+### Minor Changes
+
+- a189d4ed9: Support dynamic values for the `label` prop of `SwitchField` depending on its `checked` state
+
+    ```tsx
+    <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} />
+    ```
+
+- 7d8c36e6c: Add the `DataGridPanel` component to replace MUIs default `Panel` used by `DataGrid` to match the Comet DXP design
+
+    It is recommended to add this component to your theme's `defaultProps` of `MuiDataGrid`.
+
+    Example theme configuration for `admin/src/theme.ts`:
+
+    ```ts
+    import { DataGridPanel } from "@comet/admin";
+    import { createCometTheme } from "@comet/admin-theme";
+    import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    export const theme = createCometTheme({
+        components: {
+            MuiDataGrid: {
+                defaultProps: {
+                    components: {
+                        Panel: DataGridPanel,
+                    },
+                },
+            },
+        },
+    });
+    ```
+
+- a189d4ed9: Allow passing a `ReactNode` to `fieldLabel` of `CheckboxField` and `SwitchField`
+
+    This enables using `FormattedMessage` for the label.
+
+    ```tsx
+    <CheckboxField name="visible" fieldLabel={<FormattedMessage id="exampleForm.visible" defaultMessage="Visible" />} />
+    <SwitchField name="visible" fieldLabel={<FormattedMessage id="exampleForm.visible" defaultMessage="Visible" />} />
+    ```
+
+### Patch Changes
+
+- faa54eb8e: Fix display of warnings for forms that use both form-level and field-level validation
+- 6827982fe: Preserve the default `Button` color when using the `sx` prop with the `textLight` or `textDark` variant
+- Updated dependencies [7d8c36e6c]
+    - @comet/admin-theme@7.15.0
+    - @comet/admin-icons@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+- 6b75f20e4: Deprecate `density` prop of `DataGridToolbar`
+
+    The density setting of the surrounding Data Grid now controls the styling of the toolbar.
+
+### Patch Changes
+
+- Updated dependencies [9b190db59]
+- Updated dependencies [84e063642]
+    - @comet/admin-theme@7.14.0
+    - @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Minor Changes

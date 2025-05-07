@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 
 import { useIFrameBridge } from "../../blocks/iframebridge/useIFrameBridge";
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { useCometConfig } from "../../config/CometConfigContext";
 import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
@@ -21,9 +21,7 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
     const iFrameBridge = useIFrameBridge();
     const { scope } = useContentScope();
 
-    // TODO Comet 8: get graphQLApiUrl from CometConfig (https://github.com/vivid-planet/comet/pull/2602)
-    const cmsBlockContext = useCmsBlockContext();
-    const graphQLApiUrl = `${cmsBlockContext.damConfig.apiUrl}/graphql`;
+    const { graphQLApiUrl } = useCometConfig();
 
     useEffect(() => {
         if (iFrameBridge.iFrameReady) {
@@ -40,15 +38,15 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
         <Root>
             <ActionsContainer>
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" spacing={1}>
-                    <Grid item>
+                    <Grid>
                         <MinimizeButton onClick={handleMinimizeClick}>
                             <Minimize />
                         </MinimizeButton>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <DeviceToggle device={device} onChange={setDevice} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={setShowOnlyVisible} />
                     </Grid>
                 </Grid>

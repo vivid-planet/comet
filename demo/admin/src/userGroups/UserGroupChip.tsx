@@ -12,13 +12,19 @@ interface Props {
 function UserGroupChip({ item }: Props): JSX.Element | null {
     if (item.userGroup === "All") {
         return null;
-    } else {
-        return (
-            <Box paddingTop={2}>
-                <Chip label={userGroupOptions.find((option) => option.value === item.userGroup)?.label} />
-            </Box>
-        );
     }
+
+    const label = userGroupOptions.find((option) => option.value === item.userGroup)?.label;
+
+    if (!label) {
+        return null;
+    }
+
+    return (
+        <Box paddingTop={2}>
+            <Chip label={label} />
+        </Box>
+    );
 }
 
 export { UserGroupChip };

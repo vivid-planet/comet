@@ -23,7 +23,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type DependencyInterface } from "../dependencies/types";
 import { type GQLWarningSeverity } from "../graphql.generated";
 import { warningMessages as cometWarningMessages } from "./warningMessages";
@@ -85,21 +85,25 @@ export function WarningsGrid({ warningMessages: projectWarningMessages }: Warnin
     };
     const warningMessages = { ...cometWarningMessages, ...projectWarningMessages };
     const history = useHistory();
-    const entityDependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
     const { values: scopeValues, createUrl } = useContentScope();
+    const scopes = scopeValues.map((item) => item.scope);
 
-    const scopes = scopeValues.map((item) => Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value])));
     const scopeValueOptions = scopeValues.map((item) => {
-        const scopeNameArray = Object.entries(item).map(([key, value]) => {
-            return value.label ?? capitalCase(value.value);
-        });
+        const label: string[] = [];
+        for (const [key, value] of Object.entries(item.scope)) {
+            if (item.label && item.label[key]) {
+                label.push(item.label[key]);
+            } else if (value) {
+                label.push(capitalCase(value));
+            }
+        }
 
-        const scope = Object.fromEntries(Object.entries(item).map(([key, value]) => [key, value.value]));
         return {
-            value: JSON.stringify(scope),
-            label: scopeNameArray.join(" / "),
+            value: JSON.stringify(item.scope),
+            label: label.join(" / "),
         };
     });
 

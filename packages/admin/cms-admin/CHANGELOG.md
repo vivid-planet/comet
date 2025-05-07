@@ -1,5 +1,554 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- a9d4b70: Change type of the `values` prop of ContentScopeProvider
+
+    **Before**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "English", value: "en" },
+        },
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "German", value: "de" },
+        },
+        {
+            domain: { label: "Secondary", value: "secondary" },
+            language: { label: "English", value: "en" },
+        },
+    ];
+    ```
+
+    **Now**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            scope: { domain: "main", language: "en" },
+            label: { domain: "Main", language: "English" },
+        },
+        {
+            scope: { domain: "main", language: "de" },
+            label: { domain: "Main", language: "German" },
+        },
+        {
+            scope: { domain: "secondary", language: "en" },
+            label: { domain: "Secondary", language: "English" },
+        },
+    ];
+    ```
+
+- b039dcb: Remove `imgproxyConfig` from `CometConfigProvider` and move `maxSrcResolution` to `damConfig`
+
+### Patch Changes
+
+- Updated dependencies [a93455f]
+- Updated dependencies [72d1a5e]
+- Updated dependencies [1c62e87]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-date-time@8.0.0-beta.4
+    - @comet/admin-rte@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- 8f58741: Remove unused field `allowedImageSizes` from DamConfig
+    - @comet/admin@8.0.0-beta.3
+    - @comet/admin-date-time@8.0.0-beta.3
+    - @comet/admin-icons@8.0.0-beta.3
+    - @comet/admin-rte@8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+- b10c4f9: Merge providers into new `CometConfigProvider`
+
+    Previously, each module (e.g., DAM) had its own provider used for configuration.
+    This led to crowding the application since most applications use multiple CMS features.
+    A new `CometConfigProvider` provider is introduced to use instead.
+
+    **Example**
+
+    ```tsx
+    <CometConfigProvider
+        apiUrl={config.apiUrl}
+        graphQLApiUrl={`${config.apiUrl}/graphql`}
+        adminUrl={config.adminUrl}
+        // Config for the page tree module
+        pageTree={{
+            categories: pageTreeCategories,
+            documentTypes: pageTreeDocumentTypes,
+        }}
+        // Config for the DAM module
+        dam={{
+            ...config.dam,
+            scopeParts: ["domain"],
+            contentGeneration: {
+                generateAltText: true,
+                generateImageTitle: true,
+            },
+        }}
+        // Additional modules...
+    >
+        {/* Application */}
+    </CometConfigProvider>
+    ```
+
+    **Breaking changes**
+
+    - Multiple exports have been removed: `CmsBlockContext`, `CmsBlockContextProvider`, `useCmsBlockContext`, `BuildInformationProvider`, `DamConfigProvider`, `useDamConfig`, `DependenciesConfigProvider`, `useDependenciesConfig`, `LocaleProvider`, `SitesConfigProvider`
+    - `useLocale` has been renamed to `useContentLanguage`
+    - `useSitesConfig` has been renamed to `useSiteConfigs`
+
+    **How to upgrade**
+
+    1. Add the `CometConfigProvider` to `src/App.tsx`
+    2. Move configs for used modules to the new provider
+    3. Remove the old config providers
+
+### Minor Changes
+
+- 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
+
+    This applies to:
+
+    - `FinalFormSaveButton`
+    - `FinalFormSaveCancelButtonsLegacy`
+    - `FinalFormSaveSplitButton`
+    - The save button inside `TableLocalChangesToolbar`
+    - The save button inside the `useSaveState` hook
+    - The save button inside `MoveDamItemDialog`
+    - The save button inside `createUsePage`
+
+### Patch Changes
+
+- Updated dependencies [d99602a]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [f904b71]
+- Updated dependencies [15c6fa0]
+- Updated dependencies [535476e]
+- Updated dependencies [5b8fe2e]
+- Updated dependencies [43eb598]
+    - @comet/admin@8.0.0-beta.2
+    - @comet/admin-date-time@8.0.0-beta.2
+    - @comet/admin-icons@8.0.0-beta.2
+    - @comet/admin-rte@8.0.0-beta.2
+
+## 8.0.0-beta.1
+
+### Patch Changes
+
+- @comet/admin@8.0.0-beta.1
+- @comet/admin-date-time@8.0.0-beta.1
+- @comet/admin-icons@8.0.0-beta.1
+- @comet/admin-rte@8.0.0-beta.1
+
+## 8.0.0-beta.0
+
+### Major Changes
+
+- 9ddb6c4: Remove deprecated `readClipboard` and `writeClipboard` helpers
+
+    Use `readClipboardText` and `writeClipboardText` from `@comet/admin` instead.
+
+- 682a674: Remove `BindBlockAdminComponent` from public API
+- 93a9f1d: Stay on same page when changing scopes
+
+    Previously, `redirectPathAfterChange` of `useContentScopeConfig` had to be explicitly set to ensure that the Admin stays on the same page after changing scopes.
+    This was often forgotten, resulting in redirects to the default page (usually the dashboard page).
+    Now, as it is the preferred behavior, the Admin will stay on the same page per default.
+
+    To upgrade, perform the following changes:
+
+    1. Remove the `path` prop from the `PagesPage` component
+    2. Remove the `redirectPathAfterChange` prop from the `RedirectsPage` component
+    3. Remove unnecessary usages of the `useContentScopeConfig` hook
+
+    To restore the previous behavior, add the `useContentScopeConfig` hook:
+
+    ```tsx
+    import { useContentScopeConfig } from "@comet/cms-admin";
+
+    function MainMenuPage() {
+        // We want to redirect to the dashboard page after changing the scope.
+        useContentScopeConfig({ redirectPathAfterChange: "/dashboard" });
+    }
+    ```
+
+- de6d677: Bump @mui/x-data-grid peer dependency to v7
+
+    This has breaking changes in DataGrid.
+    Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v6/)>) to upgrade.
+
+    As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    +            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+            }]
+        />
+    ```
+
+    Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    -           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+    -           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+    +           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            }]
+        />
+    ```
+
+- 04e308a: Upgrade to MUI v6
+
+    This only causes minimal breaking changes, see the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) for details.
+
+    It is recommended to run the following codemods in your application:
+
+    ```sh
+    npx @mui/codemod@latest v6.0.0/list-item-button-prop admin/src
+    npx @mui/codemod@latest v6.0.0/styled admin/src
+    npx @mui/codemod@latest v6.0.0/sx-prop admin/src
+    npx @mui/codemod@latest v6.0.0/theme-v6 admin/src/theme.ts
+    ```
+
+- cfa2f85: Bump @mui/x-data-grid peer dependency to v6
+
+    This has breaking changes in DataGrid.
+    Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v5)>) to upgrade.
+
+    The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
+
+    ```diff
+    - const { pageSize, page, onPageSizeChange } = useDataGridRemote();
+    + const { paginationModel, onPaginationModelChange } = useDataGridRemote();
+    ```
+
+    The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
+
+    ```diff
+    const columns : GridColDef[] = [/* column definitions */];
+    const dataGridRemote = useDataGridRemote();
+    const persistentColumnState = usePersistentColumnState("persistent_column_state");
+
+    -  muiGridSortToGql(dataGridRemote.sortModel, persistentColumnState.apiRef);
+    +  muiGridSortToGql(dataGridRemote.sortModel, columns);
+    ```
+
+- 9ddb6c4: Merge `@comet/blocks-admin` into `@comet/cms-admin`
+
+    The dedicated `@comet/blocks-admin` package was originally introduced to support projects without CMS parts.
+    It turned out that this is never the case, so the separation doesn't make sense anymore.
+    Therefore, the `@comet/blocks-admin` is merged into this package.
+
+    **Breaking changes**
+
+    - The `@comet/blocks-admin` package doesn't exist anymore
+    - Multiple exports that shouldn't be used have been removed from the public API
+        - `CannotPasteBlockDialog`
+        - `ClipboardContent`
+        - `useBlockClipboard`
+        - `Collapsible`
+        - `CollapsibleSwitchButtonHeader`
+        - `usePromise`
+        - `DispatchSetStateAction` (use `Dispatch<SetStateAction<T>>` from `react` instead)
+        - `SetStateAction`
+        - `SetStateFn`
+    - Multiple exports that were too generic have been renamed
+        - `createCompositeSetting` -> `createCompositeBlockField`
+        - `createCompositeSettings` -> `createCompositeBlockFields`
+        - `IPreviewContext` -> `BlockPreviewContext`
+        - `PreviewStateInterface` -> `BlockPreviewStateInterface`
+        - `AdminComponentPart` -> `BlockAdminComponentPart`
+        - `AdminComponentButton`-> `BlockAdminComponentButton`
+        - `AdminComponentNestedButton`-> `BlockAdminComponentNestedButton`
+        - `AdminComponentPaper`->`BlockAdminComponentPaper`
+        - `useAdminComponentPaper`-> `useBlockAdminComponentPaper`
+        - `AdminComponentRoot`-> `BlockAdminComponentRoot`
+        - `AdminComponentSection`-> `BlockAdminComponentSection`
+        - `AdminComponentSectionGroup`-> `BlockAdminComponentSectionGroup`
+        - `AdminTabLabel`-> `BlockAdminTabLabel`
+        - `AdminTabsProps`-> `BlockAdminTabsProps`
+        - `AdminTabs`-> `BlockAdminTabs`
+
+    **How to upgrade**
+
+    To upgrade, perform the following changes:
+
+    1. Uninstall the `@comet/blocks-admin` package
+    2. Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
+    3. Remove usages of removed exports
+    4. Update imports that have been renamed
+
+- 584f785: Move Admin Generator into separate `@comet/admin-generator` package.
+
+    It can be run with the same `comet-admin-generator` command as before.
+
+- 95bea5c: Make fields full-width by default when using `createCompositeBlockTextField` or `createCompositeBlockSelectField`
+
+### Minor Changes
+
+- 948e07b: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+- b1bb7a7: Add support for scope-specific blocks
+
+    Use the newly added `BlocksConfigProvider` to specify if a block is allowed in the current content scope:
+
+    ```tsx title="App.tsx"
+    import { BlocksConfigProvider } from "@comet/cms-admin";
+
+    export function App() {
+        return (
+            <BlocksConfigProvider
+                isBlockSupported={(block, scope) => {
+                    if (scope.domain === "specific-customer") {
+                        return true;
+                    } else {
+                        return block.name !== MySpecialTeaserBlock.name;
+                    }
+                }}
+            >
+                {/* Other providers... */}
+            </BlocksConfigProvider>
+        );
+    }
+    ```
+
+    **Note: This feature is Admin-only, so creating documents with unsupported blocks is still possible in the API.**
+
+- 682a674: Add support for React 18
+
+### Patch Changes
+
+- cf1a829: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    - `video/avi` doesn't actually exist
+    - `image/psd` doesn't exist / is non-standard
+    - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+      instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+- 9546356: Update default icon of `ContentScopeSelect` and fix mobile styling for `AppHeader` components
+
+    - Update the default icon in `ContentScopeSelect` from `<Domain />` to `<Language />`
+    - Fix mobile styling of `BuildEntry` and `ContentScopeSelect` and `UserHeaderItem`
+
+- b8817b8: Add `BlocksBlockOutput`, `ListBlockOutput`, `OneOfBlockOutput`, `OneOfBlockPreviewState`, and `OptionalBlockOutput` to the public API
+- Updated dependencies [7ce585d]
+- Updated dependencies [f7429bd]
+- Updated dependencies [b374300]
+- Updated dependencies [b8817b8]
+- Updated dependencies [717ede6]
+- Updated dependencies [de6d677]
+- Updated dependencies [04e308a]
+- Updated dependencies [400dd1e]
+- Updated dependencies [a8c737b]
+- Updated dependencies [b8817b8]
+- Updated dependencies [eeb21ce]
+- Updated dependencies [cfa2f85]
+- Updated dependencies [c5d9a47]
+- Updated dependencies [4828880]
+- Updated dependencies [682a674]
+    - @comet/admin@8.0.0-beta.0
+    - @comet/admin-date-time@8.0.0-beta.0
+    - @comet/admin-icons@8.0.0-beta.0
+    - @comet/admin-rte@8.0.0-beta.0
+
+## 7.19.0
+
+### Minor Changes
+
+- 91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+- ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+- Updated dependencies [3544127ad]
+- Updated dependencies [17b79b581]
+    - @comet/admin@7.19.0
+    - @comet/blocks-admin@7.19.0
+    - @comet/admin-date-time@7.19.0
+    - @comet/admin-icons@7.19.0
+    - @comet/admin-rte@7.19.0
+    - @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Minor Changes
+
+- 2dc23dd6d: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+- ec9778450: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+- 0acf80d30: User Permissions: Allow permission-specific content scopes to override by-rule content scopes
+- Updated dependencies [e6092df34]
+- Updated dependencies [f496734f8]
+- Updated dependencies [e6092df34]
+    - @comet/admin-date-time@7.18.0
+    - @comet/blocks-admin@7.18.0
+    - @comet/admin@7.18.0
+    - @comet/admin-icons@7.18.0
+    - @comet/admin-rte@7.18.0
+    - @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+- 4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+- a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+- ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    - @comet/admin@7.17.0
+    - @comet/admin-date-time@7.17.0
+    - @comet/admin-icons@7.17.0
+    - @comet/admin-rte@7.17.0
+    - @comet/admin-theme@7.17.0
+    - @comet/blocks-admin@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+- 997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+- ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+- ea014c5e3: Set the correct icon for the button to confirm page actions
+- e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+- Updated dependencies [9bd499dcd]
+- Updated dependencies [ed9282b3b]
+- Updated dependencies [ec1cf3cf8]
+- Updated dependencies [bf7b89ffc]
+- Updated dependencies [5b7c6b4a7]
+    - @comet/blocks-admin@7.16.0
+    - @comet/admin-theme@7.16.0
+    - @comet/admin@7.16.0
+    - @comet/admin-date-time@7.16.0
+    - @comet/admin-icons@7.16.0
+    - @comet/admin-rte@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+- 46ab330da: Adapt styling of the dashboard header to match the Comet DXP design
+- Updated dependencies [e056e8f3d]
+- Updated dependencies [a189d4ed9]
+- Updated dependencies [faa54eb8e]
+- Updated dependencies [7d8c36e6c]
+- Updated dependencies [a189d4ed9]
+- Updated dependencies [6827982fe]
+- Updated dependencies [7d8c36e6c]
+    - @comet/blocks-admin@7.15.0
+    - @comet/admin@7.15.0
+    - @comet/admin-theme@7.15.0
+    - @comet/admin-date-time@7.15.0
+    - @comet/admin-icons@7.15.0
+    - @comet/admin-rte@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+- 97cd0a3dd: User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
+- bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    - HTML title
+    - Meta description
+    - Open Graph title
+    - Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+- 7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    - if the state is a string: the string itself
+    - otherwise: an empty array
+
+- c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+- Updated dependencies [6b75f20e4]
+- Updated dependencies [9b190db59]
+- Updated dependencies [84e063642]
+- Updated dependencies [948e07bba]
+- Updated dependencies [bb041f7a7]
+- Updated dependencies [7f72e82fc]
+    - @comet/admin@7.14.0
+    - @comet/admin-theme@7.14.0
+    - @comet/blocks-admin@7.14.0
+    - @comet/admin-rte@7.14.0
+    - @comet/admin-date-time@7.14.0
+    - @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
