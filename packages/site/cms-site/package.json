@@ -60,7 +60,6 @@
         "ts-jest": "^29.0.5",
         "typescript": "^4.0.0",
         "vite": "^5.1.6",
-        "vite-plugin-css-injected-by-js": "^3.5.2",
         "vite-plugin-dts": "^4.5.3",
         "vite-tsconfig-paths": "^3.6.0"
     },

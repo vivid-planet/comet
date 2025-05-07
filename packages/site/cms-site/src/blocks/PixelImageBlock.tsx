@@ -7,7 +7,6 @@ import { type PixelImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { type ImageDimensions, calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "../image/Image";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import styles from "./PixelImageBlock.module.css";
 import { type PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
@@ -76,7 +75,7 @@ export const PixelImageBlock = withPreview(
             return nextImage;
         }
 
-        return <div className={styles.example}>{nextImage}</div>;
+        return <ImageContainer $aspectRatio={usedAspectRatio}>{nextImage}</ImageContainer>;
     },
     { label: "PixelImage" },
 );

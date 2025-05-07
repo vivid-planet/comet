@@ -2832,9 +2832,6 @@ importers:
       vite:
         specifier: ^5.1.6
         version: 5.1.6(@types/node@22.9.0)
-      vite-plugin-css-injected-by-js:
-        specifier: ^3.5.2
-        version: 3.5.2(vite@5.1.6)
       vite-plugin-dts:
         specifier: ^4.5.3
         version: 4.5.3(@types/node@22.9.0)(rollup@4.40.2)(typescript@4.9.4)(vite@5.1.6)
@@ -34925,14 +34922,6 @@ packages:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
-    dev: true
-
-  /vite-plugin-css-injected-by-js@3.5.2(vite@5.1.6):
-    resolution: {integrity: sha512-2MpU/Y+SCZyWUB6ua3HbJCrgnF0KACAsmzOQt1UvRVJCGF6S8xdA3ZUhWcWdM9ivG4I5az8PnQmwwrkC2CAQrQ==}
-    peerDependencies:
-      vite: '>2.0.0-0'
-    dependencies:
-      vite: 5.1.6(@types/node@22.9.0)
     dev: true
 
   /vite-plugin-dts@4.5.3(@types/node@22.9.0)(rollup@4.40.2)(typescript@4.9.4)(vite@5.1.6):
