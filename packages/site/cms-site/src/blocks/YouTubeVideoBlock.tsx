@@ -113,7 +113,7 @@ export const YouTubeVideoBlock = withPreview(
                     <div
                         ref={inViewRef}
                         className={clsx(styles.videoContainer, fill && styles.fill)}
-                        style={!fill ? { aspectRatio: aspectRatio.replace("x", "/") } : undefined}
+                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.youtubeContainer} src={youtubeUrl.toString()} />
                     </div>

@@ -1,6 +1,7 @@
 .videoContainer {
     overflow: hidden;
     position: relative;
+    aspect-ratio: var(--aspect-ratio);
 }
 
 .videoContainer.fill {

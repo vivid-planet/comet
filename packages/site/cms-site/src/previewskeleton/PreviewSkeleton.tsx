@@ -35,18 +35,18 @@ const PreviewSkeleton = ({
             return <>{customContainer}</>;
         } else if (type === "bar") {
             return (
-                <div className={styles.barSkeleton} style={{ backgroundColor, color }}>
+                <div className={styles.barSkeleton} style={{ "--background-color": backgroundColor, "--color": color }}>
                     {title}
                 </div>
             );
         } else if (type === "rows") {
             return (
                 <div className={styles.rowsContainer}>
-                    <div className={styles.rowSkeleton} style={{ width: "75%", backgroundColor, color }}>
+                    <div className={styles.rowSkeleton} style={{ "--width": "75%", "--background-color": backgroundColor, "--color": color }}>
                         {title}
                     </div>
-                    <div className={styles.rowSkeleton} style={{ width: "100%", backgroundColor, color }} />
-                    <div className={styles.rowSkeleton} style={{ width: "50%", backgroundColor, color }} />
+                    <div className={styles.rowSkeleton} style={{ "--width": "100%", "--background-color": backgroundColor, "--color": color }} />
+                    <div className={styles.rowSkeleton} style={{ "--width": "50%", "--background-color": backgroundColor, "--color": color }} />
                 </div>
             );
         } else if (type === "media") {
@@ -54,10 +54,9 @@ const PreviewSkeleton = ({
                 <div
                     className={styles.imageContainer}
                     style={{
-                        aspectRatio: validAspectRatio,
-                        height: validAspectRatio ? undefined : height,
-                        backgroundColor,
-                        color,
+                        "--background-color": backgroundColor,
+                        "--color": color,
+                        ...(validAspectRatio === undefined ? { "--height": height ?? 300 } : { "--aspect-ratio": validAspectRatio }),
                     }}
                 >
                     {title}
@@ -75,10 +74,14 @@ const PreviewSkeleton = ({
 
 const getValidAspectRatio = (aspectRatio: string | number | undefined) => {
     if (aspectRatio === "inherit") {
+        // If "inherit" is passed to the image, the goal is for the NextJS's image component to use the image's original aspect ratio, not "inherit" as a CSS aspect ratio.
+        // In that case, we cannot get the actual aspect ratio, so we use the fallback behavior in the skeleton.
         return undefined;
     }
 
     if (aspectRatio === "auto") {
+        // The goal of using "auto" as a CSS aspect ratio is to use the image's original aspect ratio.
+        // Since the image does not exist while the skeleton is shown, we use the fallback behavior in the skeleton.
         return undefined;
     }
 

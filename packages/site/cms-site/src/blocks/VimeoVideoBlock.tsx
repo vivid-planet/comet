@@ -104,7 +104,7 @@ export const VimeoVideoBlock = withPreview(
                     <div
                         ref={inViewRef}
                         className={clsx(styles.videoContainer, fill && styles.fill)}
-                        style={!fill ? { aspectRatio: aspectRatio.replace("x", "/") } : undefined}
+                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
                     >
                         <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
                     </div>

@@ -74,7 +74,7 @@ export const DamVideoBlock = withPreview(
                         muted={autoplay}
                         ref={videoRef}
                         className={clsx(styles.video, fill && styles.fill)}
-                        style={!fill ? { aspectRatio: aspectRatio.replace("x", " / ") } : undefined}
+                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
                     </video>
