@@ -76,7 +76,7 @@ export const PixelImageBlock = withPreview(
         }
 
         return (
-            <div className={styles.imageContainer} style={{ aspectRatio: usedAspectRatio }}>
+            <div className={styles.imageContainer} style={{ "--aspect-ratio": usedAspectRatio }}>
                 {nextImage}
             </div>
         );
