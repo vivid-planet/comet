@@ -135,6 +135,7 @@ export class WarningEventSubscriber implements EventSubscriber {
                         warnings,
                         type: "Entity",
                         sourceInfo,
+                        scope: row.scope,
                     });
                     await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Entity", sourceInfo });
                 }
