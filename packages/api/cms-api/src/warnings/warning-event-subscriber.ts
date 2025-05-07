@@ -86,7 +86,7 @@ export class WarningEventSubscriber implements EventSubscriber {
 
                     if (this.isBlockWarningService(warningsOrWarningsService)) {
                         const warningsService = warningsOrWarningsService;
-                        const service: BlockWarningsServiceInterface = await this.moduleRef.resolve(warningsService);
+                        const service: BlockWarningsServiceInterface = await this.moduleRef.get(warningsService, { strict: false });
 
                         warnings = await service.warnings(node.block);
                     } else {
