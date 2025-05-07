@@ -25,7 +25,7 @@ export function transformConfigFile(fileName: string, sourceText: string) {
     const sourceFile = ts.createSourceFile(
         fileName,
         sourceText,
-        ts.ScriptTarget.Latest, // language version
+        ts.ScriptTarget.ES2024, // language version
         true, // setParentNodes (useful for some traversals)
     );
 
