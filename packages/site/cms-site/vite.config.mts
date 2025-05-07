@@ -3,6 +3,7 @@ import preserveDirectives from "rollup-plugin-preserve-directives";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import tsconfigPaths from "vite-tsconfig-paths";
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 export default defineConfig({
     plugins: [
@@ -10,9 +11,11 @@ export default defineConfig({
             projects: ["./tsconfig.build.json"],
         }),
         react(),
+        cssInjectedByJsPlugin({ relativeCSSInjection: true }), // injects the css in css modules into the js files -> no extra css file import necessary
         dts({ tsconfigPath: "./tsconfig.build.json" }), // generates the types for the library
     ],
     build: {
+        cssCodeSplit: true,
         outDir: "lib",
         lib: {
             entry: "./src/index.ts",
@@ -35,5 +38,10 @@ export default defineConfig({
             },
         },
         minify: "terser", // Minifies the output for production
+        css: {
+            modules: {
+                localsConvention: "camelCase", // Optional: Customize CSS Modules class names
+            },
+        },
     },
 });
