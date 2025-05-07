@@ -14,9 +14,8 @@
     ],
     "scripts": {
         "build": "$npm_execpath run clean && npm run generate-block-types && vite build",
-        "build:old": "$npm_execpath run clean && npm run generate-block-types && tsc --project tsconfig.build.json",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
-        "dev": "$npm_execpath generate-block-types && tsc --watch --preserveWatchOutput --project tsconfig.build.json",
+        "dev": "$npm_execpath generate-block-types && vite build --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
@@ -62,7 +61,8 @@
         "typescript": "^4.0.0",
         "vite": "^5.1.6",
         "vite-plugin-css-injected-by-js": "^3.5.2",
-        "vite-plugin-dts": "^4.5.3"
+        "vite-plugin-dts": "^4.5.3",
+        "vite-tsconfig-paths": "^3.6.0"
     },
     "peerDependencies": {
         "next": "^14.2.0",

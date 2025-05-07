@@ -3,11 +3,19 @@ import preserveDirectives from "rollup-plugin-preserve-directives";
 import { defineConfig } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import dts from "vite-plugin-dts";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
     // cssInjectedByJsPlugin injects the css in css modules into the js files -> no extra css file import necessary
     // dts generates the types for the library
-    plugins: [react(), cssInjectedByJsPlugin({ relativeCSSInjection: true }), dts()],
+    plugins: [
+        tsconfigPaths({
+            projects: ["./tsconfig.build.json"],
+        }),
+        react(),
+        cssInjectedByJsPlugin({ relativeCSSInjection: true }),
+        dts({ tsconfigPath: "./tsconfig.build.json" }),
+    ],
     build: {
         cssCodeSplit: true,
         outDir: "lib",
