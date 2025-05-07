@@ -2351,9 +2351,6 @@ importers:
       '@smithy/node-http-handler':
         specifier: 3.1.4
         version: 3.1.4
-      '@smithy/types':
-        specifier: ^4.1.0
-        version: 4.1.0
       '@types/get-image-colors':
         specifier: ^4.0.0
         version: 4.0.2
@@ -2511,6 +2508,9 @@ importers:
       '@sentry/node':
         specifier: ^7.0.0
         version: 7.118.0
+      '@smithy/types':
+        specifier: ^4.1.0
+        version: 4.1.0
       '@types/express':
         specifier: ^4.0.0
         version: 4.17.16
@@ -14551,6 +14551,7 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.8.1
+    dev: true
 
   /@smithy/url-parser@3.0.10:
     resolution: {integrity: sha512-j90NUalTSBR2NaZTuruEgavSdh8MLirf58LoGSk4AtQfyIymogIhgnGUU2Mga2bkMkpSoC9gxb74xBXL5afKAQ==}
