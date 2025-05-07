@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import styled, { css } from "styled-components";
 
-import { PixelImageBlockData } from "../../blocks.generated";
+import { type PixelImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../PixelImageBlock";
 
 export interface VideoPreviewImageProps {

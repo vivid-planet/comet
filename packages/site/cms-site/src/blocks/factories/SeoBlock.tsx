@@ -1,8 +1,8 @@
 import Head from "next/head";
 
-import { PixelImageBlockData, SeoBlockData } from "../../blocks.generated";
+import { type PixelImageBlockData, type SeoBlockData } from "../../blocks.generated";
 import { generateImageUrl } from "../../image/Image";
-import { PropsWithData } from "../PropsWithData";
+import { type PropsWithData } from "../PropsWithData";
 
 type SeoBlockProps<T = PixelImageBlockData> = (T extends PixelImageBlockData
     ? PropsWithData<SeoBlockData> & { resolveOpenGraphImageUrlTemplate?: never }

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext } from "react";
-import { UrlObject } from "url";
+import { type UrlObject } from "url";
 
 export type Url = string | UrlObject;
 

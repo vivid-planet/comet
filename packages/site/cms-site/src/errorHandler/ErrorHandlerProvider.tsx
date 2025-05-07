@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ErrorInfo, PropsWithChildren, useContext } from "react";
+import { type ErrorInfo, type PropsWithChildren, createContext, useContext } from "react";
 
 interface Props {
     onError: (error: Error, errorInfo: ErrorInfo) => void;

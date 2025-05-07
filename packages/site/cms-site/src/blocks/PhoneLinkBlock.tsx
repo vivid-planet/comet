@@ -1,7 +1,7 @@
-import { cloneElement, ReactElement } from "react";
+import { type ReactElement, cloneElement } from "react";
 
-import { PhoneLinkBlockData } from "../blocks.generated";
-import { PropsWithData } from "./PropsWithData";
+import { type PhoneLinkBlockData } from "../blocks.generated";
+import { type PropsWithData } from "./PropsWithData";
 
 interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData> {
     children: ReactElement;
