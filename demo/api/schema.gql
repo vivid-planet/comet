@@ -276,6 +276,11 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 """Stage root block data"""
 scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
 type AlternativeAddress {
   street: String!
   streetNumber: Float
@@ -311,6 +316,7 @@ type Manufacturer {
   name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
+  coordinates: Coordinates
   updatedAt: DateTime!
 }
 
@@ -689,6 +695,11 @@ type PaginatedDamFolders {
 
 input DamScopeInput {
   domain: String!
+}
+
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
 }
 
 input AlternativeAddressInput {
@@ -1554,10 +1565,12 @@ input ManufacturerInput {
   name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
+  coordinates: CoordinatesInput
 }
 
 input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
+  coordinates: CoordinatesInput
 }
