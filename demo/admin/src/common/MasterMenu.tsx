@@ -190,7 +190,7 @@ export const masterMenuData: MasterMenuData = [
                     path: "/system/warnings",
                     component: WarningsPage,
                 },
-                requiredPermission: "pageTree",
+                requiredPermission: "warnings",
             },
         ],
     },
