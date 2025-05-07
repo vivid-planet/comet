@@ -1,5 +1,4 @@
-import styled from "styled-components";
-
+import styles from "./PreviewOverlay.module.css";
 import { PreviewOverlayElement } from "./PreviewOverlayElement";
 import { useIFrameBridge } from "./useIFrameBridge";
 
@@ -20,7 +19,7 @@ export const PreviewOverlay = () => {
     });
 
     return (
-        <OverlayRoot style={{ height: bottomMostElementPosition }}>
+        <div className={styles.root} style={{ height: bottomMostElementPosition }}>
             {iFrameBridge.previewElementsData.map((element, index) => {
                 const isSelected = element.adminRoute === iFrameBridge.selectedAdminRoute;
 
@@ -30,15 +29,6 @@ export const PreviewOverlay = () => {
 
                 return <PreviewOverlayElement key={index} element={element} />;
             })}
-        </OverlayRoot>
+        </div>
     );
 };
-
-const OverlayRoot = styled.div`
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    right: 0;
-    min-height: 100vh;
-`;

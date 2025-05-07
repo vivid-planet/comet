@@ -3,7 +3,7 @@
 import { type PropsWithChildren, type ReactNode } from "react";
 
 import { usePreview } from "../preview/usePreview";
-import * as sc from "./PreviewSkeleton.sc";
+import styles from "./PreviewSkeleton.module.css";
 
 interface SkeletonProps extends PropsWithChildren {
     type?: "bar" | "rows" | "media";
@@ -35,25 +35,33 @@ const PreviewSkeleton = ({
             return <>{customContainer}</>;
         } else if (type === "bar") {
             return (
-                <sc.BarSkeleton $backgroundColor={backgroundColor} $color={color}>
+                <div className={styles.barSkeleton} style={{ backgroundColor, color }}>
                     {title}
-                </sc.BarSkeleton>
+                </div>
             );
         } else if (type === "rows") {
             return (
-                <sc.RowsContainer $width="100%">
-                    <sc.RowSkeleton $width="75%" $backgroundColor={backgroundColor} $color={color}>
+                <div className={styles.rowsContainer}>
+                    <div className={styles.rowSkeleton} style={{ width: "75%", backgroundColor, color }}>
                         {title}
-                    </sc.RowSkeleton>
-                    <sc.RowSkeleton $width="100%" $backgroundColor={backgroundColor} $color={color} />
-                    <sc.RowSkeleton $width="50%" $backgroundColor={backgroundColor} $color={color} />
-                </sc.RowsContainer>
+                    </div>
+                    <div className={styles.rowSkeleton} style={{ width: "100%", backgroundColor, color }} />
+                    <div className={styles.rowSkeleton} style={{ width: "50%", backgroundColor, color }} />
+                </div>
             );
         } else if (type === "media") {
             return (
-                <sc.ImageContainer $aspectRatio={validAspectRatio} $height={height} $backgroundColor={backgroundColor} $color={color}>
+                <div
+                    className={styles.imageContainer}
+                    style={{
+                        aspectRatio: validAspectRatio,
+                        height: validAspectRatio ? undefined : height,
+                        backgroundColor,
+                        color,
+                    }}
+                >
                     {title}
-                </sc.ImageContainer>
+                </div>
             );
         }
     }
@@ -67,14 +75,10 @@ const PreviewSkeleton = ({
 
 const getValidAspectRatio = (aspectRatio: string | number | undefined) => {
     if (aspectRatio === "inherit") {
-        // If "inherit" is passed to the image, the goal is for the NextJS's image component to use the image's original aspect ratio, not "inherit" as a CSS aspect ratio.
-        // In that case, we cannot get the actual aspect ratio, so we use the fallback behavior in the skeleton.
         return undefined;
     }
 
     if (aspectRatio === "auto") {
-        // The goal of using "auto" as a CSS aspect ratio is to use the image's original aspect ratio.
-        // Since the image does not exist while the skeleton is shown, we use the fallback behavior in the skeleton.
         return undefined;
     }
 

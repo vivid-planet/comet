@@ -1,11 +1,12 @@
 "use client";
 
+import classNames from "classnames";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
-import styled, { css } from "styled-components";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import styles from "./DamVideoBlock.module.css";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -65,35 +66,23 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <Video
+                    <video
                         autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
                         controls={showControls}
                         loop={loop}
                         playsInline
                         muted={autoplay}
                         ref={videoRef}
-                        $aspectRatio={aspectRatio.replace("x", " / ")}
-                        $fill={fill}
+                        className={classNames(styles.video, {
+                            [styles.fill]: fill,
+                        })}
+                        style={!fill ? { aspectRatio: aspectRatio.replace("x", " / ") } : undefined}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
-                    </Video>
+                    </video>
                 )}
             </>
         );
     },
     { label: "Video" },
 );
-
-const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>`
-    width: 100%;
-    object-fit: cover;
-
-    ${({ $aspectRatio, $fill }) =>
-        $fill
-            ? css`
-                  height: 100%;
-              `
-            : css`
-                  aspect-ratio: ${$aspectRatio};
-              `}
-`;
