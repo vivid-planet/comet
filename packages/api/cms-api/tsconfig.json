@@ -4,6 +4,6 @@
         "outDir": "./lib",
         "baseUrl": "./"
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "src/importer"],
     "exclude": ["node_modules", "lib"]
 }

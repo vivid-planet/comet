@@ -1,8 +1,8 @@
 import { LoggerService } from "@nestjs/common";
-import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { plainToInstance } from "class-transformer";
 import { Transform as StreamTransform, TransformCallback } from "stream";
 
+import { ImporterInputClass } from "../../importer-input.type";
 import { ImporterPipe, PipeData, PipeMetadata } from "../importer-pipe.type";
 
 export class DataTransformerPipe implements ImporterPipe {

@@ -1,9 +1,9 @@
 import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
-import { getFieldMetadata, ImportFieldMetadata } from "@src/importer/decorators/csv-column.decorator";
-import { ImporterInputClass } from "@src/importer/importer-input.type";
 import { Transform } from "stream";
 
+import { getFieldMetadata, ImportFieldMetadata } from "../../decorators/csv-column.decorator";
+import { ImporterInputClass } from "../../importer-input.type";
 import { CompositeImporterPipe } from "../importer-pipe.type";
 import { CsvParsePipe, CsvParserOptions } from "./csv-parser.pipe";
 import { DataTransformerPipe } from "./data-transformer.pipe";

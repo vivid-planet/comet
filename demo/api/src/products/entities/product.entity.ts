@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, FileUpload, ImportTargetInterface, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -16,7 +16,6 @@ import {
     types,
 } from "@mikro-orm/core";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { ImportTargetInterface } from "@src/importer/import-target.interface";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";

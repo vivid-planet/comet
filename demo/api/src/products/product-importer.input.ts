@@ -1,5 +1,5 @@
+import { CsvColumn, CsvColumnType } from "@comet/cms-api";
 import { Collection, Ref } from "@mikro-orm/core";
-import { CsvColumn, CsvColumnType } from "@src/importer/decorators/csv-column.decorator";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 
 import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "./entities/product.entity";

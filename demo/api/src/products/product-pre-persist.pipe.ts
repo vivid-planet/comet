@@ -1,6 +1,6 @@
+import { ImporterPipe, PipeData, PipeMetadata } from "@comet/cms-api";
 import { Connection, EntityManager, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
-import { ImporterPipe, PipeData, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
 import slugify from "slugify";
 import { Transform, TransformCallback } from "stream";
 import { v4 } from "uuid";
