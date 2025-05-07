@@ -37,7 +37,7 @@ export class NewsResolver {
     { scope, search, filter, sort, offset, limit }: NewsListArgs, 
     @Info()
     info: GraphQLResolveInfo): Promise<PaginatedNews> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getRepository<News>(News));
+        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(News));
         where.scope = scope;
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];

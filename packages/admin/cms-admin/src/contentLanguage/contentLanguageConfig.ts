@@ -1,8 +1,8 @@
 import { useCometConfig } from "../config/CometConfigContext";
-import { type ContentScopeInterface } from "../contentScope/Provider";
+import { type ContentScope } from "../contentScope/Provider";
 
 export type ContentLanguageConfig = {
-    resolveContentLanguageForScope: (scope: ContentScopeInterface) => string;
+    resolveContentLanguageForScope: (scope: ContentScope) => string;
 };
 
 export function useContentLanguageConfig(): ContentLanguageConfig {

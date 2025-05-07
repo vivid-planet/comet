@@ -28,7 +28,7 @@ export class ProductTagResolver {
     { search, filter, sort, offset, limit }: ProductTagsArgs, 
     @Info()
     info: GraphQLResolveInfo): Promise<PaginatedProductTags> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getRepository<ProductTag>(ProductTag));
+        const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(ProductTag));
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
         if (fields.includes("productsWithStatus")) {

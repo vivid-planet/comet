@@ -5,6 +5,7 @@ import { Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested } from "class-validator";
 import { IsNullable, PartialType } from "@comet/cms-api";
 import { Address, AddressAsEmbeddable } from "../../entities/manufacturer.entity";
+import { Coordinates } from "../../coordinates.type";
 @InputType()
 export class ManufacturerInput {
     @IsNotEmpty()
@@ -21,6 +22,11 @@ export class ManufacturerInput {
     @Type(() => AddressAsEmbeddable)
     @Field(() => AddressAsEmbeddable)
     addressAsEmbeddable: AddressAsEmbeddable;
+    @IsNullable()
+    @ValidateNested()
+    @Type(() => Coordinates)
+    @Field(() => Coordinates, { nullable: true })
+    coordinates?: Coordinates;
 }
 @InputType()
 export class ManufacturerUpdateInput extends PartialType(ManufacturerInput) {

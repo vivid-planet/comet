@@ -1,4 +1,4 @@
-import { type EntityMetadata, type EntityRepository, type FilterQuery, type ObjectQuery } from "@mikro-orm/postgresql";
+import { type EntityMetadata, type FilterQuery, type ObjectQuery } from "@mikro-orm/postgresql";
 
 import { getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { BooleanFilter } from "./boolean.filter";
@@ -288,10 +288,9 @@ export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function gqlArgsToMikroOrmQuery({ search, filter }: { search?: string; filter?: any }, repository: EntityRepository<any>): ObjectQuery<any> {
+export function gqlArgsToMikroOrmQuery({ search, filter }: { search?: string; filter?: any }, metadata: EntityMetadata<any>): ObjectQuery<any> {
     const andFilters = [];
 
-    const metadata = repository.getEntityManager().getMetadata().get(repository.getEntityName());
     if (search) {
         const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
         if (crudSearchPropNames.length == 0) {
