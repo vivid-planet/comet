@@ -2735,6 +2735,9 @@ importers:
 
   packages/site/cms-site:
     dependencies:
+      classnames:
+        specifier: ^2.2.6
+        version: 2.3.2
       jose:
         specifier: ^5.2.4
         version: 5.6.3
