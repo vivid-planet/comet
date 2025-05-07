@@ -11,12 +11,20 @@ export class Coordinates {
     longitude: number;
 }
 
-export class CoordinatesType extends Type<Coordinates, string> {
-    convertToDatabaseValue(value: Coordinates): string {
+export class CoordinatesType extends Type<Coordinates | null, string | null> {
+    convertToDatabaseValue(value: Coordinates | null): string | null {
+        if (value === null) {
+            return null;
+        }
+
         return `(${value.latitude},${value.longitude})`;
     }
 
-    convertToJSValue(value: string): Coordinates {
+    convertToJSValue(value: string): Coordinates | null {
+        if (value === null) {
+            return null;
+        }
+
         const match = value.match(/\(([^,]+),([^)]+)\)/);
         if (!match) throw new Error("Invalid coordinate format");
         return {
