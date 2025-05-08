@@ -431,6 +431,45 @@ Previously, if entities specified a `status` enum, it was automatically added to
 This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
 done with the normal filtering mechanism.
 
+### API Generator - Don't commit generated files [optional]
+
+The improved performance of API Generator doesn't make it neccessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+
+run api-generator in prebuild:
+```diff title="api/package.json"
+scripts: {
+-  "prebuild": "rimraf dist",
++  "prebuild": "rimraf dist && $npm_execpath run api-generator",
+}
+```
+
+lint script can be removed:
+```diff title="api/package.json"
+scripts: {
+-  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+}
+```
+
+Add generated files to eslint ignore:
+```diff title="api/eslint.config.mjs"
+scripts: {
+-  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
++  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+}
+```
+
+Add generated files to .gitignore:
+```diff title="api/.gitignore"
+scripts: {
++  src/**/generated
+}
+```
+
+And finally delete generated files from git:
+```sh
+git rm -r api/src/*/generated
+```
+
 ### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
