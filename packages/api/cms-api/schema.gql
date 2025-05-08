@@ -8,7 +8,7 @@ type UserPermission {
   requestedBy: String
   approvedBy: String
   overrideContentScopes: Boolean!
-  contentScopes: [ContentScopeWithLabel!]!
+  contentScopes: [JSONObject!]!
 }
 
 enum UserPermissionSource {
@@ -21,15 +21,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type ContentScopeWithLabel {
-  scope: JSONObject!
-  label: JSONObject!
-}
-
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
 
 type UserPermissionsUser {
   id: String!
@@ -393,7 +393,7 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [ContentScopeWithLabel!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
@@ -672,14 +672,9 @@ input UserPermissionInput {
 input UserPermissionOverrideContentScopesInput {
   permissionId: ID!
   overrideContentScopes: Boolean!
-  contentScopes: [ContentScopeWithLabelInput!]! = []
-}
-
-input ContentScopeWithLabelInput {
-  scope: JSONObject!
-  label: JSONObject!
+  contentScopes: [JSONObject!]! = []
 }
 
 input UserContentScopesInput {
-  contentScopes: [ContentScopeWithLabelInput!]! = []
+  contentScopes: [JSONObject!]! = []
 }

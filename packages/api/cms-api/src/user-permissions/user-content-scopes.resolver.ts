@@ -1,6 +1,7 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-scalars";
 import isEqual from "lodash.isequal";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
@@ -8,6 +9,7 @@ import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
+import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @Resolver()
@@ -23,10 +25,9 @@ export class UserContentScopesResolver {
     @SkipBuild()
     async userPermissionsUpdateContentScopes(
         @Args("userId", { type: () => String }) userId: string,
-        @Args("input", { type: () => UserContentScopesInput }) { contentScopes: contentScopesWithLabel }: UserContentScopesInput,
+        @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
     ): Promise<boolean> {
-        await this.userService.checkContentScopes(contentScopesWithLabel);
-        const contentScopes = contentScopesWithLabel.map((scope) => scope.scope);
+        await this.userService.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });
         if (entity) {
             entity = this.repository.assign(entity, { userId, contentScopes });
@@ -37,15 +38,15 @@ export class UserContentScopesResolver {
         return true;
     }
 
-    @Query(() => [ContentScopeWithLabel])
+    @Query(() => [GraphQLJSONObject])
     async userPermissionsContentScopes(
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
-    ): Promise<ContentScopeWithLabel[]> {
+    ): Promise<ContentScope[]> {
         const contentScopes = await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual);
-        return (await this.userService.getAvailableContentScopes()).filter((contentScopeWithLabel) =>
-            contentScopes.some((contentScope) => isEqual(contentScope, contentScopeWithLabel.scope)),
-        );
+        return (await this.userService.getAvailableContentScopes())
+            .filter((availableContentScope) => contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)))
+            .map((availableContentScope) => availableContentScope.scope);
     }
 
     @Query(() => [ContentScopeWithLabel])

@@ -57,9 +57,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                 input: {
                     permissionId,
                     overrideContentScopes: data.overrideContentScopes,
-                    contentScopes: data.contentScopes
-                        .map((contentScope) => JSON.parse(contentScope))
-                        .map((cs) => ({ scope: cs.scope, label: cs.label })),
+                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
                 },
             },
             refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
@@ -77,15 +75,9 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
-                    contentScopes {
-                        scope
-                        label
-                    }
+                    contentScopes
                 }
-                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true) {
-                    scope
-                    label
-                }
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
         `,
         {
@@ -135,11 +127,11 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                     {(props) => {
                                         return (
                                             <DataGrid
-                                                rows={
+                                                rows={(
                                                     data.availableContentScopes.filter(
                                                         (obj) => !Object.values(obj).every((value) => value === undefined),
                                                     ) ?? []
-                                                }
+                                                ).map((obj) => obj.scope)}
                                                 columns={columns}
                                                 loading={false}
                                                 getRowId={(row) => JSON.stringify(row)}

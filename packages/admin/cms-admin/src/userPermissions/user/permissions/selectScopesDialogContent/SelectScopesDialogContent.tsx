@@ -63,9 +63,7 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
             variables: {
                 userId,
                 input: {
-                    contentScopes: values.contentScopes
-                        .map((contentScope) => JSON.parse(contentScope))
-                        .map((cs) => ({ scope: cs.scope, label: cs.label })),
+                    contentScopes: values.contentScopes.map((contentScope) => JSON.parse(contentScope)),
                 },
             },
             refetchQueries: ["ContentScopes"],
@@ -95,7 +93,9 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                 {(props) => {
                     return (
                         <DataGrid
-                            rows={data.availableContentScopes.filter((obj) => !Object.values(obj).every((value) => value === undefined))}
+                            rows={data.availableContentScopes
+                                .filter((obj) => !Object.values(obj).every((value) => value === undefined))
+                                .map((obj) => obj.scope)}
                             columns={columns}
                             getRowId={(row) => JSON.stringify(row)}
                             isRowSelectable={(params) => {

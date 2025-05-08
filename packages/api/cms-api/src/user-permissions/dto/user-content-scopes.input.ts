@@ -6,17 +6,8 @@ import { ContentScope } from "../interfaces/content-scope.interface";
 
 @InputType()
 export class UserContentScopesInput {
-    @Field(() => [ContentScopeWithLabelInput], { defaultValue: [] })
+    @Field(() => [GraphQLJSONObject], { defaultValue: [] })
     @IsArray()
     @IsObject({ each: true })
-    contentScopes: ContentScopeWithLabelInput[] = [];
-}
-
-@InputType()
-export class ContentScopeWithLabelInput {
-    @Field(() => GraphQLJSONObject)
-    scope: ContentScope;
-
-    @Field(() => GraphQLJSONObject)
-    label: { [key in keyof ContentScope]: string };
+    contentScopes: ContentScope[] = [];
 }

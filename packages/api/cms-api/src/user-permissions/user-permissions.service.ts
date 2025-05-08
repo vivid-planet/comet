@@ -107,11 +107,11 @@ export class UserPermissionsService {
         return this.userService.findUsers(args);
     }
 
-    async checkContentScopes(contentScopes: ContentScopeWithLabel[]): Promise<void> {
+    async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
         const availableContentScopes = await this.getAvailableContentScopes();
         contentScopes.forEach((scope) => {
-            if (!availableContentScopes.some((cs) => isEqual(cs, scope))) {
-                throw new Error(`ContentScope does not exist: ${JSON.stringify(scope.scope)}.`);
+            if (!availableContentScopes.some((cs) => isEqual(cs.scope, scope))) {
+                throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
             }
         });
     }
