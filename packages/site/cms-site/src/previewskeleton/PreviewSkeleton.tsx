@@ -22,7 +22,7 @@ const PreviewSkeleton = ({
     title,
     type = "bar",
     aspectRatio,
-    height,
+    height: passedHeight,
     hasContent,
     color = "#A8A7A8",
     backgroundColor = type === "media" ? "#efefef" : "#E0DDE0",
@@ -50,13 +50,16 @@ const PreviewSkeleton = ({
                 </div>
             );
         } else if (type === "media") {
+            const height = passedHeight ?? 300;
             return (
                 <div
                     className={styles.imageContainer}
                     style={{
                         "--background-color": backgroundColor,
                         "--color": color,
-                        ...(validAspectRatio === undefined ? { "--height": height ?? 300 } : { "--aspect-ratio": validAspectRatio }),
+                        ...(validAspectRatio === undefined
+                            ? { "--height": typeof height === "string" ? height : `${height}px` }
+                            : { "--aspect-ratio": validAspectRatio }),
                     }}
                 >
                     {title}
