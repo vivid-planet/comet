@@ -949,11 +949,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
+        ${
+            generatorOptions.single
+                ? `
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
         async ${instanceNameSingular}(${generateIdArg("id", metadata)}): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
             return ${instanceNameSingular};
+        }
+        `
+                : ""
         }
 
         ${
@@ -1242,7 +1248,11 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
         list: generatorOptionsParam.list ?? true,
+        single: generatorOptionsParam.single ?? true,
     };
+    if (!generatorOptions.create && !generatorOptions.update && !generatorOptions.delete && !generatorOptions.list && !generatorOptions.single) {
+        throw new Error("At least one of create, update, delete, list or single must be true");
+    }
 
     const generatedFiles: GeneratedFile[] = [];
 
