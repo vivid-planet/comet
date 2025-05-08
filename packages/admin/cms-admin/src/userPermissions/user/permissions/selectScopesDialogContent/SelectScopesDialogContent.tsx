@@ -46,7 +46,10 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
 
     const { data, error } = useQuery<GQLAvailableContentScopesQuery>(gql`
         query AvailableContentScopes {
-            availableContentScopes: userPermissionsAvailableContentScopes
+            availableContentScopes: userPermissionsAvailableContentScopes {
+                scope
+                label
+            }
         }
     `);
 
@@ -90,12 +93,10 @@ export const SelectScopesDialogContent: FunctionComponent<PropsWithChildren<Sele
                 {(props) => {
                     return (
                         <DataGrid
-                            autoHeight={true}
-                            rows={data.availableContentScopes.filter((obj) => !Object.values(obj).every((value) => value === undefined)) ?? []}
+                            rows={data.availableContentScopes
+                                .filter((obj) => !Object.values(obj).every((value) => value === undefined))
+                                .map((obj) => obj.scope)}
                             columns={columns}
-                            rowCount={data.availableContentScopes.length}
-                            loading={false}
-                            getRowHeight={() => "auto"}
                             getRowId={(row) => JSON.stringify(row)}
                             isRowSelectable={(params) => {
                                 return !userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
