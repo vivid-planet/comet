@@ -1,5 +1,20 @@
 # @comet/api-generator
 
+## 8.0.0-beta.5
+
+### Minor Changes
+
+- 7e89a91: Add input support for custom mikro-orm types, the `@Field` type must also be an `@InputType`
+- 74c4fa7: Use the Entity Manager for all MikroORM operations
+- d8c62ef: Add watch (`--watch`) and single file (`--file`) modes
+
+### Patch Changes
+
+- 4186bbb: Activate transpileOnly for better performance and fix enum issue we have with it
+- Updated dependencies [c63817a]
+- Updated dependencies [e478c6b]
+    - @comet/cms-api@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Major Changes

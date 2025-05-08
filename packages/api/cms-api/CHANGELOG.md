@@ -1,5 +1,19 @@
 # @comet/cms-api
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- e478c6b: Directly pass the entity metadata instead of the repository in `gqlArgsToMikroOrmQuery`
+
+### Minor Changes
+
+- c63817a: Add `getUserForLogin` function in `UserService`.
+
+    This allows implementing a different code path for getting the user to login
+    and the user shown in the administration panel. Examples are caching the currently logged
+    in user or throwing `UnauthorizedException` when not allowed to login.
+
 ## 8.0.0-beta.4
 
 ### Major Changes

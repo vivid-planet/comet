@@ -1,5 +1,27 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 487fd69: Use ContentScope interface augmentation in admin
+
+    The export `ContentScopeInterface` has been renamed to `ContentScope`.
+    Also, generics have been removed from `ContentScopeSelect`, `ContentScopeControls` and `useContentScope`.
+    All these things hardly were used in projects.
+
+### Minor Changes
+
+- c6b5bdc: Add SignOutButton Component
+
+### Patch Changes
+
+- Updated dependencies [1d28c90]
+    - @comet/admin@8.0.0-beta.5
+    - @comet/admin-date-time@8.0.0-beta.5
+    - @comet/admin-rte@8.0.0-beta.5
+    - @comet/admin-icons@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Major Changes
