@@ -8,6 +8,7 @@ import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
 import { type BlockInterface } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
+import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
 
@@ -23,12 +24,16 @@ const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 
+interface RedirectsPageProps {
+    redirectPathAfterChange?: string;
+}
+
 interface CreateRedirectsPageOptions {
     customTargets?: Record<string, BlockInterface>;
     scopeParts?: string[];
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType {
+function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
     const linkBlock = createOneOfBlock({
         supportedBlocks: { internal: RedirectsInternalLinkBlock, external: RedirectsExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
@@ -36,8 +41,9 @@ function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirects
         allowEmpty: false,
     });
 
-    function Redirects(): JSX.Element {
+    function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
         const intl = useIntl();
+        useContentScopeConfig({ redirectPathAfterChange });
 
         const { scope: completeScope } = useContentScope();
         const scope = scopeParts.reduce(
