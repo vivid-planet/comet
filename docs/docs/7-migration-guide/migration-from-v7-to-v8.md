@@ -1593,6 +1593,37 @@ Example:
 
 </details>
 
+### Adapt to changes in ContentScopeProvider
+
+#### Use interface augmentation for ContentScope instead generics
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
++   import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
++   declare module "@comet/cms-admin" {
++       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++       interface ContentScope extends BaseContentScope {}
++   }
+-   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
+-       return useContentScopeConfigLibrary(p);
+-   }
+
+-    ContentScopeValues<ContentScope>
++    ContentScopeValues
+-    <ContentScopeProviderLibrary<ContentScope>>
++    <ContentScopeProviderLibrary>
+```
+
+#### Directly pass allowedContentScopes to ContentScopeProvider
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+    export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
+-      // Remove code which creates `values` and `userContentScopes`
+-      <ContentScopeProviderLibrary values={values} defaultValue={userContentScopes[0]}>
++      <ContentScopeProviderLibrary values={user.allowedContentScopes} defaultValue={user.allowedContentScopes[0].scope}>
+    };
+```
+
 ## Site
 
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
