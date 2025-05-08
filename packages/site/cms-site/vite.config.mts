@@ -36,7 +36,7 @@ export default defineConfig({
         minify: "terser", // Minifies the output for production
         css: {
             modules: {
-                localsConvention: "camelCase", // Optional: Customize CSS Modules class names
+                localsConvention: "camelCase",
             },
         },
     },
