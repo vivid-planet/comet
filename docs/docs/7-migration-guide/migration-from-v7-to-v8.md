@@ -433,17 +433,19 @@ done with the normal filtering mechanism.
 
 ### API Generator - Don't commit generated files [optional]
 
-The improved performance of API Generator doesn't make it neccessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
 
 run api-generator in prebuild:
+
 ```diff title="api/package.json"
 scripts: {
 -  "prebuild": "rimraf dist",
-+  "prebuild": "rimraf dist && $npm_execpath run api-generator",
++  "prebuild": "rimraf dist && npm run api-generator",
 }
 ```
 
 lint script can be removed:
+
 ```diff title="api/package.json"
 scripts: {
 -  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
@@ -451,6 +453,7 @@ scripts: {
 ```
 
 Add generated files to eslint ignore:
+
 ```diff title="api/eslint.config.mjs"
 scripts: {
 -  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
@@ -459,6 +462,7 @@ scripts: {
 ```
 
 Add generated files to .gitignore:
+
 ```diff title="api/.gitignore"
 scripts: {
 +  src/**/generated
@@ -466,6 +470,7 @@ scripts: {
 ```
 
 And finally delete generated files from git:
+
 ```sh
 git rm -r api/src/*/generated
 ```
