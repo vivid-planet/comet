@@ -74,7 +74,7 @@
         "@docusaurus/types": "^3.7.0",
         "@types/react": "^18.3.20",
         "@types/react-dom": "^18.3.5",
-        "cspell": "^8.17.5",
+        "cspell": "^8.19.4",
         "eslint": "^9.22.0",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.5.3",
