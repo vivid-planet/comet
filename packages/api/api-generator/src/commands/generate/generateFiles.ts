@@ -61,7 +61,5 @@ export const generateFiles = async (
                 }
             }
         }
-
-        await orm.close(true);
     }
 };
