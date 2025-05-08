@@ -9,8 +9,7 @@ import {
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, FindOptions } from "@mikro-orm/postgresql";
+import { EntityManager, FindOptions } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
@@ -26,27 +25,26 @@ import { PaginatedNews } from "./dto/paginated-news";
 export class NewsResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        @InjectRepository(News) private readonly repository: EntityRepository<News>,
         private readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
     @Query(() => News)
     @AffectedEntity(News)
     async news(@Args("id", { type: () => ID }) id: string): Promise<News> {
-        const news = await this.repository.findOneOrFail(id);
+        const news = await this.entityManager.findOneOrFail(News, id);
         return news;
     }
 
     @Query(() => News, { nullable: true })
     async newsBySlug(@Args("slug") slug: string, @Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope): Promise<News | null> {
-        const news = await this.repository.findOne({ slug, scope });
+        const news = await this.entityManager.findOne(News, { slug, scope });
 
         return news ?? null;
     }
 
     @Query(() => PaginatedNews)
     async newsList(@Args() { scope, search, filter, sort, offset, limit }: NewsListArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedNews> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(News));
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
@@ -66,7 +64,7 @@ export class NewsResolver {
             });
         }
 
-        const [entities, totalCount] = await this.repository.findAndCount(where, options);
+        const [entities, totalCount] = await this.entityManager.findAndCount(News, where, options);
         return new PaginatedNews(entities, totalCount);
     }
 
@@ -76,7 +74,7 @@ export class NewsResolver {
         @Args("input", { type: () => NewsInput }) input: NewsInput,
     ): Promise<News> {
         const { image: imageInput, content: contentInput, ...assignInput } = input;
-        const news = this.repository.create({
+        const news = this.entityManager.create(News, {
             ...assignInput,
             scope,
 
@@ -95,7 +93,7 @@ export class NewsResolver {
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsUpdateInput }) input: NewsUpdateInput,
     ): Promise<News> {
-        const news = await this.repository.findOneOrFail(id);
+        const news = await this.entityManager.findOneOrFail(News, id);
 
         const { image: imageInput, content: contentInput, ...assignInput } = input;
         news.assign({
@@ -117,7 +115,7 @@ export class NewsResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(News)
     async deleteNews(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        const news = await this.repository.findOneOrFail(id);
+        const news = await this.entityManager.findOneOrFail(News, id);
         this.entityManager.remove(news);
         await this.entityManager.flush();
         return true;

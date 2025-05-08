@@ -21,7 +21,7 @@ import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, S
 import { type ComponentType, type ReactNode, useCallback, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type ContentScopeInterface, createEditPageNode } from "../..";
+import { type ContentScope, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
@@ -40,7 +40,7 @@ interface Props {
     category: string;
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
-    renderContentScopeIndicator: (scope: ContentScopeInterface) => ReactNode;
+    renderContentScopeIndicator: (scope: ContentScope) => ReactNode;
 }
 
 const DefaultEditPageNode = createEditPageNode({});

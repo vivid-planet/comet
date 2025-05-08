@@ -3,12 +3,8 @@ import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { cleanTypename } from "../../common/cleanTypename";
-import { useContentScope } from "../../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
-
-export interface ContentScope {
-    [key: string]: unknown;
-}
 
 type CurrentUserContext = {
     currentUser: CurrentUserInterface;

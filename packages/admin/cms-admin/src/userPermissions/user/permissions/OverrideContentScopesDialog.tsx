@@ -12,7 +12,7 @@ import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
-import { type ContentScopeInterface } from "../../../contentScope/Provider";
+import { type ContentScope } from "../../../contentScope/Provider";
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
     type GQLOverrideContentScopesMutation,
@@ -107,7 +107,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     };
     const disabled = data && data.permission.source === "BY_RULE";
 
-    const columns: GridColDef<ContentScopeInterface>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
 
     return (
         <Dialog maxWidth="lg" open={true}>
@@ -153,9 +153,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                                 }}
                                                 initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                                                 isRowSelectable={(params) => {
-                                                    return !data.userContentScopesSkipManual.some((cs: ContentScopeInterface) =>
-                                                        isEqual(cs, params.row),
-                                                    );
+                                                    return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
                                                 }}
                                             />
                                         );

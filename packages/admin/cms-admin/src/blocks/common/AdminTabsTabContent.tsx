@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type PropsWithChildren } from "react";
 
@@ -12,9 +11,7 @@ export const TabContent = ({ children, selectedTab }: PropsWithChildren<TabConte
     const scrollRestoration = useScrollRestoration<HTMLDivElement>(`adminTabsTabContent-${selectedTab}`);
     return (
         <Root {...scrollRestoration}>
-            <Box marginBottom={4} marginTop={4}>
-                {children}
-            </Box>
+            <Content>{children}</Content>
         </Root>
     );
 };
@@ -22,4 +19,13 @@ export const TabContent = ({ children, selectedTab }: PropsWithChildren<TabConte
 const Root = styled("div")`
     overflow-y: auto;
     overflow-x: hidden;
+`;
+
+const Content = styled("div")`
+    margin-top: ${({ theme }) => theme.spacing(4)};
+    margin-bottom: ${({ theme }) => theme.spacing(4)};
+
+    & > .CometAdminStackBreadcrumbs-root:first-child {
+        margin-top: -${({ theme }) => theme.spacing(4)};
+    }
 `;

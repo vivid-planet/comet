@@ -1,5 +1,51 @@
 # @comet/admin
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- 72d1a5e: New usage of `DataGridToolbar` component
+
+    `DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
+
+    The new usage simplifies the component structure - children can now be passed directly without needing to wrap them in `ToolbarItem` and `ToolbarActions` components:
+
+    ```diff
+    - <DataGridToolbar density="compact">
+    + <DataGridToolbar>
+    -     <ToolbarItem>
+              <GridToolbarQuickFilter />
+    -     </ToolbarItem>
+    -     <ToolbarItem>
+              <GridFilterButton />
+    -     </ToolbarItem>
+    -     <ToolbarItem>
+              <GridColumnsButton />
+    -     </ToolbarItem>
+          <FillSpace />
+    -     <ToolbarActions>
+              <Button responsive variant="outlined">
+                  Secondary action
+              </Button>
+              <Button responsive startIcon={<AddIcon />}>
+                  Add item
+              </Button>
+    -     </ToolbarActions>
+      </DataGridToolbar>
+    ```
+
+### Minor Changes
+
+- a93455f: Adapt styling of MUI's List and Menu components according to the Comet DXP design
+
+    This affects the following components: `List`, `Menu`, `ListItem`, `MenuItem`, `ListItemButton`, `ListItemIcon`, `ListItemText`.
+
+- 1c62e87: Add `InlineAlert` component
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
@@ -306,6 +352,21 @@
 - Updated dependencies [04e308a]
 - Updated dependencies [682a674]
     - @comet/admin-icons@8.0.0-beta.0
+
+## 7.19.0
+
+### Patch Changes
+
+- 3544127ad: Remove unintended white background on `Button` with `textDark` variant when disabled
+    - @comet/admin-icons@7.19.0
+    - @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+- @comet/admin-icons@7.18.0
+- @comet/admin-theme@7.18.0
 
 ## 7.17.0
 

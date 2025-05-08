@@ -5,6 +5,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
+import { Coordinates } from "../../coordinates.type";
 import { Address, AddressAsEmbeddable } from "../../entities/manufacturer.entity";
 
 @InputType()
@@ -25,6 +26,12 @@ export class ManufacturerInput {
     @Type(() => AddressAsEmbeddable)
     @Field(() => AddressAsEmbeddable)
     addressAsEmbeddable: AddressAsEmbeddable;
+
+    @IsNullable()
+    @ValidateNested()
+    @Type(() => Coordinates)
+    @Field(() => Coordinates, { nullable: true })
+    coordinates?: Coordinates;
 }
 
 @InputType()

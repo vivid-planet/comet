@@ -30,6 +30,10 @@ export interface AccessControlServiceInterface {
 }
 
 export interface UserPermissionsUserServiceInterface {
+    /**
+     * Optional method to get the user for login if a different code path from the default `getUser` is required
+     */
+    getUserForLogin?: (id: string) => Promise<User> | User;
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
 }
