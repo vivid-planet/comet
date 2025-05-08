@@ -1,13 +1,13 @@
 "use client";
 // eslint-disable-next-line no-restricted-imports
-import NextImage, { ImageProps } from "next/image";
+import NextImage, { type ImageProps } from "next/image";
 import styled from "styled-components";
 
-import { PixelImageBlockData } from "../blocks.generated";
+import { type PixelImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
-import { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, ImageDimensions, parseAspectRatio } from "../image/Image";
+import { type ImageDimensions, calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "../image/Image";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { PropsWithData } from "./PropsWithData";
+import { type PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio: string | number | "inherit";
