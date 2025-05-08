@@ -9,8 +9,7 @@ import {
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, FindOptions, Reference } from "@mikro-orm/postgresql";
+import { EntityManager, FindOptions, Reference } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { FileUpload } from "@src/../../../packages/api/cms-api/lib/file-uploads/entities/file-upload.entity.js";
 import { GraphQLResolveInfo } from "graphql";
@@ -32,34 +31,26 @@ import { ProductsArgs } from "./dto/products.args";
 export class ProductResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
-        @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
-        @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
-        @InjectRepository(FileUpload) private readonly fileUploadRepository: EntityRepository<FileUpload>,
-        @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
-        @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
-        @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
-        @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
         private readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
     @Query(() => Product)
     @AffectedEntity(Product)
     async product(@Args("id", { type: () => ID }) id: string): Promise<Product> {
-        const product = await this.repository.findOneOrFail(id);
+        const product = await this.entityManager.findOneOrFail(Product, id);
         return product;
     }
 
     @Query(() => Product, { nullable: true })
     async productBySlug(@Args("slug") slug: string): Promise<Product | null> {
-        const product = await this.repository.findOne({ slug });
+        const product = await this.entityManager.findOne(Product, { slug });
 
         return product ?? null;
     }
 
     @Query(() => PaginatedProducts)
     async products(@Args() { search, filter, sort, offset, limit }: ProductsArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedProducts> {
-        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.entityManager.getMetadata(Product));
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
@@ -102,7 +93,7 @@ export class ProductResolver {
             });
         }
 
-        const [entities, totalCount] = await this.repository.findAndCount(where, options);
+        const [entities, totalCount] = await this.entityManager.findAndCount(Product, where, options);
         return new PaginatedProducts(entities, totalCount);
     }
 
@@ -120,19 +111,19 @@ export class ProductResolver {
             image: imageInput,
             ...assignInput
         } = input;
-        const product = this.repository.create({
+        const product = this.entityManager.create(Product, {
             ...assignInput,
 
-            category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
-            manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
-            priceList: priceListInput ? Reference.create(await this.fileUploadRepository.findOneOrFail(priceListInput)) : undefined,
+            category: categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined,
+            manufacturer: manufacturerInput ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput)) : undefined,
+            priceList: priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
             await product.colors.loadItems();
             product.colors.set(
                 colorsInput.map((colorInput) => {
-                    return this.productColorRepository.assign(new ProductColor(), {
+                    return this.entityManager.assign(new ProductColor(), {
                         ...colorInput,
                     });
                 }),
@@ -144,23 +135,23 @@ export class ProductResolver {
                 await Promise.all(
                     tagsWithStatusInput.map(async (tagsWithStatusInput) => {
                         const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
-                        return this.productToTagRepository.assign(new ProductToTag(), {
+                        return this.entityManager.assign(new ProductToTag(), {
                             ...assignInput,
 
-                            tag: Reference.create(await this.productTagRepository.findOneOrFail(tagInput)),
+                            tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
                         });
                     }),
                 ),
             );
         }
         if (tagsInput) {
-            const tags = await this.productTagRepository.find({ id: tagsInput });
+            const tags = await this.entityManager.find(ProductTag, { id: tagsInput });
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
         if (datasheetsInput) {
-            const datasheets = await this.fileUploadRepository.find({ id: datasheetsInput });
+            const datasheets = await this.entityManager.find(FileUpload, { id: datasheetsInput });
             if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
@@ -169,7 +160,7 @@ export class ProductResolver {
         if (statisticsInput) {
             const statistic = new ProductStatistics();
 
-            this.productStatisticsRepository.assign(statistic, {
+            this.entityManager.assign(statistic, {
                 ...statisticsInput,
             });
         }
@@ -185,7 +176,7 @@ export class ProductResolver {
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ProductUpdateInput }) input: ProductUpdateInput,
     ): Promise<Product> {
-        const product = await this.repository.findOneOrFail(id);
+        const product = await this.entityManager.findOneOrFail(Product, id);
 
         const {
             colors: colorsInput,
@@ -206,7 +197,7 @@ export class ProductResolver {
             await product.colors.loadItems();
             product.colors.set(
                 colorsInput.map((colorInput) => {
-                    return this.productColorRepository.assign(new ProductColor(), {
+                    return this.entityManager.assign(new ProductColor(), {
                         ...colorInput,
                     });
                 }),
@@ -218,23 +209,23 @@ export class ProductResolver {
                 await Promise.all(
                     tagsWithStatusInput.map(async (tagsWithStatusInput) => {
                         const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
-                        return this.productToTagRepository.assign(new ProductToTag(), {
+                        return this.entityManager.assign(new ProductToTag(), {
                             ...assignInput,
 
-                            tag: Reference.create(await this.productTagRepository.findOneOrFail(tagInput)),
+                            tag: Reference.create(await this.entityManager.findOneOrFail(ProductTag, tagInput)),
                         });
                     }),
                 ),
             );
         }
         if (tagsInput) {
-            const tags = await this.productTagRepository.find({ id: tagsInput });
+            const tags = await this.entityManager.find(ProductTag, { id: tagsInput });
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
         if (datasheetsInput) {
-            const datasheets = await this.fileUploadRepository.find({ id: datasheetsInput });
+            const datasheets = await this.entityManager.find(FileUpload, { id: datasheetsInput });
             if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
@@ -243,20 +234,20 @@ export class ProductResolver {
         if (statisticsInput) {
             const statistic = product.statistics ? await product.statistics.loadOrFail() : new ProductStatistics();
 
-            this.productStatisticsRepository.assign(statistic, {
+            this.entityManager.assign(statistic, {
                 ...statisticsInput,
             });
         }
         if (categoryInput !== undefined) {
-            product.category = categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined;
+            product.category = categoryInput ? Reference.create(await this.entityManager.findOneOrFail(ProductCategory, categoryInput)) : undefined;
         }
         if (manufacturerInput !== undefined) {
             product.manufacturer = manufacturerInput
-                ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput))
+                ? Reference.create(await this.entityManager.findOneOrFail(Manufacturer, manufacturerInput))
                 : undefined;
         }
         if (priceListInput !== undefined) {
-            product.priceList = priceListInput ? Reference.create(await this.fileUploadRepository.findOneOrFail(priceListInput)) : undefined;
+            product.priceList = priceListInput ? Reference.create(await this.entityManager.findOneOrFail(FileUpload, priceListInput)) : undefined;
         }
 
         if (imageInput) {
@@ -271,7 +262,7 @@ export class ProductResolver {
     @Mutation(() => Boolean)
     @AffectedEntity(Product)
     async deleteProduct(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        const product = await this.repository.findOneOrFail(id);
+        const product = await this.entityManager.findOneOrFail(Product, id);
         this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;

@@ -1,25 +1,16 @@
 import {
-    type ContentScopeConfigProps,
+    type ContentScope,
     ContentScopeProvider as ContentScopeProviderLibrary,
     type ContentScopeProviderProps,
     type ContentScopeValues,
     StopImpersonationButton,
-    useContentScope as useContentScopeLibrary,
-    type UseContentScopeApi,
-    useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
 } from "@comet/cms-admin";
-import { type ContentScope } from "@src/site-configs";
+import { type ContentScope as BaseContentScope } from "@src/site-configs";
 
-// convenience wrapper for app (Bind Generic)
-export function useContentScope(): UseContentScopeApi<ContentScope> {
-    return useContentScopeLibrary<ContentScope>();
-}
-// @TODO (maybe): make factory in library to statically create Provider
-
-/** @knipignore */
-export function useContentScopeConfig(p: ContentScopeConfigProps): void {
-    return useContentScopeConfigLibrary(p);
+declare module "@comet/cms-admin" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface ContentScope extends BaseContentScope {}
 }
 
 export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
@@ -30,7 +21,7 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
         (value, index, self) => self.map((x) => JSON.stringify(x)).indexOf(JSON.stringify(value)) == index,
     ) as ContentScope[];
 
-    const values: ContentScopeValues<ContentScope> = userContentScopes.map((contentScope) => ({
+    const values: ContentScopeValues = userContentScopes.map((contentScope) => ({
         scope: contentScope,
         label: { language: contentScope.language.toUpperCase() },
     }));
@@ -45,7 +36,7 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
     }
 
     return (
-        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={userContentScopes[0]}>
+        <ContentScopeProviderLibrary values={values} defaultValue={userContentScopes[0]}>
             {children}
         </ContentScopeProviderLibrary>
     );

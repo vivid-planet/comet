@@ -25,7 +25,7 @@ export const Basic = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string }) => {
                 setValue(value);
             }}
             options={[
@@ -42,7 +42,7 @@ export const MultipleDimensions = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
@@ -62,7 +62,7 @@ export const Searchable = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
@@ -81,7 +81,7 @@ export const Groups = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
@@ -101,7 +101,7 @@ export const CustomIcon = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
@@ -122,7 +122,7 @@ export const CustomRenderOption = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
@@ -158,7 +158,7 @@ export const CustomRenderOptionWithSearchHighlighting = {
             <ContentScopeSelect
                 value={value}
                 searchable
-                onChange={(value) => {
+                onChange={(value: { domain: string; language: string }) => {
                     setValue(value);
                 }}
                 options={[
@@ -195,7 +195,7 @@ export const CustomRenderSelectedOption = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
@@ -220,7 +220,7 @@ export const ThreeDimensions = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { company: string; country: string; language: string }) => {
                 setValue(value);
             }}
             options={[

@@ -277,17 +277,22 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 """Stage root block data"""
 scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
 type AlternativeAddress {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type Address {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddress
 }
@@ -295,14 +300,14 @@ type Address {
 type AlternativeAddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type AddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddable!
 }
@@ -312,6 +317,7 @@ type Manufacturer {
   name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
+  coordinates: Coordinates
   updatedAt: DateTime!
 }
 
@@ -692,17 +698,22 @@ input DamScopeInput {
   domain: String!
 }
 
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
+}
+
 input AlternativeAddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressInput
 }
@@ -710,14 +721,14 @@ input AddressInput {
 input AlternativeAddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddableInput!
 }
@@ -1163,11 +1174,11 @@ input ManufacturerFilter {
   name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
-  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_zip: StringFilter
   addressAsEmbeddable_country: StringFilter
   addressAsEmbeddable_alternativeAddress_street: StringFilter
   addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
-  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: StringFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
   updatedAt: DateTimeFilter
   and: [ManufacturerFilter!]
@@ -1555,10 +1566,12 @@ input ManufacturerInput {
   name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
+  coordinates: CoordinatesInput
 }
 
 input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
+  coordinates: CoordinatesInput
 }

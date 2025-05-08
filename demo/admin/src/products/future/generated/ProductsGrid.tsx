@@ -239,6 +239,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 </>
             ),
             type: "number",
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? (
+                    <FormattedNumber value={value} style="currency" currency="EUR" minimumFractionDigits={2} maximumFractionDigits={2} />
+                ) : (
+                    ""
+                );
+            },
             flex: 1,
             visible: theme.breakpoints.up("md"),
             minWidth: 150,

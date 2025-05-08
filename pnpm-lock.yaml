@@ -1178,8 +1178,8 @@ importers:
         specifier: ^7.8.14
         version: 7.8.14(graphql@16.10.0)
       chalk:
-        specifier: ^5.4.1
-        version: 5.4.1
+        specifier: ^4.1.2
+        version: 4.1.2
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1694,6 +1694,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../cms-api
+      chokidar:
+        specifier: ^4.0.3
+        version: 4.0.3
       commander:
         specifier: ^9.5.0
         version: 9.5.0

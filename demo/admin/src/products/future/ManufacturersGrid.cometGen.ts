@@ -12,6 +12,7 @@ export default defineConfig<GQLManufacturer>({
         { type: "text", name: "name", headerName: "Name" },
         { type: "text", name: "address.street", headerName: "Street" },
         { type: "number", name: "address.streetNumber", headerName: "Street number" },
+        { type: "text", name: "address.zip", headerName: "Zip" },
         { type: "text", name: "address.alternativeAddress.street", headerName: "Alt-Street", headerInfoTooltip: "Street of alternative address" },
         {
             type: "number",
@@ -19,9 +20,12 @@ export default defineConfig<GQLManufacturer>({
             headerName: "Alt-Street number",
             headerInfoTooltip: "Street number of alternative address",
         },
+        { type: "text", name: "address.alternativeAddress.zip", headerName: "Alt-Zip", headerInfoTooltip: "Zip of alternative address" },
         { type: "text", name: "addressAsEmbeddable.street", headerName: "Street 2" },
         { type: "number", name: "addressAsEmbeddable.streetNumber", headerName: "Street number 2" },
+        { type: "text", name: "addressAsEmbeddable.zip", headerName: "Zip 2" },
         { type: "text", name: "addressAsEmbeddable.alternativeAddress.street", headerName: "Alt-Street 2" },
         { type: "number", name: "addressAsEmbeddable.alternativeAddress.streetNumber", headerName: "Alt-Street number 2" },
+        { type: "text", name: "addressAsEmbeddable.alternativeAddress.zip", headerName: "Alt-Zip 2" },
     ],
 });
