@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import { type OverlayElementData } from "./IFrameBridge";
-import styles from "./PreviewOverlayElement.module.css";
+import styles from "./PreviewOverlayElement.module.scss";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 type Props = {

@@ -8,7 +8,7 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
-import styles from "./VimeoVideoBlock.module.css";
+import styles from "./VimeoVideoBlock.module.scss";
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;

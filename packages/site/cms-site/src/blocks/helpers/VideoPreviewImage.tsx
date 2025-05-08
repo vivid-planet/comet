@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 
 import { type PixelImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../PixelImageBlock";
-import styles from "./VideoPreviewImage.module.css";
+import styles from "./VideoPreviewImage.module.scss";
 
 export interface VideoPreviewImageProps {
     onPlay: () => void;

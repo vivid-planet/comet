@@ -1,4 +1,4 @@
-import styles from "./PreviewOverlay.module.css";
+import styles from "./PreviewOverlay.module.scss";
 import { PreviewOverlayElement } from "./PreviewOverlayElement";
 import { useIFrameBridge } from "./useIFrameBridge";
 
