@@ -204,15 +204,9 @@ export class UserPermissionsService {
         const targetPermissions = await this.getPermissionsAndContentScopes(targetUser);
         for (const permission of targetPermissions) {
             const currentUserPermission = permissions.find((p) => p.permission === permission.permission);
-            if (!currentUserPermission) {
-                console.log("Permission not found", permission.permission);
-                return false;
-            }
+            if (!currentUserPermission) return false;
             for (const contentScope of permission.contentScopes) {
-                if (!currentUserPermission.contentScopes.find((cs) => isEqual(cs, contentScope))) {
-                    console.log("ContentScope not found", contentScope);
-                    return false;
-                }
+                if (!currentUserPermission.contentScopes.find((cs) => isEqual(cs, contentScope))) return false;
             }
         }
         return true;
