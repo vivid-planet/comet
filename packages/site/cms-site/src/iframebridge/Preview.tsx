@@ -2,8 +2,8 @@
 
 import { type PropsWithChildren, useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
-import styled from "styled-components";
 
+import styles from "./Preview.module.scss";
 import { useIFrameBridge } from "./useIFrameBridge";
 import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
@@ -63,15 +63,11 @@ export const Preview = ({ adminRoute, children, label, enabledAutoScrolling = tr
 
     if (iFrameBridge.hasBridge) {
         return (
-            <PreviewElementContainer ref={previewElementContainerRef} {...{ [BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE]: "" }}>
+            <div ref={previewElementContainerRef} className={styles.previewElementContainer} {...{ [BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE]: "" }}>
                 {children}
-            </PreviewElementContainer>
+            </div>
         );
     }
 
     return <>{children}</>;
 };
-
-export const PreviewElementContainer = styled.div`
-    display: contents;
-`;

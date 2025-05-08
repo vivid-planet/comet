@@ -1,7 +1,7 @@
 "use client";
 
+import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
-import styled, { css } from "styled-components";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -9,6 +9,7 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
+import styles from "./YouTubeVideoBlock.module.scss";
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
@@ -109,36 +110,16 @@ export const YouTubeVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <YouTubeContainer ref={iframeRef} src={youtubeUrl.toString()} />
-                    </VideoContainer>
+                    <div
+                        ref={inViewRef}
+                        className={clsx(styles.videoContainer, fill && styles.fill)}
+                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
+                    >
+                        <iframe ref={iframeRef} className={styles.youtubeContainer} src={youtubeUrl.toString()} />
+                    </div>
                 )}
             </>
         );
     },
     { label: "Video" },
 );
-
-const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>`
-    overflow: hidden;
-    position: relative;
-
-    ${({ $aspectRatio, $fill }) =>
-        $fill
-            ? css`
-                  width: 100%;
-                  height: 100%;
-              `
-            : css`
-                  aspect-ratio: ${$aspectRatio};
-              `}
-`;
-
-const YouTubeContainer = styled.iframe`
-    position: absolute;
-    border: 0;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-`;

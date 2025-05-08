@@ -3,7 +3,7 @@
 import { type PropsWithChildren, type ReactNode } from "react";
 
 import { usePreview } from "../preview/usePreview";
-import * as sc from "./PreviewSkeleton.sc";
+import styles from "./PreviewSkeleton.module.scss";
 
 interface SkeletonProps extends PropsWithChildren {
     type?: "bar" | "rows" | "media";
@@ -22,7 +22,7 @@ const PreviewSkeleton = ({
     title,
     type = "bar",
     aspectRatio,
-    height,
+    height: passedHeight,
     hasContent,
     color = "#A8A7A8",
     backgroundColor = type === "media" ? "#efefef" : "#E0DDE0",
@@ -35,25 +35,35 @@ const PreviewSkeleton = ({
             return <>{customContainer}</>;
         } else if (type === "bar") {
             return (
-                <sc.BarSkeleton $backgroundColor={backgroundColor} $color={color}>
+                <div className={styles.barSkeleton} style={{ "--background-color": backgroundColor, "--color": color }}>
                     {title}
-                </sc.BarSkeleton>
+                </div>
             );
         } else if (type === "rows") {
             return (
-                <sc.RowsContainer $width="100%">
-                    <sc.RowSkeleton $width="75%" $backgroundColor={backgroundColor} $color={color}>
+                <div className={styles.rowsContainer}>
+                    <div className={styles.rowSkeleton} style={{ "--width": "75%", "--background-color": backgroundColor, "--color": color }}>
                         {title}
-                    </sc.RowSkeleton>
-                    <sc.RowSkeleton $width="100%" $backgroundColor={backgroundColor} $color={color} />
-                    <sc.RowSkeleton $width="50%" $backgroundColor={backgroundColor} $color={color} />
-                </sc.RowsContainer>
+                    </div>
+                    <div className={styles.rowSkeleton} style={{ "--width": "100%", "--background-color": backgroundColor, "--color": color }} />
+                    <div className={styles.rowSkeleton} style={{ "--width": "50%", "--background-color": backgroundColor, "--color": color }} />
+                </div>
             );
         } else if (type === "media") {
+            const height = passedHeight ?? 300;
             return (
-                <sc.ImageContainer $aspectRatio={validAspectRatio} $height={height} $backgroundColor={backgroundColor} $color={color}>
+                <div
+                    className={styles.imageContainer}
+                    style={{
+                        "--background-color": backgroundColor,
+                        "--color": color,
+                        ...(validAspectRatio === undefined
+                            ? { "--height": typeof height === "string" ? height : `${height}px` }
+                            : { "--aspect-ratio": validAspectRatio }),
+                    }}
+                >
                     {title}
-                </sc.ImageContainer>
+                </div>
             );
         }
     }
