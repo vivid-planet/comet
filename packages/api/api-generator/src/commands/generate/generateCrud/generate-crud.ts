@@ -1250,6 +1250,9 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         list: generatorOptionsParam.list ?? true,
         single: generatorOptionsParam.single ?? true,
     };
+    if (!generatorOptions.create && !generatorOptions.update && !generatorOptions.delete && !generatorOptions.list && !generatorOptions.single) {
+        throw new Error("At least one of create, update, delete, list or single must be true");
+    }
 
     const generatedFiles: GeneratedFile[] = [];
 
