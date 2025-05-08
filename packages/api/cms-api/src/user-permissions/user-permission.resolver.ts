@@ -1,15 +1,12 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ArgsType, Field, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
-import { GraphQLJSONObject } from "graphql-scalars";
-import isEqual from "lodash.isequal";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
-import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
@@ -81,23 +78,14 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsUpdateOverrideContentScopes(
-        @Args("input", { type: () => UserPermissionOverrideContentScopesInput })
-        { permissionId, contentScopes, overrideContentScopes }: UserPermissionOverrideContentScopesInput,
+        @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) input: UserPermissionOverrideContentScopesInput,
     ): Promise<UserPermission> {
-        const permission = await this.getPermission(permissionId);
-        await this.service.checkContentScopes(contentScopes);
-        permission.overrideContentScopes = overrideContentScopes;
-        permission.contentScopes = contentScopes;
+        const permission = await this.getPermission(input.permissionId);
+        await this.service.checkContentScopes(input.contentScopes);
+        permission.overrideContentScopes = input.overrideContentScopes;
+        permission.contentScopes = input.contentScopes;
         await this.entityManager.persistAndFlush(permission);
-        console.log("Updated permission", permission);
         return permission;
-    }
-
-    @ResolveField(() => [GraphQLJSONObject])
-    async contentScopes(@Parent() permission: UserPermission): Promise<ContentScope[]> {
-        return (await this.service.getAvailableContentScopes())
-            .filter((availableContentScope) => permission.contentScopes.some((contentScope) => isEqual(contentScope, availableContentScope.scope)))
-            .map((availableContentScope) => availableContentScope.scope);
     }
 
     async getPermission(id: string, userId?: string): Promise<UserPermission> {
