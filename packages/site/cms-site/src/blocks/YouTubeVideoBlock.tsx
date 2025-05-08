@@ -9,7 +9,7 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
-import styles from "./YouTubeVideoBlock.module.css";
+import styles from "./YouTubeVideoBlock.module.scss";
 
 const EXPECTED_YT_ID_LENGTH = 11;
 

@@ -4,7 +4,7 @@ import isEqual from "lodash.isequal";
 import { type PropsWithChildren, createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
-import styles from "./IFrameBridge.module.css";
+import styles from "./IFrameBridge.module.scss";
 import { type AdminMessage, type IFrameMessage, AdminMessageType, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
 import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";

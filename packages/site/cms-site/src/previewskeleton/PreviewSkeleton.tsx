@@ -3,7 +3,7 @@
 import { type PropsWithChildren, type ReactNode } from "react";
 
 import { usePreview } from "../preview/usePreview";
-import styles from "./PreviewSkeleton.module.css";
+import styles from "./PreviewSkeleton.module.scss";
 
 interface SkeletonProps extends PropsWithChildren {
     type?: "bar" | "rows" | "media";

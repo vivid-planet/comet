@@ -3,7 +3,7 @@
 import { type PropsWithChildren, useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
 
-import styles from "./Preview.module.css";
+import styles from "./Preview.module.scss";
 import { useIFrameBridge } from "./useIFrameBridge";
 import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
