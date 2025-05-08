@@ -32,4 +32,114 @@ describe("AbstractAccessControlService", () => {
             expect(service.isAllowed(user, "pageTree", { domain: "main", language: undefined })).toBe(true);
         });
     });
+
+    describe("isEqualOrMorePermissions", () => {
+        it("should be false on fewer permissions", () => {
+            expect(AbstractAccessControlService.isEqualOrMorePermissions([], [{ permission: "p1", contentScopes: [] }])).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [] }],
+                    [
+                        { permission: "p1", contentScopes: [] },
+                        { permission: "p2", contentScopes: [] },
+                    ],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }, { domain: "secondary" }] }],
+                ),
+            ).toBe(false);
+        });
+
+        it("should be false on wrong permissions", () => {
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [] }],
+                    [{ permission: "p2", contentScopes: [] }],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "secondary" }] }],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "main", language: "english" }] }],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main", language: "english" }] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                    [
+                        { permission: "p1", contentScopes: [{ domain: "secondary" }] },
+                        { permission: "p2", contentScopes: [{ domain: "main" }] },
+                    ],
+                ),
+            ).toBe(false);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [
+                        { permission: "p1", contentScopes: [{ domain: "secondary" }] },
+                        { permission: "p2", contentScopes: [{ domain: "main" }] },
+                    ],
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toBe(false);
+        });
+
+        it("should be true on equal permissions", () => {
+            expect(AbstractAccessControlService.isEqualOrMorePermissions([], [])).toBe(true);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [] }],
+                    [{ permission: "p1", contentScopes: [] }],
+                ),
+            ).toBe(true);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toBe(true);
+        });
+
+        it("should be true on more permissions", () => {
+            expect(AbstractAccessControlService.isEqualOrMorePermissions([{ permission: "p1", contentScopes: [] }], [])).toBe(true);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }, { domain: "secondary" }] }],
+                    [{ permission: "p1", contentScopes: [{ domain: "main" }] }],
+                ),
+            ).toBe(true);
+            expect(
+                AbstractAccessControlService.isEqualOrMorePermissions(
+                    [
+                        { permission: "p1", contentScopes: [{ domain: "main" }, { domain: "secondary" }] },
+                        { permission: "p2", contentScopes: [{ domain: "main" }, { domain: "secondary" }] },
+                    ],
+                    [
+                        { permission: "p1", contentScopes: [{ domain: "main" }, { domain: "secondary" }] },
+                        { permission: "p2", contentScopes: [{ domain: "secondary" }] },
+                    ],
+                ),
+            ).toBe(true);
+        });
+    });
 });

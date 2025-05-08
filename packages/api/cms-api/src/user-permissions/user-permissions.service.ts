@@ -7,6 +7,7 @@ import { Request } from "express";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
+import { AbstractAccessControlService } from "./access-control.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
@@ -152,7 +153,15 @@ export class UserPermissionsService {
             const permissions = await this.getPermissions(authenticatedUser);
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
-                    return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
+                    const user = await this.getUser(request?.cookies["comet-impersonate-user-id"]);
+                    if (
+                        await AbstractAccessControlService.isEqualOrMorePermissions(
+                            await this.getPermissionsAndContentScopes(authenticatedUser),
+                            await this.getPermissionsAndContentScopes(user),
+                        )
+                    ) {
+                        return user;
+                    }
                 } catch {
                     return undefined;
                 }

@@ -204,7 +204,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/user-permissions",
             component: UserPermissionsPage,
         },
-        requiredPermission: "userPermissions",
+        requiredPermission: ["userPermissions", "impersonation"],
     },
     {
         type: "group",

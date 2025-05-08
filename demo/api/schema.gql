@@ -36,6 +36,7 @@ type UserPermissionsUser {
   email: String!
   permissionsCount: Int!
   contentScopesCount: Int!
+  impersonationAllowed: Boolean!
 }
 
 type CurrentUserPermission {
