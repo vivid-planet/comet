@@ -19,7 +19,7 @@ export const PreviewOverlay = () => {
     });
 
     return (
-        <div className={styles.root} style={{ "--height": bottomMostElementPosition }}>
+        <div className={styles.root} style={{ "--height": `${bottomMostElementPosition}px` }}>
             {iFrameBridge.previewElementsData.map((element, index) => {
                 const isSelected = element.adminRoute === iFrameBridge.selectedAdminRoute;
 
