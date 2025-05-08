@@ -53,7 +53,6 @@ export class UserPermissionResolver {
     }
 
     @Query(() => [String])
-    @RequiredPermission(["userPermissions", "impersonation"], { skipScopeCheck: true })
     async userPermissionsAvailablePermissions(): Promise<string[]> {
         return this.service.getAvailablePermissions();
     }

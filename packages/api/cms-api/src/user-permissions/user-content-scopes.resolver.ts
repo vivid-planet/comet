@@ -48,7 +48,6 @@ export class UserContentScopesResolver {
     }
 
     @Query(() => [GraphQLJSONObject])
-    @RequiredPermission(["userPermissions", "impersonation"], { skipScopeCheck: true })
     async userPermissionsAvailableContentScopes(): Promise<ContentScope[]> {
         return this.userService.getAvailableContentScopes();
     }
