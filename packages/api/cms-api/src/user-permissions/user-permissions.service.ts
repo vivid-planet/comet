@@ -7,6 +7,7 @@ import { Request } from "express";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
+import { AbstractAccessControlService } from "./access-control.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser, CurrentUserPermission } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
@@ -153,7 +154,12 @@ export class UserPermissionsService {
             if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
                     const user = await this.getUser(request?.cookies["comet-impersonate-user-id"]);
-                    if (await this.hasEqualOrMorePermissions(authenticatedUser, user)) {
+                    if (
+                        await AbstractAccessControlService.isEqualOrMorePermissions(
+                            await this.getPermissionsAndContentScopes(authenticatedUser),
+                            await this.getPermissionsAndContentScopes(user),
+                        )
+                    ) {
                         return user;
                     }
                 } catch {
@@ -197,18 +203,5 @@ export class UserPermissionsService {
                 p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
                 return p;
             });
-    }
-
-    async hasEqualOrMorePermissions(user: User | CurrentUser, targetUser: User): Promise<boolean> {
-        const permissions = "permissions" in user ? user.permissions : await this.getPermissionsAndContentScopes(user);
-        const targetPermissions = await this.getPermissionsAndContentScopes(targetUser);
-        for (const permission of targetPermissions) {
-            const currentUserPermission = permissions.find((p) => p.permission === permission.permission);
-            if (!currentUserPermission) return false;
-            for (const contentScope of permission.contentScopes) {
-                if (!currentUserPermission.contentScopes.find((cs) => isEqual(cs, contentScope))) return false;
-            }
-        }
-        return true;
     }
 }
