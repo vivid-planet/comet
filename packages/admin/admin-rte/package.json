@@ -41,7 +41,7 @@
         "@babel/core": "^7.26.10",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@mui/material": "^7.0.0",
+        "@mui/material": "^7.1.0",
         "@types/draft-js": "^0.11.18",
         "@types/jest": "^29.5.14",
         "@types/react": "^18.3.20",
