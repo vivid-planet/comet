@@ -21,10 +21,10 @@ import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 import { type ComponentType } from "react";
 
+import { parseConfig } from "./config/parseConfig";
 import { generateForm } from "./generateForm/generateForm";
 import { generateGrid } from "./generateGrid/generateGrid";
 import { type UsableFields } from "./generateGrid/usableFields";
-import { parseConfig } from "./parseConfig";
 import { type ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
@@ -248,6 +248,7 @@ async function runGenerate(filePattern = "src/**/*.cometGen.{ts,tsx}") {
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
         }
+        console.log("");
     }
 }
 

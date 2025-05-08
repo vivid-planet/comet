@@ -1326,48 +1326,6 @@ The `MenuContext` has been removed, use the new `useMainNavigation` hook instead
 
 </details>
 
-### Stay on same page after changing scope
-
-The Admin now stays on the same page per default when changing scopes.
-Perform the following changes:
-
-1.  Remove the `path` prop from the `PagesPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    <PagesPage
-    -   path="/pages/pagetree/main-navigation"
-        allCategories={pageTreeCategories}
-        documentTypes={pageTreeDocumentTypes}
-        category="MainNavigation"
-        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
-    />
-    ```
-
-2.  Remove the `redirectPathAfterChange` prop from the `RedirectsPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
-        route: {
-            path: "/system/redirects",
-    -       render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
-    +       component: RedirectsPage
-        },
-        requiredPermission: "pageTree",
-    },
-    ```
-
-3.  Optional: Remove unnecessary usages of the `useContentScopeConfig` hook
-
-    ```diff
-    export function ProductsPage() {
-        const intl = useIntl();
-
-    -   useContentScopeConfig({ redirectPathAfterChange: "/structured-content/products" });
-    }
-    ```
-
 ### DataGrid-related changes
 
 ### Update usage of `DataGridToolbar`
