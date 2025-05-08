@@ -71,7 +71,7 @@
         "@parcel/watcher": "^2.5.1",
         "@swc/plugin-emotion": "^8.7.2",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/node": "^22.14.0",
+        "@types/node": "^22.15.17",
         "@types/react": "^18.3.21",
         "@types/react-dom": "^18.3.7",
         "@types/react-router": "^5.1.20",
