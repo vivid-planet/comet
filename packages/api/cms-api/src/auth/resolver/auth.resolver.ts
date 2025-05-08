@@ -3,7 +3,6 @@ import { Args, Context, Mutation, Parent, Query, ResolveField, Resolver } from "
 import { GraphQLJSONObject } from "graphql-scalars";
 import { IncomingMessage } from "http";
 import isEqual from "lodash.isequal";
-import uniqWith from "lodash.uniqwith";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { DisablePermissionCheck, RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
@@ -57,10 +56,7 @@ export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
 
         @ResolveField(() => [ContentScopeWithLabel])
         async allowedContentScopes(@Parent() user: CurrentUser): Promise<ContentScopeWithLabel[]> {
-            const allowedContentScopes = uniqWith(
-                user.permissions.flatMap((p) => p.contentScopes),
-                isEqual,
-            );
+            const allowedContentScopes = user.permissions.flatMap((p) => p.contentScopes);
             return (await this.service.getAvailableContentScopes()).filter((contentScopeWithLabel) =>
                 allowedContentScopes.some((allowedContentScope) => isEqual(contentScopeWithLabel.scope, allowedContentScope)),
             );

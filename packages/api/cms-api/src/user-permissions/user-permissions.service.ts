@@ -5,6 +5,7 @@ import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import { Request } from "express";
 import isEqual from "lodash.isequal";
+import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
@@ -23,7 +24,6 @@ import {
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
-import { sortContentScopeKeysAlphabetically } from "./utils/sort-content-scope-keys-alphabetically";
 
 @Injectable()
 export class UserPermissionsService {
@@ -51,7 +51,7 @@ export class UserPermissionsService {
             return words.map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(" ");
         }
 
-        return contentScopes
+        const contentScopesWithLabel = contentScopes
             .map((contentScope) =>
                 "scope" in contentScope
                     ? contentScope
@@ -70,9 +70,7 @@ export class UserPermissionsService {
                     ]),
                 ),
             }));
-
-        // TODO contentScopes = contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
-        // TODO make unique
+        return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
     }
 
     async getAvailablePermissions(): Promise<string[]> {
@@ -169,7 +167,7 @@ export class UserPermissionsService {
             }
         }
 
-        return contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
+        return uniqWith(contentScopes, isEqual);
     }
 
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
@@ -205,7 +203,7 @@ export class UserPermissionsService {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
                 const existingPermission = acc.find((p) => p.permission === userPermission.permission);
                 if (existingPermission) {
-                    existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
+                    existingPermission.contentScopes = uniqWith([...existingPermission.contentScopes, ...contentScopes], isEqual);
                 } else {
                     acc.push({
                         permission: userPermission.permission,
