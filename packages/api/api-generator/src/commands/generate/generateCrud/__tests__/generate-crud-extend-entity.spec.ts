@@ -60,10 +60,10 @@ describe("GenerateCrudInputExtendEntity", () => {
         const updatedAtField = properties.find((prop) => prop.name === "updatedAt");
 
         expect(createdAtField).toBeDefined();
-        expect(createdAtField?.type).toBe("DateFilter");
+        expect(createdAtField?.type).toBe("DateTimeFilter");
 
         expect(updatedAtField).toBeDefined();
-        expect(updatedAtField?.type).toBe("DateFilter");
+        expect(updatedAtField?.type).toBe("DateTimeFilter");
 
         orm.close();
     });
