@@ -21,8 +21,14 @@ function morphTsClass(metadata: EntityMetadata<any>) {
     return tsClass;
 }
 export function morphTsProperty(name: string, metadata: EntityMetadata<any>) {
-    const tsClass = morphTsClass(metadata);
-    return tsClass.getPropertyOrThrow(name);
+    let currentClass: ClassDeclaration | undefined = morphTsClass(metadata);
+    while (currentClass) {
+        const prop = currentClass.getProperty(name);
+        if (prop) return prop;
+
+        currentClass = currentClass.getBaseClass();
+    }
+    throw new Error(`Property ${name} not found in ${metadata.className}`);
 }
 
 function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
