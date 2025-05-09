@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql } from "@apollo/client";
 import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
-export const productFormFragment = gql `
+export const productFormFragment = gql`
         fragment ProductFormDetails on Product {
             title
 slug
@@ -23,7 +23,7 @@ lastCheckedAt
         ${finalFormFileUploadFragment}
         ${finalFormFileUploadDownloadableFragment}
     `;
-export const productQuery = gql `
+export const productQuery = gql`
             query Product($id: ID!) {
                 product(id: $id) {
                     id
@@ -33,7 +33,7 @@ export const productQuery = gql `
             }
             ${productFormFragment}
         `;
-export const createProductMutation = gql `
+export const createProductMutation = gql`
             mutation CreateProduct($input: ProductInput!) {
                 createProduct(input: $input) {
                     id
@@ -43,7 +43,7 @@ export const createProductMutation = gql `
             }
             ${productFormFragment}
         `;
-export const updateProductMutation = gql `
+export const updateProductMutation = gql`
             mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
                 updateProduct(id: $id, input: $input) {
                     id
