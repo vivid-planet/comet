@@ -165,8 +165,59 @@ export function generateGrid(
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
     const gridQuery = config.query ? config.query : instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: GQLDocumentConfigMap = {};
-    const imports: Imports = [];
-    const iconsToImport: string[] = ["Add", "Edit"];
+    const imports: Imports = [
+        { name: "FormattedMessage", importPath: "react-intl" },
+        { name: "FormattedNumber", importPath: "react-intl" },
+        { name: "useIntl", importPath: "react-intl" },
+        { name: "ReactNode", importPath: "react" },
+        { name: "gql", importPath: "@apollo/client" },
+        { name: "useApolloClient", importPath: "@apollo/client" },
+        { name: "useQuery", importPath: "@apollo/client" },
+        { name: "Button", importPath: "@comet/admin" },
+        { name: "CrudContextMenu", importPath: "@comet/admin" },
+        { name: "CrudMoreActionsMenu", importPath: "@comet/admin" },
+        { name: "DataGridToolbar", importPath: "@comet/admin" },
+        { name: "ExportApi", importPath: "@comet/admin" },
+        { name: "filterByFragment", importPath: "@comet/admin" },
+        { name: "GridFilterButton", importPath: "@comet/admin" },
+        { name: "GridCellContent", importPath: "@comet/admin" },
+        { name: "GridColDef", importPath: "@comet/admin" },
+        { name: "dataGridDateTimeColumn", importPath: "@comet/admin" },
+        { name: "dataGridDateColumn", importPath: "@comet/admin" },
+        { name: "renderStaticSelectCell", importPath: "@comet/admin" },
+        { name: "messages", importPath: "@comet/admin" },
+        { name: "muiGridFilterToGql", importPath: "@comet/admin" },
+        { name: "muiGridSortToGql", importPath: "@comet/admin" },
+        { name: "StackLink", importPath: "@comet/admin" },
+        { name: "FillSpace", importPath: "@comet/admin" },
+        { name: "Tooltip", importPath: "@comet/admin" },
+        { name: "useBufferedRowCount", importPath: "@comet/admin" },
+        { name: "useDataGridExcelExport", importPath: "@comet/admin" },
+        { name: "useDataGridRemote", importPath: "@comet/admin" },
+        { name: "usePersistentColumnState", importPath: "@comet/admin" },
+        { name: "BlockPreviewContent", importPath: "@comet/cms-admin" },
+        { name: "useContentScope", importPath: "@comet/cms-admin" },
+        { name: "Alert", importPath: "@mui/material" },
+        { name: "Box", importPath: "@mui/material" },
+        { name: "IconButton", importPath: "@mui/material" },
+        { name: "Typography", importPath: "@mui/material" },
+        { name: "useTheme", importPath: "@mui/material" },
+        { name: "Menu", importPath: "@mui/material" },
+        { name: "MenuItem", importPath: "@mui/material" },
+        { name: "ListItemIcon", importPath: "@mui/material" },
+        { name: "ListItemText", importPath: "@mui/material" },
+        { name: "CircularProgress", importPath: "@mui/material" },
+        { name: "DataGridPro", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridLogicOperator", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridRenderCellParams", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridSlotsComponent", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridToolbarProps", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridColumnHeaderTitle", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridToolbarQuickFilter", importPath: "@mui/x-data-grid-pro" },
+        { name: "GridRowOrderChangeParams", importPath: "@mui/x-data-grid-pro" },
+    ];
+
+    const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
     const fieldList = generateGqlFieldList({
@@ -582,7 +633,7 @@ export function generateGrid(
                   config.initialFilter
                       ? `initialFilter:{ ${
                             config.initialFilter.linkOperator
-                                ? `linkOperator: GridLinkOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
+                                ? `linkOperator: GridLogicOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
                                 : ""
                         }
                       items: [${config.initialFilter.items
@@ -596,36 +647,7 @@ export function generateGrid(
               }`
             : "";
 
-    const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
-    import {
-        Button,
-        CrudContextMenu,
-        CrudMoreActionsMenu,
-        DataGridToolbar,
-        ExportApi,
-        filterByFragment,
-        GridFilterButton,
-        GridCellContent,
-        GridColDef,
-        dataGridDateTimeColumn,
-        dataGridDateColumn,
-        renderStaticSelectCell,
-        messages,
-        muiGridFilterToGql,
-        muiGridSortToGql,
-        StackLink,
-        FillSpace,
-        Tooltip,
-        useBufferedRowCount,
-        useDataGridExcelExport,
-        useDataGridRemote,
-        usePersistentColumnState,
-    } from "@comet/admin";
-    import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
-    import { BlockPreviewContent, useContentScope } from "@comet/cms-admin";
-    import { Alert, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
-    import {
+    const code = `import {
         GQL${gqlTypePlural}GridQuery,
         GQL${gqlTypePlural}GridQueryVariables,
         GQL${fragmentName}Fragment,
@@ -636,8 +658,6 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
-    import { ReactNode } from "react";
-    import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
@@ -791,7 +811,7 @@ export function generateGrid(
                                                 column.headerInfoTooltip
                                             }" />}
                                         >
-                                            <Info sx={{ marginLeft: 1 }} />
+                                            <InfoIcon sx={{ marginLeft: 1 }} />
                                         </Tooltip>
                                     </>
                                 )`

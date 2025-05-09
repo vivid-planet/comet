@@ -103,7 +103,7 @@ const renderToolbarActions = ({ forwardToolbarAction, addItemText, excelExport, 
                 excelExport
                     ? `{
                         label: <FormattedMessage {...messages.downloadAsExcel} />,
-                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <ExcelIcon />,
                         onClick: () => exportApi.exportGrid(),
                         disabled: exportApi.loading,
                     }`
