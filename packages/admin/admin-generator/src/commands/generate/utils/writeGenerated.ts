@@ -22,7 +22,7 @@ export async function writeGenerated(filePath: string, contents: string): Promis
 }
 
 // copy from @comet/api-generator
-export function removeUnusedImports(): ts.TransformerFactory<ts.SourceFile> {
+function removeUnusedImports(): ts.TransformerFactory<ts.SourceFile> {
     return (context) => {
         function visit(sourceFile: ts.SourceFile): ts.SourceFile {
             const usedIdentifiers = new Set<string>();
