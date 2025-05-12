@@ -118,7 +118,7 @@ const DisableLastBottomSpacing = styled.div`
             > *:last-child {
                 margin-bottom: 0;
 
-                ${theme.breakpoints.xs.mediaQuery} {
+                ${theme.breakpoints.sm.mediaQuery} {
                     margin-bottom: 0;
                 }
             }

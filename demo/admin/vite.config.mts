@@ -76,7 +76,7 @@ export default defineConfig(({ mode }) => {
             adminPackagesHotReloadPlugin,
         ],
         server: {
-            host: true,
+            host: process.env.SERVER_HOST ?? "localhost",
             port: Number(process.env.ADMIN_PORT),
             proxy: {
                 "/api": {

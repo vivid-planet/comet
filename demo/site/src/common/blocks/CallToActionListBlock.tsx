@@ -22,7 +22,7 @@ const Root = styled.div`
     flex-flow: row wrap;
     gap: ${({ theme }) => theme.spacing.S300};
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         gap: ${({ theme }) => theme.spacing.S400};
     }
 `;

@@ -10,6 +10,7 @@ type File = {
     name: string;
     fileUrl: string;
     size: number;
+    mimetype: string;
     scope?: DamScopeInterface;
     altText?: string;
     title?: string;
@@ -40,6 +41,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
                 id: file.id,
                 name: file.name,
                 size: Number(file.size),
+                mimetype: file.mimetype,
                 scope: file.scope,
                 altText: file.altText,
                 title: file.title,
