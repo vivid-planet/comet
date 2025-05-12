@@ -58,7 +58,7 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
                     __typename: "Redirect",
                     id: redirect.id,
                     active: active,
-                    activatedAt: new Date(),
+                    activatedAt: active ? new Date() : null,
                 },
             },
         });
