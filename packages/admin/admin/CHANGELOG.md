@@ -1,5 +1,18 @@
 # @comet/admin
 
+## 7.20.0
+
+### Patch Changes
+
+-   415a83165: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+
+    Select components now truncate their value with ellipsis when used within these components, consistent with their behavior in other usages.
+
+-   99f904f81: Close `Dialog` with ESC key or backdrop click
+-   2d1726543: `title` prop of the Dialog got merged with `title` Prop of `MuiDialogProps`. This lead to errors when forwarding ReactNodes to title.
+    -   @comet/admin-icons@7.20.0
+    -   @comet/admin-theme@7.20.0
+
 ## 7.19.0
 
 ### Patch Changes
