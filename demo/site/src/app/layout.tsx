@@ -1,4 +1,4 @@
-import "@comet/cms-site/lib/style.css";
+import "@comet/cms-site/css";
 
 import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/cms-site";
 import { GlobalStyle } from "@src/app/GlobalStyle";

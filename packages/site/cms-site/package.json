@@ -12,7 +12,8 @@
         ".": {
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
-        }
+        },
+        "./css": "./lib/style.css"
     },
     "module": "./lib/index.js",
     "types": "lib/index.d.ts",
