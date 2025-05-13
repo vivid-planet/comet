@@ -24,12 +24,12 @@
     }
 
     &:hover {
-        @include hover-styles
+        @include hover-styles;
     }
 }
 
 .isHoveredInBlockList {
-    @include hover-styles
+    @include hover-styles;
 }
 
 .showBlockOutlines:not(:hover) {

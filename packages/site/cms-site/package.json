@@ -28,7 +28,7 @@
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
