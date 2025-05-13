@@ -75,7 +75,7 @@ const disableFieldOptions = {
     hideable: false,
 };
 
-const latestWarningsFragments = gql`
+const latestWarningsListFragment = gql`
     fragment LatestWarningsList on Warning {
         id
         createdAt
@@ -98,5 +98,5 @@ const latestWarningsQuery = gql`
             }
         }
     }
-    ${latestWarningsFragments}
+    ${latestWarningsListFragment}
 `;
