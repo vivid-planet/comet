@@ -10,16 +10,7 @@ Make sure that your project uses Brevo Module v3.1.0 or later.
 
 ## Allow adding contacts without sending a double opt-in mail
 
-1. Set a new environment variable `ALLOW_ADDING_CONTACTS_WITHOUT_DOI` to true:
-
-```diff
-+   @IsBoolean()
-+   @IsUndefinable()
-+   @Transform(({ value }) => value === "true")
-+   ALLOW_ADDING_CONTACTS_WITHOUT_DOI?: boolean;
-```
-
-2. Add `contactsWithoutDoi` to your`AppModule`:
+1. Add `contactsWithoutDoi` to your`AppModule`:
 
 ```diff
          BrevoModule.register({
@@ -28,13 +19,13 @@ Make sure that your project uses Brevo Module v3.1.0 or later.
                BlacklistedContacts
               }
 +           contactsWithoutDoi: {
-+               allowAddingContactsWithoutDoi: config.contactsWithoutDoi.allowAddingContactsWithoutDoi,
++               allowAddingContactsWithoutDoi: true,
                     },
            //...
          });
 ```
 
-3. Add `allowAddingContactsWithoutDoi` to the `config.ts` in the api:
+2. Add `allowAddingContactsWithoutDoi` to the `config.ts` in the api:
 
 ```diff
     //...
@@ -42,12 +33,12 @@ Make sure that your project uses Brevo Module v3.1.0 or later.
             apiKey: envVars.ECG_RTR_LIST_API_KEY,
         },
 +    contactsWithoutDoi: {
-+       allowAddingContactsWithoutDoi: envVars.ALLOW_ADDING_CONTACTS_WITHOUT_DOI,
++       allowAddingContactsWithoutDoi: true,
         },
     //...
 ```
 
-4. Add it to the `config.ts` in the admin:
+3. Add it to the `config.ts` in the admin:
 
 ```diff
         //...
@@ -60,11 +51,11 @@ Make sure that your project uses Brevo Module v3.1.0 or later.
             buildNumber: environmentVariables.BUILD_NUMBER,
             commitSha: environmentVariables.COMMIT_SHA,
             campaignUrl: environmentVariables.CAMPAIGN_URL,
-+           allowAddingContactsWithoutDoi: environmentVariables.ALLOW_ADDING_CONTACTS_WITHOUT_DOI === "true",
++           allowAddingContactsWithoutDoi: true,
                   }
 ```
 
-5. Add `allowAddingContactsWithoutDoi` to the `BrevoConfigProvider` in your `App.tsx`:
+4. Add `allowAddingContactsWithoutDoi` to the `BrevoConfigProvider` in your `App.tsx`:
 
 ```diff
     //...
