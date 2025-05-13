@@ -40,7 +40,7 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const RteStandardBlockType = {
+export const RteWithoutAutofocus = {
     render: () => {
         const { editorState, setEditorState } = useRteApi();
 
