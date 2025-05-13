@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-next";
 import { CallToActionBlockData } from "@src/blocks.generated";
 
 import { Button, ButtonVariant } from "../components/Button";

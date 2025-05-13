@@ -1,5 +1,5 @@
 "use client";
-import { OptionalBlock, PropsWithData, withPreview } from "@comet/cms-site";
+import { OptionalBlock, PropsWithData, withPreview } from "@comet/site-next";
 import { FullWidthImageBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";

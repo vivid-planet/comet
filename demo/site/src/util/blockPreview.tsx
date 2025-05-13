@@ -1,6 +1,6 @@
 "use client";
 
-import { BlockPreviewProvider, IFrameBridgeProvider } from "@comet/cms-site";
+import { BlockPreviewProvider, IFrameBridgeProvider } from "@comet/site-next";
 import { FunctionComponent } from "react";
 
 export const withBlockPreview = (Component: FunctionComponent) => () => {

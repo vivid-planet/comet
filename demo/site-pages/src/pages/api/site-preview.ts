@@ -1,4 +1,4 @@
-import { legacyPagesRouterSitePreviewApiHandler } from "@comet/cms-site";
+import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-next";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { NextApiHandler } from "next";
 

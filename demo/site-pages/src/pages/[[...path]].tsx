@@ -1,4 +1,4 @@
-import { SitePreviewParams } from "@comet/cms-site";
+import { SitePreviewParams } from "@comet/site-next";
 import { domain } from "@src/config";
 import PageTypePage, { loader as pageTypePageLoader } from "@src/documents/pages/Page";
 import { GQLPage, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";

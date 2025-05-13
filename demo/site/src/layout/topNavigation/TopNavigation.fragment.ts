@@ -1,4 +1,4 @@
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-next";
 
 export const topMenuPageTreeNodeFragment = gql`
     fragment TopMenuPageTreeNode on PageTreeNode {

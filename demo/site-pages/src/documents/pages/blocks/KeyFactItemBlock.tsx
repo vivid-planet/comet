@@ -1,4 +1,4 @@
-import { hasRichTextBlockContent, PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
+import { hasRichTextBlockContent, PropsWithData, SvgImageBlock, withPreview } from "@comet/site-next";
 import { KeyFactsItemBlockData } from "@src/blocks.generated";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";

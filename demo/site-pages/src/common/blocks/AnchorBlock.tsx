@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-next";
 import { AnchorBlockData } from "@src/blocks.generated";
 
 export const AnchorBlock = withPreview(

@@ -1,4 +1,4 @@
-import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
+import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/site-next";
 import { YouTubeVideoBlockData } from "@src/blocks.generated";
 import { cookieIds } from "@src/util/cookieIds";
 import styled from "styled-components";

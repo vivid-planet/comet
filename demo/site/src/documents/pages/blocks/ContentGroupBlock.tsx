@@ -1,4 +1,4 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/site-next";
 import { ContentGroupBlockData, ContentGroupContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";

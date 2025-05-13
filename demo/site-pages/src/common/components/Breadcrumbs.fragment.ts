@@ -1,4 +1,4 @@
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-next";
 
 export const breadcrumbsFragment = gql`
     fragment Breadcrumbs on PageTreeNode {

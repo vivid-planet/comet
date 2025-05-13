@@ -1,4 +1,4 @@
-import { ListBlock, PropsWithData, withPreview } from "@comet/cms-site";
+import { ListBlock, PropsWithData, withPreview } from "@comet/site-next";
 import { KeyFactsBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled, { css } from "styled-components";

@@ -1,4 +1,4 @@
-import { previewParams } from "@comet/cms-site";
+import { previewParams } from "@comet/site-next";
 import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
 import { NextRequest, NextResponse } from "next/server";
 

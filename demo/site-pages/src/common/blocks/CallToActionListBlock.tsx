@@ -1,4 +1,4 @@
-import { ListBlock, PropsWithData, withPreview } from "@comet/cms-site";
+import { ListBlock, PropsWithData, withPreview } from "@comet/site-next";
 import { CallToActionListBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 

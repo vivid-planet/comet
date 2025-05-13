@@ -1,4 +1,4 @@
-import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/cms-site";
+import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/site-next";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 
 const PreviewPage = () => {

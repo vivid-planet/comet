@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-next";
 import { StandaloneMediaBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 

@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-next";
 import { TextLinkBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 
