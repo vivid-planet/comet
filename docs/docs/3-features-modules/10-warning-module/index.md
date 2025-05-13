@@ -147,7 +147,7 @@ export class NewsBlockWarningsService implements BlockWarningsServiceInterface<N
 }
 ```
 
-## Custom Entity Warnings
+## API: Custom Entity Warnings
 
 You can also create warnings for entities.  
 To do this, use the `@CreateWarning` decorator
