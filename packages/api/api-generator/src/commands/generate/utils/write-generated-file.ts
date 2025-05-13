@@ -8,7 +8,7 @@ export async function writeGeneratedFile(filePath: string, contents: string): Pr
     `;
     await fs.mkdir(path.dirname(filePath), { recursive: true });
 
-    const sourceFile = ts.createSourceFile(filePath, header + contents, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const sourceFile = ts.createSourceFile(filePath, header + contents, ts.ScriptTarget.ES2024, true, ts.ScriptKind.TS);
     const result = ts.transform(sourceFile, [removeUnusedImports()]);
     const printer = ts.createPrinter({
         newLine: ts.NewLineKind.LineFeed,
