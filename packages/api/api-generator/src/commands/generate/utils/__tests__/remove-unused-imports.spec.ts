@@ -4,7 +4,7 @@ import { removeUnusedImports } from "../write-generated-file";
 
 function runTransform(input: string): string {
     input = input.trim().replace(/^\s+/gm, "");
-    const sourceFile = ts.createSourceFile("file.ts", input, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const sourceFile = ts.createSourceFile("file.ts", input, ts.ScriptTarget.ES2024, true, ts.ScriptKind.TS);
 
     const result = ts.transform(sourceFile, [removeUnusedImports()]);
     const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
