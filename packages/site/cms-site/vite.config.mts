@@ -2,13 +2,9 @@ import react from "@vitejs/plugin-react";
 import preserveDirectives from "rollup-plugin-preserve-directives";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
     plugins: [
-        tsconfigPaths({
-            projects: ["./tsconfig.build.json"],
-        }),
         react(),
         dts({ tsconfigPath: "./tsconfig.build.json" }), // generates the types for the library
     ],
