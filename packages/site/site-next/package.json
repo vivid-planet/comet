@@ -1,11 +1,11 @@
 {
-    "name": "@comet/cms-site",
+    "name": "@comet/site-next",
     "type": "module",
     "version": "7.19.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/site/cms-site"
+        "directory": "packages/site/site-next"
     },
     "license": "BSD-2-Clause",
     "exports": {
