@@ -3,7 +3,6 @@
 import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
-
 export enum ProductSortField {
     title = "title",
     status = "status",
@@ -20,18 +19,16 @@ export enum ProductSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     manufacturer = "manufacturer",
-    priceList = "priceList",
+    priceList = "priceList"
 }
 registerEnumType(ProductSortField, {
     name: "ProductSortField",
 });
-
 @InputType()
 export class ProductSort {
     @Field(() => ProductSortField)
     @IsEnum(ProductSortField)
     field: ProductSortField;
-
     @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
     @IsEnum(SortDirection)
     direction: SortDirection = SortDirection.ASC;

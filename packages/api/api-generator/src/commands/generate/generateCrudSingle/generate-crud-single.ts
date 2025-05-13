@@ -49,7 +49,6 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     }
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
-    import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
