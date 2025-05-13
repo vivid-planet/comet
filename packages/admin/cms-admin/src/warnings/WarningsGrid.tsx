@@ -17,7 +17,6 @@ import { Chip } from "@mui/material";
 import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
-import { type ReactNode } from "react";
 import { useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
@@ -71,11 +70,7 @@ function WarningsGridToolbar() {
     );
 }
 
-interface WarningsGridProps {
-    warningMessages?: Record<string, ReactNode>;
-}
-
-export function WarningsGrid({ warningMessages: projectWarningMessages }: WarningsGridProps) {
+export function WarningsGrid() {
     const intl = useIntl();
     const dataGridProps = {
         ...useDataGridRemote({ initialFilter: { items: [{ field: "state", operator: "is", value: "open" }] } }),
