@@ -9,7 +9,6 @@ export default defineConfig({
         dts({ tsconfigPath: "./tsconfig.build.json" }), // generates the types for the library
     ],
     build: {
-        cssCodeSplit: false,
         outDir: "lib",
         lib: {
             entry: "./src/index.ts",
