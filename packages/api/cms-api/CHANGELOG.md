@@ -1,5 +1,31 @@
 # @comet/cms-api
 
+## 7.20.0
+
+### Minor Changes
+
+-   ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+-   557e311ea: AccessLog: Remove some DAM URLs from log
+
+    Hashed URLs and preview URLs are not useful in the logs, so we remove them.
+
+-   21f95adfe: DAM: Fix headers
+
+    While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
+
+    -   Only store the `content-type` header
+    -   Prevent imgproxy headers from being passed through to the client
+    -   Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
+
+-   f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
+
+    Explicitly set `cache-control: no-store` for folder download to prevent caching of the response. Normally this should not be cached by any CDN, because the Request contains a cookie, but it is better to be explicit about it.
+
+    -   @comet/blocks-api@7.20.0
+
 ## 7.19.0
 
 ### Minor Changes

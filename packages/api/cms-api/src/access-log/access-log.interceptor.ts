@@ -1,5 +1,6 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { Request } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
@@ -8,7 +9,7 @@ import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
-const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
+const IGNORED_ROUTES = ["/dam/images/", "/dam/files/preview", "/dam/files/download", "/dam/files/:hash/"];
 
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
@@ -59,14 +60,15 @@ export class AccessLogInterceptor implements NestInterceptor {
             requestData.push(`args: ${JSON.stringify(gqlArgs)}`);
         } else {
             const httpContext = context.switchToHttp();
-            const httpRequest = httpContext.getRequest();
+            const httpRequest = httpContext.getRequest<Request>();
+            const user = httpRequest.user as CurrentUser;
 
             if (
-                IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
+                IGNORED_ROUTES.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
                 (this.config &&
                     this.config.shouldLogRequest &&
                     !this.config.shouldLogRequest({
-                        user: httpRequest.user,
+                        user: user,
                         req: httpRequest,
                     }))
             ) {
@@ -75,7 +77,7 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             const ipAddress = getClientIp(httpRequest);
             requestData.push(`ip: ${ipAddress}`);
-            this.pushUserToRequestData(httpRequest.user, requestData);
+            this.pushUserToRequestData(user, requestData);
 
             requestData.push(
                 ...[`method: ${httpRequest.method}`, `route: ${httpRequest.route.path}`, `params: ${JSON.stringify(httpRequest.params)}`],

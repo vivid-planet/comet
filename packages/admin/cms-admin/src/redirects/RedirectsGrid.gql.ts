@@ -16,6 +16,7 @@ export const redirectTableFragment = gql`
     fragment RedirectTable on Redirect {
         id
         active
+        activatedAt
         sourceType
         source
         target

@@ -221,6 +221,7 @@ export function createRedirectsResolver({
 
             const entity = this.repository.create({
                 scope: nonEmptyScopeOrNothing(scope),
+                activatedAt: new Date(),
                 ...input,
                 target: input.target.transformToBlockData(),
             });
@@ -257,7 +258,7 @@ export function createRedirectsResolver({
         ): Promise<RedirectInterface> {
             const redirect = await this.repository.findOneOrFail(id);
 
-            wrap(redirect).assign({ active: input.active });
+            wrap(redirect).assign({ active: input.active, activatedAt: input.active ? new Date() : null });
             await this.entityManager.persistAndFlush(redirect);
 
             return this.repository.findOneOrFail(id);
