@@ -6,7 +6,7 @@ import { PrintEditorState } from "./helper";
 
 const GreenCustomHeader = ({ children }: { children?: ReactNode }) => <h2 style={{ color: "green" }}>{children}</h2>;
 
-export const rteOptions: IRteOptions = {
+const rteOptions: IRteOptions = {
     supports: [
         "bold",
         "italic",
@@ -38,8 +38,6 @@ const [useRteApi] = makeRteApi();
 
 export default {
     title: "@comet/admin-rte",
-
-    excludeStories: ["makeApiOptions", "apiOptions", "rteOptions"],
 };
 
 export const RteStandardBlockType = {
