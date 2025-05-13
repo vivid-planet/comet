@@ -457,10 +457,10 @@ export interface HeadlineBlockData {
 Having the block data in place, we can now render the blocks. The rendering logic for each block type is recommended to be implemented in a separate component. Here as an example the [HeadlineBlock from Comet Demo](https://github.com/vivid-planet/comet/blob/a737ccc2f0826b236b49d63129a6a49e7f790993/demo/site/src/blocks/HeadlineBlock.tsx#L36) component.
 
 Having all the block components implemented, we can now start to render the page content.
-Typically a page consists of a list of blocks, those `BlocksBlock` can be rendered with a component [BlocksBlock](/docs/core-concepts/blocks/factories#site-blocksblock). from the `@comet/cms-site` package.
+Typically a page consists of a list of blocks, those `BlocksBlock` can be rendered with a component [BlocksBlock](/docs/core-concepts/blocks/factories#site-blocksblock). from the `@comet/site-next` package.
 
 ```typescript
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/site-next";
 import { PageContentBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {

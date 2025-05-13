@@ -7,7 +7,7 @@ The Block Preview allows you to preview your blocks in the context of the Comet 
 
 ![IFrame](images/iframe.png)
 
-The `IFrameBridge` is a communication bridge between the Comet Admin and the Block Preview implemented in the client. It allows you to send messages from the Comet Admin to the Block Preview and vice versa. In the admin client the `IFrameBridge` is already implemented and can be used out of the box and is already sending messages to the iframe client's block preview. In the client you can use the IFrameBridge from `@comet/cms-site` to receive/send messages from/to the Comet Admin.
+The `IFrameBridge` is a communication bridge between the Comet Admin and the Block Preview implemented in the client. It allows you to send messages from the Comet Admin to the Block Preview and vice versa. In the admin client the `IFrameBridge` is already implemented and can be used out of the box and is already sending messages to the iframe client's block preview. In the client you can use the IFrameBridge from `@comet/site-next` to receive/send messages from/to the Comet Admin.
 
 ## IFrameMessages
 
@@ -30,7 +30,7 @@ There are several messages that can be sent between the Comet Admin and the Bloc
 
 To make the Block Preview embeddable in the Comet Admin, the client must provide an entry point where the client application renders the block preview and implements the `IFrameBridge` for communication. In a typical comet application the block preview is available at `site-domain.com/block-preview/page`
 
-To Implement the `IFrameBridge` in any client, you can use `IFrameBridgeProvider` and `useIFrameBridge` from `@comet/cms-site`.
+To Implement the `IFrameBridge` in any client, you can use `IFrameBridgeProvider` and `useIFrameBridge` from `@comet/site-next`.
 
 The `IFrameBridgeProvider` will already handle and prepare the communication between the Comet Admin and the Block Preview. The `useIFrameBridge` hook can be used to send messages from the Comet Admin and provide a higher level api for sending events to the admin.
 
@@ -50,10 +50,10 @@ const BlockPreview = () => {
 
 The client is responsible to implement the sending of the corresponding Events `sendSelectComponent` and `sendHoverComponent`.
 
-`@comet/cms-site` offers a simple HOC where one can wrap a block with a `withPreview` HOC. The `withPreview` HOC will handle hover and select events and send them to the Comet Admin.
+`@comet/site-next` offers a simple HOC where one can wrap a block with a `withPreview` HOC. The `withPreview` HOC will handle hover and select events and send them to the Comet Admin.
 
 ```tsx
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-next";
 import { SampleBlockData } from "@src/blocks.generated";
 
 export const SampleBlock = withPreview(

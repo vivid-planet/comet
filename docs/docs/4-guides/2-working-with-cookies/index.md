@@ -12,7 +12,7 @@ By configuring the cookie API and using the `<CookieSafe />` component, we can e
 The `useCookieApi` hook provides access to the list of consented cookies and a function that can be called to open the cookie settings.
 
 ```ts
-import { useCookieApi } from "@comet/cms-site";
+import { useCookieApi } from "@comet/site-next";
 
 const { consentedCookies, openCookieSettings } = useCookieApi();
 ```
@@ -54,7 +54,7 @@ If the required cookies have not been consented to, a fallback component is rend
 While the cookie platform has not been initialized, a loading component is rendered.
 
 ```tsx
-import { CookieSafe, useCookieApi } from "@comet/cms-site";
+import { CookieSafe, useCookieApi } from "@comet/site-next";
 import { cookieIds } from "@src/util/cookieIds";
 
 export const CookieSafeExternalContent = () => {
@@ -77,7 +77,7 @@ export const CookieSafeExternalContent = () => {
 The fallback component should display a message to the user and allow them to open the cookie settings.
 
 ```tsx
-import { useCookieApi } from "@comet/cms-site";
+import { useCookieApi } from "@comet/site-next";
 
 export const CookieFallback = () => {
     const { openCookieSettings } = useCookieApi();
@@ -116,7 +116,7 @@ import {
     CookieApiProvider,
     useLocalStorageCookieApi,
     useOneTrustCookieApi as useProductionCookieApi,
-} from "@comet/cms-site";
+} from "@comet/site-next";
 // ...
 return (
     <html>
