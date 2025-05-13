@@ -12,13 +12,13 @@ import {
     type GQLLatestWarningsQueryVariables,
 } from "./LatestWarningsDashboardWidget.generated";
 import { WarningActions } from "./WarningActions";
-import { useWarningConfig } from "./warningConfig";
 import { WarningMessage } from "./WarningMessage";
+import { useWarningConfig } from "./warningsConfig";
 import { WarningSeverity } from "./WarningSeverity";
 
 export const LatestWarningsDashboardWidget = () => {
     const { values: scopeValues } = useContentScope();
-    const { warningMessages } = useWarningConfig();
+    const { messages } = useWarningConfig();
     const scopes = scopeValues.map((item) => item.scope);
 
     const { data, loading, error } = useQuery<GQLLatestWarningsQuery, GQLLatestWarningsQueryVariables>(latestWarningsQuery, {
@@ -36,7 +36,7 @@ export const LatestWarningsDashboardWidget = () => {
             field: "message",
             headerName: intl.formatMessage({ id: "dashboard.latestWarningsWidget.message", defaultMessage: "Message" }),
             flex: 1,
-            renderCell: (params) => <WarningMessage message={params.value} warningMessages={warningMessages} />,
+            renderCell: (params) => <WarningMessage message={params.value} warningMessages={messages} />,
         },
         {
             ...dataGridDateTimeColumn,
