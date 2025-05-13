@@ -8,17 +8,19 @@ import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
     const checkPermission = (item: MasterMenuItem, ancestors: MasterMenuItem[]): boolean => {
+        let allowed = true;
+
         if (item.requiredPermission) {
-            return isAllowed(item.requiredPermission);
+            allowed &&= isAllowed(item.requiredPermission);
         }
 
         for (const ancestor of ancestors) {
             if (ancestor.requiredPermission) {
-                return isAllowed(ancestor.requiredPermission);
+                allowed &&= isAllowed(ancestor.requiredPermission);
             }
         }
 
-        return true;
+        return allowed;
     };
 
     const flat = (
