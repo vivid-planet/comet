@@ -105,7 +105,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             field: "generationType",
             headerName: intl.formatMessage({
                 id: "comet.pages.redirects.redirect.generationType",
-                defaultMessage: "GenerationType",
+                defaultMessage: "Generation Type",
             }),
             renderCell: (params) => (
                 <Typography>
@@ -120,6 +120,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             filterOperators: getGridSingleSelectOperators(),
             type: "singleSelect",
             valueOptions: typeOptions,
+            width: 130,
         },
         {
             field: "active",
@@ -130,6 +131,17 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => <RedirectActiveness redirect={params.row} />,
             sortable: false,
             type: "boolean",
+        },
+        {
+            field: "activatedAt",
+            headerName: intl.formatMessage({
+                id: "comet.pages.redirects.redirect.activatedAt",
+                defaultMessage: "Activation Date",
+            }),
+            sortable: false,
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 170,
         },
         {
             field: "actions",

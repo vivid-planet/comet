@@ -17,6 +17,7 @@ export interface RedirectInterface {
     target: BlockDataInterface;
     comment?: string;
     active: boolean;
+    activatedAt?: Date;
     generationType: RedirectGenerationType;
     createdAt: Date;
     updatedAt: Date;
@@ -59,6 +60,13 @@ export class RedirectEntityFactory {
             @Property()
             @Field()
             active: boolean = true;
+
+            @Property({
+                columnType: "timestamp with time zone",
+                nullable: true,
+            })
+            @Field({ nullable: true })
+            activatedAt?: Date = new Date();
 
             @Enum(() => RedirectGenerationType)
             @Field(() => RedirectGenerationType)
