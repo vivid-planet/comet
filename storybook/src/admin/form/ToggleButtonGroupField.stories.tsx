@@ -1,5 +1,20 @@
 import { Alert, FinalForm, NumberField, TextField, ToggleButtonGroupField } from "@comet/admin";
-import { Image, Info, Video, Vimeo, YouTube } from "@comet/admin-icons";
+import {
+    FocusPointCenter,
+    FocusPointEast,
+    FocusPointNorth,
+    FocusPointNortheast,
+    FocusPointNorthwest,
+    FocusPointSouth,
+    FocusPointSoutheast,
+    FocusPointSouthwest,
+    FocusPointWest,
+    Image,
+    Info,
+    Video,
+    Vimeo,
+    YouTube,
+} from "@comet/admin-icons";
 import { Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react";
@@ -80,13 +95,13 @@ export const ToggleButtonFieldStory: Story = {
 export const MultipleRowsExample: Story = {
     storyName: "ToggleButtonGroupField",
     render: () => {
-        type SampleType = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+        type SampleType = "north-west" | "north" | "north-east" | "west" | "center" | "east" | "south-west" | "south" | "south-east";
         interface FormValues {
             type: SampleType;
         }
         return (
             <FinalForm<FormValues>
-                initialValues={{ type: "top-left" }}
+                initialValues={{ type: "north-west" }}
                 mode="edit"
                 onSubmit={() => {
                     // not handled
@@ -102,28 +117,40 @@ export const MultipleRowsExample: Story = {
                                 optionsPerRow={3}
                                 options={[
                                     {
-                                        label: "top left",
-                                        value: "top-left",
+                                        label: <FocusPointNorthwest />,
+                                        value: "north-west",
                                     },
                                     {
-                                        label: "top center",
-                                        value: "top-center",
+                                        label: <FocusPointNorth />,
+                                        value: "north",
                                     },
                                     {
-                                        label: "top right",
-                                        value: "top-right",
+                                        label: <FocusPointNortheast />,
+                                        value: "north-east",
                                     },
                                     {
-                                        label: "bottom left",
-                                        value: "bottom-left",
+                                        label: <FocusPointWest />,
+                                        value: "west",
                                     },
                                     {
-                                        label: "bottom center",
-                                        value: "bottom-center",
+                                        label: <FocusPointCenter />,
+                                        value: "center",
                                     },
                                     {
-                                        label: "bottom right",
-                                        value: "bottom-right",
+                                        label: <FocusPointEast />,
+                                        value: "east",
+                                    },
+                                    {
+                                        label: <FocusPointSouthwest />,
+                                        value: "south-west",
+                                    },
+                                    {
+                                        label: <FocusPointSouth />,
+                                        value: "south",
+                                    },
+                                    {
+                                        label: <FocusPointSoutheast />,
+                                        value: "south-east",
                                     },
                                 ]}
                             />
