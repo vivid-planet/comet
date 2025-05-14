@@ -69,9 +69,29 @@ const getSVGData = (icon: Icon) => {
             delete attrs["@_fill"];
             return true;
         },
-    }).parse(fileContents.toString());
+    });
+    const parsed = parsedXml.parse(fileContents.toString());
 
-    return parsedXml.svg;
+    return convertAttributesToCamelCase(parsed.svg);
+};
+
+const convertAttributesToCamelCase = (node: any): any => {
+    if (Array.isArray(node)) {
+        return node.map(convertAttributesToCamelCase);
+    }
+
+    if (typeof node !== "object" || node === null) {
+        return node;
+    }
+
+    const result: any = {};
+
+    for (const [key, value] of Object.entries(node)) {
+        const camelCaseKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+        result[camelCaseKey] = convertAttributesToCamelCase(value);
+    }
+
+    return result;
 };
 
 const writeComponent = async (icon: Icon, svgString: string) => {
