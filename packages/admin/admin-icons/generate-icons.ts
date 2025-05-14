@@ -67,31 +67,21 @@ const getSVGData = (icon: Icon) => {
         ignoreAttributes: false,
         updateTag(_, __, attrs) {
             delete attrs["@_fill"];
+            // Convert all attribute keys to camelCase
+            for (const key of Object.keys(attrs)) {
+                const camelKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+                if (camelKey !== key) {
+                    attrs[camelKey] = attrs[key];
+                    delete attrs[key];
+                }
+            }
+
             return true;
         },
     });
     const parsed = parsedXml.parse(fileContents.toString());
 
-    return convertAttributesToCamelCase(parsed.svg);
-};
-
-const convertAttributesToCamelCase = (node: any): any => {
-    if (Array.isArray(node)) {
-        return node.map(convertAttributesToCamelCase);
-    }
-
-    if (typeof node !== "object" || node === null) {
-        return node;
-    }
-
-    const result: any = {};
-
-    for (const [key, value] of Object.entries(node)) {
-        const camelCaseKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
-        result[camelCaseKey] = convertAttributesToCamelCase(value);
-    }
-
-    return result;
+    return parsed.svg;
 };
 
 const writeComponent = async (icon: Icon, svgString: string) => {
