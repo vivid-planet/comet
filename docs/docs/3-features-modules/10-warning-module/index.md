@@ -150,7 +150,7 @@ export class NewsBlockWarningsService implements BlockWarningsServiceInterface<N
 ## API: Custom Entity Warnings
 
 You can also create warnings for entities.  
-To do this, use the `@CreateWarning` decorator
+To do this, use the `@CreateWarnings` decorator
 
 ### Simple Entity Warning
 
@@ -179,7 +179,7 @@ class News {
 #### Example of the Entity:
 
 ```typescript
-@CreateWarning(NewsWarningService)
+@CreateWarnings(NewsWarningService)
 @Entity()
 class NewsPageType {
     @Field({ nullable: true })
