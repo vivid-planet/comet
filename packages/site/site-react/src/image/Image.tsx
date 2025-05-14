@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import NextImage, { type ImageLoaderProps, type ImageProps as NextImageProps } from "next/image";
+import { ImgHTMLAttributes } from "react";
 
 // Fallback to 1 / 1 aspect ratio for invalid value format
 export function parseAspectRatio(value: string | number): number {
@@ -67,14 +66,15 @@ export function calculateInheritAspectRatio(
     }
 }
 
-export function generateImageUrl({ src, width }: Pick<ImageLoaderProps, "src" | "width">, aspectRatio: number): string {
+export function generateImageUrl({ src, width }: { src: string; width: number }, aspectRatio: number): string {
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
 
-type Props = Omit<NextImageProps, "loader"> & { aspectRatio: string };
+type Props = ImgHTMLAttributes<HTMLImageElement> & { aspectRatio: string; src: string; width: string | number };
 
-export function Image({ aspectRatio, ...nextImageProps }: Props) {
+export function Image({ aspectRatio, src, width, ...imgProps }: Props) {
     const usedAspectRatio = parseAspectRatio(aspectRatio);
+    const imageUrl = generateImageUrl({ src, width: Number(width) }, usedAspectRatio);
 
-    return <NextImage loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)} {...nextImageProps} />;
+    return <img src={imageUrl} {...imgProps} />;
 }
