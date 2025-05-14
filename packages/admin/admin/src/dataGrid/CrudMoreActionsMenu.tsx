@@ -83,7 +83,6 @@ const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMe
     componentName: "CrudMoreActions",
     slotName: "chip",
 })(css`
-    width: 20px;
     height: 20px;
     flex-shrink: 0;
     border-radius: 20px;
