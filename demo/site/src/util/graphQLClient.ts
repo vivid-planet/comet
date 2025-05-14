@@ -3,7 +3,7 @@ import {
     createFetchWithDefaults,
     createGraphQLFetch as createGraphQLFetchLibrary,
     SitePreviewData,
-} from "@comet/site-next";
+} from "@comet/site-nextjs";
 
 import { getVisibilityParam } from "./ServerContext";
 

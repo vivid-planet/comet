@@ -19,7 +19,7 @@
         "dev:cms:admin": "dev-pm start @cms-admin",
         "dev:cms:api": "dev-pm start @cms-api",
         "dev:cms:site": "dev-pm start @cms-site",
-        "dev:cms:site-next": "dev-pm start @site-next",
+        "dev:cms:site-nextjs": "dev-pm start @site-nextjs",
         "dev:demo": "dev-pm start @demo",
         "dev:demo:admin": "dev-pm start @demo-admin",
         "dev:demo:api": "dev-pm start @demo-api",

@@ -1,5 +1,5 @@
 "use client";
-import { PropsWithData } from "@comet/site-next";
+import { PropsWithData } from "@comet/site-nextjs";
 import { InternalLinkBlockData } from "@src/blocks.generated";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createSitePath } from "@src/util/createSitePath";

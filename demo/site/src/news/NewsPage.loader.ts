@@ -1,4 +1,4 @@
-import { gql } from "@comet/site-next";
+import { gql } from "@comet/site-nextjs";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 

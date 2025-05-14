@@ -1,5 +1,5 @@
 "use client";
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/site-next";
+import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/site-nextjs";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";

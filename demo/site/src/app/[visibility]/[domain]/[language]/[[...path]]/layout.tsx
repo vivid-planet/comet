@@ -1,4 +1,4 @@
-import { gql } from "@comet/site-next";
+import { gql } from "@comet/site-nextjs";
 import { GQLLayoutQuery, GQLLayoutQueryVariables } from "@src/app/[visibility]/[domain]/[language]/[[...path]]/layout.generated";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";

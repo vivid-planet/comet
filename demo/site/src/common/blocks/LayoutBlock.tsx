@@ -1,5 +1,5 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/site-next";
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { LayoutBlockData } from "@src/blocks.generated";
 import styled, { css } from "styled-components";
 

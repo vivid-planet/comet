@@ -1,5 +1,5 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/site-next";
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { TextLinkBlockData } from "@src/blocks.generated";
 import { filesize } from "filesize";
 import styled from "styled-components";

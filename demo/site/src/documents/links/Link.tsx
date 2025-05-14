@@ -1,4 +1,4 @@
-import { gql } from "@comet/site-next";
+import { gql } from "@comet/site-nextjs";
 import { DamFileDownloadLinkBlockData, ExternalLinkBlockData, InternalLinkBlockData } from "@src/blocks.generated";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";

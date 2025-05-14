@@ -1,5 +1,5 @@
 "use client";
-import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/site-next";
+import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/site-nextjs";
 import { YouTubeVideoBlockData } from "@src/blocks.generated";
 import { cookieIds } from "@src/util/cookieIds";
 import styled from "styled-components";

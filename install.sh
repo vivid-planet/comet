@@ -20,7 +20,7 @@ ln -sf ../../api/cms-api/block-meta.json ./packages/admin/cms-admin/block-meta.j
 
 # site CMS
 ln -sf ../../api/cms-api/block-meta.json ./packages/site/cms-site/block-meta.json
-ln -sf ../../api/cms-api/block-meta.json ./packages/site/site-next/block-meta.json
+ln -sf ../../api/cms-api/block-meta.json ./packages/site/site-nextjs/block-meta.json
 
 # api DEMO
 ln -sf ../../.env ./demo/api/.env

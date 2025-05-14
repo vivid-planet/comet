@@ -1,7 +1,7 @@
 import "swiper/css";
 import "swiper/css/navigation";
 
-import { PropsWithData, withPreview } from "@comet/site-next";
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { MediaGalleryBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";

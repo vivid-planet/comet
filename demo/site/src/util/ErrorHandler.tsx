@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorHandlerProvider } from "@comet/site-next";
+import { ErrorHandlerProvider } from "@comet/site-nextjs";
 import { PropsWithChildren } from "react";
 
 export function ErrorHandler({ children }: PropsWithChildren) {

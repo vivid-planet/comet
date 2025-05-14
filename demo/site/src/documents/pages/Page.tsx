@@ -1,4 +1,4 @@
-import { generateImageUrl, gql } from "@comet/site-next";
+import { generateImageUrl, gql } from "@comet/site-nextjs";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";

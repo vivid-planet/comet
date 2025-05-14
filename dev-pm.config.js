@@ -11,7 +11,7 @@ const packageFolderMapping = {
     "@comet/blocks-api": "packages/api/blocks-api",
     "@comet/cms-api": "packages/api/cms-api",
     "@comet/cms-site": "packages/site/cms-site",
-    "@comet/site-next": "packages/site/site-next",
+    "@comet/site-nextjs": "packages/site/site-nextjs",
 };
 
 const waitOnPackages = (...packages) => {
@@ -163,16 +163,16 @@ module.exports = {
             group: ["cms-site", "cms"],
         },
 
-        //group site-next
+        //group site-nextjs
         {
-            name: "site-next",
-            script: "pnpm --filter @comet/site-next run dev",
-            group: ["site-next", "cms"],
+            name: "site-nextjs",
+            script: "pnpm --filter @comet/site-nextjs run dev",
+            group: ["site-nextjs", "cms"],
         },
         {
-            name: "site-next-codegen-block-types",
-            script: "pnpm --filter @comet/site-next run generate-block-types:watch",
-            group: ["site-next", "cms"],
+            name: "site-nextjs-codegen-block-types",
+            script: "pnpm --filter @comet/site-nextjs run generate-block-types:watch",
+            group: ["site-nextjs", "cms"],
         },
 
         //group demo admin
@@ -224,7 +224,7 @@ module.exports = {
             name: "demo-site",
             script: "pnpm --filter comet-demo-site run dev",
             group: ["demo-site", "demo"],
-            waitOn: [...waitOnPackages("@comet/site-next"), "tcp:$API_PORT"],
+            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-codegen",

@@ -1,5 +1,5 @@
 "use client";
-import { PropsWithData } from "@comet/site-next";
+import { PropsWithData } from "@comet/site-nextjs";
 import { NewsLinkBlockData } from "@src/blocks.generated";
 import { PropsWithChildren } from "react";
 

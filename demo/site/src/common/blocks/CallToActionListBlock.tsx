@@ -1,5 +1,5 @@
 "use client";
-import { ListBlock, PropsWithData, withPreview } from "@comet/site-next";
+import { ListBlock, PropsWithData, withPreview } from "@comet/site-nextjs";
 import { CallToActionListBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 
