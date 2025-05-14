@@ -1,10 +1,10 @@
 "use client";
 import { usePathname, useSearchParams } from "next/navigation";
-import { type PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 
 import { PreviewContext } from "../preview/PreviewContext";
 import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
-import { type SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
+import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 const SitePreview = ({ children }: PropsWithChildren) => {
     const pathname = usePathname();

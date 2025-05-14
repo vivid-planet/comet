@@ -1,4 +1,4 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { verifySitePreviewJwt } from "../SitePreviewUtils";
 

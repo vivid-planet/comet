@@ -1,13 +1,13 @@
 "use client";
 // eslint-disable-next-line no-restricted-imports
-import NextImage, { type ImageProps } from "next/image";
+import NextImage, { ImageProps } from "next/image";
+import styled from "styled-components";
 
-import { type PixelImageBlockData } from "../blocks.generated";
+import { PixelImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
-import { type ImageDimensions, calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "../image/Image";
+import { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, ImageDimensions, parseAspectRatio } from "../image/Image";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import styles from "./PixelImageBlock.module.scss";
-import { type PropsWithData } from "./PropsWithData";
+import { PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio: string | number | "inherit";
@@ -75,11 +75,7 @@ export const PixelImageBlock = withPreview(
             return nextImage;
         }
 
-        return (
-            <div className={styles.imageContainer} style={{ "--aspect-ratio": usedAspectRatio }}>
-                {nextImage}
-            </div>
-        );
+        return <ImageContainer $aspectRatio={usedAspectRatio}>{nextImage}</ImageContainer>;
     },
     { label: "PixelImage" },
 );
@@ -95,3 +91,10 @@ function createDominantImageDataUrl(w: number, h: number, dominantColor = "#ffff
 
     return `data:image/svg+xml;base64,${toBase64(svg)}`;
 }
+
+const ImageContainer = styled.div<{ $aspectRatio: number }>`
+    position: relative;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
+`;

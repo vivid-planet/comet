@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { type CookieApiHook } from "./CookieApiContext";
+import { CookieApiHook } from "./CookieApiContext";
 
 type OneTrustOnConsentChangedEvent = {
     detail: string[];

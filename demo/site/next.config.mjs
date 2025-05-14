@@ -25,7 +25,7 @@ const nextConfig = {
         styledComponents: true,
     },
     experimental: {
-        optimizePackageImports: ["@comet/cms-site"],
+        optimizePackageImports: ["@comet/site-nextjs"],
     },
     cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching

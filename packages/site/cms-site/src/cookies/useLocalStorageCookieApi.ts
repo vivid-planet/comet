@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
-import { type CookieApi, type CookieApiHook } from "./CookieApiContext";
+import { CookieApi, CookieApiHook } from "./CookieApiContext";
 
 const localStorageCookieApiKey = "comet-dev-cookie-api-consented-cookies";
 

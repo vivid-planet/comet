@@ -1,6 +1,6 @@
-import "@comet/cms-site/css";
+import "@comet/site-nextjs/css";
 
-import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/cms-site";
+import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/site-nextjs";
 import { GlobalStyle } from "@src/app/GlobalStyle";
 import { ErrorHandler } from "@src/util/ErrorHandler";
 import { ResponsiveSpacingStyle } from "@src/util/ResponsiveSpacingStyle";

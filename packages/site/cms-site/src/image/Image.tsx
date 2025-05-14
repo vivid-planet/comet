@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import NextImage, { type ImageLoaderProps, type ImageProps as NextImageProps } from "next/image";
+import NextImage, { ImageLoaderProps, ImageProps as NextImageProps } from "next/image";
 
 // Fallback to 1 / 1 aspect ratio for invalid value format
 export function parseAspectRatio(value: string | number): number {

@@ -1,5 +1,5 @@
 "use client";
-import { ListBlock, PropsWithData, withPreview } from "@comet/cms-site";
+import { ListBlock, PropsWithData, withPreview } from "@comet/site-nextjs";
 import { LinkListBlockData } from "@src/blocks.generated";
 
 import { TextLinkBlock } from "./TextLinkBlock";

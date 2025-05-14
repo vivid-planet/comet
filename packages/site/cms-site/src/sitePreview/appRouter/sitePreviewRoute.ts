@@ -3,9 +3,9 @@ import "server-only";
 import { SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-import { type SitePreviewParams, verifySitePreviewJwt } from "../SitePreviewUtils";
+import { SitePreviewParams, verifySitePreviewJwt } from "../SitePreviewUtils";
 
 export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unknown /* deprecated: remove argument in v8 */) {
     const params = request.nextUrl.searchParams;

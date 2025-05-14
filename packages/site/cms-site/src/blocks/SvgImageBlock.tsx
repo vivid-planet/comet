@@ -1,9 +1,9 @@
 "use client";
 
-import { type SvgImageBlockData } from "../blocks.generated";
+import { SvgImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { type PropsWithData } from "./PropsWithData";
+import { PropsWithData } from "./PropsWithData";
 
 interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
     width?: string | number | "auto";

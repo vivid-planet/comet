@@ -1,11 +1,11 @@
 "use client";
 
 import isEqual from "lodash.isequal";
-import { type PropsWithChildren, createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import styled from "styled-components";
 import { useDebounceCallback } from "usehooks-ts";
 
-import styles from "./IFrameBridge.module.scss";
-import { type AdminMessage, type IFrameMessage, AdminMessageType, IFrameMessageType } from "./IFrameMessage";
+import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
 import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
@@ -314,10 +314,13 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 }}
             >
                 <PreviewOverlay />
-                <div ref={childrenWrapperRef} className={styles.childrenWrapper}>
-                    {children}
-                </div>
+                <ChildrenWrapper ref={childrenWrapperRef}>{children}</ChildrenWrapper>
             </div>
         </IFrameBridgeContext.Provider>
     );
 };
+
+const ChildrenWrapper = styled.div`
+    position: relative;
+    z-index: 1;
+`;

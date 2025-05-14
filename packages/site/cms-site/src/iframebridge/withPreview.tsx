@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentType, createContext, useContext } from "react";
+import { ComponentType, createContext, useContext } from "react";
 
 import { Preview } from "./Preview";
 

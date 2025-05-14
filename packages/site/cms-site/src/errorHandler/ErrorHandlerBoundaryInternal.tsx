@@ -1,6 +1,6 @@
 "use client";
 
-import { type ErrorInfo, type PropsWithChildren, Component } from "react";
+import { Component, ErrorInfo, PropsWithChildren } from "react";
 
 interface Props extends PropsWithChildren {
     onError: (error: Error, errorInfo: ErrorInfo) => void;

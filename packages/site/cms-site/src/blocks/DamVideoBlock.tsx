@@ -1,15 +1,14 @@
 "use client";
 
-import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 
-import { type DamVideoBlockData } from "../blocks.generated";
+import { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import styles from "./DamVideoBlock.module.scss";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
-import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
+import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import { PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
@@ -66,21 +65,35 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <video
+                    <Video
                         autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
                         controls={showControls}
                         loop={loop}
                         playsInline
                         muted={autoplay}
                         ref={videoRef}
-                        className={clsx(styles.video, fill && styles.fill)}
-                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
+                        $aspectRatio={aspectRatio.replace("x", " / ")}
+                        $fill={fill}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
-                    </video>
+                    </Video>
                 )}
             </>
         );
     },
     { label: "Video" },
 );
+
+const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>`
+    width: 100%;
+    object-fit: cover;
+
+    ${({ $aspectRatio, $fill }) =>
+        $fill
+            ? css`
+                  height: 100%;
+              `
+            : css`
+                  aspect-ratio: ${$aspectRatio};
+              `}
+`;
