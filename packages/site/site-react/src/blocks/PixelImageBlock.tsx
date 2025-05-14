@@ -1,11 +1,11 @@
 "use client";
 // eslint-disable-next-line no-restricted-imports
 
-import { PixelImageBlockData } from "../blocks.generated";
+import { type PixelImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
-import { calculateInheritAspectRatio, Image, ImageProps, parseAspectRatio } from "../image/Image";
+import { type ImageProps, calculateInheritAspectRatio, Image, parseAspectRatio } from "../image/Image";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { PropsWithData } from "./PropsWithData";
+import { type PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt" | "aspectRatio"> {
     aspectRatio: string | number | "inherit";

@@ -18,7 +18,7 @@ export interface VideoPreviewImageProps {
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon />, className }: VideoPreviewImageProps) => {
     return (
         <div className={clsx(styles.root, fill && styles.fill, className)}>
-            <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
+            <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} />
             <button className={styles.iconWrapper} onClick={onPlay}>
                 {icon}
             </button>
