@@ -69,7 +69,7 @@ To ensure warnings are checked regularly, schedule the following CLI command to 
 npm run console check-warnings
 ```
 
-It's recommended to run this job during off-peak hours (such as at night) to minimize impact on application performance.
+It is recommended to schedule this job using a cronjob and run it during off-peak hours (such as at night) to minimize any impact on application performance. For more details on setting up cronjobs, see [Cron Jobs](/docs/features-modules/cron-jobs/).
 
 :::info
 
