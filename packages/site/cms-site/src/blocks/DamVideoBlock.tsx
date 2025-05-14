@@ -1,11 +1,12 @@
 "use client";
 
+import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
-import styled, { css } from "styled-components";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import styles from "./DamVideoBlock.module.scss";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
@@ -65,35 +66,21 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <Video
+                    <video
                         autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
                         controls={showControls}
                         loop={loop}
                         playsInline
                         muted={autoplay}
                         ref={videoRef}
-                        $aspectRatio={aspectRatio.replace("x", " / ")}
-                        $fill={fill}
+                        className={clsx(styles.video, fill && styles.fill)}
+                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
-                    </Video>
+                    </video>
                 )}
             </>
         );
     },
     { label: "Video" },
 );
-
-const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>`
-    width: 100%;
-    object-fit: cover;
-
-    ${({ $aspectRatio, $fill }) =>
-        $fill
-            ? css`
-                  height: 100%;
-              `
-            : css`
-                  aspect-ratio: ${$aspectRatio};
-              `}
-`;

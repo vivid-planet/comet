@@ -12,7 +12,8 @@
         ".": {
             "types": "./lib/index.d.ts",
             "import": "./lib/index.js"
-        }
+        },
+        "./css": "./lib/style.css"
     },
     "module": "./lib/index.js",
     "types": "lib/index.d.ts",
@@ -22,17 +23,18 @@
     "scripts": {
         "build": "$npm_execpath run clean && npm run generate-block-types && vite build",
         "clean": "rimraf lib 'src/**/*.generated.ts'",
-        "dev": "$npm_execpath generate-block-types && vite build --watch",
+        "dev": "$npm_execpath run clean && $npm_execpath generate-block-types && vite build --watch",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
-        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml,css,scss}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
     },
     "dependencies": {
+        "clsx": "^2.1.1",
         "jose": "^5.2.4",
         "lodash.isequal": "^4.5.0",
         "rimraf": "^3.0.0",
@@ -63,7 +65,7 @@
         "react-is": "^18.3.1",
         "rollup": "^4.40.2",
         "rollup-plugin-preserve-directives": "^0.4.0",
-        "styled-components": "^6.0.0",
+        "sass": "^1.87.0",
         "ts-jest": "^29.0.5",
         "typescript": "^4.0.0",
         "vite": "^5.1.6",
@@ -72,8 +74,7 @@
     "peerDependencies": {
         "next": "^14.2.0",
         "react": "^18.0.0",
-        "react-dom": "^18.0.0",
-        "styled-components": "^6.0.0"
+        "react-dom": "^18.0.0"
     },
     "publishConfig": {
         "access": "public",
