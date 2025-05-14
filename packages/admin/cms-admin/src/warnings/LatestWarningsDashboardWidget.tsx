@@ -13,12 +13,12 @@ import {
 } from "./LatestWarningsDashboardWidget.generated";
 import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";
-import { useWarningConfig } from "./warningsConfig";
+import { useWarningsConfig } from "./warningsConfig";
 import { WarningSeverity } from "./WarningSeverity";
 
 export const LatestWarningsDashboardWidget = () => {
     const { values: scopeValues } = useContentScope();
-    const { messages } = useWarningConfig();
+    const { messages } = useWarningsConfig();
     const scopes = scopeValues.map((item) => item.scope);
 
     const { data, loading, error } = useQuery<GQLLatestWarningsQuery, GQLLatestWarningsQueryVariables>(latestWarningsQuery, {

@@ -7,7 +7,7 @@ export interface WarningsConfig {
     messages: Record<string, ReactNode>;
 }
 
-export function useWarningConfig(): WarningsConfig {
+export function useWarningsConfig(): WarningsConfig {
     const cometConfig = useCometConfig();
 
     return { ...cometConfig.warnings, messages: { ...cometConfig.warnings?.messages, ...cometWarningMessages } };
