@@ -79,6 +79,55 @@ interface FolderDataGridProps extends DamConfig {
     selectionApi: ISelectionApi;
 }
 
+interface FolderDataGridToolbarProps {
+    id?: string;
+    breadcrumbs?: BreadcrumbItem[];
+    filterApi: IFilterApi<DamFilter>;
+    selectionApi: ISelectionApi;
+    hideArchiveFilter?: boolean;
+    additionalToolbarItems?: React.ReactNode;
+    uploadFilters: {
+        allowedMimetypes?: string[];
+    };
+}
+
+function FolderDataGridToolbar(props: FolderDataGridToolbarProps) {
+    const { id: currentFolderId } = props;
+    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+        variables: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: currentFolderId!,
+        },
+        skip: currentFolderId === undefined,
+    });
+
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={props.filterApi} />
+            </ToolbarItem>
+            <FillSpace />
+            <ToolbarActions>
+                {props.additionalToolbarItems}
+                <DamMoreActions
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                    folderId={data?.damFolder.id}
+                    filter={props.uploadFilters}
+                />
+
+                <UploadFilesButton folderId={data?.damFolder.id} filter={props.uploadFilters} />
+            </ToolbarActions>
+        </DataGridToolbar>
+    );
+}
+
 const FolderDataGrid = ({
     id: currentFolderId,
     filterApi,
@@ -543,45 +592,9 @@ const FolderDataGrid = ({
         },
     ];
 
-    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
-        variables: {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            id: currentFolderId!,
-        },
-        skip: currentFolderId === undefined,
-    });
-
     const uploadFilters = {
         allowedMimetypes: props.allowedMimetypes,
     };
-
-    function FolderDataGridToolbar() {
-        return (
-            <DataGridToolbar>
-                <ToolbarItem>
-                    <DamTableFilter hideArchiveFilter={hideArchiveFilter} filterApi={filterApi} />
-                </ToolbarItem>
-                <FillSpace />
-                <ToolbarActions>
-                    {props.additionalToolbarItems}
-                    <DamMoreActions
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                        }}
-                        transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                        }}
-                        folderId={data?.damFolder.id}
-                        filter={uploadFilters}
-                    />
-
-                    <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
-                </ToolbarActions>
-            </DataGridToolbar>
-        );
-    }
 
     return (
         <sc.FolderWrapper>
@@ -604,6 +617,16 @@ const FolderDataGrid = ({
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     components={{
                         Toolbar: FolderDataGridToolbar,
+                    }}
+                    componentsProps={{
+                        toolbar: {
+                            id: currentFolderId,
+                            breadcrumbs,
+                            filterApi,
+                            selectionApi,
+                            uploadFilters,
+                            additionalToolbarItems: props.additionalToolbarItems,
+                        },
                     }}
                 />
             </sc.FolderOuterHoverHighlight>
