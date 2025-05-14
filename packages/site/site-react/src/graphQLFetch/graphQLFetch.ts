@@ -66,10 +66,6 @@ export function createFetchWithDefaults(fetch: Fetch, defaults: RequestInit): Fe
                 ...defaults.headers,
                 ...init?.headers,
             },
-            next: {
-                ...defaults.next,
-                ...init?.next,
-            },
         });
     };
 }
