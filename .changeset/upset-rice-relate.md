@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add `ToggleButtonGroupField` component and mark `FinalFormToggleButtonGroup` as deprecated.
+Add `ToggleButtonGroupField` component
