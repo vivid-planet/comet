@@ -1,4 +1,4 @@
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-next";
 
 import { pageLinkFragment } from "./PageLink.fragment";
 

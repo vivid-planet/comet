@@ -20,7 +20,7 @@
         "serve": "NODE_ENV=production node dist/server.js"
     },
     "dependencies": {
-        "@comet/cms-site": "workspace:*",
+        "@comet/site-next": "workspace:*",
         "@formatjs/cli": "^6.0.0",
         "@googlemaps/js-api-loader": "^1.0.0",
         "@googlemaps/markerclustererplus": "^1.0.0",

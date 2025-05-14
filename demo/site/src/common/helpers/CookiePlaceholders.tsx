@@ -1,4 +1,4 @@
-import { useCookieApi } from "@comet/cms-site";
+import { useCookieApi } from "@comet/site-next";
 import styled from "styled-components";
 
 export const LoadingCookiePlaceholder = () => (

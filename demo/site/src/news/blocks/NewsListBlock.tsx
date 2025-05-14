@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-next";
 import { NewsListBlockData } from "@src/blocks.generated";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";

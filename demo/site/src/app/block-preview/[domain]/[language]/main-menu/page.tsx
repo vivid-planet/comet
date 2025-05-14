@@ -1,5 +1,5 @@
 "use client";
-import { useIFrameBridge } from "@comet/cms-site";
+import { useIFrameBridge } from "@comet/site-next";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { withBlockPreview } from "@src/util/blockPreview";
 

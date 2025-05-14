@@ -1,5 +1,5 @@
 "use client";
-import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { ListBlock, PropsWithData } from "@comet/site-next";
 import { StageBlockData } from "@src/blocks.generated";
 
 import { BasicStageBlock } from "./BasicStageBlock";

@@ -1,4 +1,4 @@
-import { BlockLoader, gql } from "@comet/cms-site";
+import { BlockLoader, gql } from "@comet/site-next";
 import { NewsListBlockData } from "@src/blocks.generated";
 
 import { GQLNewsListBlockNewsFragment, GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.loader.generated";
