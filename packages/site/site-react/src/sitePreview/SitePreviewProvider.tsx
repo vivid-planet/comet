@@ -1,27 +1,35 @@
 "use client";
-import { usePathname, useSearchParams } from "next/navigation";
-import { type PropsWithChildren, useEffect } from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 
 import { PreviewContext } from "../preview/PreviewContext";
 import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
 import { type SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 const SitePreview = ({ children }: PropsWithChildren) => {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const [pathname, setPathname] = useState<string>(window.location.pathname);
+    const [searchParams, setSearchParams] = useState<string>(window.location.search);
 
     useEffect(() => {
+        function updateLocation() {
+            setPathname(window.location.pathname);
+            setSearchParams(window.location.search);
+        }
+
         function sendUpstreamMessage() {
             const message: SitePreviewIFrameLocationMessage = {
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
-                data: { search: searchParams.toString(), pathname },
+                data: { search: searchParams, pathname },
             };
             sendSitePreviewIFrameMessage(message);
         }
+
         sendUpstreamMessage();
         window.addEventListener("load", sendUpstreamMessage);
-        () => {
+        window.addEventListener("popstate", updateLocation);
+
+        return () => {
             window.removeEventListener("load", sendUpstreamMessage);
+            window.removeEventListener("popstate", updateLocation);
         };
     }, [pathname, searchParams]);
 

@@ -45,9 +45,7 @@ export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
-export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
-export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export type { SitePreviewData, SitePreviewParams } from "./sitePreview/SitePreviewUtils";
