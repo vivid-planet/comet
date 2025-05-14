@@ -1867,6 +1867,7 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 
 `FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
 
+
 ```
 - import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
 + import { ToggleGroupButtonField } from "@comet/admin";
@@ -1893,4 +1894,21 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 +    ]}
 +    optionsPerRow={2}
 +    />
+```
+
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the prop `options` of the component have been changed from `icon` to `label`.
+
+```diff
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
++       { value: "value1", label: <Info /> },
+-       { value: "value2", icon: <Info /> },
++       { value: "value2", label: <Info /> },
+-   ]}
+-   optionsPerRow={2}
+- />
 ```
