@@ -16,6 +16,11 @@ export type FinalFormAutocompleteProps<
         clearable?: boolean;
     };
 
+/**
+ * Final Form-compatible Autocomplete component.
+ *
+ * @see {@link AutocompleteField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export const FinalFormAutocomplete = <
     T extends Record<string, any>,
     Multiple extends boolean | undefined,
