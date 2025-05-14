@@ -268,7 +268,7 @@ In the API, you defined custom warning messages for your blocks or entities. To 
 <CometConfigProvider
     {...otherConfigs}
     warnings: {
-        warningMessages: {
+        messages: {
             missingTitle: <FormattedMessage id="warnings.missingTitle" defaultMessage="Title is missing" />
         }
     }
