@@ -78,10 +78,9 @@ const getSVGData = (icon: Icon) => {
 
             return true;
         },
-    });
-    const parsed = parsedXml.parse(fileContents.toString());
+    }).parse(fileContents.toString());
 
-    return parsed.svg;
+    return parsedXml.svg;
 };
 
 const writeComponent = async (icon: Icon, svgString: string) => {
