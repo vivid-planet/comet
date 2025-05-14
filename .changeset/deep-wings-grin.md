@@ -3,9 +3,7 @@
 "@comet/cms-api": major
 ---
 
-Add Warning Module
-
-Added Warning Module feature that helps find and report issues in projects:
+Add Warning Module Feature
 
 - Central grid view in admin panel for all warnings
 - Built-in warnings for common issues (e.g. missing SEO titles)
@@ -13,7 +11,7 @@ Added Warning Module feature that helps find and report issues in projects:
 - Configurable severity levels
 - Direct navigation to issues for quick fixes
 
-The Warning Module can be added with the following changes:
+The Warning Module can be added to the project with the following changes:
 
 1. **Register the Warning Module in your API**  
    Add `WarningsModule` to the `imports` array in your `app.module.ts`:
