@@ -14,7 +14,7 @@ export async function parseConfig(file: string) {
     //3. import (=execute) temp modified config file
     let executedConfig;
     try {
-        const configFile = await import(tempFileName.replace(/\.tsx?$/, ""));
+        const configFile = await import(`${tempFileName.replace(/\.tsx?$/, "")}`);
         if (!configFile.default) {
             throw new Error(`No default export found in ${file}`);
         }
