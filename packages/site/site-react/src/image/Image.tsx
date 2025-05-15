@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { ImgHTMLAttributes } from "react";
+import { type ImgHTMLAttributes } from "react";
 
 // Fallback to 1 / 1 aspect ratio for invalid value format
 export function parseAspectRatio(value: string | number): number {
