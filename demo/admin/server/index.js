@@ -38,6 +38,7 @@ app.use(
 );
 
 app.get("/status/health", (req, res) => {
+    res.setHeader("cache-control", "no-store");
     res.send("OK!");
 });
 

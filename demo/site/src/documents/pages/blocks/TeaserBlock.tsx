@@ -26,9 +26,18 @@ const ItemWrapper = styled.div`
     display: grid;
     gap: ${({ theme }) => theme.spacing.D100};
 
+<<<<<<< HEAD
     ${({ theme }) => css`
         ${theme.breakpoints.sm.mediaQuery} {
             grid-template-columns: repeat(4, 1fr);
         }
     `}
+=======
+    ${({ theme }) =>
+        css`
+            ${theme.breakpoints.md.mediaQuery} {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        `}
+>>>>>>> main
 `;

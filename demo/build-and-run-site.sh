@@ -1,5 +1,3 @@
-# Execute this script via `npm run build-and-run-site`
-#
 # This script builds the site like in the CI and starts it.
 #
 # Reasons why you want to do this:
