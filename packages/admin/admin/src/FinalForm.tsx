@@ -229,7 +229,10 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
-                        {(props) => <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />}
+                        {(props) => {
+                            console.log("FinalForm - RenderForm - isDirty", props.dirty);
+                            return <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />;
+                        }}
                     </FormSpy>
                 )}
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
@@ -261,6 +264,8 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
+                console.log("Final Form - handleSubmit - before timeout (onAfterSubmit) - isDirty", form.getState().dirty);
+
                 setTimeout(() => {
                     if (props.mode === "add") {
                         if (tableQuery) {
@@ -273,6 +278,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                         }
                     }
 
+                    console.log("Final Form - handleSubmit - before timeout (onAfterSubmit)- isDirty", form.getState().dirty);
                     onAfterSubmit?.(values, form);
                 });
                 return data;

@@ -39,6 +39,7 @@ export const RouterPrompt = ({ message, saveAction, resetAction, subRoutePath, c
     if (subRoutePath && subRoutePath.startsWith("./")) {
         subRoutePath = subRoutePrefix + subRoutePath.substring(1);
     }
+
     useEffect(() => {
         if (context) {
             context.register({ id, message, saveAction, resetAction, path, subRoutePath, promptRoutes });

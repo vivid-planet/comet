@@ -101,12 +101,15 @@ export function NewsForm({ id, scope }: FormProps) {
                 mutation: createNewsMutation,
                 variables: { input: output, scope },
             });
+
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createNews.id;
                 if (id) {
+                    console.log("News Form - handleSubmit - before timeout - isDirty", form.getState().dirty);
                     setTimeout(() => {
+                        console.log("News Form - handleSubmit - in timeout - isDirty", form.getState().dirty);
                         stackSwitchApi.activatePage(`edit`, id);
-                    }, 100);
+                    });
                 }
             }
         }
@@ -123,6 +126,13 @@ export function NewsForm({ id, scope }: FormProps) {
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
+            onAfterSubmit={(values, form) => {
+                /*console.log("NewsForm - onAfterSubmit - beforeTimeout - isDirty", form.getState().dirty);
+                setTimeout(() => {
+                    console.log("NewsForm - onAfterSubmit - inTimeout - isDirty", form.getState().dirty);
+                    stackSwitchApi.activatePage(`edit`, id);
+                });*/
+            }}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
             subscription={{}}

@@ -68,10 +68,13 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
     }, [onAfterSave]);
 
     const reset = useCallback(() => {
+        console.log("SaveBoundary - reset");
         for (const savable of Object.values(saveStates.current)) {
             savable.doReset?.();
         }
     }, []);
+
+    console.log("SaveBoundary - render - hasChanges", hasChanges);
 
     const onSaveStatesChanged = useCallback(() => {
         const hasChanges = Object.values(saveStates.current).some((saveState) => saveState.hasChanges);
@@ -80,6 +83,7 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
 
     const register = useCallback(
         (id: string, props: SavableProps) => {
+            console.log("SaveBoundary - Register", id);
             saveStates.current[id] = props;
             onSaveStatesChanged();
         },
@@ -87,6 +91,7 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
     );
     const unregister = useCallback(
         (id: string) => {
+            console.log("SaveBoundary - Unregister", id);
             delete saveStates.current[id];
             onSaveStatesChanged();
         },
@@ -96,6 +101,8 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
     return (
         <RouterPrompt
             message={() => {
+                // This decides if the dirty modal is shown or not
+                console.log("SaveBoundary - message (DECISION IF DIRTY DIALOG SHOWN) - hasChanges", hasChanges);
                 if (hasChanges) {
                     return intl.formatMessage(messages.saveUnsavedChanges);
                 }
@@ -136,11 +143,14 @@ export const Savable = ({ doSave, doReset, hasChanges }: SavableProps) => {
     const id = useConstant<string>(() => uuid());
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryApi) throw new Error("Savable must be inside SaveBoundary");
+
+    console.log("Savable - render - hasChanges (IMPORTANT)", hasChanges);
+
     useEffect(() => {
         saveBoundaryApi.register(id, { doSave, doReset, hasChanges });
         return function cleanup() {
             saveBoundaryApi.unregister(id);
         };
     }, [id, doSave, doReset, hasChanges, saveBoundaryApi]);
-    return null;
+    return <div style={{ backgroundColor: "red" }}>Savable {hasChanges.toString()}</div>;
 };
