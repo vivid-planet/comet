@@ -2,8 +2,11 @@ import { MainContent, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackS
 import { Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
+import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { useContentScope } from "../contentScope/Provider";
+import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { useUserPermissionCheck } from "./hooks/currentUser";
 import { UserPermissionsUserPageBasicDataPanel } from "./user/basicData/UserBasicData";
 import { UserPermissionsUserPagePermissionsPanel } from "./user/permissions/PermissionsPanel";
@@ -12,6 +15,11 @@ import { UserPermissionsUserGrid } from "./UserGrid";
 
 export const UserPermissionsPage = () => {
     const isAllowed = useUserPermissionCheck();
+    const { match } = useContentScope();
+    const routeMatch = useRouteMatch();
+    const location = routeMatch.url.replace(match.url, "");
+    useContentScopeConfig({ redirectPathAfterChange: location });
+
     return (
         <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Permissions" />}>
             <StackSwitch>

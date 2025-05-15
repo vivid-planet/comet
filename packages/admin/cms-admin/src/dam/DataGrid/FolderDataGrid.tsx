@@ -46,7 +46,6 @@ import {
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
-import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
@@ -575,7 +574,6 @@ const FolderDataGrid = ({
                     }}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{

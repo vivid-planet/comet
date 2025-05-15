@@ -431,6 +431,50 @@ Previously, if entities specified a `status` enum, it was automatically added to
 This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
 done with the normal filtering mechanism.
 
+### API Generator - Don't commit generated files [optional]
+
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+
+run api-generator in prebuild:
+
+```diff title="api/package.json"
+scripts: {
+-  "prebuild": "rimraf dist",
++  "prebuild": "rimraf dist && npm run api-generator",
+}
+```
+
+lint script can be removed:
+
+```diff title="api/package.json"
+scripts: {
+-  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+}
+```
+
+Add generated files to eslint ignore:
+
+```diff title="api/eslint.config.mjs"
+scripts: {
+-  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
++  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+}
+```
+
+Add generated files to .gitignore:
+
+```diff title="api/.gitignore"
+scripts: {
++  src/**/generated
+}
+```
+
+And finally delete generated files from git:
+
+```sh
+git rm -r api/src/*/generated
+```
+
 ### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
@@ -1325,48 +1369,6 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
 
 </details>
-
-### Stay on same page after changing scope
-
-The Admin now stays on the same page per default when changing scopes.
-Perform the following changes:
-
-1.  Remove the `path` prop from the `PagesPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    <PagesPage
-    -   path="/pages/pagetree/main-navigation"
-        allCategories={pageTreeCategories}
-        documentTypes={pageTreeDocumentTypes}
-        category="MainNavigation"
-        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
-    />
-    ```
-
-2.  Remove the `redirectPathAfterChange` prop from the `RedirectsPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
-        route: {
-            path: "/system/redirects",
-    -       render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
-    +       component: RedirectsPage
-        },
-        requiredPermission: "pageTree",
-    },
-    ```
-
-3.  Optional: Remove unnecessary usages of the `useContentScopeConfig` hook
-
-    ```diff
-    export function ProductsPage() {
-        const intl = useIntl();
-
-    -   useContentScopeConfig({ redirectPathAfterChange: "/structured-content/products" });
-    }
-    ```
 
 ### DataGrid-related changes
 
