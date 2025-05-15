@@ -99,7 +99,7 @@ export function NewsForm({ id, scope }: FormProps) {
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
-                    });
+                    }, 100);
                 }
             }
         }
