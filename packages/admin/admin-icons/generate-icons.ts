@@ -67,6 +67,15 @@ const getSVGData = (icon: Icon) => {
         ignoreAttributes: false,
         updateTag(_, __, attrs) {
             delete attrs["@_fill"];
+            // Convert all attribute keys to camelCase
+            for (const key of Object.keys(attrs)) {
+                const camelKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+                if (camelKey !== key) {
+                    attrs[camelKey] = attrs[key];
+                    delete attrs[key];
+                }
+            }
+
             return true;
         },
     }).parse(fileContents.toString());
