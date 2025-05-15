@@ -12,6 +12,7 @@ const packageFolderMapping = {
     "@comet/cms-api": "packages/api/cms-api",
     "@comet/cms-site": "packages/site/cms-site",
     "@comet/site-nextjs": "packages/site/site-nextjs",
+    "@comet/site-react": "packages/site/site-react",
 };
 
 const waitOnPackages = (...packages) => {
@@ -168,11 +169,24 @@ module.exports = {
             name: "site-nextjs",
             script: "pnpm --filter @comet/site-nextjs run dev",
             group: ["site-nextjs", "cms"],
+            waitOn: [...waitOnPackages("@comet/site-react")],
         },
         {
             name: "site-nextjs-codegen-block-types",
             script: "pnpm --filter @comet/site-nextjs run generate-block-types:watch",
             group: ["site-nextjs", "cms"],
+        },
+
+        //group site-react
+        {
+            name: "site-react",
+            script: "pnpm --filter @comet/site-react run dev",
+            group: ["site-react", "cms"],
+        },
+        {
+            name: "site-react-codegen-block-types",
+            script: "pnpm --filter @comet/site-react run generate-block-types:watch",
+            group: ["site-react", "cms"],
         },
 
         //group demo admin
