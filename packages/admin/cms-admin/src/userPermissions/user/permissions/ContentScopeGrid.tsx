@@ -79,7 +79,15 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    <DataGrid rows={data.userContentScopes} columns={columns} getRowId={(row) => JSON.stringify(row)} />
+                    <DataGrid
+                        autoHeight={true}
+                        rows={data.userContentScopes}
+                        columns={columns}
+                        rowCount={data?.userContentScopes.length ?? 0}
+                        loading={false}
+                        getRowHeight={() => "auto"}
+                        getRowId={(row) => JSON.stringify(row)}
+                    />
                 </CardContent>
             </Card>
             <SaveBoundary

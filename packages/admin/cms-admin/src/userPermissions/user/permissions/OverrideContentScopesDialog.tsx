@@ -127,13 +127,16 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                     {(props) => {
                                         return (
                                             <DataGrid
+                                                autoHeight={true}
                                                 rows={(
                                                     data.availableContentScopes.filter(
                                                         (obj) => !Object.values(obj).every((value) => value === undefined),
                                                     ) ?? []
                                                 ).map((obj) => obj.scope)}
                                                 columns={columns}
+                                                rowCount={data.availableContentScopes.length}
                                                 loading={false}
+                                                getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection={!disabled}
                                                 rowSelectionModel={props.input.value}

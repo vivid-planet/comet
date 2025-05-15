@@ -161,9 +161,12 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
     return (
         <Card>
             <DataGrid<GQLPermissionForGridFragment>
+                autoHeight={true}
                 rows={data?.permissions ?? []}
                 columns={columns}
+                rowCount={data?.permissions.length ?? 0}
                 loading={loading}
+                getRowHeight={() => "auto"}
                 slots={{
                     toolbar: () => (
                         <GridToolbar>
