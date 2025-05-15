@@ -6,6 +6,6 @@
 Changed format for `useCurrentUser().allowedContentScopes`
 
 - Old: `{ [key]: string }[]`
-- New: `{ [key]: { label?: string; value: string } }[]`
+- New: `{ scope: ContentScope; label: { [key in keyof ContentScope]: string }; }[]`
 
 To support a smooth transition the `defaultValue` prop of the `ContentScopeProvider` now must also have the same format.
