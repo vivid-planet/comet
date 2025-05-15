@@ -3,8 +3,8 @@ import { promises as fs } from "fs";
 import { buildSchema, introspectionFromSchema } from "graphql";
 import { type JsxAttribute, Project, SyntaxKind } from "ts-morph";
 
+import { parseConfig } from "../../config/parseConfig";
 import { type FormConfig } from "../../generate-command";
-import { configsFromSourceFile } from "../../utils/tsMorphHelper";
 import { generateForm } from "../generateForm";
 
 const project = new Project({
@@ -38,9 +38,12 @@ async function lintCode(contents: string, filePath: string) {
     }
 }
 
-function parseString(sourceFileText: string) {
-    const tsSource = project.createSourceFile("test.tsx", sourceFileText, { overwrite: true });
-    return configsFromSourceFile(tsSource);
+async function parseConfigString(sourceFileText: string) {
+    const filePath = `${process.cwd()}/src/.test/test-${new Date().getTime()}.cometGen.tsx`;
+    await fs.writeFile(filePath, sourceFileText);
+    const ret = parseConfig(filePath);
+    await fs.unlink(filePath);
+    return ret;
 }
 
 describe("Form StaticSelect", () => {
@@ -67,11 +70,12 @@ describe("Form StaticSelect", () => {
     const gqlIntrospection = introspectionFromSchema(schema);
 
     it("creates RadioGroupField with values inferred from gql schema", async () => {
-        const config = parseString(`
-            import { FormConfig } from "@comet/admin-generator";
+        const config = await parseConfigString(
+            `
+            import { defineConfig } from "@comet/admin-generator";
             import { GQLProduct } from "@src/graphql.generated";
 
-            export const ProductForm: FormConfig<GQLProduct> = {
+            export default defineConfig<GQLProduct>({
                 type: "form",
                 gqlType: "Product",
                 fields: [
@@ -80,13 +84,14 @@ describe("Form StaticSelect", () => {
                         name: "type",
                     },
                 ],
-            }
-        `);
+            });
+        `,
+        );
 
         const generated = generateForm(
             { exportName: "ProductForm", gqlIntrospection, baseOutputFilename: "ProductForm", targetDirectory: "src" },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            config["ProductForm"] as FormConfig<any>,
+            config as FormConfig<any>,
         );
 
         const code = await lintCode(generated.code, "ProductForm.tsx");
@@ -104,11 +109,12 @@ describe("Form StaticSelect", () => {
     });
 
     it("creates RadioGroupField with values set in config", async () => {
-        const config = parseString(`
-            import { FormConfig } from "@comet/admin-generator";
+        const config = await parseConfigString(
+            `
+            import { defineConfig } from "@comet/admin-generator";
             import { GQLProduct } from "@src/graphql.generated";
 
-            export const ProductForm: FormConfig<GQLProduct> = {
+            export default defineConfig<GQLProduct>({
                 type: "form",
                 gqlType: "Product",
                 fields: [
@@ -118,13 +124,14 @@ describe("Form StaticSelect", () => {
                         values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                     },
                 ],
-            }
-        `);
+            });
+        `,
+        );
 
         const generated = generateForm(
             { exportName: "ProductForm", gqlIntrospection, baseOutputFilename: "ProductForm", targetDirectory: "src" },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            config["ProductForm"] as FormConfig<any>,
+            config as FormConfig<any>,
         );
 
         const code = await lintCode(generated.code, "ProductForm.tsx");
@@ -144,11 +151,12 @@ describe("Form StaticSelect", () => {
     });
 
     it("creates SelectField with values set in config", async () => {
-        const config = parseString(`
-            import { FormConfig } from "@comet/admin-generator";
+        const config = await parseConfigString(
+            `
+            import { defineConfig } from "@comet/admin-generator";
             import { GQLProduct } from "@src/graphql.generated";
 
-            export const ProductForm: FormConfig<GQLProduct> = {
+            export default defineConfig<GQLProduct>({
                 type: "form",
                 gqlType: "Product",
                 fields: [
@@ -159,13 +167,14 @@ describe("Form StaticSelect", () => {
                         values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                     },
                 ],
-            }
-        `);
+            });
+        `,
+        );
 
         const generated = generateForm(
             { exportName: "ProductForm", gqlIntrospection, baseOutputFilename: "ProductForm", targetDirectory: "src" },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            config["ProductForm"] as FormConfig<any>,
+            config as FormConfig<any>,
         );
 
         const code = await lintCode(generated.code, "ProductForm.tsx");
@@ -183,12 +192,13 @@ describe("Form StaticSelect", () => {
     });
 
     it("creates SelectField with imported values", async () => {
-        const config = parseString(`
-            import { FormConfig } from "@comet/admin-generator";
+        const config = await parseConfigString(
+            `
+            import { defineConfig } from "@comet/admin-generator";
             import { GQLProduct } from "@src/graphql.generated";
             import { typeValues } from "./typeValues";
 
-            export const ProductForm: FormConfig<GQLProduct> = {
+            export default defineConfig<GQLProduct>({
                 type: "form",
                 gqlType: "Product",
                 fields: [
@@ -199,13 +209,14 @@ describe("Form StaticSelect", () => {
                         values: typeValues,
                     },
                 ],
-            }
-        `);
+            });
+        `,
+        );
 
         const generated = generateForm(
             { exportName: "ProductForm", gqlIntrospection, baseOutputFilename: "ProductForm", targetDirectory: "src" },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            config["ProductForm"] as FormConfig<any>,
+            config as FormConfig<any>,
         );
 
         const code = await lintCode(generated.code, "ProductForm.tsx");
@@ -226,12 +237,13 @@ describe("Form StaticSelect", () => {
     });
 
     it("creates RadioGroupField with imported values", async () => {
-        const config = parseString(`
-            import { FormConfig } from "@comet/admin-generator";
+        const config = await parseConfigString(
+            `
+            import { defineConfig } from "@comet/admin-generator";
             import { GQLProduct } from "@src/graphql.generated";
             import { typeValues } from "./typeValues";
 
-            export const ProductForm: FormConfig<GQLProduct> = {
+            export default defineConfig<GQLProduct>({
                 type: "form",
                 gqlType: "Product",
                 fields: [
@@ -242,13 +254,14 @@ describe("Form StaticSelect", () => {
                         values: typeValues,
                     },
                 ],
-            }
-        `);
+            });
+        `,
+        );
 
         const generated = generateForm(
             { exportName: "ProductForm", gqlIntrospection, baseOutputFilename: "ProductForm", targetDirectory: "src" },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            config["ProductForm"] as FormConfig<any>,
+            config as FormConfig<any>,
         );
 
         const code = await lintCode(generated.code, "ProductForm.tsx");
