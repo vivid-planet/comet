@@ -1,3 +1,4 @@
+import { Error } from "@comet/admin-icons";
 import { InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
@@ -9,6 +10,7 @@ import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     noOptionsLabel?: ReactNode;
+    getErrorOptionsLabel?: () => ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -29,6 +31,7 @@ export const FinalFormSelect = <T,>({
     isAsync = false,
     options = [],
     loading = false,
+    error,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
@@ -49,6 +52,13 @@ export const FinalFormSelect = <T,>({
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
         </Typography>
     ),
+    getErrorOptionsLabel = () => {
+        return (
+            <Typography variant="body2">
+                <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
+            </Typography>
+        );
+    },
     children,
     required,
     ...rest
@@ -88,7 +98,13 @@ export const FinalFormSelect = <T,>({
     return (
         <Select
             {...selectProps}
-            endAdornment={<InputAdornment position="end">{endAdornment}</InputAdornment>}
+            endAdornment={
+                <InputAdornment position="end">
+                    {error && <Error color="error" />}
+
+                    {endAdornment}
+                </InputAdornment>
+            }
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
@@ -129,6 +145,11 @@ export const FinalFormSelect = <T,>({
             {loading === false && options.length === 0 && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {noOptionsLabel}
+                </MenuItemDisabledOverrideOpacity>
+            )}
+            {loading === false && error === true && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
+                    {getErrorOptionsLabel()}
                 </MenuItemDisabledOverrideOpacity>
             )}
 

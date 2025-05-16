@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
-import { Info } from "@comet/admin-icons";
+import { Info, WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
@@ -267,6 +267,105 @@ export const NoOptionsWithCustomNoOptionsLabel: Story = {
                                         No options available at this point in time
                                     </div>
                                 }
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * This story demonstrates the usage of the AsyncSelectField component where an error occurs while loading the options.
+ */
+export const ErrorLoadingOptions: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                    return [];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                    return [];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                getErrorOptionsLabel={() => {
+                                    return (
+                                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                            <WarningSolid color="error" />
+                                            Error loading options
+                                        </div>
+                                    );
+                                }}
                                 name="type"
                                 label="AsyncSelectField"
                                 fullWidth
