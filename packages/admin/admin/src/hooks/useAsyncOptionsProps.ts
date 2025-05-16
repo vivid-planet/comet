@@ -11,12 +11,15 @@ export interface AsyncOptionsProps<T> {
 export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncOptionsProps<T> {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<T[]>([]);
-    const loading = open && options.length === 0;
+    const [loading, setLoading] = useState(false);
 
     const handleOpen = async () => {
         setOpen(true);
+        setLoading(true);
         setOptions([]); // Reset options to show loading
-        setOptions(await loadOptions());
+        const options = await loadOptions();
+        setOptions(options);
+        setLoading(false);
     };
 
     return {
