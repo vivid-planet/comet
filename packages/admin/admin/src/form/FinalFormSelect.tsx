@@ -26,6 +26,7 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined) =
 export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
+    error,
     isAsync = false,
     options = [],
     loading = false,
@@ -132,7 +133,7 @@ export const FinalFormSelect = <T,>({
                     </MenuItem>
                 ))}
 
-            {loading === false && options.length === 0 && (
+            {loading === false && error === false && options.length === 0 && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {getNoOptionsLabel()}
                 </MenuItemDisabledOverrideOpacity>
