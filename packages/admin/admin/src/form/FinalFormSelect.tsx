@@ -1,12 +1,14 @@
-import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps } from "@mui/material";
+import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
+    getNoOptionsLabel?: () => ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -41,6 +43,13 @@ export const FinalFormSelect = <T,>({
         } else {
             return String(option);
         }
+    },
+    getNoOptionsLabel = () => {
+        return (
+            <Typography variant="body2">
+                <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
+            </Typography>
+        );
     },
     children,
     required,
@@ -83,12 +92,14 @@ export const FinalFormSelect = <T,>({
             {...selectProps}
             endAdornment={
                 <>
-                    {loading && (
+                    {loading ? (
                         <InputAdornment position="end">
                             <CircularProgress size={16} color="inherit" />
+                            {endAdornment}
                         </InputAdornment>
+                    ) : (
+                        <InputAdornment position="end">{endAdornment}</InputAdornment>
                     )}
-                    {endAdornment}
                 </>
             }
             onChange={(event) => {
@@ -102,9 +113,9 @@ export const FinalFormSelect = <T,>({
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
         >
             {loading && (
-                <MenuItem value="" disabled>
+                <MenuItemDisabledOverrideOpacity value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
-                </MenuItem>
+                </MenuItemDisabledOverrideOpacity>
             )}
 
             {options.length === 0 &&
@@ -120,6 +131,13 @@ export const FinalFormSelect = <T,>({
                         {getOptionLabel(value)}
                     </MenuItem>
                 ))}
+
+            {loading === false && options.length === 0 && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
+                    {getNoOptionsLabel()}
+                </MenuItemDisabledOverrideOpacity>
+            )}
+
             {options.map((option: T) => (
                 <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
                     {getOptionLabel(option)}
