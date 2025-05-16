@@ -19,6 +19,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                 user: userPermissionsUserById(id: $id) {
                     name
                     email
+                    impersonationAllowed
                 }
             }
         `,
@@ -51,12 +52,12 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                                 ? {
                                       icon: <Reset />,
                                       label: commonImpersonationMessages.stopImpersonation,
-                                      onClick: () => stopImpersonation,
+                                      onClick: () => stopImpersonation(),
                                   }
                                 : {
                                       label: commonImpersonationMessages.startImpersonation,
                                       icon: <ImpersonateUser />,
-                                      disabled: userId === currentUser.id,
+                                      disabled: !data.user.impersonationAllowed,
                                       onClick: () => startImpersonation(userId),
                                   },
                         ]}
