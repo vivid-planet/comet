@@ -4,6 +4,7 @@ import {
     EntityInfo,
     PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
+    PageTreeNodeDocumentEntityVisibilityService,
     RootBlockDataScalar,
     RootBlockType,
     ScopedEntity,
@@ -21,7 +22,7 @@ import { StageBlock } from "../blocks/stage.block";
 @ObjectType({
     implements: () => [DocumentInterface],
 })
-@RootBlockEntity()
+@RootBlockEntity({ isVisible: PageTreeNodeDocumentEntityVisibilityService })
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
 export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";

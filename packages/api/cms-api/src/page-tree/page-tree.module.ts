@@ -15,6 +15,7 @@ import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REP
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeNodeDocumentEntityInfoService } from "./page-tree-node-document-entity-info.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
+import { PageTreeNodeDocumentEntityVisibilityService } from "./page-tree-node-document-entity-visibility.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import { SitePreviewResolver } from "./site-preview.resolver";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
@@ -99,6 +100,7 @@ export class PageTreeModule {
                 },
                 documentSubscriber,
                 PageTreeNodeDocumentEntityInfoService,
+                PageTreeNodeDocumentEntityVisibilityService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,
                 {
