@@ -1,3 +1,5 @@
+import { EntityVisibilityServiceInterface } from "@comet/blocks-api";
+import { EntityVisibilityGetter, RootBlockEntityOptions } from "@comet/blocks-api/lib/blocks/decorators/root-block-entity";
 import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
@@ -188,6 +190,7 @@ export class DependenciesService {
         const qb = this.getQueryBuilderWithFilters(
             {
                 ...filter,
+                visible: true,
                 targetEntityName: entityName,
                 targetId: target.id,
             },
@@ -204,7 +207,8 @@ export class DependenciesService {
             let dependency: Dependency = result;
             if (instance) {
                 const entityInfo = await this.getEntityInfo(instance);
-                dependency = { ...dependency, ...entityInfo };
+                const entityVisibility = await this.getEntityVisibility(instance);
+                dependency = { ...dependency, ...entityInfo, visible: dependency.visible && entityVisibility };
             }
             ret.push(dependency);
         }
@@ -230,6 +234,7 @@ export class DependenciesService {
         const qb = this.getQueryBuilderWithFilters(
             {
                 ...filter,
+                visible: true,
                 rootEntityName: entityName,
                 rootId: root.id,
             },
@@ -257,6 +262,26 @@ export class DependenciesService {
         return new PaginatedDependencies(ret, Number(totalCount));
     }
 
+    private async getEntityVisibility(instance: object) {
+        const entityVisibilityGetter: EntityVisibilityGetter | undefined = (
+            Reflect.getMetadata(`data:rootBlockEntityOptions`, instance.constructor) as RootBlockEntityOptions
+        ).isVisible;
+
+        if (entityVisibilityGetter === undefined) {
+            this.logger.warn(
+                `Warning: ${instance.constructor.name} doesn't provide an entity visibility checker. You should add a @RootBlockEntity( { isVisible } ) decorator with an isVisible function. Otherwise the visibility filter won't work correctly.`,
+            );
+            return true;
+        }
+
+        if (this.isEntityVisibilityService(entityVisibilityGetter)) {
+            const service = this.moduleRef.get(entityVisibilityGetter, { strict: false });
+            return service.getEntityVisibility(instance);
+        } else {
+            return entityVisibilityGetter(instance);
+        }
+    }
+
     private async getEntityInfo(instance: object) {
         const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(`data:entityInfo`, instance.constructor);
 
@@ -267,7 +292,7 @@ export class DependenciesService {
             return {};
         }
 
-        if (this.isService(entityInfoGetter)) {
+        if (this.isEntityInfoService(entityInfoGetter)) {
             const service = this.moduleRef.get(entityInfoGetter, { strict: false });
             const { name, secondaryInformation } = await service.getEntityInfo(instance);
             return { name, secondaryInformation };
@@ -277,9 +302,33 @@ export class DependenciesService {
         }
     }
 
-    private isService(entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> {
+    private isEntityInfoService(serviceOrFunction: object): serviceOrFunction is Type<EntityInfoServiceInterface> {
+        if (!this.isService(serviceOrFunction)) {
+            return false;
+        }
+
+        console.log("serviceOrFunction", serviceOrFunction);
+        console.log("prototype", serviceOrFunction.prototype);
+        console.log("getEntityInfo", serviceOrFunction.prototype.getEntityInfo);
+
+        return Boolean(serviceOrFunction.prototype.getEntityInfo);
+    }
+
+    private isEntityVisibilityService(serviceOrFunction: object): serviceOrFunction is Type<EntityVisibilityServiceInterface> {
+        if (!this.isService(serviceOrFunction)) {
+            return false;
+        }
+
+        console.log("serviceOrFunction", serviceOrFunction);
+        console.log("prototype", serviceOrFunction.prototype);
+        console.log("getEntityInfo", serviceOrFunction.prototype.getEntityInfo);
+
+        return Boolean(serviceOrFunction.prototype.getEntityVisibility);
+    }
+
+    private isService(serviceOrFunction: object): serviceOrFunction is Type<EntityInfoServiceInterface> | Type<EntityVisibilityServiceInterface> {
         // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-        return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, serviceOrFunction);
     }
 
     private getQueryBuilderWithFilters(

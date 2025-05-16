@@ -250,6 +250,7 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
+  visible: Boolean! = true
 }
 
 type Page implements DocumentInterface {
@@ -521,6 +522,7 @@ input DependencyFilter {
   targetGraphqlObjectType: String
   targetId: String
   rootColumnName: String
+  visible: Boolean! = true
 }
 
 type MainMenuItem {
