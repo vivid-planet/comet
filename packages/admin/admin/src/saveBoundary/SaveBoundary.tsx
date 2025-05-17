@@ -96,6 +96,13 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
     return (
         <RouterPrompt
             message={() => {
+                const hasChanges = Object.values(saveStates.current).some((saveState) => {
+                    if (saveState.fetchHasChanges) {
+                        return saveState.fetchHasChanges();
+                    } else {
+                        return saveState.hasChanges;
+                    }
+                });
                 if (hasChanges) {
                     return intl.formatMessage(messages.saveUnsavedChanges);
                 }
@@ -128,19 +135,20 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
 
 export interface SavableProps {
     hasChanges: boolean;
+    fetchHasChanges?: () => boolean;
     doSave: () => Promise<SaveActionSuccess> | SaveActionSuccess;
     doReset?: () => void;
 }
 
-export const Savable = ({ doSave, doReset, hasChanges }: SavableProps) => {
+export const Savable = ({ doSave, doReset, hasChanges, fetchHasChanges }: SavableProps) => {
     const id = useConstant<string>(() => uuid());
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryApi) throw new Error("Savable must be inside SaveBoundary");
     useEffect(() => {
-        saveBoundaryApi.register(id, { doSave, doReset, hasChanges });
+        saveBoundaryApi.register(id, { doSave, doReset, hasChanges, fetchHasChanges });
         return function cleanup() {
             saveBoundaryApi.unregister(id);
         };
-    }, [id, doSave, doReset, hasChanges, saveBoundaryApi]);
+    }, [id, doSave, doReset, hasChanges, fetchHasChanges, saveBoundaryApi]);
     return null;
 };
