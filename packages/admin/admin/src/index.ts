@@ -235,8 +235,8 @@ export {
     SaveBoundary,
     SaveBoundaryApi,
     SaveBoundaryApiContext,
-    useSavable,
     useSaveBoundaryApi,
+    useSaveBoundaryState,
 } from "./saveBoundary/SaveBoundary";
 export { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
 export { Selected } from "./Selected";
