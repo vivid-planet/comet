@@ -229,7 +229,18 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
-                        {(props) => <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />}
+                        {(props) => {
+                            return (
+                                <Savable
+                                    hasChanges={props.dirty}
+                                    doSave={doSave}
+                                    doReset={doReset}
+                                    fetchHasChanges={() => {
+                                        return formRenderProps.form.getState().dirty;
+                                    }}
+                                />
+                            );
+                        }}
                     </FormSpy>
                 )}
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
