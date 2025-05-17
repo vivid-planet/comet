@@ -12,7 +12,7 @@ export interface SaveBoundaryApi {
     register: (id: string, props: SavableProps) => void;
     unregister: (id: string) => void;
 }
-export interface SaveBoundaryState {
+interface SaveBoundaryState {
     hasErrors: boolean;
     hasChanges: boolean;
     saving: boolean;
