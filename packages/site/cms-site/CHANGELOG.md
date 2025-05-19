@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.20.0
+
+### Patch Changes
+
+-   a06cac3a7: Fix `PixelImageBlock` issue when setting fixed height and width auto
+
 ## 7.19.0
 
 ## 7.18.0
