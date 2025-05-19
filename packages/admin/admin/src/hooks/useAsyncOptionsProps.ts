@@ -16,7 +16,6 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
     const handleOpen = async () => {
         setOpen(true);
         setLoading(true);
-        setOptions([]); // Reset options to show loading
         const newOptions = await loadOptions();
         setOptions(newOptions);
         setLoading(false);

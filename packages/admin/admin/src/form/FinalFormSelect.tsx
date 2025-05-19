@@ -123,11 +123,12 @@ export const FinalFormSelect = <T,>({
                         {getOptionLabel(value)}
                     </MenuItem>
                 ))}
-            {options.map((option: T) => (
-                <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
-                    {getOptionLabel(option)}
-                </MenuItem>
-            ))}
+            {!loading &&
+                options.map((option: T) => (
+                    <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
+                        {getOptionLabel(option)}
+                    </MenuItem>
+                ))}
         </Select>
     );
 };
