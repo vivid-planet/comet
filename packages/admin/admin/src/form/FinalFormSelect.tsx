@@ -102,7 +102,14 @@ export const FinalFormSelect = <T,>({
                         : options.find((i) => getOptionValue(i) == value),
                 );
             }}
-            value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
+            value={value}
+            renderValue={() => {
+                if (Array.isArray(value)) {
+                    return value.map((i) => getOptionValue(i));
+                } else {
+                    return getOptionValue(value);
+                }
+            }}
         >
             {loading && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
