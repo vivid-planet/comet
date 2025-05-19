@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { dataGridDateTimeColumn, type GridColDef } from "@comet/admin";
-import { Reload } from "@comet/admin-icons";
+import { Warning } from "@comet/admin-icons";
 import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -61,7 +61,7 @@ export const LatestWarningsDashboardWidget = () => {
 
     return (
         <DashboardWidgetRoot
-            icon={<Reload />}
+            icon={<Warning />}
             header={<FormattedMessage id="dashboard.latestWarningsWidget.title" defaultMessage="Latest Warnings" />}
         >
             <DataGrid disableColumnMenu hideFooter columns={columns} rows={data?.warnings.nodes ?? []} loading={loading} />

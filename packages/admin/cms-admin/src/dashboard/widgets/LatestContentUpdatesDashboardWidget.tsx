@@ -1,5 +1,5 @@
 import { type GridColDef } from "@comet/admin";
-import { ArrowRight, Warning } from "@comet/admin-icons";
+import { ArrowRight, Reload } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, type DataGridProps } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -58,7 +58,7 @@ export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
 
     return (
         <DashboardWidgetRoot
-            icon={<Warning />}
+            icon={<Reload />}
             header={<FormattedMessage id="dashboard.latestContentUpdatesWidget.title" defaultMessage="Latest Content Updates" />}
         >
             <DataGrid disableColumnMenu hideFooter autoHeight columns={columns} rows={rows} loading={loading} />
