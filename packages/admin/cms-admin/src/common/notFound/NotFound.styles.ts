@@ -59,3 +59,12 @@ export const DividerStyled = createComponentSlot(Divider)<NotFoundClassKey>({
         margin-bottom: ${theme.spacing(6)};
     `,
 );
+
+export const LogoContainer = createComponentSlot("div")<NotFoundClassKey>({
+    componentName: "NotFound",
+    slotName: "logoContainer",
+})(
+    ({ theme }) => css`
+        margin-bottom: ${theme.spacing(6)};
+    `,
+);
