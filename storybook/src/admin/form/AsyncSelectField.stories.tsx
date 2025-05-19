@@ -232,7 +232,7 @@ export const NoOptions: Story = {
 };
 
 /**
- * If no options are available, the getNoOptionsLabel function can be used to customize the label.
+ * If no options are available, the noOptionsLabel function can be used to customize the label.
  */
 export const NoOptionsWithCustomNoOptionsLabel: Story = {
     render: () => {
@@ -261,7 +261,7 @@ export const NoOptionsWithCustomNoOptionsLabel: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
-                                getNoOptionsLabel={
+                                noOptionsLabel={
                                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                         <Info color="info" />
                                         No options available at this point in time
