@@ -50,6 +50,12 @@ export class AuthModule {
             if (process.env.NODE_ENV !== "development") {
                 throw new Error("config.auth.useAuthproxy must only be false in development");
             }
+            authServices.push(
+                createJwtAuthService({
+                    verifyOptions: { secret: "secret" },
+                    convertJwtToUserService: UserService,
+                }), // for testing purposes, send header "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTE2MjM5MDIyfQ.fG9j2rVOgunoya_njgn9w1t8muFlrpE9ffJ9i8sJYsQ"
+            );
             authServices.push(createStaticUserAuthService({ staticUser: staticUsers[0] }));
         }
 

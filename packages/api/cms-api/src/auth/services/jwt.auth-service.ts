@@ -1,4 +1,5 @@
 import { Injectable, Type } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { JwtService, JwtVerifyOptions } from "@nestjs/jwt";
 import { Request } from "express";
 import JwksRsa, { JwksClient } from "jwks-rsa";
@@ -6,14 +7,19 @@ import JwksRsa, { JwksClient } from "jwks-rsa";
 import { User } from "../../user-permissions/interfaces/user";
 import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from "../util/auth-service.interface";
 
-type JwtPayload = { [key: string]: unknown };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type JwtPayload = { [key: string]: any };
+
+export interface JwtToUserServiceInterface {
+    convertJwtToUser: (jwt: JwtPayload) => Promise<User> | User;
+}
 
 export interface JwtAuthServiceOptions {
     jwksOptions?: JwksRsa.Options;
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    convertJwtToUser?: (jwt: any) => Promise<User> | User;
+    convertJwtToUser?: (jwt: JwtPayload) => Promise<User> | User;
+    convertJwtToUserService?: Type<JwtToUserServiceInterface>;
 }
 
 export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }: JwtAuthServiceOptions): Type<AuthServiceInterface> {
@@ -21,7 +27,10 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
     class JwtAuthService implements AuthServiceInterface {
         private jwksClient?: JwksClient;
 
-        constructor(private jwtService: JwtService) {
+        constructor(
+            private jwtService: JwtService,
+            private readonly moduleRef: ModuleRef,
+        ) {
             if (jwksOptions) this.jwksClient = new JwksClient(jwksOptions);
         }
 
@@ -49,6 +58,9 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
 
             if (options.convertJwtToUser) {
                 return { user: await options.convertJwtToUser(jwt) };
+            } else if (options.convertJwtToUserService) {
+                const service = this.moduleRef.get(options.convertJwtToUserService, { strict: false });
+                return { user: await service.convertJwtToUser(jwt) };
             }
 
             if (typeof jwt.sub !== "string" || !jwt.sub) {
