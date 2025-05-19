@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import {
     dataGridDateTimeColumn,
     DataGridToolbar,
+    GridCellContent,
     type GridColDef,
     GridFilterButton,
     MainContent,
@@ -17,9 +18,10 @@ import { Chip } from "@mui/material";
 import { DataGrid, type GridFilterModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { capitalCase } from "change-case";
 import isEqual from "lodash.isequal";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { useContentScope } from "../contentScope/Provider";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { WarningActions } from "./WarningActions";
 import { WarningMessage } from "./WarningMessage";
 import { useWarningsConfig } from "./warningsConfig";
@@ -40,6 +42,10 @@ const warningsFragment = gql`
             rootColumnName
             targetId
             jsonPath
+        }
+        entityInfo {
+            name
+            secondaryInformation
         }
         scope
     }
@@ -77,6 +83,7 @@ export function WarningsGrid() {
         ...usePersistentColumnState("WarningsGrid"),
     };
     const { messages: warningMessages } = useWarningsConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
     const { values: scopeValues } = useContentScope();
     const scopes = scopeValues.map((item) => item.scope);
 
@@ -116,10 +123,29 @@ export function WarningsGrid() {
             renderCell: (params) => <WarningSeverity severity={params.value} />,
         },
         {
+            field: "nameInfo",
+            headerName: intl.formatMessage({ id: "warning.nameAndInfo", defaultMessage: "Name/Info" }),
+            sortable: false,
+            filterable: false,
+            width: 200,
+            renderCell: ({ row }) => {
+                return (
+                    <GridCellContent
+                        primaryText={row.entityInfo?.name ?? <FormattedMessage {...messages.unknown} />}
+                        secondaryText={row.entityInfo?.secondaryInformation}
+                    />
+                );
+            },
+        },
+        {
             field: "type",
             headerName: intl.formatMessage({ id: "warning.type", defaultMessage: "Type" }),
-            width: 150,
-            renderCell: (params) => <Chip label={params.value} />,
+            sortable: false,
+            filterable: false,
+            width: 100,
+            renderCell: ({ row }) => (
+                <Chip label={entityDependencyMap[row.sourceInfo.rootEntityName]?.displayName ?? row.sourceInfo.rootEntityName} />
+            ),
         },
         {
             field: "message",
