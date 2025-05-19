@@ -8,7 +8,7 @@ import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
-    getNoOptionsLabel?: () => ReactNode;
+    getNoOptionsLabel?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -44,13 +44,11 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
-    getNoOptionsLabel = () => {
-        return (
-            <Typography variant="body2">
-                <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
-            </Typography>
-        );
-    },
+    getNoOptionsLabel = (
+        <Typography variant="body2">
+            <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
+        </Typography>
+    ),
     children,
     required,
     ...rest
@@ -141,7 +139,7 @@ export const FinalFormSelect = <T,>({
 
             {loading === false && options.length === 0 && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {getNoOptionsLabel()}
+                    {getNoOptionsLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
 

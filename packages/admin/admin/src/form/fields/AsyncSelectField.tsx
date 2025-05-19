@@ -5,7 +5,7 @@ import { FinalFormAsyncSelect } from "../FinalFormAsyncSelect";
 
 export interface AsyncSelectFieldProps<Option> extends FieldProps<Option, HTMLSelectElement> {
     loadOptions: () => Promise<Option[]>;
-    getNoOptionsLabel?: () => ReactNode;
+    getNoOptionsLabel?: ReactNode;
 
     getOptionLabel?: (option: Option) => string;
     getOptionValue?: (option: Option) => string;
