@@ -1,5 +1,101 @@
 # @comet/admin
 
+## 7.20.0
+
+### Patch Changes
+
+-   415a83165: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+
+    Select components now truncate their value with ellipsis when used within these components, consistent with their behavior in other usages.
+
+-   99f904f81: Close `Dialog` with ESC key or backdrop click
+-   2d1726543: `title` prop of the Dialog got merged with `title` Prop of `MuiDialogProps`. This lead to errors when forwarding ReactNodes to title.
+    -   @comet/admin-icons@7.20.0
+    -   @comet/admin-theme@7.20.0
+
+## 7.19.0
+
+### Patch Changes
+
+-   3544127ad: Remove unintended white background on `Button` with `textDark` variant when disabled
+    -   @comet/admin-icons@7.19.0
+    -   @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.18.0
+-   @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.17.0
+-   @comet/admin-theme@7.17.0
+
+## 7.16.0
+
+### Patch Changes
+
+-   ec1cf3cf8: Adapt styling of `Button` variants to align with Comet DXP design
+-   bf7b89ffc: Adapt styling of `FieldSet` to align with Comet DXP design
+-   Updated dependencies [ec1cf3cf8]
+    -   @comet/admin-theme@7.16.0
+    -   @comet/admin-icons@7.16.0
+
+## 7.15.0
+
+### Minor Changes
+
+-   a189d4ed9: Support dynamic values for the `label` prop of `SwitchField` depending on its `checked` state
+
+    ```tsx
+    <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} />
+    ```
+
+-   7d8c36e6c: Add the `DataGridPanel` component to replace MUIs default `Panel` used by `DataGrid` to match the Comet DXP design
+
+    It is recommended to add this component to your theme's `defaultProps` of `MuiDataGrid`.
+
+    Example theme configuration for `admin/src/theme.ts`:
+
+    ```ts
+    import { DataGridPanel } from "@comet/admin";
+    import { createCometTheme } from "@comet/admin-theme";
+    import type {} from "@mui/x-data-grid/themeAugmentation";
+
+    export const theme = createCometTheme({
+        components: {
+            MuiDataGrid: {
+                defaultProps: {
+                    components: {
+                        Panel: DataGridPanel,
+                    },
+                },
+            },
+        },
+    });
+    ```
+
+-   a189d4ed9: Allow passing a `ReactNode` to `fieldLabel` of `CheckboxField` and `SwitchField`
+
+    This enables using `FormattedMessage` for the label.
+
+    ```tsx
+    <CheckboxField name="visible" fieldLabel={<FormattedMessage id="exampleForm.visible" defaultMessage="Visible" />} />
+    <SwitchField name="visible" fieldLabel={<FormattedMessage id="exampleForm.visible" defaultMessage="Visible" />} />
+    ```
+
+### Patch Changes
+
+-   faa54eb8e: Fix display of warnings for forms that use both form-level and field-level validation
+-   6827982fe: Preserve the default `Button` color when using the `sx` prop with the `textLight` or `textDark` variant
+-   Updated dependencies [7d8c36e6c]
+    -   @comet/admin-theme@7.15.0
+    -   @comet/admin-icons@7.15.0
+
 ## 7.14.0
 
 ### Minor Changes

@@ -384,10 +384,7 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                             <LargeAddButtonContent>
                                                                 <LargeAddButtonIcon />
                                                                 <Typography>
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.columns.addColumn"
-                                                                        defaultMessage="Add column"
-                                                                    />
+                                                                    <FormattedMessage id="comet.blocks.columns.addItem" defaultMessage="Add item" />
                                                                 </Typography>
                                                             </LargeAddButtonContent>
                                                         </AdminComponentButton>
@@ -402,7 +399,7 @@ export function createColumnsBlock<T extends BlockInterface>(
                                                                 size="large"
                                                                 startIcon={<Add />}
                                                             >
-                                                                <FormattedMessage id="comet.blocks.columns.addColumn" defaultMessage="Add column" />
+                                                                <FormattedMessage id="comet.blocks.columns.addItem" defaultMessage="Add item" />
                                                             </AdminComponentButton>
                                                         </AdminComponentStickyFooter>
                                                     )}

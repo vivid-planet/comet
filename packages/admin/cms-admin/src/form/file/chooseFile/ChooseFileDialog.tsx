@@ -1,6 +1,6 @@
-import { StackLink, SubRoute } from "@comet/admin";
+import { Button, StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
+import { Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";
@@ -56,7 +56,7 @@ const renderDamLabel = (
     { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
-        <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
+        <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(row.id)} fullWidth>
             <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
         </TableRowButton>
     ) : (

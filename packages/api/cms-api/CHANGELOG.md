@@ -1,5 +1,125 @@
 # @comet/cms-api
 
+## 7.20.0
+
+### Minor Changes
+
+-   ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+-   557e311ea: AccessLog: Remove some DAM URLs from log
+
+    Hashed URLs and preview URLs are not useful in the logs, so we remove them.
+
+-   21f95adfe: DAM: Fix headers
+
+    While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
+
+    -   Only store the `content-type` header
+    -   Prevent imgproxy headers from being passed through to the client
+    -   Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
+
+-   f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
+
+    Explicitly set `cache-control: no-store` for folder download to prevent caching of the response. Normally this should not be cached by any CDN, because the Request contains a cookie, but it is better to be explicit about it.
+
+    -   @comet/blocks-api@7.20.0
+
+## 7.19.0
+
+### Minor Changes
+
+-   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+-   eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+
+    Previously, the scope wasn't considered when loading the node.
+    This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
+
+    -   @comet/blocks-api@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+-   e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
+
+### Patch Changes
+
+-   @comet/blocks-api@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+-   a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+-   @comet/blocks-api@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   83b8111d6: Allow `use` tag in SVG again
+
+    `use` can be used to define paths once in a SVG and then integrating them multiple times via anchor links: `<use xlink:href="#path-id" />`. This should not be prohibited.
+
+    It's still not possible to use `use` to reference external files, since we still prohibit `href` and `xlink:href` attributes starting with `http://`, `https://` and `javascript:`.
+
+-   e6f9641db: Add fallback values for users created via ID token
+    -   @comet/blocks-api@7.15.0
+
 ## 7.14.0
 
 ### Minor Changes

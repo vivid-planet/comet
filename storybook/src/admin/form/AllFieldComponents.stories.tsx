@@ -49,6 +49,10 @@ export const AllFieldComponents = {
             { value: "chocolate", label: "Chocolate" },
             { value: "strawberry", label: "Strawberry" },
             { value: "vanilla", label: "Vanilla" },
+            {
+                value: "fruit salad",
+                label: "Strawberries, Raspberries, Bananas, Mangos, Pineapples, Apples, Pears, Melons, Grapes, Blueberries, Peaches",
+            },
         ];
 
         const initalValues = useMemo(() => ({ multiSelect: [] }), []);
@@ -104,7 +108,7 @@ export const AllFieldComponents = {
                                     variant={fieldVariant}
                                     fullWidth
                                 />
-                                <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
+                                <SwitchField name="switch" label={(checked) => (checked ? "On" : "Off")} fieldLabel="Switch" variant={fieldVariant} />
                             </FieldSet>
                             <FieldSet title="Checkboxes">
                                 <FormSection title="Individual Checkboxes">

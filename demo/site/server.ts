@@ -5,12 +5,12 @@ import { parse } from "url";
 import { withMetrics } from "./opentelemetry-metrics";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
+const host = process.env.SERVER_HOST ?? "localhost";
 const port = parseInt(process.env.PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname, port });
+const app = next({ dev, hostname: host, port });
 
 app.prepare().then(() => {
     if (process.env.TRACING == "production") {
@@ -53,13 +53,29 @@ app.prepare().then(() => {
                 };
             }
 
+            // For Rsc requests: don't cache the response if the _rsc query param is missing
+            const rscParamMissing = !!req.headers["rsc"] && !new URLSearchParams(parsedUrl.search || "").has("_rsc");
+
             const originalWriteHead = res.writeHead;
             res.writeHead = function (statusCode: number, ...args: unknown[]) {
                 // since writeHead is a callback function, it's called after handle() -> we get the actual response statusCode
-                if (statusCode >= 400) {
+                if (statusCode >= 400 || rscParamMissing) {
                     // prevent caching of error responses
                     res.setHeader("Cache-Control", "private, no-cache, no-store, max-age=0, must-revalidate");
                 }
+
+                // For redirects: append _rsc query param to redirect location if set in the original request
+                const rsc = new URLSearchParams(parsedUrl.search || "").get("_rsc");
+                const location = res.getHeader("location")?.toString() || "";
+                if (rsc && location.startsWith("/")) {
+                    const redirectUrl = parse(location, true);
+                    const redirectSearchParams = new URLSearchParams(redirectUrl.search || "");
+                    if (!redirectSearchParams.has("_rsc")) {
+                        redirectSearchParams.set("_rsc", rsc);
+                        res.setHeader("location", `${redirectUrl.pathname}?${redirectSearchParams.toString()}`);
+                    }
+                }
+
                 return originalWriteHead.apply(this, [statusCode, ...args]);
             };
 
@@ -74,8 +90,8 @@ app.prepare().then(() => {
             console.error(err);
             process.exit(1);
         })
-        .listen(port, () => {
+        .listen(port, host, () => {
             // eslint-disable-next-line no-console
-            console.log(`> Ready on http://localhost:${port}`);
+            console.log(`> Ready on http://${host}:${port}`);
         });
 });

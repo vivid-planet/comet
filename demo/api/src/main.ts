@@ -33,6 +33,7 @@ async function bootstrap(): Promise<void> {
     //     https://github.com/typestack/class-validator#using-service-container.
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
+    app.setGlobalPrefix("api");
     app.enableCors({
         credentials: true,
         origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
@@ -70,7 +71,8 @@ async function bootstrap(): Promise<void> {
     }
 
     const port = config.apiPort;
-    await app.listen(port);
-    console.log(`Application is running on: http://localhost:${port}/`);
+    const host = config.serverHost;
+    await app.listen(port, host);
+    console.log(`Application is running on: http://${host}:${port}/`);
 }
 bootstrap();

@@ -1,5 +1,6 @@
+import { Button } from "@comet/admin";
 import { Warning } from "@comet/admin-icons";
-import { Button, DialogContent, Theme } from "@mui/material";
+import { DialogContent, Theme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const ConfirmDialogContent = styled(DialogContent)`

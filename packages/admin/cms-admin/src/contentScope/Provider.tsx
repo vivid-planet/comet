@@ -1,6 +1,8 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
+import { defaultCreatePath } from "./utils/defaultCreatePath";
+
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
@@ -73,23 +75,6 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
             [key]: !value || value === null ? NullValueAsString : value,
         };
     }, {} as NonNullRecord<S>);
-}
-
-function defaultCreatePath(values: ContentScopeValues) {
-    const dimensionValues: { [dimension: string]: Set<string> } = {};
-    values.forEach((value) => {
-        Object.keys(value).forEach((dimension) => {
-            if (!dimensionValues[dimension]) {
-                dimensionValues[dimension] = new Set();
-            }
-            dimensionValues[dimension].add(value[dimension].value);
-        });
-    });
-    return Object.keys(dimensionValues).reduce((path, dimension) => {
-        const plainValues = Array.from(dimensionValues[dimension]);
-        const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-        return `${path}/:${dimension}${whiteListedValuesString}`;
-    }, "");
 }
 
 function defaultCreateUrl(scope: ContentScopeInterface) {
