@@ -261,14 +261,12 @@ export const NoOptionsWithCustomNoOptionsLabel: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
-                                getNoOptionsLabel={() => {
-                                    return (
-                                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                            <Info color="info" />
-                                            No options available at this point in time
-                                        </div>
-                                    );
-                                }}
+                                getNoOptionsLabel={
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <Info color="info" />
+                                        No options available at this point in time
+                                    </div>
+                                }
                                 name="type"
                                 label="AsyncSelectField"
                                 fullWidth
