@@ -451,7 +451,7 @@ type PageTreeNode {
   category: PageTreeNodeCategory!
   userGroup: UserGroup!
   childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
+  numberOfDescendants: Int!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
