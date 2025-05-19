@@ -4,6 +4,7 @@ import { Redirect, type RouteProps, Switch, useRouteMatch } from "react-router-d
 
 import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 import type { MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { NotFound } from "./notFound/NotFound";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
@@ -56,18 +57,24 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
 
 export interface MasterMenuRoutesProps {
     menu: MasterMenuData;
+    notFoundPage?: ReactNode;
 }
 
-export const MasterMenuRoutes = ({ menu }: MasterMenuRoutesProps) => {
+export const MasterMenuRoutes = ({ menu, notFoundPage = <NotFound /> }: MasterMenuRoutesProps) => {
     const routes = useRoutePropsFromMasterMenuData(menu);
     const match = useRouteMatch();
-
     return (
         <Switch>
             <Redirect to={`${match.url}${routes[0].path}`} exact={true} from={match.path} />
             {routes.map((route, index) => (
                 <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
             ))}
+            <RouteWithErrorBoundary
+                component={() => {
+                    return notFoundPage;
+                }}
+                path="*"
+            />
         </Switch>
     );
 };
