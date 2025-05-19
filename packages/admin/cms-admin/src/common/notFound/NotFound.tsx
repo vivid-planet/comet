@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { CometDxpLogo } from "./CometDxpLogo";
 import { ContentContainer, DividerStyled, Info, LogoContainer, Root, Title } from "./NotFound.styles";
 
-export type NotFoundClassKey = "root" | "title" | "info" | "contentContainer" | "iconContainer" | "divider" | "logoContainer";
+export type NotFoundClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer";
 
 export type NotFoundProps = ThemedComponentBaseProps<{
     root: "div";

@@ -30,15 +30,6 @@ export const ContentContainer = createComponentSlot(Card)<NotFoundClassKey>({
     `;
 });
 
-export const IconContainer = createComponentSlot("div")<NotFoundClassKey>({
-    componentName: "NotFound",
-    slotName: "iconContainer",
-})(
-    ({ theme }) => css`
-        margin-bottom: ${theme.spacing(2)};
-    `,
-);
-
 export const Title = createComponentSlot(Typography)<NotFoundClassKey>({
     componentName: "NotFound",
     slotName: "title",
