@@ -15,6 +15,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
+    error?: Error | null;
 }
 
 const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
@@ -61,7 +62,7 @@ export const FinalFormSelect = <T,>({
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment" | "error">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
@@ -150,12 +151,12 @@ export const FinalFormSelect = <T,>({
                     </MenuItem>
                 ))}
 
-            {loading === false && options.length === 0 && (
+            {loading === false && error == null && options.length === 0 && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {noOptionsLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
-            {loading === false && error === true && (
+            {loading === false && error != null && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {errorLabel}
                 </MenuItemDisabledOverrideOpacity>
