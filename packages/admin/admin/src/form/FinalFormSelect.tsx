@@ -10,7 +10,7 @@ import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     noOptionsLabel?: ReactNode;
-    getErrorOptionsLabel?: () => ReactNode;
+    errorLabel?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -47,18 +47,17 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
+
     noOptionsLabel = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
         </Typography>
     ),
-    getErrorOptionsLabel = () => {
-        return (
-            <Typography variant="body2">
-                <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
-            </Typography>
-        );
-    },
+    errorLabel = (
+        <Typography variant="body2">
+            <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
+        </Typography>
+    ),
     children,
     required,
     ...rest
@@ -149,7 +148,7 @@ export const FinalFormSelect = <T,>({
             )}
             {loading === false && error === true && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {getErrorOptionsLabel()}
+                    {errorLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
 
