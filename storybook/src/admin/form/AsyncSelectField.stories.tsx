@@ -358,14 +358,12 @@ export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
-                                getErrorOptionsLabel={() => {
-                                    return (
-                                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                            <WarningSolid color="error" />
-                                            Error loading options
-                                        </div>
-                                    );
-                                }}
+                                errorLabel={
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <WarningSolid color="error" />
+                                        Error loading options
+                                    </div>
+                                }
                                 name="type"
                                 label="AsyncSelectField"
                                 fullWidth
