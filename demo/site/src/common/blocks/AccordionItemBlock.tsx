@@ -46,7 +46,7 @@ export const AccordionItemBlock = withPreview(
                     </IconWrapper>
                 </TitleWrapper>
                 <ContentWrapper aria-hidden={!isExpanded} $isExpanded={isExpanded}>
-                    <ContentWrapperInner>
+                    <ContentWrapperInner $isExpanded={isExpanded}>
                         <AccordionContentBlock data={content} />
                     </ContentWrapperInner>
                 </ContentWrapper>
@@ -98,6 +98,15 @@ const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
         `}
 `;
 
-const ContentWrapperInner = styled.div`
+const ContentWrapperInner = styled.div<{ $isExpanded: boolean }>`
     overflow: hidden;
+    visibility: hidden;
+    transition: visibility 350ms;
+    transition-delay: ${({ $isExpanded }) => ($isExpanded ? "0ms" : "350ms")};
+
+    ${({ $isExpanded }) =>
+        $isExpanded &&
+        css`
+            visibility: visible;
+        `}
 `;
