@@ -91,8 +91,15 @@ interface FolderDataGridToolbarProps {
     };
 }
 
-function FolderDataGridToolbar(props: FolderDataGridToolbarProps) {
-    const { id: currentFolderId } = props;
+function FolderDataGridToolbar({
+    id: currentFolderId,
+    breadcrumbs,
+    filterApi,
+    selectionApi,
+    hideArchiveFilter,
+    additionalToolbarItems,
+    uploadFilters,
+}: FolderDataGridToolbarProps) {
     const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -104,11 +111,11 @@ function FolderDataGridToolbar(props: FolderDataGridToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
-                <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={props.filterApi} />
+                <DamTableFilter hideArchiveFilter={hideArchiveFilter} filterApi={filterApi} />
             </ToolbarItem>
             <FillSpace />
             <ToolbarActions>
-                {props.additionalToolbarItems}
+                {additionalToolbarItems}
                 <DamMoreActions
                     anchorOrigin={{
                         vertical: "bottom",
@@ -119,10 +126,10 @@ function FolderDataGridToolbar(props: FolderDataGridToolbarProps) {
                         horizontal: "left",
                     }}
                     folderId={data?.damFolder.id}
-                    filter={props.uploadFilters}
+                    filter={uploadFilters}
                 />
 
-                <UploadFilesButton folderId={data?.damFolder.id} filter={props.uploadFilters} />
+                <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
             </ToolbarActions>
         </DataGridToolbar>
     );
