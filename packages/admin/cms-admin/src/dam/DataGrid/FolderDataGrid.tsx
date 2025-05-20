@@ -81,9 +81,7 @@ interface FolderDataGridProps extends DamConfig {
 
 interface FolderDataGridToolbarProps {
     id?: string;
-    breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
-    selectionApi: ISelectionApi;
     hideArchiveFilter?: boolean;
     additionalToolbarItems?: React.ReactNode;
     uploadFilters: {
@@ -93,9 +91,7 @@ interface FolderDataGridToolbarProps {
 
 function FolderDataGridToolbar({
     id: currentFolderId,
-    breadcrumbs,
     filterApi,
-    selectionApi,
     hideArchiveFilter,
     additionalToolbarItems,
     uploadFilters,
