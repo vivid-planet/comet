@@ -101,8 +101,8 @@ const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
 const ContentWrapperInner = styled.div<{ $isExpanded: boolean }>`
     overflow: hidden;
     visibility: hidden;
-    transition: visibility 350ms;
-    transition-delay: ${({ $isExpanded }) => ($isExpanded ? "0ms" : "350ms")};
+    transition: visibility;
+    transition-delay: ${({ $isExpanded }) => ($isExpanded ? "0s" : "0.5s")};
 
     ${({ $isExpanded }) =>
         $isExpanded &&
