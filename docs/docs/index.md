@@ -20,7 +20,7 @@ The following diagram visually highlights these principles.
 
 ![Architecture](./1-getting-started/images/application-baseline.jpg)
 
-A typical COMET DXP application consits of multiple microservices which are shown in the following diagram.
+A typical COMET DXP application consists of multiple microservices which are shown in the following diagram.
 
 ![Architecture](./1-getting-started/images/architecture.jpg)
 
