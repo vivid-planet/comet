@@ -34,7 +34,6 @@ const warningsFragment = gql`
         message
         type
         severity
-        status
         sourceInfo {
             rootEntityName
             rootColumnName
@@ -152,17 +151,6 @@ export function WarningsGrid() {
 
                 return intl.formatMessage(messages.globalContentScope);
             },
-        },
-        {
-            field: "status",
-            headerName: intl.formatMessage({ id: "warning.status", defaultMessage: "Status" }),
-            type: "singleSelect",
-            valueOptions: [
-                { value: "open", label: intl.formatMessage({ id: "warning.status.open", defaultMessage: "Open" }) },
-                { value: "resolved", label: intl.formatMessage({ id: "warning.status.resolved", defaultMessage: "Resolved" }) },
-                { value: "ignored", label: intl.formatMessage({ id: "warning.status.ignored", defaultMessage: "Ignored" }) },
-            ],
-            width: 150,
         },
         {
             field: "actions",
