@@ -85,7 +85,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
     }
 
     const siteUrl = siteConfig.url;
-    const canonicalUrl = document.seo.canonicalUrl || `${siteUrl}/${scope.language}${data.pageContent.path}`;
+    const canonicalUrl = (document.seo.canonicalUrl || `${siteUrl}/${scope.language}${data.pageContent.path}`).replace(/\/$/, ""); // Remove trailing slash for "home"
 
     // TODO move into library
     return {
