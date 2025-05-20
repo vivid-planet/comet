@@ -1,8 +1,7 @@
-import { type PropsWithData } from "@comet/site-react";
+import { type PropsWithData, generateImageUrl } from "@comet/site-react";
 import Head from "next/head";
 
 import { type PixelImageBlockData, type SeoBlockData } from "../../blocks.generated";
-import { generateImageUrl } from "../../image/Image";
 
 type SeoBlockProps<T = PixelImageBlockData> = (T extends PixelImageBlockData
     ? PropsWithData<SeoBlockData> & { resolveOpenGraphImageUrlTemplate?: never }

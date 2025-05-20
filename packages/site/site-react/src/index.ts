@@ -1,3 +1,5 @@
+import "@comet/site-react/css";
+
 export { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
@@ -28,9 +30,8 @@ export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
-// export type { ImageDimensions } from "./image/Image";
-// export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
-export { calculateInheritAspectRatio } from "./image/Image";
+export { Image } from "./image/Image";
+export { type ImageDimensions, calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "./image/image.utils";
 // export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 // export { usePreview } from "./preview/usePreview";
 // export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";

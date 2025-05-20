@@ -1,4 +1,4 @@
-import { parseAspectRatio } from "./Image";
+import { parseAspectRatio } from "./image.utils";
 
 describe("Image: parseAspectRatio", () => {
     it("should throw Error if invalid value", () => {

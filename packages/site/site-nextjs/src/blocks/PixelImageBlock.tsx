@@ -1,11 +1,17 @@
 "use client";
+import {
+    type ImageDimensions,
+    type PropsWithData,
+    calculateInheritAspectRatio,
+    generateImageUrl,
+    getMaxDimensionsFromArea,
+    parseAspectRatio,
+    withPreview,
+} from "@comet/site-react";
 // eslint-disable-next-line no-restricted-imports
-import { calculateInheritAspectRatio, withPreview } from "@comet/site-react";
-import { type PropsWithData } from "@comet/site-react";
 import NextImage, { type ImageProps } from "next/image";
 
 import { type PixelImageBlockData } from "../blocks.generated";
-import { type ImageDimensions, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "../image/Image";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./PixelImageBlock.module.scss";
 

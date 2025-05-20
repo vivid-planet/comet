@@ -24,8 +24,7 @@ export {
 export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 // export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 // export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
-export type { ImageDimensions } from "./image/Image";
-export { generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
+export { Image } from "./image/Image";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
@@ -38,6 +37,7 @@ export {
     type BlockLoader,
     type BlockLoaderDependencies,
     type CookieApi,
+    type ImageDimensions,
     type PropsWithData,
     type SitePreviewData,
     type SitePreviewParams,
@@ -49,6 +49,8 @@ export {
     CookieSafe,
     ErrorHandlerBoundary,
     ErrorHandlerProvider,
+    generateImageUrl,
+    getMaxDimensionsFromArea,
     hasRichTextBlockContent,
     IFrameBridgeProvider,
     IFrameMessageType,
@@ -56,6 +58,7 @@ export {
     ListBlock,
     OneOfBlock,
     OptionalBlock,
+    parseAspectRatio,
     Preview,
     recursivelyLoadBlockData,
     SvgImageBlock,
