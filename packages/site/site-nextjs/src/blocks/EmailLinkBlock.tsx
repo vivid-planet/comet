@@ -1,7 +1,7 @@
+import { type PropsWithData } from "@comet/site-react";
 import { type ReactElement, cloneElement } from "react";
 
 import { type EmailLinkBlockData } from "../blocks.generated";
-import { type PropsWithData } from "./PropsWithData";
 
 interface EmailLinkBlockProps extends PropsWithData<EmailLinkBlockData> {
     children: ReactElement;

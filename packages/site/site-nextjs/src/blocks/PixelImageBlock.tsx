@@ -1,6 +1,7 @@
 "use client";
 // eslint-disable-next-line no-restricted-imports
 import { calculateInheritAspectRatio } from "@comet/site-react";
+import { type PropsWithData } from "@comet/site-react";
 import NextImage, { type ImageProps } from "next/image";
 
 import { type PixelImageBlockData } from "../blocks.generated";
@@ -8,7 +9,6 @@ import { withPreview } from "../iframebridge/withPreview";
 import { type ImageDimensions, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "../image/Image";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./PixelImageBlock.module.scss";
-import { type PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio: string | number | "inherit";

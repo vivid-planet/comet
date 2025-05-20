@@ -8,8 +8,6 @@ export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
-export type { PropsWithData } from "./blocks/PropsWithData";
-export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { type CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
@@ -46,6 +44,7 @@ export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     type BlockLoader,
     type BlockLoaderDependencies,
+    type PropsWithData,
     type SitePreviewData,
     type SitePreviewParams,
     type SupportedBlocks,
@@ -56,5 +55,6 @@ export {
     OneOfBlock,
     OptionalBlock,
     recursivelyLoadBlockData,
+    SvgImageBlock,
     useIsElementInViewport,
 } from "@comet/site-react";

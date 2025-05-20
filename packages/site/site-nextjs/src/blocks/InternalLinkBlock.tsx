@@ -1,9 +1,9 @@
 "use client";
+import { type PropsWithData } from "@comet/site-react";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";
 
 import { type InternalLinkBlockData } from "../blocks.generated";
-import { type PropsWithData } from "./PropsWithData";
 
 interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
     title?: string;

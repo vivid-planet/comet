@@ -1,6 +1,7 @@
 "use client";
 
 import { useIsElementInViewport } from "@comet/site-react";
+import { type PropsWithData } from "@comet/site-react";
 import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
@@ -9,7 +10,6 @@ import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./DamVideoBlock.module.scss";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
