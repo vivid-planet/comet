@@ -431,6 +431,50 @@ Previously, if entities specified a `status` enum, it was automatically added to
 This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
 done with the normal filtering mechanism.
 
+### API Generator - Don't commit generated files [optional]
+
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+
+run api-generator in prebuild:
+
+```diff title="api/package.json"
+scripts: {
+-  "prebuild": "rimraf dist",
++  "prebuild": "rimraf dist && npm run api-generator",
+}
+```
+
+lint script can be removed:
+
+```diff title="api/package.json"
+scripts: {
+-  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+}
+```
+
+Add generated files to eslint ignore:
+
+```diff title="api/eslint.config.mjs"
+scripts: {
+-  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
++  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+}
+```
+
+Add generated files to .gitignore:
+
+```diff title="api/.gitignore"
+scripts: {
++  src/**/generated
+}
+```
+
+And finally delete generated files from git:
+
+```sh
+git rm -r api/src/*/generated
+```
+
 ### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
@@ -723,6 +767,79 @@ Import `JwtModule` from `@nestjs/jwt`:
     exports: [UserService, AccessControlService],
 +   imports: [JwtModule],
 ```
+
+### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
+
+The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
+Some structural changes were necessary to achieve this.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+```
+
+:::
+
+You need to modify your `AppModule` as follows:
+
+```diff title="api/src/app.module.ts"
+    BlobStorageModule.register({
+        backend: config.blob.storage,
++       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+    }),
++   ImgproxyModule.register({
++       imgproxyConfig: config.imgproxy,
++   }),
+    DamModule.register({
+        damConfig: {
+            apiUrl: config.apiUrl,
+            secret: config.dam.secret,
+            allowedImageSizes: config.dam.allowedImageSizes,
+            allowedAspectRatios: config.dam.allowedImageAspectRatios,
+            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+-           cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+            maxFileSize: config.dam.uploadsMaxFileSize,
++           maxSrcResolution: config.dam.maxSrcResolution,
+        },
+-       imgproxyConfig: config.imgproxy,
+        Scope: DamScope,
+        File: DamFile,
+        Folder: DamFolder,
+    }),
+```
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+```
+
+:::
+
+```diff title="api/src/comet-config.json"
+{
+    "dam": {
+        "allowedImageAspectRatios": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
++       "maxSrcResolution": 70,
+        "uploadsMaxFileSize": 500
+    },
+    "images": {
+        "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        "imageSizes": [16, 32, 48, 64, 96, 128, 256, 320, 384]
+    },
+    "imgproxy": {
+-       "maxSrcResolution": 70,
+        "quality": 80
+    }
+}
+```
+
+</details>
 
 ## Admin
 
@@ -1148,6 +1265,72 @@ Remove the `allCategories` prop from `PagesPage`:
 
 :::
 
+### Add proxy for `/dam` URLs
+
+The API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title=admin/vite.config.mts
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title=admin/package.json
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title=admin/server/index.js
+// ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+// ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title=deployment/helm/values.tpl.yaml
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
+
 ### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
 <details>
@@ -1186,48 +1369,6 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
 
 </details>
-
-### Stay on same page after changing scope
-
-The Admin now stays on the same page per default when changing scopes.
-Perform the following changes:
-
-1.  Remove the `path` prop from the `PagesPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    <PagesPage
-    -   path="/pages/pagetree/main-navigation"
-        allCategories={pageTreeCategories}
-        documentTypes={pageTreeDocumentTypes}
-        category="MainNavigation"
-        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
-    />
-    ```
-
-2.  Remove the `redirectPathAfterChange` prop from the `RedirectsPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
-        route: {
-            path: "/system/redirects",
-    -       render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
-    +       component: RedirectsPage
-        },
-        requiredPermission: "pageTree",
-    },
-    ```
-
-3.  Optional: Remove unnecessary usages of the `useContentScopeConfig` hook
-
-    ```diff
-    export function ProductsPage() {
-        const intl = useIntl();
-
-    -   useContentScopeConfig({ redirectPathAfterChange: "/structured-content/products" });
-    }
-    ```
 
 ### DataGrid-related changes
 
@@ -1483,6 +1624,22 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 ```
 
 </details>
+
+### Remove `x-relative-dam-urls` header from `graphQLClient`
+
+```diff title="site/src/util/graphQLClient.ts"
+// ...
+return createGraphQLFetchLibrary(
+    createFetchWithDefaults(fetch, {
+        // ...
+        headers: {
+-           "x-relative-dam-urls": "1",
+            // ...
+        },
+    }),
+    `${process.env.API_URL_INTERNAL}/graphql`,
+);
+```
 
 ## ESLint
 

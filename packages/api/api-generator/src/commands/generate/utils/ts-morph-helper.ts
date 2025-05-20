@@ -1,6 +1,6 @@
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
-import { ClassDeclaration, Project } from "ts-morph";
+import { type ArrowFunction, ClassDeclaration, type Identifier, Project, SyntaxKind } from "ts-morph";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -21,8 +21,14 @@ function morphTsClass(metadata: EntityMetadata<any>) {
     return tsClass;
 }
 export function morphTsProperty(name: string, metadata: EntityMetadata<any>) {
-    const tsClass = morphTsClass(metadata);
-    return tsClass.getPropertyOrThrow(name);
+    let currentClass: ClassDeclaration | undefined = morphTsClass(metadata);
+    while (currentClass) {
+        const prop = currentClass.getProperty(name);
+        if (prop) return prop;
+
+        currentClass = currentClass.getBaseClass();
+    }
+    throw new Error(`Property ${name} not found in ${metadata.className}`);
 }
 
 function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
@@ -146,4 +152,22 @@ export function findInputClassImportPath(className: string, targetDirectory: str
         throw new Error(`Exported declaration for ${className} is not decorated with @InputType`);
     }
     return returnImportPath;
+}
+
+export function getFieldDecoratorClassName(propertyName: string, metadata: EntityMetadata<any>) {
+    const definedDecorators = morphTsProperty(propertyName, metadata).getDecorators();
+    const fieldDecorator = definedDecorators.find((decorator) => decorator.getName() == "Field");
+    if (!fieldDecorator) {
+        return false;
+    }
+    const typeFnArg = fieldDecorator.getArguments()[0];
+    if (!typeFnArg) throw new Error(`${propertyName}: @Field is missing argument`);
+    if (typeFnArg.getKind() != SyntaxKind.ArrowFunction) throw new Error(`${propertyName}: @Field first argument must be an ArrowFunction`);
+    const typeReturningArrowFunction = typeFnArg as ArrowFunction;
+    const body = typeReturningArrowFunction.getBody();
+    if (body.getKind() != SyntaxKind.Identifier)
+        throw new Error(`${propertyName}: @Field first argument must be an ArrowFunction returning an Identifier`);
+    const identifier = body as Identifier;
+    const className = identifier.getText();
+    return className;
 }

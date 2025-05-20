@@ -26,10 +26,11 @@ import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
-import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
+import { ProductCategoriesPage as ProductCategoriesFuturePage } from "@src/products/future/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
+import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { type ContentScope } from "@src/site-configs";
@@ -76,6 +77,7 @@ export const masterMenuData: MasterMenuData = [
 
                 return (
                     <PagesPage
+                        path={`/pages/pagetree/${match.params.category}`}
                         documentTypes={(category): Record<DocumentType, DocumentInterface> => {
                             if (category === "TopMenu") {
                                 return {
@@ -179,7 +181,7 @@ export const masterMenuData: MasterMenuData = [
                 primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
                 route: {
                     path: "/system/redirects",
-                    component: RedirectsPage,
+                    render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
                 },
                 requiredPermission: "pageTree",
             },
@@ -203,7 +205,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/user-permissions",
             component: UserPermissionsPage,
         },
-        requiredPermission: "userPermissions",
+        requiredPermission: ["userPermissions", "impersonation"],
     },
     {
         type: "group",
@@ -244,6 +246,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/products-with-low-price-future",
                             component: FutureProductsWithLowPricePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Product Categories" />,
+                        route: {
+                            path: "/product-categories",
+                            component: ProductCategoriesFuturePage,
                         },
                     },
                 ],

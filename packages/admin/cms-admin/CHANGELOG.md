@@ -1,5 +1,61 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.4
+
+### Major Changes
+
+- a9d4b70: Change type of the `values` prop of ContentScopeProvider
+
+    **Before**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "English", value: "en" },
+        },
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "German", value: "de" },
+        },
+        {
+            domain: { label: "Secondary", value: "secondary" },
+            language: { label: "English", value: "en" },
+        },
+    ];
+    ```
+
+    **Now**
+
+    ```ts
+    const values: ContentScopeValues<ContentScope> = [
+        {
+            scope: { domain: "main", language: "en" },
+            label: { domain: "Main", language: "English" },
+        },
+        {
+            scope: { domain: "main", language: "de" },
+            label: { domain: "Main", language: "German" },
+        },
+        {
+            scope: { domain: "secondary", language: "en" },
+            label: { domain: "Secondary", language: "English" },
+        },
+    ];
+    ```
+
+- b039dcb: Remove `imgproxyConfig` from `CometConfigProvider` and move `maxSrcResolution` to `damConfig`
+
+### Patch Changes
+
+- Updated dependencies [a93455f]
+- Updated dependencies [72d1a5e]
+- Updated dependencies [1c62e87]
+    - @comet/admin@8.0.0-beta.4
+    - @comet/admin-date-time@8.0.0-beta.4
+    - @comet/admin-rte@8.0.0-beta.4
+    - @comet/admin-icons@8.0.0-beta.4
+
 ## 8.0.0-beta.3
 
 ### Patch Changes
@@ -326,6 +382,46 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+
+## 7.19.0
+
+### Minor Changes
+
+- 91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+- ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+- Updated dependencies [3544127ad]
+- Updated dependencies [17b79b581]
+    - @comet/admin@7.19.0
+    - @comet/blocks-admin@7.19.0
+    - @comet/admin-date-time@7.19.0
+    - @comet/admin-icons@7.19.0
+    - @comet/admin-rte@7.19.0
+    - @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Minor Changes
+
+- 2dc23dd6d: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+- ec9778450: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+- 0acf80d30: User Permissions: Allow permission-specific content scopes to override by-rule content scopes
+- Updated dependencies [e6092df34]
+- Updated dependencies [f496734f8]
+- Updated dependencies [e6092df34]
+    - @comet/admin-date-time@7.18.0
+    - @comet/blocks-admin@7.18.0
+    - @comet/admin@7.18.0
+    - @comet/admin-icons@7.18.0
+    - @comet/admin-rte@7.18.0
+    - @comet/admin-theme@7.18.0
 
 ## 7.17.0
 

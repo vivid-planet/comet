@@ -19,25 +19,25 @@ import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { type ContentScopeInterface } from "./Provider";
+import { type ContentScope } from "./Provider";
 
-type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
-    scope: Value;
-    label?: { [Key in keyof Value]?: string };
+type Option = {
+    scope: ContentScope;
+    label?: { [Key in keyof ContentScope]?: string };
 };
 
-interface Props<Value extends ContentScopeInterface> {
-    value: Value;
-    onChange: (value: Value) => void;
-    options: Array<Option<Value>>;
+interface Props {
+    value: ContentScope;
+    onChange: (value: ContentScope) => void;
+    options: Array<Option>;
     searchable?: boolean;
-    groupBy?: keyof Value;
+    groupBy?: keyof ContentScope;
     icon?: ReactNode;
-    renderOption?: (option: Option<Value>, query?: string) => ReactNode;
-    renderSelectedOption?: (option: Option<Value>) => ReactNode;
+    renderOption?: (option: Option, query?: string) => ReactNode;
+    renderSelectedOption?: (option: Option) => ReactNode;
 }
 
-export function ContentScopeSelect<Value extends ContentScopeInterface = ContentScopeInterface>({
+export function ContentScopeSelect({
     value,
     onChange,
     options,
@@ -46,7 +46,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     icon = <Language />,
     renderOption,
     renderSelectedOption,
-}: Props<Value>) {
+}: Props) {
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
@@ -64,7 +64,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
         });
     }
 
-    let groups: Array<{ value: string; label: string | undefined; options: Option<Value>[] }> = [];
+    let groups: Array<{ value: string; label: string | undefined; options: Option[] }> = [];
 
     if (groupBy) {
         if (hasMultipleDimensions) {
@@ -193,7 +193,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                     PaperProps: {
                         sx: (theme) => ({
                             minWidth: "350px",
-
+                            maxHeight: "calc(100vh - 60px)",
                             [theme.breakpoints.down("md")]: {
                                 width: "100%",
                                 maxWidth: "none",

@@ -7,7 +7,6 @@ import { type BuildInformation } from "../common/header/about/build-information/
 import { type ContentLanguageConfig } from "../contentLanguage/contentLanguageConfig";
 import { type DamConfig } from "../dam/config/damConfig";
 import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
-import { type ImgproxyConfig } from "../imgproxy/imgproxyConfig";
 import { type PageTreeConfig } from "../pages/pageTreeConfig";
 import { type SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
 
@@ -17,7 +16,6 @@ export interface CometConfig<SiteConfigs = unknown> {
     adminUrl: string;
     pageTree?: PageTreeConfig;
     dam?: DamConfig;
-    imgproxy?: ImgproxyConfig;
     dependencies?: DependenciesConfig;
     siteConfigs?: SiteConfigsConfig<SiteConfigs>;
     buildInformation?: BuildInformation;

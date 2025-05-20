@@ -157,7 +157,6 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
         css`
             color: ${theme.palette.common.black};
             &.Mui-disabled {
-                background-color: ${theme.palette.secondary.contrastText};
                 color: ${theme.palette.grey[200]};
             }
         `}

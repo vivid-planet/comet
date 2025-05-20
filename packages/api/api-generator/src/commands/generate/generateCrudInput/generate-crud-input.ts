@@ -13,6 +13,7 @@ import {
     findEnumName,
     findInputClassImportPath,
     findValidatorImportPath,
+    getFieldDecoratorClassName,
     morphTsProperty,
 } from "../utils/ts-morph-helper";
 import { type GeneratedFile } from "../utils/write-generated-files";
@@ -99,6 +100,7 @@ export async function generateCrudInput(
             const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
             isOptional = true;
             decorators.push(`@IsOptional()`);
+            imports.push({ name: "Min", importPath: "class-validator" });
             decorators.push(`@Min(1)`);
             decorators.push("@IsInt()");
             decorators.push(`@Field(() => Int, ${fieldOptions})`);
@@ -383,6 +385,15 @@ export async function generateCrudInput(
             decorators.push(`@Field(() => ID, ${fieldOptions})`);
             decorators.push("@IsUUID()");
             type = "string";
+        } else if (getFieldDecoratorClassName(prop.name, metadata)) {
+            //for custom mikro-orm type
+            const className = getFieldDecoratorClassName(prop.name, metadata) as string;
+            const importPath = findInputClassImportPath(className, `${generatorOptions.targetDirectory}/dto`, metadata);
+            imports.push({ name: className, importPath });
+            decorators.push(`@ValidateNested()`);
+            decorators.push(`@Type(() => ${className})`);
+            decorators.push(`@Field(() => ${className}${prop.nullable ? ", { nullable: true }" : ""})`);
+            type = className;
         } else {
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
@@ -423,7 +434,7 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
