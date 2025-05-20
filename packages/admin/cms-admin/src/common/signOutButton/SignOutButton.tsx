@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { Logout, ThreeDotSaving } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps as MuiButtonProps } from "@mui/material";
 import { type FunctionComponent, type PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
