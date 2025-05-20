@@ -85,7 +85,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
     }
 
     const siteUrl = siteConfig.url;
-    const canonicalUrl = document.seo.canonicalUrl || `${siteUrl}${data.pageContent.path}${scope.language}`;
+    const canonicalUrl = document.seo.canonicalUrl || `${siteUrl}/${scope.language}${data.pageContent.path}`;
 
     // TODO move into library
     return {
