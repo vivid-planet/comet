@@ -169,33 +169,25 @@ module.exports = {
             name: "site-nextjs",
             script: "pnpm --filter @comet/site-nextjs run dev",
             group: ["site-nextjs", "cms"],
-            waitOn: [
-                ...waitOnPackages(
-                    "@comet/site-react",
-                ),
-            ],
+            waitOn: [...waitOnPackages("@comet/site-react")],
         },
         {
             name: "site-nextjs-codegen-block-types",
             script: "pnpm --filter @comet/site-nextjs run generate-block-types:watch",
             group: ["site-nextjs", "cms"],
-            waitOn: [
-                ...waitOnPackages(
-                    "@comet/site-react",
-                ),
-            ],
+            waitOn: [...waitOnPackages("@comet/site-react")],
         },
 
         //group site-react
         {
             name: "site-react",
             script: "pnpm --filter @comet/site-react run dev",
-            group: ["site-react", "cms"],
+            group: ["site-react", "site-nextjs", "cms"],
         },
         {
             name: "site-react-codegen-block-types",
             script: "pnpm --filter @comet/site-react run generate-block-types:watch",
-            group: ["site-react", "cms"],
+            group: ["site-react", "site-nextjs", "cms"],
         },
 
         //group demo admin
