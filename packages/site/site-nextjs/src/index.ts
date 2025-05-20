@@ -10,13 +10,6 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { type CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
-export { CookieSafe } from "./cookies/CookieSafe";
-export { useCookieBotCookieApi } from "./cookies/useCookieBotCookieApi";
-export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
-export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
-export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
-export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 export {
     type GraphQLFetch,
     convertPreviewDataToHeaders,
@@ -44,17 +37,26 @@ export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     type BlockLoader,
     type BlockLoaderDependencies,
+    type CookieApi,
     type PropsWithData,
     type SitePreviewData,
     type SitePreviewParams,
     type SupportedBlocks,
     BlocksBlock,
     calculateInheritAspectRatio,
+    CookieApiProvider,
+    CookieSafe,
+    ErrorHandlerBoundary,
+    ErrorHandlerProvider,
     hasRichTextBlockContent,
     ListBlock,
     OneOfBlock,
     OptionalBlock,
     recursivelyLoadBlockData,
     SvgImageBlock,
+    useCookieApi,
+    useCookieBotCookieApi,
     useIsElementInViewport,
+    useLocalStorageCookieApi,
+    useOneTrustCookieApi,
 } from "@comet/site-react";

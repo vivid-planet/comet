@@ -8,13 +8,13 @@ export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 export { useIsElementInViewport } from "./blocks/helpers/useIsElementInViewport";
 export type { PropsWithData } from "./blocks/PropsWithData";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
-// export { type CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
-// export { CookieSafe } from "./cookies/CookieSafe";
-// export { useCookieBotCookieApi } from "./cookies/useCookieBotCookieApi";
-// export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
-// export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
-// export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
-// export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
+export { type CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
+export { CookieSafe } from "./cookies/CookieSafe";
+export { useCookieBotCookieApi } from "./cookies/useCookieBotCookieApi";
+export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
+export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
+export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
+export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 // export {
 //     type GraphQLFetch,
 //     convertPreviewDataToHeaders,
