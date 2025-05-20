@@ -1,6 +1,6 @@
+import { useIFrameBridge } from "@comet/site-react";
 import { useCallback, useContext } from "react";
 
-import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
 import { type PreviewContextOptions, PreviewContext } from "./PreviewContext";
 
 export interface PreviewHookReturn extends PreviewContextOptions {

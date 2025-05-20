@@ -18,12 +18,12 @@ export {
     createGraphQLFetch,
     gql,
 } from "./graphQLFetch/graphQLFetch";
-export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
-export { IFrameMessageType } from "./iframebridge/IFrameMessage";
-export { Preview } from "./iframebridge/Preview";
+// export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
+// export { IFrameMessageType } from "./iframebridge/IFrameMessage";
+// export { Preview } from "./iframebridge/Preview";
 export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
-export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
-export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
+// export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
+// export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
 export type { ImageDimensions } from "./image/Image";
 export { generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
@@ -42,6 +42,7 @@ export {
     type SitePreviewData,
     type SitePreviewParams,
     type SupportedBlocks,
+    type WithPreviewProps,
     BlocksBlock,
     calculateInheritAspectRatio,
     CookieApiProvider,
@@ -49,14 +50,20 @@ export {
     ErrorHandlerBoundary,
     ErrorHandlerProvider,
     hasRichTextBlockContent,
+    IFrameBridgeProvider,
+    IFrameMessageType,
+    isWithPreviewPropsData,
     ListBlock,
     OneOfBlock,
     OptionalBlock,
+    Preview,
     recursivelyLoadBlockData,
     SvgImageBlock,
     useCookieApi,
     useCookieBotCookieApi,
+    useIFrameBridge,
     useIsElementInViewport,
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
+    withPreview,
 } from "@comet/site-react";

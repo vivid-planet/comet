@@ -23,12 +23,11 @@ export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 //     createGraphQLFetch,
 //     gql,
 // } from "./graphQLFetch/graphQLFetch";
-// export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
-// export { IFrameMessageType } from "./iframebridge/IFrameMessage";
-// export { Preview } from "./iframebridge/Preview";
-// export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
-// export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
-// export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
+export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
+export { IFrameMessageType } from "./iframebridge/IFrameMessage";
+export { Preview } from "./iframebridge/Preview";
+export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
+export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
 // export type { ImageDimensions } from "./image/Image";
 // export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { calculateInheritAspectRatio } from "./image/Image";
