@@ -25,8 +25,6 @@ export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 // export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 // export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
 export { Image } from "./image/Image";
-export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
-export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
@@ -43,6 +41,7 @@ export {
     type SitePreviewParams,
     type SupportedBlocks,
     type WithPreviewProps,
+    BlockPreviewProvider,
     BlocksBlock,
     calculateInheritAspectRatio,
     CookieApiProvider,
@@ -68,5 +67,6 @@ export {
     useIsElementInViewport,
     useLocalStorageCookieApi,
     useOneTrustCookieApi,
+    usePreview,
     withPreview,
 } from "@comet/site-react";

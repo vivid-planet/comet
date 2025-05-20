@@ -1,8 +1,8 @@
 "use client";
+import { PreviewContext } from "@comet/site-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { type PropsWithChildren, useEffect } from "react";
 
-import { PreviewContext } from "../preview/PreviewContext";
 import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
 import { type SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 

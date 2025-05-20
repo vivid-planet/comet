@@ -1,10 +1,9 @@
 "use client";
 
-import { type PropsWithData } from "@comet/site-react";
+import { type PropsWithData, usePreview } from "@comet/site-react";
 import { type MouseEventHandler, type ReactElement, cloneElement } from "react";
 
 import { type ExternalLinkBlockData } from "../blocks.generated";
-import { usePreview } from "../preview/usePreview";
 import { sendSitePreviewIFrameMessage } from "../sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
 

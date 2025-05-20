@@ -1,8 +1,8 @@
 "use client";
 
+import { usePreview } from "@comet/site-react";
 import { type PropsWithChildren, type ReactNode } from "react";
 
-import { usePreview } from "../preview/usePreview";
 import styles from "./PreviewSkeleton.module.scss";
 
 interface SkeletonProps extends PropsWithChildren {
