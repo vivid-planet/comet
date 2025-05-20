@@ -219,7 +219,7 @@ type PageTreeNode {
   updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
+  numberOfDescendants: Int!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
