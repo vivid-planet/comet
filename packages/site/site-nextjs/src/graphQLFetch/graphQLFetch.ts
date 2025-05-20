@@ -1,4 +1,4 @@
-import { type SitePreviewData } from "../sitePreview/SitePreviewUtils";
+import { type SitePreviewData } from "@comet/site-react";
 
 type Fetch = typeof fetch;
 

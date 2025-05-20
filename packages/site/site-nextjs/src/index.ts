@@ -1,4 +1,3 @@
-export { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
@@ -41,7 +40,7 @@ export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
 export type { ImageDimensions } from "./image/Image";
-export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
+export { generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
@@ -50,4 +49,11 @@ export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSit
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
-export type { SitePreviewData, SitePreviewParams } from "./sitePreview/SitePreviewUtils";
+export {
+    type BlockLoader,
+    type BlockLoaderDependencies,
+    type SitePreviewData,
+    type SitePreviewParams,
+    calculateInheritAspectRatio,
+    recursivelyLoadBlockData,
+} from "@comet/site-react";

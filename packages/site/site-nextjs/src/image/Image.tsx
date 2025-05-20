@@ -45,28 +45,6 @@ export function getMaxDimensionsFromArea(area: ImageDimensions, aspectRatio: num
     };
 }
 
-// Duplicate of api/cms-api/src/dam/images/images.util.ts
-export function calculateInheritAspectRatio(
-    imageDimensions: ImageDimensions,
-    cropArea: {
-        focalPoint: "SMART" | "CENTER" | "NORTHWEST" | "NORTHEAST" | "SOUTHWEST" | "SOUTHEAST";
-        width?: number;
-        height?: number;
-        x?: number;
-        y?: number;
-    },
-): number {
-    if (cropArea.focalPoint === "SMART") {
-        return imageDimensions.width / imageDimensions.height;
-    } else {
-        if (cropArea.width === undefined || cropArea.height === undefined) {
-            throw new Error("Missing crop dimensions");
-        }
-
-        return (cropArea.width * imageDimensions.width) / 100 / ((cropArea.height * imageDimensions.height) / 100);
-    }
-}
-
 export function generateImageUrl({ src, width }: Pick<ImageLoaderProps, "src" | "width">, aspectRatio: number): string {
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
