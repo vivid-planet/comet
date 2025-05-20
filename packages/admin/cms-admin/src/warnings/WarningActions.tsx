@@ -1,4 +1,5 @@
 import { useApolloClient } from "@apollo/client";
+import { Tooltip } from "@comet/admin";
 import { ArrowRight, OpenNewTab } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
@@ -52,23 +53,27 @@ export function WarningActions({ sourceInfo, scope }: Props) {
 
     return (
         <div style={{ display: "flex" }}>
-            <IconButton
-                onClick={async () => {
-                    const url = await loadUrl();
-                    window.open(url, "_blank");
-                }}
-            >
-                <OpenNewTab />
-            </IconButton>
-            <IconButton
-                onClick={async () => {
-                    const url = await loadUrl();
+            <Tooltip title={<FormattedMessage id="comet.warnings.actions.tooltip.openInNewTab" defaultMessage="Open in new tab" />}>
+                <IconButton
+                    onClick={async () => {
+                        const url = await loadUrl();
+                        window.open(url, "_blank");
+                    }}
+                >
+                    <OpenNewTab />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title={<FormattedMessage id="comet.warnings.actions.tooltip.openInThisTab" defaultMessage="Open in this tab" />}>
+                <IconButton
+                    onClick={async () => {
+                        const url = await loadUrl();
 
-                    history.push(url);
-                }}
-            >
-                <ArrowRight />
-            </IconButton>
+                        history.push(url);
+                    }}
+                >
+                    <ArrowRight />
+                </IconButton>
+            </Tooltip>
         </div>
     );
 }
