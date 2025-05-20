@@ -6,32 +6,25 @@ import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withPreviewMiddleware } from "./middleware/preview";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
+import { withRobotsMiddleware } from "./middleware/robots";
+import { withSkipRewriteMiddleware } from "./middleware/skipRewrite";
 import { withStatusMiddleware } from "./middleware/status";
 
 export default chain([
     withStatusMiddleware,
     withAdminRedirectMiddleware,
+    withSkipRewriteMiddleware,
     withDamRewriteMiddleware,
     withCspHeadersMiddleware,
     withPreviewMiddleware,
     withRedirectToMainHostMiddleware,
+    withRobotsMiddleware,
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);
 
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico, favicon.svg, favicon.png
-         * - manifest.json
-         * - assets (assets from /public folder)
-         * - robots.txt
-         */
-        "/((?!_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json|assets/|robots.txt).*)",
-    ],
+    matcher: ["/(.*)"],
     // TODO find a better solution for this (https://nextjs.org/docs/messages/edge-dynamic-code-evaluation)
     unstable_allowDynamic: [
         "/node_modules/graphql/**",
