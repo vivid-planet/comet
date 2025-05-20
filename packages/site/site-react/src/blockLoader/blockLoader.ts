@@ -1,4 +1,4 @@
-import { type GraphQLFetch } from "../graphQLFetch/graphQLFetch";
+export type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestInit) => Promise<T>;
 
 type BlockMetaField = {
     name: string;
