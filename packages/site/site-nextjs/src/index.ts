@@ -3,7 +3,6 @@ export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
-export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
@@ -52,6 +51,7 @@ export {
     type SupportedBlocks,
     BlocksBlock,
     calculateInheritAspectRatio,
+    hasRichTextBlockContent,
     ListBlock,
     OneOfBlock,
     OptionalBlock,

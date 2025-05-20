@@ -8,7 +8,7 @@ export { ListBlock } from "./blocks/factories/ListBlock";
 export { OneOfBlock } from "./blocks/factories/OneOfBlock";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
-// export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
+export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 // export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 // export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 // export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
