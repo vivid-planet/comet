@@ -6,7 +6,7 @@ import { type ReactElement, type ReactNode, useRef, useState } from "react";
 import { type YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { useIsElementInViewport } from "./helpers/useIsElementVisible";
+import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
 import styles from "./YouTubeVideoBlock.module.scss";

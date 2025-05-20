@@ -56,4 +56,5 @@ export {
     OneOfBlock,
     OptionalBlock,
     recursivelyLoadBlockData,
+    useIsElementInViewport,
 } from "@comet/site-react";

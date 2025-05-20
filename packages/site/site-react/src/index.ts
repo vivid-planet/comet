@@ -9,6 +9,7 @@ export { OneOfBlock } from "./blocks/factories/OneOfBlock";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
 export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
+export { useIsElementInViewport } from "./blocks/helpers/useIsElementInViewport";
 // export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 // export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
 // export { InternalLinkBlock } from "./blocks/InternalLinkBlock";

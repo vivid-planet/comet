@@ -1,11 +1,11 @@
 "use client";
+import { useIsElementInViewport } from "@comet/site-react";
 import clsx from "clsx";
 import { type ReactNode, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
 import styles from "./VimeoVideoBlock.module.scss";

@@ -7,7 +7,7 @@ import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import styles from "./DamVideoBlock.module.scss";
-import { useIsElementInViewport } from "./helpers/useIsElementVisible";
+import { useIsElementInViewport } from "./helpers/useIsElementInViewport";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
 import { type PropsWithData } from "./PropsWithData";
 
