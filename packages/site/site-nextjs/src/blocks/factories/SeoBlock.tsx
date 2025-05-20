@@ -10,6 +10,9 @@ type SeoBlockProps<T = PixelImageBlockData> = (T extends PixelImageBlockData
           Omit<SeoBlockData, "openGraphImage"> & { openGraphImage: { block?: T } }
       >) & { title: string; canonicalUrl?: string };
 
+/**
+ * @deprecated The SeoBlock only works for the pages router and is not compatible with the app router.
+ */
 export const SeoBlock = <T = PixelImageBlockData,>({
     data: {
         htmlTitle,

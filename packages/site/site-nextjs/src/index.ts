@@ -2,12 +2,7 @@ export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
-export { BlocksBlock } from "./blocks/factories/BlocksBlock";
-export { ListBlock } from "./blocks/factories/ListBlock";
-export { OneOfBlock } from "./blocks/factories/OneOfBlock";
-export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
-export type { SupportedBlocks } from "./blocks/factories/types";
 export { hasRichTextBlockContent } from "./blocks/helpers/RichTextBlockHelper";
 export type { VideoPreviewImageProps } from "./blocks/helpers/VideoPreviewImage";
 export { VideoPreviewImage } from "./blocks/helpers/VideoPreviewImage";
@@ -54,6 +49,11 @@ export {
     type BlockLoaderDependencies,
     type SitePreviewData,
     type SitePreviewParams,
+    type SupportedBlocks,
+    BlocksBlock,
     calculateInheritAspectRatio,
+    ListBlock,
+    OneOfBlock,
+    OptionalBlock,
     recursivelyLoadBlockData,
 } from "@comet/site-react";
