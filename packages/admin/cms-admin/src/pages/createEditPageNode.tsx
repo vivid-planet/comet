@@ -30,6 +30,7 @@ import {
     type GQLUpdatePageNodeMutation,
     type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
+import { usePageTreeConfig } from "./pageTreeConfig";
 
 type SerializedInitialValues = string;
 
@@ -42,7 +43,6 @@ interface CreateEditPageNodeProps {
     nodeFragment?: { name: string; fragment: DocumentNode };
     valuesToInput?: (values: EditPageNodeFinalFormValues) => EditPageNodeFinalFormValues;
     disableHideInMenu?: boolean;
-    scopeParts?: string[];
 }
 
 export interface EditPageNodeProps {
@@ -57,7 +57,6 @@ export function createEditPageNode({
     nodeFragment,
     valuesToInput,
     disableHideInMenu = false,
-    scopeParts = ["domain"],
 }: CreateEditPageNodeProps): (props: EditPageNodeProps) => JSX.Element {
     const editPageNodeQuery = gql`
         query EditPageNode($id: ID!) {
@@ -108,10 +107,11 @@ export function createEditPageNode({
         const apollo = useApolloClient();
         const { scope } = useContentScope();
         const language = useContentLanguage({ scope });
+        const { scopePartsForRedirects } = usePageTreeConfig();
 
         const { scope: completeScope } = useContentScope();
         let isRedirectSourceAvailable = true;
-        const redirectScope = scopeParts.reduce(
+        const redirectScope = scopePartsForRedirects.reduce(
             (acc, scopePart) => {
                 acc[scopePart] = completeScope[scopePart];
                 return acc;
