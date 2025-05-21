@@ -1824,7 +1824,7 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 -   component={FinalFormToggleButtonGroup}
 -   options={[
 -       { value: "value1", icon: <Info /> },
--       { value: "value2", icon: <Info /> },
+-       { value: "value2", icon: <Error /> },
 -   ]}
 -   optionsPerRow={2}
 - />
