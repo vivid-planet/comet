@@ -51,8 +51,8 @@ const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerR
 const Button = styled(ButtonBase, { shouldForwardProp: (prop) => prop !== "$selected" })<{ $selected?: boolean }>`
     padding-left: ${({ theme }) => theme.spacing(3)};
     padding-right: ${({ theme }) => theme.spacing(3)};
-    padding-top: ${({ theme }) => theme.spacing(1.8)};
-    padding-bottom: ${({ theme }) => theme.spacing(1.8)};
+    padding-top: 9px;
+    padding-bottom: 9px;
     background-color: ${({ theme }) => theme.palette.background.paper};
 
     :hover {
