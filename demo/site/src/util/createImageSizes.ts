@@ -16,7 +16,7 @@ export function createImageSizes(breakpointWidths: BreakpointWidths) {
         }
     });
 
-    sizes.push(`(min-width: 0px) ${typeof defaultSize === "string" ? defaultSize : `${defaultSize}px`}`);
+    sizes.push(`${typeof defaultSize === "string" ? defaultSize : `${defaultSize}px`}`);
 
     return sizes.join(", ");
 }
