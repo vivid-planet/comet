@@ -235,7 +235,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
                                     hasChanges={props.dirty}
                                     doSave={doSave}
                                     doReset={doReset}
-                                    fetchHasChanges={() => {
+                                    checkForChanges={() => {
                                         return formRenderProps.form.getState().dirty;
                                     }}
                                 />

@@ -97,8 +97,8 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
         <RouterPrompt
             message={() => {
                 const hasChanges = Object.values(saveStates.current).some((saveState) => {
-                    if (saveState.fetchHasChanges) {
-                        return saveState.fetchHasChanges();
+                    if (saveState.checkForChanges) {
+                        return saveState.checkForChanges();
                     } else {
                         return saveState.hasChanges;
                     }
@@ -141,20 +141,20 @@ export interface SavableProps {
     /**
      * Additional to hasChanges a callback function that returns if the Savable has changes. Needed if SaveBoundary needs updated hasChanges right after saving but Savable hast not yet re-rendered.
      */
-    fetchHasChanges?: () => boolean;
+    checkForChanges?: () => boolean;
     doSave: () => Promise<SaveActionSuccess> | SaveActionSuccess;
     doReset?: () => void;
 }
 
-export const Savable = ({ doSave, doReset, hasChanges, fetchHasChanges }: SavableProps) => {
+export const Savable = ({ doSave, doReset, hasChanges, checkForChanges }: SavableProps) => {
     const id = useConstant<string>(() => uuid());
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryApi) throw new Error("Savable must be inside SaveBoundary");
     useEffect(() => {
-        saveBoundaryApi.register(id, { doSave, doReset, hasChanges, fetchHasChanges });
+        saveBoundaryApi.register(id, { doSave, doReset, hasChanges, checkForChanges });
         return function cleanup() {
             saveBoundaryApi.unregister(id);
         };
-    }, [id, doSave, doReset, hasChanges, fetchHasChanges, saveBoundaryApi]);
+    }, [id, doSave, doReset, hasChanges, checkForChanges, saveBoundaryApi]);
     return null;
 };
