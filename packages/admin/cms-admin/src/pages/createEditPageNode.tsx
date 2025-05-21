@@ -402,13 +402,20 @@ export function createEditPageNode({
                                                                                     </strong>
                                                                                 </Typography>
                                                                                 <Typography variant="body2">
-                                                                                    <FormattedMessage
-                                                                                        id="comet.pages.pages.page.createAutomaticRedirects.tooltip.text"
-                                                                                        defaultMessage="You have changed the slug. Therefore redirects should be created, so that users and search engines automatically land at the correct page, even if they visit the old path. Check this box, if you already have published or shared {numberOfDescendants, plural, =0 {this page} other {these pages}}."
-                                                                                        values={{
-                                                                                            numberOfDescendants,
-                                                                                        }}
-                                                                                    />
+                                                                                    {isRedirectSourceAvailable ? (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip.text"
+                                                                                            defaultMessage="You have changed the slug. Therefore redirects should be created, so that users and search engines automatically land at the correct page, even if they visit the old path. Check this box, if you already have published or shared {numberOfDescendants, plural, =0 {this page} other {these pages}}."
+                                                                                            values={{
+                                                                                                numberOfDescendants,
+                                                                                            }}
+                                                                                        />
+                                                                                    ) : (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip.redirectAlreadyExist"
+                                                                                            defaultMessage="You have changed the slug. Creating a redirect is not possible, because a redirect already exists for this page. Please check the existing redirect."
+                                                                                        />
+                                                                                    )}
                                                                                 </Typography>
                                                                             </>
                                                                         }
