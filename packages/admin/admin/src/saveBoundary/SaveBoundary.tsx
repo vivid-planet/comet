@@ -134,7 +134,13 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
 };
 
 export interface SavableProps {
+    /**
+     * Whether the Savable has currently changes (is dirty)
+     */
     hasChanges: boolean;
+    /**
+     * Additional to hasChanges a callback function that returns if the Savable has changes. Needed if SaveBoundary needs updated hasChanges right after saving but Savable hast not yet re-rendered.
+     */
     fetchHasChanges?: () => boolean;
     doSave: () => Promise<SaveActionSuccess> | SaveActionSuccess;
     doReset?: () => void;
