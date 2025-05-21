@@ -1895,7 +1895,7 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 +    />
 ```
 
-The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the prop `options` of the component have been changed from `icon` to `label`.
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
 
 ```diff
 - <Field
