@@ -1811,7 +1811,7 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 
 `FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
 
-```
+```diff
 - import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
 + import { ToggleGroupButtonField } from "@comet/admin";
 
