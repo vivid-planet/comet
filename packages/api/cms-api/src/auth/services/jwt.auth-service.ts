@@ -1,4 +1,5 @@
 import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef } from "@nestjs/core";
 import { JwtService, JwtVerifyOptions } from "@nestjs/jwt";
 import { Request } from "express";
@@ -10,16 +11,17 @@ import { AuthenticateUserResult, AuthServiceInterface, SKIP_AUTH_SERVICE } from 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type JwtPayload = { [key: string]: any };
 
+type ConvertJwtToUser = (jwt: JwtPayload) => Promise<User> | User;
+
 export interface JwtToUserServiceInterface {
-    convertJwtToUser: (jwt: JwtPayload) => Promise<User> | User;
+    convertJwtToUser: ConvertJwtToUser;
 }
 
 export interface JwtAuthServiceOptions {
     jwksOptions?: JwksRsa.Options;
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
-    convertJwtToUser?: (jwt: JwtPayload) => Promise<User> | User;
-    convertJwtToUserService?: Type<JwtToUserServiceInterface>;
+    convertJwtToUser?: ConvertJwtToUser | Type<JwtToUserServiceInterface>;
 }
 
 export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }: JwtAuthServiceOptions): Type<AuthServiceInterface> {
@@ -57,10 +59,11 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
             }
 
             if (options.convertJwtToUser) {
+                if (this.isService(options.convertJwtToUser)) {
+                    const service = this.moduleRef.get(options.convertJwtToUser, { strict: false });
+                    return { user: await service.convertJwtToUser(jwt) };
+                }
                 return { user: await options.convertJwtToUser(jwt) };
-            } else if (options.convertJwtToUserService) {
-                const service = this.moduleRef.get(options.convertJwtToUserService, { strict: false });
-                return { user: await service.convertJwtToUser(jwt) };
             }
 
             if (typeof jwt.sub !== "string" || !jwt.sub) {
@@ -82,6 +85,11 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
             if (!this.jwksClient) throw new Error("jwksOptions.jwksUri not set");
             const jwt = this.jwtService.decode(token, { complete: true }) as { header: { kid: string } };
             return (await this.jwksClient.getSigningKey(jwt.header.kid)).getPublicKey();
+        }
+
+        private isService(meta: ConvertJwtToUser | Type<JwtToUserServiceInterface>): meta is Type<JwtToUserServiceInterface> {
+            // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+            return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
         }
     }
     return JwtAuthService;
