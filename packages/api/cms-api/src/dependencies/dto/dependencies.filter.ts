@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsString } from "class-validator";
+import { IsBoolean, IsString } from "class-validator";
 
 import { IsUndefinable } from "../../common/validators/is-undefinable";
 
@@ -19,6 +19,10 @@ export class DependencyFilter {
     @IsString()
     @IsUndefinable()
     rootColumnName?: string;
+
+    @Field(() => Boolean, { defaultValue: true })
+    @IsBoolean()
+    visible: boolean;
 }
 
 @InputType()
@@ -37,4 +41,8 @@ export class DependentFilter {
     @IsString()
     @IsUndefinable()
     rootColumnName?: string;
+
+    @Field(() => Boolean, { defaultValue: true })
+    @IsBoolean()
+    visible: boolean;
 }
