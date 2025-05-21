@@ -1,11 +1,11 @@
 import theme, { Theme } from "@src/theme";
 
-type BreakpointWidths = { xs: string | number } & Partial<Record<keyof Theme["breakpoints"], string | number>>;
+type BreakpointWidths = { default: string | number } & Partial<Record<keyof Theme["breakpoints"], string | number>>;
 
 export function createImageSizes(breakpointWidths: BreakpointWidths) {
     const sizes: string[] = [];
     const breakpoints = Object.entries(theme.breakpoints).reverse();
-    const defaultSize = breakpointWidths.xs;
+    const defaultSize = breakpointWidths.default;
 
     breakpoints.forEach(([breakpointKey, breakpointValue]) => {
         const size = breakpointWidths[breakpointKey];
