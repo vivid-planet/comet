@@ -88,13 +88,16 @@ const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
     position: relative;
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 0.5s ease-out;
+    transition: grid-template-rows 0.5s ease-out, visibility 0s linear 0.5s;
+    visibility: hidden;
 
     ${({ $isExpanded }) =>
         $isExpanded &&
         css`
             grid-template-rows: 1fr;
             padding-bottom: ${({ theme }) => theme.spacing.S300};
+            visibility: visible;
+            transition-delay: 0s;
         `}
 `;
 
