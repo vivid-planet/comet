@@ -87,9 +87,9 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
             return (await this.jwksClient.getSigningKey(jwt.header.kid)).getPublicKey();
         }
 
-        private isService(meta: ConvertJwtToUser | Type<JwtToUserServiceInterface>): meta is Type<JwtToUserServiceInterface> {
+        private isService(convertJwtToUser: ConvertJwtToUser | Type<JwtToUserServiceInterface>): convertJwtToUser is Type<JwtToUserServiceInterface> {
             // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-            return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
+            return Reflect.hasMetadata(INJECTABLE_WATERMARK, convertJwtToUser);
         }
     }
     return JwtAuthService;
