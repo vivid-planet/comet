@@ -1,5 +1,3 @@
-import "@comet/site-react/css";
-
 export { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";

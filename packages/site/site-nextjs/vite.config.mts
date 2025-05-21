@@ -21,7 +21,11 @@ export default defineConfig({
                 // this is necessary to treat all npm packages as external,
                 // otherwise vite will bundle them into the library which caused issues with client / server components
                 // supposedly because server code was bundled into the client code
-                return !source.startsWith(".") && !source.startsWith("/");
+                return (
+                    source !== "@comet/site-react/css" && // include css from site-react in site-nextjs build
+                    !source.startsWith(".") &&
+                    !source.startsWith("/")
+                );
             },
             output: {
                 // these options are necessary to prevent bundling everything in one file (doesn't work with client components)
