@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { isWithPreviewPropsData, type PropsWithData, usePreview, withPreview } from "@comet/cms-site";
 import { type AccordionBlockData } from "@src/blocks.generated";
+=======
+import { isWithPreviewPropsData, PropsWithData, usePreview, withPreview } from "@comet/site-nextjs";
+import { AccordionBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";
 import { useEffect, useMemo, useState } from "react";

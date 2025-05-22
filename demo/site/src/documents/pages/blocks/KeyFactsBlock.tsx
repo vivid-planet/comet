@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { ListBlock, type PropsWithData, withPreview } from "@comet/cms-site";
 import { type KeyFactsBlockData } from "@src/blocks.generated";
+=======
+import { ListBlock, PropsWithData, withPreview } from "@comet/site-nextjs";
+import { KeyFactsBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { PageLayout } from "@src/layout/PageLayout";
 import styled, { css } from "styled-components";
 
@@ -31,7 +36,7 @@ const ItemWrapper = styled.div<{ $listItemCount: number }>`
         css`
             grid-template-columns: repeat(${Math.min($listItemCount, 2)}, 1fr);
 
-            ${theme.breakpoints.sm.mediaQuery} {
+            ${theme.breakpoints.md.mediaQuery} {
                 grid-template-columns: repeat(${Math.min($listItemCount, 4)}, 1fr);
             }
         `}

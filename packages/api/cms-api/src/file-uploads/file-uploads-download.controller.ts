@@ -150,6 +150,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
+<<<<<<< HEAD
                 const response = await fetch(this.imgproxyService.getSignedUrl(path));
                 if (response.body === null) {
                     throw new Error("Response body is null");
@@ -163,18 +164,38 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
                 const readableBody = Readable.fromWeb(response.body);
                 readableBody.pipe(new PassThrough()).pipe(res);
+=======
+                const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
 
-                if (response.ok) {
+                const contentLength = imgproxyResponse.headers.get("content-length");
+                if (!contentLength) {
+                    throw new Error("Content length not found");
+                }
+
+                const contentType = imgproxyResponse.headers.get("content-type");
+                if (!contentType) {
+                    throw new Error("Content type not found");
+                }
+>>>>>>> main
+
+                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType });
+                imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+
+                if (imgproxyResponse.ok) {
                     await this.cacheService.set(file.contentHash, path, {
+<<<<<<< HEAD
                         file: readableBody.pipe(new PassThrough()),
+=======
+                        file: imgproxyResponse.body.pipe(new PassThrough()),
+>>>>>>> main
                         metaData: {
-                            size: Number(headers["content-length"]),
-                            headers,
+                            size: Number(contentLength),
+                            contentType: contentType,
                         },
                     });
                 }
             } else {
-                res.writeHead(200, cache.metaData.headers);
+                res.writeHead(200, { "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
 
                 cache.file.pipe(res);
             }

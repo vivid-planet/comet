@@ -1,0 +1,58 @@
+@mixin hover-styles {
+    outline-color: #29b6f6;
+    outline-style: solid;
+
+    &:after {
+        background-color: #29b6f6;
+    }
+}
+
+.root {
+    position: absolute;
+    cursor: pointer;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0.25;
+    }
+
+    &:hover {
+        @include hover-styles;
+    }
+}
+
+.isHoveredInBlockList {
+    @include hover-styles;
+}
+
+.showBlockOutlines:not(:hover) {
+    outline-color: #d9d9d9;
+    outline-style: dashed;
+}
+
+.blockIsSelected {
+    outline-color: #29b6f6;
+
+    .label {
+        display: inline-block;
+    }
+}
+
+.label {
+    position: absolute;
+    padding: 2px;
+    background-color: #57b0eb;
+    line-height: 16px;
+    color: white;
+    top: 1px;
+    right: 1px;
+    font-size: 12px;
+    display: none;
+}

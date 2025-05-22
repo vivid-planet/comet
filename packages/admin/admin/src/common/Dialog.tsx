@@ -26,7 +26,7 @@ export type DialogProps = ThemedComponentBaseProps<{
     iconMapping?: {
         closeIcon?: ReactNode;
     };
-} & MuiDialogProps;
+} & Omit<MuiDialogProps, "title">;
 
 type OwnerState = {
     hasCloseButton: boolean;
@@ -49,7 +49,7 @@ export function Dialog(inProps: DialogProps) {
     };
 
     return (
-        <Root open={open} {...slotProps?.root} {...restProps}>
+        <Root open={open} onClose={onClose} {...slotProps?.root} {...restProps}>
             {onClose && (
                 <CloseButton {...slotProps?.closeButton} onClick={(event) => onClose(event, "escapeKeyDown")}>
                     {closeIcon}

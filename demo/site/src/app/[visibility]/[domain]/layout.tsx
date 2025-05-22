@@ -1,4 +1,4 @@
-import { SitePreviewProvider } from "@comet/cms-site";
+import { SitePreviewProvider } from "@comet/site-nextjs";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { SiteConfigProvider } from "@src/util/SiteConfigProvider";
 import { draftMode } from "next/headers";

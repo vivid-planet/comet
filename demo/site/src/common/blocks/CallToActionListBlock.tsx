@@ -1,6 +1,11 @@
 "use client";
+<<<<<<< HEAD
 import { ListBlock, type PropsWithData, withPreview } from "@comet/cms-site";
 import { type CallToActionListBlockData } from "@src/blocks.generated";
+=======
+import { ListBlock, PropsWithData, withPreview } from "@comet/site-nextjs";
+import { CallToActionListBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import styled from "styled-components";
 
 import { CallToActionBlock } from "./CallToActionBlock";
@@ -22,7 +27,7 @@ const Root = styled.div`
     flex-flow: row wrap;
     gap: ${({ theme }) => theme.spacing.S300};
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         gap: ${({ theme }) => theme.spacing.S400};
     }
 `;
