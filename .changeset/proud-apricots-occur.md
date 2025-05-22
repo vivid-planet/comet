@@ -1,5 +1,5 @@
 ---
-"@comet/site-next": minor
+"@comet/site-nextjs": minor
 ---
 
 Introduce new package `@comet/site-nextjs` as copy of `@comet/cms-site`
