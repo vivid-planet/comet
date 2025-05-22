@@ -13,7 +13,6 @@ export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { createFetchWithDefaults, createFetchWithPreviewHeaders } from "./graphQLFetch/graphQLFetch";
-export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { Image } from "./image/Image";
 export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
@@ -57,6 +56,7 @@ export {
     PreviewSkeleton,
     recursivelyLoadBlockData,
     SvgImageBlock,
+    useBlockPreviewFetch,
     useCookieApi,
     useCookieBotCookieApi,
     useIFrameBridge,
