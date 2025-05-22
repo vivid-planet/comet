@@ -15,6 +15,7 @@ export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
 export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
 export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
+export { createFetchInMemoryCache } from "./graphQLFetch/fetchInMemoryCache";
 export {
     type BlockPreviewData,
     type GraphQLFetch,
