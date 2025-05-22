@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 7.21.0
+
+### Patch Changes
+
+-   904ff5f1d: Deprecated: This package is now deprecated in favor of `@comet/site-nextjs`
+
 ## 7.20.0
 
 ### Patch Changes

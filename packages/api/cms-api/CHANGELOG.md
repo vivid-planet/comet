@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 7.21.0
+
+### Patch Changes
+
+-   06920eb59: Fix: Change GraphQL Type of numberOfDescendants from Float to Int
+    -   @comet/blocks-api@7.21.0
+
 ## 7.20.0
 
 ### Minor Changes
