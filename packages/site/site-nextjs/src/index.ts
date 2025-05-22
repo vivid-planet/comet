@@ -12,7 +12,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { createFetchWithDefaults, createFetchWithPreviewHeaders } from "./graphQLFetch/graphQLFetch";
+export { createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
 export { Image } from "./image/Image";
 export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
@@ -38,6 +38,7 @@ export {
     convertPreviewDataToHeaders,
     CookieApiProvider,
     CookieSafe,
+    createFetchWithPreviewHeaders,
     createGraphQLFetch,
     ErrorHandlerBoundary,
     ErrorHandlerProvider,
