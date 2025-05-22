@@ -1,15 +1,13 @@
+import { type PreviewData } from "@comet/site-react";
 import { errors, jwtVerify } from "jose";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Scope = Record<string, any>;
 
-export type SitePreviewData = {
-    includeInvisible: boolean;
-};
 export type SitePreviewParams = {
     scope: Scope;
     path: string;
-    previewData?: SitePreviewData;
+    previewData?: PreviewData;
 };
 
 export async function verifySitePreviewJwt(jwt: string): Promise<SitePreviewParams | null> {

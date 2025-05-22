@@ -1,14 +1,11 @@
 "use client";
 
+import { type PropsWithData, PreviewSkeleton, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
-import { withPreview } from "../iframebridge/withPreview";
-import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
-import { type PropsWithData } from "./PropsWithData";
 import styles from "./YouTubeVideoBlock.module.scss";
 
 const EXPECTED_YT_ID_LENGTH = 11;

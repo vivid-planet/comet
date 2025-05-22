@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 
 export const useIsElementInViewport = (ref: React.RefObject<Element>, callback: (inView: boolean) => void) => {

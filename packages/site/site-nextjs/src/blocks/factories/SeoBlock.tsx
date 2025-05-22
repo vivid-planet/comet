@@ -1,8 +1,7 @@
+import { type PropsWithData, generateImageUrl } from "@comet/site-react";
 import Head from "next/head";
 
 import { type PixelImageBlockData, type SeoBlockData } from "../../blocks.generated";
-import { generateImageUrl } from "../../image/Image";
-import { type PropsWithData } from "../PropsWithData";
 
 type SeoBlockProps<T = PixelImageBlockData> = (T extends PixelImageBlockData
     ? PropsWithData<SeoBlockData> & { resolveOpenGraphImageUrlTemplate?: never }
@@ -10,6 +9,9 @@ type SeoBlockProps<T = PixelImageBlockData> = (T extends PixelImageBlockData
           Omit<SeoBlockData, "openGraphImage"> & { openGraphImage: { block?: T } }
       >) & { title: string; canonicalUrl?: string };
 
+/**
+ * @deprecated The SeoBlock only works for the pages router and is not compatible with the app router.
+ */
 export const SeoBlock = <T = PixelImageBlockData,>({
     data: {
         htmlTitle,

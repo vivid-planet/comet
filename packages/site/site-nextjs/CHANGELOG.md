@@ -1,1 +1,1 @@
-# @comet/site-next
+# @comet/site-nextjs

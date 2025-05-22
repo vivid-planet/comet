@@ -25,6 +25,7 @@ export const OneOfBlock = ({ data: { block, ...additionalProps }, supportedBlock
     if (!blockFunction) {
         if (process.env.NODE_ENV === "development") {
             return (
+                // eslint-disable-next-line @calm/react-intl/missing-formatted-message
                 <pre>
                     Unknown type ({block.type}): {JSON.stringify(block.props)}
                 </pre>
