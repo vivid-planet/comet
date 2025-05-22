@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { gql } from "@comet/cms-site";
 import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
+=======
+import { gql } from "@comet/site-nextjs";
+import { GQLNewsContentScopeInput } from "@src/graphql.generated";
+>>>>>>> main
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 
 import { type GQLNewsIndexPageQuery, type GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";

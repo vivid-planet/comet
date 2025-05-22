@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { type PropsWithData, withPreview } from "@comet/cms-site";
 import { type FooterContentBlockData } from "@src/blocks.generated";
+=======
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
+import { FooterContentBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
@@ -55,7 +60,7 @@ const PageLayoutContent = styled.div`
     align-items: center;
     padding: ${({ theme }) => `${theme.spacing.D400} 0`};
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         position: relative;
         gap: ${({ theme }) => theme.spacing.D100};
         flex-direction: row;
@@ -70,13 +75,13 @@ const TopContainer = styled.div`
     align-items: center;
     gap: ${({ theme }) => theme.spacing.D100};
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         align-self: stretch;
         flex-direction: row-reverse;
         justify-content: space-between;
     }
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         flex-direction: row;
     }
 `;
@@ -85,11 +90,11 @@ const RichTextWrapper = styled.div`
     width: 100%;
     text-align: center;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         text-align: left;
     }
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         max-width: 80%;
     }
 `;
@@ -97,7 +102,7 @@ const RichTextWrapper = styled.div`
 const ImageWrapper = styled.div`
     width: 100px;
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         position: absolute;
         width: 100%;
         max-width: 100px;
@@ -114,7 +119,7 @@ const LinkCopyrightWrapper = styled.div`
     align-items: center;
     gap: ${({ theme }) => theme.spacing.S500};
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         width: 80%;
         align-items: flex-end;
     }
@@ -130,7 +135,7 @@ const LinksWrapper = styled.div`
 const CopyrightNotice = styled(Typography)`
     text-align: center;
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         text-align: right;
     }
 `;
@@ -148,7 +153,7 @@ const HorizontalLine = styled.hr`
     color: ${({ theme }) => theme.palette.gray["600"]};
     margin: ${({ theme }) => `${theme.spacing.D300} 0`};
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         display: none;
     }
 `;

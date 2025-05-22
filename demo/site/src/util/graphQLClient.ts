@@ -2,8 +2,13 @@ import {
     convertPreviewDataToHeaders,
     createFetchWithDefaults,
     createGraphQLFetch as createGraphQLFetchLibrary,
+<<<<<<< HEAD
     type SitePreviewData,
 } from "@comet/cms-site";
+=======
+    SitePreviewData,
+} from "@comet/site-nextjs";
+>>>>>>> main
 
 import { getVisibilityParam } from "./ServerContext";
 

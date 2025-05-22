@@ -1,5 +1,6 @@
 # @comet/cms-site
 
+<<<<<<< HEAD
 ## 8.0.0-beta.4
 
 ### Patch Changes
@@ -38,6 +39,19 @@
 
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+=======
+## 7.21.0
+
+### Patch Changes
+
+-   904ff5f1d: Deprecated: This package is now deprecated in favor of `@comet/site-nextjs`
+
+## 7.20.0
+
+### Patch Changes
+
+-   a06cac3a7: Fix `PixelImageBlock` issue when setting fixed height and width auto
+>>>>>>> main
 
 ## 7.19.0
 

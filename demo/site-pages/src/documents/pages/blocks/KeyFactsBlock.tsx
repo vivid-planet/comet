@@ -31,7 +31,7 @@ const ItemWrapper = styled.div<{ $listItemCount: number }>`
         css`
             grid-template-columns: repeat(${Math.min($listItemCount, 2)}, 1fr);
 
-            ${theme.breakpoints.sm.mediaQuery} {
+            ${theme.breakpoints.md.mediaQuery} {
                 grid-template-columns: repeat(${Math.min($listItemCount, 4)}, 1fr);
             }
         `}
