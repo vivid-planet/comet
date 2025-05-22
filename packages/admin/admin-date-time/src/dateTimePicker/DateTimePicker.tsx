@@ -14,37 +14,67 @@ export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormContr
 const Root = createComponentSlot("div")<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "root",
-})(css`
-    display: flex;
-    align-items: center;
-`);
+})(
+    ({ theme }) => css`
+        ${theme.breakpoints.up("sm")} {
+            display: flex;
+            align-items: center;
+        }
+    `,
+);
 
 const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "dateFormControl",
 })(
     ({ theme }) => css`
-        flex-grow: 1;
-        margin-right: ${theme.spacing(2)};
+        margin-bottom: ${theme.spacing(2)};
+        width: 100%;
+
+        ${theme.breakpoints.up("sm")} {
+            flex-grow: 1;
+            margin-right: ${theme.spacing(2)};
+            margin-bottom: 0;
+            width: auto;
+        }
     `,
 );
 
 const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timeFormControl",
-})(css`
-    flex-grow: 1;
-`);
+})(
+    ({ theme }) => css`
+        width: 100%;
+        flex-grow: 1;
+
+        ${theme.breakpoints.up("sm")} {
+            width: auto;
+        }
+    `,
+);
 
 const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "datePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 export interface DateTimePickerProps
     extends ThemedComponentBaseProps<{
