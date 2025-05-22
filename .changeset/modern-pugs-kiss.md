@@ -1,5 +1,5 @@
 ---
-"@comet/admin": minor
+"@comet/admin": patch
 ---
 
-Change the `onClose` prop of `DeleteDialog` to use the `onCancel` function instead of `onDelete`
+Don't delete an item when closing the delete dialog in `CrudContextMenu`
