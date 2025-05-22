@@ -1,5 +1,6 @@
 import {
     type Breakpoint,
+    // eslint-disable-next-line no-restricted-imports
     Button as MuiButton,
     type ButtonProps as MuiButtonProps,
     type ComponentsOverrides,
