@@ -1,5 +1,14 @@
 # @comet/admin
 
+## 7.21.0
+
+### Patch Changes
+
+-   1a30eb858: Prevent overlapping placeholders by a non-visible clear-button
+-   3e9ea613e: Fix color of button in `UndoSnackbar`
+    -   @comet/admin-icons@7.21.0
+    -   @comet/admin-theme@7.21.0
+
 ## 7.20.0
 
 ### Patch Changes

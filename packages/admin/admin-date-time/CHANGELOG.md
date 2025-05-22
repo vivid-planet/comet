@@ -1,5 +1,15 @@
 # @comet/admin-date-time
 
+## 7.21.0
+
+### Patch Changes
+
+-   1a30eb858: Adapt styling of `DateTimePicker` on mobile devices to improve readability of the placeholder
+-   Updated dependencies [1a30eb858]
+-   Updated dependencies [3e9ea613e]
+    -   @comet/admin@7.21.0
+    -   @comet/admin-icons@7.21.0
+
 ## 7.20.0
 
 ### Patch Changes
