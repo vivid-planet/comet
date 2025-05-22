@@ -18,7 +18,7 @@ export default chain([
     withCspHeadersMiddleware,
     withPreviewMiddleware,
     withRedirectToMainHostMiddleware,
-    withRobotsMiddleware,
+    withRobotsMiddleware, // for robots.txt, the middleware may only be skipped after the main host redirect
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);
