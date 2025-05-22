@@ -20,14 +20,17 @@ export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSit
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
-export { type SitePreviewData, type SitePreviewParams } from "./sitePreview/SitePreviewUtils";
+export { type SitePreviewParams } from "./sitePreview/SitePreviewUtils";
 export {
     type BlockLoader,
     type BlockLoaderDependencies,
     type CookieApi,
     type GraphQLFetch,
     type ImageDimensions,
+    type PreviewData,
     type PropsWithData,
+    /** @deprecated Use PreviewData instead. */
+    type PreviewData as SitePreviewData,
     type SupportedBlocks,
     type WithPreviewProps,
     BlockPreviewProvider,

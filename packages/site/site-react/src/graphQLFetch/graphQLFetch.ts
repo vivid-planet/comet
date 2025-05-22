@@ -1,10 +1,10 @@
 type Fetch = typeof fetch;
 
-export type BlockPreviewData = {
+export type PreviewData = {
     includeInvisible: boolean;
 };
 
-export function convertPreviewDataToHeaders(previewData?: BlockPreviewData) {
+export function convertPreviewDataToHeaders(previewData?: PreviewData) {
     const { includeInvisibleBlocks, includeInvisiblePages } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
@@ -54,7 +54,7 @@ export const gql = (chunks: TemplateStringsArray, ...variables: unknown[]): stri
     }, ``);
 };
 
-export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: BlockPreviewData): Fetch {
+export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: PreviewData): Fetch {
     const defaultHeaders = convertPreviewDataToHeaders(previewData);
     return createFetchWithDefaults(fetch, { headers: defaultHeaders });
 }

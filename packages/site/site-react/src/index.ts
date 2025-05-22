@@ -17,8 +17,8 @@ export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 export { createFetchInMemoryCache } from "./graphQLFetch/fetchInMemoryCache";
 export {
-    type BlockPreviewData,
     type GraphQLFetch,
+    type PreviewData,
     convertPreviewDataToHeaders,
     createFetchWithDefaults,
     createFetchWithPreviewHeaders,

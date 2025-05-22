@@ -1,10 +1,8 @@
-import { convertPreviewDataToHeaders } from "@comet/site-react";
-
-import { type SitePreviewData } from "../sitePreview/SitePreviewUtils";
+import { type PreviewData, convertPreviewDataToHeaders } from "@comet/site-react";
 
 type Fetch = typeof fetch;
 
-export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: SitePreviewData): Fetch {
+export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: PreviewData): Fetch {
     const defaultHeaders = convertPreviewDataToHeaders(previewData);
     return createFetchWithDefaults(fetch, { headers: defaultHeaders });
 }
