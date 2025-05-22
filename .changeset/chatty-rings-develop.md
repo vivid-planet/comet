@@ -1,5 +1,5 @@
 ---
-"@comet/site-react": major
+"@comet/site-react": minor
 ---
 
 Introduce new package `@comet/site-react`
