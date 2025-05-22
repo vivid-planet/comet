@@ -45,6 +45,10 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
         position,
     };
 
+    if (!hasClearableContent) {
+        return null;
+    }
+
     return (
         <Grow in={hasClearableContent}>
             <Root position={position} ownerState={ownerState} {...slotProps?.root} {...restProps}>

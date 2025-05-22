@@ -8,6 +8,7 @@ import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -76,12 +77,15 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
 
 export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const data = await fetchData({ pageTreeNodeId, scope });
+    const siteConfig = getSiteConfigForDomain(scope.domain);
+
     const document = data?.pageContent?.document;
     if (!document) {
         return {};
     }
-    const siteUrl = "http://localhost:3000"; //TODO get from site config
-    const canonicalUrl = document.seo.canonicalUrl || `${siteUrl}${data.pageContent.path}`;
+
+    const siteUrl = siteConfig.url;
+    const canonicalUrl = (document.seo.canonicalUrl || `${siteUrl}/${scope.language}${data.pageContent.path}`).replace(/\/$/, ""); // Remove trailing slash for "home"
 
     // TODO move into library
     return {
