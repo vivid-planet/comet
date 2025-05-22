@@ -10,6 +10,11 @@ export interface FinalFormAsyncAutocompleteProps<
     loadOptions: () => Promise<T[]>;
 }
 
+/**
+ * Final Form-compatible AsyncAutocomplete component.
+ *
+ * @see {@link AsyncAutocompleteField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export function FinalFormAsyncAutocomplete<
     T extends Record<string, any>,
     Multiple extends boolean | undefined,
