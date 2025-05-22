@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;
@@ -83,12 +84,14 @@ export const FinalFormSelect = <T,>({
             {...selectProps}
             endAdornment={
                 <>
-                    {loading && (
+                    {loading ? (
                         <InputAdornment position="end">
                             <CircularProgress size={16} color="inherit" />
+                            {endAdornment}
                         </InputAdornment>
+                    ) : (
+                        <InputAdornment position="end">{endAdornment}</InputAdornment>
                     )}
-                    {endAdornment}
                 </>
             }
             onChange={(event) => {
@@ -99,12 +102,19 @@ export const FinalFormSelect = <T,>({
                         : options.find((i) => getOptionValue(i) == value),
                 );
             }}
-            value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
+            value={value}
+            renderValue={() => {
+                if (Array.isArray(value)) {
+                    return value.map((i) => getOptionValue(i));
+                } else {
+                    return getOptionValue(value);
+                }
+            }}
         >
             {loading && (
-                <MenuItem value="" disabled>
+                <MenuItemDisabledOverrideOpacity value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
-                </MenuItem>
+                </MenuItemDisabledOverrideOpacity>
             )}
 
             {options.length === 0 &&
@@ -120,11 +130,12 @@ export const FinalFormSelect = <T,>({
                         {getOptionLabel(value)}
                     </MenuItem>
                 ))}
-            {options.map((option: T) => (
-                <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
-                    {getOptionLabel(option)}
-                </MenuItem>
-            ))}
+            {!loading &&
+                options.map((option: T) => (
+                    <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
+                        {getOptionLabel(option)}
+                    </MenuItem>
+                ))}
         </Select>
     );
 };
