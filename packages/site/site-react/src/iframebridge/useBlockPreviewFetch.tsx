@@ -1,8 +1,8 @@
-import { type GraphQLFetch, convertPreviewDataToHeaders, createGraphQLFetch, useIFrameBridge } from "@comet/site-react";
 import { useEffect, useState } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
-import { createFetchWithDefaults } from "../graphQLFetch/graphQLFetch";
+import { type GraphQLFetch, convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch } from "../graphQLFetch/graphQLFetch";
+import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);
 

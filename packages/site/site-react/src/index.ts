@@ -15,6 +15,15 @@ export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";
 export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
 export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
+export {
+    type BlockPreviewData,
+    type GraphQLFetch,
+    convertPreviewDataToHeaders,
+    createFetchWithDefaults,
+    createFetchWithPreviewHeaders,
+    createGraphQLFetch,
+    gql,
+} from "./graphQLFetch/graphQLFetch";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";

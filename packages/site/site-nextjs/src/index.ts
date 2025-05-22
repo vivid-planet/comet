@@ -12,14 +12,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export {
-    type GraphQLFetch,
-    convertPreviewDataToHeaders,
-    createFetchWithDefaults,
-    createFetchWithPreviewHeaders,
-    createGraphQLFetch,
-    gql,
-} from "./graphQLFetch/graphQLFetch";
+export { createFetchWithDefaults, createFetchWithPreviewHeaders } from "./graphQLFetch/graphQLFetch";
 export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { Image } from "./image/Image";
 export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
@@ -32,6 +25,7 @@ export {
     type BlockLoader,
     type BlockLoaderDependencies,
     type CookieApi,
+    type GraphQLFetch,
     type ImageDimensions,
     type PropsWithData,
     type SupportedBlocks,
@@ -39,12 +33,15 @@ export {
     BlockPreviewProvider,
     BlocksBlock,
     calculateInheritAspectRatio,
+    convertPreviewDataToHeaders,
     CookieApiProvider,
     CookieSafe,
+    createGraphQLFetch,
     ErrorHandlerBoundary,
     ErrorHandlerProvider,
     generateImageUrl,
     getMaxDimensionsFromArea,
+    gql,
     hasRichTextBlockContent,
     IFrameBridgeProvider,
     IFrameMessageType,
