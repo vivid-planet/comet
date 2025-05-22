@@ -28,6 +28,7 @@ export {
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
+export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
 export { Image } from "./image/Image";
