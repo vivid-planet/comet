@@ -73,7 +73,7 @@
         "@types/cookie-parser": "^1.4.8",
         "@types/express": "^5.0.1",
         "@types/inquirer": "^8.2.10",
-        "@types/node": "^22.15.17",
+        "@types/node": "^22.15.21",
         "@types/response-time": "^2.3.8",
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^7.4.4",
