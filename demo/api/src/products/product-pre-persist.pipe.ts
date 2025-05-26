@@ -1,4 +1,4 @@
-import { ImporterPipe, PipeData } from "@comet/cms-api";
+import { ImporterPipe } from "@comet/cms-api";
 import { Connection, EntityManager, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
 import slugify from "slugify";
@@ -28,7 +28,7 @@ export class ProductPrePersist extends Transform {
     }
 
     async _transform(
-        inputDataAndMetadata: { data: PipeData; metadata: Record<string, unknown> },
+        inputDataAndMetadata: { data: Record<string, unknown>; metadata: Record<string, unknown> },
         encoding: BufferEncoding,
         callback: TransformCallback,
     ) {
