@@ -84,7 +84,7 @@
         "@sentry/node": "^9.5.0",
         "@types/draft-js": "^0.11.18",
         "@types/express": "^5.0.1",
-        "@types/inquirer": "^8.2.10",
+        "@types/inquirer": "^8.2.11",
         "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",
         "@types/mime": "^2.0.3",
