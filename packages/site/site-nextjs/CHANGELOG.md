@@ -1,5 +1,17 @@
 # @comet/site-nextjs
 
+## 7.21.1
+
+### Patch Changes
+
+-   c84874edf: Revert "Fix `PixelImageBlock` fixed height, auto width issue" added in v7.20.0
+
+    In v7.20.0, height was set to `100%` for `PixelImageBlock`.
+    This caused issues when the image was not wrapped, as it would inherit the height of the next parent element instead of maintaining its aspect ratio.
+    Thus, we are reverting this change to restore the previous behavior.
+
+    -   @comet/site-react@7.21.1
+
 ## 7.21.0
 
 ### Minor Changes
