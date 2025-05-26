@@ -2,7 +2,7 @@
 "@comet/eslint-config": major
 ---
 
-Prevent `@mui/material` icon imports
+Add import restriction for MUI's `Button`
 
 Buttons used in Comet DXP applications should match the Comet CI.
-Use buttons from `@comet/admin` instead.
+Use `Button` from `@comet/admin` instead.
