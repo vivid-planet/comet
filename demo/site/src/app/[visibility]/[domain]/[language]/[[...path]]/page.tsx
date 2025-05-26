@@ -1,6 +1,6 @@
 export const dynamic = "error";
 
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-nextjs";
 import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";

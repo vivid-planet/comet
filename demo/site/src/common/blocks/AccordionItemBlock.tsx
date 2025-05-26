@@ -1,4 +1,4 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/site-nextjs";
 import { AccordionContentBlockData, AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
@@ -45,7 +45,7 @@ export const AccordionItemBlock = withPreview(
                         <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
                     </IconWrapper>
                 </TitleWrapper>
-                <ContentWrapper aria-hidden={!isExpanded} $isExpanded={isExpanded}>
+                <ContentWrapper $isExpanded={isExpanded}>
                     <ContentWrapperInner>
                         <AccordionContentBlock data={content} />
                     </ContentWrapperInner>

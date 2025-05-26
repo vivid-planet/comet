@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { SliderBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
