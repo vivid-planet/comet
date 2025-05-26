@@ -3,7 +3,7 @@ import { ReadStream } from "node:fs";
 import { SdkStream } from "@smithy/types";
 import { IncomingMessage } from "http";
 
-import { DataStream } from "./data-stream";
+import { ImporterDataStream } from "./data-stream";
 
 export type FileStream = SdkStream<IncomingMessage> | ReadStream;
 
@@ -21,7 +21,7 @@ export type FileStreamAndMetadata = {
     };
 };
 
-export abstract class FileDataStream extends DataStream {
+export abstract class FileDataStream extends ImporterDataStream {
     getFileStreamResult(fileStreamAndSize: FileStreamAndSize): FileStreamAndMetadata {
         return {
             dataStream: fileStreamAndSize.fileStream,

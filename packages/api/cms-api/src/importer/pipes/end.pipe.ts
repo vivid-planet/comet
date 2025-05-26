@@ -2,7 +2,7 @@ import { Transform, TransformCallback } from "stream";
 
 import { ImporterPipe } from "./importer-pipe.type";
 
-export class EndPipe implements ImporterPipe {
+export class ImporterEndPipe implements ImporterPipe {
     getPipe() {
         return new EndHandler();
     }

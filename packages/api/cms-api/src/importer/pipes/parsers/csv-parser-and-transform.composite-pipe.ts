@@ -9,7 +9,7 @@ import { CsvParsePipe, CsvParserOptions } from "./csv-parser.pipe";
 import { DataTransformerPipe } from "./data-transformer.pipe";
 import { DataValidatorPipe } from "./data-validator.pipe";
 
-export class CsvParseAndTransformPipes implements CompositeImporterPipe {
+export class ImporterCsvParseAndTransformPipes implements CompositeImporterPipe {
     private readonly fields: ImportFieldMetadata[];
 
     constructor(private readonly inputClass: ImporterInputClass, em: EntityManager<IDatabaseDriver<Connection>>) {
