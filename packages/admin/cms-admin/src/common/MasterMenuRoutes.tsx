@@ -35,10 +35,10 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
             return routes.concat(item.items.reduce((routes, child) => flat(routes, child, [...ancestors, item]), [] as RouteProps[]));
         }
         if (item.route && checkPermission(item, ancestors)) {
-            return routes.concat(item.route);
+            routes = routes.concat(item.route);
         }
         if (item.type === "collapsible" && !!item.items?.length) {
-            return routes.concat(
+            routes = routes.concat(
                 (item.items as Array<MasterMenuItem & { icon?: ReactNode }>).reduce(
                     (routes, child) => flat(routes, child, [...ancestors, item]),
                     [] as RouteProps[],
