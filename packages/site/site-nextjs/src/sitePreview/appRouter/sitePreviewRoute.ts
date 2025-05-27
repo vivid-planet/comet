@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { type SitePreviewParams, verifySitePreviewJwt } from "../SitePreviewUtils";
 
-export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unknown /* deprecated: remove argument in v8 */) {
+export async function sitePreviewRoute(request: NextRequest) {
     const params = request.nextUrl.searchParams;
     const jwt = params.get("jwt");
     if (!jwt) {

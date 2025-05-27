@@ -61,7 +61,8 @@ export class AccessLogInterceptor implements NestInterceptor {
         } else {
             const httpContext = context.switchToHttp();
             const httpRequest = httpContext.getRequest<Request>();
-            const user = httpRequest.user as CurrentUser;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const user = (httpRequest as any).user as CurrentUser;
 
             if (
                 IGNORED_ROUTES.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
