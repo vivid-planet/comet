@@ -1,26 +1,27 @@
 import { gql, useQuery } from "@apollo/client";
+import { Tooltip } from "@comet/admin";
 import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
-import { Grid, Tooltip, Typography } from "@mui/material";
-import { ReactNode, useCallback, useState } from "react";
+import { Grid, Typography } from "@mui/material";
+import { type ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { RouteComponentProps, useHistory, useLocation } from "react-router";
+import { type RouteComponentProps, useHistory, useLocation } from "react-router";
 
-import { ExternalLinkBlockData } from "../../blocks.generated";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { type ExternalLinkBlockData } from "../../blocks.generated";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
+import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
-import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
+import { type SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
-import { GQLSitePreviewJwtQuery } from "./SitePreview.generated";
+import { type GQLSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
-    resolvePath?: (path: string, scope: ContentScopeInterface) => string;
+    resolvePath?: (path: string, scope: ContentScope) => string;
     logo?: ReactNode;
 }
 
@@ -142,7 +143,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
             <IFrameViewer device={device} initialPageUrl={initialPageUrl} />
             <ActionsContainer>
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
-                    <Grid item>
+                    <Grid>
                         <SiteInformation>
                             <LogoWrapper>
                                 {logo}
@@ -169,10 +170,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                             </SiteLinkWrapper>
                         </SiteInformation>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <DeviceToggle device={device} onChange={handleDeviceChange} />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
                     </Grid>
                 </Grid>

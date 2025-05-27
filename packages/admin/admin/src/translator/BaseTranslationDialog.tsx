@@ -1,4 +1,12 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -26,22 +34,18 @@ export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) 
             </DialogTitle>
             <DialogContent>
                 <Grid container columnSpacing={4} rowSpacing={2} columns={2} alignItems="center">
-                    <Grid item xs={1}>
+                    <Grid size={1}>
                         <Typography variant="subtitle2">
                             <FormattedMessage id="comet.translator.original" defaultMessage="Original" />
                         </Typography>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid size={1}>
                         <Typography variant="subtitle2">
                             <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
                         </Typography>
                     </Grid>
-                    <Grid item xs={1}>
-                        {renderOriginalText(originalText)}
-                    </Grid>
-                    <Grid item xs={1}>
-                        {renderTranslatedText(translation, setTranslation)}
-                    </Grid>
+                    <Grid size={1}>{renderOriginalText(originalText)}</Grid>
+                    <Grid size={1}>{renderTranslatedText(translation, setTranslation)}</Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>

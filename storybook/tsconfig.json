@@ -1,18 +1,19 @@
 {
     "compilerOptions": {
-        "module": "CommonJS",
+        "baseUrl": "./",
         "declaration": true,
-        "skipLibCheck": true,
+        "declarationMap": true,
         "esModuleInterop": true,
         "jsx": "react-jsx",
         "lib": ["DOM", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ESNext.AsyncIterable"],
+        "module": "CommonJS",
         "noImplicitAny": true,
+        "outDir": "lib",
+        "rootDirs": ["src", ".storybook"],
+        "skipLibCheck": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "es5",
-        "declarationMap": true,
-        "outDir": "lib",
-        "rootDirs": ["src", ".storybook"]
+        "target": "es5"
     },
-    "include": ["./src"]
+    "include": ["./src", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
 }

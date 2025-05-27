@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import {
     EditDialogApiContext,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
     SortDirection,
     Stack,
     StackPage,
@@ -13,7 +13,7 @@ import {
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
@@ -21,12 +21,12 @@ import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/dupl
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import FolderDataGrid, {
     damFolderQuery,
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
+    type GQLDamFileTableFragment,
+    type GQLDamFolderQuery,
+    type GQLDamFolderQueryVariables,
+    type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 

@@ -1,26 +1,36 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CancelButton,
-    GridColDef,
+    FillSpace,
+    type GridColDef,
     Loading,
     messages,
     SaveBoundary,
     SaveBoundarySaveButton,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Select } from "@comet/admin-icons";
-import { Button, Card, CardContent, Dialog, DialogActions, DialogTitle, Toolbar, Typography } from "@mui/material";
+import {
+    Button,
+    Card,
+    CardContent,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Toolbar,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import { GQLContentScopesQuery, GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
+import { type GQLContentScopesQuery, type GQLContentScopesQueryVariables } from "./ContentScopeGrid.generated";
 import { SelectScopesDialogContent } from "./selectScopesDialogContent/SelectScopesDialogContent";
-import { GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
+import { type GQLAvailableContentScopesQuery } from "./selectScopesDialogContent/SelectScopesDialogContent.generated";
 
 type ContentScope = {
     [key: string]: string;
@@ -56,7 +66,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     <ToolbarTitleItem>
                         <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
                     </ToolbarTitleItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button startIcon={<Select />} onClick={() => setOpen(true)} variant="contained" color="primary">
                             <FormattedMessage id="comet.userPermissions.selectScopes" defaultMessage="Select scopes" />

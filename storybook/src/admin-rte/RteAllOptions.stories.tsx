@@ -1,7 +1,7 @@
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IMakeRteApiProps, type IRteApiProps, type IRteOptions, type IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { convertFromRaw, convertToRaw } from "draft-js";
-import { ReactNode, useRef } from "react";
+import { type ReactNode, useRef } from "react";
 
 import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
 

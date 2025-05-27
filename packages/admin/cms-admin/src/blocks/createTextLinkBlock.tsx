@@ -1,20 +1,16 @@
 import { Field, FinalFormInput, messages } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    composeBlocks,
-    createBlockSkeleton,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
+import { type TextLinkBlockData, type TextLinkBlockInput } from "../blocks.generated";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
+import { BlockCategory, type BlockInterface, type BlockState } from "./types";
 
 interface CreateTextLinkBlockOptions {
     name?: string;
@@ -48,7 +44,7 @@ export function createTextLinkBlock(
             const { link } = composedApi.adminComponents({ state, updateState: decomposeUpdateStateAction(updateState, ["link"]) });
 
             return (
-                <AdminComponentPaper disablePadding>
+                <BlockAdminComponentPaper disablePadding>
                     <Box padding={3} paddingBottom={0}>
                         <BlocksFinalForm
                             onSubmit={({ text }: { text: string | undefined }) => {
@@ -60,7 +56,7 @@ export function createTextLinkBlock(
                         </BlocksFinalForm>
                     </Box>
                     {link}
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             );
         },
 

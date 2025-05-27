@@ -1,33 +1,26 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Field, FieldContainer } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSection,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    createBlockSkeleton,
-    resolveNewState,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
+import { type GQLVideoBlockDamFileQuery, type GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, type BlockDependency, type BlockInterface, type BlockState } from "./types";
+import { resolveNewState } from "./utils";
 
 type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
@@ -52,7 +45,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         showControls: state.showControls,
     }),
 
-    output2State: async (output, context: CmsBlockContext) => {
+    output2State: async (output, context) => {
         if (!output.damFileId) {
             return { previewImage: await PixelImageBlock.output2State(output.previewImage, context) };
         }
@@ -128,12 +121,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     AdminComponent: ({ state, updateState }) => {
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-        const isInPaper = useAdminComponentPaper();
+        const isInPaper = useBlockAdminComponentPaper();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
+        const { entityDependencyMap } = useDependenciesConfig();
 
-        const showMenu = Boolean(dependencyMap["DamFile"]);
+        const showMenu = Boolean(entityDependencyMap["DamFile"]);
 
         const handleMenuClose = () => {
             setAnchorEl(null);
@@ -144,21 +137,21 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                     {state.damFile ? (
                         <FieldContainer fullWidth>
-                            <AdminComponentPaper disablePadding>
+                            <BlockAdminComponentPaper disablePadding>
                                 <Box padding={3}>
                                     <Grid container alignItems="center" spacing={3}>
-                                        <Grid item>
+                                        <Grid>
                                             {/* TODO show thumbnail of video */}
                                             <Video fontSize="large" color="primary" />
                                         </Grid>
-                                        <Grid item xs>
+                                        <Grid size="grow">
                                             <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                             <Typography variant="body1" color="textSecondary">
                                                 <DamPathLazy fileId={state.damFile.id} />
                                             </Typography>
                                         </Grid>
                                         {showMenu && (
-                                            <Grid item>
+                                            <Grid>
                                                 <IconButton
                                                     onMouseDown={(event) => event.stopPropagation()}
                                                     onClick={(event) => {
@@ -174,17 +167,20 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                     </Grid>
                                 </Box>
                                 <Divider />
-                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, damFile: undefined })}>
+                                <BlockAdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, damFile: undefined })}>
                                     <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                                </AdminComponentButton>
+                                </BlockAdminComponentButton>
                                 {showMenu && (
                                     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                        {dependencyMap["DamFile"] && state.damFile?.id && (
+                                        {entityDependencyMap["DamFile"] && state.damFile?.id && (
                                             <MenuItem
                                                 onClick={async () => {
-                                                    // id is checked three lines above
-                                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                                    const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                                    const path = await entityDependencyMap["DamFile"].resolvePath({
+                                                        apolloClient,
+                                                        // id is checked three lines above
+                                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                        id: state.damFile!.id,
+                                                    });
                                                     const url = contentScope.match.url + path;
                                                     window.open(url, "_blank");
                                                 }}
@@ -197,20 +193,20 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                         )}
                                     </Menu>
                                 )}
-                            </AdminComponentPaper>
+                            </BlockAdminComponentPaper>
                         </FieldContainer>
                     ) : (
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
                     <VideoOptionsFields />
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
                                 updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
                             }}
                         />
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </BlocksFinalForm>
             </Box>
         );

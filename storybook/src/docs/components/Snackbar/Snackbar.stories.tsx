@@ -1,6 +1,6 @@
 import { Button, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { List, ListItem, Snackbar, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 
 import { snackbarDecorator } from "./snackbar.decorator";
 

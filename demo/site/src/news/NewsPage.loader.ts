@@ -1,10 +1,10 @@
 import { gql } from "@comet/site-nextjs";
-import { GQLNewsContentScopeInput } from "@src/graphql.generated";
+import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 
-import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";
+import { type GQLNewsIndexPageQuery, type GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";
 
-export type NewsListParams = {
+type NewsListParams = {
     scope: GQLNewsContentScopeInput;
     offset?: number;
     limit: number;

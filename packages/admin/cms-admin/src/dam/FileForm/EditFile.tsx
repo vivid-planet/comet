@@ -14,28 +14,28 @@ import {
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Card, CardContent, Link, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import { ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
-import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
+import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-import { useDamConfig } from "../config/useDamConfig";
+import { useDamConfig } from "../config/damConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
-import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
+import { type GQLDamFileDetailFragment, type GQLDamFileDetailQuery, type GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
-import { LicenseType } from "./licenseType";
+import { type LicenseType } from "./licenseType";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -51,10 +51,9 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    license?:
-        | Omit<GQLLicenseInput, "type"> & {
-              type: LicenseType;
-          };
+    license?: Omit<GQLLicenseInput, "type"> & {
+        type: LicenseType;
+    };
 }
 
 interface EditFormProps {
@@ -87,11 +86,7 @@ const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
                             id="comet.dam.file.failedToLoad"
                             defaultMessage="Failed to load file. <link>Go to Assets</link>"
                             values={{
-                                link: (chunks: string) => (
-                                    <Link to={`${scopeMatch.url}/assets`} component={RouterLink}>
-                                        {chunks}
-                                    </Link>
-                                ),
+                                link: (chunks) => <RouterLink to={`${scopeMatch.url}/assets`}>{chunks}</RouterLink>,
                             }}
                         />
                     </Typography>
@@ -112,7 +107,7 @@ interface EditFileInnerProps {
 }
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
@@ -246,7 +241,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {isAllowed("dependencies") && Object.keys(dependencyMap).length > 0 && (
+                                {isAllowed("dependencies") && Object.keys(entityDependencyMap).length > 0 && (
                                     <RouterTab
                                         key="dependents"
                                         label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}

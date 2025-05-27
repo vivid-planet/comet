@@ -4,10 +4,10 @@ import { SsgRunning, SsgStandby } from "@comet/admin-icons";
 import { Box, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { differenceInMinutes, parseISO } from "date-fns";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage, FormattedTime } from "react-intl";
 
-import { GQLBuildStatusQuery } from "./BuildEntry.generated";
+import { type GQLBuildStatusQuery } from "./BuildEntry.generated";
 import { PublishButton } from "./PublishButton";
 
 const buildStatusQuery = gql`

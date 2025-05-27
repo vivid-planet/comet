@@ -12,9 +12,7 @@ const withBundleAnalyzer = nextBundleAnalyzer({
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-    images: {
-        deviceSizes: cometConfig.dam.allowedImageSizes,
-    },
+    images: cometConfig.images,
     typescript: {
         ignoreBuildErrors: process.env.NODE_ENV === "production",
     },

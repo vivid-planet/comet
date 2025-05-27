@@ -1,17 +1,18 @@
-import { SaveButton, SaveButtonProps } from "../common/buttons/save/SaveButton";
-import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
+import { SaveButton, type SaveButtonProps } from "../common/buttons/SaveButton";
+import { useSaveBoundaryApi, useSaveBoundaryState } from "./SaveBoundary";
 
 export function SaveBoundarySaveButton(props: SaveButtonProps) {
-    const saveBoundaryState = useSavable();
+    const saveBoundaryState = useSaveBoundaryState();
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryState || !saveBoundaryApi) throw new Error("SaveBoundarySaveButton must be inside SaveBoundary");
+
     return (
         <SaveButton
             disabled={!saveBoundaryState.hasChanges}
-            saving={saveBoundaryState.saving}
+            loading={saveBoundaryState.saving}
             hasErrors={saveBoundaryState.hasErrors}
             onClick={async () => {
-                return saveBoundaryApi.save();
+                await saveBoundaryApi.save();
             }}
             {...props}
         />

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FormattedDate } from "react-intl";
 import styled from "styled-components";
 
-import { GQLNewsIndexPageQuery } from "./NewsPage.loader.generated";
+import { type GQLNewsIndexPageQuery } from "./NewsPage.loader.generated";
 
 export function NewsPage({ initialData }: { initialData: GQLNewsIndexPageQuery["newsList"] }) {
     const pathname = usePathname();

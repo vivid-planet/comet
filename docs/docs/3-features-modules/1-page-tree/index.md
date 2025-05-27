@@ -13,18 +13,18 @@ The page tree supports all relevant possibilities to modify it. You can _create_
 
 Every page has the following Page properties:
 
--   **Name**: The name serves as the title for the document
--   **Slug**: The slug is the part of the URL of the page. If you want to make a page the home page of the website, name the slug _home_, and the URL will automatically change to /.
--   **Document Type**: You can choose between _Page_ and _Link_. Additional document types are possible.
--   **Hide in Menu**: You can choose not to show the page in a menu.
+- **Name**: The name serves as the title for the document
+- **Slug**: The slug is the part of the URL of the page. If you want to make a page the home page of the website, name the slug _home_, and the URL will automatically change to /.
+- **Document Type**: You can choose between _Page_ and _Link_. Additional document types are possible.
+- **Hide in Menu**: You can choose not to show the page in a menu.
 
 ## Page Status
 
 A page can have one of the following statuses:
 
--   **Published**: The page is part of the build process and is accessible on the website.
--   **Unpublished**: The page is not part of the build process.
--   **Archived**: The page is not part of the build process, and it disappears from the page tree unless you switch on _Archived Items_ on the top of the page tree.
+- **Published**: The page is part of the build process and is accessible on the website.
+- **Unpublished**: The page is not part of the build process.
+- **Archived**: The page is not part of the build process, and it disappears from the page tree unless you switch on _Archived Items_ on the top of the page tree.
 
 ## Search
 

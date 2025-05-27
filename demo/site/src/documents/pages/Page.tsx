@@ -1,7 +1,7 @@
 import { generateImageUrl, gql } from "@comet/site-nextjs";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
@@ -9,12 +9,12 @@ import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNaviga
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { Metadata, ResolvingMetadata } from "next";
+import { type Metadata, type ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
 import { StageBlock } from "./blocks/StageBlock";
-import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
+import { type GQLPageQuery, type GQLPageQueryVariables } from "./Page.generated";
 
 const pageQuery = gql`
     query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
@@ -127,7 +127,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
     }
     if (document.__typename != "Page") throw new Error(`invalid document type`);
 
-    [document.content, document.seo] = await Promise.all([
+    [document.content, document.seo, document.stage] = await Promise.all([
         recursivelyLoadBlockData({
             blockType: "PageContent",
             blockData: document.content,

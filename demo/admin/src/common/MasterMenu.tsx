@@ -1,14 +1,13 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
-    AllCategories,
     ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
-    DocumentInterface,
-    DocumentType,
+    type DocumentInterface,
+    type DocumentType,
     MasterMenu,
-    MasterMenuData,
+    type MasterMenuData,
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
@@ -19,34 +18,27 @@ import { Link } from "@src/documents/links/Link";
 import { Page } from "@src/documents/pages/Page";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
-import { categoryToUrlParam, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
+import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
-import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
-import { ProductCategoriesHandmadePage } from "@src/products/future/ProductCategoriesPage";
+import { ProductCategoriesPage as ProductCategoriesFuturePage } from "@src/products/future/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
+import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
-import { ContentScope } from "@src/site-configs";
+import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
-import { Redirect, RouteComponentProps } from "react-router";
+import { Redirect, type RouteComponentProps } from "react-router";
 
 import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";
-
-export const pageTreeCategories: AllCategories = [
-    {
-        category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
@@ -86,7 +78,6 @@ export const masterMenuData: MasterMenuData = [
                 return (
                     <PagesPage
                         path={`/pages/pagetree/${match.params.category}`}
-                        allCategories={pageTreeCategories}
                         documentTypes={(category): Record<DocumentType, DocumentInterface> => {
                             if (category === "TopMenu") {
                                 return {
@@ -214,7 +205,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/user-permissions",
             component: UserPermissionsPage,
         },
-        requiredPermission: "userPermissions",
+        requiredPermission: ["userPermissions", "impersonation"],
     },
     {
         type: "group",
@@ -259,11 +250,10 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.combinationFieldsTest" defaultMessage="Combination Fields Test" />,
-                        secondary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Product Categories" />,
                         route: {
-                            path: "/combination-fields-test-products-future",
-                            component: CombinationFieldsTestProductsPage,
+                            path: "/product-categories",
+                            component: ProductCategoriesFuturePage,
                         },
                     },
                 ],

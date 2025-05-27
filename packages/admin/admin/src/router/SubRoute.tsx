@@ -1,12 +1,12 @@
-import { createContext, ReactNode, useContext } from "react";
-import { __RouterContext, matchPath, Route, useLocation, useRouteMatch } from "react-router";
+import { createContext, type ReactNode, useContext } from "react";
+import { __RouterContext, matchPath, Route, type RouteChildrenProps, useLocation, useRouteMatch } from "react-router";
 
 interface SubRoutesContext {
     path: string;
 }
 const SubRoutesContext = createContext<SubRoutesContext | undefined>(undefined);
 
-export function SubRouteIndexRoute({ children }: { children?: ReactNode }) {
+export function SubRouteIndexRoute({ children }: { children?: ReactNode | ((props: RouteChildrenProps) => ReactNode) }) {
     const location = useLocation();
     const match = useRouteMatch();
     const urlPrefix = useSubRoutePrefix();

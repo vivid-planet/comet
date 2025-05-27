@@ -1,5 +1,4 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
-import { createRichTextBlock } from "@comet/cms-admin";
+import { BlockCategory, createCompositeBlock, createCompositeBlockTextField, createRichTextBlock } from "@comet/cms-admin";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { TextLinkBlock } from "@src/common/blocks/TextLinkBlock";
@@ -25,7 +24,6 @@ export const TeaserItemBlock = createCompositeBlock(
             },
             title: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="teaserItemBlock.title" defaultMessage="Title" />,
                 }),
             },

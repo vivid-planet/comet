@@ -1,11 +1,11 @@
 "use client";
 
-import { type PropsWithData, PreviewSkeleton, useIsElementInViewport, withPreview } from "@comet/site-react";
+import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { type YouTubeVideoBlockData } from "../blocks.generated";
-import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
+import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import styles from "./YouTubeVideoBlock.module.scss";
 
 const EXPECTED_YT_ID_LENGTH = 11;

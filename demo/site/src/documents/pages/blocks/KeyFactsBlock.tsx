@@ -1,5 +1,5 @@
-import { ListBlock, PropsWithData, withPreview } from "@comet/site-nextjs";
-import { KeyFactsBlockData } from "@src/blocks.generated";
+import { ListBlock, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type KeyFactsBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled, { css } from "styled-components";
 

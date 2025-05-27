@@ -13,8 +13,8 @@ DTOs for the feature. For this, the entity must be annotated with the `CrudGener
 
 ```ts
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> {
-    // ...
+export class Product extends BaseEntity {
+    ...
 }
 ```
 
@@ -73,7 +73,7 @@ If it's still missing, you can add it to `api/package.json`:
 {
   ...
   "scripts": {
-    "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
+    "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
     ...
   }
 }
@@ -85,6 +85,28 @@ Now you can run the generator with `npm run api-generator`. The generated files 
 :::info
 Although this is generated code, it should still be checked into the repository. This enables a quick start of the API.
 :::
+
+### Watch Mode
+
+The api-generator script also supports the `-w` or `--watch` flag. This will watch for changes in the .entity.ts files and regenerate the corresponding files.
+
+```json
+{
+  ...
+  "scripts": {
+    "api-generator:watch": "rimraf 'src/*/generated' && comet-api-generator --watch",
+    ...
+  }
+}
+```
+
+### Generate only for specific entities
+
+If you want to generate only for specific entities, you can pass a file path to an .entity.ts file with the `-f` or `--file` flag
+
+```sh
+npm exec comet-api-generator -f src/products/entities/product.entity.ts
+```
 
 ## Register generated resolvers and services
 
@@ -116,12 +138,7 @@ You should not reference the generated code externally (except, of course, to pr
 ## Changing the entity
 
 When making changes (e.g., adding a new field) to an entity annotated with the CrudGenerator, the API Generator must be
-run again: `npm run api-generator`. The resulting changes must be checked into the repository.
-
-:::info
-The CI/CD pipeline checks whether the checked-in code matches the generated code. See the
-`lint:generated-files-not-modified` script in `api/package.json`.
-:::
+run again: `npm run api-generator`.
 
 ## Magic fields
 

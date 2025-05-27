@@ -1,12 +1,13 @@
 import { errors, jwtVerify } from "jose";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Scope = Record<string, any>;
+type Scope = Record<string, any>;
 
 export type SitePreviewData = {
     includeInvisible: boolean;
 };
 export type SitePreviewParams = {
+    userId: string;
     scope: Scope;
     path: string;
     previewData?: SitePreviewData;

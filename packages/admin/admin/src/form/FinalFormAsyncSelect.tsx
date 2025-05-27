@@ -1,7 +1,7 @@
-import { SelectProps } from "@mui/material";
+import { type SelectProps } from "@mui/material";
 
 import { useAsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { FinalFormSelect, FinalFormSelectProps } from "./FinalFormSelect";
+import { FinalFormSelect, type FinalFormSelectProps } from "./FinalFormSelect";
 
 export interface FinalFormAsyncSelectProps<T> extends FinalFormSelectProps<T>, Omit<SelectProps, "input"> {
     loadOptions: () => Promise<T[]>;

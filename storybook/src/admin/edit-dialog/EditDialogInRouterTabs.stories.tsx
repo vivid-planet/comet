@@ -4,18 +4,17 @@ import {
     EditDialog,
     FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
     RouterTabs,
     TextField,
-    ToolbarActions,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { ReactNode, RefObject, useRef } from "react";
+import { DialogContent, Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -48,28 +47,34 @@ const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="name" label="Name" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="name" label="Name" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
+function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
             <FillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            {toolbarAction}
         </DataGridToolbar>
     );
 }
@@ -93,17 +98,17 @@ export const EditDialogInRouterTabs = {
                                 { field: "name", headerName: "Name", flex: 1 },
                             ]}
                             rows={products}
-                            components={{
-                                Toolbar: Toolbar,
+                            slots={{
+                                toolbar: Toolbar,
                             }}
-                            componentsProps={{
+                            slotProps={{
                                 toolbar: {
                                     toolbarAction: (
                                         <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                             <FormattedMessage {...messages.add} />
                                         </Button>
                                     ),
-                                },
+                                } as ToolbarProps,
                             }}
                         />
                     </MainContent>

@@ -1,10 +1,10 @@
 import { gql } from "@comet/site-nextjs";
-import { DamFileDownloadLinkBlockData, ExternalLinkBlockData, InternalLinkBlockData } from "@src/blocks.generated";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { type DamFileDownloadLinkBlockData, type ExternalLinkBlockData, type InternalLinkBlockData } from "@src/blocks.generated";
+import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound, redirect } from "next/navigation";
 
-import { GQLLinkRedirectQuery, GQLLinkRedirectQueryVariables } from "./Link.generated";
+import { type GQLLinkRedirectQuery, type GQLLinkRedirectQueryVariables } from "./Link.generated";
 
 const linkRedirectQuery = gql`
     query LinkRedirect($id: ID!) {

@@ -1,5 +1,11 @@
-import { ExternalLinkBlock, ExtractBlockData } from "@comet/blocks-api";
-import { InternalLinkBlock, PageTreeReadApiService, RedirectsLinkBlock, RedirectTargetUrlServiceInterface } from "@comet/cms-api";
+import {
+    ExternalLinkBlock,
+    ExtractBlockData,
+    InternalLinkBlock,
+    PageTreeReadApiService,
+    RedirectsLinkBlock,
+    RedirectTargetUrlServiceInterface,
+} from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Scope } from "@nestjs/common";

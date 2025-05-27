@@ -1,9 +1,9 @@
 import { useCallback, useContext } from "react";
 
 import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
-import { type PreviewContextOptions, PreviewContext } from "./PreviewContext";
+import { PreviewContext, type PreviewContextOptions } from "./PreviewContext";
 
-export interface PreviewHookReturn extends PreviewContextOptions {
+interface PreviewHookReturn extends PreviewContextOptions {
     isSelected: (url: string, options?: { exactMatch?: boolean }) => boolean;
     isHovered: (url: string, options?: { exactMatch?: boolean }) => boolean;
 }

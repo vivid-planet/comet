@@ -1,12 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 
 import { verifySitePreviewJwt } from "../SitePreviewUtils";
 
-async function legacyPagesRouterSitePreviewApiHandler(
-    req: NextApiRequest,
-    res: NextApiResponse,
-    _graphQLClient: unknown /* deprecated: remove argument in v8 */,
-) {
+async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse) {
     const params = req.query;
     const jwt = params.jwt;
 

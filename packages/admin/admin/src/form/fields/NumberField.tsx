@@ -1,4 +1,4 @@
-import { Field, FieldProps } from "../Field";
+import { Field, type FieldProps } from "../Field";
 import { FinalFormNumberInput } from "../FinalFormNumberInput";
 
 export type NumberFieldProps = FieldProps<number, HTMLInputElement>;

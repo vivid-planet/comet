@@ -1,7 +1,7 @@
 import { FieldContainer } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { InputBase } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 
 export default {
     title: "Docs/Form/Components/FieldContainer",

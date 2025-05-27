@@ -1,4 +1,5 @@
-import { BlockMigration, BlockMigrationInterface } from "@comet/blocks-api";
+import { BlockMigration } from "../../../../blocks/migrations/BlockMigration";
+import { type BlockMigrationInterface } from "../../../../blocks/migrations/types";
 
 interface From {
     damFileId?: string;

@@ -1,5 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { FocalPoint, ImageCropAreaInput, PixelImageBlock } from "@comet/cms-api";
+import { ExtractBlockInputFactoryProps, FocalPoint, ImageCropAreaInput, PixelImageBlock } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 

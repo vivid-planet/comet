@@ -1,11 +1,18 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
+import {
+    commonFileErrorMessages,
+    type ErrorFileSelectItem,
+    FileSelect,
+    type FileSelectProps,
+    type LoadingFileSelectItem,
+    type ValidFileSelectItem,
+} from "@comet/admin";
 import { useMemo, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
+import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
+import { useCometConfig } from "../../config/CometConfigContext";
+import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
     fragment FinalFormFileUpload on FileUpload {
@@ -71,9 +78,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
-    const {
-        damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
-    } = useCmsBlockContext();
+    const { apiUrl } = useCometConfig();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
     const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>[]>(() => {

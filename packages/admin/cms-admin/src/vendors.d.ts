@@ -1,12 +1,9 @@
-/// <reference types="@comet/admin-theme" />
+import { type HTMLAttributes } from "react";
 
-interface CustomInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-    webkitdirectory?: string;
-    directory?: string;
-}
-
-declare namespace JSX {
-    interface IntrinsicElements {
-        input: CustomInputProps;
+declare module "react" {
+    interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
+        // extends React's HTMLAttributes
+        directory?: string;
+        webkitdirectory?: string;
     }
 }

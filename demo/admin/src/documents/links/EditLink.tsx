@@ -1,13 +1,17 @@
 import { gql } from "@apollo/client";
 import { FillSpace, Loading, MainContent, messages, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { AdminComponentRoot } from "@comet/blocks-admin";
-import { ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
+import { BlockAdminComponentRoot, ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { useIntl } from "react-intl";
 
-import { GQLEditLinkQuery, GQLEditLinkQueryVariables, GQLUpdateLinkMutation, GQLUpdateLinkMutationVariables } from "./EditLink.generated";
+import {
+    type GQLEditLinkQuery,
+    type GQLEditLinkQueryVariables,
+    type GQLUpdateLinkMutation,
+    type GQLUpdateLinkMutationVariables,
+} from "./EditLink.generated";
 
 const usePage = createUsePage({
     rootBlocks: {
@@ -104,7 +108,7 @@ export const EditLink = ({ id }: Props) => {
             <MainContent>
                 <RouterTabs>
                     <RouterTab label={intl.formatMessage(messages.content)} path="">
-                        <AdminComponentRoot>{rootBlocksApi.content.adminUI}</AdminComponentRoot>
+                        <BlockAdminComponentRoot>{rootBlocksApi.content.adminUI}</BlockAdminComponentRoot>
                     </RouterTab>
                 </RouterTabs>
             </MainContent>

@@ -1,19 +1,15 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import {
-    AdminComponentSection,
-    BlockInterface,
-    BlocksFinalForm,
-    createOneOfBlock,
-    CreateOneOfBlockOptions,
-    LinkBlockInterface,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/system";
 import { FormattedMessage } from "react-intl";
 
-import { LinkBlockData } from "../blocks.generated";
+import { type LinkBlockData } from "../blocks.generated";
+import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
+import { createOneOfBlock, type CreateOneOfBlockOptions } from "./factories/createOneOfBlock";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { InternalLinkBlock } from "./InternalLinkBlock";
+import { type BlockInterface, type LinkBlockInterface } from "./types";
 
 interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, "name" | "supportedBlocks"> {
     name?: string;
@@ -45,13 +41,13 @@ function createLinkBlock(
         ...OneOfBlock,
         defaultValues: () => ({ ...OneOfBlock.defaultValues(), title: undefined }),
         AdminComponent: ({ state, updateState }) => {
-            const isInPaper = useAdminComponentPaper();
+            const isInPaper = useBlockAdminComponentPaper();
 
             return (
                 <>
                     <OneOfBlock.AdminComponent state={state} updateState={updateState} />
                     <Box padding={isInPaper ? 3 : 0} paddingTop={isInPaper ? 0 : 3}>
-                        <AdminComponentSection>
+                        <BlockAdminComponentSection>
                             <BlocksFinalForm<Pick<LinkBlockData, "title">>
                                 onSubmit={({ title }) => {
                                     updateState({ ...state, title });
@@ -65,7 +61,7 @@ function createLinkBlock(
                                     fullWidth
                                 />
                             </BlocksFinalForm>
-                        </AdminComponentSection>
+                        </BlockAdminComponentSection>
                     </Box>
                 </>
             );

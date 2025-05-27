@@ -1,5 +1,5 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/site-nextjs";
-import { ContentGroupBlockData, ContentGroupContentBlockData } from "@src/blocks.generated";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
+import { type ContentGroupBlockData, type ContentGroupContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
@@ -45,17 +45,16 @@ export const ContentGroupBlock = withPreview(
 );
 
 const RootPageLayout = styled(PageLayout)<{ $background: ContentGroupBlockData["backgroundColor"] }>`
-    ${({ theme, $background }) =>
+    ${({ theme, $background }) => css`
+        ${$background === "lightGray" &&
         css`
-            ${$background === "lightGray" &&
-            css`
-                background-color: ${theme.palette.gray["100"]};
-            `}
+            background-color: ${theme.palette.gray["100"]};
+        `}
 
-            ${$background === "darkGray" &&
-            css`
-                background-color: ${theme.palette.gray["900"]};
-                color: ${theme.palette.text.inverted};
-            `}
-        `};
+        ${$background === "darkGray" &&
+        css`
+            background-color: ${theme.palette.gray["900"]};
+            color: ${theme.palette.text.inverted};
+        `}
+    `};
 `;

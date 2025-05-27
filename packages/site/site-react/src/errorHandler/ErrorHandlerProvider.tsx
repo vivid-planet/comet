@@ -1,12 +1,12 @@
 "use client";
 
-import { type ErrorInfo, type PropsWithChildren, createContext, useContext } from "react";
+import { createContext, type ErrorInfo, type PropsWithChildren, useContext } from "react";
 
 interface Props {
     onError: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export const ErrorHandlerContext = createContext<Props>({
+const ErrorHandlerContext = createContext<Props>({
     onError: (error, errorInfo) => {
         if (process.env.NODE_ENV === "development") {
             console.error("Error caught by error handler", error, errorInfo.componentStack);

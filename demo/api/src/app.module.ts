@@ -11,6 +11,7 @@ import {
     DamModule,
     DependenciesModule,
     FileUploadsModule,
+    ImgproxyModule,
     KubernetesModule,
     PageTreeModule,
     RedirectsModule,
@@ -18,7 +19,7 @@ import {
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
@@ -28,7 +29,6 @@ import { ContentGenerationService } from "@src/content-generation/content-genera
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/documents/links/links.module";
 import { PagesModule } from "@src/documents/pages/pages.module";
-import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -75,7 +75,7 @@ export class AppModule {
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
-                                if (error instanceof ValidationError) {
+                                if (error.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
                                     return new ValidationError("Invalid request.");
                                 }
                             }
@@ -137,18 +137,18 @@ export class AppModule {
                 }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
+                    cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                 }),
+                ImgproxyModule.register(config.imgproxy),
                 DamModule.register({
                     damConfig: {
-                        apiUrl: config.apiUrl,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
-                        cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
+                        maxSrcResolution: config.dam.maxSrcResolution,
                     },
-                    imgproxyConfig: config.imgproxy,
                     Scope: DamScope,
                     File: DamFile,
                     Folder: DamFolder,

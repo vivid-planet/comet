@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import useConstant from "use-constant";
 import { v4 as uuid } from "uuid";
@@ -6,13 +6,13 @@ import { v4 as uuid } from "uuid";
 import { messages } from "../messages";
 import { RouterPrompt } from "../router/Prompt";
 
-export type SaveActionSuccess = boolean;
+type SaveActionSuccess = boolean;
 export interface SaveBoundaryApi {
     save: () => Promise<SaveActionSuccess>;
     register: (id: string, props: SavableProps) => void;
     unregister: (id: string) => void;
 }
-export interface Savable {
+interface SaveBoundaryState {
     hasErrors: boolean;
     hasChanges: boolean;
     saving: boolean;
@@ -23,9 +23,9 @@ export function useSaveBoundaryApi() {
     return useContext(SaveBoundaryApiContext);
 }
 
-export const SavableContext = createContext<Savable | undefined>(undefined);
-export function useSavable() {
-    return useContext(SavableContext);
+const SaveBoundaryStateContext = createContext<SaveBoundaryState | undefined>(undefined);
+export function useSaveBoundaryState() {
+    return useContext(SaveBoundaryStateContext);
 }
 
 interface SaveBoundaryProps {
@@ -105,7 +105,7 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
             resetAction={reset}
             subRoutePath={subRoutePath}
         >
-            <SavableContext.Provider
+            <SaveBoundaryStateContext.Provider
                 value={{
                     hasErrors,
                     hasChanges,
@@ -121,7 +121,7 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
                 >
                     {props.children}
                 </SaveBoundaryApiContext.Provider>
-            </SavableContext.Provider>
+            </SaveBoundaryStateContext.Provider>
         </RouterPrompt>
     );
 };

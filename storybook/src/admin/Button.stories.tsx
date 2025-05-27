@@ -1,7 +1,7 @@
-import { Button, ButtonProps } from "@comet/admin";
+import { Button, type ButtonProps } from "@comet/admin";
 import { Add, ArrowRight, Favorite, Wrench } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 export default {
     title: "@comet/admin/Button",

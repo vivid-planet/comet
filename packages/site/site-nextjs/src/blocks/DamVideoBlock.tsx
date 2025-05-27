@@ -1,12 +1,12 @@
 "use client";
 
-import { type PropsWithData, PreviewSkeleton, useIsElementInViewport, withPreview } from "@comet/site-react";
+import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
 import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { type DamVideoBlockData } from "../blocks.generated";
 import styles from "./DamVideoBlock.module.scss";
-import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
+import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
@@ -36,7 +36,11 @@ export const DamVideoBlock = withPreview(
 
         useIsElementInViewport(videoRef, (inView) => {
             if (autoplay && videoRef.current) {
-                inView ? videoRef.current.play() : videoRef.current.pause();
+                if (inView) {
+                    videoRef.current.play();
+                } else {
+                    videoRef.current.pause();
+                }
             }
         });
 

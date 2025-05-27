@@ -1,6 +1,6 @@
 import { Button, CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { DialogActions, DialogContent, DialogContentText, DialogProps } from "@mui/material";
+import { DialogActions, DialogContent, DialogContentText, type DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
 
 type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";

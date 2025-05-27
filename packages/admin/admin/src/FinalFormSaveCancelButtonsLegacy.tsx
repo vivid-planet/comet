@@ -1,12 +1,12 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 import { useFormState } from "react-final-form";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
-import { SaveButton } from "./common/buttons/save/SaveButton";
+import { SaveButton } from "./common/buttons/SaveButton";
 import { createComponentSlot } from "./helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 import { useStackApi } from "./stack/Api";
 
 export interface FinalFormSaveCancelButtonsLegacyProps

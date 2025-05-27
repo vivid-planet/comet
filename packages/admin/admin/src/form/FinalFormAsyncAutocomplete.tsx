@@ -1,5 +1,5 @@
 import { useAsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import FinalFormAutocomplete, { FinalFormAutocompleteProps } from "./Autocomplete";
+import { FinalFormAutocomplete, type FinalFormAutocompleteProps } from "./Autocomplete";
 
 export interface FinalFormAsyncAutocompleteProps<
     T extends Record<string, any>,

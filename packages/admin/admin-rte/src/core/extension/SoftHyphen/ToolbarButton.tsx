@@ -1,11 +1,11 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
-import { MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
-import { IControlProps } from "../../types";
+import { type IControlProps } from "../../types";
 
 const SHY_UNICODE_CHAR = 0x00ad;
 

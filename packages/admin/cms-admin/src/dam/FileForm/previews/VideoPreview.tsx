@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDetails } from "../EditFile";
+import { type DamFileDetails } from "../EditFile";
 
 const VideoPreviewWrapper = styled("div")`
     width: 100%;

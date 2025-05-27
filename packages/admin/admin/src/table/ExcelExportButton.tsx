@@ -1,10 +1,10 @@
 import { CircularProgress } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
 import { FileIcon } from "../fileIcons/FileIcon";
-import { IExportApi } from "./excelexport/IExportApi";
+import { type IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {
     exportApi: IExportApi<any>;

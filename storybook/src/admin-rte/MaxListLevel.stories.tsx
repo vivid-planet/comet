@@ -1,4 +1,4 @@
-import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
 import { useRef } from "react";
 

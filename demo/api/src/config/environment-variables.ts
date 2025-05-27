@@ -164,7 +164,6 @@ export class EnvironmentVariables {
 
     @IsString()
     @MinLength(16)
-    @ValidateIf(() => process.env.NODE_ENV === "production")
     SITE_PREVIEW_SECRET: string;
 
     @IsArray()

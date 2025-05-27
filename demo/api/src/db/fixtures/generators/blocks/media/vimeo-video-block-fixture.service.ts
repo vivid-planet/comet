@@ -1,5 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { VimeoVideoBlock } from "@comet/cms-api";
+import { ExtractBlockInputFactoryProps, VimeoVideoBlock } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 

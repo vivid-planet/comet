@@ -2,7 +2,7 @@ import {
     convertPreviewDataToHeaders,
     createFetchWithDefaults,
     createGraphQLFetch as createGraphQLFetchLibrary,
-    SitePreviewData,
+    type SitePreviewData,
 } from "@comet/site-nextjs";
 
 import { getVisibilityParam } from "./ServerContext";
@@ -31,7 +31,6 @@ export function createGraphQLFetch() {
                 revalidate: 7.5 * 60,
             },
             headers: {
-                "x-relative-dam-urls": "1",
                 authorization: `Basic ${Buffer.from(`system-user:${process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD}`).toString("base64")}`,
                 ...convertPreviewDataToHeaders(previewData),
             },

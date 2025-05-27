@@ -1,4 +1,4 @@
-import { type PropsWithData, generateImageUrl } from "@comet/site-react";
+import { generateImageUrl, type PropsWithData } from "@comet/site-react";
 import Head from "next/head";
 
 import { type PixelImageBlockData, type SeoBlockData } from "../../blocks.generated";

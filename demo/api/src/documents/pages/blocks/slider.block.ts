@@ -2,13 +2,13 @@ import {
     BlockData,
     BlockDataInterface,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     createListBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 
@@ -28,7 +28,7 @@ class SliderItemBlockInput extends BlockInput {
     text: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): SliderItemBlockData {
-        return inputToData(SliderItemBlockData, this);
+        return blockInputToData(SliderItemBlockData, this);
     }
 }
 
@@ -48,7 +48,7 @@ class SliderBlockInput extends BlockInput {
     sliderList: ExtractBlockInput<typeof SliderListBlock>;
 
     transformToBlockData(): SliderBlockData {
-        return inputToData(SliderBlockData, this);
+        return blockInputToData(SliderBlockData, this);
     }
 }
 

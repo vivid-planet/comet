@@ -1,11 +1,11 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, type ThemedComponentBaseProps, Tooltip } from "@comet/admin";
 import { MoreHorizontal } from "@comet/admin-icons";
-import { ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, Theme, Tooltip, useThemeProps } from "@mui/material";
-import { Editor } from "draft-js";
-import { MouseEvent, RefObject, useState } from "react";
+import { type ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, type Theme, useThemeProps } from "@mui/material";
+import { type Editor } from "draft-js";
+import { type MouseEvent, type RefObject, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { IFeatureConfig } from "../types";
+import { type IFeatureConfig } from "../types";
 import { ControlButton } from "./ControlButton";
 
 interface IProps

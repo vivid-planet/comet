@@ -1,10 +1,11 @@
-import { FormControlLabel, FormControlLabelProps } from "@mui/material";
-import { ReactNode } from "react";
+import { FormControlLabel, type FormControlLabelProps } from "@mui/material";
+import { type ReactNode } from "react";
 
-import { Field, FieldProps } from "../Field";
-import { FinalFormSwitch, FinalFormSwitchProps } from "../Switch";
+import { Field, type FieldProps } from "../Field";
+import { FinalFormSwitch, type FinalFormSwitchProps } from "../Switch";
 
-export interface SwitchFieldProps extends FieldProps<string, HTMLInputElement> {
+export interface SwitchFieldProps extends Omit<FieldProps<string, HTMLInputElement>, "label"> {
+    name: string;
     fieldLabel?: ReactNode;
     label?: ReactNode | ((checked?: boolean) => ReactNode);
     componentsProps?: {

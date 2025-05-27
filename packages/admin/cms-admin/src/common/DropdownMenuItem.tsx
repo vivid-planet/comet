@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { ClickAwayListener, Grow, Paper, useTheme } from "@mui/material";
-import { Dispatch, ReactElement, ReactNode, SetStateAction, useRef, useState } from "react";
+import { type Dispatch, type ReactElement, type ReactNode, type SetStateAction, useRef, useState } from "react";
 
 import * as sc from "./DropdownMenuItem.sc";
 
@@ -59,15 +59,7 @@ export function DropdownMenuItem({
                     </sc.ArrowWrapper>
                 )}
             </sc.Button>
-            <sc.Popper
-                open={showDropdown}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                transition
-                disablePortal
-                onResize={undefined}
-                onResizeCapture={undefined}
-            >
+            <sc.Popper open={showDropdown} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
                     <Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
                         <DropdownContainer>

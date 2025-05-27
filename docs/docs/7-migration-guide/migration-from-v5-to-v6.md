@@ -12,9 +12,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 <summary>Renames handled by @comet/upgrade</summary>
 
--   `JobStatus` -> `KubernetesJobStatus` in API
--   `@SubjectEntity` -> `@AffectedEntity` in API
--   `BuildRuntime` -> `JobRuntime` in Admin
+- `JobStatus` -> `KubernetesJobStatus` in API
+- `@SubjectEntity` -> `@AffectedEntity` in API
+- `BuildRuntime` -> `JobRuntime` in Admin
 
 </details>
 
@@ -146,9 +146,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     All queries and mutations must
 
-    -   have a `scope` argument, _or_
-    -   be annotated with an `@AffectedEntity()` decorator, _or_
-    -   skip the scope check using `@RequiredPermission("examplePermission", { skipScopeCheck: true })`
+    - have a `scope` argument, _or_
+    - be annotated with an `@AffectedEntity()` decorator, _or_
+    - skip the scope check using `@RequiredPermission("examplePermission", { skipScopeCheck: true })`
 
 8.  Optional: Add the `UserService` (required for Administration Panel, see Admin)
 

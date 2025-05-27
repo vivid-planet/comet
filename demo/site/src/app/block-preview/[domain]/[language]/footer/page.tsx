@@ -1,7 +1,7 @@
 "use client";
 
 import { useBlockPreviewFetch, useIFrameBridge } from "@comet/site-nextjs";
-import { FooterContentBlockData } from "@src/blocks.generated";
+import { type FooterContentBlockData } from "@src/blocks.generated";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";

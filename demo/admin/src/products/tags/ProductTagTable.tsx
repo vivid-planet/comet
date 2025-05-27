@@ -4,7 +4,7 @@ import {
     CrudContextMenu,
     FillSpace,
     filterByFragment,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -23,13 +23,13 @@ import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductTagMutation,
-    GQLCreateProductTagMutationVariables,
-    GQLDeleteProductTagMutation,
-    GQLDeleteProductTagMutationVariables,
-    GQLProductsTagsListFragment,
-    GQLProductTagsListQuery,
-    GQLProductTagsListQueryVariables,
+    type GQLCreateProductTagMutation,
+    type GQLCreateProductTagMutationVariables,
+    type GQLDeleteProductTagMutation,
+    type GQLDeleteProductTagMutationVariables,
+    type GQLProductsTagsListFragment,
+    type GQLProductTagsListQuery,
+    type GQLProductTagsListQueryVariables,
 } from "./ProductTagTable.generated";
 
 function ProductTagsTableToolbar() {
@@ -60,6 +60,7 @@ const columns: GridColDef<GQLProductsTagsListFragment>[] = [
     },
     {
         field: "actions",
+        type: "actions",
         headerName: "",
         sortable: false,
         filterable: false,
@@ -100,11 +101,14 @@ function ProductTagsTable() {
     const { data, loading, error } = useQuery<GQLProductTagsListQuery, GQLProductTagsListQueryVariables>(productTagsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productTags.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productTags.totalCount);
 
@@ -112,14 +116,12 @@ function ProductTagsTable() {
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductTagsTableToolbar,
+                slots={{
+                    toolbar: ProductTagsTableToolbar,
                 }}
             />
         </Box>

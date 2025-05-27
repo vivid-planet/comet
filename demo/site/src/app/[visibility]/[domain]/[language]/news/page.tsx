@@ -1,6 +1,6 @@
 export const dynamic = "error";
 
-import { VisibilityParam } from "@src/middleware/domainRewrite";
+import { type VisibilityParam } from "@src/middleware/domainRewrite";
 import { NewsPage } from "@src/news/NewsPage";
 import { fetchNewsList } from "@src/news/NewsPage.loader";
 import { setVisibilityParam } from "@src/util/ServerContext";

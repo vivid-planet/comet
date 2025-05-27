@@ -1,14 +1,14 @@
 "use client";
 
-import { ReactElement, ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import { DamVideoBlockData } from "../blocks.generated";
+import { type DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
-import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import { PropsWithData } from "./PropsWithData";
+import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import { type PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
@@ -38,7 +38,11 @@ export const DamVideoBlock = withPreview(
 
         useIsElementInViewport(videoRef, (inView) => {
             if (autoplay && videoRef.current) {
-                inView ? videoRef.current.play() : videoRef.current.pause();
+                if (inView) {
+                    videoRef.current.play();
+                } else {
+                    videoRef.current.pause();
+                }
             }
         });
 

@@ -3,9 +3,9 @@ import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { GQLPageLinkFragment } from "./PageLink.fragment.generated";
+import { type GQLPageLinkFragment } from "./PageLink.fragment.generated";
 
 interface Props extends PropsWithChildren {
     page: GQLPageLinkFragment;

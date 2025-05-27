@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Button, FillSpace, GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { Button, FillSpace, type GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
 import { Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -11,7 +11,12 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
-import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
+import {
+    type GQLPermissionForGridFragment,
+    type GQLPermissionsQuery,
+    type GQLPermissionsQueryVariables,
+    namedOperations,
+} from "./PermissionGrid.generated";
 
 export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
@@ -162,8 +167,8 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 rowCount={data?.permissions.length ?? 0}
                 loading={loading}
                 getRowHeight={() => "auto"}
-                components={{
-                    Toolbar: () => (
+                slots={{
+                    toolbar: () => (
                         <GridToolbar>
                             <ToolbarTitleItem>
                                 <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />

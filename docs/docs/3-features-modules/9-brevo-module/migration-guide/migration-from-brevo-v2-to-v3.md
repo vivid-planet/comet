@@ -61,10 +61,10 @@ This change prepares for future imports to be handled in a separate job, allowin
 
 Environment variables containing Brevo configuration information can be removed and are set on the `BrevoConfigurationPage` in the admin interface from now on.
 
--   BREVO_SENDER_NAME
--   BREVO_SENDER_EMAIL
--   BREVO_DOUBLE_OPT_IN_TEMPLATE_ID
--   BREVO_ALLOWED_REDIRECT_URL
+- BREVO_SENDER_NAME
+- BREVO_SENDER_EMAIL
+- BREVO_DOUBLE_OPT_IN_TEMPLATE_ID
+- BREVO_ALLOWED_REDIRECT_URL
 
 ### Add `scope` to `BrevoConfig`
 

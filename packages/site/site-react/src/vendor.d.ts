@@ -1,5 +1,3 @@
-/// <reference types="next" />
-
 import "react";
 
 declare module "react" {

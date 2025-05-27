@@ -1,4 +1,4 @@
-import { ContentScopeValues } from "../Provider";
+import { type ContentScopeValues } from "../Provider";
 
 /**
  * Groups objects into arrays based on their keys.
@@ -15,7 +15,7 @@ import { ContentScopeValues } from "../Provider";
 export function groupObjectsIntoArrays(values: ContentScopeValues) {
     const grouped = new Map();
     values.forEach((item) => {
-        const key = JSON.stringify(Object.keys(item).sort());
+        const key = JSON.stringify(Object.keys(item.scope).sort());
         if (grouped.has(key)) {
             grouped.get(key).push(item);
         } else {

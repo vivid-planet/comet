@@ -1,5 +1,11 @@
 import { Delete as DeleteIcon, WarningSolid } from "@comet/admin-icons";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
@@ -29,8 +35,7 @@ export const DeleteDialog = (props: DeleteDialogProps) => {
                 <FeedbackButton
                     startIcon={<DeleteIcon />}
                     onClick={onDelete}
-                    color="error"
-                    variant="outlined"
+                    variant="destructive"
                     tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
                 >
                     <FormattedMessage {...messages.delete} />

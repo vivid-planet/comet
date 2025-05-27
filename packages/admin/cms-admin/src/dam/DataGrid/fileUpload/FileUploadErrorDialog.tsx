@@ -1,5 +1,6 @@
 import { Button, messages } from "@comet/admin";
 import {
+    // eslint-disable-next-line no-restricted-imports
     Dialog,
     DialogActions,
     DialogContent,
@@ -16,7 +17,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { FileUploadValidationError } from "./useDamFileUpload";
+import { type FileUploadValidationError } from "./useDamFileUpload";
 
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};

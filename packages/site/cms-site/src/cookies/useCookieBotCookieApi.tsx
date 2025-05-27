@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { CookieApiHook } from "./CookieApiContext";
+import { type CookieApiHook } from "./CookieApiContext";
 
 type WindowWithCookiebot = Window & {
     Cookiebot: {

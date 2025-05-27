@@ -8,7 +8,7 @@ export const isPhoneNumber = (value: string): boolean => {
 };
 
 export const IsPhoneNumber = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     return (object: Object, propertyName: string): void => {
         registerDecorator({
             target: object.constructor,

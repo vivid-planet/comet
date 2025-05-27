@@ -1,4 +1,4 @@
-import { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@comet/site-nextjs";
+import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@comet/site-nextjs";
 import { loader as newsDetailLoader } from "@src/news/blocks/NewsDetailBlock.loader";
 import { loader as newsListLoader } from "@src/news/blocks/NewsListBlock.loader";
 

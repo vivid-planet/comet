@@ -1,4 +1,4 @@
-import { IRteOptions, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IRteOptions, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
 
 const rteOptions: IRteOptions = {

@@ -4,7 +4,6 @@ import { validateSync } from "class-validator";
 
 import { EnvironmentVariables } from "./environment-variables";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createConfig(processEnv: NodeJS.ProcessEnv) {
     const envVars = plainToClass(EnvironmentVariables, { ...processEnv });
     const errors = validateSync(envVars, { skipMissingProperties: false });
@@ -52,6 +51,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
+            allowedImageSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
         },
         azureAiTranslator:
             envVars.AZURE_AI_TRANSLATOR_ENDPOINT && envVars.AZURE_AI_TRANSLATOR_KEY && envVars.AZURE_AI_TRANSLATOR_REGION

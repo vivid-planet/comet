@@ -1,24 +1,37 @@
 import { Add, Check, Close, Reset } from "@comet/admin-icons";
-import { ComponentsOverrides, css, Dialog, DialogContent, Divider, Theme, Typography, useMediaQuery, useTheme, useThemeProps } from "@mui/material";
+import {
+    type ComponentsOverrides,
+    css,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogContent,
+    Divider,
+    type Theme,
+    Typography,
+    useMediaQuery,
+    useTheme,
+    useThemeProps,
+} from "@mui/material";
 import {
     gridColumnVisibilityModelSelector,
     gridFilterableColumnDefinitionsSelector,
-    GridFilterItem,
+    type GridFilterItem,
     gridFilterModelSelector,
     GridPanel,
-    GridPanelProps,
+    type GridPanelProps,
     gridPreferencePanelStateSelector,
     GridPreferencePanelsValue,
     useGridApiContext,
     useGridRootProps,
     useGridSelector,
 } from "@mui/x-data-grid";
-import { ReactNode, useCallback, useMemo } from "react";
+import { type DataGridProcessedProps } from "@mui/x-data-grid/internals";
+import { type ReactNode, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 const panelTypeTitle: Record<GridPreferencePanelsValue, ReactNode> = {
     [GridPreferencePanelsValue.filters]: <FormattedMessage id="dataGrid.panel.filters" defaultMessage="Filters" />,
@@ -43,7 +56,7 @@ export type DataGridPanelClassKey =
     | "resetColumnsButton"
     | "applyButton";
 
-export type DataGridPanelProps = Pick<GridPanelProps, "open" | "children"> &
+export type DataGridPanelProps = GridPanelProps &
     Omit<
         ThemedComponentBaseProps<{
             desktopGridPanel: typeof GridPanel;
@@ -74,10 +87,6 @@ export type DataGridPanelProps = Pick<GridPanelProps, "open" | "children"> &
         };
     };
 
-type OwnerState = {
-    openedPanelValue: GridPreferencePanelsValue | undefined;
-};
-
 const addFilterText = <FormattedMessage id="dataGrid.panel.addFilter" defaultMessage="Add filter" />;
 
 let lastAddedFilterItemId = 0;
@@ -107,8 +116,8 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
         }
 
         return {
-            columnField: firstColumnWithOperator.field,
-            operatorValue: firstColumnWithOperator.filterOperators[0].value,
+            field: firstColumnWithOperator.field,
+            operator: firstColumnWithOperator.filterOperators[0].value,
             id: lastAddedFilterItemId++,
         };
     }, [filterableColumns]);
@@ -153,10 +162,6 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
 
     const theme = useTheme();
     const renderFullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-    const ownerState: OwnerState = {
-        openedPanelValue,
-    };
 
     const resetFiltersButton = (
         <ResetFiltersButton variant="outlined" startIcon={resetFiltersIcon} onClick={resetFilters} {...slotProps?.resetFiltersButton}>
@@ -219,13 +224,7 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     }
 
     return (
-        <DesktopGridPanel
-            onResize={undefined} // TODO: Typing bug - remove after updating to DataGrid 7
-            onResizeCapture={undefined} // TODO: Typing bug - remove after updating to DataGrid 7
-            open={open}
-            ownerState={ownerState}
-            {...slotProps?.desktopGridPanel}
-        >
+        <DesktopGridPanel ownerState={rootProps} open={open} {...slotProps?.desktopGridPanel}>
             {children}
             <DesktopPanelFooterDivider {...slotProps?.desktopPanelFooterDivider} />
             <DesktopPanelFooter {...slotProps?.desktopPanelFooter}>
@@ -252,12 +251,14 @@ export const DataGridPanel = (inProps: DataGridPanelProps) => {
     );
 };
 
-const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey, OwnerState>({
+const DesktopGridPanel = createComponentSlot(GridPanel)<DataGridPanelClassKey, DataGridProcessedProps>({
     componentName: "DataGridPanel",
     slotName: "desktopGridPanel",
 })(css`
     .MuiDataGrid-panelHeader,
-    .MuiDataGrid-panelFooter {
+    .MuiDataGrid-columnsManagementHeader,
+    .MuiDataGrid-panelFooter,
+    .MuiDataGrid-columnsManagementFooter {
         // Hide MUIs header and footer so we can add our own with a better structure for styling
         display: none;
     }
@@ -288,12 +289,15 @@ const MobileDialog = createComponentSlot(Dialog)<DataGridPanelClassKey>({
     componentName: "DataGridPanel",
     slotName: "mobileDialog",
 })(css`
-    .MuiDataGrid-panelContent {
+    .MuiDataGrid-panelContent,
+    .MuiDataGrid-columnsManagement {
         max-height: none;
     }
 
     .MuiDataGrid-panelHeader,
-    .MuiDataGrid-panelFooter {
+    .MuiDataGrid-columnsManagementHeader,
+    .MuiDataGrid-panelFooter,
+    .MuiDataGrid-columnsManagementFooter {
         // Hide MUIs header and footer so we can add our own with a better structure for styling
         display: none;
     }

@@ -3,7 +3,7 @@ import {
     Button,
     DataGridToolbar,
     FillSpace,
-    GridColDef,
+    type GridColDef,
     GridFilterButton,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -12,22 +12,21 @@ import {
     muiGridSortToGql,
     StackLink,
     TableDeleteButton,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
+import { type BlockInterface } from "../blocks/types";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
+import { type GQLPaginatedRedirectsQuery, type GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;
@@ -37,18 +36,12 @@ interface Props {
 function RedirectsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
             <FillSpace />
-            <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
-                </Button>
-            </ToolbarActions>
+            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -145,6 +138,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>
@@ -173,13 +167,16 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         variables: {
             scope,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            ...muiGridPagingToGql({ page: dataGridProps.paginationModel.page, pageSize: dataGridProps.paginationModel.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
         context: LocalErrorScopeApolloContext,
         fetchPolicy: "cache-and-network",
     });
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.paginatedRedirects.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
@@ -191,9 +188,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
-                disableSelectionOnClick
-                components={{ Toolbar: RedirectsGridToolbar }}
+                slots={{ toolbar: RedirectsGridToolbar }}
             />
         </MainContent>
     );

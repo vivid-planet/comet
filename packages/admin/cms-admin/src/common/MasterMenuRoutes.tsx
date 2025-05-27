@@ -1,13 +1,17 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
-import { ReactNode } from "react";
-import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
+import { type ReactNode } from "react";
+import { Redirect, type RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
-import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { type MasterMenuData, type MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuItem): boolean => {
+        if (!item.requiredPermission) return true;
+        const requiredPermissions = Array.isArray(item.requiredPermission) ? item.requiredPermission : [item.requiredPermission];
+        return requiredPermissions.some((permission) => isAllowed(permission));
+    };
 
     const flat = (routes: RouteProps[], item: MasterMenuItem & { icon?: ReactNode }): RouteProps[] => {
         if (item.type === "externalLink") {

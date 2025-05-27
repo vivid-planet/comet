@@ -1,5 +1,5 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { StandaloneMediaBlockData } from "@src/blocks.generated";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { type StandaloneMediaBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { mediaAspectRatioOptions } from "@src/util/mediaAspectRatios";
 import { FormattedMessage } from "react-intl";
@@ -14,10 +14,9 @@ export const StandaloneMediaBlock = createCompositeBlock(
             },
             aspectRatio: {
                 block: createCompositeBlockSelectField<StandaloneMediaBlockData["aspectRatio"]>({
+                    label: <FormattedMessage id="standaloneMedia.aspectRatio" defaultMessage="Aspect Ratio" />,
                     defaultValue: "16x9",
                     options: mediaAspectRatioOptions,
-                    label: <FormattedMessage id="standaloneMedia.aspectRatio" defaultMessage="Aspect Ratio" />,
-                    fullWidth: true,
                 }),
             },
         },

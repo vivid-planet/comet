@@ -6,11 +6,11 @@ import {
     CrudVisibility,
     dataGridDateColumn,
     DataGridToolbar,
-    ExportApi,
+    type ExportApi,
     FillSpace,
     filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridColumnsButton,
     GridFilterButton,
     messages,
@@ -18,8 +18,6 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
     useDataGridRemote,
@@ -28,7 +26,14 @@ import {
 import { Add as AddIcon, Disabled, Edit, Excel, Online, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import {
+    DataGridPro,
+    GridFilterInputSingleSelect,
+    GridFilterInputValue,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -36,87 +41,84 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductGridRelationsQuery,
-    GQLProductGridRelationsQueryVariables,
-    GQLProductsListManualFragment,
-    GQLProductsListQuery,
-    GQLProductsListQueryVariables,
-    GQLUpdateProductStatusMutation,
-    GQLUpdateProductStatusMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductGridRelationsQuery,
+    type GQLProductGridRelationsQueryVariables,
+    type GQLProductsListManualFragment,
+    type GQLProductsListQuery,
+    type GQLProductsListQueryVariables,
+    type GQLUpdateProductStatusMutation,
+    type GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportApi; selectionModel: GridSelectionModel }) {
+type ProductsGridToolbarProps = {
+    exportApi: ExportApi;
+    selectionModel: GridRowSelectionModel;
+};
+
+function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarProps) {
     const client = useApolloClient();
     const theme = useTheme();
 
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridColumnsButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
+            <GridColumnsButton />
             <FillSpace />
-            <ToolbarActions>
-                <CrudMoreActionsMenu
-                    overallActions={[
-                        {
-                            label: <FormattedMessage {...messages.downloadAsExcel} />,
-                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                            onClick: () => exportApi.exportGrid(),
-                            disabled: exportApi.loading,
+            <CrudMoreActionsMenu
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                    <PublishAllProducts key="publish" />,
+                ]}
+                selectiveActions={[
+                    {
+                        label: "Publish",
+                        icon: <Online htmlColor={theme.palette.success.main} />,
+                        onClick: () => {
+                            for (const id of selectionModel) {
+                                client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: id as string, status: "Published" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: id as string, status: "Published" },
+                                    },
+                                });
+                            }
                         },
-                        <PublishAllProducts key="publish" />,
-                    ]}
-                    selectiveActions={[
-                        {
-                            label: "Publish",
-                            icon: <Online htmlColor={theme.palette.success.main} />,
-                            onClick: () => {
-                                for (const id of selectionModel) {
-                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                        mutation: updateProductStatusMutation,
-                                        variables: { id: id as string, status: "Published" },
-                                        optimisticResponse: {
-                                            __typename: "Mutation",
-                                            updateProduct: { __typename: "Product", id: id as string, status: "Published" },
-                                        },
-                                    });
-                                }
-                            },
+                    },
+                    {
+                        label: "Unpublish",
+                        icon: <Disabled />,
+                        onClick: () => {
+                            for (const id of selectionModel) {
+                                client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: id as string, status: "Unpublished" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
+                                    },
+                                });
+                            }
                         },
-                        {
-                            label: "Unpublish",
-                            icon: <Disabled />,
-                            onClick: () => {
-                                for (const id of selectionModel) {
-                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                        mutation: updateProductStatusMutation,
-                                        variables: { id: id as string, status: "Unpublished" },
-                                        optimisticResponse: {
-                                            __typename: "Mutation",
-                                            updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
-                                        },
-                                    });
-                                }
-                            },
-                        },
-                    ]}
-                    selectionSize={selectionModel.length}
-                />
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
-                </Button>
-            </ToolbarActions>
+                    },
+                ]}
+                selectionSize={selectionModel.length}
+            />
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -128,7 +130,7 @@ export function ProductsGrid() {
     const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
-    const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -265,7 +267,7 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 130,
             type: "boolean",
-            valueGetter: (params) => params.row.status == "Published",
+            valueGetter: (params, row) => row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
@@ -289,12 +291,13 @@ export function ProductsGrid() {
             field: "manufacturer",
             headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
             sortable: false,
-            valueGetter: ({ value }) => value?.name,
+            valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: [ManufacturerFilterOperator],
             disableExport: true,
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
@@ -351,11 +354,14 @@ export function ProductsGrid() {
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            sort: muiGridSortToGql(sortModel, columns),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
@@ -379,22 +385,20 @@ export function ProductsGrid() {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            error={error}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { exportApi, selectionModel },
+            slotProps={{
+                toolbar: { exportApi, selectionModel } as ProductsGridToolbarProps,
             }}
             checkboxSelection
             keepNonExistentRowsSelected
-            selectionModel={selectionModel}
-            onSelectionModelChange={(selectionModel) => {
+            rowSelectionModel={selectionModel}
+            onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
         />

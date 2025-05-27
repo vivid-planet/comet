@@ -1,13 +1,14 @@
 import { LevelUp } from "@comet/admin-icons";
-import { IconButton as MuiIconButton, Link as MuiLink, Typography } from "@mui/material";
+import { IconButton as MuiIconButton, type Link as MuiLink, Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
+import { Link as RouterLink } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { BreadcrumbItem } from "../Stack";
+import { type BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { BackButtonSeparator, StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
+import { BackButtonSeparator, type StackBreadcrumbsClassKey, type StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
-const Link = createComponentSlot(MuiLink)<StackBreadcrumbsClassKey>({
+const Link = createComponentSlot(RouterLink)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "link",
 })(

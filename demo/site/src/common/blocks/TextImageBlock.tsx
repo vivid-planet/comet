@@ -1,6 +1,6 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { TextImageBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type TextImageBlockData } from "@src/blocks.generated";
 import styled, { css } from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";

@@ -1,4 +1,0 @@
-{
-    "extends": "@comet/eslint-config/nestjs",
-    "ignorePatterns": ["src/db/migrations/**", "dist/**"]
-}

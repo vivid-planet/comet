@@ -2,7 +2,7 @@
 import { createSitePath } from "@src/util/createSitePath";
 import { Fragment } from "react";
 
-import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
+import { type GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import * as sc from "./Breadcrumbs.sc";
 import { GridRoot } from "./Breadcrumbs.sc";
 

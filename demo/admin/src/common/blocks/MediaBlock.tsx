@@ -1,5 +1,12 @@
-import { BlockCategory, BlockInterface, createOneOfBlock } from "@comet/blocks-admin";
-import { DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
+import {
+    BlockCategory,
+    type BlockInterface,
+    createOneOfBlock,
+    DamImageBlock,
+    DamVideoBlock,
+    VimeoVideoBlock,
+    YouTubeVideoBlock,
+} from "@comet/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 export const MediaBlock: BlockInterface = createOneOfBlock({
