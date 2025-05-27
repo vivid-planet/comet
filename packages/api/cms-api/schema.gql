@@ -220,7 +220,6 @@ type Warning {
   createdAt: DateTime!
   updatedAt: DateTime!
   message: String!
-  type: String!
   severity: WarningSeverity!
   sourceInfo: WarningSourceInfo!
   status: WarningStatus!

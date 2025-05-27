@@ -29,10 +29,6 @@ export class Warning extends BaseEntity {
     @Field()
     message: string;
 
-    @Property()
-    @Field()
-    type: string;
-
     @Enum({ items: () => WarningSeverity })
     @Field(() => WarningSeverity)
     severity: `${WarningSeverity}`;
