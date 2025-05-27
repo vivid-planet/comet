@@ -46,7 +46,7 @@ export class WarningCheckerCommand extends CommandRunner {
 
     @CreateRequestContext()
     async run(): Promise<void> {
-        let startDate = new Date();
+        const startDate = new Date();
 
         for (const data of this.groupRootBlockDataByEntity()) {
             const { tableName, className, rootBlockData, hasScope } = data;
@@ -108,7 +108,6 @@ export class WarningCheckerCommand extends CommandRunner {
 
                             this.warningService.saveWarnings({
                                 warnings,
-                                type: "Block",
                                 scope,
                                 sourceInfo: {
                                     rootEntityName: tableName,
@@ -127,10 +126,6 @@ export class WarningCheckerCommand extends CommandRunner {
         }
         await this.entityManager.flush();
 
-        // remove all Block-Warnings that are not present anymore
-        await this.entityManager.nativeDelete(Warning, { type: "Block", updatedAt: { $lt: startDate } });
-
-        startDate = new Date();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const entities = this.orm.config.get("entities") as EntityClass<any>[];
         const metadataStorage = this.orm.em.getMetadata();
@@ -150,7 +145,6 @@ export class WarningCheckerCommand extends CommandRunner {
                             for (const warning of warnings) {
                                 await this.warningService.saveWarnings({
                                     warnings: await service.createWarnings(warning),
-                                    type: "Entity",
                                     sourceInfo: {
                                         rootEntityName: entity.name,
                                         rootPrimaryKey: entityMetadata.primaryKeys[0],
@@ -179,8 +173,8 @@ export class WarningCheckerCommand extends CommandRunner {
             }
         }
 
-        // remove all Entity-Warnings that are not present anymore
-        await this.entityManager.nativeDelete(Warning, { type: "Entity", updatedAt: { $lt: startDate } });
+        // remove all warnings that are not present anymore
+        await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: startDate } });
     }
 
     private async processEntityWarningsIndividually({
@@ -205,7 +199,6 @@ export class WarningCheckerCommand extends CommandRunner {
             for (const row of rows) {
                 await this.warningService.saveWarnings({
                     warnings: await createWarnings(row),
-                    type: "Entity",
                     sourceInfo: {
                         rootEntityName,
                         rootPrimaryKey,

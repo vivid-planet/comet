@@ -34,7 +34,6 @@ const warningsFragment = gql`
         createdAt
         updatedAt
         message
-        type
         severity
         sourceInfo {
             rootEntityName
