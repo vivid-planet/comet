@@ -22,7 +22,7 @@ export const DeleteDialog = (props: DeleteDialogProps) => {
     const { dialogOpen, onDelete, onCancel } = props;
 
     return (
-        <Dialog open={dialogOpen} onClose={onDelete} maxWidth="sm">
+        <Dialog open={dialogOpen} onClose={onCancel} maxWidth="sm">
             <DialogTitle>
                 <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Attention. Please confirm." />
             </DialogTitle>
