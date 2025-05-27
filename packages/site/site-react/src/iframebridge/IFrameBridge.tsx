@@ -9,7 +9,7 @@ import { type AdminMessage, AdminMessageType, type IFrameMessage, IFrameMessageT
 import { PreviewOverlay } from "./PreviewOverlay";
 import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
-export type PreviewElement = {
+type PreviewElement = {
     element: HTMLElement;
     adminRoute: string;
     label: string;

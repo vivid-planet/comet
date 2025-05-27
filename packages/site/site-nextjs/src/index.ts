@@ -21,6 +21,7 @@ export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRoute
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export { type SitePreviewParams } from "./sitePreview/SitePreviewUtils";
 export {
+    AdminMessageType,
     type BlockLoader,
     type BlockLoaderDependencies,
     BlockPreviewProvider,
@@ -39,9 +40,19 @@ export {
     gql,
     type GraphQLFetch,
     hasRichTextBlockContent,
+    type IAdminContentScopeMessage,
+    type IAdminGraphQLApiUrlMessage,
+    type IAdminHoverComponentMessage,
+    type IAdminShowOnlyVisibleMessage,
     IFrameBridgeProvider,
+    type IFrameHoverComponentMessage,
+    type IFrameLocationMessage,
+    type IFrameMessage,
     IFrameMessageType,
+    type IFrameOpenLinkMessage,
+    type IFrameSelectComponentMessage,
     type ImageDimensions,
+    type IReadyIFrameMessage,
     isWithPreviewPropsData,
     ListBlock,
     OneOfBlock,
