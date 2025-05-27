@@ -1,11 +1,15 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     BreadcrumbItem,
+    DataGridToolbar,
     EditDialog,
+    FillSpace,
     GridCellContent,
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
+    ToolbarActions,
+    ToolbarItem,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
@@ -30,7 +34,9 @@ import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
+import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
+import { DamTableFilter } from "./filter/DamTableFilter";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     GQLDamFileTableFragment,
@@ -43,10 +49,10 @@ import {
     GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
-import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
+import { DamMoreActions } from "./selection/DamMoreActions";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { LicenseValidityTags } from "./tags/LicenseValidityTags";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
@@ -71,6 +77,58 @@ interface FolderDataGridProps extends DamConfig {
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
     selectionApi: ISelectionApi;
+}
+
+interface FolderDataGridToolbarProps {
+    id?: string;
+    filterApi: IFilterApi<DamFilter>;
+    hideArchiveFilter?: boolean;
+    additionalToolbarItems?: React.ReactNode;
+    uploadFilters: {
+        allowedMimetypes?: string[];
+    };
+}
+
+function FolderDataGridToolbar({
+    id: currentFolderId,
+    filterApi,
+    hideArchiveFilter,
+    additionalToolbarItems,
+    uploadFilters,
+}: FolderDataGridToolbarProps) {
+    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+        variables: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: currentFolderId!,
+        },
+        skip: currentFolderId === undefined,
+    });
+
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <DamTableFilter hideArchiveFilter={hideArchiveFilter} filterApi={filterApi} />
+            </ToolbarItem>
+            <FillSpace />
+            <ToolbarActions>
+                {additionalToolbarItems}
+                <DamMoreActions
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                    folderId={data?.damFolder.id}
+                    filter={uploadFilters}
+                />
+
+                <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
+            </ToolbarActions>
+        </DataGridToolbar>
+    );
 }
 
 const FolderDataGrid = ({
@@ -537,14 +595,12 @@ const FolderDataGrid = ({
         },
     ];
 
+    const uploadFilters = {
+        allowedMimetypes: props.allowedMimetypes,
+    };
+
     return (
         <sc.FolderWrapper>
-            <FolderHead
-                isSearching={isSearching}
-                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
-                breadcrumbs={breadcrumbs}
-                folderId={currentFolderId}
-            />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     {...dataGridProps}
@@ -562,6 +618,19 @@ const FolderDataGrid = ({
                     onSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
+                    components={{
+                        Toolbar: FolderDataGridToolbar,
+                    }}
+                    componentsProps={{
+                        toolbar: {
+                            id: currentFolderId,
+                            breadcrumbs,
+                            filterApi,
+                            selectionApi,
+                            uploadFilters,
+                            additionalToolbarItems: props.additionalToolbarItems,
+                        },
+                    }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
