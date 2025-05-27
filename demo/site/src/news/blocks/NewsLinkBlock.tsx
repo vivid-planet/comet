@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { type PropsWithData } from "@comet/cms-site";
+import { type PropsWithData } from "@comet/site-nextjs";
 import { type NewsLinkBlockData } from "@src/blocks.generated";
-=======
-import { PropsWithData } from "@comet/site-nextjs";
-import { NewsLinkBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";

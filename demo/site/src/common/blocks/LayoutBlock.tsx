@@ -1,11 +1,6 @@
 "use client";
-<<<<<<< HEAD
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type LayoutBlockData } from "@src/blocks.generated";
-=======
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { LayoutBlockData } from "@src/blocks.generated";
->>>>>>> main
 import styled, { css } from "styled-components";
 
 import { MediaBlock } from "./MediaBlock";

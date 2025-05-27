@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { type BlockLoader, gql } from "@comet/cms-site";
+import { type BlockLoader, gql } from "@comet/site-nextjs";
 import { type NewsLinkBlockData } from "@src/blocks.generated";
-=======
-import { BlockLoader, gql } from "@comet/site-nextjs";
-import { NewsLinkBlockData } from "@src/blocks.generated";
->>>>>>> main
 
 import { type GQLNewsBlockDetailQuery, type GQLNewsBlockDetailQueryVariables } from "./NewsDetailBlock.loader.generated";
 

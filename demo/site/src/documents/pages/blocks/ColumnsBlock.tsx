@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { BlocksBlock, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/cms-site";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
 import { type ColumnsBlockData, type ColumnsContentBlockData } from "@src/blocks.generated";
-=======
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/site-nextjs";
-import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";

@@ -8,13 +8,8 @@ import {
     type PropsWithData,
     type SupportedBlocks,
     withPreview,
-<<<<<<< HEAD
-} from "@comet/cms-site";
-import { type LinkBlockData } from "@src/blocks.generated";
-=======
 } from "@comet/site-nextjs";
-import { LinkBlockData } from "@src/blocks.generated";
->>>>>>> main
+import { type LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { type PropsWithChildren } from "react";
 

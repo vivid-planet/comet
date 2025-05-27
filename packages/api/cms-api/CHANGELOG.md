@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 8.0.0-beta.4
 
 ### Major Changes
@@ -158,46 +157,45 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
-=======
+
 ## 7.21.1
 
 ### Patch Changes
 
--   @comet/blocks-api@7.21.1
+- @comet/blocks-api@7.21.1
 
 ## 7.21.0
 
 ### Patch Changes
 
--   06920eb59: Fix: Change GraphQL Type of numberOfDescendants from Float to Int
-    -   @comet/blocks-api@7.21.0
+- 06920eb59: Fix: Change GraphQL Type of numberOfDescendants from Float to Int
+    - @comet/blocks-api@7.21.0
 
 ## 7.20.0
 
 ### Minor Changes
 
--   ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+- ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
 
 ### Patch Changes
 
--   557e311ea: AccessLog: Remove some DAM URLs from log
+- 557e311ea: AccessLog: Remove some DAM URLs from log
 
     Hashed URLs and preview URLs are not useful in the logs, so we remove them.
 
--   21f95adfe: DAM: Fix headers
+- 21f95adfe: DAM: Fix headers
 
     While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
 
-    -   Only store the `content-type` header
-    -   Prevent imgproxy headers from being passed through to the client
-    -   Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
+    - Only store the `content-type` header
+    - Prevent imgproxy headers from being passed through to the client
+    - Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
 
--   f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
+- f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
 
     Explicitly set `cache-control: no-store` for folder download to prevent caching of the response. Normally this should not be cached by any CDN, because the Request contains a cookie, but it is better to be explicit about it.
 
-    -   @comet/blocks-api@7.20.0
->>>>>>> main
+    - @comet/blocks-api@7.20.0
 
 ## 7.19.0
 

@@ -1,6 +1,5 @@
 # @comet/eslint-config
 
-<<<<<<< HEAD
 ## 8.0.0-beta.4
 
 ### Patch Changes
@@ -54,25 +53,24 @@
 ### Minor Changes
 
 - a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
-=======
+
 ## 7.21.1
 
 ### Patch Changes
 
--   @comet/eslint-plugin@7.21.1
+- @comet/eslint-plugin@7.21.1
 
 ## 7.21.0
 
 ### Patch Changes
 
--   @comet/eslint-plugin@7.21.0
+- @comet/eslint-plugin@7.21.0
 
 ## 7.20.0
 
 ### Patch Changes
 
--   @comet/eslint-plugin@7.20.0
->>>>>>> main
+- @comet/eslint-plugin@7.20.0
 
 ## 7.19.0
 

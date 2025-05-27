@@ -8,12 +8,8 @@ import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
-<<<<<<< HEAD
-import { type Metadata, type ResolvingMetadata } from "next";
-=======
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { Metadata, ResolvingMetadata } from "next";
->>>>>>> main
+import { type Metadata, type ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";

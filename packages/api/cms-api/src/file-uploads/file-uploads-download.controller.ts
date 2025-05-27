@@ -150,44 +150,29 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
-<<<<<<< HEAD
                 const response = await fetch(this.imgproxyService.getSignedUrl(path));
                 if (response.body === null) {
                     throw new Error("Response body is null");
                 }
 
-                const headers: Record<string, string> = {};
-                for (const [key, value] of response.headers.entries()) {
-                    headers[key] = value;
-                }
-                res.writeHead(response.status, headers);
-
-                const readableBody = Readable.fromWeb(response.body);
-                readableBody.pipe(new PassThrough()).pipe(res);
-=======
-                const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
-
-                const contentLength = imgproxyResponse.headers.get("content-length");
+                const contentLength = response.headers.get("content-length");
                 if (!contentLength) {
                     throw new Error("Content length not found");
                 }
 
-                const contentType = imgproxyResponse.headers.get("content-type");
+                const contentType = response.headers.get("content-type");
                 if (!contentType) {
                     throw new Error("Content type not found");
                 }
->>>>>>> main
 
-                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType });
-                imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+                res.writeHead(response.status, { "content-length": contentLength, "content-type": contentType });
 
-                if (imgproxyResponse.ok) {
+                const readableBody = Readable.fromWeb(response.body);
+                readableBody.pipe(new PassThrough()).pipe(res);
+
+                if (response.ok) {
                     await this.cacheService.set(file.contentHash, path, {
-<<<<<<< HEAD
                         file: readableBody.pipe(new PassThrough()),
-=======
-                        file: imgproxyResponse.body.pipe(new PassThrough()),
->>>>>>> main
                         metaData: {
                             size: Number(contentLength),
                             contentType: contentType,

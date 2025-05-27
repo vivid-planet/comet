@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { hasRichTextBlockContent, type PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
+import { hasRichTextBlockContent, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
 import { type KeyFactsItemBlockData } from "@src/blocks.generated";
-=======
-import { hasRichTextBlockContent, PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
-import { KeyFactsItemBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { type Renderers } from "redraft";

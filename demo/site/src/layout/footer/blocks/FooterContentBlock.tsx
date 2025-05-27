@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type FooterContentBlockData } from "@src/blocks.generated";
-=======
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { FooterContentBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";

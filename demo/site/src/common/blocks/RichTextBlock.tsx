@@ -1,11 +1,6 @@
 "use client";
-<<<<<<< HEAD
-import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/cms-site";
+import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type LinkBlockData, type RichTextBlockData } from "@src/blocks.generated";
-=======
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/site-nextjs";
-import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { PageLayout } from "@src/layout/PageLayout";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";
 import styled, { css } from "styled-components";
@@ -122,14 +117,8 @@ const DisableLastBottomSpacing = styled.div`
         > *:last-child {
             margin-bottom: 0;
 
-<<<<<<< HEAD
-            ${theme.breakpoints.xs.mediaQuery} {
+            ${theme.breakpoints.sm.mediaQuery} {
                 margin-bottom: 0;
-=======
-                ${theme.breakpoints.sm.mediaQuery} {
-                    margin-bottom: 0;
-                }
->>>>>>> main
             }
         }
     `};

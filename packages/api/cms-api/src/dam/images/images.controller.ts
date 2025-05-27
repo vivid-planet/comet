@@ -41,40 +41,7 @@ export class ImagesController {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-<<<<<<< HEAD
     @Get(`/preview{/:contentHash}/${focusImageUrl}`)
-=======
-    @Get(`/preview/:contentHash?/${smartImageUrl}`)
-    async previewSmartCroppedImage(
-        @Param() params: ImageParams,
-        @Headers("Accept") accept: string,
-        @Res() res: Response,
-        @GetCurrentUser() user: CurrentUser,
-    ): Promise<void> {
-        if (params.cropArea.focalPoint !== FocalPoint.SMART) {
-            throw new NotFoundException();
-        }
-
-        const file = await this.filesService.findOneById(params.fileId);
-        if (file === null) {
-            throw new NotFoundException();
-        }
-
-        if (params.contentHash && file.contentHash !== params.contentHash) {
-            throw new BadRequestException("Content Hash mismatch!");
-        }
-
-        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
-            throw new ForbiddenException();
-        }
-
-        return this.pipeCroppedImage(file, params, accept, res, {
-            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
-        });
-    }
-
-    @Get(`/preview/:contentHash?/${focusImageUrl}`)
->>>>>>> main
     async previewFocusCroppedImage(
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
@@ -128,7 +95,7 @@ export class ImagesController {
             throw new ForbiddenException();
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
+        return this.pipeCroppedImage(file, params, accept, res, {
             "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
@@ -252,44 +219,29 @@ export class ImagesController {
 
         const cache = await this.cacheService.get(file.contentHash, path);
         if (!cache) {
-<<<<<<< HEAD
             const response = await fetch(this.imgproxyService.getSignedUrl(path));
             if (response.body === null) {
                 throw new Error("Response body is null");
             }
 
-            const headers: Record<string, string> = {};
-            for (const [key, value] of response.headers.entries()) {
-                headers[key] = value;
-            }
-            res.writeHead(response.status, { ...headers, ...overrideHeaders });
-
-            const readableBody = Readable.fromWeb(response.body);
-            readableBody.pipe(new PassThrough()).pipe(res);
-=======
-            const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
-
-            const contentLength = imgproxyResponse.headers.get("content-length");
+            const contentLength = response.headers.get("content-length");
             if (!contentLength) {
                 throw new Error("Content length not found");
             }
 
-            const contentType = imgproxyResponse.headers.get("content-type");
+            const contentType = response.headers.get("content-type");
             if (!contentType) {
                 throw new Error("Content type not found");
             }
->>>>>>> main
 
-            res.writeHead(imgproxyResponse.status, { ...headers, "content-length": contentLength, "content-type": contentType });
-            imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+            res.writeHead(response.status, { ...headers, "content-length": contentLength, "content-type": contentType });
 
-            if (imgproxyResponse.ok) {
+            const readableBody = Readable.fromWeb(response.body);
+            readableBody.pipe(new PassThrough()).pipe(res);
+
+            if (response.ok) {
                 await this.cacheService.set(file.contentHash, path, {
-<<<<<<< HEAD
                     file: readableBody.pipe(new PassThrough()),
-=======
-                    file: imgproxyResponse.body.pipe(new PassThrough()),
->>>>>>> main
                     metaData: {
                         size: Number(contentLength),
                         contentType: contentType,

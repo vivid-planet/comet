@@ -1,11 +1,6 @@
 "use client";
-<<<<<<< HEAD
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type CallToActionBlockData } from "@src/blocks.generated";
-=======
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { CallToActionBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { filesize } from "filesize";
 
 import { Button, type ButtonVariant } from "../components/Button";

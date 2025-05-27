@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import { type BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
-=======
-import { BlobHTTPHeaders, BlobServiceClient, RestError, StorageSharedKeyCredential } from "@azure/storage-blob";
 import { Logger } from "@nestjs/common";
->>>>>>> main
 import { Readable } from "stream";
 
 import { type BlobStorageBackendInterface, type CreateFileOptions, type StorageMetaData } from "../blob-storage-backend.interface";

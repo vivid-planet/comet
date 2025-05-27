@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type TeaserItemBlockData } from "@src/blocks.generated";
-=======
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { TeaserItemBlockData } from "@src/blocks.generated";
->>>>>>> main
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";

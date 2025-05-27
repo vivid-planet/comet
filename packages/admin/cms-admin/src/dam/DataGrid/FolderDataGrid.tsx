@@ -1,11 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
-<<<<<<< HEAD
-    type BreadcrumbItem,
-=======
     BreadcrumbItem,
     DataGridToolbar,
->>>>>>> main
     EditDialog,
     FillSpace,
     GridCellContent,
@@ -22,7 +18,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
+import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
@@ -55,11 +51,6 @@ import {
     type GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
-<<<<<<< HEAD
-import { FolderHead } from "./FolderHead";
-=======
-import { DamSelectionFooter } from "./footer/SelectionFooter";
->>>>>>> main
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { DamMoreActions } from "./selection/DamMoreActions";
@@ -89,7 +80,7 @@ interface FolderDataGridProps extends DamConfig {
     selectionApi: ISelectionApi;
 }
 
-interface FolderDataGridToolbarProps {
+type FolderDataGridToolbarProps ={
     id?: string;
     filterApi: IFilterApi<DamFilter>;
     hideArchiveFilter?: boolean;
@@ -609,26 +600,12 @@ const FolderDataGrid = ({
         },
     ];
 
-<<<<<<< HEAD
-    if (error) {
-        throw error;
-    }
-    return (
-        <MainContent>
-            <FolderHead
-                isSearching={isSearching}
-                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
-                breadcrumbs={breadcrumbs}
-                folderId={currentFolderId}
-            />
-=======
     const uploadFilters = {
         allowedMimetypes: props.allowedMimetypes,
     };
 
     return (
-        <sc.FolderWrapper>
->>>>>>> main
+        <MainContent>
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     apiRef={apiRef}
@@ -645,14 +622,13 @@ const FolderDataGrid = ({
                     onRowSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
-<<<<<<< HEAD
                     columnVisibilityModel={{
                         contextMenu: !hideContextMenu,
-=======
-                    components={{
-                        Toolbar: FolderDataGridToolbar,
                     }}
-                    componentsProps={{
+                    slots={{
+                        toolbar: FolderDataGridToolbar as GridSlotsComponent["toolbar"],
+                    }}
+                    slotProps={{
                         toolbar: {
                             id: currentFolderId,
                             breadcrumbs,
@@ -660,8 +636,7 @@ const FolderDataGrid = ({
                             selectionApi,
                             uploadFilters,
                             additionalToolbarItems: props.additionalToolbarItems,
-                        },
->>>>>>> main
+                        } as FolderDataGridToolbarProps,
                     }}
                 />
             </sc.FolderOuterHoverHighlight>

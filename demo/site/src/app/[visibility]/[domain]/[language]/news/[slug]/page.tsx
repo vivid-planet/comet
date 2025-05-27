@@ -1,14 +1,8 @@
 export const dynamic = "error";
 
-<<<<<<< HEAD
-import { gql } from "@comet/cms-site";
-import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
-import { type VisibilityParam } from "@src/middleware/domainRewrite";
-=======
 import { gql } from "@comet/site-nextjs";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { VisibilityParam } from "@src/middleware/domainRewrite";
->>>>>>> main
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { setVisibilityParam } from "@src/util/ServerContext";
 import { notFound } from "next/navigation";

@@ -69,25 +69,14 @@ const Content = styled.div`
     ${({ theme }) => css`
         grid-column: 3 / -3;
 
-<<<<<<< HEAD
-        ${theme.breakpoints.xs.mediaQuery} {
+        ${theme.breakpoints.sm.mediaQuery} {
             grid-column: 5 / -5;
         }
 
-        ${theme.breakpoints.lg.mediaQuery} {
+        ${theme.breakpoints.xl.mediaQuery} {
             grid-column: 7 / -7;
         }
     `};
-=======
-            ${theme.breakpoints.sm.mediaQuery} {
-                grid-column: 5 / -5;
-            }
-
-            ${theme.breakpoints.xl.mediaQuery} {
-                grid-column: 7 / -7;
-            }
-        `};
->>>>>>> main
 `;
 
 const ImageMobile = styled.div`
