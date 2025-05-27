@@ -16,7 +16,7 @@ import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { EntityInfo } from "../../../dependencies/decorators/entity-info.decorator";
+import { EntityInfo } from "../../../common/entityInfo/entity-info.decorator";
 import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
 import { DamScopeInterface } from "../../types";
 import { FileWarningService } from "../file-warning.service";
