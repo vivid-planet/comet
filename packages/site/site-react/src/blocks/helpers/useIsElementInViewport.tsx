@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { type RefObject, useEffect } from "react";
 
-export const useIsElementInViewport = (ref: React.RefObject<Element>, callback: (inView: boolean) => void) => {
+export const useIsElementInViewport = (ref: RefObject<Element>, callback: (inView: boolean) => void) => {
     useEffect(() => {
         if (!ref.current) return;
 

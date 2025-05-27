@@ -1,7 +1,7 @@
 export const dynamic = "error";
 
 import { gql } from "@comet/site-nextjs";
-import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import { type ExternalLinkBlockData, type InternalLinkBlockData, type NewsLinkBlockData, type RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documents";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { type VisibilityParam } from "@src/middleware/domainRewrite";

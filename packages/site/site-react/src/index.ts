@@ -17,22 +17,22 @@ export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 export { createFetchInMemoryCache } from "./graphQLFetch/fetchInMemoryCache";
 export {
-    type GraphQLFetch,
-    type PreviewData,
     convertPreviewDataToHeaders,
     createFetchWithDefaults,
     createFetchWithPreviewHeaders,
     createGraphQLFetch,
     gql,
+    type GraphQLFetch,
+    type PreviewData,
 } from "./graphQLFetch/graphQLFetch";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
 export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
-export { type WithPreviewProps, isWithPreviewPropsData, withPreview } from "./iframebridge/withPreview";
+export { isWithPreviewPropsData, withPreview, type WithPreviewProps } from "./iframebridge/withPreview";
 export { Image } from "./image/Image";
-export { type ImageDimensions, calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, parseAspectRatio } from "./image/image.utils";
+export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, type ImageDimensions, parseAspectRatio } from "./image/image.utils";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { PreviewContext } from "./preview/PreviewContext";
 export { usePreview } from "./preview/usePreview";

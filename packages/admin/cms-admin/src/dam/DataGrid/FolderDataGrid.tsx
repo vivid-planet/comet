@@ -1,6 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
-    BreadcrumbItem,
+    type BreadcrumbItem,
     DataGridToolbar,
     EditDialog,
     FillSpace,
@@ -18,8 +18,8 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
+import { type ReactNode, useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
@@ -80,15 +80,15 @@ interface FolderDataGridProps extends DamConfig {
     selectionApi: ISelectionApi;
 }
 
-type FolderDataGridToolbarProps ={
+type FolderDataGridToolbarProps = {
     id?: string;
     filterApi: IFilterApi<DamFilter>;
     hideArchiveFilter?: boolean;
-    additionalToolbarItems?: React.ReactNode;
+    additionalToolbarItems?: ReactNode;
     uploadFilters: {
         allowedMimetypes?: string[];
     };
-}
+};
 
 function FolderDataGridToolbar({
     id: currentFolderId,
@@ -175,11 +175,7 @@ const FolderDataGrid = ({
 
     const apiRef = useGridApiRef();
 
-    const {
-        data: dataGridData,
-        loading,
-        error,
-    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
+    const { data: dataGridData, loading } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: currentFolderId,
             includeArchived: filterApi.current.archived,

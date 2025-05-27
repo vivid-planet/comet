@@ -104,7 +104,7 @@ export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
                 if (errors) {
                     errorMessage += `\n\nGraphQL error(s):\n- ${errors.map((error: { message: string }) => error.message).join("\n- ")}`;
                 }
-            } catch (error) {
+            } catch {
                 errorMessage += `\n${body}`;
             }
 

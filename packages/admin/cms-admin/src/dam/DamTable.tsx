@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import {
     EditDialogApiContext,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
     SortDirection,
     Stack,
     StackPage,
@@ -26,7 +26,7 @@ import FolderDataGrid, {
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 

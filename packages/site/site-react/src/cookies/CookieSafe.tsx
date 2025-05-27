@@ -1,12 +1,14 @@
 "use client";
 
+import { type PropsWithChildren, type ReactNode } from "react";
+
 import { usePreview } from "../preview/usePreview";
 import { useCookieApi } from "./CookieApiContext";
 
-type Props = React.PropsWithChildren<{
+type Props = PropsWithChildren<{
     consented: boolean;
-    fallback: React.ReactNode;
-    loading: React.ReactNode;
+    fallback: ReactNode;
+    loading: ReactNode;
 }>;
 
 export const CookieSafe = ({ consented, fallback, loading, children }: Props) => {
