@@ -1,5 +1,19 @@
+<<<<<<< HEAD
 import { DamVideoBlock, OneOfBlock, PreviewSkeleton, type PropsWithData, type SupportedBlocks, VimeoVideoBlock, withPreview } from "@comet/cms-site";
 import { type MediaBlockData } from "@src/blocks.generated";
+=======
+import {
+    DamVideoBlock,
+    OneOfBlock,
+    PreviewSkeleton,
+    PropsWithData,
+    SupportedBlocks,
+    VimeoVideoBlock,
+    withPreview,
+    YouTubeVideoBlock,
+} from "@comet/site-nextjs";
+import { MediaBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 
 import { CookieSafeYouTubeVideoBlock } from "./CookieSafeYouTubeVideoBlock";

@@ -41,19 +41,21 @@ export class ImagesController {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
+<<<<<<< HEAD
     @Get(`/preview{/:contentHash}/${focusImageUrl}`)
-    async previewFocusCroppedImage(
+=======
+    @Get(`/preview/:contentHash?/${smartImageUrl}`)
+    async previewSmartCroppedImage(
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
         @Res() res: Response,
         @GetCurrentUser() user: CurrentUser,
     ): Promise<void> {
-        if (params.cropArea.focalPoint === FocalPoint.SMART) {
+        if (params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -66,7 +68,37 @@ export class ImagesController {
             throw new ForbiddenException();
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
+        return this.pipeCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
+        });
+    }
+
+    @Get(`/preview/:contentHash?/${focusImageUrl}`)
+>>>>>>> main
+    async previewFocusCroppedImage(
+        @Param() params: ImageParams,
+        @Headers("Accept") accept: string,
+        @Res() res: Response,
+        @GetCurrentUser() user: CurrentUser,
+    ): Promise<void> {
+        if (params.cropArea.focalPoint === FocalPoint.SMART) {
+            throw new NotFoundException();
+        }
+
+        const file = await this.filesService.findOneById(params.fileId);
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new BadRequestException("Content Hash mismatch!");
+        }
+
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            throw new ForbiddenException();
+        }
+
+        return this.pipeCroppedImage(file, params, accept, res, {
             "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
@@ -109,7 +141,6 @@ export class ImagesController {
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -118,7 +149,7 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
+        return this.pipeCroppedImage(file, params, accept, res, {
             "cache-control": "max-age=86400, public", // Public cache (1 day)
         });
     }
@@ -131,7 +162,6 @@ export class ImagesController {
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -140,7 +170,7 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
+        return this.pipeCroppedImage(file, params, accept, res, {
             "cache-control": "max-age=86400, public", // Public cache (1 day)
         });
     }
@@ -149,12 +179,12 @@ export class ImagesController {
         return hash === this.imagesService.createHash(imageParams);
     }
 
-    private async getCroppedImage(
+    private async pipeCroppedImage(
         file: FileInterface,
         { cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
         accept: string,
         res: Response,
-        overrideHeaders?: OutgoingHttpHeaders,
+        headers?: OutgoingHttpHeaders,
     ): Promise<void> {
         if (!file.image) {
             throw new NotFoundException();
@@ -222,6 +252,7 @@ export class ImagesController {
 
         const cache = await this.cacheService.get(file.contentHash, path);
         if (!cache) {
+<<<<<<< HEAD
             const response = await fetch(this.imgproxyService.getSignedUrl(path));
             if (response.body === null) {
                 throw new Error("Response body is null");
@@ -235,18 +266,38 @@ export class ImagesController {
 
             const readableBody = Readable.fromWeb(response.body);
             readableBody.pipe(new PassThrough()).pipe(res);
+=======
+            const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
 
-            if (response.ok) {
+            const contentLength = imgproxyResponse.headers.get("content-length");
+            if (!contentLength) {
+                throw new Error("Content length not found");
+            }
+
+            const contentType = imgproxyResponse.headers.get("content-type");
+            if (!contentType) {
+                throw new Error("Content type not found");
+            }
+>>>>>>> main
+
+            res.writeHead(imgproxyResponse.status, { ...headers, "content-length": contentLength, "content-type": contentType });
+            imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+
+            if (imgproxyResponse.ok) {
                 await this.cacheService.set(file.contentHash, path, {
+<<<<<<< HEAD
                     file: readableBody.pipe(new PassThrough()),
+=======
+                    file: imgproxyResponse.body.pipe(new PassThrough()),
+>>>>>>> main
                     metaData: {
-                        size: Number(headers["content-length"]),
-                        headers,
+                        size: Number(contentLength),
+                        contentType: contentType,
                     },
                 });
             }
         } else {
-            res.writeHead(200, { ...cache.metaData.headers, ...overrideHeaders });
+            res.writeHead(200, { ...headers, "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
 
             cache.file.pipe(res);
         }

@@ -69,6 +69,7 @@ const Content = styled.div`
     ${({ theme }) => css`
         grid-column: 3 / -3;
 
+<<<<<<< HEAD
         ${theme.breakpoints.xs.mediaQuery} {
             grid-column: 5 / -5;
         }
@@ -77,10 +78,20 @@ const Content = styled.div`
             grid-column: 7 / -7;
         }
     `};
+=======
+            ${theme.breakpoints.sm.mediaQuery} {
+                grid-column: 5 / -5;
+            }
+
+            ${theme.breakpoints.xl.mediaQuery} {
+                grid-column: 7 / -7;
+            }
+        `};
+>>>>>>> main
 `;
 
 const ImageMobile = styled.div`
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         display: none;
     }
 `;
@@ -88,11 +99,11 @@ const ImageMobile = styled.div`
 const ImageTablet = styled.div`
     display: none;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         display: block;
     }
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         display: none;
     }
 `;
@@ -100,11 +111,11 @@ const ImageTablet = styled.div`
 const ImageDesktop = styled.div`
     display: none;
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         display: block;
     }
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         display: none;
     }
 `;
@@ -112,7 +123,7 @@ const ImageDesktop = styled.div`
 const ImageLargeDesktop = styled.div`
     display: none;
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         display: block;
     }
 `;

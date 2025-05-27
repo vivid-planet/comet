@@ -21,7 +21,14 @@
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
         "start": "$npm_execpath prebuild && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
+<<<<<<< HEAD
         "start:dev": "run-p dev:*",
+=======
+        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
+        "start:dev": "$npm_execpath check-node-version && run-p dev:*",
+        "dev:nest": "$npm_execpath prebuild && $npm_execpath db:migrate && $npm_execpath console createBlockIndexViews && NODE_OPTIONS='--max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
+        "dev:reload": "rimraf src/reload.ts && chokidar \"node_modules/@comet/cms-api/lib/**\" \"node_modules/@comet/blocks-api/lib/**\" -s -c \"echo '// change' >> src/reload.ts\"",
+>>>>>>> main
         "start:prod": "node dist/main"
     },
     "dependencies": {
@@ -75,6 +82,12 @@
         "@types/inquirer": "^8.2.11",
         "@types/node": "^22.15.21",
         "@types/response-time": "^2.3.8",
+<<<<<<< HEAD
+=======
+        "@types/rimraf": "^3.0.0",
+        "@types/uuid": "^8.0.0",
+        "check-node-version": "^4.2.1",
+>>>>>>> main
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^7.4.4",
         "eslint": "^9.22.0",

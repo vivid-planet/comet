@@ -1,6 +1,11 @@
 "use client";
+<<<<<<< HEAD
 import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/cms-site";
 import { type HeadingBlockData } from "@src/blocks.generated";
+=======
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/site-nextjs";
+import { HeadingBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { Typography } from "@src/common/components/Typography";
 import { type Renderers } from "redraft";
 import styled from "styled-components";

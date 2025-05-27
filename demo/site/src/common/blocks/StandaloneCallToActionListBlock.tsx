@@ -1,6 +1,11 @@
 "use client";
+<<<<<<< HEAD
 import { type PropsWithData, withPreview } from "@comet/cms-site";
 import { type StandaloneCallToActionListBlockData } from "@src/blocks.generated";
+=======
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
+import { StandaloneCallToActionListBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { PageLayout } from "@src/layout/PageLayout";
 import { type CSSProperties } from "react";
 import styled from "styled-components";

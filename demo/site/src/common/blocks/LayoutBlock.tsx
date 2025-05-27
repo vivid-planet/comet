@@ -1,6 +1,11 @@
 "use client";
+<<<<<<< HEAD
 import { type PropsWithData, withPreview } from "@comet/cms-site";
 import { type LayoutBlockData } from "@src/blocks.generated";
+=======
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
+import { LayoutBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import styled, { css } from "styled-components";
 
 import { MediaBlock } from "./MediaBlock";
@@ -72,7 +77,7 @@ const Root = styled.div`
 
 const Box = styled.div<{ $layout: string }>`
     grid-column: 1 / -1;
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         ${({ $layout }) =>
             $layout === "layout1" &&
             css`

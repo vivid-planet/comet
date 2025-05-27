@@ -1,6 +1,11 @@
 "use client";
+<<<<<<< HEAD
 import { type PropsWithData, withPreview } from "@comet/cms-site";
 import { type BasicStageBlockData } from "@src/blocks.generated";
+=======
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
+import { BasicStageBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
@@ -73,7 +78,7 @@ const Content = styled.div<{ $alignItems: CSSProperties["alignItems"] }>`
 const MediaPhone = styled.div`
     height: 800px;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         display: none;
     }
 `;
@@ -82,11 +87,11 @@ const MediaTablet = styled.div`
     display: none;
     height: 700px;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         display: block;
     }
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         display: none;
     }
 `;
@@ -95,11 +100,11 @@ const MediaTabletLandscape = styled.div`
     display: none;
     height: 650px;
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         display: block;
     }
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         display: none;
     }
 `;
@@ -108,11 +113,11 @@ const MediaDesktop = styled.div`
     display: none;
     height: 750px;
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         display: block;
     }
 
-    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.xl.mediaQuery} {
         height: 800px;
     }
 `;

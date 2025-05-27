@@ -6,6 +6,10 @@ import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withPreviewMiddleware } from "./middleware/preview";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
+<<<<<<< HEAD
+=======
+import { withRobotsMiddleware } from "./middleware/robots";
+>>>>>>> main
 import { withSkipRewriteMiddleware } from "./middleware/skipRewrite";
 import { withStatusMiddleware } from "./middleware/status";
 
@@ -17,6 +21,7 @@ export default chain([
     withCspHeadersMiddleware,
     withPreviewMiddleware,
     withRedirectToMainHostMiddleware,
+    withRobotsMiddleware, // for robots.txt, the middleware may only be skipped after the main host redirect
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);

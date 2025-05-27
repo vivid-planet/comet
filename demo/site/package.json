@@ -3,9 +3,15 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
+<<<<<<< HEAD
         "build": "run-s intl:compile && run-p gql:types generate-block-types build-server && next build",
         "build-server": "tsc --project tsconfig.server.json",
         "dev": "run-s intl:compile && run-p gql:types generate-block-types build-server && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node dist/server.js",
+=======
+        "build": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && next build",
+        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
+        "dev": "$npm_execpath check-node-version && run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node dist/server.js",
+>>>>>>> main
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"$npm_execpath generate-block-types\"",
@@ -20,9 +26,17 @@
         "serve": "NODE_ENV=production node dist/server.js"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@comet/cms-site": "workspace:*",
         "@formatjs/cli": "^6.6.3",
         "@next/bundle-analyzer": "^14.2.26",
+=======
+        "@comet/site-nextjs": "workspace:*",
+        "@formatjs/cli": "^6.0.0",
+        "@googlemaps/js-api-loader": "^1.0.0",
+        "@googlemaps/markerclustererplus": "^1.0.0",
+        "@next/bundle-analyzer": "^14.2.12",
+>>>>>>> main
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/auto-instrumentations-node": "^0.59.0",
         "@opentelemetry/exporter-prometheus": "^0.53.0",
@@ -47,6 +61,7 @@
         "@babel/core": "^7.26.10",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+<<<<<<< HEAD
         "@graphql-codegen/add": "^5.0.3",
         "@graphql-codegen/cli": "^5.0.6",
         "@graphql-codegen/named-operations-object": "^3.1.0",
@@ -62,6 +77,31 @@
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.5.3",
         "typescript": "^5.7.3"
+=======
+        "@graphql-codegen/add": "^3.0.0",
+        "@graphql-codegen/cli": "^2.0.0",
+        "@graphql-codegen/named-operations-object": "^2.0.0",
+        "@graphql-codegen/near-operation-file-preset": "^2.5.0",
+        "@graphql-codegen/typescript": "^2.0.0",
+        "@graphql-codegen/typescript-operations": "^2.0.0",
+        "@types/fs-extra": "^9.0.0",
+        "@types/google.maps": "^3.0.0",
+        "@types/node": "^22.0.0",
+        "@types/react": "^18.2.66",
+        "@types/react-dom": "^18.2.22",
+        "@types/react-is": "^17.0.0",
+        "@types/react-select": "^4.0.0",
+        "check-node-version": "^4.2.1",
+        "chokidar-cli": "^2.0.0",
+        "cosmiconfig-toml-loader": "^1.0.0",
+        "dotenv-cli": "^4.0.0",
+        "eslint": "^8.0.0",
+        "npm-run-all": "^4.1.5",
+        "prettier": "^2.0.0",
+        "rimraf": "^3.0.0",
+        "tsconfig-paths": "^3.0.0",
+        "typescript": "^4.0.0"
+>>>>>>> main
     },
     "engines": {
         "node": "22"

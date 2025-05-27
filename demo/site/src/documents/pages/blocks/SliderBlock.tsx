@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { type PropsWithData, withPreview } from "@comet/cms-site";
 import { type SliderBlockData } from "@src/blocks.generated";
+=======
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
+import { SliderBlockData } from "@src/blocks.generated";
+>>>>>>> main
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { PageLayout } from "@src/layout/PageLayout";

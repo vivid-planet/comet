@@ -1,16 +1,19 @@
 import { useQuery } from "@apollo/client";
 import {
     EditDialogApiContext,
+<<<<<<< HEAD
     FillSpace,
     type IFilterApi,
     type ISortInformation,
+=======
+    IFilterApi,
+    ISortInformation,
+>>>>>>> main
     SortDirection,
     Stack,
     StackPage,
     StackSwitch,
     Toolbar,
-    ToolbarActions,
-    ToolbarItem,
     useEditDialog,
     useStackApi,
     useStoredState,
@@ -22,8 +25,6 @@ import { useIntl } from "react-intl";
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
-import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
-import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
 import FolderDataGrid, {
     damFolderQuery,
     type GQLDamFileTableFragment,
@@ -31,8 +32,12 @@ import FolderDataGrid, {
     type GQLDamFolderQueryVariables,
     type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
+<<<<<<< HEAD
 import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
+=======
+import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
+>>>>>>> main
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
@@ -65,38 +70,12 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
         skip: selectedFolderId === undefined,
     });
 
-    const uploadFilters = {
-        allowedMimetypes: props.allowedMimetypes,
-    };
-
     return (
         <CurrentDamFolderProvider folderId={id}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <EditDialogApiContext.Provider value={editDialogApi}>
-                        <Toolbar scopeIndicator={props.contentScopeIndicator}>
-                            <ToolbarItem>
-                                <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
-                            </ToolbarItem>
-                            <FillSpace />
-                            <ToolbarActions>
-                                {props.additionalToolbarItems}
-                                <DamMoreActions
-                                    anchorOrigin={{
-                                        vertical: "bottom",
-                                        horizontal: "left",
-                                    }}
-                                    transformOrigin={{
-                                        vertical: "top",
-                                        horizontal: "left",
-                                    }}
-                                    folderId={id}
-                                    filter={uploadFilters}
-                                />
-
-                                <UploadFilesButton folderId={id} filter={uploadFilters} />
-                            </ToolbarActions>
-                        </Toolbar>
+                        <Toolbar scopeIndicator={props.contentScopeIndicator} />
                         <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
                     </EditDialogApiContext.Provider>
                 </StackPage>

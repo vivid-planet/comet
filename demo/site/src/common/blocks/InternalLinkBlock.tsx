@@ -1,7 +1,13 @@
 "use client";
+<<<<<<< HEAD
 import { type PropsWithData } from "@comet/cms-site";
 import { type InternalLinkBlockData } from "@src/blocks.generated";
 import { type GQLPageTreeNodeScope } from "@src/graphql.generated";
+=======
+import { PropsWithData } from "@comet/site-nextjs";
+import { InternalLinkBlockData } from "@src/blocks.generated";
+import { GQLPageTreeNodeScope } from "@src/graphql.generated";
+>>>>>>> main
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";
