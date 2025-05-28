@@ -11,7 +11,7 @@ import { type ReactElement, type ReactNode } from "react";
 
 import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useMainNavigation } from "./Context";
-import { Icon, type MainNavigationItemClassKey, type OwnerState, Root, Text } from "./Item.styles";
+import { Icon, type MainNavigationItemClassKey, type OwnerState, Root, StyledChevronRight, Text } from "./Item.styles";
 
 export type MainNavigationItemLevel = 1 | 2 | 3;
 
@@ -68,6 +68,7 @@ export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
             {showIcon && (
                 <Icon ownerState={ownerState} {...slotProps?.icon}>
                     {icon}
+                    {!isMenuOpen && hasSubitems && <StyledChevronRight fontSize="small" ownerState={ownerState} />}
                 </Icon>
             )}
             <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />

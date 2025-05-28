@@ -1,3 +1,4 @@
+import { ChevronRight } from "@comet/admin-icons";
 import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -14,7 +15,8 @@ export type MainNavigationItemClassKey =
     | "hasSecondaryText"
     | "hasSecondaryAction"
     | "icon"
-    | "text";
+    | "text"
+    | "chevronRight";
 
 export type OwnerState = {
     level: MainNavigationItemLevel;
@@ -324,9 +326,25 @@ export const Root = createComponentSlot(ListItemButton)<MainNavigationItemClassK
 export const Icon = createComponentSlot(ListItemIcon)<MainNavigationItemClassKey, OwnerState>({
     componentName: "MainNavigationItem",
     slotName: "icon",
-})();
+})({
+    display: "flex",
+    alignItems: "center",
+});
 
 export const Text = createComponentSlot(ListItemText)<MainNavigationItemClassKey, OwnerState>({
     componentName: "MainNavigationItem",
     slotName: "text",
 })();
+
+export const StyledChevronRight = createComponentSlot(ChevronRight)<MainNavigationItemClassKey, OwnerState>({
+    componentName: "MainNavigationItem",
+    slotName: "chevronRight",
+})(({ theme }) => ({
+    marginLeft: "8px",
+    marginRight: "2px",
+    color: theme.palette.grey[200],
+
+    ".MuiListItemButton-root:hover &": {
+        color: theme.palette.common.white,
+    },
+}));
