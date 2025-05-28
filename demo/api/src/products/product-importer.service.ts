@@ -1,6 +1,6 @@
+import { ImporterLocalFileDataStream } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
-import { LocalFileDataStream } from "@src/importer/data-streams/local-file-data-stream";
 
 import { ProductImporter } from "./product-importer";
 
@@ -11,7 +11,7 @@ export class ProductImporterService {
     async createImporter(filePath: string) {
         // TODO: Depending on future development, this might be better solved with dependency injection
         const importer = new ProductImporter(this.em);
-        await importer.init({ dataStream: new LocalFileDataStream(filePath) });
+        await importer.init({ dataStream: new ImporterLocalFileDataStream(filePath) });
         return importer;
     }
 }

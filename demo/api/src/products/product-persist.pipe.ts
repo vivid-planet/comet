@@ -1,8 +1,7 @@
 import { BlockDataInterface } from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+import { DamImageBlock, ImporterPipe } from "@comet/cms-api";
 import { Connection, EntityManager, FilterQuery, IDatabaseDriver, Reference } from "@mikro-orm/core";
 import { LoggerService } from "@nestjs/common";
-import { ImporterPipe, PipeMetadata } from "@src/importer/pipes/importer-pipe.type";
 import { Transform, TransformCallback } from "stream";
 import { v4 } from "uuid";
 
@@ -37,7 +36,11 @@ class ProductPersist extends Transform {
         return this.persistedEntitiesAmount;
     }
 
-    async _transform(inputDataAndMetadata: { data: ProductData; metadata: PipeMetadata }, encoding: BufferEncoding, callback: TransformCallback) {
+    async _transform(
+        inputDataAndMetadata: { data: ProductData; metadata: Record<string, unknown> },
+        encoding: BufferEncoding,
+        callback: TransformCallback,
+    ) {
         try {
             const { data } = inputDataAndMetadata;
             const { colors: colorString, category, colors: colorCollection, ...productData } = data;

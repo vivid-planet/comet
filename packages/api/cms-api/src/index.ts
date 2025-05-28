@@ -131,6 +131,14 @@ export {
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
 } from "./generator/crud-generator.decorator";
+export { ImporterDataStream } from "./importer/data-streams/data-stream";
+export { ImporterLocalFileDataStream } from "./importer/data-streams/local-file-data-stream";
+export { CsvColumn, CsvColumnType } from "./importer/decorators/csv-column.decorator";
+export { ImportTargetInterface } from "./importer/import-target.interface";
+export { ImporterInputClass } from "./importer/importer-input.type";
+export { ImporterEndPipe } from "./importer/pipes/end.pipe";
+export { ImporterPipe } from "./importer/pipes/importer-pipe.type";
+export { ImporterCsvParseAndTransformPipes } from "./importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";

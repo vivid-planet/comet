@@ -7,7 +7,7 @@ import path from "path";
 import { StreamChunkAndMetadata } from "./data-stream";
 import { FileDataStream, FileStreamAndMetadata } from "./file-data-stream";
 
-export class LocalFileDataStream extends FileDataStream {
+export class ImporterLocalFileDataStream extends FileDataStream {
     private readonly logger = new Logger();
     fileKey: string;
 

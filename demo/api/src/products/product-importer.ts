@@ -1,9 +1,6 @@
+import { ImporterCsvParseAndTransformPipes, ImporterDataStream, ImporterEndPipe, ImporterInputClass } from "@comet/cms-api";
 import { EntityManager } from "@mikro-orm/core";
 import { Logger } from "@nestjs/common";
-import { DataStream } from "@src/importer/data-streams/data-stream";
-import { ImporterInputClass } from "@src/importer/importer-input.type";
-import { EndPipe } from "@src/importer/pipes/end.pipe";
-import { CsvParseAndTransformPipes } from "@src/importer/pipes/parsers/csv-parser-and-transform.composite-pipe";
 import { pipeline, Readable, Transform } from "stream";
 
 import { ProductImporterInput } from "./product-importer.input";
@@ -19,7 +16,7 @@ export class ProductImporter {
 
     constructor(private readonly em: EntityManager) {
         this.logger = new Logger("product-importer");
-        const parsePipes = new CsvParseAndTransformPipes(this.importTarget, this.em).getPipes(this.logger, { encoding: "utf-8" });
+        const parsePipes = new ImporterCsvParseAndTransformPipes(this.importTarget, this.em).getPipes(this.logger, { encoding: "utf-8" });
         this.transformPipes = [
             ...parsePipes,
             new ProductPrePersistPipe(this.em).getPipe(this.logger),
@@ -28,11 +25,11 @@ export class ProductImporter {
                 objectMode: true,
                 transform: this.displayData.bind(this),
             }),
-            new EndPipe().getPipe(),
+            new ImporterEndPipe().getPipe(),
         ];
     }
 
-    async init({ dataStream }: { dataStream: DataStream }): Promise<void> {
+    async init({ dataStream }: { dataStream: ImporterDataStream }): Promise<void> {
         this.dataStream = await dataStream.getDataStreamAndMetadata();
     }
 
