@@ -39,6 +39,28 @@
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
 
+## 7.21.1
+
+### Patch Changes
+
+- c84874edf: Revert "Fix `PixelImageBlock` fixed height, auto width issue" added in v7.20.0
+
+    In v7.20.0, height was set to `100%` for `PixelImageBlock`.
+    This caused issues when the image was not wrapped, as it would inherit the height of the next parent element instead of maintaining its aspect ratio.
+    Thus, we are reverting this change to restore the previous behavior.
+
+## 7.21.0
+
+### Patch Changes
+
+- 904ff5f1d: Deprecated: This package is now deprecated in favor of `@comet/site-nextjs`
+
+## 7.20.0
+
+### Patch Changes
+
+- a06cac3a7: Fix `PixelImageBlock` issue when setting fixed height and width auto
+
 ## 7.19.0
 
 ## 7.18.0

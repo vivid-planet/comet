@@ -76,6 +76,16 @@
             "project": ["./src/**/*.{ts,tsx}"],
             "ignore": ["./src/**/*.generated.ts"]
         },
+        "packages/site/site-react": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"]
+        },
+        "packages/site/site-nextjs": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"]
+        },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
             "project": ["./src/**/*.{ts,tsx}"],

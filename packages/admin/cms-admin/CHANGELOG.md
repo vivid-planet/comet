@@ -383,6 +383,50 @@
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
 
+## 7.21.1
+
+### Patch Changes
+
+- Updated dependencies [b771bd6d8]
+    - @comet/admin@7.21.1
+    - @comet/admin-date-time@7.21.1
+    - @comet/admin-icons@7.21.1
+    - @comet/admin-rte@7.21.1
+    - @comet/admin-theme@7.21.1
+    - @comet/blocks-admin@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- Updated dependencies [1a30eb858]
+- Updated dependencies [1a30eb858]
+- Updated dependencies [3e9ea613e]
+    - @comet/admin-date-time@7.21.0
+    - @comet/admin@7.21.0
+    - @comet/admin-icons@7.21.0
+    - @comet/admin-rte@7.21.0
+    - @comet/admin-theme@7.21.0
+    - @comet/blocks-admin@7.21.0
+
+## 7.20.0
+
+### Minor Changes
+
+- ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+- Updated dependencies [415a83165]
+- Updated dependencies [99f904f81]
+- Updated dependencies [2d1726543]
+    - @comet/admin@7.20.0
+    - @comet/admin-date-time@7.20.0
+    - @comet/admin-icons@7.20.0
+    - @comet/admin-rte@7.20.0
+    - @comet/admin-theme@7.20.0
+    - @comet/blocks-admin@7.20.0
+
 ## 7.19.0
 
 ### Minor Changes

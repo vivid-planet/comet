@@ -1,6 +1,6 @@
 "use client";
 
-import { useIFrameBridge } from "@comet/cms-site";
+import { useIFrameBridge } from "@comet/site-nextjs";
 import { StageBlock } from "@src/documents/pages/blocks/StageBlock";
 import { withBlockPreview } from "@src/util/blockPreview";
 

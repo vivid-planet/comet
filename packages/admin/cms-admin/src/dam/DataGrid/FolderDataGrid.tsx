@@ -1,21 +1,25 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     type BreadcrumbItem,
+    DataGridToolbar,
     EditDialog,
+    FillSpace,
     GridCellContent,
     type GridColDef,
     type IFilterApi,
     type ISelectionApi,
     MainContent,
     PrettyBytes,
+    ToolbarActions,
+    ToolbarItem,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
 import { DialogContent, Slide, type SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { DataGrid, type GridRowClassNameParams, type GridRowSelectionModel, type GridSlotsComponent, useGridApiRef } from "@mui/x-data-grid";
+import { type ReactNode, useEffect, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
@@ -32,7 +36,9 @@ import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
+import { UploadFilesButton } from "./fileUpload/UploadFilesButton";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
+import { DamTableFilter } from "./filter/DamTableFilter";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     type GQLDamFileTableFragment,
@@ -45,9 +51,9 @@ import {
     type GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
-import { FolderHead } from "./FolderHead";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
+import { DamMoreActions } from "./selection/DamMoreActions";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { LicenseValidityTags } from "./tags/LicenseValidityTags";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
@@ -72,6 +78,58 @@ interface FolderDataGridProps extends DamConfig {
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
     selectionApi: ISelectionApi;
+}
+
+type FolderDataGridToolbarProps = {
+    id?: string;
+    filterApi: IFilterApi<DamFilter>;
+    hideArchiveFilter?: boolean;
+    additionalToolbarItems?: ReactNode;
+    uploadFilters: {
+        allowedMimetypes?: string[];
+    };
+};
+
+function FolderDataGridToolbar({
+    id: currentFolderId,
+    filterApi,
+    hideArchiveFilter,
+    additionalToolbarItems,
+    uploadFilters,
+}: FolderDataGridToolbarProps) {
+    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+        variables: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: currentFolderId!,
+        },
+        skip: currentFolderId === undefined,
+    });
+
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <DamTableFilter hideArchiveFilter={hideArchiveFilter} filterApi={filterApi} />
+            </ToolbarItem>
+            <FillSpace />
+            <ToolbarActions>
+                {additionalToolbarItems}
+                <DamMoreActions
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                    folderId={data?.damFolder.id}
+                    filter={uploadFilters}
+                />
+
+                <UploadFilesButton folderId={data?.damFolder.id} filter={uploadFilters} />
+            </ToolbarActions>
+        </DataGridToolbar>
+    );
 }
 
 const FolderDataGrid = ({
@@ -117,11 +175,7 @@ const FolderDataGrid = ({
 
     const apiRef = useGridApiRef();
 
-    const {
-        data: dataGridData,
-        loading,
-        error,
-    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
+    const { data: dataGridData, loading } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: currentFolderId,
             includeArchived: filterApi.current.archived,
@@ -542,17 +596,12 @@ const FolderDataGrid = ({
         },
     ];
 
-    if (error) {
-        throw error;
-    }
+    const uploadFilters = {
+        allowedMimetypes: props.allowedMimetypes,
+    };
+
     return (
         <MainContent>
-            <FolderHead
-                isSearching={isSearching}
-                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
-                breadcrumbs={breadcrumbs}
-                folderId={currentFolderId}
-            />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     apiRef={apiRef}
@@ -571,6 +620,19 @@ const FolderDataGrid = ({
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
                         contextMenu: !hideContextMenu,
+                    }}
+                    slots={{
+                        toolbar: FolderDataGridToolbar as GridSlotsComponent["toolbar"],
+                    }}
+                    slotProps={{
+                        toolbar: {
+                            id: currentFolderId,
+                            breadcrumbs,
+                            filterApi,
+                            selectionApi,
+                            uploadFilters,
+                            additionalToolbarItems: props.additionalToolbarItems,
+                        } as FolderDataGridToolbarProps,
                     }}
                 />
             </sc.FolderOuterHoverHighlight>
