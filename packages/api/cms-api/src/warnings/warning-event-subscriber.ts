@@ -103,11 +103,10 @@ export class WarningEventSubscriber implements EventSubscriber {
 
                     await this.warningService.saveWarnings({
                         warnings,
-                        type: "Block",
                         sourceInfo,
                         scope,
                     });
-                    await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Block", sourceInfo });
+                    await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
                 }
             }
 
@@ -133,11 +132,10 @@ export class WarningEventSubscriber implements EventSubscriber {
                     };
                     await this.warningService.saveWarnings({
                         warnings,
-                        type: "Entity",
                         sourceInfo,
                         scope: row.scope,
                     });
-                    await this.warningService.deleteOutdatedWarnings({ date: startDate, type: "Entity", sourceInfo });
+                    await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
                 }
             }
         }
