@@ -1,5 +1,13 @@
 # @comet/admin
 
+## 7.22.0
+
+### Patch Changes
+
+-   2cf573b72: Optimize responsive behavior of `CrudMoreActionsMenu`
+    -   @comet/admin-icons@7.22.0
+    -   @comet/admin-theme@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes

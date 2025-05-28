@@ -1,5 +1,13 @@
 # @comet/admin-react-select
 
+## 7.22.0
+
+### Patch Changes
+
+-   Updated dependencies [2cf573b72]
+    -   @comet/admin@7.22.0
+    -   @comet/admin-icons@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes
