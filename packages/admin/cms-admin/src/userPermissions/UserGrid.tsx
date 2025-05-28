@@ -24,6 +24,21 @@ import { useCurrentUser } from "./hooks/currentUser";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
+function UserPermissionsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarItem>
+                <GridFilterButton />
+            </ToolbarItem>
+            <FillSpace />
+            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+        </DataGridToolbar>
+    );
+}
+
 type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -224,18 +239,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             rowCount={data?.users.totalCount ?? 0}
             loading={loading}
             components={{
-                Toolbar: () => (
-                    <DataGridToolbar>
-                        <ToolbarItem>
-                            <GridToolbarQuickFilter />
-                        </ToolbarItem>
-                        <ToolbarItem>
-                            <GridFilterButton />
-                        </ToolbarItem>
-                        <FillSpace />
-                        {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
-                    </DataGridToolbar>
-                ),
+                Toolbar: UserPermissionsGridToolbar,
             }}
             componentsProps={{
                 toolbar: { toolbarAction },
