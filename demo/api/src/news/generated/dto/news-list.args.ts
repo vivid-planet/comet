@@ -16,7 +16,7 @@ export class NewsListArgs extends OffsetBasedPaginationArgs {
     @Type(() => NewsContentScope)
     scope: NewsContentScope;
 
-    @Field(() => [NewsStatus], { defaultValue: [NewsStatus.Active] })
+    @Field(() => [NewsStatus], { defaultValue: [NewsStatus.active] })
     @IsEnum(NewsStatus, { each: true })
     status: NewsStatus[];
 

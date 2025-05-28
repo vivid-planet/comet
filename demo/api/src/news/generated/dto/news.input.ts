@@ -24,7 +24,7 @@ export class NewsInput {
 
     @IsNotEmpty()
     @IsEnum(NewsStatus)
-    @Field(() => NewsStatus, { defaultValue: NewsStatus.Active })
+    @Field(() => NewsStatus, { defaultValue: NewsStatus.active })
     status: NewsStatus;
 
     @IsNotEmpty()
