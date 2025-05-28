@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps } from "@mui/material";
 import Cookies from "js-cookie";
 

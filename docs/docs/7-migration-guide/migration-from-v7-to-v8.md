@@ -1595,6 +1595,13 @@ Example:
 
 </details>
 
+### Import `Button` from `@comet/admin` package
+
+```diff
+- import { Button } from "@mui/material";
++ import { Button } from "@comet/admin";
+```
+
 ## Site
 
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
