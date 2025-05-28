@@ -35,6 +35,11 @@ export class DependenciesService {
     }
 
     async createViews(): Promise<void> {
+        await this.createDependenciesViews();
+        await this.createBlockIndexViews();
+    }
+
+    async createDependenciesViews(): Promise<void> {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
 
@@ -90,6 +95,36 @@ export class DependenciesService {
         console.time("creating block dependency materialized view index");
         await this.connection.execute(`CREATE INDEX block_index_dependencies_targetId ON block_index_dependencies ("targetId")`);
         console.timeEnd("creating block dependency materialized view index");
+    }
+
+    async createBlockIndexViews(): Promise<void> {
+        const indexSelects: string[] = [];
+
+        for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
+            const { metadata, column, graphqlObjectType } = rootBlockEntity;
+            const primary = metadata.primaryKeys[0];
+
+            const select = `SELECT
+                            "${metadata.tableName}"."${primary}"  "rootId",
+                            '${metadata.name}'                    "rootEntityName",
+                            '${graphqlObjectType}'                "rootGraphqlObjectType",
+                            '${metadata.tableName}'               "rootTableName",
+                            '${column}'                           "rootColumnName",
+                            '${primary}'                          "rootPrimaryKey",
+                            indexObj->>'blockname'                "blockname",
+                            indexObj->>'jsonPath'                 "jsonPath",
+                            (indexObj->>'visible')::boolean       "visible"
+                        FROM "${metadata.tableName}",
+                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj`;
+
+            indexSelects.push(select);
+        }
+
+        const viewSql = indexSelects.join("\n UNION ALL \n");
+
+        console.time("creating block dependency materialized view");
+        await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
+        await this.connection.execute(`CREATE VIEW block_index AS ${viewSql}`);
     }
 
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
