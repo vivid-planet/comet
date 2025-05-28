@@ -1,12 +1,14 @@
 # @comet/site-react
 
+## 8.0.0-beta.5
+
 ## 7.21.1
 
 ## 7.21.0
 
 ### Minor Changes
 
--   ede41201a: Introduce new package `@comet/site-react`
+- ede41201a: Introduce new package `@comet/site-react`
 
     While `@comet/cms-site` and `@comet/site-nextjs` are Next.js specific, `@comet/site-react` is framework-agnostic and works in all React projects.
     `@comet/site-react` is pure ESM and uses SCSS modules instead of `styled-components`.
