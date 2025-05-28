@@ -107,7 +107,7 @@ export function ContentScopeSelect({
                         <Domain />
                     </ListItemIcon>
                     <ListItemText
-                        primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
+                        slotProps={{ primary: { variant: "body2", fontWeight: "inherit" } }}
                         sx={{ margin: 0 }}
                         primary={<MarkedMatches text={text} matches={matches} />}
                     />
