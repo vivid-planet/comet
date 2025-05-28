@@ -12,7 +12,7 @@ import {
     ToolbarBackButton,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { useContentScope } from "@src/common/ContentScopeProvider";
+import { useContentScope, useContentScopeConfig } from "@src/common/ContentScopeProvider";
 import { useIntl } from "react-intl";
 
 import { NewsForm } from "./generated/NewsForm";
@@ -32,6 +32,9 @@ const FormToolbar = () => (
 export function NewsPage() {
     const intl = useIntl();
     const { scope } = useContentScope();
+
+    useContentScopeConfig({ redirectPathAfterChange: "/structured-content/news" });
+
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "news.news", defaultMessage: "News" })}>
             <StackSwitch>

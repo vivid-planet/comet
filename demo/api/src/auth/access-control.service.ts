@@ -7,15 +7,21 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allPermissions;
         } else {
-            const deniedPermissions = ["userPermissions"];
-            return availablePermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission }));
+            const deniedPermissions = ["userPermissions", "news"];
+            return [
+                ...availablePermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission })),
+                { permission: "news", contentScopes: [{ domain: "main", language: "en" }] },
+            ];
         }
     }
     getContentScopesForUser(user: User): ContentScopesForUser {
         if (user.isAdmin) {
             return UserPermissions.allContentScopes;
         } else {
-            return [{ domain: "main", language: "en" }];
+            return [
+                { domain: "main", language: "en" },
+                { domain: "main", language: "de" },
+            ];
         }
     }
 }
