@@ -72,14 +72,14 @@ export const HeadingBlock = createCompositeBlock(
             },
             htmlTag: {
                 block: createCompositeBlockSelectField<HeadingBlockData["htmlTag"]>({
-                    defaultValue: "H2",
+                    defaultValue: "h2",
                     options: [
-                        { value: "H1", label: <FormattedMessage id="headingBlock.headline1" defaultMessage="Headline 1" /> },
-                        { value: "H2", label: <FormattedMessage id="headingBlock.headline2" defaultMessage="Headline 2" /> },
-                        { value: "H3", label: <FormattedMessage id="headingBlock.headline3" defaultMessage="Headline 3" /> },
-                        { value: "H4", label: <FormattedMessage id="headingBlock.headline4" defaultMessage="Headline 4" /> },
-                        { value: "H5", label: <FormattedMessage id="headingBlock.headline5" defaultMessage="Headline 5" /> },
-                        { value: "H6", label: <FormattedMessage id="headingBlock.headline6" defaultMessage="Headline 6" /> },
+                        { value: "h1", label: <FormattedMessage id="headingBlock.headline1" defaultMessage="Headline 1" /> },
+                        { value: "h2", label: <FormattedMessage id="headingBlock.headline2" defaultMessage="Headline 2" /> },
+                        { value: "h3", label: <FormattedMessage id="headingBlock.headline3" defaultMessage="Headline 3" /> },
+                        { value: "h4", label: <FormattedMessage id="headingBlock.headline4" defaultMessage="Headline 4" /> },
+                        { value: "h5", label: <FormattedMessage id="headingBlock.headline5" defaultMessage="Headline 5" /> },
+                        { value: "h6", label: <FormattedMessage id="headingBlock.headline6" defaultMessage="Headline 6" /> },
                     ],
                     label: <FormattedMessage id="headingBlock.htmlTag" defaultMessage="HTML tag" />,
                     fullWidth: true,
