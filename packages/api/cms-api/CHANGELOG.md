@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 7.22.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
     "name": "@comet/site-nextjs",
     "type": "module",
-    "version": "7.21.1",
+    "version": "7.22.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -34,7 +34,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/site-react": "workspace:^7.21.1",
+        "@comet/site-react": "workspace:^7.22.0",
         "clsx": "^2.1.1",
         "jose": "^5.2.4",
         "lodash.isequal": "^4.5.0",
@@ -44,8 +44,8 @@
         "usehooks-ts": "^3.1.0"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:^7.21.1",
-        "@comet/eslint-config": "workspace:^7.21.1",
+        "@comet/cli": "workspace:^7.22.0",
+        "@comet/eslint-config": "workspace:^7.22.0",
         "@gitbeaker/node": "^34.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",
