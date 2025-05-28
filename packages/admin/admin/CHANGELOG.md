@@ -1,5 +1,34 @@
 # @comet/admin
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 1d28c90: Update props and styling of `StackBackButton`, `OkayButton`, `CancelButton`, and `DeleteButton` to match the Comet `Button` component and the Comet DXP design
+
+    - Adds support for the `responsive` prop
+    - Removes the `color` prop and updates the values of the `variant` prop
+
+- 6cfc60d: SaveBoundary: rename useSavable to useSaveBoundaryState
+
+### Minor Changes
+
+- ad9b2a3: Remove `SelectionFooter` from `FolderDataGrid` to align with the Comet DXP design
+
+    Crud actions are performed in the `CrudMoreActionsMenu` in the toolbar instead.
+
+- 09c4830: Respect SubRoute prefix in SelectionRoute and EditDialog
+
+    This allows using multiple `EditDialog`s on the same level by wrapping them into `<RouteRoute>`.
+
+### Patch Changes
+
+- 2cf573b: Optimize responsive behavior of `CrudMoreActionsMenu`
+- 4182a94: Fix loading state of FinalFormSelect when loading asynchronous options
+- bf9b1bb: Fix styling of `Chip` in `CrudMoreActionsMenu` to display the full value of its label
+- Updated dependencies [5a6efc1]
+    - @comet/admin-icons@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Major Changes
