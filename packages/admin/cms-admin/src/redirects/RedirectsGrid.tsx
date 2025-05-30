@@ -124,6 +124,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => <RedirectActiveness redirect={params.row} />,
             sortable: false,
             type: "boolean",
+            width: 130,
         },
         {
             field: "activatedAt",
@@ -132,9 +133,11 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 defaultMessage: "Activation Date",
             }),
             sortable: false,
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
             width: 170,
+            renderCell: (params) => {
+                if (!params.value) return null;
+                return <>{new Date(params.value).toLocaleString()}</>;
+            },
         },
         {
             field: "actions",
