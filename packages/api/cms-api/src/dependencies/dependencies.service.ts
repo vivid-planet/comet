@@ -122,9 +122,10 @@ export class DependenciesService {
 
         const viewSql = indexSelects.join("\n UNION ALL \n");
 
-        console.time("creating block dependency materialized view");
+        console.time("creating block index view");
         await this.connection.execute(`DROP VIEW IF EXISTS block_index`);
         await this.connection.execute(`CREATE VIEW block_index AS ${viewSql}`);
+        console.timeEnd("creating block index view");
     }
 
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
