@@ -125,6 +125,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => <RedirectActiveness redirect={params.row} />,
             sortable: false,
             type: "boolean",
+            width: 130,
         },
         {
             ...dataGridDateTimeColumn,
