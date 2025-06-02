@@ -6,7 +6,6 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCa
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useId } from "react";
-import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
 import { Typography } from "../components/Typography";
@@ -32,20 +31,12 @@ type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData> & {
 
 export const AccordionItemBlock = withPreview(
     ({ data: { title, content }, isExpanded, onChange }: AccordionItemBlockProps) => {
-        const intl = useIntl();
-
         const headlineId = useId();
         const contentId = useId();
 
-        const ariaLabelText =
-            title ||
-            (isExpanded
-                ? intl.formatMessage({ id: "accordionBlock.ariaLabel.expanded", defaultMessage: "Collapse accordion item" })
-                : intl.formatMessage({ id: "accordionBlock.ariaLabel.collapsed", defaultMessage: "Expand accordion item" }));
-
         return (
             <>
-                <TitleWrapper id={headlineId} onClick={onChange} aria-label={ariaLabelText} aria-expanded={isExpanded} aria-controls={contentId}>
+                <TitleWrapper id={headlineId} onClick={onChange} aria-label={title} aria-expanded={isExpanded} aria-controls={contentId}>
                     <Typography variant="h350">{title}</Typography>
                     <IconWrapper>
                         <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
