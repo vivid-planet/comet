@@ -5,8 +5,7 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { nanoid } from "nanoid";
-import { useMemo } from "react";
+import { useId } from "react";
 import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
@@ -35,8 +34,8 @@ export const AccordionItemBlock = withPreview(
     ({ data: { title, content }, isExpanded, onChange }: AccordionItemBlockProps) => {
         const intl = useIntl();
 
-        const headlineId = useMemo(() => nanoid(), []);
-        const contentId = useMemo(() => nanoid(), []);
+        const headlineId = useId();
+        const contentId = useId();
 
         const ariaLabelText =
             title ||
