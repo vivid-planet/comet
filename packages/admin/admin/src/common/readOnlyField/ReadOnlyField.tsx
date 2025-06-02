@@ -1,6 +1,5 @@
 import { FunctionComponent, ReactNode } from "react";
 
-import { ReadOnlyBlockField } from "./ReadOnlyBlockField";
 import { ReadOnlyDateField } from "./ReadOnlyDateField";
 import { ReadOnlyFileField } from "./ReadOnlyFileField";
 import { ReadOnlyMultiSelectField } from "./ReadOnlyMultiSelectField";
@@ -57,12 +56,12 @@ export const ReadOnlyField: FunctionComponent<ReadOnlyFieldProps> = ({ label, va
         case "file":
             return <ReadOnlyFileField {...restProps} />;
         case "block":
-            return <ReadOnlyBlockField {...restProps} />;
+            return null; // TODO: Implement ReadOnlyBlockField. At the moment, we have a problem because we don't have access to BlockPreviewContent function.
         case "select":
             return <ReadOnlySelectField {...restProps} />;
         case "multiselect":
             return <ReadOnlyMultiSelectField {...restProps} />;
         default:
-            return <ReadOnlyBlockField {...restProps} />;
+            return null;
     }
 };

@@ -5,14 +5,6 @@ export default {
     title: "@comet/admin/ReadOnlyField",
 };
 
-export const BlockReadOnlyField = () => {
-    return (
-        <div style={{ width: 300 }}>
-            <ReadOnlyField label={<FormattedMessage id="readOnlyField.label" defaultMessage="Block Content" />} value="Hello World" type="block" />
-        </div>
-    );
-};
-
 export const BooleanReadOnlyField = () => {
     return (
         <div style={{ width: 300 }}>
@@ -137,7 +129,7 @@ export const TextAreaReadOnlyField = () => {
 export const NullValueReadOnlyField = () => {
     return (
         <div style={{ width: 300 }}>
-            <ReadOnlyField label={<FormattedMessage id="readOnlyField.label" defaultMessage="Null" />} value={null} />
+            <ReadOnlyField label={<FormattedMessage id="readOnlyField.label" defaultMessage="Field with Null value" />} value={null} />
         </div>
     );
 };
@@ -145,7 +137,7 @@ export const NullValueReadOnlyField = () => {
 export const UndefinedValueReadOnlyField = () => {
     return (
         <div style={{ width: 300 }}>
-            <ReadOnlyField label={<FormattedMessage id="readOnlyField.label" defaultMessage="Undefined" />} value={undefined} />
+            <ReadOnlyField label={<FormattedMessage id="readOnlyField.label" defaultMessage="Field with Undefined value" />} value={undefined} />
         </div>
     );
 };

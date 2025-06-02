@@ -16,7 +16,7 @@ export const ReadOnlyMultiSelectField: FunctionComponent<{
     className?: string;
 }> = ({ label, value, className }) => {
     const labels = (value ?? []).map((opt) => opt.label).filter(Boolean);
-    const text = labels.length > 0 ? labels.join(", ") : "—";
+    const text = labels.length > 0 ? labels.join(", ") : "";
 
     return (
         <Wrapper className={className}>

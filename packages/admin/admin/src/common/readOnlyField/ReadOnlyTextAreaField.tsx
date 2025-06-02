@@ -11,7 +11,7 @@ export const ReadOnlyTextAreaField: FunctionComponent<{
 }> = ({ label, value, className }) => (
     <Wrapper className={className}>
         {label && <ReadOnlyFieldLabel label={label} />}
-        <Box>{value || "—"}</Box>
+        {value && <Box>{value}</Box>}
     </Wrapper>
 );
 

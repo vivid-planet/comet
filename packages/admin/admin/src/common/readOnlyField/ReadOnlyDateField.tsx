@@ -18,7 +18,7 @@ export const ReadOnlyDateField: FunctionComponent<{
             <Box>
                 <InnerBox>
                     <Calendar />
-                    {date ? date.toLocaleDateString() : "—"}
+                    {date && date.toLocaleDateString()}
                 </InnerBox>
                 <Lock />
             </Box>
