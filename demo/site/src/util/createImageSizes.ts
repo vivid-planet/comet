@@ -4,7 +4,7 @@ type BreakpointWidths = { default: string | number } & Partial<Record<keyof Them
 
 export function createImageSizes(breakpointWidths: BreakpointWidths) {
     const sizes: string[] = [];
-    const breakpoints = Object.entries(theme.breakpoints).reverse();
+    const breakpoints = Object.entries(theme.breakpoints).sort((a, b) => b[1].value - a[1].value); // breakpoint values have to be sorted in descending order when using min-width in the sizes property
     const defaultSize = breakpointWidths.default;
 
     breakpoints.forEach(([breakpointKey, breakpointValue]) => {
