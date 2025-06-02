@@ -225,6 +225,7 @@ type Warning {
   sourceInfo: WarningSourceInfo!
   status: WarningStatus!
   scope: JSONObject
+  entityInfo: EntityInfo
 }
 
 enum WarningSeverity {
@@ -237,6 +238,11 @@ enum WarningStatus {
   open
   resolved
   ignored
+}
+
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
 }
 
 type PaginatedWarnings {
