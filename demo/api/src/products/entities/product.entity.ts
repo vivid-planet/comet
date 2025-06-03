@@ -1,4 +1,14 @@
-import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
+import {
+    BlockDataInterface,
+    CrudField,
+    CrudGenerator,
+    DamImageBlock,
+    EntityInfo,
+    FileUpload,
+    RootBlock,
+    RootBlockEntity,
+    RootBlockType,
+} from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -75,6 +85,7 @@ export class ProductPriceRange {
     max: number;
 }
 
+@EntityInfo<Product>({ name: "title", /*secondaryInformation: "manufacturer.name",*/ visible: { status: { $eq: ProductStatus.Published } } })
 @ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
