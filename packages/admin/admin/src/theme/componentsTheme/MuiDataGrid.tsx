@@ -123,11 +123,18 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&:focus-within": {
                 outline: "none",
             },
+
+            "&.MuiDataGrid-columnHeader--pinnedLeft": {
+                backgroundColor: "white",
+                boxShadow: "4px 0 8px -4px rgba(0,0,0,0.1)",
+            },
+
+            "&.MuiDataGrid-columnHeader--pinnedRight": {
+                backgroundColor: "white",
+                boxShadow: "-4px 0 8px -4px rgba(0,0,0,0.1)",
+            },
         }),
-        pinnedColumns: {
-            backgroundColor: "white",
-            boxShadow: shadows[2],
-        },
+
         cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
@@ -140,6 +147,15 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: palette.grey[900],
             },
             alignContent: "center",
+
+            "&.MuiDataGrid-cell--pinnedLeft": {
+                backgroundColor: "white",
+                boxShadow: "4px 0 8px -4px rgba(0,0,0,0.1)",
+            },
+            "&.MuiDataGrid-cell--pinnedRight": {
+                backgroundColor: "white",
+                boxShadow: "-4px 0 8px -4px rgba(0,0,0,0.1)",
+            },
         }),
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
