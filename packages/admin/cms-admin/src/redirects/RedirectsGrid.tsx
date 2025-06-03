@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     Button,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     FillSpace,
     type GridColDef,
@@ -126,14 +127,13 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             type: "boolean",
         },
         {
+            ...dataGridDateTimeColumn,
             field: "activatedAt",
             headerName: intl.formatMessage({
                 id: "comet.pages.redirects.redirect.activatedAt",
                 defaultMessage: "Activation Date",
             }),
             sortable: false,
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
             width: 170,
         },
         {
