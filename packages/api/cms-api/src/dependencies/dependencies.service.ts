@@ -35,11 +35,11 @@ export class DependenciesService {
     }
 
     async createViews(): Promise<void> {
-        await this.createDependenciesViews();
-        await this.createBlockIndexViews();
+        await this.createDependenciesView();
+        await this.createBlockIndexView();
     }
 
-    async createDependenciesViews(): Promise<void> {
+    private async createDependenciesView(): Promise<void> {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverService.discoverTargetEntities();
 
@@ -97,7 +97,7 @@ export class DependenciesService {
         console.timeEnd("creating block dependency materialized view index");
     }
 
-    async createBlockIndexViews(): Promise<void> {
+    private async createBlockIndexView(): Promise<void> {
         const indexSelects: string[] = [];
 
         for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
