@@ -1,0 +1,30 @@
+@use "@src/styles/variables.scss" as *;
+
+.gridRoot {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+}
+
+.container {
+    padding: 30px 0;
+    grid-column: 2 / 24;
+}
+
+.link {
+    color: var(--color-primary-main);
+    text-decoration: none;
+    font-size: 14px;
+
+    &:last-child {
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+}
+
+.divider {
+    display: inline-block;
+    width: 15px;
+    height: 1px;
+    margin: 0 10px 5px 10px;
+    background-color: var(--color-primary-light);
+} 

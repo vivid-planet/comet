@@ -1,0 +1,13 @@
+.root {
+    &.alignLeft {
+        text-align: left;
+    }
+
+    &.alignCenter {
+        text-align: center;
+    }
+}
+
+.pageLayoutContent {
+    grid-column: 3 / -3;
+} 

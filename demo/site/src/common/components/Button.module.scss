@@ -1,0 +1,72 @@
+@use "@src/styles/variables.scss" as *;
+
+.root {
+    display: inline-flex;
+    padding: var(--spacing-s400) var(--spacing-s500);
+    border-radius: 4px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    transition:
+        background-color 0.2s ease-out,
+        color 0.2s ease-out,
+        border-color 0.2s ease-out;
+
+    text-align: center;
+    text-decoration: none;
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 110%;
+
+    &:disabled {
+        pointer-events: none;
+    }
+}
+
+.contained {
+    background-color: var(--color-primary-main);
+    color: var(--color-primary-contrast-text);
+    border: 1px solid var(--color-primary-main);
+
+    &:hover {
+        background-color: var(--color-primary-dark);
+        border-color: var(--color-primary-dark);
+    }
+
+    &:disabled {
+        background-color: var(--color-gray-50);
+        color: var(--color-gray-400);
+        border-color: var(--color-gray-200);
+    }
+}
+
+.outlined {
+    background-color: transparent;
+    color: var(--color-primary-main);
+    border: 1px solid var(--color-primary-main);
+
+    &:hover {
+        color: var(--color-primary-dark);
+        border-color: var(--color-primary-dark);
+    }
+
+    &:disabled {
+        color: var(--color-gray-300);
+        border-color: var(--color-gray-200);
+    }
+}
+
+.text {
+    background-color: transparent;
+    color: var(--color-primary-main);
+    border: 1px solid transparent;
+
+    &:hover {
+        color: var(--color-primary-dark);
+    }
+
+    &:disabled {
+        color: var(--color-gray-300);
+    }
+} 

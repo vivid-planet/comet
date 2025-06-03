@@ -2,20 +2,21 @@
 import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type LinkBlockData, type RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import clsx from "clsx";
 import redraft, { type Renderers, type TextBlockRenderFn } from "redraft";
-import styled, { css } from "styled-components";
 
 import { Typography, type TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
 import { LinkBlock } from "./LinkBlock";
+import styles from "./RichTextBlock.module.scss";
 
 export const createTextBlockRenderFn =
     (props: TypographyProps): TextBlockRenderFn =>
     (children, { keys }) =>
         children.map((child, index) => (
-            <Text key={keys[index]} {...props}>
+            <Typography key={keys[index]} {...props} className={styles.text}>
                 {child}
-            </Text>
+            </Typography>
         ));
 
 export const defaultRichTextInlineStyleMap: Renderers["inline"] = {
@@ -54,18 +55,22 @@ const defaultRichTextRenderers: Renderers = {
         "unordered-list-item": (children, { depth, keys }) => (
             <ul key={keys[keys.length - 1]} className={`ul-level-${depth}`}>
                 {children.map((child, index) => (
-                    <Text as="li" key={keys[index]}>
+                    <Typography as="li" key={keys[index]} className={styles.text}>
                         {child}
-                    </Text>
+                    </Typography>
                 ))}
             </ul>
         ),
         "ordered-list-item": (children, { depth, keys }) => (
             <ol key={keys.join("|")} className={`ol-level-${depth}`}>
                 {children.map((child, index) => (
-                    <OrderedListItem $depth={depth} as="li" key={keys[index]}>
+                    <Typography
+                        as="li"
+                        key={keys[index]}
+                        className={clsx(styles.text, styles.orderedListItem, depth % 3 !== 0 && styles[`depth${depth % 3}`])}
+                    >
                         {child}
-                    </OrderedListItem>
+                    </Typography>
                 ))}
             </ol>
         ),
@@ -75,11 +80,11 @@ const defaultRichTextRenderers: Renderers = {
      */
     entities: {
         // key is the entity key value from raw
-        LINK: (children, data: LinkBlockData, { key }) =>
+        LINK: (children, data, { key }) =>
             isValidLink(data) ? (
-                <InlineLink key={key} data={data}>
+                <LinkBlock key={key} data={data as LinkBlockData} className={styles.inlineLink}>
                     {children}
-                </InlineLink>
+                </LinkBlock>
             ) : (
                 <span>{children}</span>
             ),
@@ -97,7 +102,7 @@ export const RichTextBlock = withPreview(
 
         return (
             <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
-                {disableLastBottomSpacing ? <DisableLastBottomSpacing>{rendered}</DisableLastBottomSpacing> : rendered}
+                {disableLastBottomSpacing ? <div className={styles.disableLastBottomSpacing}>{rendered}</div> : rendered}
             </PreviewSkeleton>
         );
     },
@@ -106,47 +111,8 @@ export const RichTextBlock = withPreview(
 
 export const PageContentRichTextBlock = (props: RichTextBlockProps) => (
     <PageLayout grid>
-        <PageLayoutContent>
+        <div className={styles.pageLayoutContent}>
             <RichTextBlock {...props} />
-        </PageLayoutContent>
+        </div>
     </PageLayout>
 );
-
-const DisableLastBottomSpacing = styled.div`
-    ${({ theme }) => css`
-        > *:last-child {
-            margin-bottom: 0;
-
-            ${theme.breakpoints.sm.mediaQuery} {
-                margin-bottom: 0;
-            }
-        }
-    `};
-`;
-
-const Text = styled(Typography)`
-    white-space: pre-line;
-
-    /* Show empty lines as spacing between paragraphs */
-    &:empty:not(:first-child:last-child)::before {
-        white-space: pre;
-        content: " ";
-    }
-`;
-
-const OrderedListItem = styled(Text)<{ $depth: number }>`
-    list-style-type: ${({ $depth }) => ($depth % 3 === 1 ? "lower-alpha" : $depth % 3 === 2 ? "lower-roman" : "decimal")};
-`;
-
-const InlineLink = styled(LinkBlock)`
-    color: ${({ theme }) => theme.palette.primary.main};
-    transition: color 0.3s ease-in-out;
-
-    &:hover {
-        color: ${({ theme }) => theme.palette.primary.dark};
-    }
-`;
-
-const PageLayoutContent = styled.div`
-    grid-column: 3 / -3;
-`;

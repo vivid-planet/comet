@@ -1,0 +1,45 @@
+.root {
+    padding: 10px 20px;
+}
+
+.topLevelNavigation {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+.subLevelNavigation {
+    display: none;
+    position: absolute;
+    min-width: 100px;
+    list-style-type: none;
+    padding: 5px;
+    background-color: white;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topLevelLinkContainer {
+    position: relative;
+
+    &:hover {
+        text-decoration: underline;
+
+        & > .subLevelNavigation {
+            display: block;
+        }
+    }
+}
+
+.link {
+    text-decoration: none;
+    padding: 5px 10px;
+    color: var(--color-text-primary);
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:global(.active) {
+        color: var(--color-primary-main);
+    }
+} 

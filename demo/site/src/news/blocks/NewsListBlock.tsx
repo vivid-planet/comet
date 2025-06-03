@@ -1,3 +1,4 @@
+"use client";
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type NewsListBlockData } from "@src/blocks.generated";
 import { createSitePath } from "@src/util/createSitePath";

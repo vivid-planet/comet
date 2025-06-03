@@ -1,0 +1,17 @@
+.root {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    &.imageLeft {
+        flex-direction: row-reverse;
+    }
+}
+
+.imageContainer {
+    flex: 1;
+}
+
+.textContainer {
+    flex: 2;
+} 

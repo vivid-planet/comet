@@ -1,8 +1,7 @@
 "use client";
 
-import styled from "styled-components";
-
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import styles from "./Header.module.scss";
 import { PageLink } from "./PageLink";
 
 interface Props {
@@ -11,77 +10,31 @@ interface Props {
 
 function Header({ header }: Props): JSX.Element {
     return (
-        <Root>
+        <header className={styles.root}>
             <nav>
-                <TopLevelNavigation>
+                <ol className={styles.topLevelNavigation}>
                     {header.items.map((item) => (
-                        <TopLevelLinkContainer key={item.id}>
-                            <Link page={item.node} activeClassName="active">
+                        <li key={item.id} className={styles.topLevelLinkContainer}>
+                            <PageLink className={styles.link} page={item.node} activeClassName="active">
                                 {item.node.name}
-                            </Link>
+                            </PageLink>
                             {item.node.childNodes.length > 0 && (
-                                <SubLevelNavigation>
+                                <ol className={styles.subLevelNavigation}>
                                     {item.node.childNodes.map((node) => (
                                         <li key={node.id}>
-                                            <Link page={node} activeClassName="active">
+                                            <PageLink className={styles.link} page={node} activeClassName="active">
                                                 {node.name}
-                                            </Link>
+                                            </PageLink>
                                         </li>
                                     ))}
-                                </SubLevelNavigation>
+                                </ol>
                             )}
-                        </TopLevelLinkContainer>
+                        </li>
                     ))}
-                </TopLevelNavigation>
+                </ol>
             </nav>
-        </Root>
+        </header>
     );
 }
-
-const Root = styled.header`
-    padding: 10px 20px;
-`;
-
-const TopLevelNavigation = styled.ol`
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-`;
-
-const SubLevelNavigation = styled.ol`
-    display: none;
-    position: absolute;
-    min-width: 100px;
-    list-style-type: none;
-    padding: 5px;
-    background-color: white;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const TopLevelLinkContainer = styled.li`
-    position: relative;
-
-    &:hover {
-        text-decoration: underline;
-
-        & > ${SubLevelNavigation} {
-            display: block;
-        }
-    }
-`;
-
-const Link = styled(PageLink)`
-    text-decoration: none;
-    padding: 5px 10px;
-    color: ${({ theme }) => theme.palette.text.primary};
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &.active {
-        color: ${({ theme }) => theme.palette.primary.main};
-    }
-`;
 
 export { Header };
