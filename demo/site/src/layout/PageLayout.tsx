@@ -1,23 +1,13 @@
-import { type HTMLAttributes } from "react";
-import styled, { css } from "styled-components";
+"use client";
+import clsx from "clsx";
+import { type ComponentProps } from "react";
 
-const pageLayoutGridTotalColumns = 24;
-const pageLayoutMaxWidth = 1920;
+import styles from "./PageLayout.module.scss";
 
-interface PageLayoutProps extends HTMLAttributes<HTMLDivElement> {
+interface PageLayoutProps extends ComponentProps<"div"> {
     grid?: boolean;
 }
 
-export const PageLayout = ({ grid, ...restProps }: PageLayoutProps) => <Root $grid={grid} {...restProps} />;
-
-const Root = styled.div<{ $grid?: boolean }>`
-    max-width: ${pageLayoutMaxWidth}px;
-    margin: 0 auto;
-
-    ${({ $grid }) =>
-        $grid &&
-        css`
-            display: grid;
-            grid-template-columns: repeat(${pageLayoutGridTotalColumns}, 1fr);
-        `}
-`;
+export const PageLayout = ({ grid, className, ...restProps }: PageLayoutProps) => (
+    <div className={clsx(styles.root, grid && styles.grid, className)} {...restProps} />
+);

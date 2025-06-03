@@ -19,9 +19,6 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
     },
-    compiler: {
-        styledComponents: true,
-    },
     experimental: {
         optimizePackageImports: ["@comet/site-nextjs"],
     },

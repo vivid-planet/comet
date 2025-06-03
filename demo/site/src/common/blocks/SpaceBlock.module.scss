@@ -1,0 +1,32 @@
+.root {
+    &.d100 {
+        height: var(--spacing-d100);
+    }
+    &.d200 {
+        height: var(--spacing-d200);
+    }
+    &.d300 {
+        height: var(--spacing-d300);
+    }
+    &.d400 {
+        height: var(--spacing-d400);
+    }
+    &.s100 {
+        height: var(--spacing-s100);
+    }
+    &.s200 {
+        height: var(--spacing-s200);
+    }
+    &.s300 {
+        height: var(--spacing-s300);
+    }
+    &.s400 {
+        height: var(--spacing-s400);
+    }
+    &.s500 {
+        height: var(--spacing-s500);
+    }
+    &.s600 {
+        height: var(--spacing-s600);
+    }
+} 
