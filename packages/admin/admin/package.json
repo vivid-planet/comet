@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "8.0.0-beta.4",
+    "version": "8.0.0-beta.5",
     "repository": {
         "directory": "packages/admin/admin",
         "type": "git",

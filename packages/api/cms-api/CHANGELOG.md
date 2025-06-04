@@ -1,5 +1,42 @@
 # @comet/cms-api
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 9c3f72e: Make impersonation usable for non root users.
+
+    If activated, impersonation is only available if the impersonating user
+    has as many or fewer permissions and content scopes as the user to impersonate.
+    Since this is an expensive calculation the button to impersonate is only
+    available in the detail view of the user and has been removed from the list
+    view.
+
+    When enabling the `impersonation` permission for non root users the
+    permission should also be added to `requiredPermission` for
+    `UserPermissionsPage`. This enables the user to select the user to impersonate.
+    Nevertheless, without the `userPermissions` permission it's not possible to
+    change permission of users.
+
+- e478c6b: Directly pass the entity metadata instead of the repository in `gqlArgsToMikroOrmQuery`
+
+### Minor Changes
+
+- 9cf2160: API Generator: Add new option `single` to `@CrudGenerator` which allows to enable/disable the single query
+- 26dd92a: Add possibility to use service for `convertJwtToUser`
+- 7e97e18: Create a block_index view that contains a flat list of all blocks existing in the project
+- c63817a: Add `getUserForLogin` function in `UserService`.
+
+    This allows implementing a different code path for getting the user to login
+    and the user shown in the administration panel. Examples are caching the currently logged
+    in user or throwing `UnauthorizedException` when not allowed to login.
+
+### Patch Changes
+
+- b63ecc8: RichTextBlock: add childBlocksInfo for embedded links in order to have them in block index
+
+    This fixes missing dependencies for internal links
+
 ## 8.0.0-beta.4
 
 ### Major Changes
