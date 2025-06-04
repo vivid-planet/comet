@@ -34,15 +34,18 @@ app.prepare().then(() => {
                     return;
                 }
             }
+            const isAssetsPath = parsedUrl.pathname?.startsWith("/assets/");
             if (
-                parsedUrl.pathname?.startsWith("/assets/") || // TODO move public/* files into public/assets folder
+                isAssetsPath ||
                 parsedUrl.pathname == "/favicon.ico" ||
                 parsedUrl.pathname == "/apple-icon.png" ||
                 parsedUrl.pathname == "/icon.svg" ||
                 parsedUrl.pathname == "/robots.txt" ||
                 parsedUrl.pathname == "/sitemap.xml"
             ) {
-                res.setHeader("Cache-Control", "public, max-age=900");
+                const maxAge = isAssetsPath ? "604800" : "900"; // 1 week cache for /assets/*, otherwise 15 minutes
+                res.setHeader("Cache-Control", `public, max-age=${maxAge}`);
+
                 const origSetHeader = res.setHeader;
                 res.setHeader = function (name: string, value: string | number | readonly string[]) {
                     if (name === "cache-control" || name === "Cache-Control") {
