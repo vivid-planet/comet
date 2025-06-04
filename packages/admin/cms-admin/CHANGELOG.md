@@ -1,5 +1,27 @@
 # @comet/cms-admin
 
+## 7.22.0
+
+### Minor Changes
+
+-   2cf573b72: Adapt styling of `DamTable` to align with Comet DXP design
+
+### Patch Changes
+
+-   8b80b254e: Set `altText` and `title` fields to null in the DAM when deleting the field value
+
+    Previously, the `altText` and `title` fields value couldn't be completely removed.
+
+-   6d8159d67: Prevent the `UserPermissionsUserGrid` from losing focus while entering text in the search input
+-   Updated dependencies [2cf573b72]
+-   Updated dependencies [086774f01]
+    -   @comet/admin@7.22.0
+    -   @comet/admin-date-time@7.22.0
+    -   @comet/admin-icons@7.22.0
+    -   @comet/admin-rte@7.22.0
+    -   @comet/admin-theme@7.22.0
+    -   @comet/blocks-admin@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes

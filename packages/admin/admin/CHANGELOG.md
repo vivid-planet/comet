@@ -1,5 +1,17 @@
 # @comet/admin
 
+## 7.22.0
+
+### Patch Changes
+
+-   2cf573b72: Optimize responsive behavior of `CrudMoreActionsMenu`
+-   086774f01: Revert "Prevent form components used within `Field`/`FieldContainer` from overflowing their parent" introduced in v7.20.0
+
+    This change caused the BlocksBlock to break when rendering it inside a `Field`.
+
+    -   @comet/admin-icons@7.22.0
+    -   @comet/admin-theme@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes

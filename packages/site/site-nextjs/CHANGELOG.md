@@ -1,5 +1,12 @@
 # @comet/site-nextjs
 
+## 7.22.0
+
+### Patch Changes
+
+-   Updated dependencies [e4327e250]
+    -   @comet/site-react@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes
