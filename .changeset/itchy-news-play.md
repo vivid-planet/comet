@@ -2,7 +2,7 @@
 "@comet/cms-api": minor
 ---
 
-Add a `getFileAsBase64DataUri` method to the `FileUploadsService`
+Add new methods `getFileContent` and `getFileAsBase64DataUri` to the `FileUploadsService`
 
-This method allows you to retrieve a file as a base64-encoded data URI.
-It is meant to be used for embedding images, e.g., when generating a PDF.
+These methods allow you to retrieve a file content.
+This is needed for cases like embedding images in a PDF or attaching files to emails.

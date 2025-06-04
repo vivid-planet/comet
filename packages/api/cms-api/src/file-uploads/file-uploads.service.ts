@@ -93,7 +93,7 @@ export class FileUploadsService {
         return ["/file-uploads", hash, file.id, timeout, resizeWidth, filename].join("/");
     }
 
-    async getFileAsBase64DataUri(file: FileUpload): Promise<string> {
+    async getFileContent(file: FileUpload): Promise<Buffer> {
         const filePath = createHashedPath(file.contentHash);
         const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
 
@@ -108,6 +108,11 @@ export class FileUploadsService {
             chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
         }
         const buffer = Buffer.concat(chunks);
+        return buffer;
+    }
+
+    async getFileContentAsBase64DataUri(file: FileUpload): Promise<string> {
+        const buffer = await this.getFileContent(file);
         const base64 = buffer.toString("base64");
         return `data:${file.mimetype};base64,${base64}`;
     }
