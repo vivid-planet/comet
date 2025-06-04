@@ -146,8 +146,8 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     id,
                     input: {
                         name: values.name,
-                        title: values.title,
-                        altText: values.altText,
+                        altText: values.altText ?? null,
+                        title: values.title ?? null,
                         image: {
                             cropArea,
                         },
