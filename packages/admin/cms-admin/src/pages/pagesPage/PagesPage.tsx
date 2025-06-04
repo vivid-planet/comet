@@ -57,8 +57,8 @@ export function PagesPage({
     renderContentScopeIndicator,
 }: Props) {
     const intl = useIntl();
-    const { setRedirectPathAfterChange } = useContentScope();
-    const scope = usePageTreeScope();
+    const { scope, setRedirectPathAfterChange } = useContentScope();
+    const pageTreeScope = usePageTreeScope();
     const { additionalPageTreeNodeFragment } = useCmsBlockContext();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
@@ -76,7 +76,7 @@ export function PagesPage({
     const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         fetchPolicy: "cache-and-network",
         variables: {
-            contentScope: scope,
+            contentScope: pageTreeScope,
             category,
         },
         context: LocalErrorScopeApolloContext,
@@ -122,7 +122,7 @@ export function PagesPage({
         tree,
         pagesToRender,
         // TODO remove hardcoded domain here
-        domain: (scope as ContentScopeInterface).domain,
+        domain: (pageTreeScope as ContentScopeInterface).domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
@@ -142,7 +142,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(pageTreeScope)}>
                             <ToolbarItem sx={{ flexGrow: 1 }}>
                                 <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             </ToolbarItem>
