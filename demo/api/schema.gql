@@ -422,9 +422,9 @@ enum ProductStatus {
 }
 
 enum ProductType {
-  Cap
-  Shirt
-  Tie
+  cap
+  shirt
+  tie
 }
 
 """
@@ -466,14 +466,14 @@ enum PageTreeNodeVisibility {
 }
 
 enum PageTreeNodeCategory {
-  MainNavigation
-  TopMenu
+  mainNavigation
+  topMenu
 }
 
 enum UserGroup {
-  All
-  Admin
-  User
+  all
+  admin
+  editor
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
@@ -497,7 +497,7 @@ type PredefinedPage implements DocumentInterface {
 }
 
 enum PredefinedPageType {
-  News
+  news
 }
 
 type FooterScope {
@@ -569,14 +569,14 @@ type News {
 }
 
 enum NewsStatus {
-  Active
-  Deleted
+  active
+  deleted
 }
 
 enum NewsCategory {
-  Events
-  Company
-  Awards
+  events
+  company
+  awards
 }
 
 """NewsContent root block data"""
@@ -794,7 +794,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -1301,7 +1301,7 @@ input PageTreeNodeUpdateInput {
   attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
-  userGroup: UserGroup! = All
+  userGroup: UserGroup! = all
 }
 
 input AttachedDocumentInput {
@@ -1332,7 +1332,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: UserGroup! = All
+  userGroup: UserGroup! = all
 }
 
 input RedirectInput {
@@ -1384,7 +1384,7 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
-  status: NewsStatus! = Active
+  status: NewsStatus! = active
   date: DateTime!
   category: NewsCategory!
   image: DamImageBlockInput!

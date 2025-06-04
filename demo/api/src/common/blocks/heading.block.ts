@@ -14,12 +14,12 @@ import { IsEnum } from "class-validator";
 import { RichTextBlock } from "./rich-text.block";
 
 export enum HeadlineTag {
-    H1 = "H1",
-    H2 = "H2",
-    H3 = "H3",
-    H4 = "H4",
-    H5 = "H5",
-    H6 = "H6",
+    h1 = "h1",
+    h2 = "h2",
+    h3 = "h3",
+    h4 = "h4",
+    h5 = "h5",
+    h6 = "h6",
 }
 
 class HeadingBlockData extends BlockData {

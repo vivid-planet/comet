@@ -9,15 +9,15 @@ import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
 
 export enum NewsStatus {
-    Active = "Active",
-    Deleted = "Deleted",
+    active = "active",
+    deleted = "deleted",
 }
 registerEnumType(NewsStatus, { name: "NewsStatus" });
 
 export enum NewsCategory {
-    Events = "Events",
-    Company = "Company",
-    Awards = "Awards",
+    events = "events",
+    company = "company",
+    awards = "awards",
 }
 registerEnumType(NewsCategory, {
     name: "NewsCategory",
@@ -64,7 +64,7 @@ export class News extends BaseEntity<News, "id"> {
 
     @Enum({ items: () => NewsStatus })
     @Field(() => NewsStatus)
-    status: NewsStatus = NewsStatus.Active;
+    status: NewsStatus = NewsStatus.active;
 
     @Property()
     @Field()
