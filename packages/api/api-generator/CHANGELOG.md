@@ -1,5 +1,31 @@
 # @comet/api-generator
 
+## 8.0.0-beta.5
+
+### Minor Changes
+
+- 9cf2160: API Generator: Add new option `single` to `@CrudGenerator` which allows to enable/disable the single query
+- 7e89a91: Add input support for custom mikro-orm types, the `@Field` type must also be an `@InputType`
+- 74c4fa7: Use the Entity Manager for all MikroORM operations
+- ce6d3cd: Add basic support for inheritance used by entities
+- d8c62ef: Add watch (`--watch`) and single file (`--file`) modes
+
+### Patch Changes
+
+- 4186bbb: Activate transpileOnly for better performance and fix enum issue we have with it
+- e5b3b3d: Improve Performance: Don't format generated files with eslint anymore
+
+    When scaffolding run eslint as first step.
+
+- Updated dependencies [9cf2160]
+- Updated dependencies [26dd92a]
+- Updated dependencies [7e97e18]
+- Updated dependencies [9c3f72e]
+- Updated dependencies [c63817a]
+- Updated dependencies [e478c6b]
+- Updated dependencies [b63ecc8]
+    - @comet/cms-api@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Major Changes

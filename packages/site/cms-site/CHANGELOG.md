@@ -1,5 +1,7 @@
 # @comet/cms-site
 
+## 8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Patch Changes
