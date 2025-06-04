@@ -1,5 +1,11 @@
 # @comet/site-react
 
+## 7.22.0
+
+### Patch Changes
+
+-   e4327e250: Add missing `"use client"` directive to `useBlockPreviewFetch`
+
 ## 7.21.1
 
 ## 7.21.0
