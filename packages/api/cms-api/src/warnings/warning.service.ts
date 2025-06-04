@@ -13,12 +13,10 @@ export class WarningService {
 
     private async saveWarning({
         warning,
-        type,
         sourceInfo,
         scope,
     }: {
         warning: WarningData;
-        type: string;
         sourceInfo: WarningSourceInfo;
         scope?: ContentScope;
     }): Promise<void> {
@@ -31,7 +29,6 @@ export class WarningService {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 id,
-                type,
                 message: warning.message,
                 severity: warning.severity,
                 sourceInfo,
@@ -43,26 +40,23 @@ export class WarningService {
 
     public async saveWarnings({
         warnings,
-        type,
         sourceInfo,
         scope,
     }: {
         warnings: WarningData[];
-        type: string;
         sourceInfo: WarningSourceInfo;
         scope?: ContentScope;
     }): Promise<void> {
         for (const warning of warnings) {
             await this.saveWarning({
                 warning,
-                type,
                 sourceInfo,
                 scope,
             });
         }
     }
 
-    public async deleteOutdatedWarnings({ date, type, sourceInfo }: { date: Date; type: string; sourceInfo: WarningSourceInfo }): Promise<void> {
-        await this.entityManager.nativeDelete(Warning, { type, updatedAt: { $lt: date }, sourceInfo });
+    public async deleteOutdatedWarnings({ date, sourceInfo }: { date: Date; sourceInfo: WarningSourceInfo }): Promise<void> {
+        await this.entityManager.nativeDelete(Warning, { updatedAt: { $lt: date }, sourceInfo });
     }
 }
