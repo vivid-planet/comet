@@ -34,16 +34,21 @@ app.prepare().then(() => {
                     return;
                 }
             }
-            const isAssetsPath = parsedUrl.pathname?.startsWith("/assets/");
-            if (
-                isAssetsPath ||
-                parsedUrl.pathname == "/favicon.ico" ||
-                parsedUrl.pathname == "/apple-icon.png" ||
-                parsedUrl.pathname == "/icon.svg" ||
-                parsedUrl.pathname == "/robots.txt" ||
-                parsedUrl.pathname == "/sitemap.xml"
-            ) {
-                const maxAge = isAssetsPath ? "604800" : "900"; // 1 week cache for /assets/*, otherwise 15 minutes
+
+            let maxAge: string | undefined;
+
+            if (parsedUrl.pathname?.startsWith("/assets/")) {
+                // assets in public/assets/* are cached for 1 week. When updated without changing the filename, the cache is not invalidated.
+                // To force an immediate update of a file, ensure the filename is changed as well
+                maxAge = "604800"; // 1 week cache
+            } else if (parsedUrl.pathname == "/favicon.ico" || parsedUrl.pathname == "/apple-icon.png" || parsedUrl.pathname == "/icon.svg") {
+                // images/icons in the /app folder automatically have a hash added to the filename, so they can be cached for a long time because the hash changes when the file content changes
+                maxAge = "31536000"; // 1 year cache
+            } else if (parsedUrl.pathname == "/robots.txt" || parsedUrl.pathname == "/sitemap.xml") {
+                maxAge = "900"; // 15 minutes cache
+            }
+
+            if (maxAge) {
                 res.setHeader("Cache-Control", `public, max-age=${maxAge}`);
 
                 const origSetHeader = res.setHeader;
