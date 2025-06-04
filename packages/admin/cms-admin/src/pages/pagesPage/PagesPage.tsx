@@ -27,6 +27,7 @@ import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig"
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { DocumentInterface, DocumentType } from "../../documents/types";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -56,7 +57,8 @@ export function PagesPage({
     renderContentScopeIndicator,
 }: Props) {
     const intl = useIntl();
-    const { scope, setRedirectPathAfterChange } = useContentScope();
+    const { setRedirectPathAfterChange } = useContentScope();
+    const scope = usePageTreeScope();
     const { additionalPageTreeNodeFragment } = useCmsBlockContext();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
@@ -119,7 +121,8 @@ export function PagesPage({
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        domain: scope.domain,
+        // TODO remove hardcoded domain here
+        domain: (scope as ContentScopeInterface).domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);

@@ -8,8 +8,9 @@ import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface } from "../../contentScope/Provider";
 import { Maybe } from "../../graphql.generated";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
@@ -69,7 +70,7 @@ interface PageTreeSelectProps {
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
     const [height, setHeight] = useState(200);
@@ -111,7 +112,8 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        domain: scope.domain,
+        // TODO remove hardcoded domain here
+        domain: (scope as ContentScopeInterface).domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
