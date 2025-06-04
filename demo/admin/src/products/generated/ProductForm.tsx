@@ -195,13 +195,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
-                                    <MenuItem value="Cap">
+                                    <MenuItem value="cap">
                                         <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
                                     </MenuItem>
-                                    <MenuItem value="Shirt">
+                                    <MenuItem value="shirt">
                                         <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
                                     </MenuItem>
-                                    <MenuItem value="Tie">
+                                    <MenuItem value="tie">
                                         <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
                                     </MenuItem>
                                 </FinalFormSelect>
