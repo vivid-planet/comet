@@ -27,7 +27,7 @@ export function CreateCapProductPage() {
                     </ToolbarActions>
                 </StackToolbar>
                 <MainContent>
-                    <CreateCapProductForm type="Cap" />
+                    <CreateCapProductForm type="cap" />
                 </MainContent>
             </SaveBoundary>
         </Stack>
