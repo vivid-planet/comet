@@ -62,7 +62,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: cleanTypename(data.currentUser),
+        currentUser: {
+            ...cleanTypename(data.currentUser),
+            impersonated: !!data.currentUser.impersonated,
+        },
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
