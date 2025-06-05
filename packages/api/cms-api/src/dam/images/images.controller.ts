@@ -117,7 +117,7 @@ export class ImagesController {
         }
 
         return this.pipeCroppedImage(file, params, accept, res, {
-            "cache-control": "max-age=31536000, public", // Public cache (1 year)
+            "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         });
     }
 
@@ -138,7 +138,7 @@ export class ImagesController {
         }
 
         return this.pipeCroppedImage(file, params, accept, res, {
-            "cache-control": "max-age=31536000, public", // Public cache (1 year)
+            "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         });
     }
 
