@@ -9,16 +9,15 @@ import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
-    return { language: entity.langauge };
+    return { language: entity.language };
 })
 export class TestEntityWithScopedEntity extends BaseEntity<TestEntityWithScopedEntity, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
     @Property({ columnType: "text" })
-    langauge: string;
+    language: string;
 }
-1;
 
 describe("GenerateCrud with ScopedEntity", () => {
     it("resolver must not have skipScopeCheck", async () => {
