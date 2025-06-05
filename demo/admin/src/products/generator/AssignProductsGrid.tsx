@@ -5,8 +5,8 @@ import {
     type GQLGetProductIdsForProductCategoryQueryVariables,
     type GQLSetProductCategoryMutation,
     type GQLSetProductCategoryMutationVariables,
-} from "@src/products/future/AssignProductsGrid.generated";
-import { ProductsGrid as SelectProductsGrid } from "@src/products/future/generated/SelectProductsGrid";
+} from "@src/products/generator/AssignProductsGrid.generated";
+import { ProductsGrid as SelectProductsGrid } from "@src/products/generator/generated/SelectProductsGrid";
 import isEqual from "lodash.isequal";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
