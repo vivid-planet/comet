@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "8.0.0-beta.4",
+    "version": "8.0.0-beta.5",
     "repository": {
         "directory": "packages/admin/admin-rte",
         "type": "git",
@@ -44,7 +44,7 @@
         "@mui/material": "^7.1.0",
         "@types/draft-js": "^0.11.18",
         "@types/jest": "^29.5.14",
-        "@types/react": "^18.3.21",
+        "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
         "draft-js": "^0.11.7",
         "eslint": "^9.22.0",

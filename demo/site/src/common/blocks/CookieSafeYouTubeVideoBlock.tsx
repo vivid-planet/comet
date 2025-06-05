@@ -1,5 +1,5 @@
 "use client";
-import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
+import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/site-nextjs";
 import { cookieIds } from "@src/util/cookieIds";
 import { type ComponentProps, type CSSProperties } from "react";
 import styled from "styled-components";

@@ -1,6 +1,6 @@
 {
     "name": "@comet/api-generator",
-    "version": "8.0.0-beta.4",
+    "version": "8.0.0-beta.5",
     "repository": {
         "directory": "packages/api/api-generator",
         "type": "git",
@@ -42,7 +42,7 @@
         "@mikro-orm/postgresql": "^6.4.10",
         "@nestjs/graphql": "^13.1.0",
         "@types/jest": "^29.5.14",
-        "@types/node": "^22.15.17",
+        "@types/node": "^22.15.21",
         "@types/pluralize": "^0.0.33",
         "class-validator": "^0.14.1",
         "eslint": "^9.22.0",

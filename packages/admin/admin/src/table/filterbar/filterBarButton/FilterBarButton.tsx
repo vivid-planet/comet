@@ -1,6 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { buttonClasses, type ButtonProps, type ComponentsOverrides, svgIconClasses } from "@mui/material";
-import Button from "@mui/material/Button";
+// eslint-disable-next-line no-restricted-imports
+import { Button, buttonClasses, type ButtonProps, type ComponentsOverrides, svgIconClasses } from "@mui/material";
 import { css, type Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
 import { type ComponentType } from "react";

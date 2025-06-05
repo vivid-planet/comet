@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Button } from "@mui/material";
 import { type MouseEventHandler, type PropsWithChildren, type ReactNode } from "react";
 

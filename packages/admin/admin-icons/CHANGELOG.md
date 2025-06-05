@@ -1,5 +1,11 @@
 # @comet/admin-icons
 
+## 8.0.0-beta.5
+
+### Patch Changes
+
+- 5a6efc1: Transform SVG attributes into camelCase to generate valid JSX
+
 ## 8.0.0-beta.4
 
 ## 8.0.0-beta.3
@@ -35,6 +41,12 @@
 ### Minor Changes
 
 - 682a674: Add support for React 18
+
+## 7.21.1
+
+## 7.21.0
+
+## 7.20.0
 
 ## 7.19.0
 
