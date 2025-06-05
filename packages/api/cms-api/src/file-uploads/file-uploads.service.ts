@@ -110,10 +110,4 @@ export class FileUploadsService {
         const buffer = Buffer.concat(chunks);
         return buffer;
     }
-
-    async getFileContentAsBase64DataUri(file: FileUpload): Promise<string> {
-        const buffer = await this.getFileContent(file);
-        const base64 = buffer.toString("base64");
-        return `data:${file.mimetype};base64,${base64}`;
-    }
 }

@@ -80,16 +80,4 @@ describe("FileUploadsService", () => {
             await expect(service.getFileContent(fileUpload)).rejects.toThrow("File not found");
         });
     });
-
-    describe("getFileContentAsBase64DataUri", () => {
-        it("should return base64 data URI", async () => {
-            const buffer = Buffer.from("test");
-            mockBlobStorageBackendService.fileExists.mockResolvedValue(true);
-            mockBlobStorageBackendService.getFile.mockResolvedValue(Readable.from([buffer]));
-
-            const result = await service.getFileContentAsBase64DataUri(fileUpload);
-
-            expect(result).toBe(`data:${fileUpload.mimetype};base64,${buffer.toString("base64")}`);
-        });
-    });
 });
