@@ -2,8 +2,8 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
+import { cleanTypename } from "../../common/cleanTypename";
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
-import { type GQLCurrentUserPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
 type CurrentUserContext = {
@@ -16,12 +16,18 @@ export interface CurrentUserInterface {
     id: string;
     name: string;
     email: string;
-    permissions: GQLCurrentUserPermission[];
+    permissions: {
+        permission: string;
+        contentScopes: ContentScope[];
+    }[];
     authenticatedUser: {
         name: string;
         email: string;
     } | null;
-    allowedContentScopes: ContentScope[];
+    allowedContentScopes: {
+        scope: ContentScope;
+        label: { [key in keyof ContentScope]: string };
+    }[];
     impersonated: boolean;
 }
 
@@ -40,6 +46,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     permission
                     contentScopes
                 }
+                allowedContentScopes {
+                    scope
+                    label
+                }
                 impersonated
             }
         }
@@ -53,10 +63,8 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
 
     const context: CurrentUserContext = {
         currentUser: {
-            ...data.currentUser,
+            ...cleanTypename(data.currentUser),
             impersonated: !!data.currentUser.impersonated,
-            authenticatedUser: data.currentUser.authenticatedUser,
-            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
         },
         isAllowed:
             isAllowed ??
