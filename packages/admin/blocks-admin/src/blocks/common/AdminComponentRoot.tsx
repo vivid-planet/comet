@@ -30,7 +30,7 @@ const AdminComponentRoot = (props: PropsWithChildren<Props>) => {
 export { AdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
-    > .CometAdminRte-root > .CometAdminRteToolbar-root {
+    .CometAdminRte-root > .CometAdminRteToolbar-root {
         top: 70px;
     }
 `;
