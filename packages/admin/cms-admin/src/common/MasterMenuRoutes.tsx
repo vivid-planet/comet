@@ -63,37 +63,7 @@ export const MasterMenuRoutes = ({ menu }: MasterMenuRoutesProps) => {
             {routes.map((route, index) => (
                 <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
             ))}
-            <RouteWithErrorBoundary
-                path={`${match.path}/:path*`}
-                render={(props) => {
-                    if (isMasterMenuItemRoute(menu, `/${props.match.params.path}`) && routes.length > 0) {
-                        // Route exists but user is not allowed to access it -> redirect to first allowed route.
-                        return <Redirect to={`${match.url}${routes[0].path}`} />;
-                    }
-
-                    // TODO: Show a 404 page here
-                    // https://github.com/vivid-planet/comet/pull/3870
-                    return null;
-                }}
-            />
+            <Redirect to={`${match.url}${routes[0].path}`} from={match.path} />
         </Switch>
     );
 };
-
-function isMasterMenuItemRoute(menu: MasterMenuData, path: string): boolean {
-    return menu.some((item) => {
-        if (item.type === "externalLink") {
-            return false;
-        }
-        if (item.type === "group") {
-            return isMasterMenuItemRoute(item.items, path);
-        }
-        if (item.route && item.route.path === path) {
-            return true;
-        }
-        if (item.type === "collapsible") {
-            return isMasterMenuItemRoute(item.items as Array<MasterMenuItem & { icon?: ReactNode }>, path);
-        }
-        return false;
-    });
-}
