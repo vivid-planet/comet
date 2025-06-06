@@ -2954,7 +2954,7 @@
 
     -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
-    -   Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
 
     In the Admin:
 
