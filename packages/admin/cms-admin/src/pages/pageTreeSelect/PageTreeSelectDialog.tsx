@@ -113,7 +113,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
         tree,
         pagesToRender,
         // TODO remove hardcoded domain here
-        domain: (scope as ContentScopeInterface).domain,
+        domain: scope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);

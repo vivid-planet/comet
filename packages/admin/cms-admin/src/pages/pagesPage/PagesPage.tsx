@@ -122,7 +122,7 @@ export function PagesPage({
         tree,
         pagesToRender,
         // TODO remove hardcoded domain here
-        domain: (pageTreeScope as ContentScopeInterface).domain,
+        domain: pageTreeScope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
