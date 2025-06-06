@@ -2,6 +2,6 @@
 "@comet/cms-api": major
 ---
 
-Changed s3 blob-storage config
+Change S3 config for BlobStorage
 
-Now the config is the same as the s3-client config, so you can use any of the available options.
+Now the config has all fields from `S3ClientConfig` provided by `@aws-sdk/client-s3`, so you override all options in the project.
