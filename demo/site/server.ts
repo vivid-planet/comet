@@ -41,10 +41,11 @@ app.prepare().then(() => {
                 // assets in public/assets/* are cached for 1 week. When updated without changing the filename, the cache is not invalidated.
                 // To force an immediate update of a file, ensure the filename is changed as well
                 maxAge = "604800"; // 1 week cache
-            } else if (parsedUrl.pathname == "/favicon.ico" || parsedUrl.pathname == "/apple-icon.png" || parsedUrl.pathname == "/icon.svg") {
-                // images/icons in the /app folder automatically have a hash added to the filename, so they can be cached for a long time because the hash changes when the file content changes
+            } else if (parsedUrl.pathname == "/apple-icon.png" || parsedUrl.pathname == "/icon.svg") {
+                // the icon and apple-icon in the /app folder automatically have a generated string added to the filename, so they can be cached for a long time because the hash changes when the file content changes
+                // see: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons#icon
                 maxAge = "31536000"; // 1 year cache
-            } else if (parsedUrl.pathname == "/robots.txt" || parsedUrl.pathname == "/sitemap.xml") {
+            } else if (parsedUrl.pathname == "/robots.txt" || parsedUrl.pathname == "/sitemap.xml" || parsedUrl.pathname == "/favicon.ico") {
                 maxAge = "900"; // 15 minutes cache
             }
 
