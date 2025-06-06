@@ -60,10 +60,10 @@ export const MasterMenuRoutes = ({ menu }: MasterMenuRoutesProps) => {
 
     return (
         <Switch>
+            <Redirect to={`${match.url}${routes[0].path}`} exact={true} from={match.path} />
             {routes.map((route, index) => (
                 <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
             ))}
-            <Redirect to={`${match.url}${routes[0].path}`} from={match.path} />
         </Switch>
     );
 };
