@@ -2,4 +2,4 @@
 "@comet/admin-date-time": patch
 ---
 
-Apply `disabled` prop to the DateTimePicker
+Support the `disabled` prop in the `DateTimePicker`
