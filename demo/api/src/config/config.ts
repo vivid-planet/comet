@@ -75,8 +75,10 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                     region: envVars.S3_REGION,
                     endpoint: envVars.S3_ENDPOINT,
                     bucket: envVars.S3_BUCKET,
-                    accessKeyId: envVars.S3_ACCESS_KEY_ID,
-                    secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
+                    credentials: {
+                        accessKeyId: envVars.S3_ACCESS_KEY_ID,
+                        secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
+                    },
                 },
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
