@@ -1,6 +1,11 @@
 {
     "name": "@comet/site-nextjs",
+<<<<<<< HEAD
     "version": "8.0.0-beta.5",
+=======
+    "type": "module",
+    "version": "7.22.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -34,15 +39,26 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@comet/site-react": "workspace:*",
+=======
+        "@comet/site-react": "workspace:^7.22.0",
+>>>>>>> main
         "clsx": "^2.1.1",
         "jose": "^5.2.4",
         "rimraf": "^3.0.0",
         "server-only": "^0.0.1"
     },
     "devDependencies": {
+<<<<<<< HEAD
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+=======
+        "@comet/cli": "workspace:^7.22.0",
+        "@comet/eslint-config": "workspace:^7.22.0",
+        "@gitbeaker/node": "^34.0.0",
+        "@types/draft-js": "^0.11.10",
+>>>>>>> main
         "@types/jest": "^29.5.0",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",

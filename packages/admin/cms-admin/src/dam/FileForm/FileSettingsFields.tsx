@@ -126,6 +126,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         return `${value}.${extension}`;
                     }}
                     fullWidth
+                    required
                 />
             </FormSection>
             {isImage && <CropSettingsFields />}
