@@ -1,6 +1,11 @@
 {
     "name": "@comet/site-react",
+<<<<<<< HEAD
     "version": "8.0.0-beta.5",
+=======
+    "type": "module",
+    "version": "7.22.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -41,8 +46,14 @@
         "usehooks-ts": "^3.1.0"
     },
     "devDependencies": {
+<<<<<<< HEAD
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+=======
+        "@comet/cli": "workspace:^7.22.0",
+        "@comet/eslint-config": "workspace:^7.22.0",
+        "@gitbeaker/node": "^34.0.0",
+>>>>>>> main
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",
         "@types/lodash.isequal": "^4.5.8",
