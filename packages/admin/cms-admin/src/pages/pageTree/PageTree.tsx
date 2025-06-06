@@ -9,7 +9,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useContentScope } from "../../contentScope/Provider";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { GQLPagesQuery, GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
 import {
     GQLMovePageTreeNodesByPosMutation,
@@ -123,7 +123,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
     }, [pages]);
 
     const pageTreeService = useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const snackbarApi = useSnackbarApi();
 
     const debouncedSetHoverState = useDebouncedCallback(
