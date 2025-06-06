@@ -857,7 +857,7 @@ npx @comet/upgrade v8/update-s3-config.ts
 
 :::
 
-Previously configuration had it's own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
+Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
 
 ```diff title=api/src/config/config.ts
 blob: {
