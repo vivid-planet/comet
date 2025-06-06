@@ -1,0 +1,22 @@
+.slider {
+    position: relative;
+}
+
+.swiperContainer {
+    overflow: hidden;
+
+    :global(.swiper) {
+        overflow: visible;
+    }
+}
+
+.sliderItem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mediaWrapper {
+    position: relative;
+    height: 200px;
+} 
