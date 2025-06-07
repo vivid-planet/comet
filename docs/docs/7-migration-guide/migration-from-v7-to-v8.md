@@ -841,6 +841,53 @@ npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
 
 </details>
 
+### ✅ Change s3 blob-storage config structure
+
+It's now possible to configure the S3-client completely.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-s3-config.ts
+```
+
+:::
+
+Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
+
+```diff title=api/src/config/config.ts
+blob: {
+    storage: {
+        driver: envVars.BLOB_STORAGE_DRIVER,
+        file: {
+            path: envVars.FILE_STORAGE_PATH,
+        },
+        azure: {
+            accountName: envVars.AZURE_ACCOUNT_NAME,
+            accountKey: envVars.AZURE_ACCOUNT_KEY,
+        },
+        s3: {
+            region: envVars.S3_REGION,
+            endpoint: envVars.S3_ENDPOINT,
+            bucket: envVars.S3_BUCKET,
+-            accessKeyId: envVars.S3_ACCESS_KEY_ID,
+-            secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            credentials: {
++                 accessKeyId: envVars.S3_ACCESS_KEY_ID,
++                 secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            },
+        },
+    },
+    storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
+},
+```
+
+</details>
+
 ## Admin
 
 ### Upgrade peer dependencies
