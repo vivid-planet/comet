@@ -148,7 +148,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
-                    const response = await fetch(uploadEndpoint ?? `${apiUrl}file-uploads/upload`, {
+                    const response = await fetch(uploadEndpoint ?? `${apiUrl}/file-uploads/upload`, {
                         method: "POST",
                         body: formData,
                     });
