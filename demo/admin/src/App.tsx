@@ -5,6 +5,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CometConfigProvider,
+    type ContentScope,
     ContentScopeProvider,
     createDamFileDependency,
     CurrentUserProvider,
