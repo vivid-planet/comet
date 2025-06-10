@@ -57,10 +57,10 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
 
 export interface MasterMenuRoutesProps {
     menu: MasterMenuData;
-    notFoundPage?: ReactNode;
+    fallback?: ReactNode;
 }
 
-export const MasterMenuRoutes = ({ menu, notFoundPage = <NotFound /> }: MasterMenuRoutesProps) => {
+export const MasterMenuRoutes = ({ menu, fallback = <NotFound /> }: MasterMenuRoutesProps) => {
     const routes = useRoutePropsFromMasterMenuData(menu);
     const match = useRouteMatch();
     return (
@@ -71,7 +71,7 @@ export const MasterMenuRoutes = ({ menu, notFoundPage = <NotFound /> }: MasterMe
             ))}
             <RouteWithErrorBoundary
                 component={() => {
-                    return notFoundPage;
+                    return fallback;
                 }}
                 path="*"
             />
