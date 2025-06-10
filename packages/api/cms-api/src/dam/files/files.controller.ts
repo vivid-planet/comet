@@ -296,7 +296,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 overrideHeaders: {
                     "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
                 },
-            }); // Public cache (1 year)
+            });
         }
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {
