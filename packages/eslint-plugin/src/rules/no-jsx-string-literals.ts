@@ -12,11 +12,10 @@ export default {
             noStringLiteralsInJSX: "String literals are not allowed in JSX, use <FormattedMessage> instead",
             noStringConcatenationInJSX: "String concatenation with variables is not allowed, use <FormattedMessage> with values prop instead",
         },
-        schema: [], // no options
+        schema: [],
     },
     create(context) {
         return {
-            // Check for JSXText nodes (direct string literals in JSX)
             JSXText(node) {
                 const text = node.value.trim();
                 if (text.length > 0) {
