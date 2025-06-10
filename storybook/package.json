@@ -50,7 +50,6 @@
         "@comet/eslint-config": "workspace:*",
         "@faker-js/faker": "^9.6.0",
         "@graphql-mocks/network-msw": "^0.3.0",
-        "@storybook/addon-actions": "^9.0.8",
         "@storybook/addon-docs": "^9.0.8",
         "@storybook/addon-webpack5-compiler-babel": "^3.0.6",
         "@storybook/react": "^9.0.8",
