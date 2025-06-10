@@ -280,10 +280,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                     padding: `calc(${spacing(2)} - 1px)`,
                 },
             },
-
-            [`& .${inputBaseClasses.root}`]: {
-                marginTop: 0,
-            },
         },
         panelFooter: {
             padding: spacing(2),
