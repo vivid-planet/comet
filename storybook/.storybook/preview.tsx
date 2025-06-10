@@ -74,6 +74,7 @@ export const globalTypes: GlobalTypes = {
 };
 
 const preview: Preview = {
+    tags: ["autodocs"],
     argTypes: {
         locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
     },
@@ -182,6 +183,10 @@ const preview: Preview = {
                 const bIdx = order.findIndex((i) => bName.indexOf(i) > -1);
                 return aIdx - bIdx;
             },
+        },
+
+        docs: {
+            codePanel: true,
         },
     },
 };

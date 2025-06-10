@@ -1,9 +1,9 @@
 import { RouterMemoryRouter } from "@comet/admin";
-import { action } from "@storybook/addon-actions";
 import { type Decorator } from "@storybook/react";
 import { type Action, type History, type UnregisterCallback } from "history";
 import { type PropsWithChildren, type ReactNode, useEffect } from "react";
 import { type MemoryRouterProps, Route, type RouteComponentProps } from "react-router";
+import { action } from "storybook/actions";
 
 const StoryRouter = ({ children, routerProps }: { children: ReactNode; routerProps?: MemoryRouterProps }) => {
     return (
