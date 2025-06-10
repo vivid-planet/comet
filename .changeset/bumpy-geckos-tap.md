@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add the prop `getNoOptionsLabel` to the `FinalFormSelect` to customize it.
+Add the prop `noOptionsLabel ` to the `FinalFormSelect` to customize it.
