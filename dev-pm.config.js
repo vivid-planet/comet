@@ -195,12 +195,6 @@ module.exports = {
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
-        {
-            name: "demo-site-block-type-string-union-codegen",
-            script: "pnpm --filter comet-demo-site run generate-block-type-string-union:watch",
-            group: ["demo-site", "demo"],
-            waitOn: ["tcp:$API_PORT"],
-        },
 
         //group demo site pages
         {
