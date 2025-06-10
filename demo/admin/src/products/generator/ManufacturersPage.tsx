@@ -15,10 +15,14 @@ export function ManufacturersPage() {
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "manufacturers.addManufacturer", defaultMessage: "Add Manufacturer" })}>
-                    <StackMainContent>Add Manufacturer</StackMainContent>
+                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
+                    <StackMainContent>TODO: Add manufacturer form</StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "manufacturers.editManufacturer", defaultMessage: "Edit Manufacturer" })}>
-                    {(selectedId) => <StackMainContent>Edit Manufacturer</StackMainContent>}
+                    {(selectedId) => (
+                        // eslint-disable-next-line @calm/react-intl/missing-formatted-message
+                        <StackMainContent>TODO: Edit manufacturer form</StackMainContent>
+                    )}
                 </StackPage>
             </StackSwitch>
         </Stack>
