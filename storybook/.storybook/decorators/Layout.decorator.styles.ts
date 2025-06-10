@@ -1,6 +1,6 @@
-import { css } from "@mui/material";
+import { css, type Theme } from "@mui/material";
 
-export const previewGlobalStyles = (theme: any) =>
+export const previewGlobalStyles = (theme: Theme) =>
     css(`
     body {
         margin: 0;

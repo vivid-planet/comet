@@ -1,14 +1,12 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { MainContent } from "@comet/admin";
-import { GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
 import type { GlobalTypes } from "@storybook/types";
 
 import { IntlDecorator, LocaleOptions } from "./decorators/IntlProvider.decorator";
+import { LayoutDecorator, LayoutOptions } from "./decorators/Layout.decorator";
 import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
-import { previewGlobalStyles } from "./preview.styles";
 
 export const globalTypes: GlobalTypes = {
     theme: {
@@ -38,31 +36,24 @@ export const globalTypes: GlobalTypes = {
             dynamicTitle: true,
         },
     },
+    layout: {
+        description: "Layout",
+        toolbar: {
+            title: "Layout",
+            icon: "switchalt",
+            items: [
+                { value: LayoutOptions.Padded, title: "Padded" },
+                { value: LayoutOptions.Default, title: "Default" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
 };
 
 const preview: Preview = {
-    decorators: [
-        ThemeProviderDecorator,
-        IntlDecorator,
-        (Story, context) => {
-            return (
-                <>
-                    <GlobalStyles styles={previewGlobalStyles} />
-                    <>
-                        {context.parameters.layout === "padded" ? (
-                            <MainContent>
-                                <Story />
-                            </MainContent>
-                        ) : (
-                            <Story />
-                        )}
-                    </>
-                </>
-            );
-        },
-    ],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator],
     parameters: {
-        layout: "padded",
         options: {
             /**
              * Note: according to: https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy#sorting-stories
