@@ -4,7 +4,7 @@ import { type ComponentsOverrides, type Divider, type Theme, type Typography, us
 import { type FunctionComponent, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { CometDxpLogo } from "./CometDxpLogo";
+import { CometLogo } from "../cometLogo/CometLogo";
 import { ContentContainer, DividerStyled, Info, LogoContainer, Root, Title } from "./NotFound.styles";
 
 export type NotFoundClassKey = "root" | "title" | "info" | "contentContainer" | "divider" | "logoContainer";
@@ -29,7 +29,7 @@ export const NotFound: FunctionComponent<NotFoundProps> = (inProps) => {
         title = <FormattedMessage id="comet.notFound.title" defaultMessage="Page not found (404)" />,
         description = <FormattedMessage id="comet.notFound.description" defaultMessage="The requested page does not exist or has been moved." />,
         icon = <Error sx={{ fontSize: "32px" }} color="error" />,
-        logo = <CometDxpLogo />,
+        logo = <CometLogo />,
         sx,
         className,
         slotProps = {},

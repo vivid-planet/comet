@@ -15,8 +15,8 @@ import { type ReactElement } from "react";
 import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
+import { CometLogo } from "../../cometLogo/CometLogo";
 import { useBuildInformation } from "./build-information/useBuildInformation";
-import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 
 interface AboutModalProps {
     onClose?: () => void;
@@ -24,7 +24,7 @@ interface AboutModalProps {
     logo?: ReactElement;
 }
 
-export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps) {
+export function AboutModal({ open, onClose, logo = <CometLogo /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
 
     return (
