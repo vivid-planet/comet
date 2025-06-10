@@ -74,6 +74,16 @@ type Options = {
     outputFile: string;
 };
 
+const generateAvailableBlockType = (blockMeta: BlockMeta[]): string => {
+    const uniqueBlockNames = Array.from(new Set(blockMeta.map((block) => block.name))).sort();
+
+    let content = "export type AvailableBlockTypes =";
+    uniqueBlockNames.forEach((blockName) => {
+        content += ` | "${blockName}"`;
+    });
+    return content;
+};
+
 const generateBlockTypes = new Command("generate-block-types")
     .description("generate block types from block meta")
     .option("--inputs", "include block inputs")
@@ -109,6 +119,9 @@ const generateBlockTypes = new Command("generate-block-types")
                 content += "}\n";
             });
         }
+
+        const availableBlockTypes = generateAvailableBlockType(blockMeta);
+        content += availableBlockTypes;
 
         const prettierOptions = await resolveConfig(process.cwd());
         content = await format(content, { ...prettierOptions, parser: "typescript" });
