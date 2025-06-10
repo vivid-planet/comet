@@ -9,6 +9,8 @@ const config = [
     {
         rules: {
             "@comet/no-other-module-relative-import": "off",
+            "@calm/react-intl/missing-formatted-message": "off",
+            "@comet/no-jsx-string-literals": "off"
         },
     },
     {

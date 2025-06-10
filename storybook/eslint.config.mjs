@@ -16,6 +16,7 @@ const config = [
             "@typescript-eslint/no-non-null-assertion": "off",
             "no-console": "off",
             "@comet/no-other-module-relative-import": "off",
+            "@comet/no-jsx-string-literals": "off",
             "react/react-in-jsx-scope": "off",
         },
     },

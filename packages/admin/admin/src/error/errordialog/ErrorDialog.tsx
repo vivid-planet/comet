@@ -130,18 +130,32 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
                         </strong>
                     </Typography>
                     <Typography component="p" variant="caption">
-                        <FormattedMessage id="comet.errorDialog.details.errorType" defaultMessage="Type" />:{" "}
-                        {errorTypeLabels[additionalInformation.errorType]}
+                        <FormattedMessage
+                            id="comet.errorDialog.details.errorType"
+                            defaultMessage="Type: {errorType}"
+                            values={{ errorType: errorTypeLabels[additionalInformation.errorType] }}
+                        />
                     </Typography>
                     <Typography component="p" variant="caption">
-                        <FormattedMessage id="comet.errorDialog.details.httpStatus" defaultMessage="HTTP status" />:{" "}
-                        {additionalInformation.httpStatus}
+                        <FormattedMessage
+                            id="comet.errorDialog.details.httpStatus"
+                            defaultMessage="HTTP status: {httpStatus}"
+                            values={{ httpStatus: additionalInformation.httpStatus }}
+                        />
                     </Typography>
                     <Typography component="p" variant="caption">
-                        <FormattedMessage id="comet.errorDialog.details.url" defaultMessage="URL" />: {additionalInformation.url}
+                        <FormattedMessage
+                            id="comet.errorDialog.details.url"
+                            defaultMessage="URL: {url}"
+                            values={{ url: additionalInformation.url }}
+                        />
                     </Typography>
                     <Typography component="p" variant="caption">
-                        <FormattedMessage id="comet.errorDialog.details.timestamp" defaultMessage="Timestamp" />: {additionalInformation.timestamp}
+                        <FormattedMessage
+                            id="comet.errorDialog.details.timestamp"
+                            defaultMessage="Timestamp: {timeStamp}"
+                            values={{ timeStamp: additionalInformation.timestamp }}
+                        />
                     </Typography>
                 </>
             )}

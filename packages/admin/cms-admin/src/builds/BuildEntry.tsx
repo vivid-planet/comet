@@ -46,7 +46,9 @@ const BuildStatusPopperContent = ({ data: { autoBuildStatus, builds } }: { data:
                     <FormattedMessage id="comet.header.buildStatus.buildRunning" defaultMessage="Publication is in progress." />
                     {remainingRuntime !== undefined && (
                         <>
-                            {" "}
+                            {
+                                //eslint-disable-next-line @comet/no-jsx-string-literals
+                            }{" "}
                             <FormattedMessage
                                 id="comet.header.buildStatus.estimatedCompletion"
                                 defaultMessage="Estimated time to finish: {remainingRuntime, plural,
@@ -66,9 +68,9 @@ const BuildStatusPopperContent = ({ data: { autoBuildStatus, builds } }: { data:
                 <Typography variant="body2">
                     <FormattedMessage
                         id="comet.header.buildStatus.nextScheduledBuild"
-                        defaultMessage="New content changes found. Next publication is planned for: "
-                    />{" "}
-                    <FormattedTime value={nextCheck} />
+                        defaultMessage="New content changes found. Next publication is planned for: {time}"
+                        values={{ time: <FormattedTime value={nextCheck} /> }}
+                    />
                 </Typography>,
             );
             content.push(<PublishButton />);

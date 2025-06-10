@@ -120,14 +120,19 @@ export function CronJobsGrid() {
                         flex: 2,
                         renderCell: ({ value }) => {
                             return value ? (
-                                <>
-                                    <JobStatus status={value.status}>{value.status}</JobStatus>
-                                    {", "}
-                                    <JobRuntime
-                                        startTime={value.startTime ? parseISO(value.startTime) : undefined}
-                                        completionTime={value.completionTime ? parseISO(value.completionTime) : undefined}
-                                    />
-                                </>
+                                <FormattedMessage
+                                    id="comet.pages.cronJobs.lastJobRun"
+                                    defaultMessage="{jobStatus}, {jobRuntime}"
+                                    values={{
+                                        jobStatus: <JobStatus status={value.status}>{value.status}</JobStatus>,
+                                        jobRuntime: (
+                                            <JobRuntime
+                                                startTime={value.startTime ? parseISO(value.startTime) : undefined}
+                                                completionTime={value.completionTime ? parseISO(value.completionTime) : undefined}
+                                            />
+                                        ),
+                                    }}
+                                />
                             ) : (
                                 <FormattedMessage id="comet.pages.cronJobs.never" defaultMessage="Never" />
                             );
