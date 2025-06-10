@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
+import omit from "lodash.omit";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
-import { cleanTypename } from "../../common/cleanTypename";
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
@@ -16,19 +16,19 @@ export interface CurrentUserInterface {
     id: string;
     name: string;
     email: string;
-    permissions: {
-        permission: string;
-        contentScopes: ContentScope[];
-    }[];
+    impersonated: boolean;
     authenticatedUser: {
         name: string;
         email: string;
     } | null;
+    permissions: {
+        permission: string;
+        contentScopes: ContentScope[];
+    }[];
     allowedContentScopes: {
         scope: ContentScope;
         label: { [key in keyof ContentScope]: string };
     }[];
-    impersonated: boolean;
 }
 
 export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{ isAllowed?: CurrentUserContext["isAllowed"] }>) => {
@@ -38,6 +38,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                 id
                 name
                 email
+                impersonated
                 authenticatedUser {
                     name
                     email
@@ -50,7 +51,6 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     scope
                     label
                 }
-                impersonated
             }
         }
     `);
@@ -63,7 +63,12 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
 
     const context: CurrentUserContext = {
         currentUser: {
-            ...cleanTypename(data.currentUser),
+            id: data.currentUser.id,
+            name: data.currentUser.name,
+            email: data.currentUser.email,
+            permissions: data.currentUser.permissions.map((p) => omit(p, "__typename")),
+            authenticatedUser: data.currentUser.authenticatedUser && omit(data.currentUser.authenticatedUser, "__typename"),
+            allowedContentScopes: data.currentUser.allowedContentScopes.map((acs) => omit(acs, "__typename")),
             impersonated: !!data.currentUser.impersonated,
         },
         isAllowed:
