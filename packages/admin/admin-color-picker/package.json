@@ -26,8 +26,8 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^7.22.0",
-        "@comet/admin-icons": "workspace:^7.22.0",
+        "@comet/admin": "workspace:*",
+        "@comet/admin-icons": "workspace:*",
         "react-colorful": "^5.5.1",
         "tinycolor2": "^1.4.1",
         "use-debounce": "^6.0.0"
@@ -35,8 +35,8 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.22.0",
-        "@comet/eslint-config": "workspace:^7.22.0",
+        "@comet/admin-babel-preset": "workspace:*",
+        "@comet/eslint-config": "workspace:*",
         "@mui/material": "^5.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",

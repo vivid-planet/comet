@@ -30,7 +30,7 @@
         "prettier": "^2.7.1"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:^7.22.0",
+        "@comet/eslint-config": "workspace:*",
         "@types/node": "^22.0.0",
         "eslint": "^8.0.0",
         "npm-run-all": "^4.1.5",
