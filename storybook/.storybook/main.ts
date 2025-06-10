@@ -1,9 +1,8 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
+import type { StorybookConfig } from "@storybook/react-vite";
 import * as path from "path";
 import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
-    framework: "@storybook/react-webpack5",
     stories: ["../src/**/*.@(mdx|stories.tsx)"],
     addons: [
         "@storybook/addon-controls",
@@ -30,8 +29,21 @@ const config: StorybookConfig = {
                 },
             },
         },
-        "@storybook/addon-webpack5-compiler-babel",
     ],
+    framework: {
+        name: "@storybook/react-vite",
+        options: {},
+    },
+    async viteFinal(config) {
+        // Merge custom configuration into the default config
+        const { mergeConfig } = await import("vite");
+
+        return mergeConfig(config, {
+            optimizeDeps: {
+                include: ["@comet/admin", "@comet/admin-theme", "@comet/admin-icons", "@comet/admin-date-time", "@emotion/react"],
+            },
+        });
+    },
     staticDirs: ["../public"],
     docs: {
         autodocs: true,
