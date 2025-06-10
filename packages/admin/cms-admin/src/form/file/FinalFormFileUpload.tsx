@@ -69,24 +69,21 @@ export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Mu
     ? FinalFormFileUploadMultipleFilesProps
     : FinalFormFileUploadSingleFileProps) &
     Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>> & {
-        /**
-         * The path to the file upload endpoint.
-         *
-         * Defaults to `/file-uploads/upload`.
-         */
-        uploadPath?: string;
+        uploadEndpoint?: string;
     };
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
     maxFiles,
-    uploadPath = "/file-uploads/upload",
+    uploadEndpoint: _uploadEndPoint,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
     const { apiUrl } = useCometConfig();
+
+    const uploadEndpoint = `${apiUrl}file-uploads/upload`;
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
     const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>[]>(() => {
@@ -153,7 +150,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
-                    const response = await fetch(`${apiUrl}${uploadPath}`, {
+                    const response = await fetch(uploadEndpoint, {
                         method: "POST",
                         body: formData,
                     });
