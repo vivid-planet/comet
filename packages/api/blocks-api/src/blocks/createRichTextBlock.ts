@@ -110,9 +110,18 @@ export function createRichTextBlock<LinkBlock extends Block>(
         }
 
         childBlocksInfo(): ChildBlockInfo[] {
-            return Object.values(this.draftContent.entityMap)
-                .filter((entity) => "childBlocksInfo" in entity.data)
-                .flatMap((entity) => entity.data.childBlocksInfo());
+            const ret: ChildBlockInfo[] = [];
+            Object.entries(this.draftContent.entityMap).map(([key, entity]) => {
+                if (entity.type === "LINK") {
+                    ret.push({
+                        visible: true,
+                        relJsonPath: ["draftContent", "entityMap", key, "data"],
+                        block: entity.data as BlockDataInterface,
+                        name: LinkBlock.name,
+                    });
+                }
+            });
+            return ret;
         }
     }
 
