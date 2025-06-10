@@ -3,11 +3,11 @@ import "@fontsource-variable/roboto-flex/full.css";
 import { MainContent } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { GlobalStyles } from "@mui/material";
-import type { Preview } from "@storybook/react";
-import type { GlobalTypes } from "@storybook/types";
+import type { Preview } from "@storybook/react-webpack5";
 import { type Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
+import { type GlobalTypes } from "storybook/internal/csf";
 
 import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
