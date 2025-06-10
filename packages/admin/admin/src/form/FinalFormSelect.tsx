@@ -15,7 +15,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
-    error?: Error | null;
+    loadingError?: Error | null;
 }
 
 const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
@@ -32,7 +32,7 @@ export const FinalFormSelect = <T,>({
     isAsync = false,
     options = [],
     loading = false,
-    error,
+    loadingError,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
@@ -62,7 +62,7 @@ export const FinalFormSelect = <T,>({
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment" | "error">) => {
+}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
@@ -100,7 +100,7 @@ export const FinalFormSelect = <T,>({
             {...selectProps}
             endAdornment={
                 <InputAdornment position="end">
-                    {error && <Error color="error" />}
+                    {loadingError && <Error color="error" />}
 
                     {endAdornment}
                 </InputAdornment>
@@ -142,12 +142,12 @@ export const FinalFormSelect = <T,>({
                     </MenuItem>
                 ))}
 
-            {loading === false && error == null && options.length === 0 && (
+            {loading === false && loadingError == null && options.length === 0 && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {noOptionsLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
-            {loading === false && error != null && (
+            {loading === false && loadingError != null && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {errorLabel}
                 </MenuItemDisabledOverrideOpacity>

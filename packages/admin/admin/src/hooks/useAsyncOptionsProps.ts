@@ -4,7 +4,7 @@ export interface AsyncOptionsProps<T> {
     isAsync: boolean;
     open: boolean;
     options: T[];
-    error: Error | null;
+    loadingError: Error | null;
     loading?: boolean;
     onOpen: (event: ChangeEvent) => void;
     onClose: (event: ChangeEvent) => void;
@@ -31,7 +31,7 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
     return {
         isAsync: true,
         open,
-        error,
+        loadingError: error,
         options,
         loading,
         onOpen: handleOpen,
