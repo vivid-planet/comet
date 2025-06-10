@@ -2,4 +2,4 @@
 "@comet/cli": minor
 ---
 
-add `AvailableBlockTypes` to generate-block-types which contains string union for all available block types
+comet generate-block-types generates now `AvailableBlockTypes` type, which contains a string union for all available block types
