@@ -23,16 +23,14 @@ import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
-import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductCategoriesPage as ProductCategoriesFuturePage } from "@src/products/future/ProductCategoriesPage";
-import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
+import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
-import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
@@ -254,37 +252,6 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/product-categories",
                             component: ProductCategoriesFuturePage,
-                        },
-                    },
-                ],
-            },
-            {
-                type: "collapsible",
-                primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
-                icon: <Snips />,
-                items: [
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-                        route: {
-                            path: "/products",
-                            component: ProductsPage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                        route: {
-                            path: "/product-categories",
-                            component: ProductCategoriesPage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
-                        route: {
-                            path: "/product-tags",
-                            component: ProductTagsPage,
                         },
                     },
                 ],
