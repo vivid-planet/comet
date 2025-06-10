@@ -121,7 +121,7 @@ export function CronJobsGrid() {
                         renderCell: ({ value }) => {
                             return value ? (
                                 <FormattedMessage
-                                    id="comet.pages.cronJobs.lastJobRun"
+                                    id="comet.pages.cronJobs.lastJobRun.cell"
                                     defaultMessage="{jobStatus}, {jobRuntime}"
                                     values={{
                                         jobStatus: <JobStatus status={value.status}>{value.status}</JobStatus>,
