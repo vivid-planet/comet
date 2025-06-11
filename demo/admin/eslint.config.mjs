@@ -6,11 +6,6 @@ const config = [
         ignores: ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
     },
     ...eslintConfigReact,
-    {
-        rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
-        },
-    },
 ];
 
 export default config;
