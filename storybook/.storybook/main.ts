@@ -8,6 +8,12 @@ const config: StorybookConfig = {
     addons: [
         "@storybook/addon-controls",
         {
+            name: "@storybook/addon-essentials",
+            options: {
+                actions: false,
+            },
+        },
+        {
             name: "@storybook/addon-docs",
             options: {
                 mdxPluginOptions: {

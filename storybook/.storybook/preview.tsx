@@ -1,20 +1,17 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { createCometTheme, MainContent, MuiThemeProvider } from "@comet/admin";
+import { MainContent } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
-import { createTheme as createMuiTheme, CssBaseline, GlobalStyles } from "@mui/material";
+import { GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
+import type { GlobalTypes } from "@storybook/types";
 import { type Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
 
+import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 import { previewGlobalStyles } from "./preview.styles";
-
-const themeOptions = {
-    comet: "Comet",
-    defaultMui: "Default MUI",
-};
 
 type LocaleKey = "de" | "en";
 
@@ -59,39 +56,48 @@ const messages = {
 function isLocaleKey(value: any): value is LocaleKey {
     return value === "de" || value === "en";
 }
+
+export const globalTypes: GlobalTypes = {
+    theme: {
+        description: "Global MUI Theme",
+        toolbar: {
+            title: "Theme",
+            icon: "paintbrush",
+            items: [
+                { value: ThemeOptions.Comet, right: "🟩", title: "Comet Theme" },
+                { value: ThemeOptions.Mui, right: "🟦", title: "Mui Theme" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+};
+
 const preview: Preview = {
     argTypes: {
-        theme: {
-            name: "Theme",
-            control: "select",
-            options: Object.values(themeOptions),
-        },
         locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
     },
-    args: { theme: Object.values(themeOptions)[0], locale: "en" },
+    args: { locale: "en" },
     decorators: [
+        ThemeProviderDecorator,
         (Story, context) => {
-            const { theme: selectedTheme, locale: selectedLocale } = context.args;
-            const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
+            const { locale: selectedLocale } = context.args;
 
             return (
-                <MuiThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
-                        <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
-                            <GlobalStyles styles={previewGlobalStyles} />
-                            <>
-                                {context.parameters.layout === "padded" ? (
-                                    <MainContent>
-                                        <Story />
-                                    </MainContent>
-                                ) : (
+                <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
+                    <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
+                        <GlobalStyles styles={previewGlobalStyles} />
+                        <>
+                            {context.parameters.layout === "padded" ? (
+                                <MainContent>
                                     <Story />
-                                )}
-                            </>
-                        </DateFnsLocaleProvider>
-                    </IntlProvider>
-                </MuiThemeProvider>
+                                </MainContent>
+                            ) : (
+                                <Story />
+                            )}
+                        </>
+                    </DateFnsLocaleProvider>
+                </IntlProvider>
             );
         },
     ],
