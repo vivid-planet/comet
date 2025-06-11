@@ -16,6 +16,7 @@ import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityC
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
+import { DataGridColumnsManagement } from "../../dataGrid/columnsManagement/DataGridColumnsManagement";
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
@@ -62,6 +63,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             columnSortedDescendingIcon: ArrowDown,
             columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             panel: DataGridPanel,
+            columnsManagement: DataGridColumnsManagement,
             ...component?.defaultProps?.slots,
         },
         slotProps: {
