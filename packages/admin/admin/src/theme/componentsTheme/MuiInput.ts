@@ -1,3 +1,4 @@
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiInput: GetMuiComponentTheme<"MuiInput"> = (component) => ({
@@ -6,4 +7,11 @@ export const getMuiInput: GetMuiComponentTheme<"MuiInput"> = (component) => ({
         disableUnderline: true,
         ...component?.defaultProps,
     },
+    styleOverrides: mergeOverrideStyles<"MuiInput">(component?.styleOverrides, {
+        root: {
+            ["&::before"]: {
+                borderBottom: "unset",
+            },
+        },
+    }),
 });

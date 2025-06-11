@@ -246,6 +246,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 width: 199,
                 paddingLeft: 0,
             },
+            [`& .${inputBaseClasses.root}`]: {
+                marginTop: spacing(1),
+            },
         },
         filterFormOperatorInput: {
             marginTop: spacing(3),
@@ -255,6 +258,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [breakpoints.up("md")]: {
                 marginTop: 0,
                 width: 110,
+            },
+            [`& .${inputBaseClasses.root}`]: {
+                marginTop: spacing(1),
             },
         },
         filterFormValueInput: {
@@ -279,6 +285,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 [`& > .${autocompleteClasses.input}`]: {
                     padding: `calc(${spacing(2)} - 1px)`,
                 },
+            },
+            [`& .${inputBaseClasses.root}`]: {
+                marginTop: spacing(1),
             },
         },
         panelFooter: {
