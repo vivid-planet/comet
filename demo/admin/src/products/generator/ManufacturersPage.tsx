@@ -1,6 +1,6 @@
 import { Stack, StackMainContent, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
+import { ManufacturersGrid } from "@src/products/generator/generated/ManufacturersGrid";
 import { useIntl } from "react-intl";
 
 export function ManufacturersPage() {

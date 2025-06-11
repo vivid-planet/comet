@@ -19,7 +19,7 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
+import { ProductVariantsGrid } from "@src/products/generator/generated/ProductVariantsGrid";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
