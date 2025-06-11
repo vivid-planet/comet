@@ -1597,15 +1597,34 @@ Example:
 
 ### Adapt to changes in ContentScopeProvider
 
-#### Use interface augmentation for ContentScope instead generics
+#### Use interface augmentation for ContentScope
 
-```diff title="admin/src/common/ContentScopeProvider.tsx"
+```diff title="admin/src/App.tsx"
 +   import { type ContentScope as BaseContentScope } from "@src/site-configs";
 
 +   declare module "@comet/cms-admin" {
 +       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 +       interface ContentScope extends BaseContentScope {}
 +   }
+
+    export function App() {
+```
+
+#### Preferable use ContentScopeProvider directly from Comet
+
+```diff title="admin/src/App.tsx"
+-   import { ContentScopeProvider } from "./common/ContentScopeProvider";
++   import { ContentScopeProvider } from "@comet/cms-admin";
+    // Delete `admin/src/common/ContentScopeProvider.tsx`
+```
+
+<details>
+
+<summary>However, if you need custom behavior, you can keep `admin/src/common/ContentScopeProvider.tsx` while skipping above change.</summary>
+
+Make sure to remove the generics:
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
 -   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
 -       return useContentScopeConfigLibrary(p);
 -   }
@@ -1616,15 +1635,7 @@ Example:
 +    <ContentScopeProviderLibrary>
 ```
 
-#### Directly pass allowedContentScopes to ContentScopeProvider
-
-```diff title="admin/src/common/ContentScopeProvider.tsx"
-    export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
--      // Remove code which creates `values` and `userContentScopes`
--      <ContentScopeProviderLibrary values={values} defaultValue={userContentScopes[0]}>
-+      <ContentScopeProviderLibrary values={user.allowedContentScopes} defaultValue={user.allowedContentScopes[0].scope}>
-    };
-```
+</details>
 
 ### Import `Button` from `@comet/admin` package
 
