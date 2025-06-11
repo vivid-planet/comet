@@ -1,6 +1,6 @@
 import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { Module } from "@nestjs/common";
+import { DynamicModule, Module } from "@nestjs/common";
 import { ProductColorResolver } from "@src/products/generated/product-color.resolver";
 import { ProductVariantsService } from "@src/products/generated/product-variants.service";
 
@@ -23,34 +23,40 @@ import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 
-@Module({
-    imports: [
-        MikroOrmModule.forFeature([
-            Product,
-            ProductCategory,
-            ProductTag,
-            ProductToTag,
-            ProductVariant,
-            ProductStatistics,
-            ProductColor,
-            Manufacturer,
-            FileUpload,
-            ManufacturerCountry,
-        ]),
-    ],
-    providers: [
-        ProductResolver,
-        ProductCategoryResolver,
-        ProductCategoriesService,
-        ProductTagResolver,
-        ProductVariantResolver,
-        ProductVariantsService,
-        ManufacturerResolver,
-        ManufacturerCountryResolver,
-        ProductToTagResolver,
-        ProductColorResolver,
-        CustomProductResolver,
-    ],
-    exports: [],
-})
-export class ProductsModule {}
+@Module({})
+export class ProductsModule {
+    static forRoot(mailerModule: DynamicModule): DynamicModule {
+        return {
+            module: ProductsModule,
+            imports: [
+                mailerModule,
+                MikroOrmModule.forFeature([
+                    Product,
+                    ProductCategory,
+                    ProductTag,
+                    ProductToTag,
+                    ProductVariant,
+                    ProductStatistics,
+                    ProductColor,
+                    Manufacturer,
+                    FileUpload,
+                    ManufacturerCountry,
+                ]),
+            ],
+            providers: [
+                ProductResolver,
+                ProductCategoryResolver,
+                ProductCategoriesService,
+                ProductTagResolver,
+                ProductVariantResolver,
+                ProductVariantsService,
+                ManufacturerResolver,
+                ManufacturerCountryResolver,
+                ProductToTagResolver,
+                ProductColorResolver,
+                CustomProductResolver,
+            ],
+            exports: [],
+        };
+    }
+}

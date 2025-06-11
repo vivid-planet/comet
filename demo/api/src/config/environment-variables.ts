@@ -123,6 +123,28 @@ export class EnvironmentVariables {
     S3_BUCKET: string;
 
     @IsString()
+    MAILER_HOST: string;
+
+    @Type(() => Number)
+    @IsInt()
+    MAILER_PORT: number;
+
+    @IsString()
+    MAILER_DEFAULT_SENDER: string;
+
+    @IsOptional()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsString({ each: true })
+    MAILER_SEND_ALL_MAILS_TO?: string[];
+
+    @IsOptional()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsString({ each: true })
+    MAILER_SEND_ALL_MAILS_BCC?: string;
+
+    @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")
     CDN_ORIGIN_CHECK_SECRET: string;
 
