@@ -1,5 +1,5 @@
 import { type BlockLoader, type BlockLoaderDependencies, recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@comet/site-nextjs";
-import { type AvailableBlockTypes } from "@src/blocks.generated";
+import { type AllBlocks } from "@src/blocks.generated";
 import { loader as newsDetailLoader } from "@src/news/blocks/NewsDetailBlock.loader";
 import { loader as newsListLoader } from "@src/news/blocks/NewsListBlock.loader";
 
@@ -9,7 +9,7 @@ declare module "@comet/site-nextjs" {
     }
 }
 
-const blockLoaders: Partial<Record<AvailableBlockTypes, BlockLoader>> = {
+const blockLoaders: Partial<Record<AllBlocks, BlockLoader>> = {
     NewsDetail: newsDetailLoader,
     NewsList: newsListLoader,
 };
