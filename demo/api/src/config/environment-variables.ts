@@ -142,7 +142,7 @@ export class EnvironmentVariables {
     @IsArray()
     @Transform(({ value }) => value.split(","))
     @IsString({ each: true })
-    MAILER_SEND_ALL_MAILS_BCC?: string;
+    MAILER_SEND_ALL_MAILS_BCC?: string[];
 
     @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")

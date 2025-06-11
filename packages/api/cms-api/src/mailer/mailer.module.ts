@@ -7,7 +7,7 @@ import { MailerService } from "./mailer.service";
 export type MailerModuleConfig = (SMTPTransport | SMTPTransport.Options) & {
     defaultSender: string;
     sendAllMailsTo?: string[];
-    sendAllMailsBcc?: string;
+    sendAllMailsBcc?: string[];
 };
 
 @Module({})
