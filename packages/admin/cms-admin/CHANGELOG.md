@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- 286fbfb: Added missing prop types to `FileUploadFieldProps` that are forwarded to `FinalFormFileUpload`, ensuring consistent typing and easier customization.
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-date-time@8.0.0-beta.6
+    - @comet/admin-rte@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Major Changes

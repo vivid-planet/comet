@@ -1,5 +1,13 @@
 # @comet/cms-api
 
+## 8.0.0-beta.6
+
+### Major Changes
+
+- c5de11c: Change S3 config for BlobStorage
+
+    Now the config has all fields from `S3ClientConfig` provided by `@aws-sdk/client-s3`, so you override all options in the project.
+
 ## 8.0.0-beta.5
 
 ### Major Changes
