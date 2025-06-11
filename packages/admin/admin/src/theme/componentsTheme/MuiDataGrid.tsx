@@ -5,6 +5,7 @@ import {
     checkboxClasses,
     iconButtonClasses,
     inputBaseClasses,
+    inputClasses,
     inputLabelClasses,
     nativeSelectClasses,
     svgIconClasses,
@@ -304,6 +305,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             [`& .${svgIconClasses.root}`]: {
                 fontSize: 16,
+            },
+
+            [`& .${inputClasses.underline}::before`]: {
+                borderBottom: "unset",
             },
 
             [`& .${buttonBaseClasses.root}`]: {
