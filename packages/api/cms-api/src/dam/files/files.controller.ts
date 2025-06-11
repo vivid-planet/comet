@@ -336,6 +336,15 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                     throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
                 }
 
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
+
                 res.writeHead(206, {
                     ...headers,
                     ...options?.overrideHeaders,
