@@ -1,5 +1,14 @@
 # @comet/admin-rte
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Patch Changes
