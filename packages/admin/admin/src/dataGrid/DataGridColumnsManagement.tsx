@@ -1,4 +1,5 @@
 // MUI's implementation: https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/components/columnsManagement/GridColumnsManagement.tsx
+import { PinLeft, PinRight } from "@comet/admin-icons";
 import {
     type ComponentsOverrides,
     type List as MuiList,
@@ -12,7 +13,7 @@ import { gridColumnVisibilityModelSelector, useGridApiContext, useGridSelector }
 import { type ChangeEvent } from "react";
 
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { Body, List, ListItem, ListItemTitle, Root, Switch } from "./DataGridColumnsManagement.sc";
+import { Body, List, ListItem, ListItemTitle, PinnedIconButton, Root, Switch } from "./DataGridColumnsManagement.sc";
 
 export type DataGridColumnsManagementProps = ThemedComponentBaseProps<{
     root: "div";
@@ -23,7 +24,7 @@ export type DataGridColumnsManagementProps = ThemedComponentBaseProps<{
     listItemTitle: typeof ListItemText;
 }>;
 
-export type DataGridColumnsManagementClassKey = "root" | "body" | "list" | "listItem" | "switch" | "listItemTitle";
+export type DataGridColumnsManagementClassKey = "root" | "body" | "list" | "listItem" | "switch" | "listItemTitle" | "pinnedButton";
 
 export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProps) => {
     const { sx, className, slotProps = {} } = useThemeProps({ props: inProps, name: "CometAdminDataGridColumnsManagement" });
@@ -72,6 +73,14 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                                 >
                                     {column.headerName || column.field}
                                 </ListItemTitle>
+                                <div>
+                                    <PinnedIconButton ownerState={{ active: false }}>
+                                        <PinLeft />
+                                    </PinnedIconButton>
+                                    <PinnedIconButton ownerState={{ active: true }}>
+                                        <PinRight />
+                                    </PinnedIconButton>
+                                </div>
                             </ListItem>
                         );
                     })}

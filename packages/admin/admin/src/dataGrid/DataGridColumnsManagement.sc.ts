@@ -1,4 +1,4 @@
-import { css, List as MuiList, ListItem as MuiListItem, ListItemText, Switch as MuiSwitch } from "@mui/material";
+import { css, IconButton, List as MuiList, ListItem as MuiListItem, ListItemText, Switch as MuiSwitch } from "@mui/material";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type DataGridColumnsManagementClassKey } from "./DataGridColumnsManagement";
@@ -45,5 +45,18 @@ export const Body = createComponentSlot("div")<DataGridColumnsManagementClassKey
         flex: 1 1;
         max-height: 400px;
         align-items: flex-start;
+    `,
+);
+
+type PinnedIconStyleProps = {
+    active: boolean;
+};
+
+export const PinnedIconButton = createComponentSlot(IconButton)<DataGridColumnsManagementClassKey, PinnedIconStyleProps>({
+    componentName: "DataGridColumnsManagement",
+    slotName: "pinnedButton",
+})(
+    ({ theme, ownerState }) => css`
+        color: ${ownerState.active ? theme.palette.primary.main : theme.palette.grey["200"]};
     `,
 );
