@@ -3,8 +3,8 @@ import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { MovePage } from "@comet/admin-icons";
 import { FormattedMessage } from "react-intl";
 
-import { useContentScope } from "../../contentScope/Provider";
 import { DocumentInterface, DocumentType } from "../../documents/types";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
@@ -25,7 +25,7 @@ export function MovePageMenuItem({ page }: Props) {
             }
         }
     `);
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const { allCategories, query, getDocumentTypesByCategory } = usePageTreeContext();
 
     if (allCategories.length <= 1) {

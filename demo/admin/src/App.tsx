@@ -112,6 +112,7 @@ export function App() {
                                                         pageTreeCategories={pageTreeCategories}
                                                         pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                         additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
+                                                        pageTreeScopeParts={["domain", "language"]}
                                                     >
                                                         <ErrorDialogHandler />
                                                         <CurrentUserProvider>
