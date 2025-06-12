@@ -87,6 +87,7 @@ export interface FinalFormRangeInputProps
     separator?: ReactNode;
     disableSlider?: boolean;
     sliderProps?: Omit<SliderProps, "min" | "max">;
+    disabled?: boolean;
 }
 
 export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
@@ -100,6 +101,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         sliderProps,
         input: { name, onChange, value: fieldValue },
         slotProps,
+        disabled,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFinalFormRangeInput" });
 
@@ -142,6 +144,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                                 type: "number",
                                 placeholder: min.toString(),
                             }}
+                            disabled={disabled}
                             startAdornment={startAdornment}
                             endAdornment={endAdornment}
                             onBlur={() => {
@@ -171,6 +174,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                                 type: "number",
                                 placeholder: max.toString(),
                             }}
+                            disabled={disabled}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
@@ -199,6 +203,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                         value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
                         onChange={handleSliderChange}
                         {...sliderProps}
+                        disabled={disabled || sliderProps?.disabled}
                     />
                 </SliderWrapper>
             )}
