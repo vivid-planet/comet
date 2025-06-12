@@ -15,12 +15,12 @@ export function ManufacturersPage() {
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "manufacturers.addManufacturer", defaultMessage: "Add Manufacturer" })}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
+                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,@comet/no-jsx-string-literals */}
                     <StackMainContent>TODO: Add manufacturer form</StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "manufacturers.editManufacturer", defaultMessage: "Edit Manufacturer" })}>
                     {(selectedId) => (
-                        // eslint-disable-next-line @calm/react-intl/missing-formatted-message
+                        // eslint-disable-next-line @calm/react-intl/missing-formatted-message,@comet/no-jsx-string-literals
                         <StackMainContent>TODO: Edit manufacturer form</StackMainContent>
                     )}
                 </StackPage>

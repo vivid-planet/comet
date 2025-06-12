@@ -7,6 +7,7 @@ import {
     useCurrentUser,
 } from "@comet/cms-admin";
 import { type ContentScope as BaseContentScope } from "@src/site-configs";
+import { FormattedMessage } from "react-intl";
 
 declare module "@comet/cms-admin" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -29,7 +30,7 @@ export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProp
     if (user.allowedContentScopes.length === 0) {
         return (
             <>
-                Error: user does not have access to any scopes.
+                <FormattedMessage id="comet.admin.contentScopeProvider.noScopes" defaultMessage="Error: user does not have access to any scopes." />
                 {user.impersonated && <StopImpersonationButton />}
             </>
         );

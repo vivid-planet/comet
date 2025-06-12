@@ -15,7 +15,7 @@ export function ProductCategoriesHandmadePage() {
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProductCategory", defaultMessage: "Add product category" })}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
+                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message,@comet/no-jsx-string-literals */}
                     <StackMainContent>TODO: Add product category form</StackMainContent>
                 </StackPage>
             </StackSwitch>
