@@ -71,3 +71,11 @@ export class FindUsersArgs extends OffsetBasedPaginationArgs {
     @Type(() => UserPermissionsUserSort)
     sort?: UserPermissionsUserSort[];
 }
+
+@ArgsType()
+export class FindUsersResolverArgs extends FindUsersArgs {
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    permission?: string;
+}

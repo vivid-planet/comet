@@ -385,7 +385,7 @@ type Query {
   kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): UserPermissionsUser!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
+  userPermissionsUsers(search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!], offset: Int! = 0, limit: Int! = 25, permission: String): UserPermissionPaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!

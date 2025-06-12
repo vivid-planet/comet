@@ -7,16 +7,17 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
+    ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
-import { Chip, IconButton, Typography } from "@mui/material";
+import { Chip, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, type GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
 import { type GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
-import { type ReactNode, useContext } from "react";
+import { type ReactNode, useContext, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useUserPermissionCheck } from "./hooks/currentUser";
@@ -26,14 +27,17 @@ import {
     type GQLUserGridQuery,
     type GQLUserGridQueryVariables,
 } from "./UserGrid.generated";
+import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
+    customFilters: ReactNode;
     toolbarAction: ReactNode;
 }
-function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
+function UserPermissionsUserGridToolbar({ customFilters, toolbarAction }: UserPermissionsUserGridToolbarProps) {
     return (
         <DataGridToolbar>
             <GridToolbarQuickFilter />
+            {customFilters && <>{customFilters}</>}
             <GridFilterButton />
             <FillSpace />
             {toolbarAction && <>{toolbarAction}</>}
@@ -179,10 +183,18 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         ),
     });
 
+    const [permissionFilter, setPermissionFilter] = useState<string | null>(null);
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int!, $limit: Int!, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
-                users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
+            query UserGrid(
+                $offset: Int!
+                $limit: Int!
+                $filter: UserPermissionsUserFilter
+                $sort: [UserPermissionsUserSort!]
+                $search: String
+                $permission: String
+            ) {
+                users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search, permission: $permission) {
                     nodes {
                         ...UserForGrid
                     }
@@ -200,6 +212,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         {
             variables: {
                 ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+                permission: permissionFilter,
                 offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                 limit: dataGridProps.paginationModel.pageSize ?? 0,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
@@ -217,6 +230,21 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         { skip: !isAllowed("userPermissions") },
     );
 
+    const CustomFilters = (
+        <ToolbarItem>
+            <Typography variant="body1">
+                <FormattedMessage id="comet.userPermissions.permissionFilter" defaultMessage="Permission" />
+            </Typography>
+            <Select value={permissionFilter} onChange={(e) => setPermissionFilter(e.target.value)} sx={{ marginLeft: 1, minWidth: 100 }}>
+                {availablePermissionsAndContentScopes?.permissions.map((permission) => (
+                    <MenuItem key={permission} value={permission}>
+                        {camelCaseToHumanReadable(permission)}
+                    </MenuItem>
+                ))}
+            </Select>
+        </ToolbarItem>
+    );
+
     if (error) throw new Error(error.message);
 
     return (
@@ -231,6 +259,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             }}
             slotProps={{
                 toolbar: {
+                    customFilters: CustomFilters,
                     toolbarAction: null,
                 } as UserPermissionsUserGridToolbarProps,
             }}
