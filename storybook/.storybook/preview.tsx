@@ -1,61 +1,12 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { MainContent } from "@comet/admin";
-import { DateFnsLocaleProvider } from "@comet/admin-date-time";
-import { GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
 import type { GlobalTypes } from "@storybook/types";
-import { type Locale as DateFnsLocale } from "date-fns";
-import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { IntlProvider } from "react-intl";
 
+import { IntlDecorator, LocaleOptions } from "./decorators/IntlProvider.decorator";
+import { LayoutDecorator, LayoutOptions } from "./decorators/Layout.decorator";
 import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
-import { previewGlobalStyles } from "./preview.styles";
-
-type LocaleKey = "de" | "en";
-
-const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
-    de: deLocale,
-    en: enLocale,
-};
-
-// @TODO: use messages from lang-package
-const messages = {
-    en: {
-        "comet.core.deleteMutation.promptDelete": "Delete data?",
-        "comet.core.deleteMutation.yes": "Yes",
-        "comet.core.deleteMutation.no": "No",
-        "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-        "comet.core.editDialog.edit": "Edit",
-        "comet.core.editDialog.add": "Add",
-        "comet.core.editDialog.cancel": "Cancel",
-        "comet.core.editDialog.save": "Save",
-        "comet.core.finalForm.abort": "Cancel",
-        "comet.core.finalForm.save": "Save",
-        "comet.core.router.confirmationDialog.confirm": "OK",
-        "comet.core.router.confirmationDialog.abort": "Cancel",
-        "comet.core.stack.stack.back": "Back",
-        "comet.core.table.addButton": "Add",
-        "comet.core.table.excelExportButton": "Export",
-        "comet.core.table.deleteButton": "Delete",
-        "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
-        "comet.core.table.localChangesToolbar.save": "Save",
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-        "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-        "comet.core.table.tableQuery.error": "Error :( {error}",
-    },
-    de: {
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-        "comet.core.table.tableQuery.error": "Fehler :( {error}",
-    },
-};
-
-function isLocaleKey(value: any): value is LocaleKey {
-    return value === "de" || value === "en";
-}
 
 export const globalTypes: GlobalTypes = {
     theme: {
@@ -71,38 +22,38 @@ export const globalTypes: GlobalTypes = {
             dynamicTitle: true,
         },
     },
+    locale: {
+        name: "Locale",
+        description: "Locale",
+        toolbar: {
+            title: "Locale",
+            icon: "globe",
+            items: [
+                { value: LocaleOptions.English, title: "English", right: "🇺🇸" },
+                { value: LocaleOptions.German, title: "Deutsch", right: "🇩🇪" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    layout: {
+        description: "Layout",
+        toolbar: {
+            title: "Layout",
+            icon: "switchalt",
+            items: [
+                { value: LayoutOptions.Padded, title: "Padded" },
+                { value: LayoutOptions.Default, title: "Default" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
 };
 
 const preview: Preview = {
-    argTypes: {
-        locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
-    },
-    args: { locale: "en" },
-    decorators: [
-        ThemeProviderDecorator,
-        (Story, context) => {
-            const { locale: selectedLocale } = context.args;
-
-            return (
-                <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
-                    <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
-                        <GlobalStyles styles={previewGlobalStyles} />
-                        <>
-                            {context.parameters.layout === "padded" ? (
-                                <MainContent>
-                                    <Story />
-                                </MainContent>
-                            ) : (
-                                <Story />
-                            )}
-                        </>
-                    </DateFnsLocaleProvider>
-                </IntlProvider>
-            );
-        },
-    ],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator],
     parameters: {
-        layout: "padded",
         options: {
             /**
              * Note: according to: https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy#sorting-stories
