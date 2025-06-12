@@ -35,6 +35,9 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
+    private manualPermissions: { userId: string; permission: string }[] | undefined;
+    private availablePermissions: string[] | undefined;
+
     async getAvailableContentScopes(): Promise<ContentScope[]> {
         if (this.options.availableContentScopes) {
             if (typeof this.options.availableContentScopes === "function") {
@@ -46,21 +49,24 @@ export class UserPermissionsService {
     }
 
     async getAvailablePermissions(): Promise<string[]> {
-        return [
-            ...new Set(
-                [
-                    ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                ]
-                    .flatMap((p) => p.meta.requiredPermission)
-                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
-                    .concat(["impersonation"])
-                    .filter((p) => p !== DisablePermissionCheck)
-                    .sort(),
-            ),
-        ];
+        if (this.availablePermissions === undefined) {
+            this.availablePermissions = [
+                ...new Set(
+                    [
+                        ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ]
+                        .flatMap((p) => p.meta.requiredPermission)
+                        .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
+                        .concat(["impersonation"])
+                        .filter((p) => p !== DisablePermissionCheck)
+                        .sort(),
+                ),
+            ];
+        }
+        return this.availablePermissions;
     }
 
     getUserService(): UserPermissionsUserServiceInterface | undefined {
@@ -84,6 +90,23 @@ export class UserPermissionsService {
                 throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
             }
         });
+    }
+
+    async hasPermission(user: User, permission: string, refreshCache = true): Promise<boolean> {
+        const availablePermissions = await this.getAvailablePermissions();
+        if (this.accessControlService.getPermissionsForUser) {
+            const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
+            if (permissionsByRule === UserPermissions.allPermissions) return true;
+            if (permissionsByRule.some((p) => p.permission === permission)) return true;
+        }
+        if (this.manualPermissions === undefined || refreshCache) {
+            this.manualPermissions = (await this.permissionRepository.find({ permission: { $in: availablePermissions } }))
+                .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+                .map((p) => ({ userId: p.userId, permission: p.permission }));
+        }
+        if (this.manualPermissions.some((p) => p.userId === user.id && p.permission === permission)) return true;
+
+        return false;
     }
 
     async getPermissions(user: User): Promise<UserPermission[]> {

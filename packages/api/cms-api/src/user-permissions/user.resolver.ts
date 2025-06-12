@@ -5,8 +5,9 @@ import { PaginatedResponseFactory } from "../common/pagination/paginated-respons
 import { AbstractAccessControlService } from "./access-control.service";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
-import { FindUsersArgs } from "./dto/paginated-user-list";
+import { FindUsersResolverArgs } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
+import { User } from "./interfaces/user";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ObjectType()
@@ -23,9 +24,27 @@ export class UserResolver {
     }
 
     @Query(() => UserPermissionPaginatedUserList)
-    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionPaginatedUserList> {
-        const [users, totalCount] = await this.userService.findUsers(args);
-        return new UserPermissionPaginatedUserList(users, totalCount, args);
+    async userPermissionsUsers(@Args() args: FindUsersResolverArgs): Promise<UserPermissionPaginatedUserList> {
+        if (args.permission) {
+            // If a permission filter is provided, we need to get all users and filter them
+            const filteredUsers: User[] = [];
+            let offset = 0;
+            let users: User[] = [];
+            do {
+                [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
+                for (let i = 0; i < users.length; i++) {
+                    // Refresh cache (third argument) only for the first user in the first batch
+                    if (await this.userService.hasPermission(users[i], args.permission, offset === 0 && i === 0)) {
+                        filteredUsers.push(users[i]);
+                    }
+                }
+                offset += users.length;
+            } while (users.length > 0);
+            return new UserPermissionPaginatedUserList(filteredUsers.slice(args.offset, args.offset + args.limit), filteredUsers.length);
+        } else {
+            const [users, totalCount] = await this.userService.findUsers(args);
+            return new UserPermissionPaginatedUserList(users, totalCount);
+        }
     }
 
     @ResolveField(() => Int)
