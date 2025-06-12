@@ -1,4 +1,4 @@
-import { create, type ThemeVars } from "@storybook/theming";
+import { create, type ThemeVars } from "storybook/theming";
 
 import CometLogo from "./assets/comet-logo-header.svg";
 

@@ -1,7 +1,7 @@
 import { Button, InlineAlert } from "@comet/admin";
 import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
 import { Box } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 type Story = StoryObj<typeof InlineAlert>;
 

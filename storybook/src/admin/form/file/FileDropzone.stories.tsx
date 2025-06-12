@@ -1,6 +1,6 @@
 import { FileDropzone, type FileDropzoneProps } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { type Meta } from "@storybook/react";
+import { type Meta } from "@storybook/react-webpack5";
 import { useState } from "react";
 
 type FileRejections = Parameters<Required<FileDropzoneProps>["onDropRejected"]>[0];
