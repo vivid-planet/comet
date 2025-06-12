@@ -68,7 +68,7 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /
                     </Typography>
 
                     <Link href="https://www.vivid-planet.com" target="_blank" underline="hover">
-                        {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
+                        {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message, @comet/no-jsx-string-literals*/}
                         <Typography>www.vivid-planet.com</Typography>
                     </Link>
                 </DialogContent>

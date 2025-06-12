@@ -46,6 +46,7 @@ import {
 } from "@comet/cms-admin";
 import { Box, Grid, MenuItem, Typography } from "@mui/material";
 import { type ReactNode, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { RichTextBlock } from "./blocks/RichTextBlock";
 
@@ -121,23 +122,30 @@ export function ComponentDemo() {
                         }}
                     >
                         <Typography variant="h2" gutterBottom>
-                            Basic Blocks
+                            <FormattedMessage id="demo.componentDemo.basicBlocks" defaultMessage="Basic Blocks" />
                         </Typography>
 
                         <BlockAdminComponentSectionGroup title="Grouped Section Headline">
                             <BlockAdminComponentSection>
-                                <Typography variant="subtitle1">Label</Typography>
-                            </BlockAdminComponentSection>
-
-                            <BlockAdminComponentSection>
-                                <Typography variant="caption">
-                                    Infotext/Caption Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                    Aenean massa.
+                                <Typography variant="subtitle1">
+                                    <FormattedMessage id="demo.componentDemo.groupedSectionHeadline" defaultMessage="Label" />
                                 </Typography>
                             </BlockAdminComponentSection>
 
                             <BlockAdminComponentSection>
-                                <BlockAdminComponentPaper>Card with any content</BlockAdminComponentPaper>
+                                <Typography variant="caption">
+                                    <FormattedMessage
+                                        id="demo.componentDemo.groupedSectionBody"
+                                        defaultMessage="Infotext/Caption Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                    Aenean massa."
+                                    />
+                                </Typography>
+                            </BlockAdminComponentSection>
+
+                            <BlockAdminComponentSection>
+                                <BlockAdminComponentPaper>
+                                    <FormattedMessage id="demo.componentDemo.cardWithContent" defaultMessage="Card with any content" />
+                                </BlockAdminComponentPaper>
                             </BlockAdminComponentSection>
                         </BlockAdminComponentSectionGroup>
 
@@ -151,9 +159,15 @@ export function ComponentDemo() {
                             <TextField name="text" placeholder="Input" fullWidth />
 
                             <SelectField name="select" fullWidth>
-                                <MenuItem value="Option 1">Option 1</MenuItem>
-                                <MenuItem value="Option 2">Option 2</MenuItem>
-                                <MenuItem value="Option 3">Option 3</MenuItem>
+                                <MenuItem value="Option 1">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 1 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 2 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 3 }} />
+                                </MenuItem>
                             </SelectField>
 
                             <TextField name="text" label="Input with label" fullWidth />
@@ -161,43 +175,81 @@ export function ComponentDemo() {
                             <TextField name="textDisabled" label="Input disabled" placeholder="Input" fullWidth disabled />
 
                             <SelectField name="select" label="Select with label" fullWidth>
-                                <MenuItem value="Option 1">Option 1</MenuItem>
-                                <MenuItem value="Option 2">Option 2</MenuItem>
-                                <MenuItem value="Option 3">Option 3</MenuItem>
+                                <MenuItem value="Option 1">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 1 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 2 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 3 }} />
+                                </MenuItem>
                             </SelectField>
 
                             <SelectField name="selectDisabled" label="SelectField disabled" fullWidth disabled>
-                                <MenuItem value="Option 1">Option 1</MenuItem>
-                                <MenuItem value="Option 2">Option 2</MenuItem>
-                                <MenuItem value="Option 3">Option 3</MenuItem>
+                                <MenuItem value="Option 1">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 1 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 2 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 3 }} />
+                                </MenuItem>
                             </SelectField>
 
                             <SelectField name="select" label="Select">
-                                <MenuItem value="Option 1">Option 1</MenuItem>
-                                <MenuItem value="Option 2">Option 2</MenuItem>
-                                <MenuItem value="Option 3">Option 3</MenuItem>
+                                <MenuItem value="Option 1">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 1 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 2 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 3 }} />
+                                </MenuItem>
                             </SelectField>
 
                             <SelectField name="select" label="inline">
-                                <MenuItem value="Option 1">Option 1</MenuItem>
-                                <MenuItem value="Option 2">Option 2</MenuItem>
-                                <MenuItem value="Option 3">Option 3</MenuItem>
+                                <MenuItem value="Option 1">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 1 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 2 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 3 }} />
+                                </MenuItem>
                             </SelectField>
 
                             <SelectField
                                 name="select"
                                 label={
-                                    <>
-                                        items{" "}
-                                        <Typography color="error" component="span">
-                                            Fix <code>min-width</code> problem
-                                        </Typography>
-                                    </>
+                                    <FormattedMessage
+                                        id="demo.componentDemo.itemsMinWith"
+                                        defaultMessage="items <red>Fix <code>min-width</code> problem</red>"
+                                        values={{
+                                            red: (children: ReactNode) => (
+                                                <Typography color="error" component="span">
+                                                    {children}
+                                                </Typography>
+                                            ),
+                                            code: (children: ReactNode) => {
+                                                return <code>{children}</code>;
+                                            },
+                                        }}
+                                    />
                                 }
                             >
-                                <MenuItem value="Option 1">1</MenuItem>
-                                <MenuItem value="Option 2">2</MenuItem>
-                                <MenuItem value="Option 3">3</MenuItem>
+                                <MenuItem value="Option 1">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 1 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 2 }} />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <FormattedMessage id="demo.componentDemo.option" defaultMessage="Option {option}" values={{ option: 3 }} />
+                                </MenuItem>
                             </SelectField>
 
                             <SelectField name="select-custom" label="Custom select" fullWidth>
@@ -317,7 +369,7 @@ export function ComponentDemo() {
                         }}
                     >
                         <Typography variant="h2" gutterBottom>
-                            Action Blocks
+                            <FormattedMessage id="demo.componentDemo.actionBlocks" defaultMessage="Action Blocks" />
                         </Typography>
 
                         <BlockAdminComponentSection>
@@ -333,12 +385,14 @@ export function ComponentDemo() {
 
                         <BlockAdminComponentSection>
                             <BlockAdminComponentButton startIcon={<Add />} variant="primary">
-                                Action Primary
+                                <FormattedMessage id="demo.componentDemo.actionPrimary" defaultMessage="Action Primary" />
                             </BlockAdminComponentButton>
                         </BlockAdminComponentSection>
 
                         <BlockAdminComponentSection>
-                            <BlockAdminComponentButton startIcon={<Add />}>Action Default</BlockAdminComponentButton>
+                            <BlockAdminComponentButton startIcon={<Add />}>
+                                <FormattedMessage id="demo.componentDemo.actionDefault" defaultMessage="Action Default" />
+                            </BlockAdminComponentButton>
                         </BlockAdminComponentSection>
 
                         <BlockAdminComponentSection>
@@ -351,7 +405,7 @@ export function ComponentDemo() {
                         </BlockAdminComponentSection>
 
                         <Typography variant="h2" gutterBottom>
-                            Collection Blocks
+                            <FormattedMessage id="demo.componetDemo.collectionBlocks" defaultMessage="Collection Blocks" />
                         </Typography>
 
                         <BlockAdminComponentSection title="List Block">
@@ -375,7 +429,7 @@ export function ComponentDemo() {
                     </Grid>
                     <Grid size={3}>
                         <Typography variant="h2" gutterBottom>
-                            Compounds
+                            <FormattedMessage id="demo.componentDemo.compounds" defaultMessage="Compounds" />
                         </Typography>
 
                         <BlockAdminComponentSection>
@@ -394,14 +448,38 @@ export function ComponentDemo() {
                                     }}
                                 >
                                     <SelectField name="aspectRatio" label="Aspect ratio">
-                                        <MenuItem value="2:3">2:3</MenuItem>
-                                        <MenuItem value="4:3">4:3</MenuItem>
-                                        <MenuItem value="16:9">16:9</MenuItem>
+                                        <MenuItem value="2:3">
+                                            <FormattedMessage id="demo.componentDemo.aspectRatio2to3" defaultMessage="2:3" />
+                                        </MenuItem>
+                                        <MenuItem value="4:3">
+                                            <FormattedMessage id="demo.componentDemo.aspectRatio4to3" defaultMessage="4:3" />
+                                        </MenuItem>
+                                        <MenuItem value="16:9">
+                                            <FormattedMessage id="demo.componentDemo.aspectRatio16to9" defaultMessage="16:9" />
+                                        </MenuItem>
                                     </SelectField>
                                     <SelectField name="overlay" label="Overlay">
-                                        <MenuItem value="0%">0%</MenuItem>
-                                        <MenuItem value="10%">10%</MenuItem>
-                                        <MenuItem value="20%">20%</MenuItem>
+                                        <MenuItem value="0%">
+                                            <FormattedMessage
+                                                id="demo.componentDemo.overlayPercent"
+                                                defaultMessage="{percentValue} %"
+                                                values={{ percentValue: 0 }}
+                                            />
+                                        </MenuItem>
+                                        <MenuItem value="10%">
+                                            <FormattedMessage
+                                                id="demo.componentDemo.overlayPercent"
+                                                defaultMessage="{percentValue} %"
+                                                values={{ percentValue: 10 }}
+                                            />
+                                        </MenuItem>
+                                        <MenuItem value="20%">
+                                            <FormattedMessage
+                                                id="demo.componentDemo.overlayPercent"
+                                                defaultMessage="{percentValue} %"
+                                                values={{ percentValue: 20 }}
+                                            />
+                                        </MenuItem>
                                     </SelectField>
 
                                     <SwitchField name="shadow" fieldLabel="Shadow" />

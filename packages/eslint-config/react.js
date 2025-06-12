@@ -123,6 +123,7 @@ const config = [
         },
         rules: {
             "@comet/no-private-sibling-import": "error",
+            "@comet/no-jsx-string-literals": "error",
         },
     },
 ];
