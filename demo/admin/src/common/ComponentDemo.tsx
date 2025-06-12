@@ -3,6 +3,7 @@ import {
     CheckboxListField,
     Field,
     FinalForm,
+    FinalFormToggleButtonGroup,
     MainContent,
     RadioGroupField,
     SelectField,
@@ -40,7 +41,6 @@ import {
     createListBlock,
     createOptionalBlock,
     DamImageBlock,
-    FinalFormToggleButtonGroup,
     PixelImageBlock,
     resolveNewState,
 } from "@comet/cms-admin";
@@ -294,15 +294,15 @@ export function ComponentDemo() {
                                 label="Button group multirow"
                                 component={FinalFormToggleButtonGroup}
                                 options={[
-                                    { value: "topLeft", icon: <FocusPointNorthwest /> },
-                                    { value: "topMiddle", icon: <FocusPointNorth /> },
-                                    { value: "topRight", icon: <FocusPointNortheast /> },
-                                    { value: "middleLeft", icon: <FocusPointWest /> },
-                                    { value: "center", icon: <FocusPointCenter /> },
-                                    { value: "middleRight", icon: <FocusPointEast /> },
-                                    { value: "bottomLeft", icon: <FocusPointSouthwest /> },
-                                    { value: "bottomMiddle", icon: <FocusPointSouth /> },
-                                    { value: "bottomRight", icon: <FocusPointSoutheast /> },
+                                    { value: "topLeft", label: <FocusPointNorthwest /> },
+                                    { value: "topMiddle", label: <FocusPointNorth /> },
+                                    { value: "topRight", label: <FocusPointNortheast /> },
+                                    { value: "middleLeft", label: <FocusPointWest /> },
+                                    { value: "center", label: <FocusPointCenter /> },
+                                    { value: "middleRight", label: <FocusPointEast /> },
+                                    { value: "bottomLeft", label: <FocusPointSouthwest /> },
+                                    { value: "bottomMiddle", label: <FocusPointSouth /> },
+                                    { value: "bottomRight", label: <FocusPointSoutheast /> },
                                 ]}
                                 optionsPerRow={3}
                                 fullWidth
