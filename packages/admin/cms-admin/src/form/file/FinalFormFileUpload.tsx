@@ -68,11 +68,14 @@ type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<
 export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
     ? FinalFormFileUploadMultipleFilesProps
     : FinalFormFileUploadSingleFileProps) &
-    Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>>;
+    Partial<FileSelectProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>> & {
+        uploadEndpoint?: string;
+    };
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
     maxFiles,
+    uploadEndpoint,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
@@ -145,7 +148,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
-                    const response = await fetch(`${apiUrl}/file-uploads/upload`, {
+                    const response = await fetch(uploadEndpoint ?? `${apiUrl}/file-uploads/upload`, {
                         method: "POST",
                         body: formData,
                     });
