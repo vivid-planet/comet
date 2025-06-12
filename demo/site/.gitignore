@@ -39,6 +39,7 @@ schema.json
 block-meta.json
 src/**/*.generated.ts
 src/site-configs.d.ts
+src/**/*.scss.d.ts
 
 public/sitemap.xml
 public/robots.txt
