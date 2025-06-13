@@ -1,5 +1,6 @@
 # @comet/cms-api
 
+<<<<<<< HEAD
 ## 8.0.0-beta.5
 
 ### Major Changes
@@ -194,6 +195,13 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+=======
+## 7.22.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.22.0
+>>>>>>> main
 
 ## 7.21.1
 
@@ -2193,9 +2201,15 @@
 
     In the API:
 
+<<<<<<< HEAD
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
     - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+=======
+    -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
+    -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
+>>>>>>> main
 
     In the Admin:
 
