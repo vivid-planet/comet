@@ -8,14 +8,14 @@ import { generateCrud } from "../generate-crud";
 
 @Entity()
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
-    return { language: entity.langauge };
+    return { language: entity.language };
 })
 export class TestEntityWithScopedEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
     @Property({ columnType: "text" })
-    langauge: string;
+    language: string;
 }
 
 describe("GenerateCrud with ScopedEntity", () => {
