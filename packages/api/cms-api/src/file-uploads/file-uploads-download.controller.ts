@@ -7,6 +7,7 @@ import {
     GoneException,
     Headers,
     Inject,
+    Logger,
     NotFoundException,
     Param,
     Res,
@@ -16,7 +17,7 @@ import {
 import { Response } from "express";
 import mime from "mime";
 import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
@@ -37,6 +38,7 @@ import { FileUploadsService } from "./file-uploads.service";
 export function createFileUploadsDownloadController(options: { public: boolean }): Type<unknown> {
     @Controller("file-uploads")
     class BaseFileUploadsDownloadController {
+        protected readonly logger = new Logger(BaseFileUploadsDownloadController.name);
         constructor(
             @InjectRepository(FileUpload) private readonly fileUploadsRepository: EntityRepository<FileUpload>,
             @Inject(BlobStorageBackendService) private readonly blobStorageBackendService: BlobStorageBackendService,
@@ -77,7 +79,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             };
 
             // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
-            let stream: NodeJS.ReadableStream;
+            let stream: Readable;
 
             if (range) {
                 const { start, end, contentLength } = calculatePartialRanges(file.size, range);
@@ -97,6 +99,15 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     contentLength,
                 );
 
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
+
                 res.writeHead(206, {
                     ...headers,
                     "accept-ranges": "bytes",
@@ -105,6 +116,15 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 });
             } else {
                 stream = await this.blobStorageBackendService.getFile(this.config.directory, createHashedPath(file.contentHash));
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
 
                 res.writeHead(200, headers);
             }
@@ -189,13 +209,17 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
     if (options.public) {
         @DisableCometGuards()
-        class PublicFileUploadsDownloadController extends BaseFileUploadsDownloadController {}
+        class PublicFileUploadsDownloadController extends BaseFileUploadsDownloadController {
+            protected readonly logger = new Logger(PublicFileUploadsDownloadController.name);
+        }
 
         return PublicFileUploadsDownloadController;
     }
 
     @RequiredPermission("fileUploads", { skipScopeCheck: true })
-    class PrivateFileUploadsDownloadController extends BaseFileUploadsDownloadController {}
+    class PrivateFileUploadsDownloadController extends BaseFileUploadsDownloadController {
+        protected readonly logger = new Logger(PrivateFileUploadsDownloadController.name);
+    }
 
     return PrivateFileUploadsDownloadController;
 }
