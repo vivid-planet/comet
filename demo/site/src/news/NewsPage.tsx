@@ -50,7 +50,7 @@ export function NewsPage({ initialData }: { initialData: GQLNewsIndexPageQuery["
                                     setError((await response.json()).message);
                                 }
                             } catch (e) {
-                                setError(e.message);
+                                setError(e instanceof Error ? e.message : String(e));
                             }
                         }}
                     >

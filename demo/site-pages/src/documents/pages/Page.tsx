@@ -46,7 +46,7 @@ export async function loader({
     client: GraphQLClient;
     pageTreeNodeId: string;
     scope: GQLPageTreeNodeScopeInput;
-}): Promise<unknown> {
+}): Promise<GQLPageQuery> {
     return client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
@@ -54,7 +54,7 @@ export async function loader({
     });
 }
 
-export default function Page(props: GQLPageQuery): JSX.Element {
+export function Page(props: GQLPageQuery): JSX.Element {
     const document = props.pageContent?.document;
 
     return (

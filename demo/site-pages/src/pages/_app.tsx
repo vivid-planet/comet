@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         -webkit-text-size-adjust: none;
         color: ${({ theme }) => theme.palette.text.primary};
-        font-family: ${({ theme }) => theme.fonts.primary};
+        //font-family: ${({ theme }) => theme.fonts.primary};
         font-weight: 400;
     }
 `;
