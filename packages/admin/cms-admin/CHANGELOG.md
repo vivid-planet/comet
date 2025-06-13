@@ -1,5 +1,31 @@
 # @comet/cms-admin
 
+## 7.23.0
+
+### Minor Changes
+
+-   afaa49d6e: Page Tree: Add support for scope parts
+
+    **Example**
+
+    ```tsx
+    <CmsBlockContextProvider
+        // Dimension "domain" is used for the page tree scope
+        pageTreeScopeParts={["domain"]}
+    >
+        {/* ... */}
+    </CmsBlockContextProvider>
+    ```
+
+### Patch Changes
+
+-   @comet/admin@7.23.0
+-   @comet/admin-date-time@7.23.0
+-   @comet/admin-icons@7.23.0
+-   @comet/admin-rte@7.23.0
+-   @comet/admin-theme@7.23.0
+-   @comet/blocks-admin@7.23.0
+
 ## 7.22.0
 
 ### Minor Changes
