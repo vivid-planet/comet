@@ -1,8 +1,6 @@
-import { FileUpload } from "@comet/cms-api";
+import { FileUpload, MailerModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Module } from "@nestjs/common";
-import { ProductColorResolver } from "@src/products/generated/product-color.resolver";
-import { ProductVariantsService } from "@src/products/generated/product-variants.service";
+import { Module } from "@nestjs/common";
 
 import { CustomProductResolver } from "./custom-product.resolver";
 import { Manufacturer } from "./entities/manufacturer.entity";
@@ -19,44 +17,41 @@ import { ManufacturerCountryResolver } from "./generated/manufacturer-country.re
 import { ProductResolver } from "./generated/product.resolver";
 import { ProductCategoriesService } from "./generated/product-categories.service";
 import { ProductCategoryResolver } from "./generated/product-category.resolver";
+import { ProductColorResolver } from "./generated/product-color.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
+import { ProductVariantsService } from "./generated/product-variants.service";
 
-@Module({})
-export class ProductsModule {
-    static forRoot(mailerModule: DynamicModule): DynamicModule {
-        return {
-            module: ProductsModule,
-            imports: [
-                mailerModule,
-                MikroOrmModule.forFeature([
-                    Product,
-                    ProductCategory,
-                    ProductTag,
-                    ProductToTag,
-                    ProductVariant,
-                    ProductStatistics,
-                    ProductColor,
-                    Manufacturer,
-                    FileUpload,
-                    ManufacturerCountry,
-                ]),
-            ],
-            providers: [
-                ProductResolver,
-                ProductCategoryResolver,
-                ProductCategoriesService,
-                ProductTagResolver,
-                ProductVariantResolver,
-                ProductVariantsService,
-                ManufacturerResolver,
-                ManufacturerCountryResolver,
-                ProductToTagResolver,
-                ProductColorResolver,
-                CustomProductResolver,
-            ],
-            exports: [],
-        };
-    }
-}
+@Module({
+    imports: [
+        MailerModule,
+        MikroOrmModule.forFeature([
+            Product,
+            ProductCategory,
+            ProductTag,
+            ProductToTag,
+            ProductVariant,
+            ProductStatistics,
+            ProductColor,
+            Manufacturer,
+            FileUpload,
+            ManufacturerCountry,
+        ]),
+    ],
+    providers: [
+        ProductResolver,
+        ProductCategoryResolver,
+        ProductCategoriesService,
+        ProductTagResolver,
+        ProductVariantResolver,
+        ProductVariantsService,
+        ManufacturerResolver,
+        ManufacturerCountryResolver,
+        ProductToTagResolver,
+        ProductColorResolver,
+        CustomProductResolver,
+    ],
+    exports: [],
+})
+export class ProductsModule {}

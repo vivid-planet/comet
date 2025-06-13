@@ -1,4 +1,4 @@
-import { type DynamicModule, Module } from "@nestjs/common";
+import { type DynamicModule, Global, Module } from "@nestjs/common";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
@@ -10,9 +10,10 @@ export type MailerModuleConfig = (SMTPTransport | SMTPTransport.Options) & {
     sendAllMailsBcc?: string[];
 };
 
+@Global()
 @Module({})
 export class MailerModule {
-    static forRoot(config: MailerModuleConfig): DynamicModule {
+    static register(config: MailerModuleConfig): DynamicModule {
         return {
             module: MailerModule,
             providers: [{ provide: MAILER_MODULE_OPTIONS, useValue: config }, MailerService],

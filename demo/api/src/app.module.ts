@@ -60,7 +60,6 @@ import { StatusModule } from "./status/status.module";
 export class AppModule {
     static forRoot(config: Config): DynamicModule {
         const authModule = AuthModule.forRoot(config);
-        const mailerModule = MailerModule.forRoot(config.mailer);
 
         return {
             module: AppModule,
@@ -186,7 +185,8 @@ export class AppModule {
                 FooterModule,
                 PredefinedPagesModule,
                 CronJobsModule,
-                ProductsModule.forRoot(mailerModule),
+                MailerModule.register(config.mailer),
+                ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {
