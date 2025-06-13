@@ -135,6 +135,9 @@
     "peerDependenciesMeta": {
         "@sentry/node": {
             "optional": true
+        },
+        "nodemailer": {
+            "optional": true
         }
     },
     "engines": {
