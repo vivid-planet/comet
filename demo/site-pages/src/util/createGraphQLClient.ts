@@ -11,7 +11,7 @@ const defaultOptions: GraphQLClientOptions = {
     includeInvisibleBlocks: false,
     previewDamUrls: false,
 };
-export default function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
+export function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
     const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = { ...defaultOptions, ...options };
 
     const headers: Record<string, string> = {};
