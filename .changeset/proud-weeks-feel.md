@@ -2,6 +2,6 @@
 "@comet/cms-api": minor
 ---
 
-Add mailer-module to send mails from api
+Add `MailerModule` to send mails from API
 
-see readme for details
+See https://docs.comet-dxp.com/docs/features-modules/mailer-module for more information
