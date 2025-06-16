@@ -1,5 +1,5 @@
 import { type DynamicModule, Global, Module } from "@nestjs/common";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
 import { MailerService } from "./mailer.service";
