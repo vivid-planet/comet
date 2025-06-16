@@ -32,6 +32,15 @@ const getDensityHeightValue = (density: string) => {
     }
 };
 
+const getTablePaginationSelectHeight = (density: string) => {
+    switch (density) {
+        case "compact":
+            return 24;
+        default:
+            return undefined;
+    }
+};
+
 const filtersLeftSectionWidth = 120;
 const filterDeleteIconSize = 32;
 const filterLeftSectionGap = 5;
@@ -161,6 +170,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             [`& .${tablePaginationClasses.root} > .${toolbarClasses.root}`]: {
                 minHeight: getDensityHeightValue(ownerState?.density),
+            },
+            [`& .${tablePaginationClasses.select}`]: {
+                height: getTablePaginationSelectHeight(ownerState?.density),
             },
         }),
 
