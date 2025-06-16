@@ -74,7 +74,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
                 "content-length": file.size,
-                "cache-control": options.public ? "max-age=86400, public" : "max-age=31536000, private", // same as DAM
+                "cache-control": "no-store",
             };
 
             // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
@@ -164,7 +164,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     throw new Error("Content type not found");
                 }
 
-                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType });
+                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType, "cache-control": "no-store" });
                 imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
 
                 if (imgproxyResponse.ok) {
@@ -177,7 +177,11 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     });
                 }
             } else {
-                res.writeHead(200, { "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
+                res.writeHead(200, {
+                    "content-type": cache.metaData.contentType,
+                    "content-length": cache.metaData.size,
+                    "cache-control": "no-store",
+                });
 
                 cache.file.pipe(res);
             }
