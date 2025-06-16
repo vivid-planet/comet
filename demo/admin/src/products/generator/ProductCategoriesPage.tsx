@@ -16,7 +16,8 @@ export function ProductCategoriesPage() {
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProductCategory", defaultMessage: "Add product category" })}>
-                    <StackMainContent>Add product category</StackMainContent>
+                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
+                    <StackMainContent>TODO: Add product category form</StackMainContent>
                 </StackPage>
             </StackSwitch>
         </Stack>
