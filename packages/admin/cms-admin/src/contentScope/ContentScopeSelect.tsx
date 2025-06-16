@@ -50,7 +50,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
 
-    const hasMultipleDimensions = Object.keys(value).length > 1;
+    const hasMultipleDimensions = options.some((option) => Object.keys(option).length > 1);
 
     let filteredOptions = options;
 
