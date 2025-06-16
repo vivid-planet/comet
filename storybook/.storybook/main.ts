@@ -6,12 +6,6 @@ const config: StorybookConfig = {
     stories: ["../src/**/*.@(mdx|stories.tsx)"],
     addons: [
         {
-            name: "@storybook/addon-essentials",
-            options: {
-                actions: false,
-            },
-        },
-        {
             name: "@storybook/addon-docs",
             options: {
                 mdxPluginOptions: {
