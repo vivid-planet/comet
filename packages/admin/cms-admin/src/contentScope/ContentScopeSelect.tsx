@@ -32,6 +32,7 @@ interface Props {
     options: Array<Option>;
     searchable?: boolean;
     groupBy?: keyof ContentScope;
+    excludeFromGrouping?: (option: Option) => boolean;
     icon?: ReactNode;
     renderOption?: (option: Option, query?: string, selected?: boolean) => ReactNode;
     renderSelectedOption?: (option: Option) => ReactNode;
@@ -45,6 +46,7 @@ export function ContentScopeSelect({
     options,
     searchable,
     groupBy,
+    excludeFromGrouping,
     icon = <Language />,
     renderOption,
     renderSelectedOption,
@@ -66,11 +68,18 @@ export function ContentScopeSelect({
         });
     }
 
-    let groups: Array<{ value: string; label: string | undefined; options: Option[] }> = [];
+    const defaultGroup: Group = { value: "", label: "", options: [] };
+    let groups: Array<Group> = [defaultGroup];
 
     if (groupBy) {
         if (hasMultipleDimensions) {
             for (const option of filteredOptions) {
+                const shouldExclude = excludeFromGrouping?.(option) || option.scope[groupBy] === undefined;
+                if (shouldExclude) {
+                    defaultGroup.options.push(option);
+                    continue;
+                }
+
                 const groupForOption = groups.find((group) => group.value === option.scope[groupBy]);
 
                 if (groupForOption) {
@@ -98,7 +107,10 @@ export function ContentScopeSelect({
     if (!renderOption) {
         renderOption = (option, query, isSelected) => {
             const text = Object.entries(option.scope)
-                .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
+                .filter(([dimension]) => {
+                    const excludedFromGrouping = excludeFromGrouping && excludeFromGrouping(option);
+                    return hasMultipleDimensions && groupBy && !excludedFromGrouping ? dimension !== groupBy : true;
+                })
                 .map(([key, value]) => (option.label && option.label[key]) ?? value)
                 .join(" – ");
             const matches = findTextMatches(text, query);
@@ -251,8 +263,12 @@ export function ContentScopeSelect({
                     )}
                     <List sx={{ paddingTop: 0 }}>
                         {groups.map((group, index) => {
-                            const showGroupHeader = hasMultipleDimensions;
-                            const showGroupDivider = showGroupHeader && index !== groups.length - 1;
+                            if (group.options.length === 0) {
+                                return;
+                            }
+
+                            const showGroupHeader = hasMultipleDimensions && group.value !== "";
+                            const showGroupDivider = hasMultipleDimensions && index !== groups.length - 1;
                             const groupLabel = humanReadableLabel(group);
                             const matches = findTextMatches(groupLabel, searchValue);
 
@@ -321,4 +337,10 @@ function valueMatchesOption(value: ContentScope, option: Option) {
     const valueMatchesAllOptionDimensions = Object.keys(option.scope).every((dimension) => option.scope[dimension] === value[dimension]);
 
     return optionMatchesAllValueDimensions && valueMatchesAllOptionDimensions;
+}
+
+interface Group {
+    value: string;
+    label: string | undefined;
+    options: Option[];
 }
