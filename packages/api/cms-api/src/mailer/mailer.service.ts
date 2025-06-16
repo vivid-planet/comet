@@ -2,19 +2,17 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import type { Transporter } from "nodemailer";
 import type { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
-import { loadNodemailerDependency } from "./load-nodemailer-dependency";
-import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
+import { MAILER_MODULE_OPTIONS, MAILER_MODULE_TRANSPORT } from "./mailer.constants";
 import { MailerModuleConfig } from "./mailer.module";
 
 @Injectable()
 export class MailerService {
-    private mailerTransport: Transporter;
     private readonly logger = new Logger(MailerService.name);
 
-    constructor(@Inject(MAILER_MODULE_OPTIONS) private readonly mailerConfig: MailerModuleConfig) {
-        const nodemailer = loadNodemailerDependency();
-        this.mailerTransport = nodemailer.createTransport(mailerConfig);
-    }
+    constructor(
+        @Inject(MAILER_MODULE_OPTIONS) private readonly mailerConfig: MailerModuleConfig,
+        @Inject(MAILER_MODULE_TRANSPORT) private readonly mailerTransport: Transporter,
+    ) {}
 
     private fillMailOptionsDefaults(originMailOptions: MailOptions): MailOptions {
         return {
