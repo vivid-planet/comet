@@ -33,7 +33,7 @@ import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
+export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "content" | "chip" | "menuItem";
 
 interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
@@ -45,6 +45,7 @@ export interface CrudMoreActionsMenuProps
         menu: typeof Menu;
         menuItem: typeof MenuItem;
         button: typeof Button;
+        content: "div";
         group: typeof CrudMoreActionsGroup;
         divider: typeof Divider;
         chip: typeof Chip;
@@ -96,6 +97,15 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
     margin: 0 10px;
 `);
 
+const MoreActionsButtonContent = createComponentSlot("div")<CrudMoreActionsMenuClassKey>({
+    componentName: "CrudMoreActions",
+    slotName: "content",
+})(css`
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+`);
+
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "menuItem",
@@ -142,8 +152,10 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     return (
         <CrudMoreActionsMenuContext.Provider value={{ closeMenu: handleClose }}>
             <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick} responsive>
-                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
-                {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
+                <MoreActionsButtonContent>
+                    <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
+                    {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
+                </MoreActionsButtonContent>
             </MoreActionsButton>
             <Menu
                 keepMounted={false}
