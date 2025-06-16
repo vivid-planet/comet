@@ -5,6 +5,7 @@ import {
     type ISortInformation,
     SortDirection,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     Toolbar,
@@ -65,7 +66,15 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                 <StackPage name="table">
                     <EditDialogApiContext.Provider value={editDialogApi}>
                         <Toolbar scopeIndicator={props.contentScopeIndicator} />
-                        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
+                        <StackMainContent fullHeight>
+                            <FolderDataGrid
+                                id={id}
+                                breadcrumbs={stackApi?.breadCrumbs}
+                                selectionApi={selectionApi}
+                                filterApi={filterApi}
+                                {...props}
+                            />
+                        </StackMainContent>
                     </EditDialogApiContext.Provider>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
