@@ -1,5 +1,7 @@
 # @comet/cms-site
 
+## 7.23.0
+
 ## 7.22.0
 
 ### Patch Changes

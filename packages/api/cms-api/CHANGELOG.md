@@ -1,5 +1,21 @@
 # @comet/cms-api
 
+## 7.23.0
+
+### Minor Changes
+
+-   80d0c6293: Add new `getFileContent` method to the `FileUploadsService`
+
+    This method allows you to retrieve a file's content as a Buffer.
+    This is needed for cases like embedding images in a PDF or attaching files to emails.
+
+### Patch Changes
+
+-   2cdb87ad5: Add error and close handling for partial ranges in file stream
+-   aac00efa8: Limit image title to 150 characters in `AzureOpenAiContentGenerationService`
+-   Updated dependencies [201198da3]
+    -   @comet/blocks-api@7.23.0
+
 ## 7.22.0
 
 ### Patch Changes
