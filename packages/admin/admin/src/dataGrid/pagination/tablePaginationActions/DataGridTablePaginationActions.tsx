@@ -32,7 +32,7 @@ export const DataGridTablePaginationActions: FunctionComponent<PropsWithChildren
     const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
     const theme = useTheme();
-    const showPageOfStyled = useMediaQuery(theme.breakpoints.up(425));
+    const showPageOfStyled = useMediaQuery(theme.breakpoints.up("sm"));
 
     const {
         count,
