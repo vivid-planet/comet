@@ -46,7 +46,7 @@ export class MailerService {
     /**
      * Sends a mail and logs it in the database.
      * @param type Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
-     * @param additionalData But your additional data here, e.g. orderId, resourcePoolId, etc.
+     * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
      * @param originMailOptions `from` defaults to this.config.mailer.defaultSender, sendAllMailsBcc is always added to `bcc`
      */
     async sendMail({ type, additionalData, ...originMailOptions }: MailOptions & { type?: string; additionalData?: unknown }) {
