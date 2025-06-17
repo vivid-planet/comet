@@ -167,7 +167,6 @@ export {
     FinalFormFileUploadProps,
 } from "./form/file/FinalFormFileUpload";
 export { GQLFinalFormFileUploadDownloadableFragment, GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
-export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
 export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
