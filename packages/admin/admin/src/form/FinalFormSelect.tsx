@@ -88,15 +88,7 @@ export const FinalFormSelect = <T,>({
     return (
         <Select
             {...selectProps}
-            endAdornment={
-                <>
-                    {loading ? (
-                        <InputAdornment position="end">{endAdornment}</InputAdornment>
-                    ) : (
-                        <InputAdornment position="end">{endAdornment}</InputAdornment>
-                    )}
-                </>
-            }
+            endAdornment={<InputAdornment position="end">{endAdornment}</InputAdornment>}
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
