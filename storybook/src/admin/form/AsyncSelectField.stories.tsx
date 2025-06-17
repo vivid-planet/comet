@@ -1,6 +1,7 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
-import { Info, WarningSolid } from "@comet/admin-icons";
+import { Info, Reset, WarningSolid } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
@@ -336,6 +337,7 @@ export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
         interface FormValues {
             type: string;
         }
+
         return (
             <FinalForm<FormValues>
                 initialValues={{}}
@@ -358,12 +360,22 @@ export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
-                                errorLabel={
-                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                        <WarningSolid color="error" />
-                                        Error loading options
-                                    </div>
-                                }
+                                renderErrorLabel={(reload) => {
+                                    return (
+                                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                            <WarningSolid color="error" />
+                                            Error loading options
+                                            <IconButton
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    reload?.();
+                                                }}
+                                            >
+                                                <Reset fontSize="small" />
+                                            </IconButton>
+                                        </div>
+                                    );
+                                }}
                                 name="type"
                                 label="AsyncSelectField"
                                 fullWidth

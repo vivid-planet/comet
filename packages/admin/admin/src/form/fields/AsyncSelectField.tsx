@@ -2,11 +2,12 @@ import { type ReactNode } from "react";
 
 import { Field, type FieldProps } from "../Field";
 import { FinalFormAsyncSelect } from "../FinalFormAsyncSelect";
+import { type ReloadFunction } from "../FinalFormSelect";
 
 export interface AsyncSelectFieldProps<Option> extends FieldProps<Option, HTMLSelectElement> {
     loadOptions: () => Promise<Option[]>;
     noOptionsLabel?: ReactNode;
-    errorLabel?: ReactNode;
+    renderErrorLabel?: ReloadFunction;
     getOptionLabel?: (option: Option) => string;
     getOptionValue?: (option: Option) => string;
     clearable?: boolean;

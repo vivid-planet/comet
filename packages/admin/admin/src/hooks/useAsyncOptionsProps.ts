@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useCallback, useState } from "react";
 
 export interface AsyncOptionsProps<T> {
     isAsync: boolean;
@@ -6,6 +6,7 @@ export interface AsyncOptionsProps<T> {
     options: T[];
     loadingError: Error | null;
     loading?: boolean;
+    reload: () => void;
     onOpen: (event: ChangeEvent) => void;
     onClose: (event: ChangeEvent) => void;
 }
@@ -15,9 +16,10 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const handleOpen = async () => {
+    const handleOpen = useCallback(async () => {
         setError(null);
         setOpen(true);
+        setOptions([]);
         setLoading(true);
         try {
             const newOptions = await loadOptions();
@@ -27,9 +29,10 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
         } finally {
             setLoading(false);
         }
-    };
+    }, [loadOptions]);
 
     return {
+        reload: handleOpen,
         isAsync: true,
         open,
         loadingError: error,

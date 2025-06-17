@@ -1,16 +1,18 @@
-import { Error } from "@comet/admin-icons";
-import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
+import { Error, Reload } from "@comet/admin-icons";
+import { CircularProgress, IconButton, InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
+import { MenuItemContainerContent, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
+export type ReloadFunction = () => void;
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     noOptionsLabel?: ReactNode;
-    errorLabel?: ReactNode;
+    renderErrorLabel?: (reload?: ReloadFunction) => ReactNode;
+    reload?: ReloadFunction;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
@@ -48,17 +50,30 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
-
+    reload,
     noOptionsLabel = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
         </Typography>
     ),
-    errorLabel = (
-        <Typography variant="body2">
-            <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
-        </Typography>
+    renderErrorLabel = (reloadFunction) => (
+        <MenuItemContainerContent>
+            <Typography variant="body2">
+                <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
+            </Typography>
+            {reloadFunction && (
+                <IconButton
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        reloadFunction?.();
+                    }}
+                >
+                    <Reload fontSize="small" />
+                </IconButton>
+            )}
+        </MenuItemContainerContent>
     ),
+
     children,
     required,
     ...rest
@@ -157,8 +172,16 @@ export const FinalFormSelect = <T,>({
                 </MenuItemDisabledOverrideOpacity>
             )}
             {loading === false && loadingError != null && (
-                <MenuItemDisabledOverrideOpacity value="" disabled>
-                    {errorLabel}
+                <MenuItemDisabledOverrideOpacity
+                    value=""
+                    disableRipple
+                    onMouseDown={(e) => {
+                        // prevents the ripple effect of the menu item
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }}
+                >
+                    {renderErrorLabel(reload)}
                 </MenuItemDisabledOverrideOpacity>
             )}
 
