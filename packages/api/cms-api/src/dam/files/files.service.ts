@@ -32,6 +32,7 @@ import { FileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
+import { DamFileSubtitle } from "./entities/file-subtitle.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
@@ -121,7 +122,9 @@ export class FilesService {
             .createQueryBuilder("file")
             .select("*")
             .leftJoinAndSelect("file.image", "image")
-            .leftJoinAndSelect("file.folder", "folder");
+            .leftJoinAndSelect("file.folder", "folder")
+            .leftJoinAndSelect("file.subtitles", "subtitles")
+            .leftJoinAndSelect("subtitles.file", "subtitleFile");
     }
 
     async findAll(
@@ -289,7 +292,7 @@ export class FilesService {
         return this.updateByEntity(file, data);
     }
 
-    async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
+    async updateByEntity(entity: FileInterface, { image, subtitles, ...input }: UpdateFileInput): Promise<FileInterface> {
         const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
 
@@ -301,6 +304,21 @@ export class FilesService {
             const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: input.name, folderId }, entity.scope);
             if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
                 throw new Error(`Entity with name '${input.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+            }
+        }
+
+        if (subtitles) {
+            entity.subtitles = [];
+            for (const sub of subtitles) {
+                if (!sub.fileId) continue;
+                const fileRef = await this.findOneById(sub.fileId);
+                if (!fileRef) continue;
+                const subtitleEntity = this.entityManager.create(DamFileSubtitle, {
+                    video: entity,
+                    file: fileRef,
+                    language: sub.language,
+                });
+                entity.subtitles.push(subtitleEntity);
             }
         }
 

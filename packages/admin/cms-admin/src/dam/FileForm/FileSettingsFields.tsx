@@ -1,10 +1,12 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { AdminComponentButton } from "@comet/blocks-admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
-import { IconButton, InputAdornment } from "@mui/material";
+import { ArtificialIntelligence, Calendar, Delete } from "@comet/admin-icons";
+import { IconButton, InputAdornment, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useCallback } from "react";
+import { FieldArray } from "react-final-form-arrays";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -15,6 +17,7 @@ import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
 import { DamFileDetails, EditFileFormValues } from "./EditFile";
+import { FileField, GQLDamFileFieldFileFragment } from "../form/file/FileField";
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
 import {
@@ -177,6 +180,32 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         )
                     }
                 />
+            </FormSection>
+            <FormSection title={<FormattedMessage id="comet.dam.file.subtitles" defaultMessage="Subtitles" />}>
+                <FieldArray name="subtitles">
+                    {({ fields }) => (
+                        <>
+                            {fields.map((name, i) => (
+                                <Grid container spacing={2} key={name} alignItems="center" sx={{ mb: 2 }}>
+                                    <Grid item xs={6}>
+                                        <Field name={`${name}.file`} component={FileField} fullWidth allowedMimetypes={["text/vtt"]} />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Field name={`${name}.language`} component={FinalFormInput} placeholder="en" fullWidth />
+                                    </Grid>
+                                    <Grid item>
+                                        <IconButton onClick={() => fields.remove(i)} size="large">
+                                            <Delete />
+                                        </IconButton>
+                                    </Grid>
+                                </Grid>
+                            ))}
+                            <AdminComponentButton variant="primary" onClick={() => fields.push({ file: undefined, language: "" })}>
+                                <FormattedMessage id="comet.blocks.video.addSubtitle" defaultMessage="Add subtitle" />
+                            </AdminComponentButton>
+                        </>
+                    )}
+                </FieldArray>
             </FormSection>
             {damConfig.enableLicenseFeature && (
                 <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>

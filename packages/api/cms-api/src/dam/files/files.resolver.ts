@@ -22,6 +22,7 @@ import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
 import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
+import { DamFileSubtitle } from "./entities/file-subtitle.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
@@ -262,6 +263,11 @@ export function createFilesResolver({
         async duplicates(@Parent() file: FileInterface): Promise<FileInterface[]> {
             const files = await this.filesService.findAllByHash(file.contentHash, { scope: file.scope });
             return files.filter((f) => f.id !== file.id);
+        }
+
+        @ResolveField(() => [DamFileSubtitle])
+        subtitles(@Parent() file: FileInterface): DamFileSubtitle[] {
+            return file.subtitles ?? [];
         }
 
         @ResolveField(() => String)

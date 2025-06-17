@@ -20,6 +20,7 @@ import { EntityInfo } from "../../../dependencies/decorators/entity-info.decorat
 import { DamScopeInterface } from "../../types";
 import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
+import { DamFileSubtitle } from "./file-subtitle.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
@@ -38,6 +39,7 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     copies: FileInterface[];
     image?: DamFileImage;
     license?: License;
+    subtitles: DamFileSubtitle[];
     createdAt: Date;
     updatedAt: Date;
     scope?: DamScopeInterface;
@@ -124,6 +126,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field(() => License, { nullable: true })
         @Embedded(() => License, { nullable: true })
         license?: License;
+
+        @Field(() => [DamFileSubtitle])
+        @OneToMany(() => DamFileSubtitle, (subtitle) => subtitle.video, { cascade: [Cascade.ALL], eager: true })
+        subtitles: DamFileSubtitle[] = [];
 
         @Property({
             columnType: "timestamp with time zone",

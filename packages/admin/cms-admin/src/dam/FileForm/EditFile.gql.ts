@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { damFileFieldFragment } from "../form/file/FileField.gql";
 
 export const damFileDetailFragment = gql`
     fragment DamFileDetail on DamFile {
@@ -36,8 +37,16 @@ export const damFileDetailFragment = gql`
             expiresWithinThirtyDays
             hasExpired
         }
+        subtitles {
+            id
+            language
+            file {
+                ...DamFileFieldFile
+            }
+        }
         fileUrl
     }
+    ${damFileFieldFragment}
 `;
 
 export const damFileDetailQuery = gql`

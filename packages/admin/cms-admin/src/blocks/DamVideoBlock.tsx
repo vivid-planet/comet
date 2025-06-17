@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FieldContainer } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
 import {
     AdminComponentButton,
@@ -17,19 +17,30 @@ import {
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useState } from "react";
+import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
-import { FileField } from "../form/file/FileField";
+import { FileField, GQLDamFileFieldFileFragment } from "../form/file/FileField";
+import { FileUploadField } from "../form/file/FileUploadField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { damFileFieldFileQuery } from "../form/file/FileField.gql";
+import {
+    GQLDamFileFieldFileQuery,
+    GQLDamFileFieldFileQueryVariables,
+} from "../form/file/FileField.gql.generated";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
 
-type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
+type SubtitleState = { file?: GQLDamFileFieldFileFragment; language: string };
+type State = Omit<DamVideoBlockData, "previewImage" | "subtitles"> & {
+    previewImage: BlockState<typeof PixelImageBlock>;
+    subtitles: SubtitleState[];
+};
 
 export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlockInput> = {
     ...createBlockSkeleton(),
@@ -38,11 +49,11 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
-    defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues() }),
+    defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues(), subtitles: [] }),
 
     category: BlockCategory.Media,
 
-    input2State: (input) => ({ ...input, previewImage: PixelImageBlock.input2State(input.previewImage) }),
+    input2State: (input) => ({ ...input, previewImage: PixelImageBlock.input2State(input.previewImage), subtitles: input.subtitles ?? [] }),
 
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
@@ -50,11 +61,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         autoplay: state.autoplay,
         loop: state.loop,
         showControls: state.showControls,
+        subtitles: state.subtitles.map((s) => ({ fileId: s.file?.id, language: s.language })),
     }),
 
     output2State: async (output, context: CmsBlockContext) => {
         if (!output.damFileId) {
-            return { previewImage: await PixelImageBlock.output2State(output.previewImage, context) };
+            return { previewImage: await PixelImageBlock.output2State(output.previewImage, context), subtitles: [] };
         }
 
         const { data } = await context.apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
@@ -80,12 +92,23 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
         const damFile = data.damFile as unknown as DamVideoBlockData["damFile"];
 
+        const subtitles: SubtitleState[] = [];
+        for (const sub of output.subtitles ?? []) {
+            if (!sub.fileId) continue;
+            const { data: subData } = await context.apolloClient.query<GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables>({
+                query: damFileFieldFileQuery,
+                variables: { id: sub.fileId },
+            });
+            subtitles.push({ file: subData.damFile as GQLDamFileFieldFileFragment, language: sub.language });
+        }
+
         return {
             damFile,
             autoplay: output.autoplay,
             loop: output.loop,
             showControls: output.showControls,
             previewImage: await PixelImageBlock.output2State(output.previewImage, context),
+            subtitles,
         };
     },
 
@@ -110,6 +133,16 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
             });
         }
 
+        state.subtitles.forEach((s) => {
+            if (s.file?.id) {
+                dependencies.push({
+                    targetGraphqlObjectType: "DamFile",
+                    id: s.file.id,
+                    data: { damFile: s.file },
+                });
+            }
+        });
+
         return dependencies;
     },
 
@@ -120,6 +153,11 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         if (replacement) {
             clonedOutput.damFileId = replacement.replaceWithId;
         }
+
+        clonedOutput.subtitles = clonedOutput.subtitles?.map((s) => {
+            const rep = replacements.find((r) => r.type === "DamFile" && r.originalId === s.fileId);
+            return rep ? { ...s, fileId: rep.replaceWithId } : s;
+        });
 
         return clonedOutput;
     },
@@ -203,6 +241,32 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
                     <VideoOptionsFields />
+                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.subtitles" defaultMessage="Subtitles" />}>
+                        <FieldArray name="subtitles">
+                            {({ fields }) => (
+                                <>
+                                    {fields.map((name, i) => (
+                                        <Grid container spacing={2} key={name} alignItems="center" sx={{ mb: 2 }}>
+                                            <Grid item xs={6}>
+                                                <Field name={`${name}.file`} component={FileField} fullWidth allowedMimetypes={["text/vtt"]} />
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <Field name={`${name}.language`} component={FinalFormInput} placeholder="en" fullWidth />
+                                            </Grid>
+                                            <Grid item>
+                                                <IconButton onClick={() => fields.remove(i)} size="large">
+                                                    <Delete />
+                                                </IconButton>
+                                            </Grid>
+                                        </Grid>
+                                    ))}
+                                    <AdminComponentButton variant="primary" onClick={() => fields.push({ file: undefined, language: "" })}>
+                                        <FormattedMessage id="comet.blocks.video.addSubtitle" defaultMessage="Add subtitle" />
+                                    </AdminComponentButton>
+                                </>
+                            )}
+                        </FieldArray>
+                    </AdminComponentSection>
                     <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
