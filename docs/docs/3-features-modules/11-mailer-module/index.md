@@ -35,7 +35,7 @@ MAILER_SEND_ALL_MAILS_BCC?: string;
 ```
 mailer: {
     // Mailer configuration
-    defaultSender: envVars.MAILER_DEFAULT_SENDER,
+    defaultFrom: envVars.MAILER_DEFAULT_FROM,
     sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
     sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
     // nodemailer configuration

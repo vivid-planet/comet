@@ -130,7 +130,7 @@ export class EnvironmentVariables {
     MAILER_PORT: number;
 
     @IsString()
-    MAILER_DEFAULT_SENDER: string;
+    MAILER_DEFAULT_FROM: string;
 
     @IsOptional()
     @IsArray()

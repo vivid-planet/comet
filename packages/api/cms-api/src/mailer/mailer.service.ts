@@ -17,7 +17,7 @@ export class MailerService {
     private fillMailOptionsDefaults(originMailOptions: MailOptions): MailOptions {
         return {
             ...originMailOptions,
-            from: originMailOptions.from || this.mailerConfig.defaultSender,
+            from: originMailOptions.from || this.mailerConfig.defaultFrom,
             bcc: this.mailerConfig.sendAllMailsBcc
                 ? [...this.normalizeToArray(originMailOptions.bcc), ...this.mailerConfig.sendAllMailsBcc]
                 : originMailOptions.bcc,
@@ -37,7 +37,7 @@ export class MailerService {
 
     /**
      * Sends a mail without logging it in the database.
-     * @param mailOptions `from` defaults to this.config.mailer.defaultSender, sendAllMailsBcc is always added to `bcc`
+     * @param mailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
      */
     async sendMailWithoutLog(mailOptions: MailOptions) {
         return this._sendMail(this.fillMailOptionsDefaults(mailOptions));
@@ -47,7 +47,7 @@ export class MailerService {
      * Sends a mail and logs it in the database.
      * @param type Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
-     * @param originMailOptions `from` defaults to this.config.mailer.defaultSender, sendAllMailsBcc is always added to `bcc`
+     * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
      */
     async sendMail({ type, additionalData, ...originMailOptions }: MailOptions & { type?: string; additionalData?: unknown }) {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
