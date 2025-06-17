@@ -41,9 +41,6 @@ mailer: {
     // nodemailer configuration
     host: envVars.MAILER_HOST,
     port: envVars.MAILER_PORT,
-    tls: {
-        rejectUnauthorized: false,
-    },
 },
 ```
 

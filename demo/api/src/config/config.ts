@@ -92,9 +92,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             // nodemailer configuration
             host: envVars.MAILER_HOST,
             port: envVars.MAILER_PORT,
-            tls: {
-                rejectUnauthorized: false,
-            },
         },
         cdn: {
             originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
