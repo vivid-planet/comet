@@ -9,6 +9,7 @@ import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
 import { type GlobalTypes } from "storybook/internal/csf";
 
+import { LocaleOption } from "./decorators/IntlProvider.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 import { previewGlobalStyles } from "./preview.styles";
@@ -66,6 +67,20 @@ export const globalTypes: GlobalTypes = {
             items: [
                 { value: ThemeOption.Comet, right: "🟩", title: "Comet Theme" },
                 { value: ThemeOption.Mui, right: "🟦", title: "Mui Theme" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    locale: {
+        name: "Locale",
+        description: "Locale",
+        toolbar: {
+            title: "Locale",
+            icon: "globe",
+            items: [
+                { value: LocaleOption.English, title: "English", right: "🇺🇸" },
+                { value: LocaleOption.German, title: "Deutsch", right: "🇩🇪" },
             ],
             showName: true,
             dynamicTitle: true,
