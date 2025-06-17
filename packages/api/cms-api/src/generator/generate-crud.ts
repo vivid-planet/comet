@@ -499,8 +499,8 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasPositionProp
                 ? `constructor(
-                    private readonly entityManager: EntityManager,
-                    @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
+                    protected readonly entityManager: EntityManager,
+                    @InjectRepository(${metadata.className}) protected readonly repository: EntityRepository<${metadata.className}>,
                 ) {}`
                 : ""
         }
@@ -808,7 +808,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
-        ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
+        ${needsBlocksTransformer ? `constructor(protected readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
     }
     `;
@@ -1039,13 +1039,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
-            private readonly entityManager: EntityManager,${
-                hasPositionProp ? `private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
+            protected readonly entityManager: EntityManager,${
+                hasPositionProp ? `protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
             }
-            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
+            @InjectRepository(${metadata.className}) protected readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
-                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
-                .join("")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
+                .map((type) => `@InjectRepository(${type}) protected readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
+                .join("")}${needsBlocksTransformer ? `protected readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})

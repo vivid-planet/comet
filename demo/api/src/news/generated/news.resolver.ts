@@ -26,9 +26,9 @@ import { PaginatedNews } from "./dto/paginated-news";
 @RequiredPermission(["news"])
 export class NewsResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(News) private readonly repository: EntityRepository<News>,
-        private readonly blocksTransformer: BlocksTransformerService,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(News) protected readonly repository: EntityRepository<News>,
+        protected readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
     @Query(() => News)

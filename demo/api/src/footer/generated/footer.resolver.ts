@@ -14,9 +14,9 @@ import { FootersService } from "./footers.service";
 @RequiredPermission(["pageTree"])
 export class FooterResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        private readonly footersService: FootersService,
-        @InjectRepository(Footer) private readonly repository: EntityRepository<Footer>,
+        protected readonly entityManager: EntityManager,
+        protected readonly footersService: FootersService,
+        @InjectRepository(Footer) protected readonly repository: EntityRepository<Footer>,
     ) {}
 
     @Query(() => Footer, { nullable: true })

@@ -9,8 +9,8 @@ import { ProductCategory } from "../entities/product-category.entity";
 @Injectable()
 export class ProductCategoriesService {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(ProductCategory) private readonly repository: EntityRepository<ProductCategory>,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(ProductCategory) protected readonly repository: EntityRepository<ProductCategory>,
     ) {}
 
     async incrementPositions(lowestPosition: number, highestPosition?: number) {
