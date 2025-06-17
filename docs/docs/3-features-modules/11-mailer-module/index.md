@@ -38,9 +38,11 @@ mailer: {
     defaultFrom: envVars.MAILER_DEFAULT_FROM,
     sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
     sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
-    // nodemailer configuration
-    host: envVars.MAILER_HOST,
-    port: envVars.MAILER_PORT,
+
+    transport: { // nodemailer configuration
+        host: envVars.MAILER_HOST,
+        port: envVars.MAILER_PORT,
+    }
 },
 ```
 

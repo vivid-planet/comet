@@ -84,14 +84,14 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
         mailer: {
-            // Mailer configuration
             defaultFrom: envVars.MAILER_DEFAULT_FROM,
             sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
             sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 
-            // nodemailer configuration
-            host: envVars.MAILER_HOST,
-            port: envVars.MAILER_PORT,
+            transport: {
+                host: envVars.MAILER_HOST,
+                port: envVars.MAILER_PORT,
+            },
         },
         cdn: {
             originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,

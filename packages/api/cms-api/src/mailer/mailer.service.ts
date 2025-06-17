@@ -11,7 +11,7 @@ export class MailerService {
     private readonly logger = new Logger(MailerService.name);
 
     constructor(@Inject(MAILER_MODULE_OPTIONS) private readonly mailerConfig: MailerModuleConfig) {
-        this.mailerTransport = createTransport(mailerConfig);
+        this.mailerTransport = createTransport(mailerConfig.transport);
     }
 
     private fillMailOptionsDefaults(originMailOptions: MailOptions): MailOptions {

@@ -4,10 +4,11 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
 import { MailerService } from "./mailer.service";
 
-export type MailerModuleConfig = (SMTPTransport | SMTPTransport.Options) & {
+export type MailerModuleConfig = {
     defaultFrom: string;
     sendAllMailsTo?: string[];
     sendAllMailsBcc?: string[];
+    transport: SMTPTransport | SMTPTransport.Options;
 };
 
 @Global()
