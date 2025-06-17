@@ -171,3 +171,15 @@ npm run console -- mailer:delete-mail-logs-older-than 7 days --type notification
 ```
 
 This command will remove all mail logs created before the specified duration. Use with caution, as this operation is irreversible.
+
+---
+
+## Mail Log Creation and Updates
+
+Mail logs are created automatically whenever an email is sent using the `sendMail` method of the `MailerService`. Each log entry records details such as recipients, subject, mail options, additional data, and the mail type for filtering and statistics. The log is created before the email is sent.
+
+After the email is sent, the log entry is updated with the result of the send operation (such as the message ID and status). If mail logging is disabled via configuration, no log entries are created or updated.
+
+Mail logs are not created when using the `sendMailWithoutLog` method.
+
+---
