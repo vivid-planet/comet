@@ -1,7 +1,7 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";

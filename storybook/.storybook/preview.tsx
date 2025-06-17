@@ -3,11 +3,11 @@ import "@fontsource-variable/roboto-flex/full.css";
 import { MainContent } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { GlobalStyles } from "@mui/material";
-import type { Preview } from "@storybook/react";
-import type { GlobalTypes } from "@storybook/types";
+import type { Preview } from "@storybook/react-webpack5";
 import { type Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
+import { type GlobalTypes } from "storybook/internal/csf";
 
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
@@ -74,6 +74,7 @@ export const globalTypes: GlobalTypes = {
 };
 
 const preview: Preview = {
+    tags: ["autodocs"],
     argTypes: {
         locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
     },
@@ -182,6 +183,10 @@ const preview: Preview = {
                 const bIdx = order.findIndex((i) => bName.indexOf(i) > -1);
                 return aIdx - bIdx;
             },
+        },
+
+        docs: {
+            codePanel: true,
         },
     },
 };
