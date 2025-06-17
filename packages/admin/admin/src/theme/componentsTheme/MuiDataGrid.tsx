@@ -2,6 +2,7 @@ import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search }
 import {
     autocompleteClasses,
     buttonBaseClasses,
+    Checkbox,
     checkboxClasses,
     iconButtonClasses,
     inputBaseClasses,
@@ -55,6 +56,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             return getDensityHeightValue("standard");
         },
         slots: {
+            baseCheckbox: Checkbox,
             quickFilterIcon: Search,
             quickFilterClearIcon: Clear,
             filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
