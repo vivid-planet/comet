@@ -527,14 +527,17 @@ const FolderDataGrid = ({
                                                   expirationDate={row.license.expirationDate ? new Date(row.license.expirationDate) : undefined}
                                               />
                                           ) : (
-                                              <>
-                                                  <FormattedMessage id="comet.dam.file.license.validUntil" defaultMessage="Valid until:" />{" "}
-                                                  {row.license.durationTo ? (
-                                                      <FormattedDate value={row.license.durationTo} dateStyle="medium" />
-                                                  ) : (
-                                                      <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
-                                                  )}
-                                              </>
+                                              <FormattedMessage
+                                                  id="comet.dam.file.license.validUntil"
+                                                  defaultMessage="Valid until: {validUntil}"
+                                                  values={{
+                                                      validUntil: row.license.durationTo ? (
+                                                          <FormattedDate value={row.license.durationTo} dateStyle="medium" />
+                                                      ) : (
+                                                          <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
+                                                      ),
+                                                  }}
+                                              />
                                           )
                                       }
                                   />

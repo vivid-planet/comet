@@ -27,7 +27,7 @@ export function ToolbarButton({ editorState, setEditorState }: IControlProps) {
             placement="top"
         >
             <span>
-                <ControlButton icon={RteSoftHyphen} onButtonClick={handleClick} />{" "}
+                <ControlButton icon={RteSoftHyphen} onButtonClick={handleClick} />
             </span>
         </Tooltip>
     );

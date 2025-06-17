@@ -9,6 +9,7 @@ const config = [
     {
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
+            "@comet/no-jsx-string-literals": "off",
         },
     },
 ];

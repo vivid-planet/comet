@@ -18,6 +18,7 @@ const config = [
         files: ["**/*.test.ts", "**/*.test.tsx"],
         rules: {
             "@calm/react-intl/missing-formatted-message": "off",
+            "@comet/no-jsx-string-literals": "off",
         },
     },
     {
