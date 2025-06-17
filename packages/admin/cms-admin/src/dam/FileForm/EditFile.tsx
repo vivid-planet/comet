@@ -36,6 +36,7 @@ import { FilePreview } from "./FilePreview";
 import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
 import { LicenseType } from "./licenseType";
+import { GQLDamFileFieldFileFragment } from "../form/file/FileField";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -51,10 +52,10 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    license?:
-        | Omit<GQLLicenseInput, "type"> & {
-              type: LicenseType;
-          };
+    subtitles: { file?: GQLDamFileFieldFileFragment; language: string }[];
+    license?: Omit<GQLLicenseInput, "type"> & {
+        type: LicenseType;
+    };
 }
 
 interface EditFormProps {
@@ -153,6 +154,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         },
                         license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
                         folderId: file.folder?.id ?? null,
+                        subtitles: values.subtitles.map((s) => ({ fileId: s.file?.id, language: s.language })),
                     },
                 },
             });
@@ -178,6 +180,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                 },
                 altText: file.altText,
                 title: file.title,
+                subtitles: file.subtitles?.map((s) => ({ file: s.file as GQLDamFileFieldFileFragment, language: s.language })) ?? [],
                 license: {
                     type: file.license?.type ?? "NO_LICENSE",
                     details: file.license?.details,

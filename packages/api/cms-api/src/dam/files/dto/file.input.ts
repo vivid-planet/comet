@@ -127,6 +127,18 @@ export class UpdateImageFileInput {
     cropArea?: ImageCropAreaInput;
 }
 
+@InputType()
+export class FileSubtitleInput {
+    @Field(() => ID, { nullable: true })
+    @IsUUID()
+    @IsOptional()
+    fileId?: string;
+
+    @Field()
+    @IsString()
+    language!: string;
+}
+
 @InputType("UpdateDamFileInput")
 export class UpdateFileInput {
     @Field({ nullable: true })
@@ -161,4 +173,10 @@ export class UpdateFileInput {
     @IsOptional()
     @ValidateNested()
     license?: LicenseInput;
+
+    @Field(() => [FileSubtitleInput], { nullable: true })
+    @Type(() => FileSubtitleInput)
+    @IsOptional()
+    @ValidateNested({ each: true })
+    subtitles?: FileSubtitleInput[];
 }

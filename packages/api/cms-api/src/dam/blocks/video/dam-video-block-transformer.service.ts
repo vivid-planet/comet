@@ -21,6 +21,21 @@ type TransformResponse = {
     autoplay?: boolean;
     loop?: boolean;
     showControls?: boolean;
+    subtitles?: {
+        file: {
+            id: string;
+            name: string;
+            size: number;
+            mimetype: string;
+            contentHash: string;
+            title?: string;
+            altText?: string;
+            archived: boolean;
+            scope?: DamScopeInterface;
+            fileUrl: string;
+        };
+        language: string;
+    }[];
 };
 
 @Injectable()
@@ -35,25 +50,47 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
             previewImage: block.previewImage,
         };
 
-        if (!block.damFileId) {
-            return ret;
+        if (block.damFileId) {
+            const file = await this.filesService.findOneById(block.damFileId);
+            if (file) {
+                ret.damFile = {
+                    id: file.id,
+                    name: file.name,
+                    size: file.size,
+                    mimetype: file.mimetype,
+                    contentHash: file.contentHash,
+                    title: file.title,
+                    altText: file.altText,
+                    archived: file.archived,
+                    scope: file.scope,
+                    fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                };
+            }
         }
 
-        const file = await this.filesService.findOneById(block.damFileId);
-
-        if (file) {
-            ret.damFile = {
-                id: file.id,
-                name: file.name,
-                size: file.size,
-                mimetype: file.mimetype,
-                contentHash: file.contentHash,
-                title: file.title,
-                altText: file.altText,
-                archived: file.archived,
-                scope: file.scope,
-                fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
-            };
+        if (ret.damFile && ret.damFile.id) {
+            const videoFile = await this.filesService.findOneById(ret.damFile.id);
+            if (videoFile && videoFile.subtitles) {
+                ret.subtitles = [];
+                for (const subtitle of videoFile.subtitles) {
+                    const file = subtitle.file;
+                    ret.subtitles.push({
+                        file: {
+                            id: file.id,
+                            name: file.name,
+                            size: file.size,
+                            mimetype: file.mimetype,
+                            contentHash: file.contentHash,
+                            title: file.title,
+                            altText: file.altText,
+                            archived: file.archived,
+                            scope: file.scope,
+                            fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                        },
+                        language: subtitle.language,
+                    });
+                }
+            }
         }
 
         return ret;

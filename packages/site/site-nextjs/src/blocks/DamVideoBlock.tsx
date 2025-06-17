@@ -18,7 +18,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
 
 export const DamVideoBlock = withPreview(
     ({
-        data: { damFile, autoplay, loop, showControls, previewImage },
+        data: { damFile, autoplay, loop, showControls, previewImage, subtitles },
         aspectRatio = "16x9",
         previewImageSizes,
         renderPreviewImage,
@@ -74,6 +74,9 @@ export const DamVideoBlock = withPreview(
                         style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", " / ") } : undefined}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
+                        {subtitles?.map((s, i) => (
+                            s.file ? <track key={i} src={s.file.fileUrl} kind="subtitles" srcLang={s.language} /> : null
+                        ))}
                     </video>
                 )}
             </>

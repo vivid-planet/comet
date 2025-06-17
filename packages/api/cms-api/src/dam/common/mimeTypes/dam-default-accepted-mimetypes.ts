@@ -46,4 +46,6 @@ export const damDefaultAcceptedMimetypes = [
     // zip
     "application/x-zip-compressed",
     "application/zip",
+    // subtitles
+    "text/vtt",
 ];

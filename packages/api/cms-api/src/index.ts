@@ -93,6 +93,7 @@ export { FileUploadInput, FileUploadInterface } from "./dam/files/dto/file-uploa
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
+export { DamFileSubtitle } from "./dam/files/entities/file-subtitle.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
 export { FilesService } from "./dam/files/files.service";

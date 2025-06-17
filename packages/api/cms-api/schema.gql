@@ -1,14 +1,14 @@
 type UserPermissionsUser {
-  id: String!
-  name: String!
-  email: String!
-  permissionsCount: Int!
-  contentScopesCount: Int!
+    id: String!
+    name: String!
+    email: String!
+    permissionsCount: Int!
+    contentScopesCount: Int!
 }
 
 type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
+    permission: String!
+    contentScopes: [JSONObject!]!
 }
 
 """
@@ -17,31 +17,31 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  permissions: [CurrentUserPermission!]!
-  impersonated: Boolean
-  authenticatedUser: UserPermissionsUser
-  permissionsForScope(scope: JSONObject!): [String!]!
+    id: String!
+    name: String!
+    email: String!
+    permissions: [CurrentUserPermission!]!
+    impersonated: Boolean
+    authenticatedUser: UserPermissionsUser
+    permissionsForScope(scope: JSONObject!): [String!]!
 }
 
 type UserPermission {
-  id: ID!
-  source: UserPermissionSource!
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]!
+    id: ID!
+    source: UserPermissionSource!
+    permission: String!
+    validFrom: DateTime
+    validTo: DateTime
+    reason: String
+    requestedBy: String
+    approvedBy: String
+    overrideContentScopes: Boolean!
+    contentScopes: [JSONObject!]!
 }
 
 enum UserPermissionSource {
-  MANUAL
-  BY_RULE
+    MANUAL
+    BY_RULE
 }
 
 """
@@ -50,626 +50,704 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-  name: String
-  secondaryInformation: String
+    rootId: String!
+    rootGraphqlObjectType: String!
+    rootColumnName: String!
+    jsonPath: String!
+    visible: Boolean!
+    targetGraphqlObjectType: String!
+    targetId: String!
+    name: String
+    secondaryInformation: String
 }
 
 type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
+    nodes: [Dependency!]!
+    totalCount: Int!
 }
 
 type ImageCropArea {
-  focalPoint: FocalPoint!
-  width: Float
-  height: Float
-  x: Float
-  y: Float
+    focalPoint: FocalPoint!
+    width: Float
+    height: Float
+    x: Float
+    y: Float
 }
 
 enum FocalPoint {
-  SMART
-  CENTER
-  NORTHWEST
-  NORTHEAST
-  SOUTHWEST
-  SOUTHEAST
+    SMART
+    CENTER
+    NORTHWEST
+    NORTHEAST
+    SOUTHWEST
+    SOUTHEAST
 }
 
 type DamFileImage {
-  id: ID!
-  width: Int!
-  height: Int!
-  exif: JSONObject
-  dominantColor: String
-  cropArea: ImageCropArea!
-  url(width: Int!, height: Int!): String
+    id: ID!
+    width: Int!
+    height: Int!
+    exif: JSONObject
+    dominantColor: String
+    cropArea: ImageCropArea!
+    url(width: Int!, height: Int!): String
 }
 
 type DamFileLicense {
-  type: LicenseType
-  details: String
-  author: String
-  durationFrom: DateTime
-  durationTo: DateTime
+    type: LicenseType
+    details: String
+    author: String
+    durationFrom: DateTime
+    durationTo: DateTime
 
-  """The expirationDate is the durationTo + 1 day"""
-  expirationDate: DateTime
-  isNotValidYet: Boolean!
-  expiresWithinThirtyDays: Boolean!
-  hasExpired: Boolean!
-  isValid: Boolean!
+    """
+    The expirationDate is the durationTo + 1 day
+    """
+    expirationDate: DateTime
+    isNotValidYet: Boolean!
+    expiresWithinThirtyDays: Boolean!
+    hasExpired: Boolean!
+    isValid: Boolean!
+}
+
+type DamFileSubtitle {
+    id: ID!
+    language: String!
+    file: DamFile!
 }
 
 enum LicenseType {
-  ROYALTY_FREE
-  RIGHTS_MANAGED
+    ROYALTY_FREE
+    RIGHTS_MANAGED
 }
 
 type BuildTemplate {
-  id: ID!
-  name: String!
+    id: ID!
+    name: String!
 
-  """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
-  """
-  label: String
+    """
+    Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+    """
+    label: String
 }
 
 type AutoBuildStatus {
-  hasChangesSinceLastBuild: Boolean!
-  lastCheck: DateTime
-  nextCheck: DateTime!
+    hasChangesSinceLastBuild: Boolean!
+    lastCheck: DateTime
+    nextCheck: DateTime!
 }
 
 type Build {
-  id: ID!
-  status: KubernetesJobStatus!
-  name: String
+    id: ID!
+    status: KubernetesJobStatus!
+    name: String
 
-  """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
-  """
-  label: String
-  trigger: String
-  startTime: DateTime
-  completionTime: DateTime
-  estimatedCompletionTime: DateTime
+    """
+    Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+    """
+    label: String
+    trigger: String
+    startTime: DateTime
+    completionTime: DateTime
+    estimatedCompletionTime: DateTime
 }
 
 enum KubernetesJobStatus {
-  pending
-  active
-  succeeded
-  failed
+    pending
+    active
+    succeeded
+    failed
 }
 
 type SeoTags {
-  htmlTitle: String!
-  metaDescription: String!
-  openGraphTitle: String!
-  openGraphDescription: String!
+    htmlTitle: String!
+    metaDescription: String!
+    openGraphTitle: String!
+    openGraphDescription: String!
 }
 
 type KubernetesCronJob {
-  id: ID!
-  name: String!
+    id: ID!
+    name: String!
 
-  """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
-  """
-  label: String
-  schedule: String!
-  lastScheduledAt: DateTime
-  lastJobRun: KubernetesJob
+    """
+    Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+    """
+    label: String
+    schedule: String!
+    lastScheduledAt: DateTime
+    lastJobRun: KubernetesJob
 }
 
 type KubernetesJob {
-  id: ID!
-  name: String!
+    id: ID!
+    name: String!
 
-  """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
-  """
-  label: String
-  status: KubernetesJobStatus!
-  startTime: DateTime
-  completionTime: DateTime
+    """
+    Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+    """
+    label: String
+    status: KubernetesJobStatus!
+    startTime: DateTime
+    completionTime: DateTime
 }
 
 type FilenameResponse {
-  name: String!
-  folderId: ID
-  isOccupied: Boolean!
+    name: String!
+    folderId: ID
+    isOccupied: Boolean!
 }
 
 type FileUpload {
-  id: ID!
-  name: String!
-  size: Int!
-  mimetype: String!
-  contentHash: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  downloadUrl: String!
-  imageUrl(resizeWidth: Int!): String
+    id: ID!
+    name: String!
+    size: Int!
+    mimetype: String!
+    contentHash: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    downloadUrl: String!
+    imageUrl(resizeWidth: Int!): String
 }
 
 type UserPermissionPaginatedUserList {
-  nodes: [UserPermissionsUser!]!
-  totalCount: Int!
+    nodes: [UserPermissionsUser!]!
+    totalCount: Int!
 }
 
 type PageTreeNode {
-  id: ID!
-  parentId: String
-  pos: Int!
-  name: String!
-  slug: String!
-  visibility: PageTreeNodeVisibility!
-  documentType: String!
-  hideInMenu: Boolean!
-  updatedAt: DateTime!
-  category: String!
-  childNodes: [PageTreeNode!]!
-  numberOfDescendants: Int!
-  parentNode: PageTreeNode
-  path: String!
-  parentNodes: [PageTreeNode!]!
-  document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+    id: ID!
+    parentId: String
+    pos: Int!
+    name: String!
+    slug: String!
+    visibility: PageTreeNodeVisibility!
+    documentType: String!
+    hideInMenu: Boolean!
+    updatedAt: DateTime!
+    category: String!
+    childNodes: [PageTreeNode!]!
+    numberOfDescendants: Int!
+    parentNode: PageTreeNode
+    path: String!
+    parentNodes: [PageTreeNode!]!
+    document: PageContentUnion
+    dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
-  Published
-  Unpublished
-  Archived
+    Published
+    Unpublished
+    Archived
 }
 
 union PageContentUnion = Page
 
 type Page implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
+    id: ID!
+    updatedAt: DateTime!
 }
 
 interface DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
+    id: ID!
+    updatedAt: DateTime!
 }
 
 input DependentFilter {
-  rootGraphqlObjectType: String
-  rootId: String
-  rootColumnName: String
+    rootGraphqlObjectType: String
+    rootId: String
+    rootColumnName: String
 }
 
 type Redirect {
-  id: ID!
-  sourceType: RedirectSourceTypeValues!
-  source: String!
-  target: JSONObject!
-  comment: String
-  active: Boolean!
-  activatedAt: DateTime
-  generationType: RedirectGenerationType!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+    id: ID!
+    sourceType: RedirectSourceTypeValues!
+    source: String!
+    target: JSONObject!
+    comment: String
+    active: Boolean!
+    activatedAt: DateTime
+    generationType: RedirectGenerationType!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
-  path
+    path
 }
 
 enum RedirectGenerationType {
-  manual
-  automatic
+    manual
+    automatic
 }
 
 input DependencyFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
+    targetGraphqlObjectType: String
+    targetId: String
+    rootColumnName: String
 }
 
 type PaginatedRedirects {
-  nodes: [Redirect!]!
-  totalCount: Int!
+    nodes: [Redirect!]!
+    totalCount: Int!
 }
 
 type PaginatedPageTreeNodes {
-  nodes: [PageTreeNode!]!
-  totalCount: Int!
+    nodes: [PageTreeNode!]!
+    totalCount: Int!
 }
 
 type DamFolder {
-  id: ID!
-  name: String!
-  numberOfChildFolders: Int!
-  numberOfFiles: Int!
-  mpath: [ID!]!
-  archived: Boolean!
-  isInboxFromOtherScope: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  parent: DamFolder
-  parents: [DamFolder!]!
+    id: ID!
+    name: String!
+    numberOfChildFolders: Int!
+    numberOfFiles: Int!
+    mpath: [ID!]!
+    archived: Boolean!
+    isInboxFromOtherScope: Boolean!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    parent: DamFolder
+    parents: [DamFolder!]!
 }
 
 type DamFile {
-  id: ID!
-  folder: DamFolder
-  name: String!
-  size: Int!
-  mimetype: String!
-  contentHash: String!
-  title: String
-  altText: String
-  archived: Boolean!
-  image: DamFileImage
-  license: DamFileLicense
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  importSourceId: String
-  importSourceType: String
-  fileUrl: String!
-  duplicates: [DamFile!]!
-  damPath: String!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+    id: ID!
+    folder: DamFolder
+    name: String!
+    size: Int!
+    mimetype: String!
+    contentHash: String!
+    title: String
+    altText: String
+    archived: Boolean!
+    image: DamFileImage
+    license: DamFileLicense
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    importSourceId: String
+    importSourceType: String
+    subtitles: [DamFileSubtitle!]!
+    fileUrl: String!
+    duplicates: [DamFile!]!
+    damPath: String!
+    dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
+    nodes: [DamItem!]!
+    totalCount: Int!
 }
 
 union DamItem = DamFile | DamFolder
 
 type CopyFilesResponse {
-  mappedFiles: [MappedFile!]!
+    mappedFiles: [MappedFile!]!
 }
 
 type MappedFile {
-  rootFile: DamFile!
-  copy: DamFile!
+    rootFile: DamFile!
+    copy: DamFile!
 }
 
 type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
+    nodes: [DamFile!]!
+    totalCount: Int!
 }
 
 type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
+    nodes: [DamFolder!]!
+    totalCount: Int!
 }
 
 type Query {
-  builds(limit: Float): [Build!]!
-  autoBuildStatus: AutoBuildStatus!
-  buildTemplates: [BuildTemplate!]!
-  redirects(scope: RedirectScopeInput! = {}, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  paginatedRedirects(scope: RedirectScopeInput! = {}, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
-  redirect(id: ID!): Redirect!
-  redirectBySource(scope: RedirectScopeInput! = {}, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
-  redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
-  damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
-  damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
-  damFile(id: ID!): DamFile!
-  findCopiesOfFileInScope(id: ID!, scope: DamScopeInput! = {}, imageCropArea: ImageCropAreaInput): [DamFile!]!
-  damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
-  damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput! = {}): [FilenameResponse!]!
-  damFoldersFlat(scope: DamScopeInput! = {}): [DamFolder!]!
-  damFoldersList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
-  damFolder(id: ID!): DamFolder!
-  damFolderByNameAndParentId(scope: DamScopeInput! = {}, name: String!, parentId: ID): DamFolder
-  pageTreeNode(id: ID!): PageTreeNode
-  pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
-  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], documentType: String, offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
-  pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  kubernetesCronJobs: [KubernetesCronJob!]!
-  kubernetesCronJob(name: String!): KubernetesCronJob!
-  kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
-  kubernetesJob(name: String!): KubernetesJob!
-  kubernetesJobLogs(name: String!): String!
-  currentUser: CurrentUser!
-  userPermissionsUserById(id: String!): UserPermissionsUser!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
-  userPermissionsPermissionList(userId: String!): [UserPermission!]!
-  userPermissionsPermission(id: ID!, userId: String): UserPermission!
-  userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
-  fileUploadForTypesGenerationDoNotUse: FileUpload!
-  azureAiTranslate(input: AzureAiTranslationInput!): String!
-  sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+    builds(limit: Float): [Build!]!
+    autoBuildStatus: AutoBuildStatus!
+    buildTemplates: [BuildTemplate!]!
+    redirects(
+        scope: RedirectScopeInput! = {}
+        query: String
+        type: RedirectGenerationType
+        active: Boolean
+        sortColumnName: String
+        sortDirection: SortDirection! = ASC
+    ): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
+    paginatedRedirects(
+        scope: RedirectScopeInput! = {}
+        search: String
+        filter: RedirectFilter
+        sort: [RedirectSort!]
+        offset: Int! = 0
+        limit: Int! = 25
+    ): PaginatedRedirects!
+    redirect(id: ID!): Redirect!
+    redirectBySource(scope: RedirectScopeInput! = {}, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
+    redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
+    damItemsList(
+        offset: Int! = 0
+        limit: Int! = 25
+        sortColumnName: String
+        sortDirection: SortDirection! = ASC
+        scope: DamScopeInput! = {}
+        folderId: ID
+        includeArchived: Boolean
+        filter: DamItemFilterInput
+    ): PaginatedDamItems!
+    damItemListPosition(
+        sortColumnName: String
+        sortDirection: SortDirection! = ASC
+        scope: DamScopeInput! = {}
+        id: ID!
+        type: DamItemType!
+        folderId: ID
+        includeArchived: Boolean
+        filter: DamItemFilterInput
+    ): Int!
+    damFilesList(
+        offset: Int! = 0
+        limit: Int! = 25
+        sortColumnName: String
+        sortDirection: SortDirection! = ASC
+        scope: DamScopeInput! = {}
+        folderId: ID
+        includeArchived: Boolean = false
+        filter: FileFilterInput
+    ): PaginatedDamFiles!
+    damFile(id: ID!): DamFile!
+    findCopiesOfFileInScope(id: ID!, scope: DamScopeInput! = {}, imageCropArea: ImageCropAreaInput): [DamFile!]!
+    damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
+    damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput! = {}): [FilenameResponse!]!
+    damFoldersFlat(scope: DamScopeInput! = {}): [DamFolder!]!
+    damFoldersList(
+        offset: Int! = 0
+        limit: Int! = 25
+        sortColumnName: String
+        sortDirection: SortDirection! = ASC
+        scope: DamScopeInput! = {}
+        parentId: ID
+        includeArchived: Boolean
+        filter: FolderFilterInput
+    ): PaginatedDamFolders!
+    damFolder(id: ID!): DamFolder!
+    damFolderByNameAndParentId(scope: DamScopeInput! = {}, name: String!, parentId: ID): DamFolder
+    pageTreeNode(id: ID!): PageTreeNode
+    pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+    pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+    paginatedPageTreeNodes(
+        scope: PageTreeNodeScopeInput! = {}
+        category: String
+        sort: [PageTreeNodeSort!]
+        documentType: String
+        offset: Int! = 0
+        limit: Int! = 25
+    ): PaginatedPageTreeNodes!
+    pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+    kubernetesCronJobs: [KubernetesCronJob!]!
+    kubernetesCronJob(name: String!): KubernetesCronJob!
+    kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
+    kubernetesJob(name: String!): KubernetesJob!
+    kubernetesJobLogs(name: String!): String!
+    currentUser: CurrentUser!
+    userPermissionsUserById(id: String!): UserPermissionsUser!
+    userPermissionsUsers(
+        offset: Int! = 0
+        limit: Int! = 25
+        search: String
+        filter: UserPermissionsUserFilter
+        sort: [UserPermissionsUserSort!]
+    ): UserPermissionPaginatedUserList!
+    userPermissionsPermissionList(userId: String!): [UserPermission!]!
+    userPermissionsPermission(id: ID!, userId: String): UserPermission!
+    userPermissionsAvailablePermissions: [String!]!
+    userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
+    userPermissionsAvailableContentScopes: [JSONObject!]!
+    fileUploadForTypesGenerationDoNotUse: FileUpload!
+    azureAiTranslate(input: AzureAiTranslationInput!): String!
+    sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
 }
 
 input RedirectScopeInput {
-  thisScopeHasNoFields____: String
+    thisScopeHasNoFields____: String
 }
 
 enum SortDirection {
-  ASC
-  DESC
+    ASC
+    DESC
 }
 
 input RedirectFilter {
-  generationType: StringFilter
-  source: StringFilter
-  target: StringFilter
-  active: BooleanFilter
-  createdAt: DateTimeFilter
-  updatedAt: DateTimeFilter
-  and: [RedirectFilter!]
-  or: [RedirectFilter!]
+    generationType: StringFilter
+    source: StringFilter
+    target: StringFilter
+    active: BooleanFilter
+    createdAt: DateTimeFilter
+    updatedAt: DateTimeFilter
+    and: [RedirectFilter!]
+    or: [RedirectFilter!]
 }
 
 input StringFilter {
-  contains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
-  isAnyOf: [String!]
+    contains: String
+    startsWith: String
+    endsWith: String
+    equal: String
+    notEqual: String
+    isAnyOf: [String!]
 }
 
 input BooleanFilter {
-  equal: Boolean
+    equal: Boolean
 }
 
 input DateTimeFilter {
-  equal: DateTime
-  lowerThan: DateTime
-  greaterThan: DateTime
-  lowerThanEqual: DateTime
-  greaterThanEqual: DateTime
-  notEqual: DateTime
+    equal: DateTime
+    lowerThan: DateTime
+    greaterThan: DateTime
+    lowerThanEqual: DateTime
+    greaterThanEqual: DateTime
+    notEqual: DateTime
 }
 
 input RedirectSort {
-  field: RedirectSortField!
-  direction: SortDirection! = ASC
+    field: RedirectSortField!
+    direction: SortDirection! = ASC
 }
 
 enum RedirectSortField {
-  source
-  createdAt
-  updatedAt
+    source
+    createdAt
+    updatedAt
 }
 
 input DamScopeInput {
-  thisScopeHasNoFields____: String
+    thisScopeHasNoFields____: String
 }
 
 input DamItemFilterInput {
-  searchText: String
-  mimetypes: [String!]
+    searchText: String
+    mimetypes: [String!]
 }
 
 enum DamItemType {
-  File
-  Folder
+    File
+    Folder
 }
 
 input FileFilterInput {
-  searchText: String
-  mimetypes: [String!]
+    searchText: String
+    mimetypes: [String!]
 }
 
 input ImageCropAreaInput {
-  focalPoint: FocalPoint!
-  width: Float
-  height: Float
-  x: Float
-  y: Float
+    focalPoint: FocalPoint!
+    width: Float
+    height: Float
+    x: Float
+    y: Float
 }
 
 input FilenameInput {
-  name: String!
-  folderId: ID
+    name: String!
+    folderId: ID
 }
 
 input FolderFilterInput {
-  searchText: String
+    searchText: String
 }
 
 input PageTreeNodeScopeInput {
-  thisScopeHasNoFields____: String
+    thisScopeHasNoFields____: String
 }
 
 input PageTreeNodeSort {
-  field: PageTreeNodeSortField!
-  direction: SortDirection! = ASC
+    field: PageTreeNodeSortField!
+    direction: SortDirection! = ASC
 }
 
 enum PageTreeNodeSortField {
-  updatedAt
-  pos
+    updatedAt
+    pos
 }
 
 enum SlugAvailability {
-  Available
-  Taken
-  Reserved
+    Available
+    Taken
+    Reserved
 }
 
 input UserPermissionsUserFilter {
-  name: StringFilter
-  email: StringFilter
-  status: StringFilter
-  and: [UserPermissionsUserFilter!]
-  or: [UserPermissionsUserFilter!]
+    name: StringFilter
+    email: StringFilter
+    status: StringFilter
+    and: [UserPermissionsUserFilter!]
+    or: [UserPermissionsUserFilter!]
 }
 
 input UserPermissionsUserSort {
-  field: UserPermissionsUserSortField!
-  direction: SortDirection! = ASC
+    field: UserPermissionsUserSortField!
+    direction: SortDirection! = ASC
 }
 
 enum UserPermissionsUserSortField {
-  name
-  email
-  status
+    name
+    email
+    status
 }
 
 input AzureAiTranslationInput {
-  text: String!
-  targetLanguage: String!
+    text: String!
+    targetLanguage: String!
 }
 
 type Mutation {
-  createBuilds(input: CreateBuildsInput!): Boolean!
-  createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
-  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
-  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
-  deleteRedirect(id: ID!): Boolean!
-  updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, input: UpdateDamFileInput!): DamFile!
-  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
-  archiveDamFile(id: ID!): DamFile!
-  archiveDamFiles(ids: [ID!]!): [DamFile!]!
-  restoreDamFile(id: ID!): DamFile!
-  restoreDamFiles(ids: [ID!]!): [DamFile!]!
-  deleteDamFile(id: ID!): Boolean!
-  createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput! = {}): DamFolder!
-  updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
-  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput! = {}): [DamFolder!]!
-  deleteDamFolder(id: ID!): Boolean!
-  updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
-  deletePageTreeNode(id: ID!): Boolean!
-  updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
-  updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
-  movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
-  movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
-  updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
-  createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
-  triggerKubernetesCronJob(name: String!): KubernetesJob!
-  currentUserSignOut: String!
-  userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
-  userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
-  userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
-  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
-  generateAltText(fileId: String!, language: String): String!
-  generateImageTitle(fileId: String!, language: String): String!
-  generateSeoTags(content: String!, language: String!): SeoTags!
+    createBuilds(input: CreateBuildsInput!): Boolean!
+    createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
+    updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
+    updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
+    deleteRedirect(id: ID!): Boolean!
+    updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
+    importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, input: UpdateDamFileInput!): DamFile!
+    moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+    copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
+    archiveDamFile(id: ID!): DamFile!
+    archiveDamFiles(ids: [ID!]!): [DamFile!]!
+    restoreDamFile(id: ID!): DamFile!
+    restoreDamFiles(ids: [ID!]!): [DamFile!]!
+    deleteDamFile(id: ID!): Boolean!
+    createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput! = {}): DamFolder!
+    updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
+    moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput! = {}): [DamFolder!]!
+    deleteDamFolder(id: ID!): Boolean!
+    updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
+    deletePageTreeNode(id: ID!): Boolean!
+    updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
+    updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
+    movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
+    movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
+    updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
+    createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+    triggerKubernetesCronJob(name: String!): KubernetesJob!
+    currentUserSignOut: String!
+    userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
+    userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
+    userPermissionsDeletePermission(id: ID!): Boolean!
+    userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
+    userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
+    generateAltText(fileId: String!, language: String): String!
+    generateImageTitle(fileId: String!, language: String): String!
+    generateSeoTags(content: String!, language: String!): SeoTags!
 }
 
 input CreateBuildsInput {
-  names: [String!]!
+    names: [String!]!
 }
 
 input RedirectInput {
-  sourceType: RedirectSourceTypeValues!
-  source: String!
-  target: JSONObject!
-  comment: String
-  active: Boolean
-  generationType: RedirectGenerationType!
+    sourceType: RedirectSourceTypeValues!
+    source: String!
+    target: JSONObject!
+    comment: String
+    active: Boolean
+    generationType: RedirectGenerationType!
 }
 
 input RedirectUpdateActivenessInput {
-  active: Boolean!
+    active: Boolean!
 }
 
 input UpdateDamFileInput {
-  name: String
-  title: String
-  altText: String
-  image: UpdateImageFileInput
-  folderId: ID
-  license: LicenseInput
+    name: String
+    title: String
+    altText: String
+    image: UpdateImageFileInput
+    folderId: ID
+    license: LicenseInput
+    subtitles: [FileSubtitleInput!]
 }
 
 input UpdateImageFileInput {
-  cropArea: ImageCropAreaInput
+    cropArea: ImageCropAreaInput
+}
+
+input FileSubtitleInput {
+    fileId: ID
+    language: String!
 }
 
 input LicenseInput {
-  type: LicenseType
-  details: String
-  author: String
-  durationFrom: DateTime
-  durationTo: DateTime
+    type: LicenseType
+    details: String
+    author: String
+    durationFrom: DateTime
+    durationTo: DateTime
 }
 
 input CreateDamFolderInput {
-  name: String!
-  parentId: ID
-  isInboxFromOtherScope: Boolean! = false
+    name: String!
+    parentId: ID
+    isInboxFromOtherScope: Boolean! = false
 }
 
 input UpdateDamFolderInput {
-  name: String
-  parentId: ID
-  archived: Boolean
+    name: String
+    parentId: ID
+    archived: Boolean
 }
 
 input PageTreeNodeUpdateInput {
-  name: String!
-  slug: String!
-  attachedDocument: AttachedDocumentInput
-  hideInMenu: Boolean
-  createAutomaticRedirectsOnSlugChange: Boolean = true
+    name: String!
+    slug: String!
+    attachedDocument: AttachedDocumentInput
+    hideInMenu: Boolean
+    createAutomaticRedirectsOnSlugChange: Boolean = true
 }
 
 input AttachedDocumentInput {
-  type: String!
-  id: String
+    type: String!
+    id: String
 }
 
 input PageTreeNodeUpdateVisibilityInput {
-  visibility: PageTreeNodeVisibility!
+    visibility: PageTreeNodeVisibility!
 }
 
 input MovePageTreeNodesByPosInput {
-  parentId: String
-  pos: Int!
+    parentId: String
+    pos: Int!
 }
 
 input MovePageTreeNodesByNeighbourInput {
-  parentId: String
-  afterId: String
-  beforeId: String
+    parentId: String
+    afterId: String
+    beforeId: String
 }
 
 input PageTreeNodeCreateInput {
-  id: ID
-  name: String!
-  parentId: String
-  pos: Int
-  slug: String!
-  attachedDocument: AttachedDocumentInput!
-  hideInMenu: Boolean
+    id: ID
+    name: String!
+    parentId: String
+    pos: Int
+    slug: String!
+    attachedDocument: AttachedDocumentInput!
+    hideInMenu: Boolean
 }
 
 input UserPermissionInput {
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
+    permission: String!
+    validFrom: DateTime
+    validTo: DateTime
+    reason: String
+    requestedBy: String
+    approvedBy: String
 }
 
 input UserPermissionOverrideContentScopesInput {
-  permissionId: ID!
-  overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]! = []
+    permissionId: ID!
+    overrideContentScopes: Boolean!
+    contentScopes: [JSONObject!]! = []
 }
 
 input UserContentScopesInput {
-  contentScopes: [JSONObject!]! = []
+    contentScopes: [JSONObject!]! = []
 }

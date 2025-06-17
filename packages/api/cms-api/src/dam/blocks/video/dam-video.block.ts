@@ -9,32 +9,54 @@ import {
     inputToData,
     typesafeMigrationPipe,
 } from "@comet/blocks-api";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-video-block";
 import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";
 
+class Subtitle {
+    @BlockField({ nullable: true })
+    @IsUUID()
+    @IsOptional()
+    fileId?: string;
+
+    @BlockField()
+    @IsString()
+    language!: string;
+}
+
 class DamVideoBlockData extends BaseVideoBlockData {
     damFileId?: string;
+
+    @Type(() => Subtitle)
+    subtitles: Subtitle[] = [];
 
     async transformToPlain() {
         return DamVideoBlockTransformerService;
     }
 
     indexData(): BlockIndexData {
-        if (this.damFileId === undefined) {
+        const dependencies = [] as Array<{ targetEntityName: string; id: string }>;
+
+        if (this.damFileId) {
+            dependencies.push({ targetEntityName: FILE_ENTITY, id: this.damFileId });
+        }
+
+        for (const subtitle of this.subtitles) {
+            if (subtitle.fileId) {
+                dependencies.push({ targetEntityName: FILE_ENTITY, id: subtitle.fileId });
+            }
+        }
+
+        if (dependencies.length === 0) {
             return {};
         }
 
         return {
-            dependencies: [
-                {
-                    targetEntityName: FILE_ENTITY,
-                    id: this.damFileId,
-                },
-            ],
+            dependencies,
         };
     }
 }
@@ -44,6 +66,10 @@ class DamVideoBlockInput extends BaseVideoBlockInput {
     @IsUUID()
     @IsOptional()
     damFileId?: string;
+
+    @Type(() => Subtitle)
+    @ValidateNested({ each: true })
+    subtitles: Subtitle[] = [];
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(DamVideoBlockData, this);
@@ -107,6 +133,25 @@ class Meta extends AnnotationBlockMeta {
                         },
                         {
                             name: "fileUrl",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                    ],
+                },
+            },
+            {
+                name: "subtitles",
+                kind: BlockMetaFieldKind.NestedObjectList,
+                nullable: false,
+                object: {
+                    fields: [
+                        {
+                            name: "fileId",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: true,
+                        },
+                        {
+                            name: "language",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },
