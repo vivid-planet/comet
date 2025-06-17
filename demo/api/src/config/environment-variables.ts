@@ -1,7 +1,7 @@
 import { BlobStorageConfig } from "@comet/cms-api";
 import { PrivateSiteConfig } from "@src/site-configs";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -135,13 +135,13 @@ export class EnvironmentVariables {
     @IsOptional()
     @IsArray()
     @Transform(({ value }) => value.split(","))
-    @IsString({ each: true })
+    @IsEmail({}, { each: true })
     MAILER_SEND_ALL_MAILS_TO?: string[];
 
     @IsOptional()
     @IsArray()
     @Transform(({ value }) => value.split(","))
-    @IsString({ each: true })
+    @IsEmail({}, { each: true })
     MAILER_SEND_ALL_MAILS_BCC?: string[];
 
     @IsString()
