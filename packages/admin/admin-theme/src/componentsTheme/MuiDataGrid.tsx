@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
 import {
+    autocompleteClasses,
     buttonBaseClasses,
     getSwitchUtilityClass,
     iconButtonClasses,
@@ -242,6 +243,28 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             "&:empty": {
                 display: "none", // Make space for `filterFormOperatorInput` to expand and take up the full width
+            },
+
+            [`&& .${autocompleteClasses.inputRoot}`]: {
+                padding: 0,
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+                border: `1px solid ${palette.grey[100]}`,
+
+                [`& > .${autocompleteClasses.input}`]: {
+                    padding: `calc(${spacing(2)} - 1px)`,
+                    display: "flex",
+                    alignItems: "center",
+                },
+
+                [`& > .MuiOutlinedInput-notchedOutline`]: {
+                    display: "none",
+                },
+
+                "&.Mui-focused": {
+                    border: `1px solid ${palette.primary.main}`,
+                },
             },
 
             [`& .${inputBaseClasses.root}`]: {
