@@ -4,7 +4,7 @@
 
 API Generator: Allow easier extension of generated resolvers and services
 
-Even though we don't encourage to extend generated resolvers and services, it should still be possible. Our recommendation is to generate a new resolver but there are cases where it makes sense to extend the existing one (e.g. modifying certain functions or reuseing existing code).
+Even though we don't encourage to extend generated resolvers and services, it should still be possible. Our recommendation is to generate a new resolver but there are cases where it makes sense to extend the existing one (e.g. modifying certain functions or reusing existing code).
 
 Until now, this was hard to do, because every resolver and service declared it's services as private. If you need to use a service from the base resolver, you had to redeclare all services with a different name.
 
@@ -44,7 +44,7 @@ Class 'CustomProductResolver' incorrectly extends base class 'ProductResolver'.
   Types have separate declarations of a private property 'repository'.ts(2415)
 ```
 
-Now, the constructor can be ommitted and the custom resolver can be simplified to:
+Now, the constructor can be omitted and the custom resolver can be simplified to:
 
 ```ts
 @Resolver(() => Product)
