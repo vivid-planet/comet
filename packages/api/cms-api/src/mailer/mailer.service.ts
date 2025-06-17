@@ -38,7 +38,11 @@ export class MailerService {
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
      * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
      */
-    async sendMail({ type, additionalData, ...originMailOptions }: MailOptions & { type?: string; additionalData?: unknown }) {
+    async sendMail({
+        mailTypeForLogging,
+        additionalData,
+        ...originMailOptions
+    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown }) {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
 
         let logEntry: MailerLog<unknown> | undefined;
@@ -48,7 +52,7 @@ export class MailerService {
                 subject: originMailOptions.subject,
                 mailOptions: mailOptionsWithDefaults,
                 additionalData,
-                type, // for statistic and filter purposes
+                type: mailTypeForLogging, // for statistic and filter purposes
             });
             await this.entityManager.flush();
         }
