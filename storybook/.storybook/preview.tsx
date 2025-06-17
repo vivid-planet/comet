@@ -9,7 +9,7 @@ import { type Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
 
-import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
+import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 import { previewGlobalStyles } from "./preview.styles";
 
@@ -64,8 +64,8 @@ export const globalTypes: GlobalTypes = {
             title: "Theme",
             icon: "paintbrush",
             items: [
-                { value: ThemeOptions.Comet, right: "🟩", title: "Comet Theme" },
-                { value: ThemeOptions.Mui, right: "🟦", title: "Mui Theme" },
+                { value: ThemeOption.Comet, right: "🟩", title: "Comet Theme" },
+                { value: ThemeOption.Mui, right: "🟦", title: "Mui Theme" },
             ],
             showName: true,
             dynamicTitle: true,
