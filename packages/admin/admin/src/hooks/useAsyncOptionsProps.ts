@@ -16,6 +16,7 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
     const [error, setError] = useState<Error | null>(null);
 
     const handleOpen = async () => {
+        setError(null);
         setOpen(true);
         setLoading(true);
         try {
