@@ -3,6 +3,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
 import { MailerService } from "./mailer.service";
+import { SendTestMailCommand } from "./send-test-mail.command";
 
 export type MailerModuleConfig = {
     defaultFrom: string;
@@ -17,7 +18,7 @@ export class MailerModule {
     static register(config: MailerModuleConfig): DynamicModule {
         return {
             module: MailerModule,
-            providers: [{ provide: MAILER_MODULE_OPTIONS, useValue: config }, MailerService],
+            providers: [{ provide: MAILER_MODULE_OPTIONS, useValue: config }, MailerService, SendTestMailCommand],
             exports: [MailerService],
         };
     }
