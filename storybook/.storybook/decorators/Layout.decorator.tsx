@@ -5,7 +5,7 @@ import { type Decorator } from "@storybook/react";
 
 import { previewGlobalStyles } from "./Layout.decorator.styles";
 
-export enum LayoutOptions {
+export enum LayoutOption {
     Default = "default",
     Padded = "padded",
 }
@@ -18,7 +18,7 @@ export const LayoutDecorator: Decorator = (fn, context) => {
         <div>
             <GlobalStyles styles={previewGlobalStyles(theme)} />
 
-            {selectedLayout === LayoutOptions.Padded ? <MainContent>{fn()}</MainContent> : fn()}
+            {selectedLayout === LayoutOption.Padded ? <MainContent>{fn()}</MainContent> : fn()}
         </div>
     );
 };

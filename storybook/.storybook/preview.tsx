@@ -4,7 +4,7 @@ import type { Preview } from "@storybook/react-webpack5";
 import { type GlobalTypes } from "storybook/internal/csf";
 
 import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
-import { LayoutDecorator, LayoutOptions } from "./decorators/Layout.decorator";
+import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
 import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 
@@ -42,8 +42,8 @@ export const globalTypes: GlobalTypes = {
             title: "Layout",
             icon: "switchalt",
             items: [
-                { value: LayoutOptions.Padded, title: "Padded" },
-                { value: LayoutOptions.Default, title: "Default" },
+                { value: LayoutOption.Padded, title: "Padded" },
+                { value: LayoutOption.Default, title: "Default" },
             ],
             showName: true,
             dynamicTitle: true,
