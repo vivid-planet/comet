@@ -8,7 +8,7 @@ export enum LocaleOption {
     English = "en",
 }
 
-function isLocaleOptions(value: any): value is LocaleOption {
+function isLocaleOption(value: any): value is LocaleOption {
     return value === "de" || value === "en";
 }
 
@@ -57,12 +57,12 @@ export const IntlDecorator: Decorator = (fn, context) => {
     return (
         <IntlProvider
             locale={selectedLocale}
-            messages={isLocaleOptions(selectedLocale) ? messages[selectedLocale] : {}}
+            messages={isLocaleOption(selectedLocale) ? messages[selectedLocale] : {}}
             onError={() => {
                 // disable error logging
             }}
         >
-            <DateFnsLocaleProvider value={isLocaleOptions(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
+            <DateFnsLocaleProvider value={isLocaleOption(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
                 {fn()}
             </DateFnsLocaleProvider>
         </IntlProvider>
