@@ -11,6 +11,11 @@ export type FinalFormNumberInputProps = InputBaseProps &
         decimals?: number;
     };
 
+/**
+ * Final Form-compatible NumberInput component.
+ *
+ * @see {@link NumberField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdornment, decimals = 0, ...props }: FinalFormNumberInputProps) {
     const intl = useIntl();
 

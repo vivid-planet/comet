@@ -8,6 +8,11 @@ export interface FinalFormToggleButtonGroupProps<FieldValue> extends FieldRender
     optionsPerRow?: number;
 }
 
+/**
+ * Final Form-compatible ToggleButtonGroup component.
+ *
+ * @see {@link ToggleButtonGroupField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export function FinalFormToggleButtonGroup<FieldValue = unknown>({
     input: { value, onChange },
     options,
