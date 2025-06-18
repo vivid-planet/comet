@@ -1,7 +1,6 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
-    createRedirectsPage,
     CronJobsPage,
     DamPage,
     type DocumentInterface,
@@ -11,6 +10,7 @@ import {
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
+    WarningsPage,
 } from "@comet/cms-admin";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
@@ -20,7 +20,6 @@ import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
-import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
@@ -31,6 +30,7 @@ import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLo
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
+import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
@@ -43,7 +43,6 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Page,
     Link,
 };
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {
@@ -182,6 +181,15 @@ export const masterMenuData: MasterMenuData = [
                     render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
                 },
                 requiredPermission: "pageTree",
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
+                route: {
+                    path: "/system/warnings",
+                    component: WarningsPage,
+                },
+                requiredPermission: "warnings",
             },
         ],
     },

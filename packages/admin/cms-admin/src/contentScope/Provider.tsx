@@ -45,6 +45,7 @@ export type UseContentScopeApi = {
     match: match;
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     supported: boolean;
+    createUrl: (scope: ContentScope) => string;
     values: ContentScopeValues;
 };
 
@@ -112,6 +113,7 @@ export function useContentScope(): UseContentScopeApi {
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
         values: context.values as ContentScopeValues, // @TODO:
+        createUrl: context.location.createUrl,
     };
 }
 

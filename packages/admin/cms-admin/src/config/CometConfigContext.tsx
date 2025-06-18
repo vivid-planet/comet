@@ -9,6 +9,7 @@ import { type DamConfig } from "../dam/config/damConfig";
 import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type PageTreeConfig } from "../pages/pageTreeConfig";
 import { type SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
+import { type WarningsConfig } from "../warnings/warningsConfig";
 
 export interface CometConfig<SiteConfigs = unknown> {
     apiUrl: string;
@@ -23,6 +24,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     blocks?: BlocksConfig & {
         context?: Omit<BlockContext, "apiUrl" | "apolloClient">;
     };
+    warnings?: WarningsConfig;
 }
 
 const CometConfigContext = createContext<CometConfig | undefined>(undefined);

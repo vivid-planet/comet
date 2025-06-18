@@ -5,6 +5,7 @@ import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageExists } from "../validators/page-exists.validator";
 import { InternalLinkBlockTransformerService } from "./internal-link-block-transformer.service";
+import { InternalLinkBlockWarningsService } from "./internal-link-block-warnings.service";
 
 class InternalLinkBlockData extends BlockData {
     targetPageId?: string;
@@ -29,6 +30,10 @@ class InternalLinkBlockData extends BlockData {
                 },
             ],
         };
+    }
+
+    warnings() {
+        return InternalLinkBlockWarningsService;
     }
 }
 
