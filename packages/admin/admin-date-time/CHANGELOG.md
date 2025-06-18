@@ -1,5 +1,15 @@
 # @comet/admin-date-time
 
+## 7.24.0
+
+### Patch Changes
+
+-   fa611381b: Don't show the `ClearInputAdornment` if the `TimePicker` is disabled
+-   fa611381b: Support the `disabled` prop in the `DateTimePicker`
+-   Updated dependencies [fc900f217]
+    -   @comet/admin@7.24.0
+    -   @comet/admin-icons@7.24.0
+
 ## 7.23.0
 
 ### Patch Changes
