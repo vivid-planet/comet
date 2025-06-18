@@ -1,0 +1,48 @@
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
+import { Inject, Logger } from "@nestjs/common";
+import { Command, CommandRunner, Option } from "nest-commander";
+
+import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
+import { MailerModuleConfig } from "./mailer.module";
+import { MailerService } from "./mailer.service";
+
+@Command({
+    name: "mailer:send-test-mail",
+    description: "test mail integration",
+})
+export class SendTestMailCommand extends CommandRunner {
+    private readonly logger = new Logger(SendTestMailCommand.name);
+
+    constructor(
+        private readonly orm: MikroORM,
+        @Inject(MAILER_MODULE_OPTIONS) private readonly mailerConfig: MailerModuleConfig,
+        private readonly mailerService: MailerService,
+    ) {
+        super();
+    }
+
+    @Option({
+        flags: "-r, --receiver",
+    })
+    parseReceiver() {}
+
+    @CreateRequestContext()
+    async run(_arguments: string[], { receiver }: { receiver?: string }): Promise<void> {
+        const defaultReceiver = [
+            ...(this.mailerConfig.sendAllMailsTo ? this.mailerConfig.sendAllMailsTo : []),
+            ...(this.mailerConfig.sendAllMailsBcc ? this.mailerConfig.sendAllMailsBcc : []),
+        ];
+        if (!receiver && defaultReceiver.length === 0) {
+            throw new Error(`No default receiver configured in config.mailer.receiver or config.mailer.bccReceiver. Please use --receiver.`);
+        }
+
+        const result = await this.mailerService.sendMail({
+            type: "mail-server-communication-test",
+            to: receiver || defaultReceiver,
+            subject: "Mail-Server communication works",
+            text: "Lorem ipsum dolor sit amet",
+            html: `<div>Lorem ipsum dolor sit amet</div>`,
+        });
+        this.logger.log(`Test mail sent. Result: ${JSON.stringify(result)}`);
+    }
+}
