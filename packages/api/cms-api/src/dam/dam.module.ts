@@ -16,6 +16,7 @@ import { DamItemsService } from "./files/dam-items.service";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
 import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
+import { LinkedDamFile } from "./files/entities/linked-dam-file.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { FileValidationService } from "./files/file-validation.service";
@@ -26,6 +27,7 @@ import { FilesEntityInfoService } from "./files/files-entity-info.service";
 import { FoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
+import { createLinkedDamFilesResolver } from "./files/linked-dam-files.resolver";
 import { CalculateDominantImageColor } from "./images/calculateDominantImageColor.console";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
 import { ImagesController } from "./images/images.controller";
@@ -80,6 +82,7 @@ export class DamModule {
         const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
+        const LinkedDamFilesResolver = createLinkedDamFilesResolver({ File, Scope });
 
         if (Scope) {
             // Scope validation needs to happen after resolver generation. Otherwise the input type metadata has not been defined yet.
@@ -102,7 +105,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, LinkedDamFile]), BlobStorageModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
@@ -130,6 +133,7 @@ export class DamModule {
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
                 HasValidFilenameConstraint,
+                LinkedDamFilesResolver,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

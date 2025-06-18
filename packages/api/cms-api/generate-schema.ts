@@ -30,6 +30,7 @@ import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
+import { createLinkedDamFilesResolver } from "./src/dam/files/linked-dam-files.resolver";
 import { FileUploadsResolver } from "./src/file-uploads/file-uploads.resolver";
 import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
@@ -117,6 +118,7 @@ async function generateSchema(): Promise<void> {
         GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+        createLinkedDamFilesResolver({ File }),
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

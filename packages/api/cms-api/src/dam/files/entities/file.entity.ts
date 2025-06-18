@@ -22,9 +22,10 @@ import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
+import { LinkedDamFile, LinkedDamFileInterface } from "./linked-dam-file.entity";
 
 export interface FileInterface extends BaseEntity<FileInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "linkedDamFilesSources" | "linkedDamFilesTargets";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -43,6 +44,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     scope?: DamScopeInterface;
     importSourceId?: string;
     importSourceType?: string;
+    linkedDamFilesSources: LinkedDamFileInterface[];
+    linkedDamFilesTargets: LinkedDamFileInterface[];
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
@@ -145,6 +148,12 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field({ nullable: true })
         @Property({ columnType: "text", nullable: true })
         importSourceType?: string;
+
+        @OneToMany(() => LinkedDamFile, (linkedDamFile: LinkedDamFileInterface) => linkedDamFile.source)
+        linkedDamFilesSources: LinkedDamFileInterface[];
+
+        @OneToMany(() => LinkedDamFile, (linkedDamFile: LinkedDamFileInterface) => linkedDamFile.target)
+        linkedDamFilesTargets: LinkedDamFileInterface[];
 
         // fileUrl: Field is resolved in resolver
     }

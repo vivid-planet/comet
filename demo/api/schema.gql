@@ -117,6 +117,16 @@ enum LicenseType {
   RIGHTS_MANAGED
 }
 
+type LinkedDamFile {
+  id: ID!
+  language: String!
+  type: LinkedDamFileType!
+}
+
+enum LinkedDamFileType {
+  subtitles
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -243,7 +253,11 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  linkedDamFilesSources: [LinkedDamFile!]!
+  linkedDamFilesTargets: [LinkedDamFile!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  source: DamFile!
+  target: DamFile!
 }
 
 input DependentFilter {

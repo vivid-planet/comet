@@ -23,6 +23,7 @@ import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface
 import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
+import { LinkedDamFile, LinkedDamFileInterface } from "./entities/linked-dam-file.entity";
 import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
 import { createFileUploadInputFromUrl, slugifyFilename } from "./files.utils";
@@ -267,6 +268,16 @@ export function createFilesResolver({
         @ResolveField(() => String)
         async damPath(@Parent() file: FileInterface): Promise<string> {
             return this.filesService.getDamPath(file);
+        }
+
+        @ResolveField(() => [LinkedDamFile])
+        linkedDamFilesSources(@Parent() file: FileInterface): LinkedDamFileInterface[] {
+            return file.linkedDamFilesSources;
+        }
+
+        @ResolveField(() => [LinkedDamFile])
+        linkedDamFilesTargets(@Parent() file: FileInterface): LinkedDamFileInterface[] {
+            return file.linkedDamFilesTargets;
         }
     }
 
