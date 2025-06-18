@@ -17,9 +17,9 @@ import {
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
+import { DataGridTablePagination } from "../../dataGrid/pagination/DataGridTablePagination";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
@@ -68,6 +68,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             columnSortedDescendingIcon: ArrowDown,
             columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             panel: DataGridPanel,
+            pagination: DataGridTablePagination,
             ...component?.defaultProps?.slots,
         },
         slotProps: {
@@ -78,21 +79,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         localeText: {
-            MuiTablePagination: {
-                labelDisplayedRows: ({ from, to, count }) => (
-                    <FormattedMessage
-                        id="dataGrid.pagination.labelDisplayedRows"
-                        defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
-                        values={{
-                            from: <FormattedNumber value={from} />,
-                            to: <FormattedNumber value={to} />,
-                            formattedCount: <FormattedNumber value={count} />,
-                            count,
-                        }}
-                    />
-                ),
-                ...component?.defaultProps?.localeText?.MuiTablePagination,
-            },
             ...component?.defaultProps?.localeText,
         },
     },
@@ -152,6 +138,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             boxSizing: "border-box",
             minHeight: getDensityHeightValue(ownerState?.density),
 
+            justifyContent: "start",
             [`& .${tablePaginationClasses.selectLabel}, & .${tablePaginationClasses.displayedRows}`]: {
                 marginTop: 0,
                 marginBottom: 0,
