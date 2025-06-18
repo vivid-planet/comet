@@ -1,4 +1,4 @@
-import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
+import { InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -88,18 +88,7 @@ export const FinalFormSelect = <T,>({
     return (
         <Select
             {...selectProps}
-            endAdornment={
-                <>
-                    {loading ? (
-                        <InputAdornment position="end">
-                            <CircularProgress size={16} color="inherit" />
-                            {endAdornment}
-                        </InputAdornment>
-                    ) : (
-                        <InputAdornment position="end">{endAdornment}</InputAdornment>
-                    )}
-                </>
-            }
+            endAdornment={<InputAdornment position="end">{endAdornment}</InputAdornment>}
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
