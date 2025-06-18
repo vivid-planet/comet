@@ -54,6 +54,7 @@ export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "
 export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuContext, CrudMoreActionsMenuItem, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { DataGridColumnsManagement, DataGridColumnsManagementClassKey, DataGridColumnsManagementProps } from "./dataGrid/DataGridColumnsManagement";
 export { DataGridPanel, DataGridPanelClassKey, DataGridPanelProps } from "./dataGrid/DataGridPanel";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
