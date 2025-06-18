@@ -121,7 +121,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     const { classNameSingular } = buildNameVariants(metadata);
     const { crudFilterProps } = buildOptions(metadata, generatorOptions);
 
-    let importsOut = "";
+    const imports: Imports = [];
     let enumFiltersOut = "";
 
     const generatedEnumNames = new Set<string>();
@@ -135,7 +135,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                 enumFiltersOut += `@InputType()
                     class ${enumName}EnumsFilter extends createEnumsFilter(${enumName}) {}
                 `;
-                importsOut += `import { ${enumName} } from "${importPath}";`;
+                imports.push({ name: enumName, importPath });
             }
         } else if (prop.enum) {
             const enumName = findEnumName(prop.name, metadata);
@@ -145,7 +145,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                 enumFiltersOut += `@InputType()
                     class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
                 `;
-                importsOut += `import { ${enumName} } from "${importPath}";`;
+                imports.push({ name: enumName, importPath });
             }
         }
     });
@@ -154,7 +154,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-    ${importsOut}
+    ${generateImportsCode(imports)}
 
     ${enumFiltersOut}
 
@@ -949,11 +949,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
+        ${
+            generatorOptions.single
+                ? `
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
         async ${instanceNameSingular}(${generateIdArg("id", metadata)}): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.entityManager.findOneOrFail(${metadata.className}, id);
             return ${instanceNameSingular};
+        }
+        `
+                : ""
         }
 
         ${
@@ -1242,7 +1248,11 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
         list: generatorOptionsParam.list ?? true,
+        single: generatorOptionsParam.single ?? true,
     };
+    if (!generatorOptions.create && !generatorOptions.update && !generatorOptions.delete && !generatorOptions.list && !generatorOptions.single) {
+        throw new Error("At least one of create, update, delete, list or single must be true");
+    }
 
     const generatedFiles: GeneratedFile[] = [];
 

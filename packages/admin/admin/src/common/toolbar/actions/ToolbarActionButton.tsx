@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Button, type ButtonProps, type ComponentsOverrides, IconButton } from "@mui/material";
 import { css, type Theme, useTheme, useThemeProps } from "@mui/material/styles";
 

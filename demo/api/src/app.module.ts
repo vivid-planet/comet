@@ -54,6 +54,7 @@ import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
+import { StatusModule } from "./status/status.module";
 
 @Module({})
 export class AppModule {
@@ -153,6 +154,7 @@ export class AppModule {
                     File: DamFile,
                     Folder: DamFolder,
                 }),
+                StatusModule,
                 FileUploadsModule.register({
                     maxFileSize: config.fileUploads.maxFileSize,
                     directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,

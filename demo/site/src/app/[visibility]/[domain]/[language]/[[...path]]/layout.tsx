@@ -1,4 +1,4 @@
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-nextjs";
 import { Footer } from "@src/layout/footer/Footer";
 import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";

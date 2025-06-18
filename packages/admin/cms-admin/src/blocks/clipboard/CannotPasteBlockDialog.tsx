@@ -1,5 +1,6 @@
 import { messages } from "@comet/admin";
 import {
+    // eslint-disable-next-line no-restricted-imports
     Button,
     // eslint-disable-next-line no-restricted-imports
     Dialog,

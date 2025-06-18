@@ -36,6 +36,7 @@ type UserPermissionsUser {
   email: String!
   permissionsCount: Int!
   contentScopesCount: Int!
+  impersonationAllowed: Boolean!
 }
 
 type CurrentUserPermission {
@@ -500,7 +501,7 @@ type PageTreeNode {
   category: PageTreeNodeCategory!
   userGroup: UserGroup!
   childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
+  numberOfDescendants: Int!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
@@ -688,6 +689,7 @@ type Redirect {
   target: JSONObject!
   comment: String
   active: Boolean!
+  activatedAt: DateTime
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -879,7 +881,6 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
-  manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
   warning(id: ID!): Warning!
   warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!

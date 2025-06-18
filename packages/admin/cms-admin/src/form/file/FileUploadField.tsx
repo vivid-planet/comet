@@ -1,17 +1,19 @@
 import { Field, type FieldProps } from "@comet/admin";
 
-import { FinalFormFileUpload } from "./FinalFormFileUpload";
+import { FinalFormFileUpload, type FinalFormFileUploadProps } from "./FinalFormFileUpload";
 import { type GQLFinalFormFileUploadDownloadableFragment, type GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
-type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment, HTMLInputElement> & {
-    multiple?: false;
-    maxFiles?: 1;
-};
+type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment, HTMLInputElement> &
+    Partial<FinalFormFileUploadProps<false>> & {
+        multiple?: false;
+        maxFiles?: 1;
+    };
 
-type MultipleFileUploadProps = FieldProps<Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>, HTMLInputElement> & {
-    multiple: true;
-    maxFiles?: number;
-};
+type MultipleFileUploadProps = FieldProps<Array<GQLFinalFormFileUploadFragment | GQLFinalFormFileUploadDownloadableFragment>, HTMLInputElement> &
+    Partial<FinalFormFileUploadProps<true>> & {
+        multiple: true;
+        maxFiles?: number;
+    };
 
 export type FileUploadFieldProps<Multiple extends boolean | undefined> = Multiple extends true ? MultipleFileUploadProps : SingleFileUploadProps;
 

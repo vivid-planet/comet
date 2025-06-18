@@ -14,7 +14,7 @@ export class AlternativeAddress {
     @IsString()
     street: string;
 
-    @Field(() => Number, { nullable: true })
+    @Field({ nullable: true })
     @Property({ nullable: true })
     @IsNumber()
     @IsNullable()
@@ -51,7 +51,7 @@ export class AlternativeAddressAsEmbeddable {
     @IsString()
     street: string;
 
-    @Field(() => Number, { nullable: true })
+    @Field({ nullable: true })
     @Property({ nullable: true })
     @IsNumber()
     @IsNullable()

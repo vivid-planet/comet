@@ -9,7 +9,7 @@ const config: Config = {
         }],
     },
     testTimeout: 20000,
-    testPathIgnorePatterns: ["/node_modules/", "/__tests__/\\.(temp|test).*"],
+    testPathIgnorePatterns: ["/node_modules/", "/__tests__/\\.(temp|test).*", "/lib/"],
 };
 
 export default config;

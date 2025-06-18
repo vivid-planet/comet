@@ -155,11 +155,17 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     throw new Error("Response body is null");
                 }
 
-                const headers: Record<string, string> = {};
-                for (const [key, value] of response.headers.entries()) {
-                    headers[key] = value;
+                const contentLength = response.headers.get("content-length");
+                if (!contentLength) {
+                    throw new Error("Content length not found");
                 }
-                res.writeHead(response.status, headers);
+
+                const contentType = response.headers.get("content-type");
+                if (!contentType) {
+                    throw new Error("Content type not found");
+                }
+
+                res.writeHead(response.status, { "content-length": contentLength, "content-type": contentType });
 
                 const readableBody = Readable.fromWeb(response.body);
                 readableBody.pipe(new PassThrough()).pipe(res);
@@ -168,13 +174,13 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     await this.cacheService.set(file.contentHash, path, {
                         file: readableBody.pipe(new PassThrough()),
                         metaData: {
-                            size: Number(headers["content-length"]),
-                            headers,
+                            size: Number(contentLength),
+                            contentType: contentType,
                         },
                     });
                 }
             } else {
-                res.writeHead(200, cache.metaData.headers);
+                res.writeHead(200, { "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
 
                 cache.file.pipe(res);
             }

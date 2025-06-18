@@ -1,5 +1,5 @@
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
-import { type match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
+import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
 import { defaultCreatePath } from "./utils/defaultCreatePath";
 
@@ -128,23 +128,13 @@ export function ContentScopeProvider({ children, defaultValue, values, location 
     const path = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<ContentScope>>(path);
-    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<string>();
-    const currentLocation = useLocation();
-
-    let defaultRedirectPathAfterChange: string | undefined;
-
-    if (match) {
-        // Location: /main/en/dashboard
-        // Match: /main/en
-        // Page: Location - Match = /dashboard
-        defaultRedirectPathAfterChange = currentLocation.pathname.replace(match.url, "");
-    }
+    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     return (
         <Context.Provider
             value={{
                 path,
-                redirectPathAfterChange: redirectPathAfterChange ?? defaultRedirectPathAfterChange,
+                redirectPathAfterChange,
                 setRedirectPathAfterChange,
                 values,
                 location: location as ContentScopeLocation,
