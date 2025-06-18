@@ -14,8 +14,8 @@ import { PaginatedManufacturerCountries } from "./dto/paginated-manufacturer-cou
 @RequiredPermission(["manufacturerCountries"], { skipScopeCheck: true })
 export class ManufacturerCountryResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(ManufacturerCountry) private readonly repository: EntityRepository<ManufacturerCountry>,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(ManufacturerCountry) protected readonly repository: EntityRepository<ManufacturerCountry>,
     ) {}
 
     @Query(() => ManufacturerCountry)

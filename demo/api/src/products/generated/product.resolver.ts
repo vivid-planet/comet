@@ -32,16 +32,16 @@ import { ProductsArgs } from "./dto/products.args";
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
-        @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
-        @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
-        @InjectRepository(FileUpload) private readonly fileUploadRepository: EntityRepository<FileUpload>,
-        @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
-        @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
-        @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
-        @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
-        private readonly blocksTransformer: BlocksTransformerService,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(Product) protected readonly repository: EntityRepository<Product>,
+        @InjectRepository(ProductCategory) protected readonly productCategoryRepository: EntityRepository<ProductCategory>,
+        @InjectRepository(Manufacturer) protected readonly manufacturerRepository: EntityRepository<Manufacturer>,
+        @InjectRepository(FileUpload) protected readonly fileUploadRepository: EntityRepository<FileUpload>,
+        @InjectRepository(ProductStatistics) protected readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
+        @InjectRepository(ProductColor) protected readonly productColorRepository: EntityRepository<ProductColor>,
+        @InjectRepository(ProductToTag) protected readonly productToTagRepository: EntityRepository<ProductToTag>,
+        @InjectRepository(ProductTag) protected readonly productTagRepository: EntityRepository<ProductTag>,
+        protected readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
     @Query(() => Product)
