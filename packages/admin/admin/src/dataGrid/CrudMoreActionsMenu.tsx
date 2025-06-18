@@ -94,6 +94,7 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
     slotName: "button",
 })(css`
     margin: 0 10px;
+    min-height: 44px;
 `);
 
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
