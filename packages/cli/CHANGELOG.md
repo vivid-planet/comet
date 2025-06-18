@@ -1,5 +1,13 @@
 # @comet/cli
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 23335c6: Remove workarounds in `inject-site-configs` command.
+
+    Please use the command like the current implementation in the starter.
+
 ## 8.0.0-beta.4
 
 ## 8.0.0-beta.3
@@ -16,6 +24,12 @@
 ## 8.0.0-beta.1
 
 ## 8.0.0-beta.0
+
+## 7.21.1
+
+## 7.21.0
+
+## 7.20.0
 
 ## 7.19.0
 

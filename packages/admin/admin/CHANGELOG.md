@@ -1,5 +1,34 @@
 # @comet/admin
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 1d28c90: Update props and styling of `StackBackButton`, `OkayButton`, `CancelButton`, and `DeleteButton` to match the Comet `Button` component and the Comet DXP design
+
+    - Adds support for the `responsive` prop
+    - Removes the `color` prop and updates the values of the `variant` prop
+
+- 6cfc60d: SaveBoundary: rename useSavable to useSaveBoundaryState
+
+### Minor Changes
+
+- ad9b2a3: Remove `SelectionFooter` from `FolderDataGrid` to align with the Comet DXP design
+
+    Crud actions are performed in the `CrudMoreActionsMenu` in the toolbar instead.
+
+- 09c4830: Respect SubRoute prefix in SelectionRoute and EditDialog
+
+    This allows using multiple `EditDialog`s on the same level by wrapping them into `<RouteRoute>`.
+
+### Patch Changes
+
+- 2cf573b: Optimize responsive behavior of `CrudMoreActionsMenu`
+- 4182a94: Fix loading state of FinalFormSelect when loading asynchronous options
+- bf9b1bb: Fix styling of `Chip` in `CrudMoreActionsMenu` to display the full value of its label
+- Updated dependencies [5a6efc1]
+    - @comet/admin-icons@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Major Changes
@@ -352,6 +381,36 @@
 - Updated dependencies [04e308a]
 - Updated dependencies [682a674]
     - @comet/admin-icons@8.0.0-beta.0
+
+## 7.21.1
+
+### Patch Changes
+
+- b771bd6d8: Don't delete an item when closing the delete dialog in `CrudContextMenu`
+    - @comet/admin-icons@7.21.1
+    - @comet/admin-theme@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- 1a30eb858: Prevent overlapping placeholders by a non-visible clear-button
+- 3e9ea613e: Fix color of button in `UndoSnackbar`
+    - @comet/admin-icons@7.21.0
+    - @comet/admin-theme@7.21.0
+
+## 7.20.0
+
+### Patch Changes
+
+- 415a83165: Prevent form components used within `Field`/`FieldContainer` from overflowing their parent
+
+    Select components now truncate their value with ellipsis when used within these components, consistent with their behavior in other usages.
+
+- 99f904f81: Close `Dialog` with ESC key or backdrop click
+- 2d1726543: `title` prop of the Dialog got merged with `title` Prop of `MuiDialogProps`. This lead to errors when forwarding ReactNodes to title.
+    - @comet/admin-icons@7.20.0
+    - @comet/admin-theme@7.20.0
 
 ## 7.19.0
 

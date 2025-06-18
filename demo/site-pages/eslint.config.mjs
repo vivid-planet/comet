@@ -6,11 +6,6 @@ const config = [
         ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**"],
     },
     ...eslintConfigNextJs,
-    {
-        rules: {
-            "@calm/react-intl/missing-formatted-message": "off",
-        },
-    },
 ];
 
 export default config;

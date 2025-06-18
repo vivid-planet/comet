@@ -7,9 +7,11 @@ import {
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
+    Select,
     svgIconClasses,
     type SvgIconProps,
     tablePaginationClasses,
+    TextField,
     toolbarClasses,
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
@@ -56,6 +58,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             quickFilterIcon: Search,
             quickFilterClearIcon: Clear,
             filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
+            baseTextField: TextField,
+            baseSelect: Select,
             booleanCellTrueIcon: Check,
             booleanCellFalseIcon: Close,
             columnSortedAscendingIcon: ArrowUp,

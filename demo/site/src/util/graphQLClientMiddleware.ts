@@ -1,4 +1,4 @@
-import { createFetchWithDefaults, createGraphQLFetch } from "@comet/cms-site";
+import { createFetchWithDefaults, createGraphQLFetch } from "@comet/site-nextjs";
 
 export function createGraphQLFetchMiddleware() {
     if (!process.env.API_BASIC_AUTH_SYSTEM_USER_PASSWORD) {

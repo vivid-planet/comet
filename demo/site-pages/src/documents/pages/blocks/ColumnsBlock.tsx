@@ -50,21 +50,21 @@ const Column = styled.div<{ $layout: string }>`
         css`
             grid-column: 5 / -5;
 
-            ${theme.breakpoints.xs.mediaQuery} {
+            ${theme.breakpoints.sm.mediaQuery} {
                 grid-column: 7 / -7;
             }
-            ${theme.breakpoints.sm.mediaQuery} {
+            ${theme.breakpoints.md.mediaQuery} {
                 grid-column: 8 / -8;
             }
-            ${theme.breakpoints.md.mediaQuery} {
+            ${theme.breakpoints.lg.mediaQuery} {
                 grid-column: 9 / -9;
             }
-            ${theme.breakpoints.lg.mediaQuery} {
+            ${theme.breakpoints.xl.mediaQuery} {
                 grid-column: 10 / -10;
             }
         `};
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         ${({ $layout }) =>
             $layout === "4-16-4" &&
             css`

@@ -12,7 +12,7 @@ export interface SaveBoundaryApi {
     register: (id: string, props: SavableProps) => void;
     unregister: (id: string) => void;
 }
-export interface Savable {
+interface SaveBoundaryState {
     hasErrors: boolean;
     hasChanges: boolean;
     saving: boolean;
@@ -23,9 +23,9 @@ export function useSaveBoundaryApi() {
     return useContext(SaveBoundaryApiContext);
 }
 
-const SavableContext = createContext<Savable | undefined>(undefined);
-export function useSavable() {
-    return useContext(SavableContext);
+const SaveBoundaryStateContext = createContext<SaveBoundaryState | undefined>(undefined);
+export function useSaveBoundaryState() {
+    return useContext(SaveBoundaryStateContext);
 }
 
 interface SaveBoundaryProps {
@@ -105,7 +105,7 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
             resetAction={reset}
             subRoutePath={subRoutePath}
         >
-            <SavableContext.Provider
+            <SaveBoundaryStateContext.Provider
                 value={{
                     hasErrors,
                     hasChanges,
@@ -121,7 +121,7 @@ export const SaveBoundary = ({ onAfterSave, ...props }: PropsWithChildren<SaveBo
                 >
                     {props.children}
                 </SaveBoundaryApiContext.Provider>
-            </SavableContext.Provider>
+            </SaveBoundaryStateContext.Provider>
         </RouterPrompt>
     );
 };

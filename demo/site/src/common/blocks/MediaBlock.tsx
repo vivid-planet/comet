@@ -1,4 +1,12 @@
-import { DamVideoBlock, OneOfBlock, PreviewSkeleton, type PropsWithData, type SupportedBlocks, VimeoVideoBlock, withPreview } from "@comet/cms-site";
+import {
+    DamVideoBlock,
+    OneOfBlock,
+    PreviewSkeleton,
+    type PropsWithData,
+    type SupportedBlocks,
+    VimeoVideoBlock,
+    withPreview,
+} from "@comet/site-nextjs";
 import { type MediaBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 

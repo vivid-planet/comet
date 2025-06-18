@@ -18,11 +18,12 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import { type ComponentType, type ReactNode, useCallback, useMemo, useRef } from "react";
+import { type ComponentType, type ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { type ContentScope, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
+import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
 import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
@@ -38,6 +39,7 @@ import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {
     category: string;
+    path: string;
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScope) => ReactNode;
@@ -47,17 +49,26 @@ const DefaultEditPageNode = createEditPageNode({});
 
 export function PagesPage({
     category,
+    path,
     documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props) {
     const intl = useIntl();
-    const { scope } = useContentScope();
+    const { scope, setRedirectPathAfterChange } = useContentScope();
     const { additionalPageTreeNodeFragment } = usePageTreeConfig();
+    useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
     const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
     const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
+
+    useEffect(() => {
+        setRedirectPathAfterChange(path);
+        return () => {
+            setRedirectPathAfterChange(undefined);
+        };
+    }, [setRedirectPathAfterChange, path]);
 
     const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         fetchPolicy: "cache-and-network",
