@@ -1,5 +1,21 @@
 # @comet/admin
 
+## 8.0.0-beta.6
+
+### Minor Changes
+
+- afc306b: Add the prop `noOptionsLabel ` to the `FinalFormSelect` to customize it.
+- afc306b: Add a default message "No options." when the FinalFormSelect has no options
+- 06d5600: Savable: add optional checkForChanges that can return hasChanges (aka dirty) before Savable re-renders and updates the hasChanges prop
+
+    Fixes issue in Form where a "Save changes?"-Dialog appears right after adding a new entry
+
+- 77b52a8: Add `ToggleButtonGroupField` component
+
+### Patch Changes
+
+- @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Major Changes

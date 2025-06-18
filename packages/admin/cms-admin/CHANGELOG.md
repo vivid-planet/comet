@@ -1,5 +1,25 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.6
+
+### Minor Changes
+
+- 77b52a8: Mark `FinalFormToggleButtonGroup` as deprecated. One should prefer using `ToggleButtonGroupField` from `@comet/admin` instead
+- d8ba897: Allow overriding the `uploadEndpoint` of `${apiUrl}/file-uploads/upload` in the `FinalFormFileUpload` component.
+
+### Patch Changes
+
+- e983344: Adapt styling of `RedirectActiveness` dropdown to align with Comet DXP design
+- 286fbfb: Added missing prop types to `FileUploadFieldProps` that are forwarded to `FinalFormFileUpload`, ensuring consistent typing and easier customization.
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+- Updated dependencies [06d5600]
+- Updated dependencies [77b52a8]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-date-time@8.0.0-beta.6
+    - @comet/admin-rte@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Major Changes

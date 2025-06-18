@@ -1,5 +1,11 @@
 # @comet/site-nextjs
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- @comet/site-react@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Patch Changes

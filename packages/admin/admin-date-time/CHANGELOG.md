@@ -1,5 +1,16 @@
 # @comet/admin-date-time
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+- Updated dependencies [06d5600]
+- Updated dependencies [77b52a8]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Patch Changes
