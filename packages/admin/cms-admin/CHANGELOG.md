@@ -1,5 +1,21 @@
 # @comet/cms-admin
 
+## 7.24.0
+
+### Patch Changes
+
+-   Updated dependencies [751616321]
+-   Updated dependencies [fa611381b]
+-   Updated dependencies [fa611381b]
+-   Updated dependencies [fc900f217]
+-   Updated dependencies [24e046fb3]
+    -   @comet/blocks-admin@7.24.0
+    -   @comet/admin-date-time@7.24.0
+    -   @comet/admin@7.24.0
+    -   @comet/admin-theme@7.24.0
+    -   @comet/admin-rte@7.24.0
+    -   @comet/admin-icons@7.24.0
+
 ## 7.23.0
 
 ### Minor Changes
