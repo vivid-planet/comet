@@ -1,4 +1,3 @@
-import { styled } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { useRouteMatch } from "react-router";
 
@@ -28,13 +27,6 @@ const DefaultContentScopeIndicator = () => {
     }
 };
 
-const DamTableWrapper = styled("div")`
-    display: grid;
-    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
-    grid-template-columns: 1fr;
-    grid-template-rows: max-content;
-`;
-
 function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
     const { scope, match } = useContentScope();
     const routeMatch = useRouteMatch();
@@ -44,12 +36,10 @@ function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props)
 
     return (
         <DamScopeProvider>
-            <DamTableWrapper>
-                <DamTable
-                    contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultContentScopeIndicator />}
-                    additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
-                />
-            </DamTableWrapper>
+            <DamTable
+                contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultContentScopeIndicator />}
+                additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
+            />
         </DamScopeProvider>
     );
 }

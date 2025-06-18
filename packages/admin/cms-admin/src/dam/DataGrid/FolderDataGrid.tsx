@@ -8,7 +8,6 @@ import {
     type GridColDef,
     type IFilterApi,
     type ISelectionApi,
-    MainContent,
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
@@ -601,7 +600,7 @@ const FolderDataGrid = ({
     };
 
     return (
-        <MainContent>
+        <>
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     apiRef={apiRef}
@@ -660,7 +659,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </MainContent>
+        </>
     );
 };
 
