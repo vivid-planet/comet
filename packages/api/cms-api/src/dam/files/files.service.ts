@@ -27,12 +27,13 @@ import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
-import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
+import { CreateFileInput, ImageFileInput, LinkedDamFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
+import { LinkedDamFile } from "./entities/linked-dam-file.entity";
 import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -106,6 +107,7 @@ export class FilesService {
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+        @InjectRepository(LinkedDamFile) private readonly linkedDamFileRepository: EntityRepository<LinkedDamFile>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
@@ -302,6 +304,10 @@ export class FilesService {
             if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
                 throw new Error(`Entity with name '${input.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
             }
+        }
+
+        if (input.linkedDamFiles) {
+            await this.updateDamFileLinks(entity, input.linkedDamFiles);
         }
 
         const file = Object.assign(entity, {
@@ -638,5 +644,47 @@ export class FilesService {
         }
 
         return { exifData, contentHash, image };
+    }
+
+    /**
+     * Updates the links to DAM files in the given entity.
+     * It will remove links that are not present in the input, update existing links, and create new links.
+     *
+     * @param entity The entity to update the links for.
+     * @param input The input containing the linked DAM files.
+     */
+    private async updateDamFileLinks(entity: FileInterface, input: Array<LinkedDamFileInput>) {
+        await entity.linkedDamFilesTargets.loadItems();
+
+        const linksToDelete = entity.linkedDamFilesTargets.filter((exsitingLink) => {
+            return !input.some((inputLink) => inputLink.id === exsitingLink.id);
+        });
+        const linksToUpdate = input.filter((file) => file.id !== undefined);
+        const linksToCreate = input.filter((file) => file.id === undefined);
+
+        for (const link of linksToDelete) {
+            const existingLink = entity.linkedDamFilesTargets.getItems().find((l) => l.id === link.id);
+            if (existingLink) {
+                entity.linkedDamFilesTargets.remove(existingLink);
+            }
+        }
+
+        for (const link of linksToUpdate) {
+            const existingLink = entity.linkedDamFilesTargets.getItems().find((l) => l.id === link.id);
+            if (existingLink) {
+                existingLink.language = link.language;
+                existingLink.target = await this.filesRepository.findOneOrFail(link.targetFileId);
+                existingLink.type = link.type;
+            }
+        }
+
+        for (const link of linksToCreate) {
+            this.linkedDamFileRepository.create({
+                type: link.type,
+                language: link.language,
+                source: entity,
+                target: await this.filesRepository.findOneOrFail(link.targetFileId),
+            });
+        }
     }
 }

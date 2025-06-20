@@ -2,6 +2,7 @@ import {
     BaseEntity,
     BigIntType,
     Cascade,
+    Collection,
     Embedded,
     Entity,
     Index,
@@ -44,8 +45,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     scope?: DamScopeInterface;
     importSourceId?: string;
     importSourceType?: string;
-    linkedDamFilesSources: LinkedDamFileInterface[];
-    linkedDamFilesTargets: LinkedDamFileInterface[];
+    linkedDamFilesSources: Collection<LinkedDamFile, object>;
+    linkedDamFilesTargets: Collection<LinkedDamFile, object>;
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
@@ -150,10 +151,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         importSourceType?: string;
 
         @OneToMany(() => LinkedDamFile, (linkedDamFile: LinkedDamFileInterface) => linkedDamFile.source)
-        linkedDamFilesSources: LinkedDamFileInterface[];
+        linkedDamFilesSources = new Collection<LinkedDamFile>(this);
 
         @OneToMany(() => LinkedDamFile, (linkedDamFile: LinkedDamFileInterface) => linkedDamFile.target)
-        linkedDamFilesTargets: LinkedDamFileInterface[];
+        linkedDamFilesTargets = new Collection<LinkedDamFile>(this);
 
         // fileUrl: Field is resolved in resolver
     }

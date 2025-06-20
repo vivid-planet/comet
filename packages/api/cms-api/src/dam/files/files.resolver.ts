@@ -271,13 +271,13 @@ export function createFilesResolver({
         }
 
         @ResolveField(() => [LinkedDamFile])
-        linkedDamFilesSources(@Parent() file: FileInterface): LinkedDamFileInterface[] {
-            return file.linkedDamFilesSources;
+        async linkedDamFilesSources(@Parent() file: FileInterface): Promise<LinkedDamFileInterface[]> {
+            return file.linkedDamFilesSources.loadItems();
         }
 
         @ResolveField(() => [LinkedDamFile])
-        linkedDamFilesTargets(@Parent() file: FileInterface): LinkedDamFileInterface[] {
-            return file.linkedDamFilesTargets;
+        async linkedDamFilesTargets(@Parent() file: FileInterface): Promise<LinkedDamFileInterface[]> {
+            return file.linkedDamFilesTargets.loadItems();
         }
     }
 

@@ -20,6 +20,7 @@ import { IsUndefinable } from "../../../common/validators/is-undefinable";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../../types";
 import { LicenseType } from "../entities/license.embeddable";
+import { LinkedDamFileType } from "../entities/linked-dam-file.entity";
 
 export class ImageFileInput {
     @IsOptional()
@@ -161,4 +162,30 @@ export class UpdateFileInput {
     @IsOptional()
     @ValidateNested()
     license?: LicenseInput;
+
+    @Field(() => [LinkedDamFileInput], { nullable: true })
+    @Type(() => LinkedDamFileInput)
+    @ValidateNested({ each: true })
+    @IsOptional()
+    linkedDamFiles?: Array<LinkedDamFileInput>;
+}
+
+@InputType({ isAbstract: true })
+export class LinkedDamFileInput {
+    @Field(() => ID, { nullable: true })
+    @IsOptional()
+    @IsUUID()
+    id?: string;
+
+    @Field(() => ID)
+    @IsUUID()
+    targetFileId: string;
+
+    @Field()
+    @IsString()
+    language: string;
+
+    @Field(() => LinkedDamFileType)
+    @IsEnum(LinkedDamFileType)
+    type: LinkedDamFileType;
 }

@@ -93,6 +93,16 @@ type DamFileImage {
   url(width: Int!, height: Int!): String
 }
 
+type LinkedDamFile {
+  id: ID!
+  language: String!
+  type: LinkedDamFileType!
+}
+
+enum LinkedDamFileType {
+  subtitles
+}
+
 type DamFileLicense {
   type: LicenseType
   details: String
@@ -111,16 +121,6 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
-}
-
-type LinkedDamFile {
-  id: ID!
-  language: String!
-  type: LinkedDamFileType!
-}
-
-enum LinkedDamFileType {
-  subtitles
 }
 
 type BuildTemplate {
@@ -605,6 +605,7 @@ input UpdateDamFileInput {
   image: UpdateImageFileInput
   folderId: ID
   license: LicenseInput
+  linkedDamFiles: [LinkedDamFileInput!]
 }
 
 input UpdateImageFileInput {
@@ -617,6 +618,13 @@ input LicenseInput {
   author: String
   durationFrom: DateTime
   durationTo: DateTime
+}
+
+input LinkedDamFileInput {
+  id: ID
+  targetFileId: ID!
+  language: String!
+  type: LinkedDamFileType!
 }
 
 input CreateDamFolderInput {
