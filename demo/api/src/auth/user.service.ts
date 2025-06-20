@@ -19,6 +19,6 @@ export class UserService implements UserPermissionsUserServiceInterface, JwtToUs
     findUsers(args: FindUsersArgs): Users {
         const search = args.search?.toLowerCase();
         const users = staticUsers.filter((user) => !search || user.name.toLowerCase().includes(search) || user.email.toLowerCase().includes(search));
-        return [users, users.length];
+        return [users.slice(args.offset, args.offset + args.limit), users.length];
     }
 }

@@ -838,6 +838,7 @@ input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
+  permission: PermissionFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
 }
@@ -846,6 +847,12 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
+}
+
+input PermissionFilter {
   equal: String
   notEqual: String
   isAnyOf: [String!]
