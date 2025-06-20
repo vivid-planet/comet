@@ -2,7 +2,7 @@ import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/adm
 import { Domain, Language } from "@comet/admin-icons";
 import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
-import { type Meta } from "@storybook/react";
+import { type Meta } from "@storybook/react-webpack5";
 import { useState } from "react";
 
 export default {

@@ -122,6 +122,7 @@ export { SelectField, SelectFieldOption, SelectFieldProps } from "./form/fields/
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";
+export { ToggleButtonGroupField, ToggleButtonGroupFieldProps } from "./form/fields/ToggleButtonGroupField";
 export { commonErrorMessages as commonFileErrorMessages } from "./form/file/commonErrorMessages";
 export { FileDropzone, FileDropzoneClassKey, FileDropzoneProps } from "./form/file/FileDropzone";
 export { FileSelect, FileSelectClassKey, FileSelectProps } from "./form/file/FileSelect";
@@ -181,6 +182,16 @@ export {
      */
     FinalFormSelectProps,
 } from "./form/FinalFormSelect";
+export {
+    /**
+     * @deprecated Use `<ToggleButtonGroupField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormToggleButtonGroup />`
+     */
+    FinalFormToggleButtonGroup,
+    /**
+     * @deprecated Use `<ToggleButtonGroupField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormToggleButtonGroup />`
+     */
+    FinalFormToggleButtonGroupProps,
+} from "./form/FinalFormToggleButtonGroup";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";

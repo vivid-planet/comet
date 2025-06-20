@@ -1,27 +1,39 @@
-import { ButtonBase } from "@mui/material";
+import { ButtonBase, Typography, type TypographyProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 
-interface Props<FieldValue> extends FieldRenderProps<FieldValue, HTMLDivElement> {
-    options: Array<{ value: FieldValue; icon: ReactNode }>;
+export interface FinalFormToggleButtonGroupProps<FieldValue> extends FieldRenderProps<FieldValue, HTMLDivElement> {
+    options: Array<{ value: FieldValue; label: ReactNode }>;
     optionsPerRow?: number;
 }
 
-export function FinalFormToggleButtonGroup<FieldValue = unknown>({ input: { value, onChange }, options, optionsPerRow }: Props<FieldValue>) {
+export function FinalFormToggleButtonGroup<FieldValue = unknown>({
+    input: { value, onChange },
+    options,
+    optionsPerRow,
+}: FinalFormToggleButtonGroupProps<FieldValue>) {
     return (
         <Root $optionsPerRow={optionsPerRow}>
-            {options.map(({ value: optionValue, icon }, index) => (
+            {options.map(({ value: optionValue, label }, index) => (
                 <Button key={index} $selected={value === optionValue} onClick={() => onChange(optionValue)} focusRipple>
-                    {icon}
+                    <Label component="span" variant="body2">
+                        {label}
+                    </Label>
                 </Button>
             ))}
         </Root>
     );
 }
 
+const Label = styled(Typography)<{ component: TypographyProps["component"] }>`
+    display: flex;
+    align-items: center;
+`;
+
 const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerRow" })<{ $optionsPerRow?: number }>`
     display: inline-flex;
+    min-height: 40px;
     border: 1px solid ${({ theme }) => theme.palette.divider};
     background-color: ${({ theme }) => theme.palette.divider};
     border-radius: 2px;
@@ -37,8 +49,10 @@ const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerR
 `;
 
 const Button = styled(ButtonBase, { shouldForwardProp: (prop) => prop !== "$selected" })<{ $selected?: boolean }>`
-    width: 46px;
-    height: 46px;
+    padding-left: ${({ theme }) => theme.spacing(3)};
+    padding-right: ${({ theme }) => theme.spacing(3)};
+    padding-top: 9px;
+    padding-bottom: 9px;
     background-color: ${({ theme }) => theme.palette.background.paper};
 
     :hover {
