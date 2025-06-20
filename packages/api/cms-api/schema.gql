@@ -506,12 +506,15 @@ enum SlugAvailability {
 }
 
 input UserPermissionsUserFilter {
+  and: [UserPermissionsUserFilterField!]
+  or: [UserPermissionsUserFilterField!]
+}
+
+input UserPermissionsUserFilterField {
   name: StringFilter
   email: StringFilter
   status: StringFilter
   permission: PermissionFilter
-  and: [UserPermissionsUserFilter!]
-  or: [UserPermissionsUserFilter!]
 }
 
 input PermissionFilter {

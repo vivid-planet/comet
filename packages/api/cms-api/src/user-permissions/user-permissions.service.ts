@@ -101,9 +101,13 @@ export class UserPermissionsService {
     async hasPermission(user: User, permission: string | string[]): Promise<boolean> {
         const permissions = Array.isArray(permission) ? permission : [permission];
         if (this.accessControlService.getPermissionsForUser) {
-            const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, await this.getAvailablePermissions());
-            if (permissionsByRule === UserPermissions.allPermissions) return true;
-            if (permissionsByRule.some((p) => permissions.includes(p.permission))) return true;
+            const availablePermissions = await this.getAvailablePermissions();
+            const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
+            if (permissionsByRule === UserPermissions.allPermissions) {
+                if (availablePermissions.some((p) => permissions.includes(p))) return true;
+            } else {
+                if (permissionsByRule.some((p) => permissions.includes(p.permission))) return true;
+            }
         }
         if (this.manualPermissions === undefined) {
             throw new Error('You need to call "warmupHasPermissionCache" before using "hasPermission" for the first time.');

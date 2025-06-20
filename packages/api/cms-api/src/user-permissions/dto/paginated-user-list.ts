@@ -25,7 +25,7 @@ export class PermissionFilter {
 }
 
 @InputType()
-class UserPermissionsUserFilter {
+class UserPermissionsUserFilterField {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
@@ -45,16 +45,19 @@ class UserPermissionsUserFilter {
     @ValidateNested()
     @Type(() => PermissionFilter)
     permission?: PermissionFilter;
+}
 
-    @Field(() => [UserPermissionsUserFilter], { nullable: true })
-    @Type(() => UserPermissionsUserFilter)
+@InputType()
+class UserPermissionsUserFilter {
+    @Field(() => [UserPermissionsUserFilterField], { nullable: true })
+    @Type(() => UserPermissionsUserFilterField)
     @ValidateNested({ each: true })
-    and?: UserPermissionsUserFilter[];
+    and?: UserPermissionsUserFilterField[];
 
-    @Field(() => [UserPermissionsUserFilter], { nullable: true })
-    @Type(() => UserPermissionsUserFilter)
+    @Field(() => [UserPermissionsUserFilterField], { nullable: true })
+    @Type(() => UserPermissionsUserFilterField)
     @ValidateNested({ each: true })
-    or?: UserPermissionsUserFilter[];
+    or?: UserPermissionsUserFilterField[];
 }
 
 enum UserPermissionsUserSortField {
