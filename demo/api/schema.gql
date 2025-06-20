@@ -772,7 +772,7 @@ input RedirectScopeInput {
 type Query {
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): UserPermissionsUser!
-  userPermissionsUsers(search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!], offset: Int! = 0, limit: Int! = 25, permission: String): UserPermissionPaginatedUserList!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
@@ -838,6 +838,7 @@ input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
+  permission: PermissionFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
 }
@@ -846,6 +847,12 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
+}
+
+input PermissionFilter {
   equal: String
   notEqual: String
   isAnyOf: [String!]

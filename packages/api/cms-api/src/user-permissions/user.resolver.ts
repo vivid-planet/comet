@@ -5,7 +5,7 @@ import { PaginatedResponseFactory } from "../common/pagination/paginated-respons
 import { AbstractAccessControlService } from "./access-control.service";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
-import { FindUsersResolverArgs } from "./dto/paginated-user-list";
+import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
 import { User } from "./interfaces/user";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -24,8 +24,11 @@ export class UserResolver {
     }
 
     @Query(() => UserPermissionPaginatedUserList)
-    async userPermissionsUsers(@Args() args: FindUsersResolverArgs): Promise<UserPermissionPaginatedUserList> {
-        if (args.permission) {
+    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionPaginatedUserList> {
+        const permissionFilter = args.filter?.and?.find((f) => f.permission);
+        if (permissionFilter?.permission) {
+            await this.userService.warmupHasPermissionCache();
+            const permission = permissionFilter.permission;
             // If a permission filter is provided, we need to get all users and filter them
             const filteredUsers: User[] = [];
             let offset = 0;
@@ -33,8 +36,11 @@ export class UserResolver {
             do {
                 [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
                 for (let i = 0; i < users.length; i++) {
-                    // Refresh cache (third argument) only for the first user in the first batch
-                    if (await this.userService.hasPermission(users[i], args.permission, offset === 0 && i === 0)) {
+                    if (
+                        (permission.equal && (await this.userService.hasPermission(users[i], permission.equal))) ||
+                        (permission.isAnyOf && (await this.userService.hasPermission(users[i], permission.isAnyOf))) ||
+                        (permission.notEqual && !(await this.userService.hasPermission(users[i], permission.notEqual)))
+                    ) {
                         filteredUsers.push(users[i]);
                     }
                 }

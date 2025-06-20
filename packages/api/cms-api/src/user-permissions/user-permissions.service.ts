@@ -92,19 +92,23 @@ export class UserPermissionsService {
         });
     }
 
-    async hasPermission(user: User, permission: string, refreshCache = true): Promise<boolean> {
-        const availablePermissions = await this.getAvailablePermissions();
+    async warmupHasPermissionCache() {
+        this.manualPermissions = (await this.permissionRepository.find({ permission: { $in: await this.getAvailablePermissions() } }))
+            .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+            .map((p) => ({ userId: p.userId, permission: p.permission }));
+    }
+
+    async hasPermission(user: User, permission: string | string[]): Promise<boolean> {
+        const permissions = Array.isArray(permission) ? permission : [permission];
         if (this.accessControlService.getPermissionsForUser) {
-            const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
+            const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, await this.getAvailablePermissions());
             if (permissionsByRule === UserPermissions.allPermissions) return true;
-            if (permissionsByRule.some((p) => p.permission === permission)) return true;
+            if (permissionsByRule.some((p) => permissions.includes(p.permission))) return true;
         }
-        if (this.manualPermissions === undefined || refreshCache) {
-            this.manualPermissions = (await this.permissionRepository.find({ permission: { $in: availablePermissions } }))
-                .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
-                .map((p) => ({ userId: p.userId, permission: p.permission }));
+        if (this.manualPermissions === undefined) {
+            throw new Error('You need to call "warmupHasPermissionCache" before using "hasPermission" for the first time.');
         }
-        if (this.manualPermissions.some((p) => p.userId === user.id && p.permission === permission)) return true;
+        if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) return true;
 
         return false;
     }
