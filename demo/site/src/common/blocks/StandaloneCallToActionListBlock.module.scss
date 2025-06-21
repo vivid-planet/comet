@@ -1,0 +1,19 @@
+.root {
+    display: flex;
+
+    &.alignLeft {
+        justify-content: flex-start;
+    }
+
+    &.alignCenter {
+        justify-content: center;
+    }
+
+    &.alignRight {
+        justify-content: flex-end;
+    }
+}
+
+.pageLayoutContent {
+    grid-column: 3 / -3;
+} 

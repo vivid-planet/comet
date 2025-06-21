@@ -1,43 +1,24 @@
 "use client";
 import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type TextImageBlockData } from "@src/blocks.generated";
-import styled, { css } from "styled-components";
+import clsx from "clsx";
 
 import { DamImageBlock } from "./DamImageBlock";
 import { RichTextBlock } from "./RichTextBlock";
+import styles from "./TextImageBlock.module.scss";
 
 export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
-            <Root $imagePosition={imagePosition}>
-                <ImageContainer>
+            <div className={clsx(styles.root, imagePosition === "left" && styles.imageLeft)}>
+                <div className={styles.imageContainer}>
                     <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
-                </ImageContainer>
-                <TextContainer>
+                </div>
+                <div className={styles.textContainer}>
                     <RichTextBlock data={text} />
-                </TextContainer>
-            </Root>
+                </div>
+            </div>
         );
     },
     { label: "Text/Image" },
 );
-
-const Root = styled.div<{ $imagePosition: TextImageBlockData["imagePosition"] }>`
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-
-    ${({ $imagePosition }) =>
-        $imagePosition === "left" &&
-        css`
-            flex-direction: row-reverse;
-        `}
-`;
-
-const ImageContainer = styled.div`
-    flex: 1;
-`;
-
-const TextContainer = styled.div`
-    flex: 2;
-`;
