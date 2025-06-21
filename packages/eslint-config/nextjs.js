@@ -19,5 +19,43 @@ module.exports = {
                 ],
             },
         ],
+        "no-restricted-syntax": [
+            "error",
+            {
+                selector:
+                    "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name=/^NEXT_PUBLIC/]",
+                message:
+                    "Using NEXT_PUBLIC_ environment variables is not supported, as we deploy the sam e build across multiple environments. Use SiteConfig or a custom Context instead",
+            },
+        ],
     },
+    overrides: [
+        {
+            files: ["next.config.js"],
+            rules: {
+                "no-restricted-syntax": [
+                    "error",
+                    {
+                        selector:
+                            "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name!=NODE_ENV]",
+                        message:
+                            "Environment variables other than NODE_ENV are not supported in next.config.js, as we deploy the same build across multiple environments. Use a middleware instead.",
+                    },
+                ],
+            },
+        },
+        {
+            files: ["*.loader.ts"],
+            rules: {
+                "no-restricted-syntax": [
+                    "error",
+                    {
+                        selector:
+                            "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier]",
+                        message: "Environment variables are not supported in loaders, as they also get called client side for block preview.",
+                    },
+                ],
+            },
+        },
+    ],
 };
