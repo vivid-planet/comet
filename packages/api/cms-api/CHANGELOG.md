@@ -1,5 +1,6 @@
 # @comet/cms-api
 
+<<<<<<< HEAD
 ## 8.0.0-beta.5
 
 ### Major Changes
@@ -194,6 +195,29 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+=======
+## 7.23.0
+
+### Minor Changes
+
+-   80d0c6293: Add new `getFileContent` method to the `FileUploadsService`
+
+    This method allows you to retrieve a file's content as a Buffer.
+    This is needed for cases like embedding images in a PDF or attaching files to emails.
+
+### Patch Changes
+
+-   2cdb87ad5: Add error and close handling for partial ranges in file stream
+-   aac00efa8: Limit image title to 150 characters in `AzureOpenAiContentGenerationService`
+-   Updated dependencies [201198da3]
+    -   @comet/blocks-api@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.22.0
+>>>>>>> main
 
 ## 7.21.1
 
@@ -2193,9 +2217,15 @@
 
     In the API:
 
+<<<<<<< HEAD
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
     - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+=======
+    -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
+    -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
+>>>>>>> main
 
     In the Admin:
 

@@ -1,5 +1,6 @@
 # @comet/cms-admin
 
+<<<<<<< HEAD
 ## 8.0.0-beta.5
 
 ### Major Changes
@@ -129,10 +130,18 @@
     Previously, each module (e.g., DAM) had its own provider used for configuration.
     This led to crowding the application since most applications use multiple CMS features.
     A new `CometConfigProvider` provider is introduced to use instead.
+=======
+## 7.23.0
+
+### Minor Changes
+
+-   afaa49d6e: Page Tree: Add support for scope parts
+>>>>>>> main
 
     **Example**
 
     ```tsx
+<<<<<<< HEAD
     <CometConfigProvider
         apiUrl={config.apiUrl}
         graphQLApiUrl={`${config.apiUrl}/graphql`}
@@ -431,6 +440,46 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+=======
+    <CmsBlockContextProvider
+        // Dimension "domain" is used for the page tree scope
+        pageTreeScopeParts={["domain"]}
+    >
+        {/* ... */}
+    </CmsBlockContextProvider>
+    ```
+
+### Patch Changes
+
+-   @comet/admin@7.23.0
+-   @comet/admin-date-time@7.23.0
+-   @comet/admin-icons@7.23.0
+-   @comet/admin-rte@7.23.0
+-   @comet/admin-theme@7.23.0
+-   @comet/blocks-admin@7.23.0
+
+## 7.22.0
+
+### Minor Changes
+
+-   2cf573b72: Adapt styling of `DamTable` to align with Comet DXP design
+
+### Patch Changes
+
+-   8b80b254e: Set `altText` and `title` fields to null in the DAM when deleting the field value
+
+    Previously, the `altText` and `title` fields value couldn't be completely removed.
+
+-   6d8159d67: Prevent the `UserPermissionsUserGrid` from losing focus while entering text in the search input
+-   Updated dependencies [2cf573b72]
+-   Updated dependencies [086774f01]
+    -   @comet/admin@7.22.0
+    -   @comet/admin-date-time@7.22.0
+    -   @comet/admin-icons@7.22.0
+    -   @comet/admin-rte@7.22.0
+    -   @comet/admin-theme@7.22.0
+    -   @comet/blocks-admin@7.22.0
+>>>>>>> main
 
 ## 7.21.1
 
@@ -3362,9 +3411,15 @@
 
     In the API:
 
+<<<<<<< HEAD
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
     - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+=======
+    -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
+    -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
+>>>>>>> main
 
     In the Admin:
 
