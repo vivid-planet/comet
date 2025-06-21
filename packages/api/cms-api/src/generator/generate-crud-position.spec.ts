@@ -1,4 +1,4 @@
-import { BaseEntity, Embeddable, Embedded, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Embeddable, Embedded, Entity, ManyToOne, MikroORM, PrimaryKey, Property, Ref } from "@mikro-orm/core";
 import { defineConfig } from "@mikro-orm/postgresql";
 import { Field, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
@@ -8,7 +8,7 @@ import { v4 as uuid } from "uuid";
 import { CrudGenerator } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { generateCrudInput } from "./generate-crud-input";
-import { lintSource, parseSource } from "./utils/test-helper";
+import { lintGeneratedFiles, lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
 class TestEntityWithPositionField extends BaseEntity<TestEntityWithPositionField, "id"> {
@@ -53,6 +53,22 @@ class TestEntityWithPositionGroup extends BaseEntity<TestEntityWithPositionGroup
 
     @Property()
     country: string;
+}
+
+@Entity()
+// not sure if parent should be included in the groupByFields or this should be the default behavior if parent is present
+@CrudGenerator({ targetDirectory: __dirname, position: { groupByFields: ["parent"] } })
+class TestEntityWithPositionParent extends BaseEntity<TestEntityWithPositionParent, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property({ columnType: "integer" })
+    @Field(() => Int)
+    @Min(1)
+    position: number;
+
+    @ManyToOne(() => TestEntityWithPositionParent, { ref: true, nullable: true })
+    parent?: Ref<TestEntityWithPositionParent>;
 }
 
 describe("GenerateCrudPosition", () => {
@@ -187,6 +203,39 @@ describe("GenerateCrudPosition", () => {
             const getLastPositionFunction = structure.methods?.find((method) => method.name === "getPositionGroupCondition");
             expect(getLastPositionFunction).not.toBeUndefined();
         }
+
+        orm.close();
+    });
+
+    it("resolver should consider position changes into new parent", async () => {
+        LazyMetadataStorage.load();
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntityWithPositionParent],
+            }),
+        );
+
+        const out = await generateCrud(
+            { targetDirectory: __dirname, position: { groupByFields: ["parent"] } },
+            orm.em.getMetadata().get("TestEntityWithPositionParent"),
+        );
+        const lintedOut = await lintGeneratedFiles(out);
+
+        const file = lintedOut.find((file) => file.name === "test-entity-with-position-parent.resolver.ts");
+        if (!file) throw new Error("File not found");
+        const source = parseSource(file.content);
+
+        const classes = source.getClasses();
+        expect(classes.length).toBe(1);
+
+        const cls = classes[0];
+        const structure = cls.getStructure();
+        const updateMethod = structure.methods?.find((method) => method.name === "updateTestEntityWithPositionParent");
+        const updateMethodCode = updateMethod?.statements?.toString();
+
+        // resolver needs a check if item is moved to a new parent so the other children need to be updated in old and new parent
+        expect(updateMethodCode).toContain("if (testEntityWithPositionParent.parent?.id === input.parent)");
 
         orm.close();
     });
