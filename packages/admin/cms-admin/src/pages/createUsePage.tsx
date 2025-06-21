@@ -7,6 +7,7 @@ import {
     DispatchSetStateAction,
     parallelAsyncEvery,
     resolveNewState,
+    useBlockContext,
 } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
 import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
@@ -172,6 +173,7 @@ export const createUsePage: CreateUsePage =
             const [referenceOutput, setReferenceOutput] = useState<undefined | Output>(undefined);
             const [saving, setSaving] = useState(false);
             const [saveError, setSaveError] = useState<"invalid" | "conflict" | "error" | undefined>();
+            const blockContext = useBlockContext();
 
             const generateOutput = (ps: PS): Output => {
                 return {
@@ -236,28 +238,63 @@ export const createUsePage: CreateUsePage =
 
             // manage sync of page state and gql-api
             useEffect(() => {
-                if (data?.page) {
-                    const page = {
-                        ...data.page,
-                        document:
-                            data.page.document && data.page.document.__typename === gqlPageType
-                                ? {
-                                      ...data.page.document,
+                const generateStateFromSession = async (sessionState: string, page: PS): Promise<PS | undefined> => {
+                    try {
+                        const output = JSON.parse(sessionState) as Output;
+                        const pageState = JSON.parse(JSON.stringify(page)) as PS;
 
-                                      ...Object.entries(rootBlocks).reduce(
-                                          (a, [key, value]) => ({
-                                              ...a,
-                                              [key]: value.input2State(data.page?.document?.[key]),
-                                          }),
-                                          {},
-                                      ),
-                                  }
-                                : createEmptyPageDocument(),
-                    } as unknown as PS;
-                    setPageState(page);
-                    setReferenceOutput(generateOutput(page));
-                }
-            }, [data, pageId]);
+                        for (const [key, value] of Object.entries(rootBlocks)) {
+                            const state = await value.output2State(output[key], blockContext);
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (pageState as any).document[key] = state;
+                        }
+
+                        return { ...pageState };
+                    } catch (error) {
+                        console.error(error);
+                        return undefined;
+                    }
+                };
+                const loadPageState = async () => {
+                    const sessionStoragePageState = window.sessionStorage.getItem(`pageState_${pageId}`);
+
+                    if (data?.page) {
+                        const page = {
+                            ...data.page,
+                            document:
+                                data.page.document && data.page.document.__typename === gqlPageType
+                                    ? {
+                                          ...data.page.document,
+
+                                          ...Object.entries(rootBlocks).reduce(
+                                              (a, [key, value]) => ({
+                                                  ...a,
+                                                  [key]: value.input2State(data.page?.document?.[key]),
+                                              }),
+                                              {},
+                                          ),
+                                      }
+                                    : createEmptyPageDocument(),
+                        } as unknown as PS;
+
+                        if (sessionStoragePageState) {
+                            const state = await generateStateFromSession(sessionStoragePageState, page);
+                            if (state) {
+                                setPageState(state);
+                            } else {
+                                setPageState(page);
+                            }
+                            // set reference output to the loaded page to enable the user to save the page
+                            setReferenceOutput(generateOutput(page));
+                            window.sessionStorage.removeItem(`pageState_${pageId}`);
+                        } else if (!pageState) {
+                            setPageState(page);
+                            setReferenceOutput(generateOutput(page));
+                        }
+                    }
+                };
+                loadPageState();
+            }, [data, pageId, pageState, blockContext]);
 
             const handleSavePage = useCallback(async () => {
                 // TODO show progress and error handling
@@ -324,6 +361,10 @@ export const createUsePage: CreateUsePage =
                             },
                         });
                     } catch (error) {
+                        if (hasChanges) {
+                            const output = generateOutput(pageState);
+                            window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify(output));
+                        }
                         console.error(error);
                         setSaveError("error");
                     } finally {
@@ -337,7 +378,7 @@ export const createUsePage: CreateUsePage =
                 } else {
                     throw new Error("No page state");
                 }
-            }, [data, client, pageId, pageState, onValidationFailed, checkForSaveConflict]);
+            }, [data, client, pageId, pageState, onValidationFailed, checkForSaveConflict, hasChanges]);
 
             // allow to create an updateHandler for each block-node
             const createHandleUpdate = useCallback((key: string) => {
