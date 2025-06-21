@@ -809,6 +809,7 @@ type Query {
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  productsByCustomFilter(status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: CustomProductFilter, sort: [ProductSort!], offset: Int! = 0, limit: Int! = 25): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
@@ -1003,7 +1004,6 @@ input ProductFilter {
   tagsWithStatus: OneToManyFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
-  manufacturer: ManyToOneFilter
   priceList: ManyToOneFilter
   datasheets: ManyToManyFilter
   and: [ProductFilter!]
@@ -1077,8 +1077,54 @@ enum ProductSortField {
   category
   createdAt
   updatedAt
-  manufacturer
   priceList
+}
+
+input CustomProductFilter {
+  title: StringFilter
+  status: ProductStatusEnumFilter
+  slug: StringFilter
+  description: StringFilter
+  type: ProductTypeEnumFilter
+  additionalTypes: ProductTypeEnumsFilter
+  price: NumberFilter
+  inStock: BooleanFilter
+  soldCount: NumberFilter
+  availableSince: DateFilter
+  lastCheckedAt: DateTimeFilter
+  colors: OneToManyFilter
+  variants: OneToManyFilter
+  category: ManyToOneFilter
+  tags: ManyToManyFilter
+  tagsWithStatus: OneToManyFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  priceList: ManyToOneFilter
+  datasheets: ManyToManyFilter
+  and: [CustomProductFilter!]
+  or: [CustomProductFilter!]
+  manufacturer: ProductManufacturerFilter
+}
+
+input ProductManufacturerFilter {
+  equal: CustomManufacturerFilter
+  notEqual: CustomManufacturerFilter
+}
+
+input CustomManufacturerFilter {
+  name: StringFilter
+  addressAsEmbeddable_street: StringFilter
+  addressAsEmbeddable_streetNumber: NumberFilter
+  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_country: StringFilter
+  addressAsEmbeddable_alternativeAddress_street: StringFilter
+  addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_country: StringFilter
+  updatedAt: DateTimeFilter
+  and: [CustomManufacturerFilter!]
+  or: [CustomManufacturerFilter!]
+  id: StringFilter
 }
 
 input ProductCategoryFilter {

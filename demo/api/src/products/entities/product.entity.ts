@@ -217,6 +217,13 @@ export class Product extends BaseEntity<Product, "id"> {
     updatedAt: Date = new Date();
 
     @ManyToOne(() => Manufacturer, { nullable: true, index: true, ref: true })
+    @CrudField({
+        resolveField: true, //default is true
+        search: true, //default is true
+        filter: false, //default is true
+        sort: false, //default is true
+        input: true, //default is true
+    })
     manufacturer?: Ref<Manufacturer> = undefined;
 
     @ManyToOne(() => FileUpload, { nullable: true, ref: true })
