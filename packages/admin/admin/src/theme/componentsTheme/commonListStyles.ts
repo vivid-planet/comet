@@ -1,7 +1,6 @@
 export const commonListItemPrimaryTextStyles = {
     fontSize: 14,
     lineHeight: "19px",
-    fontWeight: 250,
 };
 
 export const commonListItemRootStyles = {
