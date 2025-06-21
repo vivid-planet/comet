@@ -13,6 +13,5 @@ block-meta.json
 src/blocks.generated.ts
 src/comet-config.json
 src/**/*.generated.ts
-src/**/generated/
 src/site-configs.d.ts
 .swc/
