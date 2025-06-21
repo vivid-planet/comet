@@ -13,6 +13,7 @@ import {
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
+    MailerModule,
     PageTreeModule,
     RedirectsModule,
     SentryModule,
@@ -184,6 +185,7 @@ export class AppModule {
                 FooterModule,
                 PredefinedPagesModule,
                 CronJobsModule,
+                MailerModule.register(config.mailer),
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
