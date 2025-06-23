@@ -2102,7 +2102,7 @@ The `FinalFormToggleButtonGroup` component is still available, but moved from `@
 - />
 ```
 
-### DashboardWidgetRoot no longer handles Grid layout
+### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
 
 :::note Handled by following upgrade script
 
