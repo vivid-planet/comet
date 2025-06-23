@@ -26,6 +26,11 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined) =
     return value !== undefined && value !== "";
 };
 
+/**
+ * Final Form-compatible Select component.
+ *
+ * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,

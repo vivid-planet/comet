@@ -12,6 +12,11 @@ export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
     clearable?: boolean;
 }
 
+/**
+ * Final Form-compatible SearchTextField component.
+ *
+ * @see {@link SearchField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps) {
     const {
         icon = <Search />,
