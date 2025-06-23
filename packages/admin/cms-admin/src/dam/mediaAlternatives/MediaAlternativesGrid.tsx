@@ -15,12 +15,14 @@ import {
     useEditDialog,
     usePersistentColumnState,
 } from "@comet/admin";
+import { DeleteDialog } from "@comet/admin/lib/common/DeleteDialog";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { MediaAlternativeForm } from "./MediaAlternativeForm";
 import {
     GQLDamMediaAlternativeGridFragment,
@@ -57,8 +59,18 @@ const damMediaAlternativesQuery = gql`
         $filter: DamMediaAlternativeFilter
         $for: ID
         $alternative: ID
+        $type: DamMediaAlternativeType
     ) {
-        damMediaAlternatives(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, for: $for, alternative: $alternative) {
+        damMediaAlternatives(
+            offset: $offset
+            limit: $limit
+            sort: $sort
+            search: $search
+            filter: $filter
+            for: $for
+            alternative: $alternative
+            type: $type
+        ) {
             nodes {
                 ...DamMediaAlternativeGrid
             }
@@ -92,13 +104,15 @@ function MediaAlternativesGridToolbar({ handleAdd }: { handleAdd: () => void }) 
 
 interface MediaAlternativesGridProps {
     file: { id: string };
+    type: GQLDamMediaAlternativeType;
 }
 
-export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): ReactElement {
+export function MediaAlternativesGrid({ file, type }: MediaAlternativesGridProps): ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("DamMediaAlternativesGrid") };
     const [EditDialog, selection, editDialogApi, selectionApi] = useEditDialog();
+    const [deleteId, setDeleteId] = useState<string | undefined>();
 
     const columns: GridColDef<GQLDamMediaAlternativeGridFragment>[] = [
         {
@@ -106,7 +120,7 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
             headerName: intl.formatMessage({ id: "damMediaAlternatives.title", defaultMessage: "File" }),
             flex: 1,
             minWidth: 150,
-            renderCell: ({ row }) => <GridCellContent primaryText={row.for.name} secondaryText={row.for.damPath} />,
+            renderCell: ({ row }) => <GridCellContent primaryText={row.alternative.name} secondaryText={row.alternative.damPath} />,
         },
         {
             field: "language",
@@ -135,12 +149,8 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
                             <EditIcon />
                         </IconButton>
                         <IconButton
-                            onClick={async () => {
-                                await client.mutate<GQLDeleteDamMediaAlternativeMutation, GQLDeleteDamMediaAlternativeMutationVariables>({
-                                    mutation: deleteDamMediaAlternativeMutation,
-                                    variables: { id: params.row.id },
-                                    refetchQueries: [damMediaAlternativesQuery],
-                                });
+                            onClick={() => {
+                                setDeleteId(params.row.id);
                             }}
                         >
                             <DeleteIcon />
@@ -161,6 +171,7 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
             for: file.id,
+            type: type,
         },
     });
     const rowCount = useBufferedRowCount(data?.damMediaAlternatives.totalCount);
@@ -193,9 +204,24 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
                         id={selection.mode === "edit" ? selection.id : undefined}
                         fileId={file.id}
                         selectionApi={selectionApi}
+                        type={type}
                     />
                 ) : null}
             </EditDialog>
+            <DeleteDialog
+                dialogOpen={deleteId !== undefined}
+                onCancel={() => setDeleteId(undefined)}
+                onDelete={async () => {
+                    if (deleteId) {
+                        await client.mutate<GQLDeleteDamMediaAlternativeMutation, GQLDeleteDamMediaAlternativeMutationVariables>({
+                            mutation: deleteDamMediaAlternativeMutation,
+                            variables: { id: deleteId },
+                            refetchQueries: [damMediaAlternativesQuery],
+                        });
+                    }
+                    setDeleteId(undefined);
+                }}
+            />
         </>
     );
 }

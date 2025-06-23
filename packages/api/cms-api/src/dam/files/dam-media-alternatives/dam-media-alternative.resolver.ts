@@ -45,7 +45,7 @@ export function createDamMediaAlternativeResolver({
 
         @Query(() => PaginatedDamMediaAlternatives)
         async damMediaAlternatives(
-            @Args() { search, filter, sort, offset, limit, for: forId, alternative: alternativeId }: DamMediaAlternativesArgs,
+            @Args() { search, filter, sort, offset, limit, for: forId, alternative: alternativeId, type }: DamMediaAlternativesArgs,
             @Info() info: GraphQLResolveInfo,
         ): Promise<PaginatedDamMediaAlternatives> {
             if ((!forId && !alternativeId) || (forId && alternativeId)) {
@@ -58,6 +58,10 @@ export function createDamMediaAlternativeResolver({
                 where.for = forId;
             } else if (alternativeId) {
                 where.alternative = alternativeId;
+            }
+
+            if (type) {
+                where.type = type;
             }
 
             const fields = extractGraphqlFields(info, { root: "nodes" });

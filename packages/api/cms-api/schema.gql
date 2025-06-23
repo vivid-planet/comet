@@ -413,7 +413,7 @@ type Query {
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
   damMediaAlternative(id: ID!): DamMediaAlternative!
-  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, filter: DamMediaAlternativeFilter, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID): PaginatedDamMediaAlternatives!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, filter: DamMediaAlternativeFilter, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
 }
 
 input RedirectScopeInput {
@@ -552,15 +552,8 @@ input AzureAiTranslationInput {
 input DamMediaAlternativeFilter {
   id: StringFilter
   language: StringFilter
-  type: DamMediaAlternativeTypeEnumFilter
   and: [DamMediaAlternativeFilter!]
   or: [DamMediaAlternativeFilter!]
-}
-
-input DamMediaAlternativeTypeEnumFilter {
-  isAnyOf: [DamMediaAlternativeType!]
-  equal: DamMediaAlternativeType
-  notEqual: DamMediaAlternativeType
 }
 
 input DamMediaAlternativeSort {

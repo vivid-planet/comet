@@ -3,6 +3,7 @@ import { Field, FinalForm, FinalFormInput, ISelectionApi, Loading } from "@comet
 import { FormattedMessage } from "react-intl";
 
 import { FileField } from "../../form/file/FileField";
+import { GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import {
     GQLCreateDamMediaAlternativeMutation,
@@ -18,6 +19,7 @@ interface MediaAlternativeFormProps {
     selectionApi: ISelectionApi;
     fileId: string;
     id?: string;
+    type: GQLDamMediaAlternativeType;
 }
 
 interface FormValues {
@@ -25,7 +27,7 @@ interface FormValues {
     language: string;
 }
 
-export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id }: MediaAlternativeFormProps) => {
+export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type }: MediaAlternativeFormProps) => {
     const acceptedMimeTypes = useDamAcceptedMimeTypes();
 
     const [createDamMediaAlternative] = useMutation<GQLCreateDamMediaAlternativeMutation, GQLCreateDamMediaAlternativeMutationVariables>(
@@ -64,7 +66,7 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id }: MediaAl
                                 alternative: alternative.id,
                                 for: fileId,
                                 language,
-                                type: "captions",
+                                type,
                             },
                         },
                     });

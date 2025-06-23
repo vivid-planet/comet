@@ -253,7 +253,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         path="/media-alternatives"
                                     >
                                         <FieldSet title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />} disablePadding>
-                                            <MediaAlternativesGrid file={file} />
+                                            <MediaAlternativesGrid file={file} type="captions" />
                                         </FieldSet>
                                     </RouterTab>
                                 )}
