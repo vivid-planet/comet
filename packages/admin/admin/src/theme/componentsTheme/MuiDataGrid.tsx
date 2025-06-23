@@ -16,7 +16,7 @@ import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityC
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
-import { DataGridColumnsManagement } from "../../dataGrid/DataGridColumnsManagement";
+import { DataGridColumnsManagement } from "../../dataGrid/columnsManagement/DataGridColumnsManagement";
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
