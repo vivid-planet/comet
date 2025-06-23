@@ -1,3 +1,4 @@
+import { Error } from "@comet/admin-icons";
 import { InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
@@ -9,10 +10,12 @@ import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     noOptionsLabel?: ReactNode;
+    errorLabel?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
+    loadingError?: Error | null;
 }
 
 const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
@@ -29,6 +32,7 @@ export const FinalFormSelect = <T,>({
     isAsync = false,
     options = [],
     loading = false,
+    loadingError,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
@@ -44,9 +48,15 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
+
     noOptionsLabel = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
+        </Typography>
+    ),
+    errorLabel = (
+        <Typography variant="body2">
+            <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
     ),
     children,
@@ -88,7 +98,13 @@ export const FinalFormSelect = <T,>({
     return (
         <Select
             {...selectProps}
-            endAdornment={<InputAdornment position="end">{endAdornment}</InputAdornment>}
+            endAdornment={
+                <InputAdornment position="end">
+                    {loadingError && <Error color="error" />}
+
+                    {endAdornment}
+                </InputAdornment>
+            }
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
@@ -126,9 +142,14 @@ export const FinalFormSelect = <T,>({
                     </MenuItem>
                 ))}
 
-            {loading === false && options.length === 0 && (
+            {loading === false && loadingError == null && options.length === 0 && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {noOptionsLabel}
+                </MenuItemDisabledOverrideOpacity>
+            )}
+            {loading === false && loadingError != null && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
+                    {errorLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
 
