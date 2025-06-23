@@ -35,7 +35,6 @@ export class LinkedDamFile extends BaseEntity<LinkedDamFile, "id"> implements Li
     @ManyToOne({
         entity: () => FILE_ENTITY,
         inversedBy: (file: FileInterface) => file.linkedDamFileSources,
-        // joinColumn: "sourceId",
         onDelete: "cascade",
         ref: true,
     })
@@ -44,7 +43,6 @@ export class LinkedDamFile extends BaseEntity<LinkedDamFile, "id"> implements Li
     @ManyToOne({
         entity: () => FILE_ENTITY,
         inversedBy: (file: FileInterface) => file.linkedDamFileTargets,
-        // joinColumn: "targetId",
         onDelete: "cascade",
         ref: true,
     })
