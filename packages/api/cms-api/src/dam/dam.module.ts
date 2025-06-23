@@ -2,7 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory, WarningsModule } from "..";
 import { FileValidationService } from "../file-utils/file-validation.service";
 import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
@@ -19,6 +19,7 @@ import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
+import { FileWarningService } from "./files/file-warning.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
@@ -94,7 +95,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, ImgproxyModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, ImgproxyModule, WarningsModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
@@ -119,6 +120,7 @@ export class DamModule {
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
                 HasValidFilenameConstraint,
+                FileWarningService,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

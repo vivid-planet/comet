@@ -17,6 +17,7 @@ import {
     RedirectsModule,
     SentryModule,
     UserPermissionsModule,
+    WarningsModule,
 } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
@@ -197,6 +198,7 @@ export class AppModule {
                 }),
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
+                WarningsModule,
             ],
         };
     }

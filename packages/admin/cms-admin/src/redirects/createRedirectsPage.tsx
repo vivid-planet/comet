@@ -29,17 +29,21 @@ interface RedirectsPageProps {
 }
 
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>;
+    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectsLinkBlock to create a custom link block for the redirects
     scopeParts?: string[];
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
-    const linkBlock = createOneOfBlock({
+export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInterface>) {
+    return createOneOfBlock({
         supportedBlocks: { internal: RedirectsInternalLinkBlock, external: RedirectsExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
         displayName: <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
         allowEmpty: false,
     });
+}
+
+function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
+    const linkBlock = createRedirectsLinkBlock(customTargets);
 
     function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
         const intl = useIntl();

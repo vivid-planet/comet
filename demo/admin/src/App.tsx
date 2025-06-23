@@ -27,6 +27,7 @@ import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import { NewsListBlock } from "./news/blocks/NewsListBlock";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
 import { pageTreeCategories } from "./pageTree/pageTreeCategories";
+import { RedirectDependency } from "./redirects/RedirectsDependency";
 
 const GlobalStyle = () => (
     <Global
@@ -69,6 +70,7 @@ export function App() {
                     Page,
                     Link,
                     News: NewsDependency,
+                    Redirect: RedirectDependency,
                     DamFile: createDamFileDependency(),
                 },
             }}
