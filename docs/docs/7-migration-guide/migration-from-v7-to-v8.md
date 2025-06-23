@@ -2052,3 +2052,99 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
 </details>
+
+### `FinalFormToggleButtonGroup` deprecated
+
+`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
+
+```diff
+- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
++ import { ToggleGroupButtonField } from "@comet/admin";
+
+...
++ FormValueType = "value1" | "value2";
+
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
+-       { value: "value2", icon: <Error /> },
+-   ]}
+-   optionsPerRow={2}
+- />
++ <ToggleGroupButtonField<FormValueType>
++    name="formValue"
++    label={"Field Label"}
++    options={[
++        { value: "value1", label: <Info /> },
++        { value: "value2", label: <Error /> },
++    ]}
++    optionsPerRow={2}
++    />
+```
+
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
+
+```diff
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
++       { value: "value1", label: <Info /> },
+-       { value: "value2", icon: <Info /> },
++       { value: "value2", label: <Info /> },
+-   ]}
+-   optionsPerRow={2}
+- />
+```
+
+### DashboardWidgetRoot no longer handles Grid layout
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/add-grid-to-latest-content-updates.ts
+```
+
+:::
+
+The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its children in a `<Grid>` component. This means that layout and sizing must now be handled by the parent component.
+
+**Migration steps `DashboardWidgetRoot:**
+
+- **Before:**  
+  `DashboardWidgetRoot` automatically wrapped its content in a grid item, e.g.
+
+    ```tsx
+    <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    ```
+
+- **After:**  
+  You must now wrap `DashboardWidgetRoot` in a `<Grid item>` yourself:
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    </Grid>
+    ```
+
+**Migration steps `LatestContentUpdates`:**
+
+- **Before:**
+
+    ```tsx
+    <LatestContentUpdates />
+    ```
+
+- **After:**
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <LatestContentUpdates />
+    </Grid>
+    ```
+
+**Action required:**  
+Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
