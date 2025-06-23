@@ -2107,7 +2107,8 @@ The `FinalFormToggleButtonGroup` component is still available, but moved from `@
 :::note Handled by following upgrade script
 
 ```sh
-npx @comet/upgrade v8/add-grid-to-latest-content-updates.ts
+
+npx @comet/upgrade v8/add-grid-to-latest-content-updates-and-dashboard-widget-root.ts
 ```
 
 :::
