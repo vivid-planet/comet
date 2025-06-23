@@ -2,7 +2,8 @@ import { IntrospectionQuery } from "graphql";
 
 import { generateFields, GenerateFieldsReturn } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
-import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "./generator";
+import { GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, isFormFieldConfig, isFormLayoutConfig } from "./generatorConfigs/formConfig";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
