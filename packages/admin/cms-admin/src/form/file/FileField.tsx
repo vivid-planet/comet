@@ -37,6 +37,7 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
     const damFile = input.value;
 
     if (damFile) {
+        const showMenu = Boolean(dependencyMap["DamFile"]);
         return (
             <>
                 <AdminComponentPaper disablePadding>
@@ -47,31 +48,36 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
                                 <DamPathLazy fileId={damFile.id} />
                             </Typography>
                         </Grid>
-                        <Grid item>
-                            <IconButton
-                                onMouseDown={(event) => event.stopPropagation()}
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    setAnchorEl(event.currentTarget);
-                                }}
-                                size="large"
-                            >
-                                <MoreVertical />
-                            </IconButton>
-                        </Grid>
+                        {showMenu && (
+                            <Grid item>
+                                <IconButton
+                                    onMouseDown={(event) => event.stopPropagation()}
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        setAnchorEl(event.currentTarget);
+                                    }}
+                                    size="large"
+                                >
+                                    <MoreVertical />
+                                </IconButton>
+                            </Grid>
+                        )}
                     </Grid>
                     <Divider />
                     <AdminComponentButton startIcon={<Delete />} onClick={() => input.onChange(undefined)}>
                         <FormattedMessage id="comet.form.file.empty" defaultMessage="Empty" />
                     </AdminComponentButton>
                 </AdminComponentPaper>
-                <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                    {dependencyMap["DamFile"] && damFile?.id && (
+                {showMenu && (
+                    <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                         <MenuItem
                             onClick={async () => {
                                 // id is checked three lines above
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: damFile.id });
+                                const path = await dependencyMap["DamFile"].resolvePath({
+                                    apolloClient,
+                                    id: damFile.id,
+                                });
                                 const url = contentScope.match.url + path;
                                 window.open(url, "_blank");
                             }}
@@ -81,8 +87,8 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
                             </ListItemIcon>
                             <FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />
                         </MenuItem>
-                    )}
-                </Menu>
+                    </Menu>
+                )}
             </>
         );
     }
