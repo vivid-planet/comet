@@ -115,6 +115,7 @@ export type { MasterMenuData, MasterMenuProps } from "./common/MasterMenu";
 export { MasterMenu, useMenuFromMasterMenuData } from "./common/MasterMenu";
 export type { MasterMenuRoutesProps } from "./common/MasterMenuRoutes";
 export { MasterMenuRoutes, useRoutePropsFromMasterMenuData } from "./common/MasterMenuRoutes";
+export { NotFound, NotFoundClassKey, NotFoundProps } from "./common/notFound/NotFound";
 export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
@@ -199,6 +200,7 @@ export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/
 export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
 export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
