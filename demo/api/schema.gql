@@ -812,7 +812,7 @@ type Query {
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   damMediaAlternative(id: ID!): DamMediaAlternative!
-  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, filter: DamMediaAlternativeFilter, sort: [DamMediaAlternativeSort!]): PaginatedDamMediaAlternatives!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, filter: DamMediaAlternativeFilter, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID): PaginatedDamMediaAlternatives!
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
@@ -963,8 +963,6 @@ input DamMediaAlternativeFilter {
   id: StringFilter
   language: StringFilter
   type: DamMediaAlternativeTypeEnumFilter
-  source: ManyToOneFilter
-  target: ManyToOneFilter
   and: [DamMediaAlternativeFilter!]
   or: [DamMediaAlternativeFilter!]
 }
@@ -973,12 +971,6 @@ input DamMediaAlternativeTypeEnumFilter {
   isAnyOf: [DamMediaAlternativeType!]
   equal: DamMediaAlternativeType
   notEqual: DamMediaAlternativeType
-}
-
-input ManyToOneFilter {
-  isAnyOf: [ID!]
-  equal: ID
-  notEqual: ID
 }
 
 input DamMediaAlternativeSort {
@@ -990,8 +982,8 @@ enum DamMediaAlternativeSortField {
   id
   language
   type
-  source
-  target
+  for
+  alternative
 }
 
 input NewsFilter {
@@ -1099,6 +1091,12 @@ input DateFilter {
   lowerThanEqual: Date
   greaterThanEqual: Date
   notEqual: Date
+}
+
+input ManyToOneFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
 }
 
 input ManyToManyFilter {
@@ -1437,15 +1435,15 @@ input UpdateDamFolderInput {
 input DamMediaAlternativeInput {
   language: String!
   type: DamMediaAlternativeType!
-  source: ID!
-  target: ID!
+  for: ID!
+  alternative: ID!
 }
 
 input DamMediaAlternativeUpdateInput {
   language: String
   type: DamMediaAlternativeType
-  source: ID
-  target: ID
+  for: ID
+  alternative: ID
 }
 
 input NewsInput {

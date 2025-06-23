@@ -5,6 +5,7 @@ import { Type } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
+import { CometValidationException } from "../../../common/errors/validation.exception";
 import { gqlArgsToMikroOrmQuery } from "../../../common/filter/mikro-orm";
 import { extractGraphqlFields } from "../../../common/graphql/extract-graphql-fields";
 import { AffectedEntity } from "../../../user-permissions/decorators/affected-entity.decorator";
@@ -44,18 +45,28 @@ export function createDamMediaAlternativeResolver({
 
         @Query(() => PaginatedDamMediaAlternatives)
         async damMediaAlternatives(
-            @Args() { search, filter, sort, offset, limit }: DamMediaAlternativesArgs,
+            @Args() { search, filter, sort, offset, limit, for: forId, alternative: alternativeId }: DamMediaAlternativesArgs,
             @Info() info: GraphQLResolveInfo,
         ): Promise<PaginatedDamMediaAlternatives> {
+            if ((!forId && !alternativeId) || (forId && alternativeId)) {
+                throw new CometValidationException("Exactly one of 'for' or 'alternative' parameters must be provided");
+            }
+
             const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+
+            if (forId) {
+                where.for = forId;
+            } else if (alternativeId) {
+                where.alternative = alternativeId;
+            }
 
             const fields = extractGraphqlFields(info, { root: "nodes" });
             const populate: string[] = [];
-            if (fields.includes("source")) {
-                populate.push("source");
+            if (fields.includes("for")) {
+                populate.push("for");
             }
-            if (fields.includes("target")) {
-                populate.push("target");
+            if (fields.includes("alternative")) {
+                populate.push("alternative");
             }
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,12 +88,12 @@ export function createDamMediaAlternativeResolver({
         async createDamMediaAlternative(
             @Args("input", { type: () => DamMediaAlternativeInput }) input: DamMediaAlternativeInput,
         ): Promise<DamMediaAlternative> {
-            const { source: sourceInput, target: targetInput, ...assignInput } = input;
+            const { for: forInput, alternative: alternativeInput, ...assignInput } = input;
             const damMediaAlternative = this.repository.create({
                 ...assignInput,
 
-                for: Reference.create(await this.damFileRepository.findOneOrFail(sourceInput)),
-                alternative: Reference.create(await this.damFileRepository.findOneOrFail(targetInput)),
+                for: Reference.create(await this.damFileRepository.findOneOrFail(forInput)),
+                alternative: Reference.create(await this.damFileRepository.findOneOrFail(alternativeInput)),
             });
 
             await this.entityManager.flush();
@@ -98,16 +109,16 @@ export function createDamMediaAlternativeResolver({
         ): Promise<DamMediaAlternative> {
             const damMediaAlternative = await this.repository.findOneOrFail(id);
 
-            const { source: sourceInput, target: targetInput, ...assignInput } = input;
+            const { for: forInput, alternative: alternativeInput, ...assignInput } = input;
             damMediaAlternative.assign({
                 ...assignInput,
             });
 
-            if (sourceInput !== undefined) {
-                damMediaAlternative.for = Reference.create(await this.damFileRepository.findOneOrFail(sourceInput));
+            if (forInput !== undefined) {
+                damMediaAlternative.for = Reference.create(await this.damFileRepository.findOneOrFail(forInput));
             }
-            if (targetInput !== undefined) {
-                damMediaAlternative.alternative = Reference.create(await this.damFileRepository.findOneOrFail(targetInput));
+            if (alternativeInput !== undefined) {
+                damMediaAlternative.alternative = Reference.create(await this.damFileRepository.findOneOrFail(alternativeInput));
             }
 
             await this.entityManager.flush();

@@ -1,6 +1,6 @@
-import { ArgsType, Field } from "@nestjs/graphql";
+import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../../../common/pagination/offset-based.args";
 import { DamMediaAlternativeFilter } from "./dam-media-alternative.filter";
@@ -24,4 +24,14 @@ export class DamMediaAlternativesArgs extends OffsetBasedPaginationArgs {
     @Type(() => DamMediaAlternativeSort)
     @IsOptional()
     sort?: DamMediaAlternativeSort[];
+
+    @Field(() => ID, { nullable: true })
+    @IsUUID()
+    @IsOptional()
+    for?: string;
+
+    @Field(() => ID, { nullable: true })
+    @IsUUID()
+    @IsOptional()
+    alternative?: string;
 }

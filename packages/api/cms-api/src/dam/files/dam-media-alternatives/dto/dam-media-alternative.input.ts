@@ -19,12 +19,12 @@ export class DamMediaAlternativeInput {
     @IsNotEmpty()
     @Field(() => ID)
     @IsString()
-    source: string;
+    for: string;
 
     @IsNotEmpty()
     @Field(() => ID)
     @IsString()
-    target: string;
+    alternative: string;
 }
 
 @InputType()

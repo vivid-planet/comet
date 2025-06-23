@@ -7,8 +7,8 @@ export enum DamMediaAlternativeSortField {
     id = "id",
     language = "language",
     type = "type",
-    source = "source",
-    target = "target",
+    for = "for",
+    alternative = "alternative",
 }
 registerEnumType(DamMediaAlternativeSortField, {
     name: "DamMediaAlternativeSortField",

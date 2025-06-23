@@ -48,8 +48,16 @@ const damMediaAlternativeFragment = gql`
 `;
 
 const damMediaAlternativesQuery = gql`
-    query DamMediaAlternatives($offset: Int!, $limit: Int!, $sort: [DamMediaAlternativeSort!], $search: String, $filter: DamMediaAlternativeFilter) {
-        damMediaAlternatives(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+    query DamMediaAlternatives(
+        $offset: Int!
+        $limit: Int!
+        $sort: [DamMediaAlternativeSort!]
+        $search: String
+        $filter: DamMediaAlternativeFilter
+        $for: ID
+        $alternative: ID
+    ) {
+        damMediaAlternatives(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, for: $for, alternative: $alternative) {
             nodes {
                 ...DamMediaAlternativeGrid
             }
@@ -145,6 +153,7 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
+            for: file.id,
         },
     });
     const rowCount = useBufferedRowCount(data?.damMediaAlternatives.totalCount);
