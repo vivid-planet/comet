@@ -42,6 +42,15 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
         const file = await this.filesService.findOneById(block.damFileId);
 
         if (file) {
+            const captions = [];
+            for (const caption of (await file.linkedDamFileTargets.loadItems()).filter((linkedFile) => linkedFile.type === "captions")) {
+                captions.push({
+                    id: caption.id,
+                    language: caption.language,
+                    fileUrl: await this.filesService.createFileUrl(await caption.target.load(), { previewDamUrls, relativeDamUrls }),
+                });
+            }
+
             ret.damFile = {
                 id: file.id,
                 name: file.name,
@@ -53,6 +62,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 archived: file.archived,
                 scope: file.scope,
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                captions: captions,
             };
         }
 

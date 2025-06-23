@@ -26,9 +26,11 @@ export const VideoPreview = ({ file }: VideoPreviewProps) => {
     return (
         <VideoPreviewWrapper>
             <StyledVideo controls src={file.fileUrl}>
-                {file.linkedDamFileTargets.map((caption) => {
-                    return <track key={caption.id} src={caption.target.fileUrl} kind="captions" srcLang={caption.language} />;
-                })}
+                {file.linkedDamFileTargets
+                    .filter((linkedFile) => linkedFile.type === "captions")
+                    .map((caption) => {
+                        return <track key={caption.id} src={caption.target.fileUrl} kind="captions" srcLang={caption.language} />;
+                    })}
                 <FormattedMessage
                     id="comet.dam.file.unsupportedVideoTag"
                     defaultMessage="Your browser does not support the video element. Please use another browser."
