@@ -23,10 +23,11 @@ export function createDamMediaAlternativeResolver({
     File: Type<FileInterface>;
     Scope?: Type<DamScopeInterface>;
 }): Type<unknown> {
-    const hasNonEmptyScope = PassedScope != null;
+    // const hasNonEmptyScope = PassedScope != null;
 
     @Resolver(() => DamMediaAlternative)
-    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    // @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission(["dam"], { skipScopeCheck: true })
     class DamMediaAlternativeResolver {
         constructor(
             private readonly entityManager: EntityManager,
