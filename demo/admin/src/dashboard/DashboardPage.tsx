@@ -28,7 +28,16 @@ export function DashboardPage() {
             <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
             <MainContent>
                 <Grid container direction="row" spacing={4}>
-                    {isAllowed("pageTree") && <LatestContentUpdates />}
+                    {isAllowed("pageTree") && (
+                        <Grid
+                            size={{
+                                xs: 12,
+                                lg: 6,
+                            }}
+                        >
+                            <LatestContentUpdates />
+                        </Grid>
+                    )}
                     {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
                     {isAllowed("warnings") && <LatestWarningsDashboardWidget />}
                 </Grid>
