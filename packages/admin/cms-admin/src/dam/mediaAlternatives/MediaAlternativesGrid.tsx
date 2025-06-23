@@ -8,11 +8,11 @@ import {
     messages,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackLink,
     ToolbarActions,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
+    useEditDialog,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
@@ -21,6 +21,7 @@ import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { MediaAlternativeForm } from "./MediaAlternativeForm";
 import {
     GQLDamMediaAlternativeGridFragment,
     GQLDamMediaAlternativesQuery,
@@ -73,7 +74,7 @@ const deleteDamMediaAlternativeMutation = gql`
     }
 `;
 
-function MediaAlternativesGridToolbar() {
+function MediaAlternativesGridToolbar({ handleAdd }: { handleAdd: () => void }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -81,7 +82,7 @@ function MediaAlternativesGridToolbar() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarActions>
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <Button responsive startIcon={<AddIcon />} onClick={handleAdd}>
                     <FormattedMessage {...messages.add} />
                 </Button>
             </ToolbarActions>
@@ -97,6 +98,7 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("DamMediaAlternativesGrid") };
+    const [EditDialog, selection, editDialogApi, selectionApi] = useEditDialog();
 
     const columns: GridColDef<GQLDamMediaAlternativeGridFragment>[] = [
         {
@@ -124,7 +126,12 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <IconButton
+                            color="primary"
+                            onClick={() => {
+                                editDialogApi.openEditDialog(params.row.id);
+                            }}
+                        >
                             <EditIcon />
                         </IconButton>
                         <IconButton
@@ -161,17 +168,34 @@ export function MediaAlternativesGrid({ file }: MediaAlternativesGridProps): Rea
     const rows = data?.damMediaAlternatives.nodes ?? [];
 
     return (
-        <DataGrid
-            {...dataGridProps}
-            autoHeight={true}
-            disableSelectionOnClick
-            rows={rows}
-            rowCount={rowCount}
-            columns={columns}
-            loading={loading}
-            components={{
-                Toolbar: MediaAlternativesGridToolbar,
-            }}
-        />
+        <>
+            <DataGrid
+                {...dataGridProps}
+                autoHeight={true}
+                disableSelectionOnClick
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                components={{
+                    Toolbar: MediaAlternativesGridToolbar,
+                }}
+                componentsProps={{
+                    toolbar: {
+                        handleAdd: () => editDialogApi.openAddDialog(file.id),
+                    },
+                }}
+            />
+            <EditDialog>
+                {selection.id && selection.mode ? (
+                    <MediaAlternativeForm
+                        mode={selection.mode}
+                        id={selection.mode === "edit" ? selection.id : undefined}
+                        fileId={file.id}
+                        selectionApi={selectionApi}
+                    />
+                ) : null}
+            </EditDialog>
+        </>
     );
 }
