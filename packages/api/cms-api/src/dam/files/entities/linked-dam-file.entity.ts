@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, Enum, ManyToOne, PrimaryKey, Property, Ref } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
@@ -8,12 +8,12 @@ export interface LinkedDamFileInterface {
     id: string;
     language: string;
     type: LinkedDamFileType;
-    source: FileInterface;
-    target: FileInterface;
+    source: Ref<FileInterface>;
+    target: Ref<FileInterface>;
 }
 
 export enum LinkedDamFileType {
-    subtitles = "subtitles",
+    captions = "captions",
 }
 registerEnumType(LinkedDamFileType, { name: "LinkedDamFileType" });
 
@@ -34,17 +34,19 @@ export class LinkedDamFile extends BaseEntity<LinkedDamFile, "id"> implements Li
 
     @ManyToOne({
         entity: () => FILE_ENTITY,
-        inversedBy: (file: FileInterface) => file.linkedDamFilesSources,
+        inversedBy: (file: FileInterface) => file.linkedDamFileSources,
         // joinColumn: "sourceId",
         onDelete: "cascade",
+        ref: true,
     })
-    source: FileInterface;
+    source: Ref<FileInterface>;
 
     @ManyToOne({
         entity: () => FILE_ENTITY,
-        inversedBy: (file: FileInterface) => file.linkedDamFilesTargets,
+        inversedBy: (file: FileInterface) => file.linkedDamFileTargets,
         // joinColumn: "targetId",
         onDelete: "cascade",
+        ref: true,
     })
-    target: FileInterface;
+    target: Ref<FileInterface>;
 }

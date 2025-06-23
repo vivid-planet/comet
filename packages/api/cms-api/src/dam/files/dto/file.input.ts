@@ -11,6 +11,7 @@ import {
     IsOptional,
     IsString,
     IsUUID,
+    MinLength,
     ValidateIf,
     ValidateNested,
 } from "class-validator";
@@ -163,29 +164,46 @@ export class UpdateFileInput {
     @ValidateNested()
     license?: LicenseInput;
 
-    @Field(() => [LinkedDamFileInput], { nullable: true })
-    @Type(() => LinkedDamFileInput)
+    @Field(() => [LinkedDamFileTargetInput], { nullable: true })
+    @Type(() => LinkedDamFileTargetInput)
     @ValidateNested({ each: true })
     @IsOptional()
-    linkedDamFiles?: Array<LinkedDamFileInput>;
+    linkedDamFileTargets?: Array<LinkedDamFileTargetInput>;
+
+    @Field(() => [LinkedDamFileSourceInput], { nullable: true })
+    @Type(() => LinkedDamFileSourceInput)
+    @ValidateNested({ each: true })
+    @IsOptional()
+    linkedDamFileSources?: Array<LinkedDamFileSourceInput>;
 }
 
 @InputType({ isAbstract: true })
-export class LinkedDamFileInput {
+class LinkedDamFileInput {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
     id?: string;
 
-    @Field(() => ID)
-    @IsUUID()
-    targetFileId: string;
-
     @Field()
     @IsString()
+    @MinLength(2)
     language: string;
 
     @Field(() => LinkedDamFileType)
     @IsEnum(LinkedDamFileType)
     type: LinkedDamFileType;
+}
+
+@InputType({ isAbstract: true })
+export class LinkedDamFileTargetInput extends LinkedDamFileInput {
+    @Field(() => ID)
+    @IsUUID()
+    targetFileId: string;
+}
+
+@InputType({ isAbstract: true })
+export class LinkedDamFileSourceInput extends LinkedDamFileInput {
+    @Field(() => ID)
+    @IsUUID()
+    sourceFileId: string;
 }

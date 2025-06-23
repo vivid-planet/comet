@@ -16,6 +16,7 @@ import {
 } from "@comet/admin";
 import { Card, CardContent, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import arrayMutators from "final-form-arrays";
 import isEqual from "lodash.isequal";
 import { ReactNode, useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -25,8 +26,15 @@ import ReactSplit from "react-split";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
-import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
+import {
+    GQLFocalPoint,
+    GQLImageCropAreaInput,
+    GQLLicenseInput,
+    GQLLinkedDamFileSourceInput,
+    GQLLinkedDamFileTargetInput,
+} from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamConfig } from "../config/useDamConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
@@ -36,6 +44,8 @@ import { FilePreview } from "./FilePreview";
 import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
 import { LicenseType } from "./licenseType";
+import { CaptionsLinkedFilesFields } from "./tabs/CaptionsLinkedFilesFields";
+import { VideoLinkedFilesFields } from "./tabs/VideoLinkedFilesFields";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -55,6 +65,16 @@ export interface EditFileFormValues extends EditImageFormValues {
         | Omit<GQLLicenseInput, "type"> & {
               type: LicenseType;
           };
+    captions?: Array<
+        Omit<GQLLinkedDamFileTargetInput, "targetFileId"> & {
+            target: { id: string; name: string };
+        }
+    >;
+    videos?: Array<
+        Omit<GQLLinkedDamFileSourceInput, "sourceFileId"> & {
+            source: { id: string; name: string };
+        }
+    >;
 }
 
 interface EditFormProps {
@@ -113,6 +133,7 @@ interface EditFileInnerProps {
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
     const dependencyMap = useDependenciesConfig();
+    const acceptedMimeTypes = useDamAcceptedMimeTypes();
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
@@ -120,6 +141,8 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
 
     const onSubmit = useCallback(
         async (values: EditFileFormValues) => {
+            console.log("values ", values);
+
             let cropArea: GQLImageCropAreaInput;
 
             if (values.focalPoint === "SMART") {
@@ -140,6 +163,8 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                 };
             }
 
+            console.log("values ", values);
+
             await apolloClient.mutate({
                 mutation: updateDamFileMutation,
                 variables: {
@@ -153,6 +178,24 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                         },
                         license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
                         folderId: file.folder?.id ?? null,
+                        linkedDamFileTargets:
+                            values.captions === undefined && file.linkedDamFileTargets
+                                ? []
+                                : values.captions?.map((linkedFile) => ({
+                                      id: linkedFile.id,
+                                      targetFileId: linkedFile.target?.id,
+                                      language: linkedFile.language,
+                                      type: "captions",
+                                  })),
+                        linkedDamFileSources:
+                            values.videos === undefined && file.linkedDamFileSources
+                                ? []
+                                : values.videos?.map((linkedFile) => ({
+                                      id: linkedFile.id,
+                                      sourceFileId: linkedFile.source?.id,
+                                      language: linkedFile.language,
+                                      type: "captions",
+                                  })),
                     },
                 },
             });
@@ -185,8 +228,13 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     durationFrom: file.license?.durationFrom ? Date.parse(file.license?.durationFrom) : undefined,
                     durationTo: file.license?.durationTo ? Date.parse(file.license?.durationTo) : undefined,
                 },
+                captions: file.linkedDamFileTargets.filter((linkedFile) => linkedFile.type === "captions"),
+                videos: file.linkedDamFileSources.filter((linkedFile) => linkedFile.type === "captions"),
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
+            mutators={{
+                ...arrayMutators,
+            }}
         >
             {() => (
                 <>
@@ -239,6 +287,21 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         />
                                     </RouterTab>
                                 )}
+                                {showLinkedFilesTab(file, acceptedMimeTypes) && (
+                                    <RouterTab
+                                        key="linked-files"
+                                        label={intl.formatMessage({
+                                            id: "comet.dam.file.linkedFiles.tabTitle",
+                                            defaultMessage: "Linked files",
+                                        })}
+                                        path="/linked-files"
+                                    >
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) && <VideoLinkedFilesFields />}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
+                                            <CaptionsLinkedFilesFields />
+                                        )}
+                                    </RouterTab>
+                                )}
                                 <RouterTab
                                     key="duplicates"
                                     label={intl.formatMessage({ id: "comet.dam.file.duplicates.tabTitle", defaultMessage: "Duplicates" })}
@@ -287,5 +350,12 @@ const StickyScrollWrapper = ({ children }: { children: ReactNode }) => {
         </div>
     );
 };
+
+function showLinkedFilesTab(file: DamFileDetails, acceptedMimeTypes: ReturnType<typeof useDamAcceptedMimeTypes>) {
+    return (
+        acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) ||
+        acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype)
+    );
+}
 
 export default EditFile;

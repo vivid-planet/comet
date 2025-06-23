@@ -37,6 +37,25 @@ export const damFileDetailFragment = gql`
             hasExpired
         }
         fileUrl
+        linkedDamFileTargets {
+            id
+            type
+            language
+            target {
+                id
+                name
+                fileUrl
+            }
+        }
+        linkedDamFileSources {
+            id
+            type
+            language
+            source {
+                id
+                name
+            }
+        }
     }
 `;
 

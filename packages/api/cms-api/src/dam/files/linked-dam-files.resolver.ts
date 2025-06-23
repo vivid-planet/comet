@@ -16,16 +16,16 @@ export function createLinkedDamFilesResolver({
     const hasNonEmptyScope = PassedScope != null;
 
     @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
-    @Resolver(() => File)
+    @Resolver(() => LinkedDamFile)
     class LinkedDamFilesResolver {
         @ResolveField(() => File)
         async source(@Parent() linkedDamFile: LinkedDamFile): Promise<FileInterface> {
-            return linkedDamFile.source;
+            return linkedDamFile.source.load();
         }
 
         @ResolveField(() => File)
         async target(@Parent() linkedDamFile: LinkedDamFile): Promise<FileInterface> {
-            return linkedDamFile.target;
+            return linkedDamFile.target.load();
         }
     }
 

@@ -1,4 +1,4 @@
-import { MikroORM, Utils } from "@mikro-orm/core";
+import { MikroORM, Reference, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
@@ -27,7 +27,7 @@ import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
-import { CreateFileInput, ImageFileInput, LinkedDamFileInput, UpdateFileInput } from "./dto/file.input";
+import { CreateFileInput, ImageFileInput, LinkedDamFileSourceInput, LinkedDamFileTargetInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
@@ -291,7 +291,10 @@ export class FilesService {
         return this.updateByEntity(file, data);
     }
 
-    async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
+    async updateByEntity(
+        entity: FileInterface,
+        { image, linkedDamFileTargets, linkedDamFileSources, ...input }: UpdateFileInput,
+    ): Promise<FileInterface> {
         const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
 
@@ -306,8 +309,13 @@ export class FilesService {
             }
         }
 
-        if (input.linkedDamFiles) {
-            await this.updateDamFileLinks(entity, input.linkedDamFiles);
+        console.log("input outside ", input);
+        if (linkedDamFileTargets) {
+            await this.updateDamFileTargets(entity, linkedDamFileTargets);
+        }
+
+        if (linkedDamFileSources) {
+            await this.updateDamFileSources(entity, linkedDamFileSources);
         }
 
         const file = Object.assign(entity, {
@@ -653,28 +661,34 @@ export class FilesService {
      * @param entity The entity to update the links for.
      * @param input The input containing the linked DAM files.
      */
-    private async updateDamFileLinks(entity: FileInterface, input: Array<LinkedDamFileInput>) {
-        await entity.linkedDamFilesTargets.loadItems();
+    private async updateDamFileTargets(entity: FileInterface, input: Array<LinkedDamFileTargetInput>) {
+        await entity.linkedDamFileTargets.loadItems();
+        console.log("input updateDamFileTargets ", input);
 
-        const linksToDelete = entity.linkedDamFilesTargets.filter((exsitingLink) => {
-            return !input.some((inputLink) => inputLink.id === exsitingLink.id);
+        const linksToDelete = entity.linkedDamFileTargets.filter((existingLink) => {
+            return !input.some((inputLink) => inputLink.id === existingLink.id);
         });
         const linksToUpdate = input.filter((file) => file.id !== undefined);
         const linksToCreate = input.filter((file) => file.id === undefined);
 
+        console.log("linksToCreate ", linksToCreate);
+        console.log("linksToUpdate ", linksToUpdate);
+        console.log("linksToDelete ", linksToDelete);
+
         for (const link of linksToDelete) {
-            const existingLink = entity.linkedDamFilesTargets.getItems().find((l) => l.id === link.id);
+            const existingLink = entity.linkedDamFileTargets.getItems().find((l) => l.id === link.id);
             if (existingLink) {
-                entity.linkedDamFilesTargets.remove(existingLink);
+                entity.linkedDamFileTargets.remove(existingLink);
+                this.entityManager.remove(existingLink);
             }
         }
 
         for (const link of linksToUpdate) {
-            const existingLink = entity.linkedDamFilesTargets.getItems().find((l) => l.id === link.id);
+            const existingLink = entity.linkedDamFileTargets.getItems().find((l) => l.id === link.id);
             if (existingLink) {
                 existingLink.language = link.language;
-                existingLink.target = await this.filesRepository.findOneOrFail(link.targetFileId);
                 existingLink.type = link.type;
+                existingLink.target = Reference.create(await this.filesRepository.findOneOrFail(link.targetFileId));
             }
         }
 
@@ -684,6 +698,54 @@ export class FilesService {
                 language: link.language,
                 source: entity,
                 target: await this.filesRepository.findOneOrFail(link.targetFileId),
+            });
+        }
+    }
+
+    /**
+     * Updates the links to DAM files in the given entity.
+     * It will remove links that are not present in the input, update existing links, and create new links.
+     *
+     * @param entity The entity to update the links for.
+     * @param input The input containing the linked DAM files.
+     */
+    private async updateDamFileSources(entity: FileInterface, input: Array<LinkedDamFileSourceInput>) {
+        await entity.linkedDamFileSources.loadItems();
+        console.log("input updateDamFileSources ", input);
+
+        const linksToDelete = entity.linkedDamFileSources.filter((existingLink) => {
+            return !input.some((inputLink) => inputLink.id === existingLink.id);
+        });
+        const linksToUpdate = input.filter((file) => file.id !== undefined);
+        const linksToCreate = input.filter((file) => file.id === undefined);
+
+        console.log("linksToCreate ", linksToCreate);
+        console.log("linksToUpdate ", linksToUpdate);
+        console.log("linksToDelete ", linksToDelete);
+
+        for (const link of linksToDelete) {
+            const existingLink = entity.linkedDamFileSources.getItems().find((l) => l.id === link.id);
+            if (existingLink) {
+                entity.linkedDamFileSources.remove(existingLink);
+                this.entityManager.remove(existingLink);
+            }
+        }
+
+        for (const link of linksToUpdate) {
+            const existingLink = entity.linkedDamFileSources.getItems().find((l) => l.id === link.id);
+            if (existingLink) {
+                existingLink.language = link.language;
+                existingLink.type = link.type;
+                existingLink.source = Reference.create(await this.filesRepository.findOneOrFail(link.sourceFileId));
+            }
+        }
+
+        for (const link of linksToCreate) {
+            this.linkedDamFileRepository.create({
+                type: link.type,
+                language: link.language,
+                source: await this.filesRepository.findOneOrFail(link.sourceFileId),
+                target: entity,
             });
         }
     }

@@ -101,10 +101,12 @@ type LinkedDamFile {
   id: ID!
   language: String!
   type: LinkedDamFileType!
+  source: DamFile!
+  target: DamFile!
 }
 
 enum LinkedDamFileType {
-  subtitles
+  captions
 }
 
 type DamFileLicense {
@@ -253,11 +255,9 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  linkedDamFilesSources: [LinkedDamFile!]!
-  linkedDamFilesTargets: [LinkedDamFile!]!
+  linkedDamFileSources: [LinkedDamFile!]!
+  linkedDamFileTargets: [LinkedDamFile!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-  source: DamFile!
-  target: DamFile!
 }
 
 input DependentFilter {
@@ -1369,7 +1369,8 @@ input UpdateDamFileInput {
   image: UpdateImageFileInput
   folderId: ID
   license: LicenseInput
-  linkedDamFiles: [LinkedDamFileInput!]
+  linkedDamFileTargets: [LinkedDamFileTargetInput!]
+  linkedDamFileSources: [LinkedDamFileSourceInput!]
 }
 
 input UpdateImageFileInput {
@@ -1384,11 +1385,18 @@ input LicenseInput {
   durationTo: DateTime
 }
 
-input LinkedDamFileInput {
+input LinkedDamFileTargetInput {
   id: ID
-  targetFileId: ID!
   language: String!
   type: LinkedDamFileType!
+  targetFileId: ID!
+}
+
+input LinkedDamFileSourceInput {
+  id: ID
+  language: String!
+  type: LinkedDamFileType!
+  sourceFileId: ID!
 }
 
 input CreateDamFolderInput {
