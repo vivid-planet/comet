@@ -129,12 +129,14 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
                 ) : (
                     <GridCellContent primaryText={row.for.name} secondaryText={row.for.damPath} />
                 ),
+            filterable: false,
         },
         {
             field: "language",
             headerName: intl.formatMessage({ id: "damMediaAlternatives.language", defaultMessage: "Language" }),
             flex: 1,
             minWidth: 50,
+            filterable: false,
         },
         {
             field: "actions",
