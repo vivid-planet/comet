@@ -12,7 +12,7 @@ export const CaptionsLinkedFilesFields = () => {
     const acceptedMimeTypes = useDamAcceptedMimeTypes();
 
     return (
-        <FieldSet title={<FormattedMessage id="comet.blocks.video.videos" defaultMessage="Linked videos" />}>
+        <FieldSet title={<FormattedMessage id="comet.dam.file.captionsLinkedFiles.linkedVideos" defaultMessage="Linked videos" />}>
             <FieldArray name="videos">
                 {({ fields }) => {
                     return (
@@ -38,7 +38,7 @@ export const CaptionsLinkedFilesFields = () => {
                                 </Grid>
                             ))}
                             <AdminComponentButton variant="primary" onClick={() => fields.push({ file: undefined })}>
-                                <FormattedMessage id="comet.blocks.video.addCaptionsToVideo" defaultMessage="Add captions to video" />
+                                <FormattedMessage id="comet.dam.file.captionsLinkedFiles.addCaptionsToVideo" defaultMessage="Add captions to video" />
                             </AdminComponentButton>
                         </>
                     );

@@ -62,7 +62,7 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
                     </Grid>
                     <Divider />
                     <AdminComponentButton startIcon={<Delete />} onClick={() => input.onChange(undefined)}>
-                        <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
+                        <FormattedMessage id="comet.form.file.empty" defaultMessage="Empty" />
                     </AdminComponentButton>
                 </AdminComponentPaper>
                 <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
@@ -79,7 +79,7 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
                             <ListItemIcon>
                                 <OpenNewTab />
                             </ListItemIcon>
-                            <FormattedMessage id="comet.blocks.image.openInDam" defaultMessage="Open in DAM" />
+                            <FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />
                         </MenuItem>
                     )}
                 </Menu>
