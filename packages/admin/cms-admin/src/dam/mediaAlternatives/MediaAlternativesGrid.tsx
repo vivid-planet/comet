@@ -102,12 +102,15 @@ function MediaAlternativesGridToolbar({ handleAdd }: { handleAdd: () => void }) 
     );
 }
 
+type Direction = "for" | "alternative";
+
 interface MediaAlternativesGridProps {
     file: { id: string };
     type: GQLDamMediaAlternativeType;
+    direction: Direction;
 }
 
-export function MediaAlternativesGrid({ file, type }: MediaAlternativesGridProps): ReactElement {
+export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativesGridProps): ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("DamMediaAlternativesGrid") };
@@ -120,7 +123,12 @@ export function MediaAlternativesGrid({ file, type }: MediaAlternativesGridProps
             headerName: intl.formatMessage({ id: "damMediaAlternatives.title", defaultMessage: "File" }),
             flex: 1,
             minWidth: 150,
-            renderCell: ({ row }) => <GridCellContent primaryText={row.alternative.name} secondaryText={row.alternative.damPath} />,
+            renderCell: ({ row }) =>
+                direction === "for" ? (
+                    <GridCellContent primaryText={row.alternative.name} secondaryText={row.alternative.damPath} />
+                ) : (
+                    <GridCellContent primaryText={row.for.name} secondaryText={row.for.damPath} />
+                ),
         },
         {
             field: "language",
@@ -170,7 +178,8 @@ export function MediaAlternativesGrid({ file, type }: MediaAlternativesGridProps
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
-            for: file.id,
+            for: direction === "for" ? file.id : undefined,
+            alternative: direction === "alternative" ? file.id : undefined,
             type: type,
         },
     });
@@ -205,6 +214,7 @@ export function MediaAlternativesGrid({ file, type }: MediaAlternativesGridProps
                         fileId={file.id}
                         selectionApi={selectionApi}
                         type={type}
+                        direction={direction}
                     />
                 ) : null}
             </EditDialog>

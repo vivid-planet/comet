@@ -14,12 +14,15 @@ import {
     GQLUpdateDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativeForm.generated";
 
+type Direction = "for" | "alternative";
+
 interface MediaAlternativeFormProps {
     mode: "add" | "edit";
     selectionApi: ISelectionApi;
     fileId: string;
     id?: string;
     type: GQLDamMediaAlternativeType;
+    direction?: Direction;
 }
 
 interface FormValues {
@@ -27,7 +30,7 @@ interface FormValues {
     language: string;
 }
 
-export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type }: MediaAlternativeFormProps) => {
+export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type, direction }: MediaAlternativeFormProps) => {
     const acceptedMimeTypes = useDamAcceptedMimeTypes();
 
     const [createDamMediaAlternative] = useMutation<GQLCreateDamMediaAlternativeMutation, GQLCreateDamMediaAlternativeMutationVariables>(
@@ -53,7 +56,12 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type }: M
     }
 
     const initialValues =
-        mode === "edit" && data ? { language: data.damMediaAlternative.language, alternative: data.damMediaAlternative.alternative } : undefined;
+        mode === "edit" && data
+            ? {
+                  language: data.damMediaAlternative.language,
+                  alternative: direction === "for" ? data.damMediaAlternative.alternative : data.damMediaAlternative.for,
+              }
+            : undefined;
 
     return (
         <FinalForm<FormValues>
@@ -63,8 +71,9 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type }: M
                     await createDamMediaAlternative({
                         variables: {
                             input: {
-                                alternative: alternative.id,
-                                for: fileId,
+                                ...(direction === "for"
+                                    ? { alternative: alternative.id, for: fileId }
+                                    : { alternative: fileId, for: alternative.id }),
                                 language,
                                 type,
                             },
@@ -79,7 +88,7 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type }: M
                             id,
                             input: {
                                 language,
-                                alternative: alternative.id,
+                                ...(direction === "for" ? { alternative: alternative.id } : { for: alternative.id }),
                             },
                         },
                     });
@@ -91,7 +100,9 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type }: M
             <Field
                 name="alternative"
                 component={FileField}
-                allowedMimetypes={acceptedMimeTypes.filteredAcceptedMimeTypes.captions}
+                allowedMimetypes={
+                    direction === "for" ? acceptedMimeTypes.filteredAcceptedMimeTypes.captions : acceptedMimeTypes.filteredAcceptedMimeTypes.video
+                }
                 fullWidth
                 required
             />
@@ -125,6 +136,11 @@ const editMediaAlternativeQuery = gql`
         damMediaAlternative(id: $id) {
             id
             language
+            for {
+                id
+                name
+                damPath
+            }
             alternative {
                 id
                 name

@@ -252,9 +252,22 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         })}
                                         path="/media-alternatives"
                                     >
-                                        <FieldSet title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />} disablePadding>
-                                            <MediaAlternativesGrid file={file} type="captions" />
-                                        </FieldSet>
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />}
+                                                disablePadding
+                                            >
+                                                <MediaAlternativesGrid file={file} type="captions" direction="for" />
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />}
+                                                disablePadding
+                                            >
+                                                <MediaAlternativesGrid file={file} type="captions" direction="alternative" />
+                                            </FieldSet>
+                                        )}
                                     </RouterTab>
                                 )}
                                 <RouterTab
