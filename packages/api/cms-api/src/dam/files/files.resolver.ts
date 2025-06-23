@@ -277,8 +277,6 @@ export function createFilesResolver({
 
         @ResolveField(() => [LinkedDamFile])
         async linkedDamFileTargets(@Parent() file: FileInterface): Promise<LinkedDamFileInterface[]> {
-            console.log(await file.linkedDamFileTargets.loadItems());
-
             return file.linkedDamFileTargets.loadItems();
         }
     }

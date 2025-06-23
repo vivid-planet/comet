@@ -21,8 +21,6 @@ interface VideoPreviewProps {
 }
 
 export const VideoPreview = ({ file }: VideoPreviewProps) => {
-    console.log(file.linkedDamFileTargets);
-
     return (
         <VideoPreviewWrapper>
             <StyledVideo controls src={file.fileUrl}>

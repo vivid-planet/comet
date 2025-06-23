@@ -309,7 +309,6 @@ export class FilesService {
             }
         }
 
-        console.log("input outside ", input);
         if (linkedDamFileTargets) {
             await this.updateDamFileTargets(entity, linkedDamFileTargets);
         }
@@ -663,17 +662,12 @@ export class FilesService {
      */
     private async updateDamFileTargets(entity: FileInterface, input: Array<LinkedDamFileTargetInput>) {
         await entity.linkedDamFileTargets.loadItems();
-        console.log("input updateDamFileTargets ", input);
 
         const linksToDelete = entity.linkedDamFileTargets.filter((existingLink) => {
             return !input.some((inputLink) => inputLink.id === existingLink.id);
         });
         const linksToUpdate = input.filter((file) => file.id !== undefined);
         const linksToCreate = input.filter((file) => file.id === undefined);
-
-        console.log("linksToCreate ", linksToCreate);
-        console.log("linksToUpdate ", linksToUpdate);
-        console.log("linksToDelete ", linksToDelete);
 
         for (const link of linksToDelete) {
             const existingLink = entity.linkedDamFileTargets.getItems().find((l) => l.id === link.id);
@@ -711,17 +705,12 @@ export class FilesService {
      */
     private async updateDamFileSources(entity: FileInterface, input: Array<LinkedDamFileSourceInput>) {
         await entity.linkedDamFileSources.loadItems();
-        console.log("input updateDamFileSources ", input);
 
         const linksToDelete = entity.linkedDamFileSources.filter((existingLink) => {
             return !input.some((inputLink) => inputLink.id === existingLink.id);
         });
         const linksToUpdate = input.filter((file) => file.id !== undefined);
         const linksToCreate = input.filter((file) => file.id === undefined);
-
-        console.log("linksToCreate ", linksToCreate);
-        console.log("linksToUpdate ", linksToUpdate);
-        console.log("linksToDelete ", linksToDelete);
 
         for (const link of linksToDelete) {
             const existingLink = entity.linkedDamFileSources.getItems().find((l) => l.id === link.id);

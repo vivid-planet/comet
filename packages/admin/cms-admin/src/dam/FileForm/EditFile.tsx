@@ -141,8 +141,6 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
 
     const onSubmit = useCallback(
         async (values: EditFileFormValues) => {
-            console.log("values ", values);
-
             let cropArea: GQLImageCropAreaInput;
 
             if (values.focalPoint === "SMART") {
@@ -162,8 +160,6 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     height: values.crop.height ? Math.ceil(values.crop.height) : undefined,
                 };
             }
-
-            console.log("values ", values);
 
             await apolloClient.mutate({
                 mutation: updateDamFileMutation,
@@ -200,7 +196,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                 },
             });
         },
-        [apolloClient, file.folder?.id, id],
+        [apolloClient, file.folder?.id, id, file.linkedDamFileSources, file.linkedDamFileTargets],
     );
 
     const initialBlockListWidth = 100 / 3;
