@@ -119,7 +119,7 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
 
     const columns: GridColDef<GQLDamMediaAlternativeGridFragment>[] = [
         {
-            field: "file",
+            field: direction === "for" ? "alternative" : "for",
             headerName: intl.formatMessage({ id: "damMediaAlternatives.title", defaultMessage: "File" }),
             flex: 1,
             minWidth: 150,

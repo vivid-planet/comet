@@ -78,6 +78,11 @@ export function createDamMediaAlternativeResolver({
 
             if (sort) {
                 options.orderBy = sort.map((sortItem) => {
+                    if (sortItem.field === "alternative") {
+                        return { alternative: { name: sortItem.direction } };
+                    } else if (sortItem.field === "for") {
+                        return { for: { name: sortItem.direction } };
+                    }
                     return {
                         [sortItem.field]: sortItem.direction,
                     };
