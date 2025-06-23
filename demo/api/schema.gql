@@ -70,6 +70,18 @@ type PaginatedDependencies {
   totalCount: Int!
 }
 
+type DamMediaAlternative {
+  id: ID!
+  language: String!
+  type: DamMediaAlternativeType!
+  for: DamFile!
+  alternative: DamFile!
+}
+
+enum DamMediaAlternativeType {
+  captions
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -181,6 +193,11 @@ type KubernetesJob {
   completionTime: DateTime
 }
 
+type PaginatedDamMediaAlternatives {
+  nodes: [DamMediaAlternative!]!
+  totalCount: Int!
+}
+
 type FilenameResponse {
   name: String!
   folderId: ID
@@ -239,6 +256,8 @@ type DamFile {
   updatedAt: DateTime!
   importSourceId: String
   importSourceType: String
+  alternativesForThisFile: [DamMediaAlternative!]!
+  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   scope: DamScope!
   fileUrl: String!
   duplicates: [DamFile!]!
@@ -792,6 +811,8 @@ type Query {
   damFoldersList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
+  damMediaAlternative(id: ID!): DamMediaAlternative!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, filter: DamMediaAlternativeFilter, sort: [DamMediaAlternativeSort!]): PaginatedDamMediaAlternatives!
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
@@ -938,6 +959,41 @@ input FolderFilterInput {
   searchText: String
 }
 
+input DamMediaAlternativeFilter {
+  id: StringFilter
+  language: StringFilter
+  type: DamMediaAlternativeTypeEnumFilter
+  source: ManyToOneFilter
+  target: ManyToOneFilter
+  and: [DamMediaAlternativeFilter!]
+  or: [DamMediaAlternativeFilter!]
+}
+
+input DamMediaAlternativeTypeEnumFilter {
+  isAnyOf: [DamMediaAlternativeType!]
+  equal: DamMediaAlternativeType
+  notEqual: DamMediaAlternativeType
+}
+
+input ManyToOneFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
+}
+
+input DamMediaAlternativeSort {
+  field: DamMediaAlternativeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum DamMediaAlternativeSortField {
+  id
+  language
+  type
+  source
+  target
+}
+
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
@@ -1043,12 +1099,6 @@ input DateFilter {
   lowerThanEqual: Date
   greaterThanEqual: Date
   notEqual: Date
-}
-
-input ManyToOneFilter {
-  isAnyOf: [ID!]
-  equal: ID
-  notEqual: ID
 }
 
 input ManyToManyFilter {
@@ -1222,6 +1272,9 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
+  createDamMediaAlternative(input: DamMediaAlternativeInput!): DamMediaAlternative!
+  updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
+  deleteDamMediaAlternative(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!): News!
   deleteNews(id: ID!): Boolean!
@@ -1379,6 +1432,20 @@ input UpdateDamFolderInput {
   name: String
   parentId: ID
   archived: Boolean
+}
+
+input DamMediaAlternativeInput {
+  language: String!
+  type: DamMediaAlternativeType!
+  source: ID!
+  target: ID!
+}
+
+input DamMediaAlternativeUpdateInput {
+  language: String
+  type: DamMediaAlternativeType
+  source: ID
+  target: ID
 }
 
 input NewsInput {
