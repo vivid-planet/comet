@@ -41,7 +41,7 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
         return (
             <>
                 <AdminComponentPaper disablePadding>
-                    <Grid container alignItems="center" spacing={3}>
+                    <Grid container alignItems="center" p={3}>
                         <Grid item xs>
                             <Typography variant="subtitle1">{damFile.name}</Typography>
                             <Typography variant="body1" color="textSecondary">
