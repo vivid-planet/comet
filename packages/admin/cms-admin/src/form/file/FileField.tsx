@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper } from "@comet/blocks-admin";
-import { Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
+import { ReactNode, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -18,9 +18,10 @@ export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement> {
     buttonText?: string;
     allowedMimetypes?: string[];
+    preview?: ReactNode;
 }
 
-const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
+const FileField = ({ buttonText, input, allowedMimetypes, preview }: FileFieldProps) => {
     const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const client = useApolloClient();
 
@@ -41,28 +42,31 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
         return (
             <>
                 <AdminComponentPaper disablePadding>
-                    <Grid container alignItems="center" p={3}>
-                        <Grid item xs>
-                            <Typography variant="subtitle1">{damFile.name}</Typography>
-                            <Typography variant="body1" color="textSecondary">
-                                <DamPathLazy fileId={damFile.id} />
-                            </Typography>
-                        </Grid>
-                        {showMenu && (
-                            <Grid item>
-                                <IconButton
-                                    onMouseDown={(event) => event.stopPropagation()}
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        setAnchorEl(event.currentTarget);
-                                    }}
-                                    size="large"
-                                >
-                                    <MoreVertical />
-                                </IconButton>
+                    <Box padding={3}>
+                        <Grid container alignItems="center" spacing={3}>
+                            {preview && <Grid item>{preview}</Grid>}
+                            <Grid item xs>
+                                <Typography variant="subtitle1">{damFile.name}</Typography>
+                                <Typography variant="body1" color="textSecondary">
+                                    <DamPathLazy fileId={damFile.id} />
+                                </Typography>
                             </Grid>
-                        )}
-                    </Grid>
+                            {showMenu && (
+                                <Grid item>
+                                    <IconButton
+                                        onMouseDown={(event) => event.stopPropagation()}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            setAnchorEl(event.currentTarget);
+                                        }}
+                                        size="large"
+                                    >
+                                        <MoreVertical />
+                                    </IconButton>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </Box>
                     <Divider />
                     <AdminComponentButton startIcon={<Delete />} onClick={() => input.onChange(undefined)}>
                         <FormattedMessage id="comet.form.file.empty" defaultMessage="Empty" />
