@@ -1451,8 +1451,8 @@ importers:
         specifier: workspace:*
         version: link:../admin-rte
       axios:
-        specifier: ^0.29.0
-        version: 0.29.0
+        specifier: ^0.30.0
+        version: 0.30.0
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
@@ -9199,8 +9199,8 @@ packages:
   axios@0.21.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
 
-  axios@0.29.0:
-    resolution: {integrity: sha512-Kjsq1xisgO5DjjNQwZFsy0gpcU1P2j36dZeQDXVhpIU26GVgkDUnROaHLSuluhMqtDE7aKA2hbKXG5yu5DN8Tg==}
+  axios@0.30.0:
+    resolution: {integrity: sha512-Z4F3LjCgfjZz8BMYalWdMgAQUnEtKDmpwNHjh/C8pQZWde32TF64cqnSeyL3xD/aTIASRU30RHTNzRiV/NpGMg==}
 
   axios@1.7.9:
     resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
@@ -22649,7 +22649,7 @@ snapshots:
 
   '@manypkg/find-root@1.1.0':
     dependencies:
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.6
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -26757,7 +26757,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  axios@0.29.0:
+  axios@0.30.0:
     dependencies:
       follow-redirects: 1.15.9(debug@4.4.0)
       form-data: 4.0.0
@@ -34481,7 +34481,7 @@ snapshots:
 
   regenerator-transform@0.15.2:
     dependencies:
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.6
 
   regexp.prototype.flags@1.5.4:
     dependencies:
