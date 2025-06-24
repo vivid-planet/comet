@@ -8,16 +8,19 @@ export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (compon
     },
     styleOverrides: mergeOverrideStyles<"MuiDialogTitle">(component?.styleOverrides, {
         root: {
+            display: "flex",
+            alignItems: "center",
             backgroundColor: palette.grey["A200"],
             color: "#ffffff",
-            padding: spacing(2),
+            padding: spacing(2, 4),
             fontSize: "14px",
-            boxSizing: "unset",
+            boxSizing: "border-box",
+            minHeight: 50,
 
             [breakpoints.up("sm")]: {
                 minWidth: 0,
                 fontSize: "16px",
-                padding: spacing(4),
+                minHeight: 60,
             },
         },
     }),
