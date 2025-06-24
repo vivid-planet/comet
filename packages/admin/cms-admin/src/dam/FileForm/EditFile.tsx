@@ -243,7 +243,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         />
                                     </RouterTab>
                                 )}
-                                {showLinkedFilesTab(file, acceptedMimeTypes) && (
+                                {showMediaAlternativesTab(file, acceptedMimeTypes) && (
                                     <RouterTab
                                         key="media-alternatives"
                                         label={intl.formatMessage({
@@ -324,7 +324,7 @@ const StickyScrollWrapper = ({ children }: { children: ReactNode }) => {
     );
 };
 
-function showLinkedFilesTab(file: DamFileDetails, acceptedMimeTypes: ReturnType<typeof useDamAcceptedMimeTypes>) {
+function showMediaAlternativesTab(file: DamFileDetails, acceptedMimeTypes: ReturnType<typeof useDamAcceptedMimeTypes>) {
     return (
         acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) ||
         acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype)
