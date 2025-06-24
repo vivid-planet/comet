@@ -1,8 +1,9 @@
 import { useApolloClient } from "@apollo/client";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper } from "@comet/blocks-admin";
-import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { Maybe } from "graphql/jsutils/Maybe";
+import { ComponentProps, isValidElement, ReactElement, ReactNode, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -15,13 +16,19 @@ import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldF
 
 export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
+interface ActionItem extends ComponentProps<typeof MenuItem> {
+    label: ReactNode;
+    icon?: ReactNode;
+}
+
 interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment | undefined, HTMLInputElement> {
     buttonText?: string;
     allowedMimetypes?: string[];
     preview?: ReactNode;
+    menuActions?: Maybe<ActionItem | ReactElement>[];
 }
 
-const FileField = ({ buttonText, input, allowedMimetypes, preview }: FileFieldProps) => {
+const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: FileFieldProps) => {
     const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const client = useApolloClient();
 
@@ -87,8 +94,25 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview }: FileFieldPr
                             <ListItemIcon>
                                 <OpenNewTab />
                             </ListItemIcon>
-                            <FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />
+                            <ListItemText primary={<FormattedMessage id="comet.form.file.openInDam" defaultMessage="Open in DAM" />} />
                         </MenuItem>
+                        {menuActions &&
+                            menuActions.map((item, index) => {
+                                if (!item) return null;
+
+                                if (isValidElement(item)) {
+                                    return item;
+                                }
+
+                                const { label, icon, ...rest } = item as ActionItem;
+
+                                return (
+                                    <MenuItem key={index} {...rest}>
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
+                                        <ListItemText primary={label} />
+                                    </MenuItem>
+                                );
+                            })}
                     </Menu>
                 )}
             </>
