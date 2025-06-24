@@ -72,8 +72,6 @@ const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
                     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                         <MenuItem
                             onClick={async () => {
-                                // id is checked three lines above
-                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 const path = await dependencyMap["DamFile"].resolvePath({
                                     apolloClient,
                                     id: damFile.id,
