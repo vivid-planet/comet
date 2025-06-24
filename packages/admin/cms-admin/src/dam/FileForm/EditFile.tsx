@@ -262,7 +262,12 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         )}
                                         {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
                                             <FieldSet
-                                                title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />}
+                                                title={
+                                                    <FormattedMessage
+                                                        id="comet.dam.file.videosUsingCaptions"
+                                                        defaultMessage="Videos using these captions"
+                                                    />
+                                                }
                                                 disablePadding
                                             >
                                                 <MediaAlternativesGrid file={file} type="captions" direction="alternative" />
