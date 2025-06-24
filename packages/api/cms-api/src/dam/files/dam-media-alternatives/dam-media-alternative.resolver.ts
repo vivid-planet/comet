@@ -10,24 +10,14 @@ import { gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "../../../common/f
 import { extractGraphqlFields } from "../../../common/graphql/extract-graphql-fields";
 import { AffectedEntity } from "../../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../../user-permissions/decorators/required-permission.decorator";
-import { DamScopeInterface } from "../../types";
 import { FILE_ENTITY, FileInterface } from "../entities/file.entity";
 import { DamMediaAlternativeInput, DamMediaAlternativeUpdateInput } from "./dto/dam-media-alternative.input";
 import { DamMediaAlternativesArgs } from "./dto/dam-media-alternatives.args";
 import { PaginatedDamMediaAlternatives } from "./dto/paginated-dam-media-alternatives";
 import { DamMediaAlternative } from "./entities/dam-media-alternative.entity";
 
-export function createDamMediaAlternativeResolver({
-    File,
-    Scope: PassedScope,
-}: {
-    File: Type<FileInterface>;
-    Scope?: Type<DamScopeInterface>;
-}): Type<unknown> {
-    // const hasNonEmptyScope = PassedScope != null;
-
+export function createDamMediaAlternativeResolver({ File }: { File: Type<FileInterface> }): Type<unknown> {
     @Resolver(() => DamMediaAlternative)
-    // @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @RequiredPermission(["dam"], { skipScopeCheck: true })
     class DamMediaAlternativeResolver {
         constructor(

@@ -82,7 +82,7 @@ export class DamModule {
         const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
-        const DamMediaAlternativeResolver = createDamMediaAlternativeResolver({ File, Scope });
+        const DamMediaAlternativeResolver = createDamMediaAlternativeResolver({ File });
 
         if (Scope) {
             // Scope validation needs to happen after resolver generation. Otherwise the input type metadata has not been defined yet.
