@@ -11,7 +11,7 @@ const DatePickerFilter = ({ item, applyValue }: GridFilterInputValueProps) => {
     const [internalValue, setInternalValue] = useState<Date | null>(dateValue);
 
     const applyDateValue = (newValue: Date | null) => {
-        const stringValue = newValue ? format(newValue, dateFormat) : "";
+        const stringValue = newValue ? format(newValue, dateFormat) : null;
         applyValue({ ...item, value: stringValue });
     };
 
