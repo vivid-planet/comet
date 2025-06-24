@@ -1263,7 +1263,7 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
-  createDamMediaAlternative(input: DamMediaAlternativeInput!): DamMediaAlternative!
+  createDamMediaAlternative(for: ID!, alternative: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
   updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
   deleteDamMediaAlternative(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
@@ -1428,8 +1428,6 @@ input UpdateDamFolderInput {
 input DamMediaAlternativeInput {
   language: String!
   type: DamMediaAlternativeType!
-  for: ID!
-  alternative: ID!
 }
 
 input DamMediaAlternativeUpdateInput {

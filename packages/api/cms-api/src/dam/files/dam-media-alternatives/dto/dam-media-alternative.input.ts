@@ -2,6 +2,7 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 import { PartialType } from "../../../../common/helper/partial-type.helper";
+import { IsUndefinable } from "../../../../common/validators/is-undefinable";
 import { DamMediaAlternativeType } from "../entities/dam-media-alternative.entity";
 
 @InputType()
@@ -15,17 +16,17 @@ export class DamMediaAlternativeInput {
     @IsEnum(DamMediaAlternativeType)
     @Field(() => DamMediaAlternativeType)
     type: DamMediaAlternativeType;
-
-    @IsNotEmpty()
-    @Field(() => ID)
-    @IsString()
-    for: string;
-
-    @IsNotEmpty()
-    @Field(() => ID)
-    @IsString()
-    alternative: string;
 }
 
 @InputType()
-export class DamMediaAlternativeUpdateInput extends PartialType(DamMediaAlternativeInput) {}
+export class DamMediaAlternativeUpdateInput extends PartialType(DamMediaAlternativeInput) {
+    @Field(() => ID, { nullable: true })
+    @IsUndefinable()
+    @IsString()
+    for?: string;
+
+    @Field(() => ID, { nullable: true })
+    @IsUndefinable()
+    @IsString()
+    alternative?: string;
+}

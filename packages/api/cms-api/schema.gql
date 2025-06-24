@@ -606,7 +606,7 @@ type Mutation {
   generateAltText(fileId: String!, language: String): String!
   generateImageTitle(fileId: String!, language: String): String!
   generateSeoTags(content: String!, language: String!): SeoTags!
-  createDamMediaAlternative(input: DamMediaAlternativeInput!): DamMediaAlternative!
+  createDamMediaAlternative(for: ID!, alternative: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
   updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
   deleteDamMediaAlternative(id: ID!): Boolean!
 }
@@ -721,8 +721,6 @@ input UserContentScopesInput {
 input DamMediaAlternativeInput {
   language: String!
   type: DamMediaAlternativeType!
-  for: ID!
-  alternative: ID!
 }
 
 input DamMediaAlternativeUpdateInput {

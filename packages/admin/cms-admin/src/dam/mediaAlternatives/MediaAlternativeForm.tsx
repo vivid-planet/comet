@@ -70,10 +70,8 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type, dir
                 if (mode === "add") {
                     await createDamMediaAlternative({
                         variables: {
+                            ...(direction === "for" ? { alternative: alternative.id, for: fileId } : { alternative: fileId, for: alternative.id }),
                             input: {
-                                ...(direction === "for"
-                                    ? { alternative: alternative.id, for: fileId }
-                                    : { alternative: fileId, for: alternative.id }),
                                 language,
                                 type,
                             },
@@ -151,8 +149,8 @@ const editMediaAlternativeQuery = gql`
 `;
 
 const createDamMediaAlternativeMutation = gql`
-    mutation CreateDamMediaAlternative($input: DamMediaAlternativeInput!) {
-        createDamMediaAlternative(input: $input) {
+    mutation CreateDamMediaAlternative($for: ID!, $alternative: ID!, $input: DamMediaAlternativeInput!) {
+        createDamMediaAlternative(for: $for, alternative: $alternative, input: $input) {
             id
         }
     }

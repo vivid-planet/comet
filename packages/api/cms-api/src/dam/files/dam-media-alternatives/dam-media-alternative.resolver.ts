@@ -24,11 +24,10 @@ export function createDamMediaAlternativeResolver({
     File: Type<FileInterface>;
     Scope?: Type<DamScopeInterface>;
 }): Type<unknown> {
-    // const hasNonEmptyScope = PassedScope != null;
+    const hasNonEmptyScope = PassedScope != null;
 
     @Resolver(() => DamMediaAlternative)
-    // @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
-    @RequiredPermission(["dam"], { skipScopeCheck: true })
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     class DamMediaAlternativeResolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -44,6 +43,8 @@ export function createDamMediaAlternativeResolver({
         }
 
         @Query(() => PaginatedDamMediaAlternatives)
+        @AffectedEntity(File, { idArg: "for", nullable: true })
+        @AffectedEntity(File, { idArg: "alternative", nullable: true })
         async damMediaAlternatives(
             @Args() { search, filter, sort, offset, limit, for: forId, alternative: alternativeId, type }: DamMediaAlternativesArgs,
             @Info() info: GraphQLResolveInfo,
@@ -104,15 +105,18 @@ export function createDamMediaAlternativeResolver({
         }
 
         @Mutation(() => DamMediaAlternative)
+        @AffectedEntity(File, { idArg: "for" })
+        @AffectedEntity(File, { idArg: "alternative" })
         async createDamMediaAlternative(
+            @Args("for", { type: () => ID }) forId: string,
+            @Args("alternative", { type: () => ID }) alternativeId: string,
             @Args("input", { type: () => DamMediaAlternativeInput }) input: DamMediaAlternativeInput,
         ): Promise<DamMediaAlternative> {
-            const { for: forInput, alternative: alternativeInput, ...assignInput } = input;
             const damMediaAlternative = this.repository.create({
-                ...assignInput,
+                ...input,
 
-                for: Reference.create(await this.damFileRepository.findOneOrFail(forInput)),
-                alternative: Reference.create(await this.damFileRepository.findOneOrFail(alternativeInput)),
+                for: Reference.create(await this.damFileRepository.findOneOrFail(forId)),
+                alternative: Reference.create(await this.damFileRepository.findOneOrFail(alternativeId)),
             });
 
             await this.entityManager.flush();
