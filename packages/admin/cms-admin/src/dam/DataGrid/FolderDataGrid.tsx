@@ -8,7 +8,6 @@ import {
     type GridColDef,
     type IFilterApi,
     type ISelectionApi,
-    MainContent,
     PrettyBytes,
     ToolbarActions,
     ToolbarItem,
@@ -78,6 +77,7 @@ interface FolderDataGridProps extends DamConfig {
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
     selectionApi: ISelectionApi;
+    renderWithFullHeightMainContent?: boolean;
 }
 
 type FolderDataGridToolbarProps = {
@@ -141,6 +141,7 @@ const FolderDataGrid = ({
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
+    renderWithFullHeightMainContent,
     ...props
 }: FolderDataGridProps) => {
     const intl = useIntl();
@@ -601,7 +602,7 @@ const FolderDataGrid = ({
     };
 
     return (
-        <MainContent>
+        <>
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     apiRef={apiRef}
@@ -616,7 +617,7 @@ const FolderDataGrid = ({
                     checkboxSelection={!hideMultiselect}
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
-                    autoHeight={true}
+                    autoHeight={!renderWithFullHeightMainContent}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
                         contextMenu: !hideContextMenu,
@@ -660,7 +661,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </MainContent>
+        </>
     );
 };
 

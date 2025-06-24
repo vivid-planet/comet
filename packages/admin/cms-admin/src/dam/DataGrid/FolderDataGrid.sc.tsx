@@ -13,6 +13,7 @@ export const FolderOuterHoverHighlight = styled("div", { shouldForwardProp: (pro
     flex-grow: 1;
     flex-direction: column;
     justify-content: flex-start;
+    height: 100%;
 
     ${({ isHovered, theme }) =>
         isHovered &&
