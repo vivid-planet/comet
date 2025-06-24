@@ -2,7 +2,6 @@ import { useApolloClient } from "@apollo/client";
 import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper } from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
-import { Maybe } from "graphql/jsutils/Maybe";
 import { ComponentProps, isValidElement, ReactElement, ReactNode, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -25,7 +24,7 @@ interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment | 
     buttonText?: string;
     allowedMimetypes?: string[];
     preview?: ReactNode;
-    menuActions?: Maybe<ActionItem | ReactElement>[];
+    menuActions?: Array<ActionItem | ReactElement | null | undefined>;
 }
 
 const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }: FileFieldProps) => {
