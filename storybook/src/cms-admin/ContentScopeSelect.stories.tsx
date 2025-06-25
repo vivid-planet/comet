@@ -295,6 +295,29 @@ export const GroupingWithOptionalScopeParts = function () {
             ]}
             groupBy="country"
             searchable
+            renderOption={(option, query) => {
+                let text: string;
+                if (option.company?.value === undefined) {
+                    text = option.country.label ?? option.country.value;
+                } else {
+                    text = option.company.label ?? option.company.value;
+                }
+
+                const matches = findTextMatches(text, query);
+
+                return (
+                    <>
+                        <ListItemIcon>
+                            <Domain />
+                        </ListItemIcon>
+                        <ListItemText
+                            primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
+                            sx={{ margin: 0 }}
+                            primary={<MarkedMatches text={text} matches={matches} />}
+                        />
+                    </>
+                );
+            }}
         />
     );
 };
