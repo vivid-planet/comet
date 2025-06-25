@@ -1,4 +1,6 @@
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { type Decorator } from "@storybook/react";
 import { de, enUS } from "date-fns/locale";
 import { IntlProvider } from "react-intl";
@@ -53,6 +55,7 @@ const messages: Record<LocaleOption, Record<string, string>> = {
 
 export const IntlDecorator: Decorator = (fn, context) => {
     const { locale: selectedLocale = LocaleOption.English } = context.globals;
+    const selecteDateFnsLocale = isLocaleOption(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en;
 
     return (
         <IntlProvider
@@ -62,9 +65,9 @@ export const IntlDecorator: Decorator = (fn, context) => {
                 // disable error logging
             }}
         >
-            <DateFnsLocaleProvider value={isLocaleOption(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
-                {fn()}
-            </DateFnsLocaleProvider>
+            <LocalizationProvider adapterLocale={selecteDateFnsLocale} dateAdapter={AdapterDateFns}>
+                <DateFnsLocaleProvider value={selecteDateFnsLocale}>{fn()}</DateFnsLocaleProvider>
+            </LocalizationProvider>
         </IntlProvider>
     );
 };
