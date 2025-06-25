@@ -133,7 +133,7 @@ export function ProductForm({ id, width }: FormProps) {
 
         const output = {
             ...formValues,
-            description: formValues.description ?? "",
+            description: formValues.description,
             image: rootBlocks.image.state2Output(formValues.image),
             type: formValues.type as GQLProductType,
             category: formValues.category ? formValues.category.id : null,
@@ -200,7 +200,12 @@ export function ProductForm({ id, width }: FormProps) {
                         startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         disableSlider
                     />
-                    <TextAreaField fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description" />} />
+                    <TextAreaField
+                        required
+                        fullWidth
+                        name="description"
+                        label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                    />
                     <DateField
                         required
                         fullWidth
@@ -281,7 +286,6 @@ export function ProductForm({ id, width }: FormProps) {
                     <SelectField
                         name="additionalTypes"
                         label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
-                        required
                         fullWidth
                         multiple
                     >
