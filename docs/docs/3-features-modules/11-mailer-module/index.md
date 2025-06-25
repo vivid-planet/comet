@@ -15,18 +15,18 @@ MAILER_HOST: string;
 MAILER_PORT: number;
 
 @IsString()
-MAILER_DEFAULT_SENDER: string;
+MAILER_DEFAULT_FROM: string;
 
-@IsOptional()
+@IsUndefinable()
 @IsArray()
 @Transform(({ value }) => value.split(","))
-@IsString({ each: true })
+@IsEmail({}, { each: true })
 MAILER_SEND_ALL_MAILS_TO?: string[];
 
-@IsOptional()
+@IsUndefinable()
 @IsArray()
 @Transform(({ value }) => value.split(","))
-@IsString({ each: true })
+@IsEmail({}, { each: true })
 MAILER_SEND_ALL_MAILS_BCC?: string;
 ```
 
@@ -62,7 +62,7 @@ mailhog:
 # mailer
 MAILER_HOST=localhost
 MAILER_PORT=1025
-MAILER_DEFAULT_SENDER='"Comet Demo" <comet-demo@comet-dxp.com>'
+MAILER_DEFAULT_FROM='"Comet Demo" <comet-demo@comet-dxp.com>'
 MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 
@@ -71,7 +71,16 @@ MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 imports: [
     ...
-    MailerModule.forRoot(config.mailer),
+    MailerModule.register(config.mailer),
+]
+```
+
+#### specific module file
+
+```
+imports: [
+    ...
+    MailerModule,
 ]
 ```
 
@@ -83,7 +92,7 @@ api:
     ...
     MAILER_HOST: "localhost"
     MAILER_PORT: 25
-    MAILER_DEFAULT_SENDER: '"Comet Demo" <comet-demo@comet-dxp.com>'
+    MAILER_DEFAULT_FROM: '"Comet Demo" <comet-demo@comet-dxp.com>'
     MAILER_SEND_ALL_MAILS_TO: "demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com"
 ```
 
@@ -94,19 +103,13 @@ api:
 Add as import to your module
 
 ```typescript
-@Module({})
-export class ProductsModule {
-    static forRoot(mailerModule: DynamicModule): DynamicModule {
-        return {
-            module: ProductsModule,
-            imports: [
-                mailerModule,
-                ...,
-            ],
-            ...,
-        };
-    }
-}
+@Module({
+    imports: [
+        MailerModule,
+        ...,
+    ],
+})
+export class ProductsModule {}
 ```
 
 Then inject the `MailerService` into your service or controller:
