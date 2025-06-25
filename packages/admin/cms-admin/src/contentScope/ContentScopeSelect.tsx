@@ -316,10 +316,8 @@ function humanReadableLabel({ label, value }: { label?: string; value: string })
 }
 
 function valueMatchesOption<Value extends ContentScopeInterface = ContentScopeInterface>(value: Value, option: Option<Value>) {
-    const dimensions = new Set<string>();
-    for (const dimension of [...Object.keys(value), ...Object.keys(option)]) {
-        dimensions.add(dimension);
-    }
+    const optionMatchesAllValueDimensions = Object.keys(value).every((dimension) => value[dimension] === option[dimension]?.value);
+    const valueMatchesAllOptionDimensions = Object.keys(option).every((dimension) => option[dimension]?.value === value[dimension]);
 
-    return Array.from(dimensions).every((key) => value[key] === option[key]?.value);
+    return optionMatchesAllValueDimensions && valueMatchesAllOptionDimensions;
 }
