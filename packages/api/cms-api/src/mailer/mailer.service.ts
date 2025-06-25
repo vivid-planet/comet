@@ -39,7 +39,7 @@ export class MailerService {
             : mailOptionsWithDefaults;
 
         const result = await this.mailerTransport.sendMail(mailOptions);
-        if (!result.messageId) this.logger.error("Mail could not be sent!");
+        if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
 
         return result;
     }
