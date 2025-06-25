@@ -37,16 +37,18 @@ export class MailerService {
      * @param type Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
      * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
+     * @param logMail When set to false, the email will not be logged to the database.
      */
     async sendMail({
         mailTypeForLogging,
         additionalData,
+        logMail = true,
         ...originMailOptions
-    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown }) {
+    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown; logMail?: boolean }) {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
 
         let logEntry: MailerLog<unknown> | undefined;
-        if (!this.mailerConfig.disableMailLog) {
+        if (logMail && !this.mailerConfig.disableMailLog) {
             logEntry = this.mailerLogRepository.create({
                 to: this.normalizeToArray(originMailOptions.to).map<string>(this.convertAddressToString),
                 subject: originMailOptions.subject,
@@ -65,7 +67,7 @@ export class MailerService {
         const result = await this.mailerTransport.sendMail(mailOptions);
         if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
 
-        if (!this.mailerConfig.disableMailLog && logEntry) {
+        if (logMail && !this.mailerConfig.disableMailLog && logEntry) {
             logEntry.assign({ result });
             await this.entityManager.flush();
         }
