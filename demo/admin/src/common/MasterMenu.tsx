@@ -35,7 +35,6 @@ import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
 
-import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -192,16 +191,6 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "warnings",
             },
         ],
-    },
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
-        icon: <Snips />,
-        route: {
-            path: "/component-demo",
-            component: ComponentDemo,
-        },
-        requiredPermission: "pageTree",
     },
     {
         type: "route",
