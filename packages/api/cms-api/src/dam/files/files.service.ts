@@ -252,6 +252,7 @@ export class FilesService {
             const oldAndNewFileAreIdentical = fileToReplace.contentHash === uploadedFileMetadata.contentHash;
 
             if (!oldAndNewFileAreIdentical) {
+                // Don't upload the file if it is identical to the existing one
                 await this.blobStorageBackendService.upload(uploadedFile, uploadedFileMetadata.contentHash, this.config.filesDirectory);
 
                 // Check if the current file is the only one using the contentHash before deleting from blob storage
@@ -261,25 +262,22 @@ export class FilesService {
                 ) {
                     await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
                 }
-
-                if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height && fileToReplace.image) {
-                    fileToReplace.image.width = uploadedFileMetadata.image.width;
-                    fileToReplace.image.height = uploadedFileMetadata.image.height;
-                    fileToReplace.image.exif = uploadedFileMetadata.exifData;
-                }
-
-                Object.assign(fileToReplace, {
-                    size: uploadedFile.size,
-                    mimetype: uploadedFile.mimetype,
-                    contentHash: uploadedFileMetadata.contentHash,
-                    ...assignData,
-                });
-
-                result = await this.save(fileToReplace);
-            } else {
-                // if old and new files are identical, skip replacement and return the existing file
-                result = fileToReplace;
             }
+
+            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height && fileToReplace.image) {
+                fileToReplace.image.width = uploadedFileMetadata.image.width;
+                fileToReplace.image.height = uploadedFileMetadata.image.height;
+                fileToReplace.image.exif = uploadedFileMetadata.exifData;
+            }
+
+            Object.assign(fileToReplace, {
+                size: uploadedFile.size,
+                mimetype: uploadedFile.mimetype,
+                contentHash: uploadedFileMetadata.contentHash,
+                ...assignData,
+            });
+
+            result = await this.save(fileToReplace);
 
             rimraf.sync(uploadedFile.path);
         } catch (e) {
