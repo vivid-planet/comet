@@ -165,7 +165,7 @@ export async function generateCrudInput(
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
             decorators.push(`@Field(() => GraphQLDate, ${fieldOptions})`);
-            type = "Date";
+            type = "string";
         } else if (prop.type === "Date") {
             // DateTime
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();

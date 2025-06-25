@@ -137,7 +137,7 @@ export class Product extends BaseEntity {
 
     @Property({ type: types.date, nullable: true })
     @Field(() => GraphQLDate, { nullable: true })
-    availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
+    availableSince?: string = undefined;
 
     @Property({ nullable: true })
     @Field({ nullable: true })
