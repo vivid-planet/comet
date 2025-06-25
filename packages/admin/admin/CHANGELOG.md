@@ -1,5 +1,14 @@
 # @comet/admin
 
+## 7.24.0
+
+### Patch Changes
+
+-   fc900f217: Support the `disabled` prop in the `FinalFormRangeInput`
+-   Updated dependencies [24e046fb3]
+    -   @comet/admin-theme@7.24.0
+    -   @comet/admin-icons@7.24.0
+
 ## 7.23.0
 
 ### Patch Changes
