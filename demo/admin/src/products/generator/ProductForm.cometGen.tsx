@@ -29,7 +29,7 @@ export default defineConfig<GQLProduct>({
                 },
                 { type: "text", name: "slug", required: true },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
-                { type: "text", name: "description", label: "Description", multiline: true, required: false },
+                { type: "text", name: "description", label: "Description", multiline: true },
                 {
                     type: "staticSelect",
                     name: "type",
