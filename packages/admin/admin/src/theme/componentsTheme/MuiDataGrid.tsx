@@ -21,7 +21,6 @@ import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
-import { commonSelectDefaultProps } from "./getCommonSelectTheme";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
 const getDensityHeightValue = (density: string) => {
@@ -76,13 +75,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             baseButton: {
                 color: "info",
                 ...component?.defaultProps?.slotProps?.baseButton,
-            },
-            pagination: {
-                slotProps: {
-                    select: {
-                        ...commonSelectDefaultProps,
-                    },
-                },
             },
         },
         localeText: {
