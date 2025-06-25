@@ -24,25 +24,6 @@ export class MailerService {
         };
     }
 
-    private async _sendMail(originMailOptions: MailOptions) {
-        // this is needed because only on production stage we are allowed to send mails to customers
-        const mailOptions: MailOptions = this.mailerConfig.sendAllMailsTo
-            ? { ...originMailOptions, to: this.mailerConfig.sendAllMailsTo, cc: undefined, bcc: undefined }
-            : originMailOptions;
-
-        const result = await this.mailerTransport.sendMail(mailOptions);
-        if (!result.messageId) this.logger.error("Mail could not be sent!");
-        return result;
-    }
-
-    /**
-     * Sends a mail without logging it in the database.
-     * @param mailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
-     */
-    async sendMailWithoutLog(mailOptions: MailOptions) {
-        return this._sendMail(this.fillMailOptionsDefaults(mailOptions));
-    }
-
     /**
      * Sends a mail and logs it in the database.
      * @param type Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
@@ -52,7 +33,13 @@ export class MailerService {
     async sendMail({ type, additionalData, ...originMailOptions }: MailOptions & { type?: string; additionalData?: unknown }) {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
 
-        const result = await this._sendMail(mailOptionsWithDefaults);
+        // this is needed because only on production stage we are allowed to send mails to customers
+        const mailOptions: MailOptions = this.mailerConfig.sendAllMailsTo
+            ? { ...mailOptionsWithDefaults, to: this.mailerConfig.sendAllMailsTo, cc: undefined, bcc: undefined }
+            : mailOptionsWithDefaults;
+
+        const result = await this.mailerTransport.sendMail(mailOptions);
+        if (!result.messageId) this.logger.error("Mail could not be sent!");
 
         return result;
     }
