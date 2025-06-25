@@ -192,6 +192,9 @@ export function generateFormField({
             }
             ${validateCode}
         />`;
+        if (!config.virtual && !required && !config.readOnly) {
+            formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
+        }
     } else if (config.type == "number") {
         code = `
             <NumberField
