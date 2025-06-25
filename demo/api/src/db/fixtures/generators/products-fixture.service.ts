@@ -72,7 +72,10 @@ export class ProductsFixtureService {
                 inStock: faker.datatype.boolean(),
                 soldCount: faker.number.int({ min: 0, max: 100 }),
                 availableSince: faker.date.past(),
-                image: DamImageBlock.blockInputFactory({ attachedBlocks: [] }).transformToBlockData(),
+                image: DamImageBlock.blockInputFactory({
+                    attachedBlocks: [{ type: "pixelImage", props: {} }],
+                    activeType: "pixelImage",
+                }).transformToBlockData(),
                 manufacturer: faker.helpers.arrayElement(manufacturers),
             });
 
