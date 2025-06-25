@@ -4,9 +4,9 @@
 
 `DatePicker` from `@mui/x-date-pickers` is now used inside `DataGrid` filters
 
-This change replaces the previous `TextField` with `<input type="date" />` for an improved user experience.
+This change replaces the previous `TextField` (which uses `<input type="date" />`) with `DatePicker` for an improved user experience.
 
-`@mui/x-date-pickers` has been added as a peer dependency and must be installed in your project's `admin` package.
+`@mui/x-date-pickers` has been added as a peer dependency and must be installed in your project's admin application.
 `LocalizationProvider` must be added to your app's root and configured with `date-fns` as the date adapter.
 
 `admin/package.json`
