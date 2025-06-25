@@ -87,16 +87,6 @@ api:
     MAILER_SEND_ALL_MAILS_TO: "demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com"
 ```
 
-#### /api/package.json
-
-```
-"dependencies": {
-    ...
-    "nodemailer": "^7.0.3",
-    ...
-}
-```
-
 ## Usage
 
 ### Sending a Mail

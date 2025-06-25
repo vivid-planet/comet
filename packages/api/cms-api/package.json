@@ -57,6 +57,7 @@
         "mime": "^3.0.0",
         "mime-db": "^1.53.0",
         "multer": "^1.4.4",
+        "nodemailer": "^7.0.0",
         "openai": "^4.87.3",
         "probe-image-size": "^7.2.3",
         "request-ip": "^3.3.0",
@@ -128,15 +129,11 @@
         "express": "^5.0.0",
         "graphql": "^16.6.0",
         "nest-commander": "^3.0.0",
-        "nodemailer": "^7.0.0|^6.0.0",
         "reflect-metadata": "^0.2.0",
         "rxjs": "^7.1.0"
     },
     "peerDependenciesMeta": {
         "@sentry/node": {
-            "optional": true
-        },
-        "nodemailer": {
             "optional": true
         }
     },
