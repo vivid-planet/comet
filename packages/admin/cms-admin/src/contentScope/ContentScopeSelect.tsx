@@ -84,12 +84,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     const selectedOption = options.find((option) => {
-        const dimensions = new Set<string>();
-        for (const dimension of [...Object.keys(value), ...Object.keys(option)]) {
-            dimensions.add(dimension);
-        }
-
-        return Array.from(dimensions).every((key) => value[key] === option[key]?.value);
+        return valueMatchesOption(value, option);
     });
 
     if (!selectedOption) {
@@ -318,4 +313,13 @@ function optionToValue<Value extends ContentScopeInterface = ContentScopeInterfa
 
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {
     return label ?? capitalCase(value);
+}
+
+function valueMatchesOption<Value extends ContentScopeInterface = ContentScopeInterface>(value: Value, option: Option<Value>) {
+    const dimensions = new Set<string>();
+    for (const dimension of [...Object.keys(value), ...Object.keys(option)]) {
+        dimensions.add(dimension);
+    }
+
+    return Array.from(dimensions).every((key) => value[key] === option[key]?.value);
 }
