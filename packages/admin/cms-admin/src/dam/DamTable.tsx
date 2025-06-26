@@ -1,16 +1,14 @@
 import { useQuery } from "@apollo/client";
 import {
     EditDialogApiContext,
-    FillSpace,
     type IFilterApi,
     type ISortInformation,
     SortDirection,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     Toolbar,
-    ToolbarActions,
-    ToolbarItem,
     useEditDialog,
     useStackApi,
     useStoredState,
@@ -22,8 +20,6 @@ import { useIntl } from "react-intl";
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
-import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
-import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
 import FolderDataGrid, {
     damFolderQuery,
     type GQLDamFileTableFragment,
@@ -32,15 +28,8 @@ import FolderDataGrid, {
     type GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
 import { type RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
-import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
-
-interface FolderProps extends DamConfig {
-    filterApi: IFilterApi<DamFilter>;
-    additionalToolbarItems?: ReactNode;
-    id?: string;
-}
 
 export interface DamFilter {
     allowedMimetypes?: string[];
@@ -49,7 +38,14 @@ export interface DamFilter {
     sort?: ISortInformation;
 }
 
-const Folder = ({ id, filterApi, ...props }: FolderProps) => {
+interface FolderProps extends DamConfig {
+    filterApi: IFilterApi<DamFilter>;
+    additionalToolbarItems?: ReactNode;
+    id?: string;
+    renderWithFullHeightMainContent?: boolean;
+}
+
+const Folder = ({ id, filterApi, renderWithFullHeightMainContent, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
@@ -65,39 +61,24 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
         skip: selectedFolderId === undefined,
     });
 
-    const uploadFilters = {
-        allowedMimetypes: props.allowedMimetypes,
-    };
+    const folderDataGridNode = (
+        <FolderDataGrid
+            id={id}
+            breadcrumbs={stackApi?.breadCrumbs}
+            selectionApi={selectionApi}
+            filterApi={filterApi}
+            renderWithFullHeightMainContent={renderWithFullHeightMainContent}
+            {...props}
+        />
+    );
 
     return (
         <CurrentDamFolderProvider folderId={id}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <EditDialogApiContext.Provider value={editDialogApi}>
-                        <Toolbar scopeIndicator={props.contentScopeIndicator}>
-                            <ToolbarItem>
-                                <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
-                            </ToolbarItem>
-                            <FillSpace />
-                            <ToolbarActions>
-                                {props.additionalToolbarItems}
-                                <DamMoreActions
-                                    anchorOrigin={{
-                                        vertical: "bottom",
-                                        horizontal: "left",
-                                    }}
-                                    transformOrigin={{
-                                        vertical: "top",
-                                        horizontal: "left",
-                                    }}
-                                    folderId={id}
-                                    filter={uploadFilters}
-                                />
-
-                                <UploadFilesButton folderId={id} filter={uploadFilters} />
-                            </ToolbarActions>
-                        </Toolbar>
-                        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
+                        <Toolbar scopeIndicator={props.contentScopeIndicator} />
+                        {renderWithFullHeightMainContent ? <StackMainContent fullHeight>{folderDataGridNode}</StackMainContent> : folderDataGridNode}
                     </EditDialogApiContext.Provider>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
@@ -108,7 +89,14 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                 <StackPage name="folder" title={data?.damFolder.name}>
                     {(selectedId) => {
                         setSelectedFolderId(selectedId);
-                        return <Folder id={selectedId} filterApi={filterApi} {...props} />;
+                        return (
+                            <Folder
+                                id={selectedId}
+                                filterApi={filterApi}
+                                renderWithFullHeightMainContent={renderWithFullHeightMainContent}
+                                {...props}
+                            />
+                        );
                     }}
                 </StackPage>
             </StackSwitch>
@@ -127,9 +115,11 @@ export interface DamConfig {
     additionalToolbarItems?: ReactNode;
 }
 
-type DamTableProps = DamConfig;
+type DamTableProps = DamConfig & {
+    renderWithFullHeightMainContent?: boolean;
+};
 
-export const DamTable = ({ ...props }: DamTableProps) => {
+export const DamTable = ({ renderWithFullHeightMainContent, ...damConfigProps }: DamTableProps) => {
     const intl = useIntl();
     const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
         columnName: "name",
@@ -141,7 +131,7 @@ export const DamTable = ({ ...props }: DamTableProps) => {
         hideMultiselect: false,
         hideDamActions: false,
         hideArchiveFilter: false,
-        ...props,
+        ...damConfigProps,
     };
 
     const filterApi = useTableQueryFilter<DamFilter>({
@@ -159,7 +149,12 @@ export const DamTable = ({ ...props }: DamTableProps) => {
             <FileUploadContextProvider>
                 <ManualDuplicatedFilenamesHandlerContextProvider>
                     <DamSelectionProvider>
-                        <Folder filterApi={filterApi} {...propsWithDefaultValues} additionalToolbarItems={props.additionalToolbarItems} />
+                        <Folder
+                            filterApi={filterApi}
+                            {...propsWithDefaultValues}
+                            additionalToolbarItems={damConfigProps.additionalToolbarItems}
+                            renderWithFullHeightMainContent={renderWithFullHeightMainContent}
+                        />
                     </DamSelectionProvider>
                 </ManualDuplicatedFilenamesHandlerContextProvider>
             </FileUploadContextProvider>

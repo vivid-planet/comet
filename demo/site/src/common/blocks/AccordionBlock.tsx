@@ -1,4 +1,4 @@
-import { isWithPreviewPropsData, type PropsWithData, usePreview, withPreview } from "@comet/cms-site";
+import { isWithPreviewPropsData, type PropsWithData, usePreview, withPreview } from "@comet/site-nextjs";
 import { type AccordionBlockData } from "@src/blocks.generated";
 import { AccordionItemBlock } from "@src/common/blocks/AccordionItemBlock";
 import { PageLayout } from "@src/layout/PageLayout";

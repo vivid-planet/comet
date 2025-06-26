@@ -6,6 +6,7 @@ import { DependentsResolverFactory } from "../dependencies/dependents.resolver.f
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { InternalLinkBlockTransformerService } from "./blocks/internal-link-block-transformer.service";
+import { InternalLinkBlockWarningsService } from "./blocks/internal-link-block-warnings.service";
 import { createPageTreeResolver } from "./createPageTreeResolver";
 import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
@@ -92,6 +93,7 @@ export class PageTreeModule {
                 PageTreeNodeDocumentEntityInfoService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,
+                InternalLinkBlockWarningsService,
                 {
                     provide: SITE_PREVIEW_CONFIG,
                     useValue: {

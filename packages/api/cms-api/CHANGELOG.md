@@ -1,5 +1,42 @@
 # @comet/cms-api
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 9c3f72e: Make impersonation usable for non root users.
+
+    If activated, impersonation is only available if the impersonating user
+    has as many or fewer permissions and content scopes as the user to impersonate.
+    Since this is an expensive calculation the button to impersonate is only
+    available in the detail view of the user and has been removed from the list
+    view.
+
+    When enabling the `impersonation` permission for non root users the
+    permission should also be added to `requiredPermission` for
+    `UserPermissionsPage`. This enables the user to select the user to impersonate.
+    Nevertheless, without the `userPermissions` permission it's not possible to
+    change permission of users.
+
+- e478c6b: Directly pass the entity metadata instead of the repository in `gqlArgsToMikroOrmQuery`
+
+### Minor Changes
+
+- 9cf2160: API Generator: Add new option `single` to `@CrudGenerator` which allows to enable/disable the single query
+- 26dd92a: Add possibility to use service for `convertJwtToUser`
+- 7e97e18: Create a block_index view that contains a flat list of all blocks existing in the project
+- c63817a: Add `getUserForLogin` function in `UserService`.
+
+    This allows implementing a different code path for getting the user to login
+    and the user shown in the administration panel. Examples are caching the currently logged
+    in user or throwing `UnauthorizedException` when not allowed to login.
+
+### Patch Changes
+
+- b63ecc8: RichTextBlock: add childBlocksInfo for embedded links in order to have them in block index
+
+    This fixes missing dependencies for internal links
+
 ## 8.0.0-beta.4
 
 ### Major Changes
@@ -157,6 +194,45 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+
+## 7.21.1
+
+### Patch Changes
+
+- @comet/blocks-api@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- 06920eb59: Fix: Change GraphQL Type of numberOfDescendants from Float to Int
+    - @comet/blocks-api@7.21.0
+
+## 7.20.0
+
+### Minor Changes
+
+- ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+- 557e311ea: AccessLog: Remove some DAM URLs from log
+
+    Hashed URLs and preview URLs are not useful in the logs, so we remove them.
+
+- 21f95adfe: DAM: Fix headers
+
+    While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
+
+    - Only store the `content-type` header
+    - Prevent imgproxy headers from being passed through to the client
+    - Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
+
+- f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
+
+    Explicitly set `cache-control: no-store` for folder download to prevent caching of the response. Normally this should not be cached by any CDN, because the Request contains a cookie, but it is better to be explicit about it.
+
+    - @comet/blocks-api@7.20.0
 
 ## 7.19.0
 

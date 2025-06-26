@@ -39,7 +39,7 @@
         "redraft": "^0.10.2",
         "sitemap": "^8.0.0",
         "styled-components": "^6.1.16",
-        "swiper": "^11.2.6"
+        "swiper": "^11.2.8"
     },
     "devDependencies": {
         "@babel/core": "^7.26.10",
@@ -53,8 +53,8 @@
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@parcel/watcher": "^2.5.1",
         "@types/fs-extra": "^11.0.4",
-        "@types/node": "^22.14.0",
-        "@types/react": "^18.3.21",
+        "@types/node": "^22.15.21",
+        "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.22.0",

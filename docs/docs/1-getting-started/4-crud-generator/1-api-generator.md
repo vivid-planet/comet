@@ -138,12 +138,7 @@ You should not reference the generated code externally (except, of course, to pr
 ## Changing the entity
 
 When making changes (e.g., adding a new field) to an entity annotated with the CrudGenerator, the API Generator must be
-run again: `npm run api-generator`. The resulting changes must be checked into the repository.
-
-:::info
-The CI/CD pipeline checks whether the checked-in code matches the generated code. See the
-`lint:generated-files-not-modified` script in `api/package.json`.
-:::
+run again: `npm run api-generator`.
 
 ## Magic fields
 

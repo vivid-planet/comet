@@ -83,7 +83,6 @@ const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMe
     componentName: "CrudMoreActions",
     slotName: "chip",
 })(css`
-    width: 20px;
     height: 20px;
     flex-shrink: 0;
     border-radius: 20px;
@@ -95,6 +94,7 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
     slotName: "button",
 })(css`
     margin: 0 10px;
+    min-height: 44px;
 `);
 
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
@@ -142,7 +142,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
     return (
         <CrudMoreActionsMenuContext.Provider value={{ closeMenu: handleClose }}>
-            <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
+            <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick} responsive>
                 <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>

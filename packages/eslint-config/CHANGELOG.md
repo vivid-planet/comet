@@ -1,5 +1,18 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 6d3c196: Add import restriction for MUI's `Button`
+
+    Buttons used in Comet DXP applications should match the Comet CI.
+    Use `Button` from `@comet/admin` instead.
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Patch Changes
@@ -53,6 +66,24 @@
 ### Minor Changes
 
 - a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
+
+## 7.21.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.21.0
+
+## 7.20.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.20.0
 
 ## 7.19.0
 

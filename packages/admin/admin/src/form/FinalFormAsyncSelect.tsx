@@ -7,6 +7,11 @@ export interface FinalFormAsyncSelectProps<T> extends FinalFormSelectProps<T>, O
     loadOptions: () => Promise<T[]>;
 }
 
+/**
+ * Final Form-compatible AsyncSelect component.
+ *
+ * @see {@link AsyncSelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export function FinalFormAsyncSelect<T>({ loadOptions, ...rest }: FinalFormAsyncSelectProps<T>) {
     return <FinalFormSelect<T> {...useAsyncOptionsProps(loadOptions)} {...rest} />;
 }

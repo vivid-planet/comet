@@ -431,6 +431,50 @@ Previously, if entities specified a `status` enum, it was automatically added to
 This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
 done with the normal filtering mechanism.
 
+### API Generator - Don't commit generated files [optional]
+
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+
+run api-generator in prebuild:
+
+```diff title="api/package.json"
+scripts: {
+-  "prebuild": "rimraf dist",
++  "prebuild": "rimraf dist && npm run api-generator",
+}
+```
+
+lint script can be removed:
+
+```diff title="api/package.json"
+scripts: {
+-  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+}
+```
+
+Add generated files to eslint ignore:
+
+```diff title="api/eslint.config.mjs"
+scripts: {
+-  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
++  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+}
+```
+
+Add generated files to .gitignore:
+
+```diff title="api/.gitignore"
+scripts: {
++  src/**/generated
+}
+```
+
+And finally delete generated files from git:
+
+```sh
+git rm -r api/src/*/generated
+```
+
 ### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
@@ -793,6 +837,53 @@ npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
         "quality": 80
     }
 }
+```
+
+</details>
+
+### ✅ Change s3 blob-storage config structure
+
+It's now possible to configure the S3-client completely.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-s3-config.ts
+```
+
+:::
+
+Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
+
+```diff title=api/src/config/config.ts
+blob: {
+    storage: {
+        driver: envVars.BLOB_STORAGE_DRIVER,
+        file: {
+            path: envVars.FILE_STORAGE_PATH,
+        },
+        azure: {
+            accountName: envVars.AZURE_ACCOUNT_NAME,
+            accountKey: envVars.AZURE_ACCOUNT_KEY,
+        },
+        s3: {
+            region: envVars.S3_REGION,
+            endpoint: envVars.S3_ENDPOINT,
+            bucket: envVars.S3_BUCKET,
+-            accessKeyId: envVars.S3_ACCESS_KEY_ID,
+-            secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            credentials: {
++                 accessKeyId: envVars.S3_ACCESS_KEY_ID,
++                 secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            },
+        },
+    },
+    storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
+},
 ```
 
 </details>
@@ -1551,6 +1642,13 @@ Example:
 
 </details>
 
+### Import `Button` from `@comet/admin` package
+
+```diff
+- import { Button } from "@mui/material";
++ import { Button } from "@comet/admin";
+```
+
 ## Site
 
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
@@ -1764,3 +1862,52 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
 </details>
+
+### `FinalFormToggleButtonGroup` deprecated
+
+`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
+
+```diff
+- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
++ import { ToggleGroupButtonField } from "@comet/admin";
+
+...
++ FormValueType = "value1" | "value2";
+
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
+-       { value: "value2", icon: <Error /> },
+-   ]}
+-   optionsPerRow={2}
+- />
++ <ToggleGroupButtonField<FormValueType>
++    name="formValue"
++    label={"Field Label"}
++    options={[
++        { value: "value1", label: <Info /> },
++        { value: "value2", label: <Error /> },
++    ]}
++    optionsPerRow={2}
++    />
+```
+
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
+
+```diff
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
++       { value: "value1", label: <Info /> },
+-       { value: "value2", icon: <Info /> },
++       { value: "value2", label: <Info /> },
+-   ]}
+-   optionsPerRow={2}
+- />
+```

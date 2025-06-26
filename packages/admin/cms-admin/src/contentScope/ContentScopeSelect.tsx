@@ -275,7 +275,6 @@ export function ContentScopeSelect({
                                                 selected={isSelected}
                                                 sx={({ spacing }) => ({
                                                     paddingX: spacing(6),
-                                                    gap: spacing(2),
                                                     fontWeight: isSelected ? 600 : 250,
                                                 })}
                                             >

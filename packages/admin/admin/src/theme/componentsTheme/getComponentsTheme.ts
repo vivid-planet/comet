@@ -15,6 +15,7 @@ import { getMuiCardHeader } from "./MuiCardHeader";
 import { getMuiCheckbox } from "./MuiCheckbox";
 import { getMuiChip } from "./MuiChip";
 import { getMuiDataGrid } from "./MuiDataGrid";
+import { getMuiDateCalendar } from "./MuiDateCalendar";
 import { getMuiDialog } from "./MuiDialog";
 import { getMuiDialogActions } from "./MuiDialogActions";
 import { getMuiDialogContent } from "./MuiDialogContent";
@@ -115,4 +116,5 @@ export const getComponentsTheme = (components: Components, theme: Theme): ThemeO
     MuiTooltip: getMuiTooltip(components.MuiTooltip, theme),
     MuiTypography: getMuiTypography(components.MuiTypography, theme),
     MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, theme),
+    MuiDateCalendar: getMuiDateCalendar(components.MuiDateCalendar, theme),
 });

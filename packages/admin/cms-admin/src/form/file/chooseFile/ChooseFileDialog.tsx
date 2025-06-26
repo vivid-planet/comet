@@ -23,10 +23,7 @@ import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
-        height: 80vh;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: max-content max-content auto;
+        height: 100%; // The fixed height prevents the height of the dialog from changing when navigating between folders which may have different heights depending on the number of items in the folder
     }
 `;
 
@@ -37,7 +34,6 @@ const StyledDialogTitle = styled(DialogTitle)`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 `;
 
 const CloseButton = styled(IconButton)`

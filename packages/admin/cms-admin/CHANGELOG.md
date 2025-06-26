@@ -1,5 +1,54 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 9c3f72e: Make impersonation usable for non root users.
+
+    If activated, impersonation is only available if the impersonating user
+    has as many or fewer permissions and content scopes as the user to impersonate.
+    Since this is an expensive calculation the button to impersonate is only
+    available in the detail view of the user and has been removed from the list
+    view.
+
+    When enabling the `impersonation` permission for non root users the
+    permission should also be added to `requiredPermission` for
+    `UserPermissionsPage`. This enables the user to select the user to impersonate.
+    Nevertheless, without the `userPermissions` permission it's not possible to
+    change permission of users.
+
+- 487fd69: Use ContentScope interface augmentation in admin
+
+    The export `ContentScopeInterface` has been renamed to `ContentScope`.
+    Also, generics have been removed from `ContentScopeSelect`, `ContentScopeControls` and `useContentScope`.
+    All these things hardly were used in projects.
+
+### Minor Changes
+
+- 2cf573b: Adapt styling of `DamTable` to align with Comet DXP design
+- 9c3f72e: Allow array for `requiredPermission` in `MasterMenuData`
+
+    The menu item appears if at least one permission is allowed for the current user.
+
+- c6b5bdc: Add SignOutButton Component
+
+### Patch Changes
+
+- 204e437: Fix spacing in `ContentScopeSelect` to align with Comet DXP design
+- Updated dependencies [2cf573b]
+- Updated dependencies [4182a94]
+- Updated dependencies [1d28c90]
+- Updated dependencies [6cfc60d]
+- Updated dependencies [ad9b2a3]
+- Updated dependencies [5a6efc1]
+- Updated dependencies [09c4830]
+- Updated dependencies [bf9b1bb]
+    - @comet/admin@8.0.0-beta.5
+    - @comet/admin-icons@8.0.0-beta.5
+    - @comet/admin-date-time@8.0.0-beta.5
+    - @comet/admin-rte@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Major Changes
@@ -382,6 +431,50 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+
+## 7.21.1
+
+### Patch Changes
+
+- Updated dependencies [b771bd6d8]
+    - @comet/admin@7.21.1
+    - @comet/admin-date-time@7.21.1
+    - @comet/admin-icons@7.21.1
+    - @comet/admin-rte@7.21.1
+    - @comet/admin-theme@7.21.1
+    - @comet/blocks-admin@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- Updated dependencies [1a30eb858]
+- Updated dependencies [1a30eb858]
+- Updated dependencies [3e9ea613e]
+    - @comet/admin-date-time@7.21.0
+    - @comet/admin@7.21.0
+    - @comet/admin-icons@7.21.0
+    - @comet/admin-rte@7.21.0
+    - @comet/admin-theme@7.21.0
+    - @comet/blocks-admin@7.21.0
+
+## 7.20.0
+
+### Minor Changes
+
+- ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+- Updated dependencies [415a83165]
+- Updated dependencies [99f904f81]
+- Updated dependencies [2d1726543]
+    - @comet/admin@7.20.0
+    - @comet/admin-date-time@7.20.0
+    - @comet/admin-icons@7.20.0
+    - @comet/admin-rte@7.20.0
+    - @comet/admin-theme@7.20.0
+    - @comet/blocks-admin@7.20.0
 
 ## 7.19.0
 

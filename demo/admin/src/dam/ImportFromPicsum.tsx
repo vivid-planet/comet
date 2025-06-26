@@ -59,7 +59,9 @@ export const ImportFromPicsum = () => {
             </Button>
             <Dialog open={isOpen} onClose={handleCloseDialog}>
                 <div>
-                    <DialogTitle>Import from Picsum</DialogTitle>
+                    <DialogTitle>
+                        <FormattedMessage id="pages.dam.importFromPicsum" defaultMessage="Import from Picsum" />
+                    </DialogTitle>
                     <DialogContent>
                         <Box sx={{ aspectRatio: "16/9", lineHeight: 0 }}>
                             {picsumImage ? <ImagePreview src={picsumImage?.url} alt="image" /> : <Loading behavior="fillParent" />}
