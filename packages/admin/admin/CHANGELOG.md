@@ -1,5 +1,63 @@
 # @comet/admin
 
+## 8.0.0-beta.6
+
+### Major Changes
+
+- 15b7dd3: `DatePicker` from `@mui/x-date-pickers` is now used inside `DataGrid` filters
+
+    This change replaces the previous `TextField` (which uses `<input type="date" />`) with `DatePicker` for an improved user experience.
+
+    `@mui/x-date-pickers` has been added as a peer dependency and must be installed in your project's admin application.
+    `LocalizationProvider` must be added to your app's root and configured with `date-fns` as the date adapter.
+
+    `admin/package.json`
+
+    ```diff
+        "dependencies": {
+    +       "@mui/x-date-pickers": "^7.29.4",
+    +       "date-fns": "^4.1.0",
+        }
+    ```
+
+    `admin/src/App.tsx`
+
+    ```diff
+    +import { LocalizationProvider } from "@mui/x-date-pickers";
+    +import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+    +import { enUS } from "date-fns/locale";
+
+     // ...
+
+     <IntlProvider locale="en" messages={getMessages()}>
+    +    <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+             <MuiThemeProvider theme={theme}>
+                 {/* ... */}
+             </MuiThemeProvider>
+    +    </LocalizationProvider>
+     </IntlProvider>
+    ```
+
+### Minor Changes
+
+- 9e3e943: Add error handling for asynchronous option loading in `FinalFormSelect`. When loading fails, an error message is shown in the dropdown.
+- afc306b: Add the prop `noOptionsLabel ` to the `FinalFormSelect` to customize it.
+- afc306b: Add a default message "No options." when the FinalFormSelect has no options
+- 9e3e943: Add the possibility to customize the `FinalFormSelect` error message with `errorLabel` prop.
+- 06d5600: Savable: add optional checkForChanges that can return hasChanges (aka dirty) before Savable re-renders and updates the hasChanges prop
+
+    Fixes issue in Form where a "Save changes?"-Dialog appears right after adding a new entry
+
+- 77b52a8: Add `ToggleButtonGroupField` component
+
+### Patch Changes
+
+- d6a004a: Fix styling of `DialogTitle`
+
+    - The title text and the close button are now aligned correctly on mobile
+    - Long titles are no longer overlapped by the close button
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Major Changes

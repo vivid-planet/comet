@@ -1,5 +1,17 @@
 # @comet/cms-api
 
+## 8.0.0-beta.6
+
+### Major Changes
+
+- ef1c645: Add warnings feature
+
+    The warnings module can be used to display application-wide warnings in the admin. See the [docs](https://docs.comet-dxp.com/docs/features-modules/warning-module) for more information.
+
+- c5de11c: Change S3 config for BlobStorage
+
+    Now the config has all fields from `S3ClientConfig` provided by `@aws-sdk/client-s3`, so you override all options in the project.
+
 ## 8.0.0-beta.5
 
 ### Major Changes
