@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type PropsWithChildren, type ReactNode } from "react";
 
@@ -9,20 +9,13 @@ export type DashboardWidgetRootProps = PropsWithChildren<{
 
 export const DashboardWidgetRoot = ({ header, icon, children }: DashboardWidgetRootProps) => {
     return (
-        <Grid
-            size={{
-                xs: 12,
-                lg: 6,
-            }}
-        >
-            <Paper square={false} sx={{ borderRadius: 2 }}>
-                <HeaderWrapper>
-                    {icon}
-                    <Typography variant="h5">{header}</Typography>
-                </HeaderWrapper>
-                {children}
-            </Paper>
-        </Grid>
+        <Paper square={false} sx={{ borderRadius: 2 }}>
+            <HeaderWrapper>
+                {icon}
+                <Typography variant="h5">{header}</Typography>
+            </HeaderWrapper>
+            {children}
+        </Paper>
     );
 };
 
