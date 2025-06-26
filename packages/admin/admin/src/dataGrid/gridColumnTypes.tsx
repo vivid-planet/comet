@@ -46,10 +46,17 @@ export const dataGridDateColumn: GridColTypeDef = {
     type: "date",
     valueGetter: (value) => value && new Date(value),
     renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" />,
-    filterOperators: getGridDateOperators().map((operator) => ({
-        ...operator,
-        InputComponent: DatePickerFilter,
-    })),
+    filterOperators: getGridDateOperators().map((operator) => {
+        if (!operator.InputComponent) {
+            // Skip operators that do not have an InputComponent, e.g., "isEmpty" or "isNotEmpty"
+            return operator;
+        }
+
+        return {
+            ...operator,
+            InputComponent: DatePickerFilter,
+        };
+    }),
 };
 
 export const dataGridDateTimeColumn: GridColTypeDef = {
