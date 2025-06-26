@@ -25,9 +25,12 @@ import {
     type GQLEditPageParentNodeQueryVariables,
     type GQLIsPathAvailableQuery,
     type GQLIsPathAvailableQueryVariables,
+    type GQLRedirectSourceAvailableQuery,
+    type GQLRedirectSourceAvailableQueryVariables,
     type GQLUpdatePageNodeMutation,
     type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
+import { usePageTreeConfig } from "./pageTreeConfig";
 
 type SerializedInitialValues = string;
 
@@ -104,6 +107,17 @@ export function createEditPageNode({
         const apollo = useApolloClient();
         const { scope } = useContentScope();
         const language = useContentLanguage({ scope });
+        const { scopePartsForRedirects } = usePageTreeConfig();
+
+        const { scope: completeScope } = useContentScope();
+        let isRedirectSourceAvailable = true;
+        const redirectScope = scopePartsForRedirects.reduce(
+            (acc, scopePart) => {
+                acc[scopePart] = completeScope[scopePart];
+                return acc;
+            },
+            {} as { [key: string]: unknown },
+        );
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
 
@@ -167,6 +181,23 @@ export function createEditPageNode({
             [apollo, scope, parentId, slug],
         );
 
+        const checkForExistingRedirects = useCallback(
+            async (value: string): Promise<boolean> => {
+                const redirectSource = parentPath ? `${parentPath}/${value}` : `/${value}`;
+
+                const { data: redirectData } = await apollo.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
+                    query: redirectSourceAvailableForPageEdit,
+                    variables: {
+                        scope: redirectScope,
+                        source: redirectSource,
+                    },
+                });
+
+                return redirectData.redirectSourceAvailable;
+            },
+            [apollo, redirectScope, parentPath],
+        );
+
         const validateSlug = async (value: string) => {
             if (!isValidSlug(value)) {
                 return intl.formatMessage({
@@ -190,6 +221,8 @@ export function createEditPageNode({
                         defaultMessage: "Slug leads to reserved path",
                     });
                 }
+
+                isRedirectSourceAvailable = await checkForExistingRedirects(value);
             }
         };
 
@@ -369,13 +402,20 @@ export function createEditPageNode({
                                                                                     </strong>
                                                                                 </Typography>
                                                                                 <Typography variant="body2">
-                                                                                    <FormattedMessage
-                                                                                        id="comet.pages.pages.page.createAutomaticRedirects.tooltip.text"
-                                                                                        defaultMessage="You have changed the slug. Therefore redirects should be created, so that users and search engines automatically land at the correct page, even if they visit the old path. Check this box, if you already have published or shared {numberOfDescendants, plural, =0 {this page} other {these pages}}."
-                                                                                        values={{
-                                                                                            numberOfDescendants,
-                                                                                        }}
-                                                                                    />
+                                                                                    {isRedirectSourceAvailable ? (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip.text"
+                                                                                            defaultMessage="You have changed the slug. Therefore redirects should be created, so that users and search engines automatically land at the correct page, even if they visit the old path. Check this box, if you already have published or shared {numberOfDescendants, plural, =0 {this page} other {these pages}}."
+                                                                                            values={{
+                                                                                                numberOfDescendants,
+                                                                                            }}
+                                                                                        />
+                                                                                    ) : (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip.redirectAlreadyExist"
+                                                                                            defaultMessage="You have changed the slug. Creating a redirect is not possible, because a redirect already exists for this page. Please check the existing redirect."
+                                                                                        />
+                                                                                    )}
                                                                                 </Typography>
                                                                             </>
                                                                         }
@@ -416,6 +456,7 @@ export function createEditPageNode({
                                                                         </div>
                                                                     </Typography>
                                                                 }
+                                                                disabled={!isRedirectSourceAvailable}
                                                                 name="createAutomaticRedirectsOnSlugChange"
                                                             />
                                                         </FieldContainer>
@@ -521,6 +562,12 @@ const transformToSlug = (name: string, locale: string) => {
 const isValidSlug = (value: string) => {
     return /^[a-zA-Z0-9][a-zA-Z0-9-_]*$/.test(value);
 };
+
+const redirectSourceAvailableForPageEdit = gql`
+    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+        redirectSourceAvailable(scope: $scope, source: $source)
+    }
+`;
 
 interface InitialValues {
     parent: null | string;
