@@ -479,6 +479,8 @@ input StringFilter {
 
 input BooleanFilter {
   equal: Boolean
+  notEqual: Boolean
+  isAnyOf: [Boolean!]
 }
 
 input DateTimeFilter {

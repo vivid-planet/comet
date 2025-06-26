@@ -58,6 +58,12 @@ describe("redirectMatchesFilter", () => {
 
         expect(redirectMatchesFilter(redirect, { active: { equal: true } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { active: { equal: false } })).toBe(false);
+
+        expect(redirectMatchesFilter(redirect, { active: { notEqual: false } })).toBe(true);
+        expect(redirectMatchesFilter(redirect, { active: { notEqual: true } })).toBe(false);
+
+        expect(redirectMatchesFilter(redirect, { active: { isAnyOf: [true, false] } })).toBe(true);
+        expect(redirectMatchesFilter(redirect, { active: { isAnyOf: [] } })).toBe(false);
     });
 
     it("should match for date time filter", () => {

@@ -109,6 +109,12 @@ export function filterToMikroOrmQuery(
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (filterProperty instanceof ManyToOneFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
