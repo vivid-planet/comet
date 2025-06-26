@@ -28,7 +28,10 @@ export default {
                             message: "Import private siblings always with relative imports",
                         });
                     } else {
-                        if (isPrivateFileMatch[1] != `./${path.basename(filePath).replace(/\.(.*)$/, "")}`) {
+                        const pattern = `\\.((${[...optionSiblingExtensions, "ts"].join("|")}).*)$`;
+                        const regex = new RegExp(pattern);
+
+                        if (isPrivateFileMatch[1] != `./${path.basename(filePath).replace(regex, "")}`) {
                             context.report({
                                 node,
                                 message: "Avoid private sibling import from other files",
