@@ -11,6 +11,11 @@ export class StringFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
+    doesNotContain?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
     startsWith?: string;
 
     @Field({ nullable: true })
