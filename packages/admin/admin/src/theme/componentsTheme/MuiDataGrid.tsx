@@ -133,11 +133,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&.MuiDataGrid-columnHeader--pinnedLeft": {
                 backgroundColor: "white",
                 boxShadow: "4px 0 8px -4px rgba(0,0,0,0.1)",
+                borderRight: "none",
             },
 
             "&.MuiDataGrid-columnHeader--pinnedRight": {
                 backgroundColor: "white",
                 boxShadow: "-4px 0 8px -4px rgba(0,0,0,0.1)",
+                borderLeft: "none",
             },
         }),
 
