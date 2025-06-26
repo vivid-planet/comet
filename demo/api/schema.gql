@@ -812,7 +812,7 @@ type Query {
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   damMediaAlternative(id: ID!): DamMediaAlternative!
-  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, filter: DamMediaAlternativeFilter, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
@@ -957,13 +957,6 @@ input FilenameInput {
 
 input FolderFilterInput {
   searchText: String
-}
-
-input DamMediaAlternativeFilter {
-  id: StringFilter
-  language: StringFilter
-  and: [DamMediaAlternativeFilter!]
-  or: [DamMediaAlternativeFilter!]
 }
 
 input DamMediaAlternativeSort {

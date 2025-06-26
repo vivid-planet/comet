@@ -56,21 +56,11 @@ const damMediaAlternativesQuery = gql`
         $limit: Int!
         $sort: [DamMediaAlternativeSort!]
         $search: String
-        $filter: DamMediaAlternativeFilter
         $for: ID
         $alternative: ID
         $type: DamMediaAlternativeType
     ) {
-        damMediaAlternatives(
-            offset: $offset
-            limit: $limit
-            sort: $sort
-            search: $search
-            filter: $filter
-            for: $for
-            alternative: $alternative
-            type: $type
-        ) {
+        damMediaAlternatives(offset: $offset, limit: $limit, sort: $sort, search: $search, for: $for, alternative: $alternative, type: $type) {
             nodes {
                 ...DamMediaAlternativeGrid
             }
@@ -171,11 +161,10 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
         },
     ];
 
-    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+    const { search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
     const { data, loading, error } = useQuery<GQLDamMediaAlternativesQuery, GQLDamMediaAlternativesQueryVariables>(damMediaAlternativesQuery, {
         variables: {
-            filter: gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,

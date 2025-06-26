@@ -1,4 +1,4 @@
-import { FindOptions, Reference } from "@mikro-orm/core";
+import { FilterQuery, FindOptions, Reference } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
@@ -6,7 +6,7 @@ import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from 
 import { GraphQLResolveInfo } from "graphql";
 
 import { CometValidationException } from "../../../common/errors/validation.exception";
-import { gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "../../../common/filter/mikro-orm";
+import { searchToMikroOrmQuery } from "../../../common/filter/mikro-orm";
 import { extractGraphqlFields } from "../../../common/graphql/extract-graphql-fields";
 import { AffectedEntity } from "../../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../../user-permissions/decorators/required-permission.decorator";
@@ -46,23 +46,17 @@ export function createDamMediaAlternativeResolver({
         @AffectedEntity(File, { idArg: "for", nullable: true })
         @AffectedEntity(File, { idArg: "alternative", nullable: true })
         async damMediaAlternatives(
-            @Args() { search, filter, sort, offset, limit, for: forId, alternative: alternativeId, type }: DamMediaAlternativesArgs,
+            @Args() { search, sort, offset, limit, for: forId, alternative: alternativeId, type }: DamMediaAlternativesArgs,
             @Info() info: GraphQLResolveInfo,
         ): Promise<PaginatedDamMediaAlternatives> {
             if ((!forId && !alternativeId) || (forId && alternativeId)) {
                 throw new CometValidationException("Exactly one of 'for' or 'alternative' parameters must be provided");
             }
 
-            let where = gqlArgsToMikroOrmQuery({ filter }, this.repository);
+            let where: FilterQuery<DamMediaAlternative> = {};
+
             if (search) {
-                const searchFilter = searchToMikroOrmQuery(search, ["language", forId ? "alternative.name" : "for.name"]);
-                if (where.$and) {
-                    where.$and.unshift(searchFilter);
-                } else if (Object.keys(where).length > 0) {
-                    where = { $and: [searchFilter, where] };
-                } else {
-                    where = searchFilter;
-                }
+                where = { ...searchToMikroOrmQuery(search, ["language", forId ? "alternative.name" : "for.name"]) };
             }
 
             if (forId) {
