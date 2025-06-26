@@ -193,6 +193,22 @@ describe("filterToMikroOrmQuery", () => {
             $eq: true,
         });
     });
+    it("boolean not equals", async () => {
+        const f = new BooleanFilter();
+        f.notEqual = true;
+
+        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+            $ne: true,
+        });
+    });
+    it("boolean is any of", async () => {
+        const f = new BooleanFilter();
+        f.isAnyOf = [true, false];
+
+        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+            $in: [true, false],
+        });
+    });
 });
 
 class FooFilter {
