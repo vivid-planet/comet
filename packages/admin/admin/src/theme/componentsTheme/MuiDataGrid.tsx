@@ -129,6 +129,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&:focus-within": {
                 outline: "none",
             },
+            "&--last .MuiDataGrid-columnSeparator": {
+                display: "none",
+            },
         }),
         pinnedColumns: {
             backgroundColor: "white",
