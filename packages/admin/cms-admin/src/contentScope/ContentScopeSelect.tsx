@@ -275,7 +275,9 @@ export function ContentScopeSelect({
                                                 selected={isSelected}
                                                 sx={({ spacing }) => ({
                                                     paddingX: spacing(6),
-                                                    fontWeight: isSelected ? 600 : 250,
+                                                    "&& .MuiListItemText-primary": {
+                                                        fontWeight: isSelected ? 600 : 250,
+                                                    },
                                                 })}
                                             >
                                                 {renderOption?.(option, searchValue)}
