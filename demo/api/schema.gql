@@ -256,12 +256,12 @@ type DamFile {
   updatedAt: DateTime!
   importSourceId: String
   importSourceType: String
-  alternativesForThisFile: [DamMediaAlternative!]!
-  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   scope: DamScope!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  alternativesForThisFile: [DamMediaAlternative!]!
+  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 

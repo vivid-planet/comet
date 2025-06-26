@@ -110,6 +110,30 @@ class Meta extends AnnotationBlockMeta {
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },
+                        {
+                            name: "captions",
+                            kind: BlockMetaFieldKind.NestedObjectList,
+                            nullable: false,
+                            object: {
+                                fields: [
+                                    {
+                                        name: "id",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                    {
+                                        name: "language",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                    {
+                                        name: "fileUrl",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                ],
+                            },
+                        },
                     ],
                 },
             },

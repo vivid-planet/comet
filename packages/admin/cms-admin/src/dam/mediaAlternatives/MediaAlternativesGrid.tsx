@@ -23,6 +23,7 @@ import { ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLDamMediaAlternativeType } from "../../graphql.generated";
+import { VideoPreviewCaptionsQueryName } from "../FileForm/previews/VideoPreview";
 import { MediaAlternativeForm } from "./MediaAlternativeForm";
 import {
     GQLDamMediaAlternativeGridFragment,
@@ -75,6 +76,8 @@ const deleteDamMediaAlternativeMutation = gql`
         deleteDamMediaAlternative(id: $id)
     }
 `;
+
+export const mediaAlternativesGridRefetchQueries = [damMediaAlternativesQuery, VideoPreviewCaptionsQueryName];
 
 function MediaAlternativesGridToolbar({ handleAdd }: { handleAdd: () => void }) {
     return (
@@ -217,7 +220,7 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
                         await client.mutate<GQLDeleteDamMediaAlternativeMutation, GQLDeleteDamMediaAlternativeMutationVariables>({
                             mutation: deleteDamMediaAlternativeMutation,
                             variables: { id: deleteId },
-                            refetchQueries: [damMediaAlternativesQuery],
+                            refetchQueries: mediaAlternativesGridRefetchQueries,
                         });
                     }
                     setDeleteId(undefined);

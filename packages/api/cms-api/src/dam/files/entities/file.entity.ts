@@ -151,11 +151,9 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         importSourceType?: string;
 
         @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.for)
-        @Field(() => [DamMediaAlternative])
         alternativesForThisFile: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
 
         @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.alternative)
-        @Field(() => [DamMediaAlternative])
         thisFileIsAlternativeFor: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
 
         // fileUrl: Field is resolved in resolver
