@@ -285,7 +285,6 @@ export function ProductForm({ id, width }: FormProps) {
                     <SelectField
                         name="additionalTypes"
                         label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
-                        required
                         fullWidth
                         multiple
                     >
