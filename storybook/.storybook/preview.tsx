@@ -1,97 +1,64 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { createCometTheme, MainContent, MuiThemeProvider } from "@comet/admin";
-import { DateFnsLocaleProvider } from "@comet/admin-date-time";
-import { createTheme as createMuiTheme, CssBaseline, GlobalStyles } from "@mui/material";
-import type { Preview } from "@storybook/react";
-import { type Locale as DateFnsLocale } from "date-fns";
-import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { IntlProvider } from "react-intl";
+import { MainContent } from "@comet/admin";
+import { GlobalStyles } from "@mui/material";
+import type { Preview } from "@storybook/react-webpack5";
+import { type GlobalTypes } from "storybook/internal/csf";
 
+import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
+import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
 import { previewGlobalStyles } from "./preview.styles";
 
-const themeOptions = {
-    comet: "Comet",
-    defaultMui: "Default MUI",
-};
-
-type LocaleKey = "de" | "en";
-
-const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
-    de: deLocale,
-    en: enLocale,
-};
-
-// @TODO: use messages from lang-package
-const messages = {
-    en: {
-        "comet.core.deleteMutation.promptDelete": "Delete data?",
-        "comet.core.deleteMutation.yes": "Yes",
-        "comet.core.deleteMutation.no": "No",
-        "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-        "comet.core.editDialog.edit": "Edit",
-        "comet.core.editDialog.add": "Add",
-        "comet.core.editDialog.cancel": "Cancel",
-        "comet.core.editDialog.save": "Save",
-        "comet.core.finalForm.abort": "Cancel",
-        "comet.core.finalForm.save": "Save",
-        "comet.core.router.confirmationDialog.confirm": "OK",
-        "comet.core.router.confirmationDialog.abort": "Cancel",
-        "comet.core.stack.stack.back": "Back",
-        "comet.core.table.addButton": "Add",
-        "comet.core.table.excelExportButton": "Export",
-        "comet.core.table.deleteButton": "Delete",
-        "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
-        "comet.core.table.localChangesToolbar.save": "Save",
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-        "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-        "comet.core.table.tableQuery.error": "Error :( {error}",
-    },
-    de: {
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-        "comet.core.table.tableQuery.error": "Fehler :( {error}",
-    },
-};
-
-function isLocaleKey(value: any): value is LocaleKey {
-    return value === "de" || value === "en";
-}
-const preview: Preview = {
-    argTypes: {
-        theme: {
-            name: "Theme",
-            control: "select",
-            options: Object.values(themeOptions),
+export const globalTypes: GlobalTypes = {
+    theme: {
+        description: "Global MUI Theme",
+        toolbar: {
+            title: "Theme",
+            icon: "paintbrush",
+            items: [
+                { value: ThemeOption.Comet, right: "🟩", title: "Comet Theme" },
+                { value: ThemeOption.Mui, right: "🟦", title: "Mui Theme" },
+            ],
+            showName: true,
+            dynamicTitle: true,
         },
-        locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
     },
-    args: { theme: Object.values(themeOptions)[0], locale: "en" },
-    decorators: [
-        (Story, context) => {
-            const { theme: selectedTheme, locale: selectedLocale } = context.args;
-            const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
+    locale: {
+        name: "Locale",
+        description: "Locale",
+        toolbar: {
+            title: "Locale",
+            icon: "globe",
+            items: [
+                { value: LocaleOption.English, title: "English", right: "🇺🇸" },
+                { value: LocaleOption.German, title: "German", right: "🇩🇪" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+};
 
+const preview: Preview = {
+    tags: ["autodocs"],
+    decorators: [
+        ThemeProviderDecorator,
+        IntlDecorator,
+        (Story, context) => {
             return (
-                <MuiThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
-                        <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
-                            <GlobalStyles styles={previewGlobalStyles} />
-                            <>
-                                {context.parameters.layout === "padded" ? (
-                                    <MainContent>
-                                        <Story />
-                                    </MainContent>
-                                ) : (
-                                    <Story />
-                                )}
-                            </>
-                        </DateFnsLocaleProvider>
-                    </IntlProvider>
-                </MuiThemeProvider>
+                <>
+                    <GlobalStyles styles={previewGlobalStyles} />
+                    <>
+                        {context.parameters.layout === "padded" ? (
+                            <MainContent>
+                                <Story />
+                            </MainContent>
+                        ) : (
+                            <Story />
+                        )}
+                    </>
+                </>
             );
         },
     ],
@@ -176,6 +143,10 @@ const preview: Preview = {
                 const bIdx = order.findIndex((i) => bName.indexOf(i) > -1);
                 return aIdx - bIdx;
             },
+        },
+
+        docs: {
+            codePanel: true,
         },
     },
 };

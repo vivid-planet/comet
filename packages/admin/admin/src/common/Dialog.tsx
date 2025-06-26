@@ -72,14 +72,10 @@ const DialogTitle = createComponentSlot(MuiDialogTitle)<DialogClassKey, OwnerSta
     componentName: "Dialog",
     slotName: "dialogTitle",
 })(
-    ({ ownerState }) => css`
-        min-height: 20px;
-        display: flex;
-        align-items: center;
-
+    ({ ownerState, theme }) => css`
         ${ownerState.hasCloseButton &&
         css`
-            padding-right: 40px;
+            padding-right: ${theme.spacing(10)};
         `}
     `,
 );
@@ -91,8 +87,12 @@ const CloseButton = createComponentSlot(IconButton)<DialogClassKey>({
     ({ theme }) => css`
         position: absolute;
         right: 12px;
-        top: 14px;
+        top: 9px;
         color: ${theme.palette.secondary.contrastText};
+
+        ${theme.breakpoints.up("sm")} {
+            top: 14px;
+        }
     `,
 );
 

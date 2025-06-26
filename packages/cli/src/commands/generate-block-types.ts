@@ -2,47 +2,7 @@ import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
 import { format, resolveConfig } from "prettier";
 
-type BlockMetaField =
-    | {
-          name: string;
-          kind: "String" | "Number" | "Boolean" | "Json";
-          nullable: boolean;
-          array?: boolean;
-      }
-    | {
-          name: string;
-          kind: "Enum";
-          nullable: boolean;
-          enum: string[];
-      }
-    | {
-          name: string;
-          kind: "Block";
-          nullable: boolean;
-          block: string;
-      }
-    | {
-          name: string;
-          kind: "OneOfBlocks";
-          nullable: boolean;
-          blocks: Record<string, string>;
-      }
-    | {
-          name: string;
-          kind: "NestedObject" | "NestedObjectList";
-          nullable: boolean;
-          object: BlockMetaNestedObject;
-      };
-
-interface BlockMeta {
-    name: string;
-    fields: BlockMetaField[];
-    inputFields: BlockMetaField[];
-}
-
-interface BlockMetaNestedObject {
-    fields: BlockMetaField[];
-}
+import { type BlockMeta, type BlockMetaField } from "../BlockMeta";
 
 let content = "";
 
@@ -114,6 +74,16 @@ type Options = {
     outputFile: string;
 };
 
+const generateAllBlockNames = (blockMeta: BlockMeta[]): string => {
+    const uniqueBlockNames = Array.from(new Set(blockMeta.map((block) => block.name))).sort();
+
+    let content = "export type AllBlockNames =";
+    uniqueBlockNames.forEach((blockName) => {
+        content += ` | "${blockName}"`;
+    });
+    return content;
+};
+
 const generateBlockTypes = new Command("generate-block-types")
     .description("generate block types from block meta")
     .option("--inputs", "include block inputs")
@@ -149,6 +119,8 @@ const generateBlockTypes = new Command("generate-block-types")
                 content += "}\n";
             });
         }
+
+        content += generateAllBlockNames(blockMeta);
 
         const prettierOptions = await resolveConfig(process.cwd());
         content = await format(content, { ...prettierOptions, parser: "typescript" });

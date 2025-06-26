@@ -1,6 +1,7 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
-import type { Meta, StoryObj } from "@storybook/react";
+import { Info, WarningSolid } from "@comet/admin-icons";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
@@ -167,6 +168,202 @@ export const LongLoading: Story = {
                                 getOptionLabel={(option) => {
                                     return option;
                                 }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * This story demonstrates the usage of the AsyncSelectField component where no options are returned.
+ */
+export const NoOptions: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+                                    return [];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * If no options are available, the noOptionsLabel function can be used to customize the label.
+ */
+export const NoOptionsWithCustomNoOptionsLabel: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+
+                                    return [];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                noOptionsLabel={
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <Info color="info" />
+                                        No options available at this point in time
+                                    </div>
+                                }
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+/**
+ * This story demonstrates the usage of the AsyncSelectField component where an error occurs while loading the options.
+ */
+export const ErrorLoadingOptions: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                    return [];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                    return [];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                errorLabel={
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <WarningSolid color="error" />
+                                        Error loading options
+                                    </div>
+                                }
                                 name="type"
                                 label="AsyncSelectField"
                                 fullWidth

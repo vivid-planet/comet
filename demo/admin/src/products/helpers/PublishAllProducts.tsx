@@ -3,6 +3,7 @@ import { Button, CancelButton, CrudMoreActionsMenuContext, Dialog } from "@comet
 import { Online } from "@comet/admin-icons";
 import { DialogActions, DialogContent, ListItemIcon, MenuItem } from "@mui/material";
 import { useContext, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { type GQLPublishAllProductsMutation, type GQLPublishAllProductsMutationVariables } from "./PublishAllProducts.generated";
 
@@ -40,14 +41,16 @@ export function PublishAllProducts() {
                 <ListItemIcon>
                     <Online color="success" />
                 </ListItemIcon>
-                Publish all...
+                <FormattedMessage id="products.publishAllProducts.menuItem" defaultMessage="Publish all..." />
             </MenuItem>
             <Dialog open={open} onClose={handleClose} title="Publish all products?">
-                <DialogContent>You are about to publish all products.</DialogContent>
+                <DialogContent>
+                    <FormattedMessage id="products.publishAllProducts.dialog.content" defaultMessage="You are about to publish all products." />
+                </DialogContent>
                 <DialogActions>
                     <CancelButton onClick={handleClose} />
                     <Button onClick={handlePublishAll} startIcon={<Online />} variant="success">
-                        Publish
+                        <FormattedMessage id="products.publishAllProducts.dialog.button" defaultMessage="You are about to publish all products." />
                     </Button>
                 </DialogActions>
             </Dialog>

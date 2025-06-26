@@ -1,7 +1,6 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
-    createRedirectsPage,
     CronJobsPage,
     DamPage,
     type DocumentInterface,
@@ -11,6 +10,7 @@ import {
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
+    WarningsPage,
 } from "@comet/cms-admin";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
@@ -20,24 +20,21 @@ import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
-import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
-import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
-import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
-import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
-import { ProductCategoriesPage as ProductCategoriesFuturePage } from "@src/products/future/ProductCategoriesPage";
-import { ProductsPage as FutureProductsPage, ProductsPage } from "@src/products/future/ProductsPage";
-import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
+import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
+import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
+import { ProductCategoriesPage } from "@src/products/generator/ProductCategoriesPage";
+import { ProductsPage } from "@src/products/generator/ProductsPage";
+import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
-import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
 
-import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +42,6 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Page,
     Link,
 };
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {
@@ -185,17 +181,16 @@ export const masterMenuData: MasterMenuData = [
                 },
                 requiredPermission: "pageTree",
             },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
+                route: {
+                    path: "/system/warnings",
+                    component: WarningsPage,
+                },
+                requiredPermission: "warnings",
+            },
         ],
-    },
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
-        icon: <Snips />,
-        route: {
-            path: "/component-demo",
-            component: ComponentDemo,
-        },
-        requiredPermission: "pageTree",
     },
     {
         type: "route",
@@ -213,54 +208,7 @@ export const masterMenuData: MasterMenuData = [
         items: [
             {
                 type: "collapsible",
-                primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
-                icon: <Snips />,
-                items: [
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
-                        route: {
-                            path: "/products-future",
-                            component: FutureProductsPage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.createCapProductFuture" defaultMessage="Create Cap Product Future" />,
-                        route: {
-                            path: "/create-cap-product-future",
-                            component: FutureCreateCapProductPage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Manufacturers Future" />,
-                        route: {
-                            path: "/manufacturers-future",
-                            component: FutureManufacturersPage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products with low price Future" />,
-                        route: {
-                            path: "/products-with-low-price-future",
-                            component: FutureProductsWithLowPricePage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Product Categories" />,
-                        route: {
-                            path: "/product-categories",
-                            component: ProductCategoriesFuturePage,
-                        },
-                    },
-                ],
-            },
-            {
-                type: "collapsible",
-                primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
+                primary: <FormattedMessage id="menu.generator" defaultMessage="Generator" />,
                 icon: <Snips />,
                 items: [
                     {
@@ -273,18 +221,34 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
+                        primary: <FormattedMessage id="menu.createCapProduct" defaultMessage="Create Cap Product" />,
                         route: {
-                            path: "/product-categories",
-                            component: ProductCategoriesPage,
+                            path: "/create-cap-product",
+                            component: CreateCapProductPage,
                         },
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
+                        primary: <FormattedMessage id="menu.manufacturers" defaultMessage="Manufacturers" />,
                         route: {
-                            path: "/product-tags",
-                            component: ProductTagsPage,
+                            path: "/manufacturers",
+                            component: ManufacturersPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productsWithLowPrice" defaultMessage="Products with low price" />,
+                        route: {
+                            path: "/products-with-low-price",
+                            component: ProductsWithLowPricePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Product Categories" />,
+                        route: {
+                            path: "/product-categories",
+                            component: ProductCategoriesPage,
                         },
                     },
                 ],
