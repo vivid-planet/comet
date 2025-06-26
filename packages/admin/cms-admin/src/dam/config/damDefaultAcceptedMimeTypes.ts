@@ -25,7 +25,7 @@ export const damDefaultAcceptedMimeTypes = [
     "video/quicktime",
     "video/ogg",
     "video/webm",
-    // subtitles
+    // captions
     "text/vtt",
     // pdf
     "application/pdf",

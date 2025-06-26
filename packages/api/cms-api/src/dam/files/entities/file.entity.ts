@@ -2,6 +2,7 @@ import {
     BaseEntity,
     BigIntType,
     Cascade,
+    Collection,
     Embedded,
     Entity,
     Index,
@@ -18,13 +19,14 @@ import { v4 as uuid } from "uuid";
 
 import { EntityInfo } from "../../../dependencies/decorators/entity-info.decorator";
 import { DamScopeInterface } from "../../types";
+import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
 import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
 export interface FileInterface extends BaseEntity<FileInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -43,6 +45,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     scope?: DamScopeInterface;
     importSourceId?: string;
     importSourceType?: string;
+    alternativesForThisFile: Collection<DamMediaAlternative>;
+    thisFileIsAlternativeFor: Collection<DamMediaAlternative>;
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
@@ -145,6 +149,14 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field({ nullable: true })
         @Property({ columnType: "text", nullable: true })
         importSourceType?: string;
+
+        @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.for)
+        @Field(() => [DamMediaAlternative])
+        alternativesForThisFile: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
+
+        @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.alternative)
+        @Field(() => [DamMediaAlternative])
+        thisFileIsAlternativeFor: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
 
         // fileUrl: Field is resolved in resolver
     }
