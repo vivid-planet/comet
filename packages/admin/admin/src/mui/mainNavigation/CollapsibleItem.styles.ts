@@ -102,6 +102,7 @@ export const CollapsibleIndicator = createComponentSlot("div")<MainNavigationCol
         css`
             font-size: 12px;
             color: ${theme.palette.grey[200]};
+            margin-left: -2px;
 
             ${ownerState.subMenuOpen &&
             css`
