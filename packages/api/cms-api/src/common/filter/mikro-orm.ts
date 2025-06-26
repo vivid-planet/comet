@@ -40,6 +40,9 @@ export function filterToMikroOrmQuery(
         if (filterProperty.contains !== undefined) {
             ilike.push(`%${quoteLike(filterProperty.contains)}%`);
         }
+        if (filterProperty.doesNotContain !== undefined) {
+            ret.$not = { $ilike: `%${quoteLike(filterProperty.doesNotContain)}%` };
+        }
         if (filterProperty.startsWith !== undefined) {
             ilike.push(`${quoteLike(filterProperty.startsWith)}%`);
         }
@@ -234,6 +237,14 @@ export function filtersToMikroOrmQuery(
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         if (Object.keys(query as any).length > 0) {
+                            // $not can't be applied like { field: { $not: { ... } } }.
+                            // It has to be applied like { $not: { field: { ... } } }.
+                            if (query.$not) {
+                                acc.$not ??= {};
+                                acc.$not[filterPropertyName] = query.$not;
+                                delete query.$not;
+                            }
+
                             acc[filterPropertyName] = query;
                         }
                     }

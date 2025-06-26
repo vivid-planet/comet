@@ -30,6 +30,9 @@ describe("redirectMatchesFilter", () => {
         expect(redirectMatchesFilter(redirect, { source: { contains: "our" } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { source: { contains: "arg" } })).toBe(false);
 
+        expect(redirectMatchesFilter(redirect, { source: { doesNotContain: "our" } })).toBe(false);
+        expect(redirectMatchesFilter(redirect, { source: { doesNotContain: "arg" } })).toBe(true);
+
         expect(redirectMatchesFilter(redirect, { source: { startsWith: "/sou" } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { source: { startsWith: "/arg" } })).toBe(false);
 
