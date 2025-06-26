@@ -99,9 +99,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
             backgroundColor: "white",
-            "& .MuiDataGrid-columnHeader--last .MuiDataGrid-columnSeparator": {
-                display: "none",
-            },
         },
         panelHeader: {
             padding: `4px 4px ${spacing(1)} 4px`,
@@ -131,6 +128,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
             "&:focus-within": {
                 outline: "none",
+            },
+            "&--last .MuiDataGrid-columnSeparator": {
+                display: "none",
             },
         }),
         pinnedColumns: {
