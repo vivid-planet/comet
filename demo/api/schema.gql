@@ -439,7 +439,7 @@ type Product {
   title: String!
   status: ProductStatus!
   slug: String!
-  description: String!
+  description: String
   type: ProductType!
   additionalTypes: [ProductType!]!
   price: Float
@@ -1553,7 +1553,7 @@ input ProductInput {
   title: String!
   status: ProductStatus! = Unpublished
   slug: String!
-  description: String!
+  description: String = null
   type: ProductType!
   additionalTypes: [ProductType!]! = []
   price: Float = null
