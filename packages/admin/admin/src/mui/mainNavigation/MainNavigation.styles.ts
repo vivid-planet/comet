@@ -36,6 +36,15 @@ const getSharedStyles = (theme: Theme, headerHeight: number) => css`
     .CometAdminMainNavigationItemGroup-root + .CometAdminMainNavigationItem-root {
         margin-top: ${theme.spacing(8)};
     }
+
+    .CometAdminMainNavigationItem-level1 .MuiListItemText-primary {
+        font-weight: 450;
+        font-size: 16px;
+    }
+
+    .CometAdminMainNavigationItem-level2 {
+        height: 40px;
+    }
 `;
 
 export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MainNavigationClassKey, OwnerState>({
