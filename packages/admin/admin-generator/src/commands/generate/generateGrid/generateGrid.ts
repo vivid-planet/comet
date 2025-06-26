@@ -482,10 +482,10 @@ export function generateGrid(
             }
 
             const values = columnValues.map((value) => {
-                if (typeof value === "string") {
+                if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
                     return {
                         value,
-                        label: camelCaseToHumanReadable(value),
+                        label: camelCaseToHumanReadable(value.toString()),
                     };
                 } else {
                     return value;
@@ -494,7 +494,10 @@ export function generateGrid(
 
             const valueOptions = `[${values
                 .map(({ value, label }) => {
-                    const labelData = getValueOptionsLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label);
+                    const labelData = getValueOptionsLabelData(
+                        `${instanceGqlType}.${name}.${value.toString().charAt(0).toLowerCase() + value.toString().slice(1)}`,
+                        label,
+                    );
                     return `{
                         value: ${JSON.stringify(value)},
                         label: ${labelData.textLabel},
