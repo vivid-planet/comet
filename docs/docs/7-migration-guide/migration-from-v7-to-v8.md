@@ -792,12 +792,10 @@ You need to modify your `AppModule` as follows:
         backend: config.blob.storage,
 +       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
     }),
-+   ImgproxyModule.register({
-+       imgproxyConfig: config.imgproxy,
-+   }),
++   ImgproxyModule.register(config.imgproxy),
     DamModule.register({
         damConfig: {
-            apiUrl: config.apiUrl,
+-           apiUrl: config.apiUrl,
             secret: config.dam.secret,
             allowedImageSizes: config.dam.allowedImageSizes,
             allowedAspectRatios: config.dam.allowedImageAspectRatios,
