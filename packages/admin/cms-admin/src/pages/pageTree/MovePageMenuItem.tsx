@@ -3,11 +3,18 @@ import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { MovePage } from "@comet/admin-icons";
 import { FormattedMessage } from "react-intl";
 
+<<<<<<< HEAD
 import { useContentScope } from "../../contentScope/Provider";
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
 import { usePageTreeConfig } from "../pageTreeConfig";
 import { type GQLUpdatePageTreeNodeCategoryMutation, type GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
 import { type PageTreePage } from "./usePageTree";
+=======
+import { DocumentInterface, DocumentType } from "../../documents/types";
+import { usePageTreeScope } from "../config/usePageTreeScope";
+import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
+import { PageTreePage } from "./usePageTree";
+>>>>>>> main
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
@@ -26,9 +33,14 @@ export function MovePageMenuItem({ page }: Props) {
             }
         }
     `);
+<<<<<<< HEAD
     const { scope } = useContentScope();
     const { categories } = usePageTreeConfig();
     const { query, getDocumentTypesByCategory } = usePageTreeContext();
+=======
+    const scope = usePageTreeScope();
+    const { allCategories, query, getDocumentTypesByCategory } = usePageTreeContext();
+>>>>>>> main
 
     if (categories.length <= 1) {
         return null;

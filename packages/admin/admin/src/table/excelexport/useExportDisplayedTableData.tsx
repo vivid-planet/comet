@@ -17,11 +17,11 @@ export function useExportDisplayedTableData(options?: IExcelExportOptions): IExp
 
     async function exportTable() {
         if (tableRef != null) {
-            await setLoading(true);
+            setLoading(true);
             try {
                 await createExcelExportDownload(tableRef.props.columns, tableRef.props.data, options);
             } finally {
-                await setLoading(false);
+                setLoading(false);
             }
         } else {
             throw new Error("No table ref set");

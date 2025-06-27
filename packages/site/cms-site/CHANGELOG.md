@@ -1,5 +1,6 @@
 # @comet/cms-site
 
+<<<<<<< HEAD
 ## 8.0.0-beta.5
 
 ## 8.0.0-beta.4
@@ -40,6 +41,17 @@
 
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
 - b8817b8: Add `AdminMessageType`, `IAdminContentScopeMessage`, `IAdminGraphQLApiUrlMessage`, `IAdminHoverComponentMessage`, `IAdminShowOnlyVisibleMessage`, `IFrameHoverComponentMessage`, `IFrameLocationMessage`, `IFrameMessage`, `IFrameMessageType`, `IFrameOpenLinkMessage`, `IFrameSelectComponentMessage`, and `IReadyIFrameMessage` to the public API
+=======
+## 7.24.0
+
+## 7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+-   e4327e250: Add missing `"use client"` directive to `useBlockPreviewFetch`
+>>>>>>> main
 
 ## 7.21.1
 
