@@ -48,31 +48,31 @@ export class UserResolver {
             return new UserPermissionPaginatedUserList(filteredUsers.slice(args.offset, args.offset + args.limit), filteredUsers.length);
         } else if (permissionOrFilters) {
             await this.userService.warmupHasPermissionCache();
-            const matchedUsers: User[] = [];
+            const matchedUsers = new Set<User>();
             let users: User[] = [];
             // Add all users that match other than permission filters
-            let offset = 0;
-            do {
-                [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
-                for (let i = 0; i < users.length; i++) {
-                    matchedUsers.push(users[i]);
-                }
-                offset += users.length;
-            } while (users.length > 0);
+            if (args.filter?.or?.some((f) => !f.permission)) {
+                let offset = 0;
+                do {
+                    [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
+                    for (let i = 0; i < users.length; i++) {
+                        matchedUsers.add(users[i]);
+                    }
+                    offset += users.length;
+                } while (users.length > 0);
+            }
             // Add users that match permission filters
-            offset = 0;
+            let offset = 0;
             do {
                 [users] = await this.userService.findUsers({ sort: args.sort, offset, limit: 100 });
                 for (let i = 0; i < users.length; i++) {
                     if (await this.permissionOrFiltersApplies(users[i], permissionOrFilters)) {
-                        if (!matchedUsers.some((u) => u.id === users[i].id)) {
-                            matchedUsers.push(users[i]);
-                        }
+                        matchedUsers.add(users[i]);
                     }
                 }
                 offset += users.length;
             } while (users.length > 0);
-            return new UserPermissionPaginatedUserList(matchedUsers.slice(args.offset, args.offset + args.limit), matchedUsers.length);
+            return new UserPermissionPaginatedUserList(Array.from(matchedUsers).slice(args.offset, args.offset + args.limit), matchedUsers.size);
         } else {
             const [users, totalCount] = await this.userService.findUsers(args);
             return new UserPermissionPaginatedUserList(users, totalCount);
