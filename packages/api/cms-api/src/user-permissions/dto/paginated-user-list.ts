@@ -7,6 +7,24 @@ import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
 @InputType()
+export class PermissionFilter {
+    @Field(() => String, { nullable: true })
+    @IsOptional()
+    @IsString()
+    equal?: string;
+
+    @Field(() => String, { nullable: true })
+    @IsOptional()
+    @IsString()
+    notEqual?: string;
+
+    @Field(() => [String], { nullable: true })
+    @IsOptional()
+    @IsString({ each: true })
+    isAnyOf?: string[];
+}
+
+@InputType()
 class UserPermissionsUserFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
@@ -22,6 +40,11 @@ class UserPermissionsUserFilter {
     @ValidateNested()
     @Type(() => StringFilter)
     status?: StringFilter;
+
+    @Field(() => PermissionFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => PermissionFilter)
+    permission?: PermissionFilter;
 
     @Field(() => [UserPermissionsUserFilter], { nullable: true })
     @Type(() => UserPermissionsUserFilter)
