@@ -1,5 +1,14 @@
 # @comet/blocks-admin
 
+## 7.24.0
+
+### Patch Changes
+
+-   751616321: Fix sticky behavior of `RteToolbar`
+-   Updated dependencies [fc900f217]
+    -   @comet/admin@7.24.0
+    -   @comet/admin-icons@7.24.0
+
 ## 7.23.0
 
 ### Patch Changes
