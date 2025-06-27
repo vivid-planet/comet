@@ -87,12 +87,13 @@ export interface DateTimePickerProps
     onChange?: (value?: Date) => void;
     value?: Date;
     required?: boolean;
+    disabled?: boolean;
     onBlur?: InputBaseProps["onBlur"];
     onFocus?: InputBaseProps["onFocus"];
 }
 
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, required, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
+    const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
@@ -139,6 +140,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     onChange={onChangeDate}
                     fullWidth
                     required={required}
+                    disabled={disabled}
                     {...slotProps?.datePicker}
                     onBlur={(event) => {
                         onBlur?.(event);
@@ -158,6 +160,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     onChange={onChangeTime}
                     fullWidth
                     required={required}
+                    disabled={disabled}
                     {...slotProps?.timePicker}
                     onBlur={(event) => {
                         onBlur?.(event);
