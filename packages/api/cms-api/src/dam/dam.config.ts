@@ -5,5 +5,7 @@ export interface DamConfig {
     filesDirectory: string;
     acceptedMimeTypes?: string[];
     maxFileSize: number;
+    requireLicense?: boolean;
+    enableLicenseFeature?: boolean;
     maxSrcResolution: number;
 }

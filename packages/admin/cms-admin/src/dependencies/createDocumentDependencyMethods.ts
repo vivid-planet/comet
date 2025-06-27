@@ -79,7 +79,12 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
                 }
 
                 url += `${path ?? ""}/`;
-                url += block.resolveDependencyPath(block.input2State(data.node[rootColumnName]), jsonPath.substring("root.".length));
+
+                const jsonPathSubstring = jsonPath.substring("root.".length);
+
+                if (jsonPathSubstring) {
+                    url += block.resolveDependencyPath(block.input2State(data.node[rootColumnName]), jsonPathSubstring);
+                }
             }
 
             return url;

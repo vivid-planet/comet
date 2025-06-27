@@ -152,6 +152,7 @@ export function ProductsGrid() {
                 return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
             disableExport: true,
+            filterable: false,
         },
         {
             field: "title",
