@@ -64,16 +64,12 @@ export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
+export { DataGridPagination, DataGridPaginationClassKey, DataGridPaginationProps } from "./dataGrid/pagination/DataGridPagination";
 export {
-    DataGridTablePagination,
-    DataGridTablePaginationClassKey,
-    DataGridTablePaginationProps,
-} from "./dataGrid/pagination/DataGridTablePagination";
-export {
-    DataGridTablePaginationActions,
-    DataGridTablePaginationActionsClassKey,
-    DataGridTablePaginationActionsProps,
-} from "./dataGrid/pagination/tablePaginationActions/DataGridTablePaginationActions";
+    DataGridPaginationActions,
+    DataGridPaginationActionsClassKey,
+    DataGridPaginationActionsProps,
+} from "./dataGrid/pagination/paginationActions/DataGridPaginationActions";
 export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";

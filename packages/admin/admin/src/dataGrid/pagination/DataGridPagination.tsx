@@ -4,24 +4,24 @@ import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps"
 import { type ChangeEvent, type FunctionComponent, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Root, Title } from "./DataGridTablePagination.styles";
-import { DataGridTablePaginationActions } from "./tablePaginationActions/DataGridTablePaginationActions";
+import { Root, Title } from "./DataGridPagination.styles";
+import { DataGridPaginationActions } from "./paginationActions/DataGridPaginationActions";
 
-export type DataGridTablePaginationClassKey = "root" | "title";
+export type DataGridPaginationClassKey = "root" | "title";
 
-export type DataGridTablePaginationProps = ThemedComponentBaseProps<{
+export type DataGridPaginationProps = ThemedComponentBaseProps<{
     root: "div";
     title: typeof Typography;
 }>;
 
-export const DataGridTablePagination: FunctionComponent<DataGridTablePaginationProps> = (inProps) => {
+export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (inProps) => {
     const {
         sx,
         className,
         slotProps = {},
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDataGridTablePagination",
+        name: "CometAdminDataGridPagination",
     });
 
     const apiRef = useGridApiContext();
@@ -49,7 +49,7 @@ export const DataGridTablePagination: FunctionComponent<DataGridTablePaginationP
         <Root sx={sx} className={className} {...slotProps.root}>
             <Title variant="body2" {...slotProps.title}>
                 <FormattedMessage
-                    id="comet.dataGridTablePagination.itemsPerPage"
+                    id="comet.dataGridPagination.itemsPerPage"
                     defaultMessage="{itemsFrom}-{itemsTo} of {itemsTotal} items"
                     values={{
                         itemsFrom: paginationState.paginationModel.page * paginationState.paginationModel.pageSize + 1,
@@ -63,13 +63,13 @@ export const DataGridTablePagination: FunctionComponent<DataGridTablePaginationP
             </Title>
 
             <TablePagination
-                ActionsComponent={DataGridTablePaginationActions}
+                ActionsComponent={DataGridPaginationActions}
                 component="div"
                 count={paginationState.rowCount}
                 labelDisplayedRows={() => {
                     return null;
                 }}
-                labelRowsPerPage={<FormattedMessage defaultMessage="Items per page:" id="comet.dataGridTablePagination.itemsPerPageLabel" />}
+                labelRowsPerPage={<FormattedMessage defaultMessage="Items per page:" id="comet.dataGridPagination.itemsPerPageLabel" />}
                 page={paginationState.paginationModel.page <= pageCount ? paginationState.paginationModel.page : pageCount}
                 rowsPerPage={paginationState.paginationModel.pageSize}
                 rowsPerPageOptions={rootProps.pageSizeOptions?.includes(paginationState.paginationModel.pageSize) ? rootProps.pageSizeOptions : []}
@@ -82,17 +82,17 @@ export const DataGridTablePagination: FunctionComponent<DataGridTablePaginationP
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDataGridTablePagination: DataGridTablePaginationProps;
+        CometAdminDataGridPagination: DataGridPaginationProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDataGridTablePagination: DataGridTablePaginationClassKey;
+        CometAdminDataGridPagination: DataGridPaginationClassKey;
     }
 
     interface Components {
-        CometAdminDataGridTablePagination?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDataGridTablePagination"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDataGridTablePagination"];
+        CometAdminDataGridPagination?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDataGridPagination"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDataGridPagination"];
         };
     }
 }

@@ -6,27 +6,27 @@ import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps"
 import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PageOfTypography, PreviousNextContainer, Root } from "./DataGridTablePaginationActions.styles";
+import { PageOfTypography, PreviousNextContainer, Root } from "./DataGridPaginationActions.styles";
 
-export type DataGridTablePaginationActionsClassKey = "root" | "pageOfTypography" | "previousNextContainer";
+export type DataGridPaginationActionsClassKey = "root" | "pageOfTypography" | "previousNextContainer";
 
-type TablePaginationActions = "previous" | "next";
+type PaginationActions = "previous" | "next";
 
-export type DataGridTablePaginationActionsProps = ThemedComponentBaseProps<{
+export type DataGridPaginationActionsProps = ThemedComponentBaseProps<{
     root: "div";
     pageOfTypography: typeof Typography;
     previousNextContainer: "div";
 }> &
     TablePaginationActionsProps & {
-        iconMapping?: Partial<Record<TablePaginationActions, ReactNode>>;
+        iconMapping?: Partial<Record<PaginationActions, ReactNode>>;
     };
 
-const defaultIconMapping: Record<TablePaginationActions, ReactNode> = {
+const defaultIconMapping: Record<PaginationActions, ReactNode> = {
     previous: <ChevronLeft />,
     next: <ChevronRight />,
 };
 
-export const DataGridTablePaginationActions: FunctionComponent<PropsWithChildren<DataGridTablePaginationActionsProps>> = (inProps) => {
+export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<DataGridPaginationActionsProps>> = (inProps) => {
     const apiRef = useGridApiContext();
     const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const pageCount = useGridSelector(apiRef, gridPageCountSelector);
@@ -45,7 +45,7 @@ export const DataGridTablePaginationActions: FunctionComponent<PropsWithChildren
         slotProps = {},
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDataGridTablePaginationActions",
+        name: "CometAdminDataGridPaginationActions",
     });
     const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
 
@@ -55,7 +55,7 @@ export const DataGridTablePaginationActions: FunctionComponent<PropsWithChildren
                 <PageOfTypography variant="body2" {...slotProps.pageOfTypography}>
                     <FormattedMessage
                         defaultMessage="Page {page} of {pageCount}"
-                        id="comet.dataGridTablePaginationActions.pageXOfY"
+                        id="comet.dataGridPaginationActions.pageXOfY"
                         values={{
                             page: page + 1,
                             pageCount: pageCount,
@@ -89,17 +89,17 @@ export const DataGridTablePaginationActions: FunctionComponent<PropsWithChildren
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDataGridTablePaginationActions: DataGridTablePaginationActionsProps;
+        CometAdminDataGridPaginationActions: DataGridPaginationActionsProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDataGridTablePaginationActions: DataGridTablePaginationActionsClassKey;
+        CometAdminDataGridPaginationActions: DataGridPaginationActionsClassKey;
     }
 
     interface Components {
-        CometAdminDataGridTablePaginationActions?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDataGridTablePaginationActions"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDataGridTablePaginationActions"];
+        CometAdminDataGridPaginationActions?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDataGridPaginationActions"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDataGridPaginationActions"];
         };
     }
 }

@@ -16,7 +16,7 @@ import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityC
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
-import { DataGridTablePagination } from "../../dataGrid/pagination/DataGridTablePagination";
+import { DataGridPagination } from "../../dataGrid/pagination/DataGridPagination";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
@@ -62,7 +62,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             columnSortedDescendingIcon: ArrowDown,
             columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             panel: DataGridPanel,
-            pagination: DataGridTablePagination,
+            pagination: DataGridPagination,
             ...component?.defaultProps?.slots,
         },
         slotProps: {
