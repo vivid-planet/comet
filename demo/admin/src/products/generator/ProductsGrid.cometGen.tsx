@@ -1,5 +1,6 @@
 import { GridCellContent } from "@comet/admin";
 import { defineConfig } from "@comet/admin-generator";
+import { GridFilterInputValue } from "@mui/x-data-grid-pro";
 import { type GQLProduct } from "@src/graphql.generated";
 import { type ReactNode } from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
@@ -146,6 +147,16 @@ export default defineConfig<GQLProduct>({
             headerName: "Tags",
             queryFields: ["tags.title"],
             renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+            filterOperators: [
+                {
+                    label: "Search",
+                    value: "search",
+                    getApplyFilterFn: () => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputValue,
+                },
+            ],
         },
         {
             type: "actions",
