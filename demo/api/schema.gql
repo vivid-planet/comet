@@ -471,7 +471,7 @@ type Product {
   priceRange: ProductPriceRange
   inStock: Boolean!
   soldCount: Int
-  availableSince: Date
+  availableSince: LocalDate
   lastCheckedAt: DateTime
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
@@ -503,9 +503,9 @@ enum ProductType {
 }
 
 """
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+A local date string (i.e., with no associated timezone) in `YYYY-MM-DD` format, e.g. `2020-01-01`.
 """
-scalar Date
+scalar LocalDate
 
 type PageTreeNodeScope {
   domain: String!
@@ -1149,12 +1149,12 @@ input NumberFilter {
 }
 
 input DateFilter {
-  equal: Date
-  lowerThan: Date
-  greaterThan: Date
-  lowerThanEqual: Date
-  greaterThanEqual: Date
-  notEqual: Date
+  equal: LocalDate
+  lowerThan: LocalDate
+  greaterThan: LocalDate
+  lowerThanEqual: LocalDate
+  greaterThanEqual: LocalDate
+  notEqual: LocalDate
 }
 
 input ManyToOneFilter {
@@ -1614,7 +1614,7 @@ input ProductInput {
   price: Float = null
   priceRange: ProductPriceRangeInput
   inStock: Boolean! = true
-  availableSince: Date = null
+  availableSince: LocalDate = null
   lastCheckedAt: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
@@ -1654,7 +1654,7 @@ input ProductUpdateInput {
   price: Float
   priceRange: ProductPriceRangeInput
   inStock: Boolean
-  availableSince: Date
+  availableSince: LocalDate
   lastCheckedAt: DateTime
   image: DamImageBlockInput
   discounts: [ProductDiscountsInput!]
