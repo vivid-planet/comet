@@ -9,7 +9,8 @@
 "@comet/cms-admin": major
 "@comet/eslint-config": major
 "@comet/eslint-plugin": major
-"@comet/cms-site": major
+"@comet/site-nextjs": major
+"@comet/site-react": major
 "@comet/admin": major
 "@comet/cms-api": major
 "@comet/cli": major

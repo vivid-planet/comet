@@ -1,5 +1,5 @@
 ---
-"@comet/cms-site": major
+"@comet/site-nextjs": major
 "@comet/cms-api": major
 ---
 
