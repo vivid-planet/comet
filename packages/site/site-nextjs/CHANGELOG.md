@@ -1,5 +1,17 @@
 # @comet/site-nextjs
 
+## 7.25.0
+
+### Minor Changes
+
+-   b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+### Patch Changes
+
+-   @comet/site-react@7.25.0
+
 ## 7.24.0
 
 ### Patch Changes

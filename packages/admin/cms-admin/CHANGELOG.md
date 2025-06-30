@@ -1,5 +1,25 @@
 # @comet/cms-admin
 
+## 7.25.0
+
+### Minor Changes
+
+-   b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+-   c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+-   a1a129e00: Allow uploading .vtt files to the DAM
+
+### Patch Changes
+
+-   @comet/admin@7.25.0
+-   @comet/admin-date-time@7.25.0
+-   @comet/admin-icons@7.25.0
+-   @comet/admin-rte@7.25.0
+-   @comet/admin-theme@7.25.0
+-   @comet/blocks-admin@7.25.0
+
 ## 7.24.0
 
 ### Patch Changes
