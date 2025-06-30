@@ -1651,6 +1651,27 @@ Example:
 
 ## Site
 
+### Switch from `@comet/cms-site` to `@comet/site-nextjs`
+
+[//]: # "TODO: Upgrade script "
+
+The `@comet/cms-site` package has been reworked and renamed to `@comet/site-nextjs`. Notable changes are
+
+- Styled components is no longer a required peer dependency
+- Instead, SCSS modules are used internally
+- The package is now pure ESM
+
+To switch you must
+
+- uninstall `@comet/cms-site`
+- install `@comet/site-nextjs`
+- change all imports from `@comet/cms-site` to `@comet/site-nextjs`
+- import the css file exported by the package:
+
+```diff title="site/src/app/layout.tsx"
++ import "@comet/site-nextjs/css";
+```
+
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
 
 <details>

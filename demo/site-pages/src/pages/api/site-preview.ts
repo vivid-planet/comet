@@ -1,4 +1,4 @@
-import { legacyPagesRouterSitePreviewApiHandler } from "@comet/cms-site";
+import { legacyPagesRouterSitePreviewApiHandler } from "@comet/site-nextjs";
 import { type NextApiHandler } from "next";
 
 const SitePreviewApiHandler: NextApiHandler = async (req, res) => {

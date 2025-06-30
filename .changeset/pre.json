@@ -20,7 +20,6 @@
     "@comet/cli": "7.13.0",
     "@comet/eslint-config": "7.13.0",
     "@comet/eslint-plugin": "7.13.0",
-    "@comet/cms-site": "7.13.0",
     "comet-storybook": "1.0.0",
     "@comet/admin-generator": "7.14.0",
     "@comet/api-generator": "7.14.0",

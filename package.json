@@ -18,7 +18,6 @@
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",
         "dev:cms:api": "dev-pm start @cms-api",
-        "dev:cms:site": "dev-pm start @cms-site",
         "dev:cms:site-nextjs": "dev-pm start @site-nextjs",
         "dev:cms:site-react": "dev-pm start @site-react",
         "dev:demo": "dev-pm start @demo",
