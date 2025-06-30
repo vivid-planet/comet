@@ -4,7 +4,7 @@ import { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
 import { MAILER_MODULE_OPTIONS, MAILER_MODULE_TRANSPORT } from "./mailer.constants";
 
-export type MailerServiceConfig = {
+type MailerServiceConfig = {
     defaultFrom: string;
     sendAllMailsTo?: string[];
     sendAllMailsBcc?: string[];
