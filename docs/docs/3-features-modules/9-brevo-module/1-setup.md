@@ -185,6 +185,14 @@ Brevo must be configured using the `BrevoConfigPage` in your admin interface.
 
 ## Mail Rendering
 
+The optional **Brevo Mail Rendering** package provides frontend components for rendering newsletters in your application.
+
+:::caution
+The mail rendering package is currently a work in progress.  
+At the moment, it only includes the `NewsletterImageBlock`, which is optimized for displaying images in newsletter campaigns.  
+Additional blocks and features will be added in future releases.
+:::
+
 ### Installation
 
 To add the Brevo Mail Rendering package, add the following to your `package.json` dependencies and install:
@@ -192,3 +200,9 @@ To add the Brevo Mail Rendering package, add the following to your `package.json
 ```json
 "@vivid-planet/comet-brevo-mail-rendering": "^3.0.0"
 ```
+
+### Register blocks
+
+To use a block from the package, register it in your `NewsletterContentBlock` (or any `BlocksBlock` you use for creating email campaigns).  
+Make sure to register the block in your API, ADMIN, and SITE projects.  
+For detailed instructions on working with blocks in Comet, see https://docs.comet-dxp.com/docs/core-concepts/blocks/your-first-block
