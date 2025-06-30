@@ -13,6 +13,7 @@ import {
     GQLUpdateDamMediaAlternativeMutation,
     GQLUpdateDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativeForm.generated";
+import { mediaAlternativesGridRefetchQueries } from "./MediaAlternativesGrid";
 
 type Direction = "for" | "alternative";
 
@@ -36,13 +37,13 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type, dir
     const [createDamMediaAlternative] = useMutation<GQLCreateDamMediaAlternativeMutation, GQLCreateDamMediaAlternativeMutationVariables>(
         createDamMediaAlternativeMutation,
         {
-            refetchQueries: ["DamMediaAlternatives"],
+            refetchQueries: mediaAlternativesGridRefetchQueries,
         },
     );
     const [updateDamMediaAlternative] = useMutation<GQLUpdateDamMediaAlternativeMutation, GQLUpdateDamMediaAlternativeMutationVariables>(
         updateDamMediaAlternativeMutation,
         {
-            refetchQueries: ["DamMediaAlternatives"],
+            refetchQueries: mediaAlternativesGridRefetchQueries,
         },
     );
 
