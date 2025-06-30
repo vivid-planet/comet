@@ -14,7 +14,7 @@ export const Root = createComponentSlot("div")<DataGridPaginationClassKey>({
     padding: 0 12px;
 `);
 
-export const Title = createComponentSlot(Typography)<DataGridPaginationClassKey>({
+export const PageInformation = createComponentSlot(Typography)<DataGridPaginationClassKey>({
     componentName: "DataGridPagination",
-    slotName: "title",
+    slotName: "pageInformation",
 })();

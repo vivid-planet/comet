@@ -4,14 +4,14 @@ import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps"
 import { type ChangeEvent, type FunctionComponent, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { Root, Title } from "./DataGridPagination.styles";
+import { PageInformation, Root } from "./DataGridPagination.styles";
 import { DataGridPaginationActions } from "./paginationActions/DataGridPaginationActions";
 
-export type DataGridPaginationClassKey = "root" | "title";
+export type DataGridPaginationClassKey = "root" | "pageInformation";
 
 export type DataGridPaginationProps = ThemedComponentBaseProps<{
     root: "div";
-    title: typeof Typography;
+    pageInformation: typeof Typography;
 }>;
 
 export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (inProps) => {
@@ -47,9 +47,9 @@ export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (i
 
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
-            <Title variant="body2" {...slotProps.title}>
+            <PageInformation variant="body2" {...slotProps.pageInformation}>
                 <FormattedMessage
-                    id="comet.dataGridPagination.itemsPerPage"
+                    id="comet.dataGridPagination.pageInformation"
                     defaultMessage="{itemsFrom}-{itemsTo} of {itemsTotal} items"
                     values={{
                         itemsFrom: paginationState.paginationModel.page * paginationState.paginationModel.pageSize + 1,
@@ -60,7 +60,7 @@ export const DataGridPagination: FunctionComponent<DataGridPaginationProps> = (i
                         itemsTotal: paginationState.rowCount,
                     }}
                 />
-            </Title>
+            </PageInformation>
 
             <TablePagination
                 ActionsComponent={DataGridPaginationActions}
