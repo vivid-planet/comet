@@ -6,7 +6,6 @@ const packageFolderMapping = {
     "@comet/admin-rte": "packages/admin/admin-rte",
     "@comet/cms-admin": "packages/admin/cms-admin",
     "@comet/cms-api": "packages/api/cms-api",
-    "@comet/cms-site": "packages/site/cms-site",
     "@comet/site-nextjs": "packages/site/site-nextjs",
     "@comet/site-react": "packages/site/site-react",
 };
@@ -99,18 +98,6 @@ module.exports = {
             waitOn: waitOnPackages("@comet/cms-api"),
         },
 
-        //group cms-site
-        {
-            name: "cms-site",
-            script: "pnpm --filter @comet/cms-site run dev",
-            group: ["cms-site", "cms"],
-        },
-        {
-            name: "cms-site-codegen-block-types",
-            script: "pnpm --filter @comet/cms-site run generate-block-types:watch",
-            group: ["cms-site", "cms"],
-        },
-
         //group site-nextjs
         {
             name: "site-nextjs",
@@ -201,7 +188,7 @@ module.exports = {
             name: "demo-site-pages",
             script: "pnpm --filter comet-demo-site-pages run dev",
             group: ["demo-site-pages", "demo"],
-            waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
+            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-pages-codegen",
