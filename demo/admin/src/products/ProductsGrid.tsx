@@ -23,7 +23,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Disabled, Edit, Excel, Online, StateFilled as StateFilledIcon } from "@comet/admin-icons";
+import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
@@ -177,7 +177,27 @@ export function ProductsGrid() {
             width: 100,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: ["Cap", "Shirt", "Tie"],
+            valueOptions: [
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.type.cap.primary" defaultMessage="Great cap" />}
+                            icon={<EducationIcon color="primary" />}
+                        />
+                    ),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
         },
         {
             field: "additionalTypes",
@@ -228,30 +248,7 @@ export function ProductsGrid() {
         {
             field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
-            type: "singleSelect",
-            valueOptions: [
-                {
-                    value: true,
-                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
-                    cellContent: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
-                            icon={<StateFilledIcon color="success" />}
-                        />
-                    ),
-                },
-                {
-                    value: false,
-                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
-                    cellContent: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
-                            icon={<StateFilledIcon color="error" />}
-                        />
-                    ),
-                },
-            ],
-            renderCell: renderStaticSelectCell,
+            type: "boolean",
             flex: 1,
             minWidth: 80,
             disableExport: true,
