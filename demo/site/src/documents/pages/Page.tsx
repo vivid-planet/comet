@@ -1,15 +1,7 @@
 import { generateImageUrl, gql } from "@comet/site-nextjs";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
-<<<<<<< HEAD
 import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
-import { Header } from "@src/layout/header/Header";
-import { headerFragment } from "@src/layout/header/Header.fragment";
-import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
-import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
-=======
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
->>>>>>> main
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
