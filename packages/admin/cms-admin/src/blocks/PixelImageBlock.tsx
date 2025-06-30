@@ -1,18 +1,29 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
+<<<<<<< HEAD
 import { Crop, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
+=======
+import { Crop } from "@comet/admin-icons";
+import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, IPreviewContext, SelectPreviewComponent } from "@comet/blocks-admin";
+import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
+>>>>>>> main
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+<<<<<<< HEAD
 import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
+=======
+import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
+import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
+>>>>>>> main
 import { FileField } from "../form/file/FileField";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -151,12 +162,17 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     AdminComponent: ({ state, updateState }) => {
         const [open, setOpen] = useState(false);
+<<<<<<< HEAD
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const { apiUrl } = useCometConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
         const { entityDependencyMap } = useDependenciesConfig();
+=======
+        const context = useCmsBlockContext();
+        const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+>>>>>>> main
 
         // useSyncImageAttributes({ state, updateState });
 
@@ -166,18 +182,13 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
         const handleCropClick = () => {
             setOpen(true);
-
-            handleMenuClose();
-        };
-
-        const handleMenuClose = () => {
-            setAnchorEl(null);
         };
 
         const previewUrl = createPreviewUrl(state, apiUrl, { width: 320, height: 320 });
 
         return (
             <SelectPreviewComponent>
+<<<<<<< HEAD
                 {state.damFile?.image ? (
                     <>
                         <BlockAdminComponentPaper disablePadding>
@@ -263,17 +274,51 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                     <BlocksFinalForm<{ damFile?: ImageBlockState["damFile"] }>
                         onSubmit={(newValues) => {
                             updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined, cropArea: undefined })); // reset local crop area when image changes
+=======
+                <BlocksFinalForm<{ damFile?: ImageBlockState["damFile"] }>
+                    onSubmit={(newValues) => {
+                        updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined, cropArea: undefined })); // reset local crop area when image changes
+                    }}
+                    initialValues={{ damFile: state.damFile }}
+                >
+                    <Field
+                        name="damFile"
+                        component={FileField}
+                        fullWidth
+                        buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
+                        allowedMimetypes={filteredAcceptedMimeTypes.pixelImage}
+                        preview={<PreviewImage src={previewUrl} width="70" height="70" />}
+                        menuActions={[
+                            {
+                                label: <FormattedMessage id="comet.blocks.image.cropImage" defaultMessage="Crop image" />,
+                                icon: <Crop />,
+                                onClick: handleCropClick,
+                            },
+                        ]}
+                    />
+                </BlocksFinalForm>
+                {open && state.damFile?.image && (
+                    <EditImageDialog
+                        image={{
+                            name: state.damFile.name,
+                            url: state.damFile.fileUrl,
+                            width: state.damFile.image.width,
+                            height: state.damFile.image.height,
+                            size: state.damFile.size,
+>>>>>>> main
                         }}
-                        initialValues={{ damFile: state.damFile }}
-                    >
-                        <Field
-                            name="damFile"
-                            component={FileField}
-                            fullWidth
-                            buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
-                            allowedMimetypes={filteredAcceptedMimeTypes.pixelImage}
-                        />
-                    </BlocksFinalForm>
+                        damFileId={state.damFile.id}
+                        initialValues={{
+                            useInheritedDamSettings: state.cropArea === undefined,
+                            cropArea: state.cropArea ?? state.damFile.image.cropArea,
+                        }}
+                        inheritedDamSettings={{ cropArea: state.damFile.image.cropArea }}
+                        onSubmit={(cropArea) => {
+                            updateState((prevState) => ({ ...prevState, cropArea }));
+                            setOpen(false);
+                        }}
+                        onClose={handleClose}
+                    />
                 )}
             </SelectPreviewComponent>
         );
@@ -298,12 +343,6 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         return contents;
     },
 };
-
-const ContentRoot = styled(ButtonBase)`
-    padding: ${({ theme }) => theme.spacing(3)};
-    width: 100%;
-    text-align: left;
-` as typeof ButtonBase;
 
 const PreviewImage = styled("img")`
     object-fit: cover;

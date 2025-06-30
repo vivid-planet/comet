@@ -1,7 +1,13 @@
+import { gql, useQuery } from "@apollo/client";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
+<<<<<<< HEAD
 import { type DamFileDetails } from "../EditFile";
+=======
+import { DamFileDetails } from "../EditFile";
+import { GQLVideoPreviewCaptionsQuery, GQLVideoPreviewCaptionsQueryVariables, namedOperations } from "./VideoPreview.generated";
+>>>>>>> main
 
 const VideoPreviewWrapper = styled("div")`
     width: 100%;
@@ -20,10 +26,40 @@ interface VideoPreviewProps {
     file: DamFileDetails;
 }
 
+export const VideoPreviewCaptionsQueryName = namedOperations.Query.VideoPreviewCaptions;
+
+const videoPreviewCaptionsQuery = gql`
+    query VideoPreviewCaptions($id: ID!) {
+        damFile(id: $id) {
+            id
+            alternativesForThisFile {
+                id
+                language
+                type
+                alternative {
+                    id
+                    fileUrl
+                }
+            }
+        }
+    }
+`;
+
 export const VideoPreview = ({ file }: VideoPreviewProps) => {
+    const { data } = useQuery<GQLVideoPreviewCaptionsQuery, GQLVideoPreviewCaptionsQueryVariables>(videoPreviewCaptionsQuery, {
+        variables: {
+            id: file.id,
+        },
+    });
+
     return (
         <VideoPreviewWrapper>
             <StyledVideo controls src={file.fileUrl}>
+                {data?.damFile.alternativesForThisFile
+                    .filter((alternative) => alternative.type === "captions")
+                    .map((caption) => {
+                        return <track key={caption.id} src={caption.alternative.fileUrl} kind="captions" srcLang={caption.language} />;
+                    })}
                 <FormattedMessage
                     id="comet.dam.file.unsupportedVideoTag"
                     defaultMessage="Your browser does not support the video element. Please use another browser."

@@ -67,6 +67,18 @@ type PaginatedDependencies {
   totalCount: Int!
 }
 
+type DamMediaAlternative {
+  id: ID!
+  language: String!
+  type: DamMediaAlternativeType!
+  for: DamFile!
+  alternative: DamFile!
+}
+
+enum DamMediaAlternativeType {
+  captions
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -183,6 +195,11 @@ type KubernetesJob {
   status: KubernetesJobStatus!
   startTime: DateTime
   completionTime: DateTime
+}
+
+type PaginatedDamMediaAlternatives {
+  nodes: [DamMediaAlternative!]!
+  totalCount: Int!
 }
 
 type FilenameResponse {
@@ -366,6 +383,8 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  alternativesForThisFile: [DamMediaAlternative!]!
+  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -444,8 +463,13 @@ type Query {
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+<<<<<<< HEAD
   warning(id: ID!): Warning!
   warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+=======
+  damMediaAlternative(id: ID!): DamMediaAlternative!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
+>>>>>>> main
 }
 
 input RedirectScopeInput {
@@ -581,6 +605,7 @@ input AzureAiTranslationInput {
   targetLanguage: String!
 }
 
+<<<<<<< HEAD
 input WarningFilter {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -623,6 +648,19 @@ enum WarningSortField {
   type
   severity
   status
+=======
+input DamMediaAlternativeSort {
+  field: DamMediaAlternativeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum DamMediaAlternativeSortField {
+  id
+  language
+  type
+  for
+  alternative
+>>>>>>> main
 }
 
 type Mutation {
@@ -662,6 +700,9 @@ type Mutation {
   generateAltText(fileId: String!, language: String): String!
   generateImageTitle(fileId: String!, language: String): String!
   generateSeoTags(content: String!, language: String!): SeoTags!
+  createDamMediaAlternative(for: ID!, alternative: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
+  updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
+  deleteDamMediaAlternative(id: ID!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -769,4 +810,20 @@ input UserPermissionOverrideContentScopesInput {
 
 input UserContentScopesInput {
   contentScopes: [JSONObject!]! = []
+<<<<<<< HEAD
 }
+=======
+}
+
+input DamMediaAlternativeInput {
+  language: String!
+  type: DamMediaAlternativeType!
+}
+
+input DamMediaAlternativeUpdateInput {
+  language: String
+  type: DamMediaAlternativeType
+  for: ID
+  alternative: ID
+}
+>>>>>>> main

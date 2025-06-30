@@ -84,6 +84,7 @@ export function App() {
                         return config.scope.domain === scope.domain;
                     });
 
+<<<<<<< HEAD
                     if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
                     return {
                         url: siteConfig.url,
@@ -149,6 +150,104 @@ export function App() {
                         </MuiThemeProvider>
                     </LocalizationProvider>
                 </IntlProvider>
+=======
+                                if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                                return {
+                                    url: siteConfig.url,
+                                    preloginEnabled: siteConfig.preloginEnabled || false,
+                                    blockPreviewBaseUrl:
+                                        siteConfig.scope.domain === "secondary"
+                                            ? `${siteConfig.url}/block-preview`
+                                            : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                                    sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
+                                };
+                            },
+                        }}
+                    >
+                        <DamConfigProvider
+                            value={{
+                                scopeParts: ["domain"],
+                                additionalToolbarItems: <ImportFromPicsum />,
+                                importSources: {
+                                    picsum: {
+                                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
+                                    },
+                                },
+                                contentGeneration: {
+                                    generateAltText: true,
+                                    generateImageTitle: true,
+                                },
+                            }}
+                        >
+                            <DependenciesConfigProvider
+                                entityDependencyMap={{
+                                    Page,
+                                    Link,
+                                    DamFile: createDamFileDependency(),
+                                }}
+                            >
+                                <IntlProvider locale="en" messages={getMessages()}>
+                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.language}>
+                                        <MuiThemeProvider theme={theme}>
+                                            <DndProvider options={HTML5toTouch}>
+                                                <SnackbarProvider>
+                                                    <CmsBlockContextProvider
+                                                        damConfig={{
+                                                            apiUrl: config.apiUrl,
+                                                            apiClient,
+                                                            maxFileSize: config.dam.uploadsMaxFileSize,
+                                                            maxSrcResolution: config.imgproxy.maxSrcResolution,
+                                                            allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
+                                                        }}
+                                                        pageTreeCategories={pageTreeCategories}
+                                                        pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
+                                                        pageTreeScopeParts={["domain", "language"]}
+                                                    >
+                                                        <ErrorDialogHandler />
+                                                        <CurrentUserProvider>
+                                                            <RouterBrowserRouter>
+                                                                <GlobalStyle />
+                                                                <ContentScopeProvider>
+                                                                    {({ match }) => (
+                                                                        <Switch>
+                                                                            <Route
+                                                                                path={`${match.path}/preview`}
+                                                                                render={(props) => (
+                                                                                    <SitePreview
+                                                                                        resolvePath={(path: string, scope) => {
+                                                                                            return `/${scope.language}${path}`;
+                                                                                        }}
+                                                                                        {...props}
+                                                                                    />
+                                                                                )}
+                                                                            />
+                                                                            <Route
+                                                                                render={() => (
+                                                                                    <MasterLayout
+                                                                                        headerComponent={MasterHeader}
+                                                                                        menuComponent={AppMasterMenu}
+                                                                                    >
+                                                                                        <MasterMenuRoutes menu={masterMenuData} />
+                                                                                    </MasterLayout>
+                                                                                )}
+                                                                            />
+                                                                        </Switch>
+                                                                    )}
+                                                                </ContentScopeProvider>
+                                                            </RouterBrowserRouter>
+                                                        </CurrentUserProvider>
+                                                    </CmsBlockContextProvider>
+                                                </SnackbarProvider>
+                                            </DndProvider>
+                                        </MuiThemeProvider>
+                                    </LocaleProvider>
+                                </IntlProvider>
+                            </DependenciesConfigProvider>
+                        </DamConfigProvider>
+                    </SitesConfigProvider>
+                </BuildInformationProvider>
+>>>>>>> main
             </ApolloProvider>
         </CometConfigProvider>
     );

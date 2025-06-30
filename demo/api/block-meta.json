@@ -935,6 +935,30 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "captions",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "id",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "language",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "fileUrl",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
                         }
                     ]
                 },

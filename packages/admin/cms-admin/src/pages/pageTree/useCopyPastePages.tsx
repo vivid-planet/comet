@@ -3,11 +3,19 @@ import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDial
 import { type ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
+<<<<<<< HEAD
 import { useCometConfig } from "../../config/CometConfigContext";
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
 import { usePageTreeConfig } from "../pageTreeConfig";
+=======
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { ContentScopeInterface } from "../../contentScope/Provider";
+import { useDamScope } from "../../dam/config/useDamScope";
+import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
+import { usePageTreeScope } from "../config/usePageTreeScope";
+>>>>>>> main
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { sendPages, type SendPagesOptions } from "./useCopyPastePages/sendPages";
 import { type GQLPageTreePageFragment } from "./usePageTree";
@@ -70,7 +78,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const { documentTypes } = usePageTreeConfig();
     const { currentCategory } = usePageTreeContext();
     const client = useApolloClient();
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const damScope = useDamScope();
     const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
     const errorDialog = useErrorDialog();

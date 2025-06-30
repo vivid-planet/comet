@@ -2,6 +2,7 @@ import {
     BaseEntity,
     BigIntType,
     Cascade,
+    Collection,
     Embedded,
     Entity,
     Index,
@@ -19,14 +20,23 @@ import { v4 as uuid } from "uuid";
 import { EntityInfo } from "../../../common/entityInfo/entity-info.decorator";
 import { CreateWarnings } from "../../../warnings/decorators/create-warnings.decorator";
 import { DamScopeInterface } from "../../types";
+<<<<<<< HEAD
 import { FileWarningService } from "../file-warning.service";
+=======
+import { DamMediaAlternative } from "../dam-media-alternatives/entities/dam-media-alternative.entity";
+>>>>>>> main
 import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
+<<<<<<< HEAD
 export interface FileInterface extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
+=======
+export interface FileInterface extends BaseEntity<FileInterface, "id"> {
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies" | "alternativesForThisFile" | "thisFileIsAlternativeFor";
+>>>>>>> main
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -45,6 +55,8 @@ export interface FileInterface extends BaseEntity {
     scope?: DamScopeInterface;
     importSourceId?: string;
     importSourceType?: string;
+    alternativesForThisFile: Collection<DamMediaAlternative>;
+    thisFileIsAlternativeFor: Collection<DamMediaAlternative>;
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
@@ -148,6 +160,12 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field({ nullable: true })
         @Property({ columnType: "text", nullable: true })
         importSourceType?: string;
+
+        @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.for)
+        alternativesForThisFile: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
+
+        @OneToMany(() => DamMediaAlternative, (damMediaAlternative: DamMediaAlternative) => damMediaAlternative.alternative)
+        thisFileIsAlternativeFor: Collection<DamMediaAlternative> = new Collection<DamMediaAlternative>(this);
 
         // fileUrl: Field is resolved in resolver
     }

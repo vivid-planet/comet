@@ -16,8 +16,15 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
+<<<<<<< HEAD
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { type Maybe } from "../../graphql.generated";
+=======
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { ContentScopeInterface } from "../../contentScope/Provider";
+import { Maybe } from "../../graphql.generated";
+import { usePageTreeScope } from "../config/usePageTreeScope";
+>>>>>>> main
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
@@ -77,8 +84,13 @@ interface PageTreeSelectProps {
 }
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
+<<<<<<< HEAD
     const { categories, additionalPageTreeNodeFragment } = usePageTreeConfig();
     const { scope } = useContentScope();
+=======
+    const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
+    const scope = usePageTreeScope();
+>>>>>>> main
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
     const [height, setHeight] = useState(200);
@@ -120,6 +132,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
+        // TODO remove hardcoded domain here
         domain: scope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {

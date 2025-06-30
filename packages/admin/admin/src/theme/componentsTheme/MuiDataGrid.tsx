@@ -280,10 +280,31 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             [`&& .${autocompleteClasses.inputRoot}`]: {
+<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
                 paddingBottom: 0,
 
                 [`& > .${autocompleteClasses.input}`]: {
                     padding: `calc(${spacing(2)} - 1px)`,
+=======
+                padding: 0,
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+                border: `1px solid ${palette.grey[100]}`,
+
+                [`& > .${autocompleteClasses.input}`]: {
+                    padding: `calc(${spacing(2)} - 1px)`,
+                    display: "flex",
+                    alignItems: "center",
+                },
+
+                [`& > .MuiOutlinedInput-notchedOutline`]: {
+                    display: "none",
+                },
+
+                "&.Mui-focused": {
+                    border: `1px solid ${palette.primary.main}`,
+>>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
                 },
             },
 

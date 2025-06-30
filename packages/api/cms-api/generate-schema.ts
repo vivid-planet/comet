@@ -26,6 +26,7 @@ import { GenerateSeoTagsResolver } from "./src/content-generation/generate-seo-t
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { createDamMediaAlternativeResolver } from "./src/dam/files/dam-media-alternatives/dam-media-alternative.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
@@ -119,7 +120,11 @@ async function generateSchema(): Promise<void> {
         GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+<<<<<<< HEAD
         WarningResolver
+=======
+        createDamMediaAlternativeResolver({ File }),
+>>>>>>> main
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

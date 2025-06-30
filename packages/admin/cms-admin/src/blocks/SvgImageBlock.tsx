@@ -1,17 +1,26 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
+<<<<<<< HEAD
 import { Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
+=======
+import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, IPreviewContext, SelectPreviewComponent } from "@comet/blocks-admin";
+import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
+>>>>>>> main
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+<<<<<<< HEAD
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
+=======
+import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
+import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
+>>>>>>> main
 import { FileField } from "../form/file/FileField";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -119,6 +128,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
+<<<<<<< HEAD
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const { apiUrl } = useCometConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
@@ -203,6 +213,30 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                         />
                     </BlocksFinalForm>
                 )}
+=======
+        const context = useCmsBlockContext();
+        const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+
+        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl);
+
+        return (
+            <SelectPreviewComponent>
+                <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
+                    onSubmit={(newValues) => {
+                        updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined }));
+                    }}
+                    initialValues={{ damFile: state.damFile }}
+                >
+                    <Field
+                        name="damFile"
+                        component={FileField}
+                        fullWidth
+                        buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
+                        allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
+                        preview={<img src={previewUrl} width="70" height="70" />}
+                    />
+                </BlocksFinalForm>
+>>>>>>> main
             </SelectPreviewComponent>
         );
     },

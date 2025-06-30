@@ -1,15 +1,36 @@
+<<<<<<< HEAD
 import { gql, useApolloClient } from "@apollo/client";
 import { Field, FieldContainer } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
+=======
+import { gql } from "@apollo/client";
+import { Field } from "@comet/admin";
+import { Video } from "@comet/admin-icons";
+import {
+    AdminComponentSection,
+    BlockCategory,
+    BlockDependency,
+    BlockInterface,
+    BlocksFinalForm,
+    BlockState,
+    createBlockSkeleton,
+    resolveNewState,
+    useAdminComponentPaper,
+} from "@comet/blocks-admin";
+import { Box } from "@mui/material";
+>>>>>>> main
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+<<<<<<< HEAD
 import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
+=======
+import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+>>>>>>> main
 import { FileField } from "../form/file/FileField";
 import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
 import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
@@ -120,6 +141,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
+<<<<<<< HEAD
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const isInPaper = useBlockAdminComponentPaper();
         const contentScope = useContentScope();
@@ -131,10 +153,14 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         const handleMenuClose = () => {
             setAnchorEl(null);
         };
+=======
+        const isInPaper = useAdminComponentPaper();
+>>>>>>> main
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+<<<<<<< HEAD
                     {state.damFile ? (
                         <FieldContainer fullWidth>
                             <BlockAdminComponentPaper disablePadding>
@@ -198,6 +224,15 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     ) : (
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4", "video/webm"]} />
                     )}
+=======
+                    <Field
+                        name="damFile"
+                        component={FileField}
+                        fullWidth
+                        allowedMimetypes={["video/mp4", "video/webm"]}
+                        preview={<Video fontSize="large" color="primary" />}
+                    />
+>>>>>>> main
                     <VideoOptionsFields />
                     <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent

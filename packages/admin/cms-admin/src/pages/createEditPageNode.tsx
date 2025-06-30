@@ -11,11 +11,19 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
 
+<<<<<<< HEAD
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
 import { useContentScope } from "../contentScope/Provider";
 import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
 import { type GQLSlugAvailability } from "../graphql.generated";
+=======
+import { DocumentInterface, DocumentType } from "../documents/types";
+import { SyncFields } from "../form/SyncFields";
+import { GQLSlugAvailability } from "../graphql.generated";
+import { useLocale } from "../locale/useLocale";
+import { usePageTreeScope } from "./config/usePageTreeScope";
+>>>>>>> main
 import {
     type GQLCreatePageNodeMutation,
     type GQLCreatePageNodeMutationVariables,
@@ -102,8 +110,13 @@ export function createEditPageNode({
 
         const intl = useIntl();
         const apollo = useApolloClient();
+<<<<<<< HEAD
         const { scope } = useContentScope();
         const language = useContentLanguage({ scope });
+=======
+        const scope = usePageTreeScope();
+        const locale = useLocale({ scope });
+>>>>>>> main
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
 
