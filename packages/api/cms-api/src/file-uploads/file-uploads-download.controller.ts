@@ -16,10 +16,6 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import mime from "mime";
-<<<<<<< HEAD
-=======
-import fetch from "node-fetch";
->>>>>>> main
 import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
@@ -190,12 +186,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     throw new Error("Content type not found");
                 }
 
-<<<<<<< HEAD
-                res.writeHead(response.status, { "content-length": contentLength, "content-type": contentType });
-=======
-                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType, "cache-control": "no-store" });
-                imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
->>>>>>> main
+                res.writeHead(response.status, { "content-length": contentLength, "content-type": contentType, "cache-control": "no-store" });
 
                 const readableBody = Readable.fromWeb(response.body);
                 readableBody.pipe(new PassThrough()).pipe(res);

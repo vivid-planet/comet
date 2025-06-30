@@ -98,17 +98,17 @@ export class DamModule {
 
         return {
             module: DamModule,
-<<<<<<< HEAD
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule, ImgproxyModule, WarningsModule],
-=======
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]), BlobStorageModule],
->>>>>>> main
+            imports: [
+                MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]),
+                BlobStorageModule,
+                ImgproxyModule,
+                WarningsModule,
+            ],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
                 DamItemsService,
                 fileValidationServiceProvider,
-
                 FilesResolver,
                 FileDependentsResolver,
                 FilesEntityInfoService,
@@ -127,11 +127,8 @@ export class DamModule {
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
                 HasValidFilenameConstraint,
-<<<<<<< HEAD
                 FileWarningService,
-=======
                 DamMediaAlternativeResolver,
->>>>>>> main
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

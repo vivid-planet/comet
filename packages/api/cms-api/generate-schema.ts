@@ -120,11 +120,8 @@ async function generateSchema(): Promise<void> {
         GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
-<<<<<<< HEAD
-        WarningResolver
-=======
+        WarningResolver,
         createDamMediaAlternativeResolver({ File }),
->>>>>>> main
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

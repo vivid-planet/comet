@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 8.0.0-beta.5
 
 ### Major Changes
@@ -195,27 +194,27 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
-=======
+
 ## 7.25.0
 
 ### Minor Changes
 
--   b421ed273: Support captions in the `DamVideoBlock`
+- b421ed273: Support captions in the `DamVideoBlock`
 
     The captions can be set uploaded as .vtt files and linked to videos in the DAM.
 
--   c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
--   a1a129e00: Allow uploading .vtt files to the DAM
+- c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+- a1a129e00: Allow uploading .vtt files to the DAM
 
 ### Patch Changes
 
--   @comet/blocks-api@7.25.0
+- @comet/blocks-api@7.25.0
 
 ## 7.24.0
 
 ### Minor Changes
 
--   efeff64ab: API Generator: Allow easier extension of generated resolvers and services
+- efeff64ab: API Generator: Allow easier extension of generated resolvers and services
 
     Even though we don't encourage to extend generated resolvers and services, it should still be possible. Our recommendation is to generate a new resolver but there are cases where it makes sense to extend the existing one (e.g. modifying certain functions or reusing existing code).
 
@@ -273,41 +272,40 @@
 
 ### Patch Changes
 
--   b6e3f7e3c: Don't replace a file if the new file is identical to the existing one in the DAM
+- b6e3f7e3c: Don't replace a file if the new file is identical to the existing one in the DAM
 
     This previously led to a bug where a file was deleted if it was replaced with the same file.
 
--   3607c7c22: Extend the browser cache duration for public DAM assets from 1 day to 1 year to reduce the data load for returning users.
--   2310f8553: Prevent socket exhaustion when streaming files and prevent the API from crashing due to stream errors in the `FileUploadsDownloadController`
+- 3607c7c22: Extend the browser cache duration for public DAM assets from 1 day to 1 year to reduce the data load for returning users.
+- 2310f8553: Prevent socket exhaustion when streaming files and prevent the API from crashing due to stream errors in the `FileUploadsDownloadController`
 
     We already added this fix to the DAM in the past.
 
--   2af3d8187: Ignore UUID columns in `searchToMikroOrmQuery` when inferring fields from entity metadata
--   34df51db0: Set cache-control headers for file uploads
-    -   @comet/blocks-api@7.24.0
+- 2af3d8187: Ignore UUID columns in `searchToMikroOrmQuery` when inferring fields from entity metadata
+- 34df51db0: Set cache-control headers for file uploads
+    - @comet/blocks-api@7.24.0
 
 ## 7.23.0
 
 ### Minor Changes
 
--   80d0c6293: Add new `getFileContent` method to the `FileUploadsService`
+- 80d0c6293: Add new `getFileContent` method to the `FileUploadsService`
 
     This method allows you to retrieve a file's content as a Buffer.
     This is needed for cases like embedding images in a PDF or attaching files to emails.
 
 ### Patch Changes
 
--   2cdb87ad5: Add error and close handling for partial ranges in file stream
--   aac00efa8: Limit image title to 150 characters in `AzureOpenAiContentGenerationService`
--   Updated dependencies [201198da3]
-    -   @comet/blocks-api@7.23.0
+- 2cdb87ad5: Add error and close handling for partial ranges in file stream
+- aac00efa8: Limit image title to 150 characters in `AzureOpenAiContentGenerationService`
+- Updated dependencies [201198da3]
+    - @comet/blocks-api@7.23.0
 
 ## 7.22.0
 
 ### Patch Changes
 
--   @comet/blocks-api@7.22.0
->>>>>>> main
+- @comet/blocks-api@7.22.0
 
 ## 7.21.1
 
@@ -2307,15 +2305,9 @@
 
     In the API:
 
-<<<<<<< HEAD
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
     - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
-=======
-    -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
-    -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
-    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
->>>>>>> main
 
     In the Admin:
 
