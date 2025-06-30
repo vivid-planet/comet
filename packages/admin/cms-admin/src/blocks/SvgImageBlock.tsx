@@ -1,27 +1,12 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    IPreviewContext,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
+import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, IPreviewContext, SelectPreviewComponent } from "@comet/blocks-admin";
 import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
-import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
-import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
-import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
-import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
@@ -125,90 +110,28 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-        const contentScope = useContentScope();
-        const apolloClient = useApolloClient();
-        const dependencyMap = useDependenciesConfig();
 
         const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl);
-        const showMenu = Boolean(dependencyMap["DamFile"]);
-
-        const handleMenuClose = () => {
-            setAnchorEl(null);
-        };
 
         return (
             <SelectPreviewComponent>
-                {state.damFile ? (
-                    <AdminComponentPaper disablePadding>
-                        <Box padding={3}>
-                            <Grid container alignItems="center" spacing={3}>
-                                <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
-                                <Grid item xs>
-                                    <Typography variant="subtitle1">{state.damFile.name}</Typography>
-                                    <Typography variant="body1" color="textSecondary">
-                                        <DamPathLazy fileId={state.damFile.id} />
-                                    </Typography>
-                                </Grid>
-                                {showMenu && (
-                                    <Grid item>
-                                        <IconButton
-                                            onMouseDown={(event) => event.stopPropagation()}
-                                            onClick={(event) => {
-                                                event.stopPropagation();
-                                                setAnchorEl(event.currentTarget);
-                                            }}
-                                            size="large"
-                                        >
-                                            <MoreVertical />
-                                        </IconButton>
-                                    </Grid>
-                                )}
-                            </Grid>
-                        </Box>
-                        <Divider />
-                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
-                            <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                        </AdminComponentButton>
-                        {showMenu && (
-                            <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                {dependencyMap["DamFile"] && state.damFile?.id && (
-                                    <MenuItem
-                                        onClick={async () => {
-                                            // id is checked three lines above
-                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                            const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
-                                            const url = contentScope.match.url + path;
-                                            window.open(url, "_blank");
-                                        }}
-                                    >
-                                        <ListItemIcon>
-                                            <OpenNewTab />
-                                        </ListItemIcon>
-                                        <FormattedMessage id="comet.blocks.image.openInDam" defaultMessage="Open in DAM" />
-                                    </MenuItem>
-                                )}
-                            </Menu>
-                        )}
-                    </AdminComponentPaper>
-                ) : (
-                    <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
-                        onSubmit={(newValues) => {
-                            updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined }));
-                        }}
-                        initialValues={{ damFile: state.damFile }}
-                    >
-                        <Field
-                            name="damFile"
-                            component={FileField}
-                            fullWidth
-                            buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
-                            allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
-                        />
-                    </BlocksFinalForm>
-                )}
+                <BlocksFinalForm<{ damFile?: SvgImageBlockState["damFile"] }>
+                    onSubmit={(newValues) => {
+                        updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined }));
+                    }}
+                    initialValues={{ damFile: state.damFile }}
+                >
+                    <Field
+                        name="damFile"
+                        component={FileField}
+                        fullWidth
+                        buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
+                        allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
+                        preview={<img src={previewUrl} width="70" height="70" />}
+                    />
+                </BlocksFinalForm>
             </SelectPreviewComponent>
         );
     },
