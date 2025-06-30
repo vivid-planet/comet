@@ -6,16 +6,16 @@ import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps"
 import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PageOfTypography, PreviousNextContainer, Root } from "./DataGridPaginationActions.styles";
+import { PageOf, PreviousNext, Root } from "./DataGridPaginationActions.styles";
 
-export type DataGridPaginationActionsClassKey = "root" | "pageOfTypography" | "previousNextContainer";
+export type DataGridPaginationActionsClassKey = "root" | "pageOf" | "previousNext";
 
 type PaginationActions = "previous" | "next";
 
 export type DataGridPaginationActionsProps = ThemedComponentBaseProps<{
     root: "div";
-    pageOfTypography: typeof Typography;
-    previousNextContainer: "div";
+    pageOf: typeof Typography;
+    previousNext: "div";
 }> &
     TablePaginationActionsProps & {
         iconMapping?: Partial<Record<PaginationActions, ReactNode>>;
@@ -52,7 +52,7 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             {showPageOfStyled && (
-                <PageOfTypography variant="body2" {...slotProps.pageOfTypography}>
+                <PageOf variant="body2" {...slotProps.pageOf}>
                     <FormattedMessage
                         defaultMessage="Page {page} of {pageCount}"
                         id="comet.dataGridPaginationActions.pageXOfY"
@@ -61,10 +61,10 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
                             pageCount: pageCount,
                         }}
                     />
-                </PageOfTypography>
+                </PageOf>
             )}
 
-            <PreviousNextContainer {...slotProps.previousNextContainer}>
+            <PreviousNext {...slotProps.previousNext}>
                 <IconButton
                     disabled={paginationState.paginationModel.page === 0}
                     onClick={(event) => {
@@ -82,7 +82,7 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
                 >
                     {iconMapping["next"]}
                 </IconButton>
-            </PreviousNextContainer>
+            </PreviousNext>
         </Root>
     );
 };

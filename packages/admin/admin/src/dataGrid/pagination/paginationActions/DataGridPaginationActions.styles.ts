@@ -11,9 +11,9 @@ export const Root = createComponentSlot("div")<DataGridPaginationActionsClassKey
     align-items: center;
 `);
 
-export const PageOfTypography = createComponentSlot(Typography)<DataGridPaginationActionsClassKey>({
+export const PageOf = createComponentSlot(Typography)<DataGridPaginationActionsClassKey>({
     componentName: "DataGridPaginationActions",
-    slotName: "pageOfTypography",
+    slotName: "pageOf",
 })(({ theme }) => {
     return css`
         color: ${theme.palette.grey["200"]};
@@ -21,7 +21,7 @@ export const PageOfTypography = createComponentSlot(Typography)<DataGridPaginati
     `;
 });
 
-export const PreviousNextContainer = createComponentSlot("div")<DataGridPaginationActionsClassKey>({
+export const PreviousNext = createComponentSlot("div")<DataGridPaginationActionsClassKey>({
     componentName: "DataGridPaginationActions",
-    slotName: "previousNextContainer",
+    slotName: "previousNext",
 })();
