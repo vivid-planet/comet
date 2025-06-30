@@ -1,4 +1,4 @@
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type BasicStageBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";

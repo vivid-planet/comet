@@ -1,4 +1,4 @@
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type CallToActionBlockData } from "@src/blocks.generated";
 
 import { Button, type ButtonVariant } from "../components/Button";
