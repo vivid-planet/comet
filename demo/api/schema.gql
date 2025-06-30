@@ -928,6 +928,8 @@ input StringFilter {
   equal: String
   notEqual: String
   isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input UserPermissionsUserSort {
@@ -984,6 +986,8 @@ input DateTimeFilter {
   lowerThanEqual: DateTime
   greaterThanEqual: DateTime
   notEqual: DateTime
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input RedirectSort {
@@ -1146,6 +1150,8 @@ input NumberFilter {
   greaterThanEqual: Float
   notEqual: Float
   isAnyOf: [Float!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input DateFilter {
@@ -1155,6 +1161,8 @@ input DateFilter {
   lowerThanEqual: Date
   greaterThanEqual: Date
   notEqual: Date
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input ManyToOneFilter {
