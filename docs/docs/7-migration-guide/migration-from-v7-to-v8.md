@@ -1776,6 +1776,7 @@ return createGraphQLFetchLibrary(
 -           "x-relative-dam-urls": "1",
             // ...
         },
+    }),
     `${process.env.API_URL_INTERNAL}/graphql`,
 );
 ```
