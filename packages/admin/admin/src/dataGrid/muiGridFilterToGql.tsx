@@ -51,9 +51,7 @@ function convertValueByType(value: any, type?: string) {
     if (type === "number") {
         return parseFloat(value);
     } else if (type === "boolean") {
-        if (value === "true") return true;
-        if (value === "false") return false;
-        return undefined;
+        return value;
     } else {
         return value;
     }
