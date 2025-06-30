@@ -1218,6 +1218,101 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
 ```
 
+### Change type of the `values` prop of `ContentScopeProvider`
+
+The `ContentScopeProvider` now expects a different structure for the `values` prop.
+
+**Before:**
+
+```ts
+const values: ContentScopeValues = [
+    {
+        domain: { label: "Main", value: "main" },
+        language: { label: "English", value: "en" },
+    },
+    {
+        domain: { label: "Main", value: "main" },
+        language: { label: "German", value: "de" },
+    },
+    {
+        domain: { label: "Secondary", value: "secondary" },
+        language: { label: "English", value: "en" },
+    },
+];
+```
+
+**Now:**
+
+```ts
+const values: ContentScopeValues = [
+    {
+        scope: { domain: "main", language: "en" },
+        label: { domain: "Main", language: "English" },
+    },
+    {
+        scope: { domain: "main", language: "de" },
+        label: { domain: "Main", language: "German" },
+    },
+    {
+        scope: { domain: "secondary", language: "en" },
+        label: { domain: "Secondary", language: "English" },
+    },
+];
+```
+
+The following changes are necessary:
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+import {
++   type ContentScope,
+    // ...
+} from "@comet/cms-admin";
++ import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
++ declare module "@comet/cms-admin" {
++     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++     interface ContentScope extends BaseContentScope {}
++ }
+
+- export function useContentScope(): UseContentScopeApi<ContentScope> {
+-    return useContentScopeLibrary<ContentScope>();
++ export function useContentScope(): UseContentScopeApi {
++    return useContentScopeLibrary();
+  }
+
+// ...
+
+export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
+
+    // ...
+
+-    const values: ContentScopeValues<ContentScope> = userContentScopes.map((contentScope) => ({
+-        domain: { value: contentScope.domain },
+-        language: { value: contentScope.language, label: contentScope.language.toUpperCase() },
++    const values: ContentScopeValues = userContentScopes.map((contentScope) => ({
++        scope: contentScope,
++        label: { language: contentScope.language.toUpperCase() },
+  }));
+
+  if (user.allowedContentScopes.length === 0) {
+-        throw new Error("User does not have access to any scopes.");
++        return (
++            <>
++                Error: user does not have access to any scopes.
++                {user.impersonated && <StopImpersonationButton />}
++            </>
++        );
+  }
+
+  return (
+-        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={userContentScopes[0]}>
++        <ContentScopeProviderLibrary values={values} defaultValue={userContentScopes[0]}>
+             {children}
+         </ContentScopeProviderLibrary>
+  );
+}
+```
+
 ### ✅ Merge providers into `CometConfigProvider`
 
 The separate providers for CMS features (e.g, `DamConfigProvider`) have been merged into a `CometConfigProvider`.
@@ -1681,7 +1776,6 @@ return createGraphQLFetchLibrary(
 -           "x-relative-dam-urls": "1",
             // ...
         },
-    }),
     `${process.env.API_URL_INTERNAL}/graphql`,
 );
 ```
