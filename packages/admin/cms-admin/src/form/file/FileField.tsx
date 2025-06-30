@@ -1,22 +1,14 @@
 import { useApolloClient } from "@apollo/client";
-<<<<<<< HEAD
-import { Assets } from "@comet/admin-icons";
-import { useState } from "react";
+import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
+import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { type ComponentProps, isValidElement, type ReactElement, type ReactNode, useState } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
-=======
-import { Assets, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import { AdminComponentButton, AdminComponentPaper } from "@comet/blocks-admin";
-import { Box, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
-import { ComponentProps, isValidElement, ReactElement, ReactNode, useState } from "react";
-import { FieldRenderProps } from "react-final-form";
-import { FormattedMessage } from "react-intl";
-
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
 import { useContentScope } from "../../contentScope/Provider";
-import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
->>>>>>> main
+import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { DamPathLazy } from "./DamPathLazy";
 import { damFileFieldFileQuery } from "./FileField.gql";
@@ -44,7 +36,7 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
 
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
-    const dependencyMap = useDependenciesConfig();
+    const { entityDependencyMap } = useDependenciesConfig();
 
     const handleMenuClose = () => {
         setAnchorEl(null);
@@ -53,21 +45,21 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
     const damFile = input.value;
 
     if (damFile) {
-        const showMenu = Boolean(dependencyMap["DamFile"]);
+        const showMenu = Boolean(entityDependencyMap["DamFile"]);
         return (
             <>
-                <AdminComponentPaper disablePadding>
+                <BlockAdminComponentPaper disablePadding>
                     <Box padding={3}>
                         <Grid container alignItems="center" spacing={3}>
-                            {preview && <Grid item>{preview}</Grid>}
-                            <Grid item xs>
+                            {preview && <Grid>{preview}</Grid>}
+                            <Grid size="grow">
                                 <Typography variant="subtitle1">{damFile.name}</Typography>
                                 <Typography variant="body1" color="textSecondary">
                                     <DamPathLazy fileId={damFile.id} />
                                 </Typography>
                             </Grid>
                             {showMenu && (
-                                <Grid item>
+                                <Grid>
                                     <IconButton
                                         onMouseDown={(event) => event.stopPropagation()}
                                         onClick={(event) => {
@@ -83,15 +75,15 @@ const FileField = ({ buttonText, input, allowedMimetypes, preview, menuActions }
                         </Grid>
                     </Box>
                     <Divider />
-                    <AdminComponentButton startIcon={<Delete />} onClick={() => input.onChange(undefined)}>
+                    <BlockAdminComponentButton startIcon={<Delete />} onClick={() => input.onChange(undefined)}>
                         <FormattedMessage id="comet.form.file.empty" defaultMessage="Empty" />
-                    </AdminComponentButton>
-                </AdminComponentPaper>
+                    </BlockAdminComponentButton>
+                </BlockAdminComponentPaper>
                 {showMenu && (
                     <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleMenuClose}>
                         <MenuItem
                             onClick={async () => {
-                                const path = await dependencyMap["DamFile"].resolvePath({
+                                const path = await entityDependencyMap["DamFile"].resolvePath({
                                     apolloClient,
                                     id: damFile.id,
                                 });

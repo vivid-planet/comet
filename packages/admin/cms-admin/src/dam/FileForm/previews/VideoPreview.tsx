@@ -2,12 +2,8 @@ import { gql, useQuery } from "@apollo/client";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-<<<<<<< HEAD
 import { type DamFileDetails } from "../EditFile";
-=======
-import { DamFileDetails } from "../EditFile";
-import { GQLVideoPreviewCaptionsQuery, GQLVideoPreviewCaptionsQueryVariables, namedOperations } from "./VideoPreview.generated";
->>>>>>> main
+import { type GQLVideoPreviewCaptionsQuery, type GQLVideoPreviewCaptionsQueryVariables, namedOperations } from "./VideoPreview.generated";
 
 const VideoPreviewWrapper = styled("div")`
     width: 100%;

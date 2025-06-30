@@ -28,12 +28,8 @@ import { useDependenciesConfig } from "../../dependencies/dependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
-<<<<<<< HEAD
 import { useDamConfig } from "../config/damConfig";
-=======
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
-import { useDamConfig } from "../config/useDamConfig";
->>>>>>> main
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
 import Duplicates from "./Duplicates";
@@ -114,12 +110,8 @@ interface EditFileInnerProps {
 }
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
-<<<<<<< HEAD
     const { entityDependencyMap } = useDependenciesConfig();
-=======
-    const dependencyMap = useDependenciesConfig();
     const acceptedMimeTypes = useDamAcceptedMimeTypes();
->>>>>>> main
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();

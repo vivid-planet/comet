@@ -19,13 +19,8 @@ import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
 import { type Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
-<<<<<<< HEAD
-import { useContentScope } from "../../contentScope/Provider";
-import { type GQLPagesQuery, type GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
-=======
 import { usePageTreeScope } from "../config/usePageTreeScope";
-import { GQLPagesQuery, GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
->>>>>>> main
+import { type GQLPagesQuery, type GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
 import {
     type GQLMovePageTreeNodesByPosMutation,
     type GQLPagesCacheQuery,

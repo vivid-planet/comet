@@ -7,24 +7,20 @@ import { type MasterMenuData, type MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
-<<<<<<< HEAD
-    const checkPermission = (item: MasterMenuItem): boolean => {
-        if (!item.requiredPermission) return true;
-        const requiredPermissions = Array.isArray(item.requiredPermission) ? item.requiredPermission : [item.requiredPermission];
-        return requiredPermissions.some((permission) => isAllowed(permission));
-    };
-=======
     const checkPermission = (item: MasterMenuItem, ancestors: MasterMenuItem[]): boolean => {
+        function getRequiredPermissionsArray(permission: string | string[]): string[] {
+            return Array.isArray(permission) ? permission : [permission];
+        }
+
         let allowed = true;
->>>>>>> main
 
         if (item.requiredPermission) {
-            allowed &&= isAllowed(item.requiredPermission);
+            allowed &&= getRequiredPermissionsArray(item.requiredPermission).some((permission) => isAllowed(permission));
         }
 
         for (const ancestor of ancestors) {
             if (ancestor.requiredPermission) {
-                allowed &&= isAllowed(ancestor.requiredPermission);
+                allowed &&= getRequiredPermissionsArray(ancestor.requiredPermission).some((permission) => isAllowed(permission));
             }
         }
 

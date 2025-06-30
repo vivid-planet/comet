@@ -1,28 +1,14 @@
 import { gql } from "@apollo/client";
-<<<<<<< HEAD
-import { Field, FinalFormSelect, messages } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
-import { Box, Divider, MenuItem, Typography } from "@mui/material";
-import { deepClone } from "@mui/x-data-grid/utils/utils";
-import { FormattedMessage } from "react-intl";
-
-import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
-import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
-import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
-import { createBlockSkeleton } from "../../blocks/helpers/createBlockSkeleton";
-import { BlockCategory, type BlockDependency, type BlockInterface } from "../../blocks/types";
-import { DamPathLazy } from "../../form/file/DamPathLazy";
-=======
 import { Field, FinalFormSelect } from "@comet/admin";
-import { AdminComponentPaper, BlockCategory, BlockDependency, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
->>>>>>> main
+import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
+import { createBlockSkeleton } from "../../blocks/helpers/createBlockSkeleton";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "../../blocks/types";
 import { FileField } from "../../form/file/FileField";
 import { type GQLDamFileDownloadLinkFileQuery, type GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
@@ -129,26 +115,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     openFileType: state.openFileType ?? "Download",
                 }}
             >
-<<<<<<< HEAD
-                {state.file === undefined ? (
-                    <Field name="file" component={FileField} fullWidth />
-                ) : (
-                    <BlockAdminComponentPaper disablePadding>
-                        <Box padding={3}>
-                            <Typography variant="subtitle1">{state.file.name}</Typography>
-                            <Typography variant="body1" color="textSecondary">
-                                <DamPathLazy fileId={state.file.id} />
-                            </Typography>
-                        </Box>
-                        <Divider />
-                        <BlockAdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
-                            <FormattedMessage {...messages.empty} />
-                        </BlockAdminComponentButton>
-                    </BlockAdminComponentPaper>
-                )}
-=======
                 <Field name="file" component={FileField} fullWidth />
->>>>>>> main
                 <Divider />
                 <BlockAdminComponentPaper>
                     <Field

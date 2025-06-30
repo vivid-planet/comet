@@ -21,20 +21,13 @@ import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, S
 import { type ComponentType, type ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type ContentScope, createEditPageNode } from "../..";
+import { type ContentScope, createEditPageNode, useSiteConfig } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
-<<<<<<< HEAD
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
-import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
-import { type EditPageNodeProps } from "../createEditPageNode";
-=======
-import { DocumentInterface, DocumentType } from "../../documents/types";
-import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { usePageTreeScope } from "../config/usePageTreeScope";
-import { EditPageNodeProps } from "../createEditPageNode";
->>>>>>> main
+import { type EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, type PageTreeRefApi } from "../pageTree/PageTree";
@@ -63,12 +56,8 @@ export function PagesPage({
 }: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
-<<<<<<< HEAD
     const { additionalPageTreeNodeFragment } = usePageTreeConfig();
-=======
     const pageTreeScope = usePageTreeScope();
-    const { additionalPageTreeNodeFragment } = useCmsBlockContext();
->>>>>>> main
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });

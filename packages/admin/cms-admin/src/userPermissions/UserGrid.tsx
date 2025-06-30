@@ -27,9 +27,8 @@ import {
     type GQLUserGridQueryVariables,
 } from "./UserGrid.generated";
 
-<<<<<<< HEAD
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
-    toolbarAction: ReactNode;
+    toolbarAction?: ReactNode;
 }
 function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
     return (
@@ -41,23 +40,6 @@ function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGr
         </DataGridToolbar>
     );
 }
-=======
-function UserPermissionsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
-    return (
-        <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <FillSpace />
-            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
-        </DataGridToolbar>
-    );
-}
-
->>>>>>> main
 type Props = {
     toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -244,17 +226,12 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             columns={columns}
             rowCount={data?.users.totalCount ?? 0}
             loading={loading}
-<<<<<<< HEAD
             slots={{
                 toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],
-=======
-            components={{
-                Toolbar: UserPermissionsGridToolbar,
->>>>>>> main
             }}
             slotProps={{
                 toolbar: {
-                    toolbarAction: null,
+                    toolbarAction: toolbarAction,
                 } as UserPermissionsUserGridToolbarProps,
             }}
         />
