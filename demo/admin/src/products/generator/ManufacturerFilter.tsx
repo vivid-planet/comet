@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { InputBase } from "@mui/material";
+import { ChevronDown } from "@comet/admin-icons";
+import { InputBase, InputLabel } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { type GridFilterInputValueProps, type GridFilterOperator } from "@mui/x-data-grid-pro";
 import { useState } from "react";
@@ -21,7 +22,7 @@ const manufacturersQuery = gql`
 `;
 
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
-function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
+function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValueProps) {
     const intl = useIntl();
     const [search, setSearch] = useState<string | undefined>(undefined);
     const [debouncedSearch] = useDebounce(search, 500);
@@ -55,17 +56,21 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
                 applyValue({ id: item.id, operator: "equals", value: value ? value.id : undefined, field: "manufacturer" });
             }}
             renderInput={(params) => (
-                <InputBase
-                    {...params}
-                    {...params.InputProps}
-                    autoComplete="off"
-                    placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
-                    value={search ? search : null}
-                    onChange={(event) => {
-                        setSearch(event.target.value);
-                    }}
-                />
+                <>
+                    <InputLabel>{apiRef.current.getLocaleText("filterPanelInputLabel")}</InputLabel>
+                    <InputBase
+                        {...params}
+                        {...params.InputProps}
+                        autoComplete="off"
+                        placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
+                        value={search ? search : null}
+                        onChange={(event) => {
+                            setSearch(event.target.value);
+                        }}
+                    />
+                </>
             )}
+            popupIcon={<ChevronDown />}
         />
     );
 }
