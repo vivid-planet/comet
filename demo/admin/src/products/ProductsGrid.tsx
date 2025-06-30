@@ -180,6 +180,7 @@ export function ProductsGrid() {
             valueOptions: ["Cap", "Shirt", "Tie"],
         },
         {
+            type: "singleSelect",
             field: "additionalTypes",
             headerName: "Additional Types",
             width: 150,
