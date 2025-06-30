@@ -279,15 +279,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 display: "none", // Make space for `filterFormOperatorInput` to expand and take up the full width
             },
 
-            // TODO: Check styling
-            // [`&& .${autocompleteClasses.inputRoot}`]: {
-            //     paddingBottom: 0,
-            //
-            //     [`& > .${autocompleteClasses.input}`]: {
-            //         padding: `calc(${spacing(2)} - 1px)`,
-            //     },
-            // },
-
             [`&& .${autocompleteClasses.inputRoot}`]: {
                 padding: 0,
                 height: "40px",
