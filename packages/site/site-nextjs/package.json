@@ -1,11 +1,6 @@
 {
     "name": "@comet/site-nextjs",
-<<<<<<< HEAD
     "version": "8.0.0-beta.5",
-=======
-    "type": "module",
-    "version": "7.25.0",
->>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -48,18 +43,9 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-<<<<<<< HEAD
         "@types/jest": "^29.5.14",
         "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
-=======
-        "@gitbeaker/node": "^34.0.0",
-        "@types/draft-js": "^0.11.10",
-        "@types/jest": "^29.5.0",
-        "@types/lodash.isequal": "^4.5.8",
-        "@types/react": "^18.3.18",
-        "@types/react-dom": "^18.3.5",
->>>>>>> main
         "@vitejs/plugin-react": "^4.4.1",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.22.0",
