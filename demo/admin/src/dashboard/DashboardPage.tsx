@@ -38,8 +38,27 @@ export function DashboardPage() {
                             <LatestContentUpdates />
                         </Grid>
                     )}
-                    {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
-                    {isAllowed("warnings") && <LatestWarningsDashboardWidget />}
+
+                    {import.meta.env.MODE !== "development" && (
+                        <Grid
+                            size={{
+                                xs: 12,
+                                lg: 6,
+                            }}
+                        >
+                            <LatestBuildsDashboardWidget />
+                        </Grid>
+                    )}
+                    {isAllowed("warnings") && (
+                        <Grid
+                            size={{
+                                xs: 12,
+                                lg: 6,
+                            }}
+                        >
+                            <LatestWarningsDashboardWidget />
+                        </Grid>
+                    )}
                 </Grid>
             </MainContent>
         </Stack>
