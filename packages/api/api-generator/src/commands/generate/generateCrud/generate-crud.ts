@@ -437,12 +437,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasPositionProp
                 ? `constructor(
-<<<<<<< HEAD:packages/api/api-generator/src/commands/generate/generateCrud/generate-crud.ts
-                    private readonly entityManager: EntityManager,
-=======
                     protected readonly entityManager: EntityManager,
-                    @InjectRepository(${metadata.className}) protected readonly repository: EntityRepository<${metadata.className}>,
->>>>>>> main:packages/api/cms-api/src/generator/generate-crud.ts
                 ) {}`
                 : ""
         }
@@ -951,14 +946,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             protected readonly entityManager: EntityManager,${
                 hasPositionProp ? `protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
             }
-<<<<<<< HEAD:packages/api/api-generator/src/commands/generate/generateCrud/generate-crud.ts
             ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
-=======
-            @InjectRepository(${metadata.className}) protected readonly repository: EntityRepository<${metadata.className}>,
-            ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
-                .map((type) => `@InjectRepository(${type}) protected readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
-                .join("")}${needsBlocksTransformer ? `protected readonly blocksTransformer: BlocksTransformerService,` : ""}
->>>>>>> main:packages/api/cms-api/src/generator/generate-crud.ts
         ) {}
 
         ${
