@@ -66,21 +66,12 @@ MAILER_DEFAULT_FROM='"Comet Demo" <comet-demo@comet-dxp.com>'
 MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 
-#### /api/src/app.module.ts or specific module file
+#### /api/src/app.module.ts (MailerModule is Global, so no module specific import is needed)
 
 ```
 imports: [
     ...
     MailerModule.register(config.mailer),
-]
-```
-
-#### specific module file
-
-```
-imports: [
-    ...
-    MailerModule,
 ]
 ```
 
@@ -100,19 +91,7 @@ api:
 
 ### Sending a Mail
 
-Add as import to your module
-
-```typescript
-@Module({
-    imports: [
-        MailerModule,
-        ...,
-    ],
-})
-export class ProductsModule {}
-```
-
-Then inject the `MailerService` into your service or controller:
+Inject the `MailerService` into your service or controller: (MailerModule is global, so no module import is needed)
 
 ```typescript
 @Resolver(() => Product)
