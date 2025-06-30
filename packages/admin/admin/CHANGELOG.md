@@ -1,6 +1,5 @@
 # @comet/admin
 
-<<<<<<< HEAD
 ## 8.0.0-beta.5
 
 ### Major Changes
@@ -382,42 +381,41 @@
 - Updated dependencies [04e308a]
 - Updated dependencies [682a674]
     - @comet/admin-icons@8.0.0-beta.0
-=======
+
 ## 7.25.0
 
 ### Patch Changes
 
--   @comet/admin-icons@7.25.0
--   @comet/admin-theme@7.25.0
+- @comet/admin-icons@7.25.0
+- @comet/admin-theme@7.25.0
 
 ## 7.24.0
 
 ### Patch Changes
 
--   fc900f217: Support the `disabled` prop in the `FinalFormRangeInput`
--   Updated dependencies [24e046fb3]
-    -   @comet/admin-theme@7.24.0
-    -   @comet/admin-icons@7.24.0
+- fc900f217: Support the `disabled` prop in the `FinalFormRangeInput`
+- Updated dependencies [24e046fb3]
+    - @comet/admin-theme@7.24.0
+    - @comet/admin-icons@7.24.0
 
 ## 7.23.0
 
 ### Patch Changes
 
--   @comet/admin-icons@7.23.0
--   @comet/admin-theme@7.23.0
+- @comet/admin-icons@7.23.0
+- @comet/admin-theme@7.23.0
 
 ## 7.22.0
 
 ### Patch Changes
 
--   2cf573b72: Optimize responsive behavior of `CrudMoreActionsMenu`
--   086774f01: Revert "Prevent form components used within `Field`/`FieldContainer` from overflowing their parent" introduced in v7.20.0
+- 2cf573b72: Optimize responsive behavior of `CrudMoreActionsMenu`
+- 086774f01: Revert "Prevent form components used within `Field`/`FieldContainer` from overflowing their parent" introduced in v7.20.0
 
     This change caused the BlocksBlock to break when rendering it inside a `Field`.
 
-    -   @comet/admin-icons@7.22.0
-    -   @comet/admin-theme@7.22.0
->>>>>>> main
+    - @comet/admin-icons@7.22.0
+    - @comet/admin-theme@7.22.0
 
 ## 7.21.1
 

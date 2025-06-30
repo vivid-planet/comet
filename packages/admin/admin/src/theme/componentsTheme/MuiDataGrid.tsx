@@ -279,13 +279,16 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 display: "none", // Make space for `filterFormOperatorInput` to expand and take up the full width
             },
 
-            [`&& .${autocompleteClasses.inputRoot}`]: {
-<<<<<<< HEAD:packages/admin/admin/src/theme/componentsTheme/MuiDataGrid.tsx
-                paddingBottom: 0,
+            // TODO: Check styling
+            // [`&& .${autocompleteClasses.inputRoot}`]: {
+            //     paddingBottom: 0,
+            //
+            //     [`& > .${autocompleteClasses.input}`]: {
+            //         padding: `calc(${spacing(2)} - 1px)`,
+            //     },
+            // },
 
-                [`& > .${autocompleteClasses.input}`]: {
-                    padding: `calc(${spacing(2)} - 1px)`,
-=======
+            [`&& .${autocompleteClasses.inputRoot}`]: {
                 padding: 0,
                 height: "40px",
                 display: "flex",
@@ -304,7 +307,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
                 "&.Mui-focused": {
                     border: `1px solid ${palette.primary.main}`,
->>>>>>> main:packages/admin/admin-theme/src/componentsTheme/MuiDataGrid.tsx
                 },
             },
 
