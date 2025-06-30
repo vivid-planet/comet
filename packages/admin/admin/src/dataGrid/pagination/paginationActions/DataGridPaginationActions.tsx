@@ -49,6 +49,8 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
     });
     const iconMapping = { ...defaultIconMapping, ...passedIconMapping };
 
+    const isOnFirstPage = paginationState.paginationModel.page === 0;
+    const isOnLastPage = count !== -1 ? paginationState.paginationModel.page >= Math.ceil(count / rowsPerPage) - 1 : false;
     return (
         <Root sx={sx} className={className} {...slotProps.root}>
             {showPageOfStyled && (
@@ -66,7 +68,7 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
 
             <PreviousNext {...slotProps.previousNext}>
                 <IconButton
-                    disabled={paginationState.paginationModel.page === 0}
+                    disabled={isOnFirstPage}
                     onClick={(event) => {
                         onPageChange(event, page - 1);
                     }}
@@ -75,7 +77,7 @@ export const DataGridPaginationActions: FunctionComponent<PropsWithChildren<Data
                 </IconButton>
 
                 <IconButton
-                    disabled={count !== -1 ? paginationState.paginationModel.page >= Math.ceil(count / rowsPerPage) - 1 : false}
+                    disabled={isOnLastPage}
                     onClick={(event) => {
                         onPageChange(event, page + 1);
                     }}
