@@ -64,7 +64,7 @@ You can also register additional entities or features you want to use later on (
 
 Example implementation:
 
-```diff
+```
 BrevoModule.register({
     brevo: {
         resolveConfig: (scope: EmailCampaignContentScope) => {
@@ -112,6 +112,76 @@ To add the Brevo Admin package, add the following to your `package.json` depende
 ```json
 "@vivid-planet/comet-brevo-admin": "^3.0.0"
 ```
+
+### Add Brevo Pages to the `MasterMenu`
+
+The Brevo module offers predefined admin pages. Add those to the `MasterMenu`:
+
+```
+//...
+        {
+            type: "collapsible",
+            primary: <FormattedMessage id="menu.newsletter" defaultMessage="Newsletter" />,
+            icon: <Mail />,
+            items: [
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.newsletter.emailCampaigns" defaultMessage="Email campaigns" />,
+                    route: {
+                        path: "/newsletter/email-campaigns",
+                        component: CampaignsPage,
+                    },
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.newsletter.contacts" defaultMessage="Contacts" />,
+                    route: {
+                        path: "/newsletter/contacts",
+                        render: () => <BrevoContactsPage />,
+                    },
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.newsletter.testContacts" defaultMessage="Test contacts" />,
+                    route: {
+                        path: "/newsletter/test-contacts",
+                        render: () => <BrevoTestContactsPage />,
+                    },
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.newsletter.targetGroups" defaultMessage="Target groups" />,
+                    route: {
+                        path: "/newsletter/target-groups",
+                        render: () => <TargetGroupsPage />,
+                    },
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.newsletter.config" defaultMessage="Config" />,
+                    route: {
+                        path: "/newsletter/config",
+                        render: () => <BrevoConfigPage />,
+                    },
+                    requiredPermission: "brevo-newsletter-config",
+                },
+            ],
+            requiredPermission: "brevo-newsletter",
+        },
+//...
+```
+
+### Add Brevo configuration
+
+Brevo must be configured using the `BrevoConfigPage` in your admin interface.
+
+| Form Field                | Description                                                                                                                                                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sender                    | The email address and name that will appear as the sender of your email campaigns. The sender address must be verified in your Brevo account.                                                                           |
+| Double Opt-In Template ID | The ID of your double opt-in template. You can create a template and find its ID at [Brevo Templates](https://app.brevo.com/templates/listing).                                                                         |
+| Folder ID                 | The ID of the folder in Brevo where your contacts or campaigns are organized. You can find this in your Brevo account under Contacts > Folders. If you have not changed your folder structure, this is usually `1`.     |
+| Allowed Redirection URL   | Defines the pattern for valid redirection URLs used when creating or importing contacts. Only URLs matching this pattern will be accepted.                                                                              |
+| Unsubscription Page ID    | The 24-digit ID of your configured unsubscription page. Go to [Brevo Unsubscription Pages](https://app.brevo.com/campaign/pages/unsubscription), add or edit a page, and copy the ID from the page URL into the config. |
 
 ## Mail Rendering
 
