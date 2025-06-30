@@ -11,6 +11,7 @@ export interface PageTreeConfig {
         name: string;
         fragment: DocumentNode;
     };
+    scopePartsForRedirects: string[];
 }
 
 export function usePageTreeConfig(): PageTreeConfig {

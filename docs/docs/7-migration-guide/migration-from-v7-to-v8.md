@@ -1312,6 +1312,27 @@ Remove the `allCategories` prop from `PagesPage`:
 
 :::
 
+### Add `scopePartsForRedirects` to `pageTreeConfig`
+
+Add `scopePartsForRedirects` to `pageTreeConfig` to check for existing redirects per scope when changing a page's slug
+
+**Example**
+
+```tsx
+ export function App() {
+    return (
+        <CometConfigProvider
+            //...
+            pageTree={{
+                //...
++               scopePartsForRedirects: ["domain"],
+            }}
+            //...
+        >
+        )
+    }
+```
+
 ### Add proxy for `/dam` URLs
 
 The API now only returns relative URLs for DAM assets.
