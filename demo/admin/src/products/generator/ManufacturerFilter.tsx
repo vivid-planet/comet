@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { InputBase } from "@mui/material";
+import { ChevronDown } from "@comet/admin-icons";
 import Autocomplete from "@mui/material/Autocomplete";
-import { type GridFilterInputValueProps, type GridFilterOperator } from "@mui/x-data-grid-pro";
+import { type GridFilterInputValueProps, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
@@ -21,10 +21,11 @@ const manufacturersQuery = gql`
 `;
 
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
-function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
+function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValueProps) {
     const intl = useIntl();
     const [search, setSearch] = useState<string | undefined>(undefined);
     const [debouncedSearch] = useDebounce(search, 500);
+    const rootProps = useGridRootProps();
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
         variables: {
@@ -55,17 +56,18 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
                 applyValue({ id: item.id, operator: "equals", value: value ? value.id : undefined, field: "manufacturer" });
             }}
             renderInput={(params) => (
-                <InputBase
+                <rootProps.slots.baseTextField
                     {...params}
-                    {...params.InputProps}
                     autoComplete="off"
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
                     value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
                     }}
+                    label={apiRef.current.getLocaleText("filterPanelInputLabel")}
                 />
             )}
+            popupIcon={<ChevronDown />}
         />
     );
 }
