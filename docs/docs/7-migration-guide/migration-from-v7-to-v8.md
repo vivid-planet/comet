@@ -1809,6 +1809,54 @@ scalars: rootBlocks.reduce(
 )
 ```
 
+### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
+
+:::note Handled by following upgrade script
+
+```sh
+
+npx @comet/upgrade v8/add-grid-to-latest-content-updates-and-dashboard-widget-root.ts
+```
+
+:::
+
+The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its children in a `<Grid>` component. This means that layout and sizing must now be handled by the parent component.
+
+**Migration steps `DashboardWidgetRoot:**
+
+- **Before:**  
+  `DashboardWidgetRoot` automatically wrapped its content in a grid item, e.g.
+
+    ```tsx
+    <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    ```
+
+- **After:**  
+  You must now wrap `DashboardWidgetRoot` in a `<Grid item>` yourself:
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    </Grid>
+    ```
+
+**Migration steps `LatestContentUpdates`:**
+
+- **Before:**
+
+    ```tsx
+    <LatestContentUpdates />
+    ```
+
+- **After:**
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <LatestContentUpdates />
+    </Grid>
+    ```
+
+**Action required:**  
+Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
@@ -2052,51 +2100,3 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
 </details>
-
-### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
-
-:::note Handled by following upgrade script
-
-```sh
-
-npx @comet/upgrade v8/add-grid-to-latest-content-updates-and-dashboard-widget-root.ts
-```
-
-:::
-
-The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its children in a `<Grid>` component. This means that layout and sizing must now be handled by the parent component.
-
-**Migration steps `DashboardWidgetRoot:**
-
-- **Before:**  
-  `DashboardWidgetRoot` automatically wrapped its content in a grid item, e.g.
-
-    ```tsx
-    <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
-    ```
-
-- **After:**  
-  You must now wrap `DashboardWidgetRoot` in a `<Grid item>` yourself:
-    ```tsx
-    <Grid size={{ xs: 12, lg: 6 }}>
-        <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
-    </Grid>
-    ```
-
-**Migration steps `LatestContentUpdates`:**
-
-- **Before:**
-
-    ```tsx
-    <LatestContentUpdates />
-    ```
-
-- **After:**
-    ```tsx
-    <Grid size={{ xs: 12, lg: 6 }}>
-        <LatestContentUpdates />
-    </Grid>
-    ```
-
-**Action required:**  
-Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
