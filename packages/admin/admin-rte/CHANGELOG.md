@@ -224,7 +224,6 @@
 - bb041f7a7: Add content generation capabilities to `createSeoBlock`
 
     The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
-
     - HTML title
     - Meta description
     - Open Graph title
@@ -237,7 +236,6 @@
     `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
 
     The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
-
     - if the state is a string: the string itself
     - otherwise: an empty array
 
@@ -461,7 +459,6 @@
 ### Major Changes
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -540,7 +537,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -664,7 +660,6 @@
 ### Major Changes
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -743,7 +738,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`

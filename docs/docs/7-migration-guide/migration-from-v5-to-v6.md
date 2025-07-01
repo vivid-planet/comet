@@ -145,7 +145,6 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 7.  Make sure the scope check can be performed for all operations
 
     All queries and mutations must
-
     - have a `scope` argument, _or_
     - be annotated with an `@AffectedEntity()` decorator, _or_
     - skip the scope check using `@RequiredPermission("examplePermission", { skipScopeCheck: true })`

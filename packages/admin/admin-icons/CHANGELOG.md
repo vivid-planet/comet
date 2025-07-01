@@ -83,7 +83,6 @@
 ### Minor Changes
 
 - 7cea765fe: Add UI for Impersonation Feature
-
     - Add indicator to display when impersonation mode is active in `UserHeaderItem`
     - Add button to allow users to switch on impersonation in the `UserGrid`
     - Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
@@ -290,7 +289,6 @@
 
 - c3b7f992: Add new icons intended to be used in the RTE
 - c3b7f992: Change how `maxVisible` in `FeaturesButtonGroup` works:
-
     - If maxVisible = 4 and there are four features -> all four features (and no dropdown) are shown
     - If maxVisible = 4 and there are five features -> three features and the dropdown (containing two features) are shown
 

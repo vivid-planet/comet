@@ -395,7 +395,6 @@
 ### Patch Changes
 
 - 6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
-
     - Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
     - Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
     - Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
@@ -462,7 +461,6 @@
     The clear button will automatically be shown for all optional fields.
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -541,7 +539,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -670,7 +667,6 @@
     The clear button will automatically be shown for all optional fields.
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -749,7 +745,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -1155,7 +1150,6 @@
 ### Minor Changes
 
 - 3e15b819: Add field components to simplify the creation of forms with final-form.
-
     - TextField
     - TextAreaField
     - SearchField

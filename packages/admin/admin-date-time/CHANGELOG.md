@@ -405,7 +405,6 @@
 ### Patch Changes
 
 - 6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
-
     - Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
     - Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
     - Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
@@ -499,26 +498,21 @@
     The clear button will automatically be shown for all optional fields.
 
 - b87c3c292: Rename multiple props and class-keys and remove the `componentsProps` types:
-
     - `DatePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `DatePickerComponentsProps` type
 
     - `DateRangePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `DateRangePickerComponentsProps` type
         - Rename the `calendar` class-key to `dateRange`
 
     - `DateTimePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `DateTimePickerComponentsProps` type
         - Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
 
     - `TimeRangePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
         - Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
@@ -529,7 +523,6 @@
     The clear button will automatically be shown for all optional fields.
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -608,7 +601,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -764,26 +756,21 @@
     The clear button will automatically be shown for all optional fields.
 
 - b87c3c292: Rename multiple props and class-keys and remove the `componentsProps` types:
-
     - `DatePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `DatePickerComponentsProps` type
 
     - `DateRangePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `DateRangePickerComponentsProps` type
         - Rename the `calendar` class-key to `dateRange`
 
     - `DateTimePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `DateTimePickerComponentsProps` type
         - Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
 
     - `TimeRangePicker`:
-
         - Replace the `componentsProps` prop with `slotProps`
         - Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
         - Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
@@ -794,7 +781,6 @@
     The clear button will automatically be shown for all optional fields.
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -873,7 +859,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -1279,7 +1264,6 @@
 ### Minor Changes
 
 - 3e15b819: Add field components to simplify the creation of forms with final-form.
-
     - TextField
     - TextAreaField
     - SearchField
