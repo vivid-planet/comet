@@ -91,7 +91,7 @@ export default defineConfig<GQLProduct>({
             type: "text",
             renderCell: ({ value, row }) => <ProductTitle title={value} />,
             name: "title",
-            headerName: "Custom",
+            headerName: "Title",
             minWidth: 200,
             visible: "down('md')",
         },
