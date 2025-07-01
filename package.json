@@ -43,7 +43,7 @@
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.28.1",
+        "@changesets/cli": "^2.29.5",
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.6.3",

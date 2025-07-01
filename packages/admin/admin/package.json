@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "8.0.0-beta.5",
+    "version": "8.0.0-beta.6",
     "repository": {
         "directory": "packages/admin/admin",
         "type": "git",
@@ -54,8 +54,8 @@
         "@emotion/styled": "^11.14.1",
         "@mui/material": "^7.1.0",
         "@mui/system": "^7.1.0",
-        "@mui/x-data-grid": "^7.29.4",
-        "@mui/x-data-grid-pro": "^7.29.4",
+        "@mui/x-data-grid": "^7.29.7",
+        "@mui/x-data-grid-pro": "^7.29.7",
         "@mui/x-date-pickers": "^7.29.4",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^6.6.3",
@@ -68,7 +68,7 @@
         "@types/lodash.debounce": "^4.0.9",
         "@types/lodash.isequal": "^4.5.8",
         "@types/node": "^22.15.34",
-        "@types/react": "^18.3.22",
+        "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",

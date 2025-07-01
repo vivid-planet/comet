@@ -1,5 +1,15 @@
 # @comet/site-nextjs
 
+## 8.0.0-beta.6
+
+### Major Changes
+
+- e19e997: Remove the `@comet/cms-site` package in favor of `@comet/site-nextjs`
+
+### Patch Changes
+
+- @comet/site-react@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Patch Changes

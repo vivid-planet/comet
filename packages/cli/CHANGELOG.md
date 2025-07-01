@@ -1,5 +1,11 @@
 # @comet/cli
 
+## 8.0.0-beta.6
+
+### Minor Changes
+
+- 5164ad3: comet generate-block-types generates now `AllBlockNames` type, which contains a string union for all blocks
+
 ## 8.0.0-beta.5
 
 ### Major Changes
