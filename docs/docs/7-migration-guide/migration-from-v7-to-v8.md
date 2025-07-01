@@ -1276,9 +1276,7 @@ import {
 
 - export function useContentScope(): UseContentScopeApi<ContentScope> {
 -    return useContentScopeLibrary<ContentScope>();
-+ export function useContentScope(): UseContentScopeApi {
-+    return useContentScopeLibrary();
-  }
+- }
 
 // ...
 
