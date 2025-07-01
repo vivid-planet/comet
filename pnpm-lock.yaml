@@ -1879,8 +1879,8 @@ importers:
         specifier: ^1.4.4
         version: 1.4.4
       openai:
-        specifier: ^4.87.3
-        version: 4.87.3(ws@8.18.3)(zod@3.25.67)
+        specifier: ^4.104.0
+        version: 4.104.0(ws@8.18.3)(zod@3.25.67)
       probe-image-size:
         specifier: ^7.2.3
         version: 7.2.3
@@ -14322,8 +14322,8 @@ packages:
     resolution: {integrity: sha512-XgFPPM+B28FtCCgSb9I+s9szOC1vZRSwgWsRUA5ylIxRTgKozqjOCrVOqGsYABPYK5qnfqClxZTFBa8PKt2v6Q==}
     engines: {node: '>=12'}
 
-  openai@4.87.3:
-    resolution: {integrity: sha512-d2D54fzMuBYTxMW8wcNmhT1rYKcTfMJ8t+4KjH2KtvYenygITiGBgHoIrzHwnDQWW+C5oCA+ikIR2jgPCFqcKQ==}
+  openai@4.104.0:
+    resolution: {integrity: sha512-p99EFNsA/yX6UhVO93f5kJsDRLAg+CTA2RBqdHK4RtK8u5IJw32Hyb2dTGKbnnFmnuoBv5r7Z2CURI9sGZpSuA==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -33346,7 +33346,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.87.3(ws@8.18.3)(zod@3.25.67):
+  openai@4.104.0(ws@8.18.3)(zod@3.25.67):
     dependencies:
       '@types/node': 18.15.3
       '@types/node-fetch': 2.6.12
