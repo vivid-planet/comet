@@ -103,6 +103,75 @@ BrevoModule.register({
 }),
 ```
 
+### Brevo Contact Attributes
+
+Brevo contacts are managed and stored directly within the Brevo platform. However, attributes must be set in the application to allow adding contacts according to your project's needs.
+
+Add `BrevoContactAttributes` to store information for each contact, such as names, salutations, or any other data relevant to your use case.
+
+`BrevoContactFilterAttributes` can be added for creating target groups that are used to create lists for sending emails to selected users.
+
+:::caution
+Be aware that at least one attribute in BrevoContactFilterAttributes must be set for technical reasons, even if filters are not needed in the project.
+:::
+
+To add custom contact attributes, add `BrevoContactAttributes` and `BrevoContactFilterAttributes` to your project, as shown in this example:
+
+```
+import { IsUndefinable } from "@comet/cms-api";
+import { Embeddable, Enum } from "@mikro-orm/core";
+import { Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+
+import { BrevoContactBranch, BrevoContactSalutation } from "./brevo-contact.enums";
+
+@ObjectType()
+@InputType("BrevoContactAttributesInput")
+export class BrevoContactAttributes {
+    @IsNotEmpty()
+    @IsString()
+    @Field()
+    LASTNAME: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @Field()
+    FIRSTNAME: string;
+
+    @Field(() => BrevoContactSalutation, { nullable: true })
+    @IsEnum(BrevoContactSalutation)
+    @IsUndefinable()
+    SALUTATION?: BrevoContactSalutation;
+
+    @Field(() => [BrevoContactBranch], { nullable: true })
+    @IsEnum(BrevoContactBranch, { each: true })
+    @Enum({ items: () => BrevoContactBranch, array: true })
+    @IsUndefinable()
+    BRANCH?: BrevoContactBranch[];
+}
+
+@Embeddable()
+@ObjectType()
+@InputType("BrevoContactFilterAttributesInput")
+export class BrevoContactFilterAttributes {
+    // index signature to match Array<any> | undefined in BrevoContactFilterAttributesInterface
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: Array<any> | undefined;
+
+    @Field(() => [BrevoContactSalutation], { nullable: true })
+    @IsEnum(BrevoContactSalutation, { each: true })
+    @Enum({ items: () => BrevoContactSalutation, array: true })
+    @IsUndefinable()
+    SALUTATION?: BrevoContactSalutation[];
+
+    @Field(() => [BrevoContactBranch], { nullable: true })
+    @IsEnum(BrevoContactBranch, { each: true })
+    @Enum({ items: () => BrevoContactBranch, array: true })
+    @IsUndefinable()
+    BRANCH?: BrevoContactBranch[];
+}
+```
+
 ## Admin
 
 ### Installation
@@ -113,12 +182,374 @@ To add the Brevo Admin package, add the following to your `package.json` depende
 "@vivid-planet/comet-brevo-admin": "^3.0.0"
 ```
 
-### Add Brevo Pages to the `MasterMenu`
+### BrevoContactsPageAttributesConfig
 
-The Brevo module offers predefined admin pages. Add those to the `MasterMenu`:
+To use custom contact attributes in the `BrevoContactsPage`, you need to provide a configuration object. Therefor, create the config named `BrevoContactsPageAttributesConfig` like in this example:
 
 ```
-//...
+const attributesFragment = gql`
+    fragment BrevoContactAttributesFragment on BrevoContact {
+        attributes {
+            LASTNAME
+            FIRSTNAME
+            SALUTATION
+            BRANCH
+        }
+    }
+`;
+
+const salutationOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactSalutation }> = [
+    {
+        label: <FormattedMessage id="brevoContact.filters.salutation.male" defaultMessage="Male" />,
+        value: "MALE",
+    },
+    {
+        label: <FormattedMessage id="brevoContact.filters.salutation.female" defaultMessage="Female" />,
+        value: "FEMALE",
+    },
+];
+
+const branchOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactBranch }> = [
+    {
+        label: <FormattedMessage id="brevoContact.filters.branch.products" defaultMessage="Products" />,
+        value: "PRODUCTS",
+    },
+    {
+        label: <FormattedMessage id="brevoContact.filters.branch.marketing" defaultMessage="Marketing" />,
+        value: "MARKETING",
+    },
+    {
+        label: <FormattedMessage id="brevoContact.filters.branch.news" defaultMessage="News" />,
+        value: "NEWS",
+    },
+];
+
+interface AdditionalFormConfigInputProps extends EditBrevoContactFormValues {
+    attributes: {
+        BRANCH?: Array<GQLBrevoContactBranch>;
+        SALUTATION?: GQLBrevoContactSalutation;
+        FIRSTNAME?: string;
+        LASTNAME?: string;
+    };
+}
+
+export const additionalFormConfig = {
+    nodeFragment: attributesFragment,
+};
+
+export interface BrevoContactConfig {
+    additionalGridFields: GridColDef<GQLBrevoContactAttributesFragmentFragment>[];
+    additionalFormFields: React.ReactNode;
+    additionalAttributesFragment: {
+        fragment: DocumentNode;
+        name: string;
+    };
+    input2State: (values?: AdditionalFormConfigInputProps) => {
+        attributes: { BRANCH?: Array<GQLBrevoContactBranch>; SALUTATION?: GQLBrevoContactSalutation; FIRSTNAME?: string; LASTNAME?: string };
+    };
+    exportFields: {
+        renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => string;
+        headerName: string;
+    }[];
+}
+
+export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
+    return {
+        additionalGridFields: [
+            {
+                field: "attributes.firstName",
+                headerName: intl.formatMessage({ id: "brevoContact.firstName", defaultMessage: "First name" }),
+                filterable: false,
+                sortable: false,
+                width: 150,
+                renderCell: ({ row }) => row.attributes?.FIRSTNAME,
+            },
+            {
+                field: "attributes.lastName",
+                headerName: intl.formatMessage({ id: "brevoContact.lastName", defaultMessage: "Last name" }),
+                filterable: false,
+                sortable: false,
+                width: 150,
+                renderCell: ({ row }) => row.attributes?.LASTNAME,
+            },
+        ],
+        additionalFormFields: (
+            <>
+                <Field
+                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="Salutation" />}
+                    name="attributes.SALUTATION"
+                    fullWidth
+                >
+                    {(props) => (
+                        <FinalFormSelect {...props} fullWidth>
+                            {salutationOptions.map((option) => (
+                                <MenuItem value={option.value} key={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </FinalFormSelect>
+                    )}
+                </Field>
+                <Field label={<FormattedMessage id="brevoContact.fields.branch" defaultMessage="Branch" />} name="attributes.BRANCH" fullWidth>
+                    {(props) => (
+                        <FinalFormSelect {...props} fullWidth multiple>
+                            {branchOptions.map((option) => (
+                                <MenuItem value={option.value} key={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </FinalFormSelect>
+                    )}
+                </Field>
+                <TextField
+                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="First name" />}
+                    name="attributes.FIRSTNAME"
+                    fullWidth
+                />
+                <TextField
+                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="Last name" />}
+                    name="attributes.LASTNAME"
+                    fullWidth
+                />
+            </>
+        ),
+        input2State: (values?: AdditionalFormConfigInputProps) => {
+            return {
+                attributes: {
+                    BRANCH: values?.attributes?.BRANCH ?? [],
+                    SALUTATION: values?.attributes?.SALUTATION,
+                    FIRSTNAME: values?.attributes?.FIRSTNAME,
+                    LASTNAME: values?.attributes?.LASTNAME,
+                },
+            };
+        },
+        additionalAttributesFragment: {
+            fragment: attributesFragment,
+            name: "BrevoContactAttributesFragment",
+        },
+        exportFields: [
+            {
+                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => row.attributes?.FIRSTNAME,
+                headerName: intl.formatMessage({ id: "brevoContact.firstName", defaultMessage: "First name" }),
+            },
+            {
+                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => row.attributes?.LASTNAME,
+                headerName: intl.formatMessage({ id: "brevoContact.lastName", defaultMessage: "Last name" }),
+            },
+        ],
+    };
+};
+```
+
+After creating the config, make sure, to pass it to the BrevoContactsPage.
+
+:::caution
+Attributes must also be added in the Brevo account. Please visit: https://my.brevo.com/lists/add-attributes for adding or editing contact attributes.
+:::
+
+### Target Group Form Config
+
+The `TargetGroupFormConfig` is used to define the form fields and behavior for creating and editing target groups in the Brevo admin interface. Target groups enable you to segment your contacts based on specific attributes (such as salutation or branch), allowing you to send targeted email campaigns to selected users. The configuration is used, to define the fields for your `TargetGroupForm`.
+
+```
+import { gql } from "@apollo/client";
+import { Field, FinalFormSelect } from "@comet/admin";
+import { EditTargetGroupFinalFormValues } from "@comet/brevo-admin";
+import { MenuItem } from "@mui/material";
+import { GQLBrevoContactBranch, GQLBrevoContactSalutation } from "@src/graphql.generated";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
+
+const salutationOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactSalutation }> = [
+    {
+        label: <FormattedMessage id="targetGroup.filters.salutation.male" defaultMessage="Male" />,
+        value: "MALE",
+    },
+    {
+        label: <FormattedMessage id="targetGroup.filters.salutation.female" defaultMessage="Female" />,
+        value: "FEMALE",
+    },
+];
+
+const branchOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactBranch }> = [
+    {
+        label: <FormattedMessage id="brevoContact.filters.branch.products" defaultMessage="Products" />,
+        value: "PRODUCTS",
+    },
+    {
+        label: <FormattedMessage id="brevoContact.filters.branch.marketing" defaultMessage="Marketing" />,
+        value: "MARKETING",
+    },
+    {
+        label: <FormattedMessage id="brevoContact.filters.branch.news" defaultMessage="News" />,
+        value: "NEWS",
+    },
+];
+
+export const additionalPageTreeNodeFieldsFragment = {
+    fragment: gql`
+        fragment TargetGroupFilters on TargetGroup {
+            filters {
+                SALUTATION
+                BRANCH
+            }
+        }
+    `,
+    name: "TargetGroupFilters",
+};
+
+interface AdditionalFormConfigInputProps extends EditTargetGroupFinalFormValues {
+    filters: {
+        SALUTATION: Array<GQLBrevoContactSalutation>;
+        BRANCH: Array<GQLBrevoContactBranch>;
+    };
+}
+
+export const additionalFormConfig = {
+    input2State: (values?: AdditionalFormConfigInputProps) => {
+        return {
+            title: values?.title ?? "",
+            filters: {
+                SALUTATION: values?.filters?.SALUTATION ?? [],
+                BRANCH: values?.filters?.BRANCH ?? [],
+            },
+        };
+    },
+    nodeFragment: additionalPageTreeNodeFieldsFragment,
+    additionalFormFields: (
+        <>
+            <Field label={<FormattedMessage id="targetGroup.fields.salutation" defaultMessage="Salutation" />} name="filters.SALUTATION" fullWidth>
+                {(props) => (
+                    <FinalFormSelect {...props} fullWidth multiple clearable>
+                        {salutationOptions.map((option) => (
+                            <MenuItem value={option.value} key={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </FinalFormSelect>
+                )}
+            </Field>
+            <Field label={<FormattedMessage id="targetGroup.fields.branch" defaultMessage="Branch" />} name="filters.BRANCH" fullWidth>
+                {(props) => (
+                    <FinalFormSelect {...props} fullWidth clearable multiple>
+                        {branchOptions.map((option) => (
+                            <MenuItem value={option.value} key={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </FinalFormSelect>
+                )}
+            </Field>
+        </>
+    ),
+};
+```
+
+### Add Brevo Pages to the `MasterMenu`
+
+The Brevo module offers predefined admin pages. Add those to the `MasterMenu`. Also register the BrevoContactConfig in this step. This is an example implementation:
+
+```
+import { Assets, Dashboard, Mail, PageTree, Wrench } from "@comet/admin-icons";
+import {
+    BrevoConfigPage,
+    createBrevoContactsPage,
+    createBrevoTestContactsPage,
+    createEmailCampaignsPage,
+    createTargetGroupsPage,
+} from "@comet/brevo-admin";
+import {
+    AllCategories,
+    ContentScopeIndicator,
+    createRedirectsPage,
+    DamPage,
+    DocumentInterface,
+    MasterMenu,
+    MasterMenuData,
+    MasterMenuRoutes,
+    PagesPage,
+    PublisherPage,
+} from "@comet/cms-admin";
+import { BrevoContactConfig, getBrevoContactConfig } from "@src/common/brevoModuleConfig/brevoContactsPageAttributesConfig";
+import { additionalFormConfig } from "@src/common/brevoModuleConfig/targetGroupFormConfig";
+import { DashboardPage } from "@src/dashboard/DashboardPage";
+import { Link } from "@src/documents/links/Link";
+import { Page } from "@src/documents/pages/Page";
+import { EmailCampaignContentBlock } from "@src/emailCampaigns/blocks/EmailCampaignContentBlock";
+import React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+
+export const pageTreeCategories: AllCategories = [
+    {
+        category: "MainNavigation",
+        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
+    },
+];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
+    Page,
+    Link,
+};
+const RedirectsPage = createRedirectsPage({ scopeParts: ["domain"] });
+
+const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoContactConfig }): MasterMenuData => {
+    const BrevoContactsPage = createBrevoContactsPage({
+        additionalAttributesFragment: brevoContactConfig.additionalAttributesFragment,
+        additionalGridFields: brevoContactConfig.additionalGridFields,
+        additionalFormFields: brevoContactConfig.additionalFormFields,
+        input2State: brevoContactConfig.input2State,
+    });
+
+    const TargetGroupsPage = createTargetGroupsPage({
+        additionalFormFields: additionalFormConfig.additionalFormFields,
+        exportTargetGroupOptions: {
+            additionalAttributesFragment: brevoContactConfig.additionalAttributesFragment,
+            exportFields: brevoContactConfig.exportFields,
+        },
+        nodeFragment: additionalFormConfig.nodeFragment,
+        input2State: additionalFormConfig.input2State,
+    });
+
+    const CampaignsPage = createEmailCampaignsPage({
+        EmailCampaignContentBlock,
+    });
+
+    const BrevoTestContactsPage = createBrevoTestContactsPage({
+        additionalAttributesFragment: brevoContactConfig.additionalAttributesFragment,
+        additionalGridFields: brevoContactConfig.additionalGridFields,
+        additionalFormFields: brevoContactConfig.additionalFormFields,
+        input2State: brevoContactConfig.input2State,
+    });
+
+    return [
+        {
+            type: "route",
+            primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
+            icon: <Dashboard />,
+            route: {
+                path: "/dashboard",
+                component: DashboardPage,
+            },
+        },
+        {
+            type: "route",
+            primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
+            icon: <PageTree />,
+            route: {
+                path: "/pages/pagetree/main-navigation",
+                render: () => (
+                    <PagesPage
+                        path="/pages/pagetree/main-navigation"
+                        allCategories={pageTreeCategories}
+                        documentTypes={pageTreeDocumentTypes}
+                        category="MainNavigation"
+                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
+                    />
+                ),
+            },
+            requiredPermission: "pageTree",
+        },
         {
             type: "collapsible",
             primary: <FormattedMessage id="menu.newsletter" defaultMessage="Newsletter" />,
@@ -134,7 +565,7 @@ The Brevo module offers predefined admin pages. Add those to the `MasterMenu`:
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.contacts" defaultMessage="Contacts" />,
+                    primary: <FormattedMessage id="menu.newsletter.emailCampaigns" defaultMessage="Contacts" />,
                     route: {
                         path: "/newsletter/contacts",
                         render: () => <BrevoContactsPage />,
@@ -168,10 +599,63 @@ The Brevo module offers predefined admin pages. Add those to the `MasterMenu`:
             ],
             requiredPermission: "brevo-newsletter",
         },
-//...
+        {
+            type: "route",
+            primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
+            icon: <Assets />,
+            route: {
+                path: "/assets",
+                component: DamPage,
+            },
+            requiredPermission: "dam",
+        },
+        {
+            type: "collapsible",
+            primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
+            icon: <Wrench />,
+            items: [
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
+                    route: {
+                        path: "/system/publisher",
+                        component: PublisherPage,
+                    },
+                    requiredPermission: "builds",
+                },
+                {
+                    type: "route",
+                    primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
+                    route: {
+                        path: "/system/redirects",
+                        render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
+                    },
+                    requiredPermission: "pageTree",
+                },
+            ],
+            requiredPermission: "pageTree",
+        },
+    ];
+};
+
+export const AppMasterMenu = () => {
+    const intl = useIntl();
+
+    const masterMenuDataForScope = React.useMemo(() => getMasterMenuData({ brevoContactConfig: getBrevoContactConfig(intl) }), [intl]);
+
+    return <MasterMenu menu={masterMenuDataForScope} />;
+};
+
+export const MasterRoutes = () => {
+    const intl = useIntl();
+
+    const masterMenuDataForScope = React.useMemo(() => getMasterMenuData({ brevoContactConfig: getBrevoContactConfig(intl) }), [intl]);
+
+    return <MasterMenuRoutes menu={masterMenuDataForScope} />;
+};
 ```
 
-### Add Brevo configuration
+### Brevo configuration
 
 Brevo must be configured using the `BrevoConfigPage` in your admin interface.
 
@@ -188,8 +672,8 @@ Brevo must be configured using the `BrevoConfigPage` in your admin interface.
 The optional **Brevo Mail Rendering** package provides frontend components for rendering newsletters in your application.
 
 :::caution
-The mail rendering package is currently a work in progress.  
-At the moment, it only includes the `NewsletterImageBlock`, which is optimized for displaying images in newsletter campaigns.  
+The mail rendering package is currently a work in progress.
+At the moment, it only includes the `NewsletterImageBlock`, which is optimized for displaying images in newsletter campaigns.
 Additional blocks and features will be added in future releases.
 :::
 
