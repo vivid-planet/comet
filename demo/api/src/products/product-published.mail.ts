@@ -1,31 +1,107 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
+import { getMessages } from "@src/common/lang";
+import { createIntl, createIntlCache, IntlCache } from "react-intl";
 
 type MailProps = {
-    recipient: { name: string; email: string };
+    recipient: { name: string; email: string; language: "en" | "de" };
     countProductPublished: "all" | number;
 };
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
+    private readonly intlCache: IntlCache;
+    constructor() {
+        this.intlCache = createIntlCache();
+    }
+
     async generateMail(props: MailProps) {
+        const messages = getMessages(props.recipient.language);
+
+        const intl = createIntl(
+            {
+                // Locale of the application
+                locale: props.recipient.language,
+                // Locale of the fallback defaultMessage
+                defaultLocale: "en",
+                messages: messages,
+            },
+            this.intlCache,
+        );
+
         return {
             mailTypeForLogging: "ProductPublishedMail",
-            subject: "All products published",
+            subject: intl.formatMessage({ id: "product-published-mail.subject", defaultMessage: "All products published" }),
             to: props.recipient.email,
             text:
-                `Hello ${props.recipient.name},` +
-                "\r\n" +
-                `${
-                    props.countProductPublished === "all"
-                        ? "All products have been published"
-                        : `${props.countProductPublished} products have been published`
-                }`,
-            html: `<p>Hello ${props.recipient.name},</p>
-                ${
-                    props.countProductPublished === "all"
-                        ? "<p>All products have been published</p>"
-                        : `<p>${props.countProductPublished} products have been published</p>`
-                }`,
+                props.countProductPublished === "all"
+                    ? intl.formatMessage(
+                          {
+                              id: "product-published-mail.all-published",
+                              defaultMessage: "{salutation},{br}{br}all products have been published",
+                          },
+                          {
+                              salutation: intl.formatMessage(
+                                  {
+                                      id: "salutation",
+                                      defaultMessage: "Hello, {name}",
+                                  },
+                                  { name: props.recipient.name },
+                              ),
+                              br: "\r\n",
+                          },
+                      )
+                    : intl.formatMessage(
+                          {
+                              id: "product-published-mail.some-published",
+                              defaultMessage:
+                                  "{salutation},{br}{br}{countProductPublished, plural, one {A product has} other {# products have}} been published",
+                          },
+                          {
+                              salutation: intl.formatMessage(
+                                  {
+                                      id: "salutation",
+                                      defaultMessage: "Hello, {name}",
+                                  },
+                                  { name: props.recipient.name },
+                              ),
+                              br: "\r\n",
+                              countProductPublished: props.countProductPublished,
+                          },
+                      ),
+            html:
+                props.countProductPublished === "all"
+                    ? intl.formatMessage(
+                          {
+                              id: "product-published-mail.all-published-html",
+                              defaultMessage: "<p>{salutation},</p><p>all products have been published</p>",
+                          },
+                          {
+                              salutation: intl.formatMessage(
+                                  {
+                                      id: "salutation",
+                                      defaultMessage: "Hello, {name}",
+                                  },
+                                  { name: props.recipient.name },
+                              ),
+                          },
+                      )
+                    : intl.formatMessage(
+                          {
+                              id: "product-published-mail.some-published-html",
+                              defaultMessage:
+                                  "<p>{salutation},</p><p>{countProductPublished, plural, one {A product has} other {# products have}} been published</p>",
+                          },
+                          {
+                              salutation: intl.formatMessage(
+                                  {
+                                      id: "salutation",
+                                      defaultMessage: "Hello, {name}",
+                                  },
+                                  { name: props.recipient.name },
+                              ),
+                              countProductPublished: props.countProductPublished,
+                          },
+                      ),
         };
     }
 
@@ -33,13 +109,13 @@ export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
         return [
             {
                 props: {
-                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com" },
+                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "en" as const },
                     countProductPublished: "all" as const,
                 },
             },
             {
                 props: {
-                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com" },
+                    recipient: { name: "John Doe", email: "product-manager@comet-dxp.com", language: "en" as const },
                     countProductPublished: 5,
                 },
             },
