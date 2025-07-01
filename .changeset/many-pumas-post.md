@@ -36,3 +36,12 @@ class Product {
     availableSince?: string = undefined;
 }
 ```
+
+3. Add the `LocalDate` scalar to `codegen.ts`:
+
+```diff
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
+```
