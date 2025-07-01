@@ -64,6 +64,12 @@ export function filterToMikroOrmQuery(
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
         }
+        if (filterProperty.isEmpty) {
+            ret.$eq = null;
+        }
+        if (filterProperty.isNotEmpty) {
+            ret.$ne = null;
+        }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -86,6 +92,12 @@ export function filterToMikroOrmQuery(
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
         }
+        if (filterProperty.isEmpty) {
+            ret.$eq = null;
+        }
+        if (filterProperty.isNotEmpty) {
+            ret.$ne = null;
+        }
     } else if (filterProperty instanceof DateTimeFilter || filterProperty instanceof DateFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -104,6 +116,12 @@ export function filterToMikroOrmQuery(
         }
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isEmpty) {
+            ret.$eq = null;
+        }
+        if (filterProperty.isNotEmpty) {
+            ret.$ne = null;
         }
     } else if (filterProperty instanceof BooleanFilter) {
         if (filterProperty.equal !== undefined) {
