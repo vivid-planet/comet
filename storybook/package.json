@@ -75,8 +75,8 @@
         "prettier": "^3.5.3",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",
-        "react-router": "^5.3.4",
-        "react-router-dom": "^5.3.4",
+        "react-router": "^7.6.3",
+        "react-router-dom": "^7.6.3",
         "remark-gfm": "^4.0.1",
         "storybook": "^9.0.8",
         "typescript": "^5.7.3"
