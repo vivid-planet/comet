@@ -553,7 +553,7 @@ export function generateGrid(
             visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
             disableExport: column.disableExport,
-            sortBy: "sortBy" in column && column.sortBy,
+            sortBy: "sortBy" in column ? column.sortBy : undefined,
         };
     });
 
@@ -782,7 +782,7 @@ export function generateGrid(
                             : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
-                        sortable: !sortFields.includes(column.name) || allowRowReordering ? `false` : undefined,
+                        sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueFormatter: column.valueFormatter,
                         valueOptions: column.valueOptions,
@@ -892,7 +892,7 @@ export function generateGrid(
                         ? [
                               `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
                               `limit: dataGridProps.paginationModel.pageSize`,
-                              `sort: muiGridSortToGql(dataGridProps.sortModel)`,
+                              `sort: muiGridSortToGql(dataGridProps.sortModel, columns)`,
                           ]
                         : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
                           [`offset: 0`, `limit: 100`, `sort: { field: "position", direction: "ASC" }`]),
