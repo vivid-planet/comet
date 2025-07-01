@@ -28,10 +28,19 @@ export default {
                             message: "Import private siblings always with relative imports",
                         });
                     } else {
-                        const pattern = `\\.((${[...optionSiblingExtensions, "ts"].join("|")}).*)$`;
-                        const regex = new RegExp(pattern);
+                        let baseName = path.basename(filePath);
+                        if (baseName.endsWith(".ts")) {
+                            baseName = baseName.slice(0, -3);
+                        }
+                        for (const ext of optionSiblingExtensions) {
+                            const suffix = `.${ext}`;
+                            if (baseName.endsWith(suffix)) {
+                                baseName = baseName.slice(0, -suffix.length);
+                                break;
+                            }
+                        }
 
-                        if (isPrivateFileMatch[1] != `./${path.basename(filePath).replace(regex, "")}`) {
+                        if (isPrivateFileMatch[1] != `./${baseName}`) {
                             context.report({
                                 node,
                                 message: "Avoid private sibling import from other files",
