@@ -30,7 +30,7 @@
         ]
     },
     "dependencies": {
-        "@algolia/client-search": "^4.24.0",
+        "@algolia/client-search": "^4.25.2",
         "@apollo/client": "^3.13.8",
         "@comet/admin": "workspace:*",
         "@comet/admin-color-picker": "workspace:*",
