@@ -28,7 +28,7 @@ import {
 } from "./UserGrid.generated";
 
 interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
-    toolbarAction: ReactNode;
+    toolbarAction?: ReactNode;
 }
 function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
     return (
@@ -231,7 +231,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             }}
             slotProps={{
                 toolbar: {
-                    toolbarAction: null,
+                    toolbarAction: toolbarAction,
                 } as UserPermissionsUserGridToolbarProps,
             }}
         />

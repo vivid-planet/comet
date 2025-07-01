@@ -102,6 +102,37 @@
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
 
+## 7.25.0
+
+### Patch Changes
+
+- @comet/admin@7.25.0
+- @comet/admin-icons@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- Updated dependencies [fc900f217]
+    - @comet/admin@7.24.0
+    - @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+- @comet/admin@7.23.0
+- @comet/admin-icons@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- Updated dependencies [2cf573b72]
+- Updated dependencies [086774f01]
+    - @comet/admin@7.22.0
+    - @comet/admin-icons@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes

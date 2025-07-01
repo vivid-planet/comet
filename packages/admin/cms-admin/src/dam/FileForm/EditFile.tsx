@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    FieldSet,
     FillSpace,
     FinalForm,
     FinalFormSaveButton,
@@ -28,7 +29,9 @@ import { DependencyList } from "../../dependencies/DependencyList";
 import { type GQLFocalPoint, type GQLImageCropAreaInput, type GQLLicenseInput } from "../../graphql.generated";
 import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig } from "../config/damConfig";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
+import { MediaAlternativesGrid } from "../mediaAlternatives/MediaAlternativesGrid";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { type GQLDamFileDetailFragment, type GQLDamFileDetailQuery, type GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
@@ -108,6 +111,7 @@ interface EditFileInnerProps {
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
     const { entityDependencyMap } = useDependenciesConfig();
+    const acceptedMimeTypes = useDamAcceptedMimeTypes();
     const intl = useIntl();
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
@@ -141,8 +145,8 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                     id,
                     input: {
                         name: values.name,
-                        title: values.title,
-                        altText: values.altText,
+                        altText: values.altText ?? null,
+                        title: values.title ?? null,
                         image: {
                             cropArea,
                         },
@@ -234,6 +238,38 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                         />
                                     </RouterTab>
                                 )}
+                                {showMediaAlternativesTab(file, acceptedMimeTypes) && (
+                                    <RouterTab
+                                        key="media-alternatives"
+                                        label={intl.formatMessage({
+                                            id: "comet.dam.file.mediaAlternatives.tabTitle",
+                                            defaultMessage: "Media alternatives",
+                                        })}
+                                        path="/media-alternatives"
+                                    >
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />}
+                                                disablePadding
+                                            >
+                                                <MediaAlternativesGrid file={file} type="captions" direction="for" />
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={
+                                                    <FormattedMessage
+                                                        id="comet.dam.file.videosUsingCaptions"
+                                                        defaultMessage="Videos using these captions"
+                                                    />
+                                                }
+                                                disablePadding
+                                            >
+                                                <MediaAlternativesGrid file={file} type="captions" direction="alternative" />
+                                            </FieldSet>
+                                        )}
+                                    </RouterTab>
+                                )}
                                 <RouterTab
                                     key="duplicates"
                                     label={intl.formatMessage({ id: "comet.dam.file.duplicates.tabTitle", defaultMessage: "Duplicates" })}
@@ -282,5 +318,12 @@ const StickyScrollWrapper = ({ children }: { children: ReactNode }) => {
         </div>
     );
 };
+
+function showMediaAlternativesTab(file: DamFileDetails, acceptedMimeTypes: ReturnType<typeof useDamAcceptedMimeTypes>) {
+    return (
+        acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) ||
+        acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype)
+    );
+}
 
 export default EditFile;

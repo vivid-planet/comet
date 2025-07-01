@@ -16,6 +16,7 @@ import { RequiredPermission } from "../../user-permissions/decorators/required-p
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
+import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
@@ -266,6 +267,16 @@ export function createFilesResolver({
         @ResolveField(() => String)
         async damPath(@Parent() file: FileInterface): Promise<string> {
             return this.filesService.getDamPath(file);
+        }
+
+        @ResolveField(() => [DamMediaAlternative])
+        async alternativesForThisFile(@Parent() file: FileInterface): Promise<DamMediaAlternative[]> {
+            return file.alternativesForThisFile.loadItems();
+        }
+
+        @ResolveField(() => [DamMediaAlternative])
+        async thisFileIsAlternativeFor(@Parent() file: FileInterface): Promise<DamMediaAlternative[]> {
+            return file.thisFileIsAlternativeFor.loadItems();
         }
     }
 

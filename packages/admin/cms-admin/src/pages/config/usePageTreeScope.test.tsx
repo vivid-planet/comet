@@ -1,0 +1,94 @@
+import { MockedProvider } from "@apollo/client/testing";
+import { RouterMemoryRouter } from "@comet/admin";
+import { renderHook } from "@testing-library/react";
+import { type ReactNode } from "react";
+
+import { type CometConfig, CometConfigProvider } from "../../config/CometConfigContext";
+import { ContentScopeProvider } from "../../contentScope/Provider";
+import { type PageTreeConfig } from "../pageTreeConfig";
+import { usePageTreeScope } from "./usePageTreeScope";
+
+describe("usePageTreeScope", () => {
+    function Providers({ children }: { children: ReactNode }) {
+        return (
+            <MockedProvider>
+                <RouterMemoryRouter>
+                    <ContentScopeProvider values={[{ scope: { domain: "main", language: "en" } }]} defaultValue={{ domain: "main", language: "en" }}>
+                        {() => <>{children}</>}
+                    </ContentScopeProvider>
+                </RouterMemoryRouter>
+            </MockedProvider>
+        );
+    }
+
+    const baseCometConfig = {} as CometConfig;
+    const basePageTreeConfig = {} as PageTreeConfig;
+
+    it("should work with CmsBlockContextProvider", () => {
+        const { result } = renderHook(() => usePageTreeScope(), {
+            wrapper: ({ children }) => (
+                <Providers>
+                    <CometConfigProvider {...baseCometConfig}>{children}</CometConfigProvider>
+                </Providers>
+            ),
+        });
+
+        expect(result.current).toEqual({ domain: "main", language: "en" });
+    });
+
+    it("should work for a single dimension", () => {
+        const { result } = renderHook(() => usePageTreeScope(), {
+            wrapper: ({ children }) => (
+                <Providers>
+                    <CometConfigProvider {...baseCometConfig} pageTree={{ ...basePageTreeConfig, scopeParts: ["domain"] }}>
+                        {children}
+                    </CometConfigProvider>
+                </Providers>
+            ),
+        });
+
+        expect(result.current).toEqual({ domain: "main" });
+    });
+
+    it("should work for multiple dimensions", () => {
+        const { result } = renderHook(() => usePageTreeScope(), {
+            wrapper: ({ children }) => (
+                <Providers>
+                    <CometConfigProvider {...baseCometConfig} pageTree={{ ...basePageTreeConfig, scopeParts: ["domain", "language"] }}>
+                        {children}
+                    </CometConfigProvider>
+                </Providers>
+            ),
+        });
+
+        expect(result.current).toEqual({ domain: "main", language: "en" });
+    });
+
+    it("should work for no dimensions", () => {
+        const { result } = renderHook(() => usePageTreeScope(), {
+            wrapper: ({ children }) => (
+                <Providers>
+                    <CometConfigProvider {...baseCometConfig} pageTree={{ ...basePageTreeConfig, scopeParts: [] }}>
+                        {children}
+                    </CometConfigProvider>
+                </Providers>
+            ),
+        });
+
+        expect(result.current).toEqual({});
+    });
+
+    it("should ignore unknown dimensions", () => {
+        const { result } = renderHook(() => usePageTreeScope(), {
+            wrapper: ({ children }) => (
+                <Providers>
+                    <CometConfigProvider {...baseCometConfig} pageTree={{ ...basePageTreeConfig, scopeParts: ["domain", "unknown"] }}>
+                        {children}
+                    </CometConfigProvider>
+                </Providers>
+            ),
+        });
+
+        expect(result.current).toEqual({ domain: "main" });
+    });
+});
