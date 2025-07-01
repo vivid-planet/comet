@@ -5,6 +5,7 @@ import { type ReactNode } from "react";
 
 import { type CometConfig, CometConfigProvider } from "../../config/CometConfigContext";
 import { ContentScopeProvider } from "../../contentScope/Provider";
+import { CurrentUserContext, type CurrentUserInterface } from "../../userPermissions/hooks/currentUser";
 import { type PageTreeConfig } from "../pageTreeConfig";
 import { usePageTreeScope } from "./usePageTreeScope";
 
@@ -12,11 +13,16 @@ describe("usePageTreeScope", () => {
     function Providers({ children }: { children: ReactNode }) {
         return (
             <MockedProvider>
-                <RouterMemoryRouter>
-                    <ContentScopeProvider values={[{ scope: { domain: "main", language: "en" } }]} defaultValue={{ domain: "main", language: "en" }}>
-                        {() => <>{children}</>}
-                    </ContentScopeProvider>
-                </RouterMemoryRouter>
+                <CurrentUserContext.Provider value={{ currentUser: {} as CurrentUserInterface, isAllowed: () => true }}>
+                    <RouterMemoryRouter>
+                        <ContentScopeProvider
+                            values={[{ scope: { domain: "main", language: "en" } }]}
+                            defaultValue={{ domain: "main", language: "en" }}
+                        >
+                            {() => <>{children}</>}
+                        </ContentScopeProvider>
+                    </RouterMemoryRouter>
+                </CurrentUserContext.Provider>
             </MockedProvider>
         );
     }
