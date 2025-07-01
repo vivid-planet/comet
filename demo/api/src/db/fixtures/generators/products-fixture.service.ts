@@ -6,6 +6,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { Product, ProductStatus } from "@src/products/entities/product.entity";
 import { ProductType } from "@src/products/entities/product-type.enum";
+import { format } from "date-fns";
 
 @Injectable()
 export class ProductsFixtureService {
@@ -71,7 +72,7 @@ export class ProductsFixtureService {
                 price: faker.number.float({ min: 0, max: 1000, fractionDigits: 2 }),
                 inStock: faker.datatype.boolean(),
                 soldCount: faker.number.int({ min: 0, max: 100 }),
-                availableSince: faker.date.past(),
+                availableSince: format(faker.date.past(), "yyyy-MM-dd"),
                 image: DamImageBlock.blockInputFactory({
                     attachedBlocks: [{ type: "pixelImage", props: {} }],
                     activeType: "pixelImage",

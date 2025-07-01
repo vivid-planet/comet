@@ -163,9 +163,9 @@ export async function generateCrudInput(
             const defaultValue =
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
-            decorators.push("@IsDate()");
-            decorators.push(`@Field(() => GraphQLDate, ${fieldOptions})`);
-            type = "Date";
+            decorators.push("@IsDateString()");
+            decorators.push(`@Field(() => GraphQLLocalDate, ${fieldOptions})`);
+            type = "string";
         } else if (prop.type === "Date") {
             // DateTime
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
@@ -434,9 +434,8 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
-import { GraphQLJSONObject } from "graphql-scalars";
-import { GraphQLDate } from "graphql-scalars";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsDateString, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
+import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 
 @InputType()

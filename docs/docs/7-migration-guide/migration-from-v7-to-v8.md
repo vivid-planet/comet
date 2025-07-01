@@ -886,6 +886,42 @@ blob: {
 
 </details>
 
+### Use strings for date-only columns
+
+Starting with v6 MikroORM maps date-only columns to `string` instead of `Date`.
+Perform the following changes:
+
+1. Use `string` instead of `Date` for date-only columns:
+
+    ```diff
+    class Product {
+        @Property({ type: types.date, nullable: true })
+        @Field(() => GraphQLDate, { nullable: true })
+    -   availableSince?: Date = undefined;
+    +   availableSince?: string = undefined;
+    }
+    ```
+
+2. Use `GraphQLLocalDate` instead of `GraphQLDate`:
+
+    ```diff
+    - import { GraphQLDate } from "graphql-scalars";
+    + import { GraphQLLocalDate } from "graphql-scalars";
+
+    class Product {
+        @Property({ type: types.date, nullable: true })
+    -   @Field(() => GraphQLDate, { nullable: true })
+    +   @Field(() => GraphQLLocalDate, { nullable: true })
+        availableSince?: string = undefined;
+    }
+    ```
+
+    :::info Why this change?
+
+    The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type, whereas the `GraphQLLocalDate` performs no type coercion.
+
+    :::
+
 ## Admin
 
 ### Upgrade peer dependencies
@@ -1764,6 +1800,15 @@ The `FinalFormToggleButtonGroup` component is still available, but moved from `@
 - />
 ```
 
+### Add the `LocalDate` scalar to the GraphQL Codegen config
+
+```diff title="admin/codegen.ts"
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
+```
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
@@ -1822,6 +1867,15 @@ return createGraphQLFetchLibrary(
     }),
     `${process.env.API_URL_INTERNAL}/graphql`,
 );
+```
+
+### Add the `LocalDate` scalar to the GraphQL Codegen config
+
+```diff title="site/codegen.ts"
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
 ```
 
 ## ESLint

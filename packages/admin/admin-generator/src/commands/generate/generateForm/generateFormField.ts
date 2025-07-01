@@ -308,14 +308,6 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        formValuesConfig = [
-            {
-                ...defaultFormValuesConfig,
-                ...{
-                    initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
-                },
-            },
-        ];
     } else if (config.type == "dateTime") {
         code = `<DateTimeField
                 ${required ? "required" : ""}
