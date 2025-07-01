@@ -60,7 +60,7 @@ const nextConfig = {
         styledComponents: true,
     },
     experimental: {
-        optimizePackageImports: ["@comet/cms-site"],
+        optimizePackageImports: ["@comet/site-nextjs"],
     },
 };
 

@@ -432,6 +432,91 @@
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
 
+## 7.25.0
+
+### Minor Changes
+
+- b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+- c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+- a1a129e00: Allow uploading .vtt files to the DAM
+
+### Patch Changes
+
+- @comet/admin@7.25.0
+- @comet/admin-date-time@7.25.0
+- @comet/admin-icons@7.25.0
+- @comet/admin-rte@7.25.0
+- @comet/admin-theme@7.25.0
+- @comet/blocks-admin@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- 6d293de63: Consider required permission of ancestors in `MasterMenuRoutes`
+- Updated dependencies [751616321]
+- Updated dependencies [fa611381b]
+- Updated dependencies [fa611381b]
+- Updated dependencies [fc900f217]
+- Updated dependencies [24e046fb3]
+    - @comet/blocks-admin@7.24.0
+    - @comet/admin-date-time@7.24.0
+    - @comet/admin@7.24.0
+    - @comet/admin-theme@7.24.0
+    - @comet/admin-rte@7.24.0
+    - @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Minor Changes
+
+- afaa49d6e: Page Tree: Add support for scope parts
+
+    **Example**
+
+    ```tsx
+    <CmsBlockContextProvider
+        // Dimension "domain" is used for the page tree scope
+        pageTreeScopeParts={["domain"]}
+    >
+        {/* ... */}
+    </CmsBlockContextProvider>
+    ```
+
+### Patch Changes
+
+- @comet/admin@7.23.0
+- @comet/admin-date-time@7.23.0
+- @comet/admin-icons@7.23.0
+- @comet/admin-rte@7.23.0
+- @comet/admin-theme@7.23.0
+- @comet/blocks-admin@7.23.0
+
+## 7.22.0
+
+### Minor Changes
+
+- 2cf573b72: Adapt styling of `DamTable` to align with Comet DXP design
+
+### Patch Changes
+
+- 8b80b254e: Set `altText` and `title` fields to null in the DAM when deleting the field value
+
+    Previously, the `altText` and `title` fields value couldn't be completely removed.
+
+- 6d8159d67: Prevent the `UserPermissionsUserGrid` from losing focus while entering text in the search input
+- Updated dependencies [2cf573b72]
+- Updated dependencies [086774f01]
+    - @comet/admin@7.22.0
+    - @comet/admin-date-time@7.22.0
+    - @comet/admin-icons@7.22.0
+    - @comet/admin-rte@7.22.0
+    - @comet/admin-theme@7.22.0
+    - @comet/blocks-admin@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes
@@ -3364,7 +3449,7 @@
 
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
-    - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+    - Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
 
     In the Admin:
 

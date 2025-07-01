@@ -5,6 +5,7 @@ import { type GridColDef } from "./GridColDef";
 const muiGridOperatorValueToGqlOperator: { [key: string]: string } = {
     contains: "contains",
     equals: "equal",
+    doesNotEqual: "notEqual",
     ">": "greaterThan",
     ">=": "greaterThanEqual",
     "<": "lowerThan",
@@ -46,18 +47,6 @@ type GqlFilter = {
     or?: GqlFilter[] | null;
 };
 
-function convertValueByType(value: any, type?: string) {
-    if (type === "number") {
-        return parseFloat(value);
-    } else if (type === "boolean") {
-        if (value === "true") return true;
-        if (value === "false") return false;
-        return undefined;
-    } else {
-        return value;
-    }
-}
-
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items
@@ -65,11 +54,9 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
         .map((filterItem) => {
             if (!filterItem.operator) throw new Error("operaturValue not set");
             const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
-            const column = columns.find((i) => i.field == filterItem.field);
-            const convertedValue = convertValueByType(filterItem.value, column?.type);
             return {
                 [filterItem.field]: {
-                    [gqlOperator]: convertedValue,
+                    [gqlOperator]: filterItem.value,
                 } as GqlStringFilter | GqlNumberFilter,
             };
         });

@@ -60,6 +60,6 @@ Provides a component for selecting colors in forms, built with react-final-form.
 
 ## Site {#sitePackage}
 
-### @comet/cms-site
+### @comet/site-nextjs
 
 Used to integrate Comet DPX into a Next.js application.

@@ -60,7 +60,7 @@ export const PageContentBlock = createBlocksBlock({
 Use the `BlocksBlock` component:
 
 ```tsx title="PageContentBlock.tsx"
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/site-nextjs";
 import { PageContentBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {
@@ -175,7 +175,7 @@ export const ColumnsBlock = createColumnsBlock({
 ### Site
 
 ```tsx title="ColumnsBlock.tsx"
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/site-nextjs";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {
@@ -275,7 +275,7 @@ export const ImageLinkBlock = createImageLinkBlock({ link: LinkBlock, image: Dam
 ### Site
 
 ```tsx title="ImageLinkBlock.tsx"
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData } from "@comet/site-nextjs";
 import { ImageLinkBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { LinkBlock } from "@src/blocks/LinkBlock";
@@ -344,7 +344,7 @@ export const LinkBlock = createLinkBlock({
 
 ```tsx title="LinkBlock.tsx"
 "use client";
-import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/site-nextjs";
 import { LinkBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {
@@ -435,7 +435,7 @@ export const LinkListBlock = createListBlock({
 Use the `ListBlock` component:
 
 ```tsx title="LinkListBlock.tsx"
-import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { ListBlock, PropsWithData } from "@comet/site-nextjs";
 import { LinkListBlockData } from "@src/blocks.generated";
 
 export function LinkListBlock({ data }: PropsWithData<LinkListBlockData>) {
@@ -498,7 +498,7 @@ export const LinkBlock = createOneOfBlock({
 Use the `OneOfBlock` component:
 
 ```tsx title="LinkBlock.tsx"
-import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/site-nextjs";
 import { LinkBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {
@@ -569,7 +569,7 @@ export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 Use the `OptionalBlock` component:
 
 ```tsx title="LinkBlock.tsx"
-import { OptionalBlock, PropsWithData } from "@comet/cms-site";
+import { OptionalBlock, PropsWithData } from "@comet/site-nextjs";
 import { OptionalImageBlockData } from "@src/blocks.generated";
 
 export function OptionalImageBlock({ data }: PropsWithData<OptionalImageBlockData>) {
@@ -618,7 +618,7 @@ export const RichTextBlock = createRichTextBlock({ link: LinkBlock });
 ### Site
 
 ```tsx title="RichTextBlock.tsx"
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData } from "@comet/cms-site";
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData } from "@comet/site-nextjs";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import redraft, { Renderers } from "redraft";
 
@@ -711,7 +711,7 @@ export const SeoBlock = createSeoBlock();
 Use the `SeoBlock` component:
 
 ```tsx title="Page.tsx"
-import { SeoBlock } from "@comet/cms-site";
+import { SeoBlock } from "@comet/site-nextjs";
 
 <SeoBlock data={document.seo} title="Custom title" />;
 ```
@@ -778,7 +778,7 @@ export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].va
 ### Site
 
 ```tsx title="SpaceBlock.tsx"
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData } from "@comet/site-nextjs";
 import { SpaceBlockData } from "@src/blocks.generated";
 
 const spaceMapping: Record<string, number> = {
@@ -838,7 +838,7 @@ export const TextImageBlock = createTextImageBlock({ text: RichTextBlock, image:
 ### Site
 
 ```tsx title="TextImageBlock.tsx"
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData } from "@comet/site-nextjs";
 import { TextImageBlockData } from "@src/blocks.generated";
 
 import { DamImageBlock } from "./DamImageBlock";
@@ -901,7 +901,7 @@ export const TextLinkBlock = createTextLinkBlock({ link: LinkBlock });
 ### Site
 
 ```tsx title="TextLinkBlock.tsx"
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData } from "@comet/site-nextjs";
 import { DemoTextLinkBlockData } from "@src/blocks.generated";
 
 import { LinkBlock } from "./LinkBlock";

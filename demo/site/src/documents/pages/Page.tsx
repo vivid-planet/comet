@@ -2,10 +2,6 @@ import { generateImageUrl, gql } from "@comet/site-nextjs";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { type GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
-import { Header } from "@src/layout/header/Header";
-import { headerFragment } from "@src/layout/header/Header.fragment";
-import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
-import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { recursivelyLoadBlockData } from "@src/util/recursivelyLoadBlockData";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
@@ -17,7 +13,7 @@ import { StageBlock } from "./blocks/StageBlock";
 import { type GQLPageQuery, type GQLPageQueryVariables } from "./Page.generated";
 
 const pageQuery = gql`
-    query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
+    query Page($pageTreeNodeId: ID!) {
         pageContent: pageTreeNode(id: $pageTreeNodeId) {
             id
             name
@@ -32,16 +28,8 @@ const pageQuery = gql`
             }
             ...Breadcrumbs
         }
-        header: mainMenu(scope: { domain: $domain, language: $language }) {
-            ...Header
-        }
-        topMenu(scope: { domain: $domain, language: $language }) {
-            ...TopMenuPageTreeNode
-        }
     }
     ${breadcrumbsFragment}
-    ${headerFragment}
-    ${topMenuPageTreeNodeFragment}
 `;
 
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
@@ -53,8 +41,6 @@ async function fetchData({ pageTreeNodeId, scope }: Props) {
         pageQuery,
         {
             pageTreeNodeId,
-            domain: scope.domain,
-            language: scope.language,
         },
         { method: "GET" }, //for request memoization
     );
@@ -153,8 +139,6 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             {document.seo.structuredData && document.seo.structuredData.length > 0 && (
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: document.seo.structuredData }} />
             )}
-            <TopNavigation data={data.topMenu} />
-            <Header header={data.header} />
             <Breadcrumbs {...data.pageContent} scope={scope} />
             <main>
                 <StageBlock data={document.stage} />

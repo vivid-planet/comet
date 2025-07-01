@@ -437,7 +437,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasPositionProp
                 ? `constructor(
-                    private readonly entityManager: EntityManager,
+                    protected readonly entityManager: EntityManager,
                 ) {}`
                 : ""
         }
@@ -732,7 +732,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
-        ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
+        ${needsBlocksTransformer ? `constructor(protected readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
     }
     `;
@@ -943,8 +943,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
-            private readonly entityManager: EntityManager,${
-                hasPositionProp ? `private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
+            protected readonly entityManager: EntityManager,${
+                hasPositionProp ? `protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
             }
             ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}

@@ -29,8 +29,8 @@
         "@comet/admin-icons": "workspace:*",
         "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.14.0",
-        "@emotion/styled": "^11.14.0",
-        "@fontsource-variable/roboto-flex": "^5.2.5",
+        "@emotion/styled": "^11.14.1",
+        "@fontsource-variable/roboto-flex": "^5.2.6",
         "@mui/material": "^7.1.0",
         "@mui/system": "^7.1.0",
         "@mui/x-data-grid": "^7.29.4",
@@ -53,7 +53,7 @@
         "react-intl": "^7.1.10",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "use-debounce": "^10.0.4",
+        "use-debounce": "^10.0.5",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
@@ -73,7 +73,7 @@
         "@parcel/watcher": "^2.5.1",
         "@swc/plugin-emotion": "^8.7.2",
         "@types/lodash.isequal": "^4.5.8",
-        "@types/node": "^22.15.21",
+        "@types/node": "^22.15.34",
         "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
         "@types/react-router": "^5.1.20",

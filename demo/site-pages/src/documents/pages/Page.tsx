@@ -1,4 +1,4 @@
-import { SeoBlock } from "@comet/cms-site";
+import { SeoBlock } from "@comet/site-nextjs";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";

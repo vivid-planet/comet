@@ -2,6 +2,18 @@
 
 ## 8.0.0-beta.5
 
+## 7.25.0
+
+## 7.24.0
+
+## 7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- e4327e250: Add missing `"use client"` directive to `useBlockPreviewFetch`
+
 ## 7.21.1
 
 ## 7.21.0

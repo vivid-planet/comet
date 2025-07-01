@@ -1,4 +1,4 @@
-import { SitePreviewProvider } from "@comet/cms-site";
+import { SitePreviewProvider } from "@comet/site-nextjs";
 import { theme } from "@src/theme";
 import { type AppProps, type NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
