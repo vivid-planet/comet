@@ -211,7 +211,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         gql`
             query UserAvailablePermissionsAndContentScopes {
                 permissions: userPermissionsAvailablePermissions
-                contentScopes: userPermissionsAvailableContentScopes
+                contentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
             }
         `,
         { skip: !isAllowed("userPermissions") },
