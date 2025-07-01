@@ -394,7 +394,6 @@
     // TODO Move the following introduction to the migration guide before releasing
 
     Requires following changes to site:
-
     - Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
     - Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
     - Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
@@ -409,7 +408,6 @@
         - Use the `path`-part of the return value to redirect to the preview
 
     Requires following changes to admin
-
     - The `SitesConfig` must provide a `sitePreviewApiUrl`
 
 ### Patch Changes
@@ -441,7 +439,6 @@
 - 6cb850567: Fix Prettier peer dependency
 
     The dependency range was incorrectly set to `>= 2`. Change to `^2.0.0` since Prettier v3 isn't supported at the moment.
-
     - @comet/eslint-plugin@6.15.1
 
 ## 6.15.0

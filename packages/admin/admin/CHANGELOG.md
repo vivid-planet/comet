@@ -53,7 +53,6 @@
 ### Patch Changes
 
 - d6a004a: Fix styling of `DialogTitle`
-
     - The title text and the close button are now aligned correctly on mobile
     - Long titles are no longer overlapped by the close button
     - @comet/admin-icons@8.0.0-beta.6
@@ -63,7 +62,6 @@
 ### Major Changes
 
 - 1d28c90: Update props and styling of `StackBackButton`, `OkayButton`, `CancelButton`, and `DeleteButton` to match the Comet `Button` component and the Comet DXP design
-
     - Adds support for the `responsive` prop
     - Removes the `color` prop and updates the values of the `variant` prop
 
@@ -144,7 +142,6 @@
 ### Major Changes
 
 - 5b8fe2e: Update props and usage of `FeedbackButton` to be consistent with the new Comet `Button`
-
     - The `variant` prop now replaces its old values and the now removed `color` prop.
     - The `responsive` prop is now supported to move the button's text to a tooltip on smaller devices.
     - The previous values of `slotProps` have been removed, they can now be set through the `slotProps` of the `root` slot.
@@ -183,7 +180,6 @@
 - 5b8fe2e: Adapt `SaveButton` and `SaveBoundarySaveButton` to look like the standard `FeedbackButton` in order to match the Comet DXP design
 
     Their props have been updated to match those of `FeedbackButton`:
-
     - `saving` has been renamed to `loading`.
     - `saveIcon` has been renamed to `startIcon`.
     - `hasConflict` has been removed. Use `hasErrors` instead and optionally provide a `tooltipErrorMessage` to show a more precise error message in the tooltip.
@@ -199,7 +195,6 @@
 - 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
 
     This applies to:
-
     - `FinalFormSaveButton`
     - `FinalFormSaveCancelButtonsLegacy`
     - `FinalFormSaveSplitButton`
@@ -286,7 +281,6 @@
 - f7429bd: Rename menu components
 
     To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
-
     - `Menu` → `MainNavigation`
     - `MenuProps` → `MainNavigationProps`
     - `MenuClassKey` → `MainNavigationClassKey`
@@ -331,7 +325,6 @@
     This affects the following exports: `breakpointsOptions`, `breakpointValues`, `createCometTheme`, `createTypographyOptions`, `errorPalette`, `greyPalette`, `infoPalette`, `paletteOptions`, `primaryPalette`, `shadows`, `successPalette`, `warningPalette`.
 
     **Migrating your project**
-
     1. Remove the `@comet/admin-theme` dependency from your project
     2. Change all imports from `@comet/admin-theme` to `@comet/admin`
 
@@ -471,7 +464,6 @@
 - 086774f01: Revert "Prevent form components used within `Field`/`FieldContainer` from overflowing their parent" introduced in v7.20.0
 
     This change caused the BlocksBlock to break when rendering it inside a `Field`.
-
     - @comet/admin-icons@7.22.0
     - @comet/admin-theme@7.22.0
 
@@ -713,14 +705,12 @@
 ### Minor Changes
 
 - b8b8e2747: Make `GridFilterButton` and `GridColumnsButton` responsive by moving their text to a tooltip on mobile
-
     - This also makes the button's styles consistent with the standard `Button` component
     - `GridFilterButton` now supports props to override the default button props
 
 - e9f547d95: Adjust how tooltips are triggered
 
     This is to achieve a more consistent and user-friendly experience by ensuring tooltips are always shown when the user interacts with the underlying element.
-
     - When using the default `hover` trigger, tooltips will now be shown on both `hover` and `focus`. Previously, you had to choose between `hover` and `focus`.
     - The `trigger` prop is deprecated and will be removed in a future major version. The combined `hover`/`focus` trigger will be the only supported behavior.
     - Tooltips on touch devices will be shown immediately when the user starts interacting with the underlying element.
@@ -748,7 +738,6 @@
 - 8f924d591: Add new custom `Dialog`
 
     The component extends the MUI `Dialog` component to enable common use cases:
-
     - The `title` prop can be used to set the dialog title
     - A close button is shown when the `onClose` is used
 
@@ -768,7 +757,6 @@
     Use it to define below which container size the `vertical` styling is applied when using the `horizontal` variant.
 
 - 589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
-
     - `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
     - `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
 
@@ -826,7 +814,6 @@
     ```
 
 - 7cea765fe: Add UI for Impersonation Feature
-
     - Add indicator to display when impersonation mode is active in `UserHeaderItem`
     - Add button to allow users to switch on impersonation in the `UserGrid`
     - Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
@@ -835,7 +822,6 @@
 ### Patch Changes
 
 - 48cac4dac: Fix styling issues of inputs like `FinalFormInput`, `FinalFormNumberInput`, `FinalFormSelect`, `TextAreaField`
-
     - Change background-color, border-color and color of the label for different states (`default`, `disabled` and `focused`).
     - For required inputs, fix spacing between the label and asterisk.
     - Fix font-weight and margin of `helperText`.
@@ -996,7 +982,6 @@
     The `label` or the string value of the option will be used as the cell's content if no `cellContent` node is provided.
 
     The following example would behave as follows:
-
     - If the cell's value is "Shirt", it will render the `cellContent` node (the H2 Typography)
     - If the cell's value is "Cap", it will render the `label` (the string "This Cap")
     - If the cell's value is anything else, it will render the value as a string, e.g. "Tie"
@@ -1077,7 +1062,6 @@
 
     Note: the behavior of the `options` prop differs from `FinalFormSelect` and is only intended to work with static options.
     Use the existing `AsyncSelectField` for dynamic options.
-
     - Each option must have the `value` and `label` properties. A custom structure is not supported.
     - There are no `getOptionLabel` and `getOptionValue` props. The `label` and `value` properties are used directly.
     - The value stored in the form state is the `value` property, not the whole option object.
@@ -1167,7 +1151,6 @@
 
     Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
     Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
-
     - @comet/admin-icons@7.3.2
     - @comet/admin-theme@7.3.2
 
@@ -1184,7 +1167,6 @@
 ### Patch Changes
 
 - 6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
-
     - Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
     - Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
     - Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
@@ -1359,7 +1341,6 @@
     The default path is `./save`, you can change it using the `subRoutePath` prop.
 
 - 73140014f: Change theming method of `Menu`
-
     - Rename `permanent` class-key to `permanentDrawer` and `temporary` class-key to `temporaryDrawer`
     - Replace the `permanentDrawerProps` and `temporaryDrawerProps` props with `slotProps`
 
@@ -1377,7 +1358,6 @@
     This prop was used to display a custom required symbol next to the label of the field. We now use the native implementation of the required attribute of MUI to ensure better accessibility and compatibility with screen readers.
 
 - d0869ac82: Rework `Toolbar`
-
     - The `Toolbar` is now split into a top and a bottom bar.
 
         The top bar displays a scope indicator and breadcrumbs. The bottom bar behaves like the old `Toolbar`.
@@ -1496,7 +1476,6 @@
     Use the `popover` prop instead of `popoverRoot` to override styles.
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -1575,7 +1554,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -1857,7 +1835,6 @@
     The default path is `./save`, you can change it using the `subRoutePath` prop.
 
 - 73140014f: Change theming method of `Menu`
-
     - Rename `permanent` class-key to `permanentDrawer` and `temporary` class-key to `temporaryDrawer`
     - Replace the `permanentDrawerProps` and `temporaryDrawerProps` props with `slotProps`
 
@@ -1871,7 +1848,6 @@
     This prop was used to display a custom required symbol next to the label of the field. We now use the native implementation of the required attribute of MUI to ensure better accessibility and compatibility with screen readers.
 
 - d0869ac82: Rework `Toolbar`
-
     - The `Toolbar` is now split into a top and a bottom bar.
 
         The top bar displays a scope indicator and breadcrumbs. The bottom bar behaves like the old `Toolbar`.
@@ -1937,7 +1913,6 @@
     Use the `popover` prop instead of `popoverRoot` to override styles.
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -2016,7 +1991,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -2201,7 +2175,6 @@
 
     `FieldContainer` (and therefore `Field`) needs to set the with of the `InputBase` it wraps to 100%.
     This also caused deeply nested `InputBase` components, e.g., inside a `Dialog`, to get this `width` and break the styling of these components, as they are not intended to be styled by `FieldContainer`.
-
     - @comet/admin-icons@6.17.0
 
 ## 6.16.0
@@ -2228,7 +2201,6 @@
 - 0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
 
     The error dialog now presents screens according to the current state. Required to work in all conditions:
-
     - `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
     - `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
 
@@ -2405,7 +2377,6 @@
 - e938254bf: Add the `useDataGridExcelExport` hook for exporting data from a `DataGrid` to an excel file
 
     The hook returns an `exportApi` encompassing:
-
     - `exportGrid`: a function to generate and export the excel file
     - `loading`: a boolean indicating if the export is in progress
     - `error`: an error when the export has failed
@@ -2552,7 +2523,6 @@
     Render a `Savable` Component anywhere below a `SaveBoundary`. For `FinalForm` this hasn't to be done manually.
 
 - a4fac913: Rework `Alert` component
-
     - Use theme wherever possible
     - Move styles where they're more fitting
     - Fix some paddings
@@ -2725,7 +2695,6 @@
 
     Previously, uncaught errors in production environments would result in an "An error occurred" `ErrorDialog`, making the error difficult to debug.
     To improve the reproducibility of an error, we enrich the `ErrorDialog` with the following `additionalInformation`:
-
     - `errorType`: The type of the error, network or server error
     - `httpStatus`: The HTTP status of the request that failed
     - `url`: The URL where the error occurred
@@ -2746,7 +2715,6 @@
 
     The `onAfterSave` callback was only called when submitting a form inside an `EditDialog` by clicking the save button, but not when submitting the form by hitting the enter key.
     We fix this by adding the callback to the `EditDialogFormApi` and calling it after the form has been successfully submitted.
-
     - @comet/admin-icons@5.1.0
 
 ## 5.0.0
@@ -2799,7 +2767,6 @@
 ### Patch Changes
 
 - eac9990b: Fix the clear-button in `FinalFormSelect` when using it with the `multiple` prop.
-
     - The clear button is now only shown when at least one value is selected.
     - Clearing the value now sets it to an empty array instead of `undefined`, which would cause an error when trying to render the select.
 
@@ -2852,7 +2819,6 @@
 - 662abcc9: Prevent the `MainContent` component from having an invalid height.
 
     This bug would cause the page tree to have no height when navigating into a page and then navigating back again.
-
     - @comet/admin-icons@4.4.1
 
 ## 4.4.0
@@ -2867,7 +2833,6 @@
     `disablePadding` is helpful if a component requires the `fullHeight` behaviour but should fill the entire page without the surrounding space.
 
 - 3e15b819: Add field components to simplify the creation of forms with final-form.
-
     - TextField
     - TextAreaField
     - SearchField

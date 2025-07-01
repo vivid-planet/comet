@@ -56,7 +56,6 @@
     In v7.20.0, height was set to `100%` for `PixelImageBlock`.
     This caused issues when the image was not wrapped, as it would inherit the height of the next parent element instead of maintaining its aspect ratio.
     Thus, we are reverting this change to restore the previous behavior.
-
     - @comet/site-react@7.21.1
 
 ## 7.21.0
@@ -66,7 +65,6 @@
 - 904ff5f1d: Introduce new package `@comet/site-nextjs` as copy of `@comet/cms-site`
 
     Changes:
-
     - Remove `styled-components` as peer dependency
     - use SCSS modules instead
     - `@comet/site-nextjs` is pure ESM
