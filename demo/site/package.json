@@ -42,7 +42,7 @@
         "redraft": "^0.10.2",
         "styled-components": "^6.1.16",
         "swiper": "^11.2.10",
-        "zod": "^3.24.2"
+        "zod": "^3.25.67"
     },
     "devDependencies": {
         "@babel/core": "^7.27.7",
