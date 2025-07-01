@@ -8,7 +8,7 @@ import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductCategory } from "../entities/product-category.entity";
 import { Manufacturer } from "../entities/manufacturer.entity";
-import { FileUpload } from "../../../../../packages/api/cms-api/lib/file-uploads/entities/file-upload.entity.js";
+import { FileUpload } from "@comet/cms-api";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { ProductToTag } from "../entities/product-to-tag.entity";
@@ -38,7 +38,7 @@ export class ProductResolver {
     @Query(() => PaginatedProducts)
     async products(
     @Args()
-    { search, filter, sort, offset, limit }: ProductsArgs, 
+    { search, filter, sort, offset, limit }: ProductsArgs,
     @Info()
     info: GraphQLResolveInfo): Promise<PaginatedProducts> {
         const where = gqlArgsToMikroOrmQuery({ search, filter, }, this.entityManager.getMetadata(Product));
@@ -134,7 +134,7 @@ export class ProductResolver {
     @AffectedEntity(Product)
     async updateProduct(
     @Args("id", { type: () => ID })
-    id: string, 
+    id: string,
     @Args("input", { type: () => ProductUpdateInput })
     input: ProductUpdateInput): Promise<Product> {
         const product = await this.entityManager.findOneOrFail(Product, id);
