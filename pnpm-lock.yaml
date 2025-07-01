@@ -18,8 +18,8 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0
       '@formatjs/cli':
-        specifier: ^6.6.3
-        version: 6.6.3(@vue/compiler-core@3.5.15)
+        specifier: ^6.7.2
+        version: 6.7.2(@vue/compiler-core@3.5.15)
       '@types/node':
         specifier: ^22.15.34
         version: 22.15.34
@@ -141,8 +141,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@18.3.1)
@@ -169,8 +169,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@formatjs/cli':
-        specifier: ^6.6.3
-        version: 6.6.3(@vue/compiler-core@3.5.15)
+        specifier: ^6.7.2
+        version: 6.7.2(@vue/compiler-core@3.5.15)
       '@graphql-codegen/add':
         specifier: ^5.0.3
         version: 5.0.3(graphql@15.10.1)
@@ -455,8 +455,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/site/site-nextjs
       '@formatjs/cli':
-        specifier: ^6.6.3
-        version: 6.6.3(@vue/compiler-core@3.5.15)
+        specifier: ^6.7.2
+        version: 6.7.2(@vue/compiler-core@3.5.15)
       '@next/bundle-analyzer':
         specifier: ^14.2.30
         version: 14.2.30
@@ -503,8 +503,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       redraft:
         specifier: ^0.10.2
         version: 0.10.2
@@ -582,8 +582,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/site/site-nextjs
       '@formatjs/cli':
-        specifier: ^6.6.3
-        version: 6.6.3(@vue/compiler-core@3.5.15)
+        specifier: ^6.7.2
+        version: 6.7.2(@vue/compiler-core@3.5.15)
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
@@ -609,8 +609,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       redraft:
         specifier: ^0.10.2
         version: 0.10.2
@@ -778,8 +778,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       react-live:
         specifier: ^4.1.8
         version: 4.1.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1005,8 +1005,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@18.3.1)
@@ -1111,8 +1111,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1184,8 +1184,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1275,8 +1275,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1439,8 +1439,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1698,8 +1698,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@18.3.1)
@@ -2433,8 +2433,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@18.3.1)
       react-intl:
-        specifier: ^7.1.10
-        version: 7.1.10(react@18.3.1)(typescript@5.7.3)
+        specifier: ^7.1.11
+        version: 7.1.11(react@18.3.1)(typescript@5.7.3)
       ts-dedent:
         specifier: ^2.2.0
         version: 2.2.0
@@ -5166,15 +5166,15 @@ packages:
   '@fontsource/roboto@5.2.6':
     resolution: {integrity: sha512-hzarG7yAhMoP418smNgfY4fO7UmuUEm5JUtbxCoCcFHT0hOJB+d/qAEyoNjz7YkPU5OjM2LM8rJnW8hfm0JLaA==}
 
-  '@formatjs/cli@6.6.3':
-    resolution: {integrity: sha512-vW9EQdHmxQg/+s9K39ZwKcIyyhmEMHOtsv1KyQFtjv+pbE3XmiB5ohoo4wAx3HDsrufrTsplGnQdQ+KB2wY/bA==}
+  '@formatjs/cli@6.7.2':
+    resolution: {integrity: sha512-714/ifbtq7CmOtcLVGjYZp5EX0vKclQt3XZ+4Oiz0lhrHWU1ObFTtX9sLS9dADGta1pgDtS4+A3YpjWMY26Spg==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
-      '@glimmer/env': ^0.1.7
-      '@glimmer/reference': ^0.94.0
+      '@glimmer/env': '*'
+      '@glimmer/reference': '*'
       '@glimmer/syntax': ^0.94.9
-      '@glimmer/validator': ^0.94.0
+      '@glimmer/validator': '*'
       '@vue/compiler-core': ^3.5.12
       content-tag: ^3.0.0
       ember-template-recast: ^6.1.5
@@ -15460,8 +15460,8 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
 
-  react-intl@7.1.10:
-    resolution: {integrity: sha512-I5eB73BAqBbkd2M3wL8gTSE/xFvJRmxZcjS1HMnBT3KXya2PUSI7nDO/tlapX8khchoDoliliMsmyIURB/ww1g==}
+  react-intl@7.1.11:
+    resolution: {integrity: sha512-tnVoRCWvW5Ie2ikYSdPF7z3+880yCe/9xPmitFeRPw3RYDcCfR4m8ZYa4MBq19W4adt9Z+PQA4FaMBCJ7E+HCQ==}
     peerDependencies:
       react: 16 || 17 || 18 || 19
       typescript: ^5.6.0
@@ -21762,7 +21762,7 @@ snapshots:
 
   '@fontsource/roboto@5.2.6': {}
 
-  '@formatjs/cli@6.6.3(@vue/compiler-core@3.5.15)':
+  '@formatjs/cli@6.7.2(@vue/compiler-core@3.5.15)':
     optionalDependencies:
       '@vue/compiler-core': 3.5.15
 
@@ -34624,7 +34624,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
 
-  react-intl@7.1.10(react@18.3.1)(typescript@5.7.3):
+  react-intl@7.1.11(react@18.3.1)(typescript@5.7.3):
     dependencies:
       '@formatjs/ecma402-abstract': 2.3.4
       '@formatjs/icu-messageformat-parser': 2.11.2

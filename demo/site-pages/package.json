@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "@comet/site-nextjs": "workspace:*",
-        "@formatjs/cli": "^6.6.3",
+        "@formatjs/cli": "^6.7.2",
         "@opentelemetry/api": "^1.9.0",
         "fs-extra": "^11.3.0",
         "graphql": "^15.10.1",
@@ -35,7 +35,7 @@
         "next": "^14.2.30",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "react-intl": "^7.1.10",
+        "react-intl": "^7.1.11",
         "redraft": "^0.10.2",
         "sitemap": "^8.0.0",
         "styled-components": "^6.1.16",
