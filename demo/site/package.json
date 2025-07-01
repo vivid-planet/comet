@@ -45,7 +45,7 @@
         "zod": "^3.24.2"
     },
     "devDependencies": {
-        "@babel/core": "^7.26.10",
+        "@babel/core": "^7.27.7",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^5.0.3",

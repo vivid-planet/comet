@@ -42,7 +42,7 @@
         "swiper": "^11.2.10"
     },
     "devDependencies": {
-        "@babel/core": "^7.26.10",
+        "@babel/core": "^7.27.7",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^5.0.3",
