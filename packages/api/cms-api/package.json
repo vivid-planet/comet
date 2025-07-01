@@ -82,7 +82,7 @@
         "@nestjs/jwt": "^11.0.0",
         "@nestjs/platform-express": "^11.0.19",
         "@nestjs/testing": "^11.0.19",
-        "@sentry/node": "^9.5.0",
+        "@sentry/node": "^9.34.0",
         "@types/draft-js": "^0.11.18",
         "@types/express": "^5.0.1",
         "@types/inquirer": "^8.2.11",
