@@ -1,6 +1,8 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { TextImageBlockData } from "@src/blocks.generated";
+import { PageLayout } from "@src/layout/PageLayout";
+import { createImageSizes } from "@src/util/createImageSizes";
 import styled, { css } from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
@@ -11,7 +13,7 @@ export const TextImageBlock = withPreview(
         return (
             <Root $imagePosition={imagePosition}>
                 <ImageContainer>
-                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
+                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes={createImageSizes({ default: "100vw", md: "30vw" })} />
                 </ImageContainer>
                 <TextContainer>
                     <RichTextBlock data={text} />
@@ -22,10 +24,20 @@ export const TextImageBlock = withPreview(
     { label: "Text/Image" },
 );
 
+export const PageContentTextImageBlock = (props: PropsWithData<TextImageBlockData>) => (
+    <PageLayout>
+        <TextImageBlock {...props} />
+    </PageLayout>
+);
+
 const Root = styled.div<{ $imagePosition: TextImageBlockData["imagePosition"] }>`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
+
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+        flex-direction: row;
+    }
 
     ${({ $imagePosition }) =>
         $imagePosition === "left" &&
@@ -35,6 +47,7 @@ const Root = styled.div<{ $imagePosition: TextImageBlockData["imagePosition"] }>
 `;
 
 const ImageContainer = styled.div`
+    position: relative;
     flex: 1;
 `;
 
