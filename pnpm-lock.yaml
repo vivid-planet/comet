@@ -2282,7 +2282,7 @@ importers:
         specifier: ^2.2.31
         version: 2.2.31
       usehooks-ts:
-        specifier: ^3.1.0
+        specifier: ^3.1.1
         version: 3.1.1(react@18.3.1)
     devDependencies:
       '@comet/cli':
