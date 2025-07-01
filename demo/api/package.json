@@ -5,8 +5,8 @@
     "scripts": {
         "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
         "api-generator:watch": "rimraf --glob 'src/**/generated' && comet-api-generator generate --watch",
-        "prebuild": "rimraf dist && $npm_execpath api-generator",
-        "build": "nest build",
+        "prebuild": "npm run intl:compile && rimraf dist && $npm_execpath api-generator",
+        "build": "npm run intl:compile && nest build",
         "console": "NODE_OPTIONS='--max-old-space-size=256' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
         "console:prod": "node dist/console.js",
         "db:migrate": "$npm_execpath console migrate --",
@@ -15,7 +15,10 @@
         "dev:reload": "rimraf src/reload.ts && chokidar \"node_modules/@comet/cms-api/lib/**\" -s -c \"echo '// change' >> src/reload.ts\"",
         "fixtures": "$npm_execpath console fixtures --",
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
-        "lint": "$npm_execpath run api-generator && run-p lint:prettier lint:eslint lint:tsc",
+        "intl:compile": "npm run intl:compile:comet-demo",
+        "intl:compile:comet-demo": "formatjs compile-folder --format simple --ast lang/comet-demo-lang/api lang-compiled/comet-demo-api",
+        "intl:extract": "formatjs extract \"src/**/*.ts*\" --ignore ./**.d.ts --out-file lang-extracted/en.json --format simple --throws",
+        "lint": "$npm_execpath run-s api-generator intl:compile && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
@@ -63,7 +66,8 @@
         "rimraf": "^6.0.1",
         "rxjs": "^7.8.2",
         "slugify": "^1.6.6",
-        "uuid": "^11.1.0"
+        "uuid": "^11.1.0",
+        "react-intl": "^6.0.0"
     },
     "devDependencies": {
         "@comet/api-generator": "workspace:*",
@@ -86,7 +90,8 @@
         "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^3.15.0",
-        "typescript": "^5.7.3"
+        "typescript": "^5.7.3",
+        "@formatjs/cli": "^6.0.0"
     },
     "mikro-orm": {
         "configPaths": [
