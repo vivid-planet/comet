@@ -29,7 +29,7 @@ interface RedirectsPageProps {
 }
 
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectsLinkBlock to create a custom link block for the redirects
+    link?: BlockInterface;
     scopeParts?: string[];
 }
 
@@ -42,9 +42,10 @@ export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInt
     });
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
-    const linkBlock = createRedirectsLinkBlock(customTargets);
-
+function createRedirectsPage({
+    link = createRedirectsLinkBlock(),
+    scopeParts = [],
+}: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
     function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
         const intl = useIntl();
         useContentScopeConfig({ redirectPathAfterChange });
@@ -64,16 +65,16 @@ function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirects
                 <StackSwitch initialPage="grid">
                     <StackPage name="grid">
                         <StackToolbar scopeIndicator={<ContentScopeIndicator global={isGlobalScoped} scope={isGlobalScoped ? undefined : scope} />} />
-                        <RedirectsGrid linkBlock={linkBlock} scope={scope} />
+                        <RedirectsGrid linkBlock={link} scope={scope} />
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.redirects.edit", defaultMessage: "edit" })}>
                         {(selectedId: string) => {
-                            return <RedirectForm mode="edit" id={selectedId} linkBlock={linkBlock} scope={scope} />;
+                            return <RedirectForm mode="edit" id={selectedId} linkBlock={link} scope={scope} />;
                         }}
                     </StackPage>
                     <StackPage name="add" title={intl.formatMessage({ id: "comet.pages.redirects.create", defaultMessage: "create" })}>
                         {() => {
-                            return <RedirectForm mode="add" linkBlock={linkBlock} scope={scope} />;
+                            return <RedirectForm mode="add" linkBlock={link} scope={scope} />;
                         }}
                     </StackPage>
                 </StackSwitch>
