@@ -12,10 +12,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
 
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
-import { useContentScope } from "../contentScope/Provider";
 import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
 import { type GQLSlugAvailability } from "../graphql.generated";
+import { usePageTreeScope } from "./config/usePageTreeScope";
 import {
     type GQLCreatePageNodeMutation,
     type GQLCreatePageNodeMutationVariables,
@@ -102,7 +102,7 @@ export function createEditPageNode({
 
         const intl = useIntl();
         const apollo = useApolloClient();
-        const { scope } = useContentScope();
+        const scope = usePageTreeScope();
         const language = useContentLanguage({ scope });
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");

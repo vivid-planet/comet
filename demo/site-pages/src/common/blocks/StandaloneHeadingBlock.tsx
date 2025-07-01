@@ -1,4 +1,4 @@
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type StandaloneHeadingBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { type CSSProperties } from "react";

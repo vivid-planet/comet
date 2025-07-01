@@ -25,7 +25,7 @@
         "serve": "npm run extract:publicGenerated && NODE_ENV=production node server.js"
     },
     "dependencies": {
-        "@comet/cms-site": "workspace:*",
+        "@comet/site-nextjs": "workspace:*",
         "@formatjs/cli": "^6.6.3",
         "@opentelemetry/api": "^1.9.0",
         "fs-extra": "^11.3.0",
@@ -39,7 +39,7 @@
         "redraft": "^0.10.2",
         "sitemap": "^8.0.0",
         "styled-components": "^6.1.16",
-        "swiper": "^11.2.8"
+        "swiper": "^11.2.10"
     },
     "devDependencies": {
         "@babel/core": "^7.26.10",
@@ -53,7 +53,7 @@
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@parcel/watcher": "^2.5.1",
         "@types/fs-extra": "^11.0.4",
-        "@types/node": "^22.15.21",
+        "@types/node": "^22.15.34",
         "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
         "chokidar-cli": "^3.0.0",
