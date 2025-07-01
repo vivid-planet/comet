@@ -36,7 +36,7 @@ const config = [
                         {
                             name: "next/image",
                             importNames: ["default"],
-                            message: "Please use Image from @comet/cms-site instead",
+                            message: "Please use Image from @comet/site-nextjs instead",
                         },
                     ],
                 },

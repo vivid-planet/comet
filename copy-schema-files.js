@@ -4,7 +4,6 @@ const fs = require("fs");
     await Promise.all([
         fs.promises.copyFile("packages/api/cms-api/schema.gql", "packages/admin/cms-admin/schema.gql"),
         fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/admin/cms-admin/block-meta.json"),
-        fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/site/cms-site/block-meta.json"),
         fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/site/site-nextjs/block-meta.json"),
         fs.promises.copyFile("packages/api/cms-api/block-meta.json", "packages/site/site-react/block-meta.json"),
 

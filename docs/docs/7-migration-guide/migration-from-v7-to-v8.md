@@ -1642,6 +1642,48 @@ Example:
 
 </details>
 
+### Adapt to changes in ContentScopeProvider
+
+#### Use interface augmentation for ContentScope
+
+```diff title="admin/src/App.tsx"
++   import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
++   declare module "@comet/cms-admin" {
++       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++       interface ContentScope extends BaseContentScope {}
++   }
+
+    export function App() {
+```
+
+#### Preferable use ContentScopeProvider directly from Comet
+
+```diff title="admin/src/App.tsx"
+-   import { ContentScopeProvider } from "./common/ContentScopeProvider";
++   import { ContentScopeProvider } from "@comet/cms-admin";
+    // Delete `admin/src/common/ContentScopeProvider.tsx`
+```
+
+<details>
+
+<summary>However, if you need custom behavior, you can keep `admin/src/common/ContentScopeProvider.tsx` while skipping above change.</summary>
+
+Make sure to remove the generics:
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+-   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
+-       return useContentScopeConfigLibrary(p);
+-   }
+
+-    ContentScopeValues<ContentScope>
++    ContentScopeValues
+-    <ContentScopeProviderLibrary<ContentScope>>
++    <ContentScopeProviderLibrary>
+```
+
+</details>
+
 ### Import `Button` from `@comet/admin` package
 
 ```diff
@@ -1650,6 +1692,27 @@ Example:
 ```
 
 ## Site
+
+### Switch from `@comet/cms-site` to `@comet/site-nextjs`
+
+[//]: # "TODO: Upgrade script "
+
+The `@comet/cms-site` package has been reworked and renamed to `@comet/site-nextjs`. Notable changes are
+
+- Styled components is no longer a required peer dependency
+- Instead, SCSS modules are used internally
+- The package is now pure ESM
+
+To switch you must
+
+- uninstall `@comet/cms-site`
+- install `@comet/site-nextjs`
+- change all imports from `@comet/cms-site` to `@comet/site-nextjs`
+- import the css file exported by the package:
+
+```diff title="site/src/app/layout.tsx"
++ import "@comet/site-nextjs/css";
+```
 
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
 

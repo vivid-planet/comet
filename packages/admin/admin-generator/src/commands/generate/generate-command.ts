@@ -135,13 +135,16 @@ export type StaticSelectLabelCellContent = {
     icon?: Icon;
 };
 
+type StaticSelectValue = string | number | boolean;
+type StaticSelectValueObject = { value: StaticSelectValue; label: string | StaticSelectLabelCellContent };
+
 export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "text"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "number"; currency?: string; decimals?: number; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "boolean"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "date"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
+    | { type: "staticSelect"; values?: Array<StaticSelectValue | StaticSelectValueObject> }
     | { type: "block"; block: BlockInterface }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 

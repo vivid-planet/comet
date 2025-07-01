@@ -33,7 +33,7 @@
         "cache-manager": "^5.7.6",
         "filesize": "^10.1.6",
         "graphql": "^15.10.1",
-        "ioredis": "^5.6.0",
+        "ioredis": "^5.6.1",
         "lru-cache": "^11.0.2",
         "next": "^14.2.26",
         "react": "^18.3.1",
@@ -41,7 +41,7 @@
         "react-intl": "^7.1.10",
         "redraft": "^0.10.2",
         "styled-components": "^6.1.16",
-        "swiper": "^11.2.8",
+        "swiper": "^11.2.10",
         "zod": "^3.24.2"
     },
     "devDependencies": {
@@ -55,7 +55,7 @@
         "@graphql-codegen/typescript": "^4.1.6",
         "@graphql-codegen/typescript-operations": "^4.6.1",
         "@parcel/watcher": "^2.5.1",
-        "@types/node": "^22.15.21",
+        "@types/node": "^22.15.34",
         "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
         "check-node-version": "^4.2.1",

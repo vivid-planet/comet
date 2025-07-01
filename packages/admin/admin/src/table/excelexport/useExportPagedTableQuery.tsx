@@ -31,8 +31,8 @@ export function useExportPagedTableQuery<IVariables extends OperationVariables>(
 
     async function exportTable() {
         if (tableRef != null) {
-            await setProgress(0);
-            await setLoading(true);
+            setProgress(0);
+            setLoading(true);
 
             const { fromPage = 1, toPage = 1 } = options;
 
@@ -56,13 +56,13 @@ export function useExportPagedTableQuery<IVariables extends OperationVariables>(
                         exportData.push(...data.data);
                     }
                     const progressInPercent = (i / (toPage - fromPage)) * 100;
-                    await setProgress(progressInPercent);
+                    setProgress(progressInPercent);
                 }
                 createExcelExportDownload<any>(tableRef.props.columns, exportData, excelOptions);
             } catch {
                 throw new Error("Error happend while exporting data");
             } finally {
-                await setLoading(false);
+                setLoading(false);
             }
         }
     }

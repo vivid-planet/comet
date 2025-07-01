@@ -54,8 +54,8 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
-            private readonly entityManager: EntityManager,
-            private readonly ${instanceNamePlural}Service: ${classNamePlural}Service
+            protected readonly entityManager: EntityManager,
+            protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
         ) {}
     
         @Query(() => ${metadata.className}, { nullable: true })

@@ -71,11 +71,6 @@
             "entry": ["./src/apiGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/site/cms-site": {
-            "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./src/**/*.generated.ts"]
-        },
         "packages/site/site-react": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],

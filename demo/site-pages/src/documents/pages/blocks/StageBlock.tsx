@@ -1,4 +1,4 @@
-import { ListBlock, type PropsWithData } from "@comet/cms-site";
+import { ListBlock, type PropsWithData } from "@comet/site-nextjs";
 import { type StageBlockData } from "@src/blocks.generated";
 
 import { BasicStageBlock } from "./BasicStageBlock";

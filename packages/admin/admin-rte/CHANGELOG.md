@@ -1,5 +1,20 @@
 # @comet/admin-rte
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [9e3e943]
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+- Updated dependencies [9e3e943]
+- Updated dependencies [06d5600]
+- Updated dependencies [15b7dd3]
+- Updated dependencies [d6a004a]
+- Updated dependencies [77b52a8]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Patch Changes
@@ -100,6 +115,37 @@
 - Updated dependencies [682a674]
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
+
+## 7.25.0
+
+### Patch Changes
+
+- @comet/admin@7.25.0
+- @comet/admin-icons@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- Updated dependencies [fc900f217]
+    - @comet/admin@7.24.0
+    - @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+- @comet/admin@7.23.0
+- @comet/admin-icons@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- Updated dependencies [2cf573b72]
+- Updated dependencies [086774f01]
+    - @comet/admin@7.22.0
+    - @comet/admin-icons@7.22.0
 
 ## 7.21.1
 
