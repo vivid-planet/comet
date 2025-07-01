@@ -68,7 +68,7 @@
         "@types/lodash.debounce": "^4.0.9",
         "@types/lodash.isequal": "^4.5.8",
         "@types/node": "^22.15.34",
-        "@types/react": "^18.3.22",
+        "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.3.3",
