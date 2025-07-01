@@ -2176,7 +2176,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       jose:
-        specifier: ^5.2.4
+        specifier: ^5.10.0
         version: 5.10.0
       rimraf:
         specifier: ^3.0.0
