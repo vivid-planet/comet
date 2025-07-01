@@ -71,7 +71,7 @@
         "@nestjs/schematics": "^11.0.5",
         "@types/cli-progress": "^3.11.6",
         "@types/compression": "^1.7.5",
-        "@types/cookie-parser": "^1.4.8",
+        "@types/cookie-parser": "^1.4.9",
         "@types/express": "^5.0.1",
         "@types/inquirer": "^8.2.11",
         "@types/node": "^22.15.34",
