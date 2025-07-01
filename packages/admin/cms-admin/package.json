@@ -82,7 +82,7 @@
         "@mui/system": "^7.1.0",
         "@mui/x-data-grid": "^7.29.7",
         "@testing-library/dom": "^10.4.0",
-        "@testing-library/react": "^16.2.0",
+        "@testing-library/react": "^16.3.0",
         "@types/draft-js": "^0.11.18",
         "@types/file-saver": "^2.0.7",
         "@types/final-form-set-field-touched": "^1.0.3",
