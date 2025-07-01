@@ -332,9 +332,16 @@ export function generateFormField({
                 ...defaultFormValuesConfig,
                 ...{
                     initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                    omitFromFragmentType: name,
+                    typeCode: `${name}${!required ? "?" : ""}: Date${!required ? " | null" : ""};`,
                 },
             },
         ];
+        if (!config.virtual && !config.readOnly) {
+            formValueToGqlInputCode = required
+                ? `${name}: formValues.${name}.toISOString(),`
+                : `${name}: formValues.${name} ? formValues.${name}.toISOString() : null,`;
+        }
     } else if (config.type == "block") {
         code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
