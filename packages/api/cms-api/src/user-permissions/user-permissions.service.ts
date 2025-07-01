@@ -37,6 +37,9 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
+    private manualPermissions: { userId: string; permission: string }[] | undefined;
+    private availablePermissions: string[] | undefined;
+
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         let contentScopes: AvailableContentScope[] = [];
         if (this.options.availableContentScopes) {
@@ -75,21 +78,24 @@ export class UserPermissionsService {
     }
 
     async getAvailablePermissions(): Promise<string[]> {
-        return [
-            ...new Set(
-                [
-                    ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                ]
-                    .flatMap((p) => p.meta.requiredPermission)
-                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
-                    .concat(["impersonation"])
-                    .filter((p) => p !== DisablePermissionCheck)
-                    .sort(),
-            ),
-        ];
+        if (this.availablePermissions === undefined) {
+            this.availablePermissions = [
+                ...new Set(
+                    [
+                        ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                        ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ]
+                        .flatMap((p) => p.meta.requiredPermission)
+                        .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
+                        .concat(["impersonation"])
+                        .filter((p) => p !== DisablePermissionCheck)
+                        .sort(),
+                ),
+            ];
+        }
+        return this.availablePermissions;
     }
 
     getUserService(): UserPermissionsUserServiceInterface | undefined {
@@ -113,6 +119,31 @@ export class UserPermissionsService {
                 throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
             }
         });
+    }
+
+    async warmupHasPermissionCache() {
+        this.manualPermissions = (await this.permissionRepository.find({ permission: { $in: await this.getAvailablePermissions() } }))
+            .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+            .map((p) => ({ userId: p.userId, permission: p.permission }));
+    }
+
+    async hasPermission(user: User, permission: string | string[]): Promise<boolean> {
+        const permissions = Array.isArray(permission) ? permission : [permission];
+        if (this.accessControlService.getPermissionsForUser) {
+            const availablePermissions = await this.getAvailablePermissions();
+            const permissionsByRule = await this.accessControlService.getPermissionsForUser(user, availablePermissions);
+            if (permissionsByRule === UserPermissions.allPermissions) {
+                if (availablePermissions.some((p) => permissions.includes(p))) return true;
+            } else {
+                if (permissionsByRule.some((p) => permissions.includes(p.permission))) return true;
+            }
+        }
+        if (this.manualPermissions === undefined) {
+            throw new Error('You need to call "warmupHasPermissionCache" before using "hasPermission" for the first time.');
+        }
+        if (this.manualPermissions.some((p) => p.userId === user.id && permissions.includes(p.permission))) return true;
+
+        return false;
     }
 
     async getPermissions(user: User): Promise<UserPermission[]> {

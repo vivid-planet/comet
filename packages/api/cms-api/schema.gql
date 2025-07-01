@@ -588,8 +588,15 @@ input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
+  permission: PermissionFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
+}
+
+input PermissionFilter {
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
 }
 
 input UserPermissionsUserSort {

@@ -53,6 +53,19 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     const stackApi = useContext(StackSwitchApiContext);
     const isAllowed = useUserPermissionCheck();
 
+    const { data: availablePermissionsAndContentScopes } = useQuery<GQLUserAvailablePermissionsAndContentScopesQuery>(
+        gql`
+            query UserAvailablePermissionsAndContentScopes {
+                permissions: userPermissionsAvailablePermissions
+                contentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
+            }
+        `,
+        { skip: !isAllowed("userPermissions") },
+    );
+
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
             field: "name",
@@ -75,11 +88,12 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     if (isAllowed("userPermissions")) {
         columns.push(
             {
-                field: "permissionsInfo",
+                field: "permission",
                 flex: 1,
                 pinnable: false,
                 sortable: false,
-                filterable: false,
+                type: "singleSelect",
+                valueOptions: availablePermissionsAndContentScopes?.permissions,
                 headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
                 renderCell: ({ row }) => {
                     if (row.permissionsCount === availablePermissionsAndContentScopes?.permissions.length) {
@@ -205,19 +219,6 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 sort: muiGridSortToGql(dataGridProps.sortModel),
             },
         },
-    );
-
-    const { data: availablePermissionsAndContentScopes } = useQuery<GQLUserAvailablePermissionsAndContentScopesQuery>(
-        gql`
-            query UserAvailablePermissionsAndContentScopes {
-                permissions: userPermissionsAvailablePermissions
-                contentScopes: userPermissionsAvailableContentScopes {
-                    scope
-                    label
-                }
-            }
-        `,
-        { skip: !isAllowed("userPermissions") },
     );
 
     if (error) throw new Error(error.message);
