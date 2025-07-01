@@ -95,7 +95,7 @@
         "@types/request-ip": "^0.0.41",
         "chokidar-cli": "^3.0.0",
         "class-transformer": "^0.5.1",
-        "class-validator": "^0.14.1",
+        "class-validator": "^0.14.2",
         "eslint": "^9.22.0",
         "express": "^5.0.1",
         "graphql": "^16.10.0",
