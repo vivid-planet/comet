@@ -54,7 +54,7 @@
         "@parcel/watcher": "^2.5.1",
         "@types/fs-extra": "^11.0.4",
         "@types/node": "^22.15.34",
-        "@types/react": "^18.3.22",
+        "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "chokidar-cli": "^3.0.0",
         "eslint": "^9.22.0",
