@@ -28,7 +28,7 @@ import { ProductCategoriesPage } from "@src/products/generator/ProductCategories
 import { ProductsPage } from "@src/products/generator/ProductsPage";
 import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
-import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
+import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
@@ -276,9 +276,9 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productCategoryHandmade" defaultMessage="Product Category Handmade" />,
+                        primary: <FormattedMessage id="menu.productCategoriesHandmade" defaultMessage="Product Categories Handmade" />,
                         route: {
-                            path: "/product-category-handmade",
+                            path: "/product-categories-handmade",
                             component: ProductCategoriesHandmadePage,
                         },
                     },

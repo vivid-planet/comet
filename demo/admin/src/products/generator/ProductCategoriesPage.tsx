@@ -1,8 +1,32 @@
-import { Stack, StackMainContent, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import {
+    FillSpace,
+    SaveBoundary,
+    SaveBoundarySaveButton,
+    Stack,
+    StackMainContent,
+    StackPage,
+    StackSwitch,
+    StackToolbar,
+    ToolbarActions,
+    ToolbarAutomaticTitleItem,
+    ToolbarBackButton,
+} from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useIntl } from "react-intl";
 
 import { ProductCategoriesGrid } from "./generated/ProductCategoriesGrid";
+import { ProductCategoryForm } from "./generated/ProductCategoryForm";
+
+const FormToolbar = () => (
+    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+        <ToolbarBackButton />
+        <ToolbarAutomaticTitleItem />
+        <FillSpace />
+        <ToolbarActions>
+            <SaveBoundarySaveButton />
+        </ToolbarActions>
+    </StackToolbar>
+);
 
 export function ProductCategoriesPage() {
     const intl = useIntl();
@@ -16,8 +40,22 @@ export function ProductCategoriesPage() {
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProductCategory", defaultMessage: "Add product category" })}>
-                    {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
-                    <StackMainContent>TODO: Add product category form</StackMainContent>
+                    <SaveBoundary>
+                        <FormToolbar />
+                        <StackMainContent>
+                            <ProductCategoryForm />
+                        </StackMainContent>
+                    </SaveBoundary>
+                </StackPage>
+                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProductCategory", defaultMessage: "Edit product category" })}>
+                    {(id) => (
+                        <SaveBoundary>
+                            <FormToolbar />
+                            <StackMainContent>
+                                <ProductCategoryForm id={id} />
+                            </StackMainContent>
+                        </SaveBoundary>
+                    )}
                 </StackPage>
             </StackSwitch>
         </Stack>
