@@ -2053,55 +2053,6 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 
 </details>
 
-### `FinalFormToggleButtonGroup` deprecated
-
-`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
-
-```diff
-- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
-+ import { ToggleGroupButtonField } from "@comet/admin";
-
-...
-+ FormValueType = "value1" | "value2";
-
-- <Field
--   name="formValue"
--   label={"Field Label"}
--   component={FinalFormToggleButtonGroup}
--   options={[
--       { value: "value1", icon: <Info /> },
--       { value: "value2", icon: <Error /> },
--   ]}
--   optionsPerRow={2}
-- />
-+ <ToggleGroupButtonField<FormValueType>
-+    name="formValue"
-+    label={"Field Label"}
-+    options={[
-+        { value: "value1", label: <Info /> },
-+        { value: "value2", label: <Error /> },
-+    ]}
-+    optionsPerRow={2}
-+    />
-```
-
-The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
-
-```diff
-- <Field
--   name="formValue"
--   label={"Field Label"}
--   component={FinalFormToggleButtonGroup}
--   options={[
--       { value: "value1", icon: <Info /> },
-+       { value: "value1", label: <Info /> },
--       { value: "value2", icon: <Info /> },
-+       { value: "value2", label: <Info /> },
--   ]}
--   optionsPerRow={2}
-- />
-```
-
 ### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
 
 :::note Handled by following upgrade script
