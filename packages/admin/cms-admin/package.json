@@ -38,7 +38,7 @@
         "@comet/admin-rte": "workspace:*",
         "axios": "^0.29.0",
         "change-case": "^4.1.2",
-        "class-validator": "^0.14.1",
+        "class-validator": "^0.14.2",
         "date-fns": "^4.1.0",
         "file-saver": "^2.0.5",
         "final-form-arrays": "^3.1.0",
