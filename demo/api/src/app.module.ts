@@ -71,7 +71,8 @@ export class AppModule {
                     imports: [BlocksModule],
                     useFactory: (moduleRef: ModuleRef) => ({
                         debug: config.debug,
-                        playground: config.debug,
+                        graphiql: config.debug ? { url: "/api/graphql" } : undefined,
+                        playground: false,
                         autoSchemaFile: "schema.gql",
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
