@@ -75,7 +75,7 @@
         "@types/express": "^5.0.1",
         "@types/inquirer": "^8.2.11",
         "@types/node": "^22.15.34",
-        "@types/response-time": "^2.3.8",
+        "@types/response-time": "^2.3.9",
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^7.4.4",
