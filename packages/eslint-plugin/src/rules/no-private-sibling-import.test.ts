@@ -11,13 +11,25 @@ const errors = [{ message: "Avoid private sibling import from other files" }];
 const options = [["gql", "sc", "gql.generated"]];
 
 ruleTester.run("can't import from private .gql.ts", noPrivateSiblingImport, {
-    valid: [{ code: `import FooGql from "./Foo.gql";`, filename: "/path/to/Foo.ts" }],
-    invalid: [{ code: `import BarGql from "./Bar.gql";`, filename: "/path/to/Foo.ts", errors }],
+    valid: [
+        { code: `import FooGql from "./Foo.gql";`, filename: "/path/to/Foo.ts" },
+        { code: `import FooGql from "./Foo.gql";`, filename: "/path/to/Foo.tsx" },
+    ],
+    invalid: [
+        { code: `import BarGql from "./Bar.gql";`, filename: "/path/to/Foo.ts", errors },
+        { code: `import BarGql from "./Bar.gql";`, filename: "/path/to/Foo.tsx", errors },
+    ],
 });
 
 ruleTester.run("can't import from private .sc.ts", noPrivateSiblingImport, {
-    valid: [{ code: `import FooSc from "./Foo.sc";`, filename: "/path/to/Foo.ts" }],
-    invalid: [{ code: `import BarSc from "./Bar.sc";`, filename: "/path/to/Foo.ts", errors }],
+    valid: [
+        { code: `import FooSc from "./Foo.sc";`, filename: "/path/to/Foo.ts" },
+        { code: `import FooSc from "./Foo.sc";`, filename: "/path/to/Foo.tsx" },
+    ],
+    invalid: [
+        { code: `import BarSc from "./Bar.sc";`, filename: "/path/to/Foo.ts", errors },
+        { code: `import BarSc from "./Bar.sc";`, filename: "/path/to/Foo.tsx", errors },
+    ],
 });
 
 ruleTester.run("can override extensions -> can't import from private .gql.generated.ts", noPrivateSiblingImport, {

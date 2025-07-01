@@ -29,9 +29,12 @@ export default {
                         });
                     } else {
                         let baseName = path.basename(filePath);
-                        if (baseName.endsWith(".ts")) {
+                        if (baseName.endsWith(".tsx")) {
+                            baseName = baseName.slice(0, -4);
+                        } else if (baseName.endsWith(".ts")) {
                             baseName = baseName.slice(0, -3);
                         }
+
                         for (const ext of optionSiblingExtensions) {
                             const suffix = `.${ext}`;
                             if (baseName.endsWith(suffix)) {
