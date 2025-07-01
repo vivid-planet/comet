@@ -27,9 +27,11 @@ import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
 import { ProductCategoriesPage } from "@src/products/generator/ProductCategoriesPage";
 import { ProductsPage } from "@src/products/generator/ProductsPage";
 import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
+import { ProductTagsPage } from "@src/products/generator/ProductTagsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
+import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
 import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
@@ -251,6 +253,14 @@ export const masterMenuData: MasterMenuData = [
                             component: ProductCategoriesPage,
                         },
                     },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productTags" defaultMessage="Product Tags" />,
+                        route: {
+                            path: "/product-tags",
+                            component: ProductTagsPage,
+                        },
+                    },
                 ],
             },
             {
@@ -280,6 +290,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/product-category-handmade",
                             component: ProductCategoriesHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productTagsHandmade" defaultMessage="Product Tags Handmade" />,
+                        route: {
+                            path: "/product-tags-handmade",
+                            component: ProductTagsHandmadePage,
                         },
                     },
                 ],
