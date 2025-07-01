@@ -41,7 +41,7 @@
         "react-intl": "^7.1.10",
         "redraft": "^0.10.2",
         "styled-components": "^6.1.16",
-        "swiper": "^11.2.8",
+        "swiper": "^11.2.10",
         "zod": "^3.24.2"
     },
     "devDependencies": {
