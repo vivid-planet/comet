@@ -1795,8 +1795,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       '@azure/storage-blob':
-        specifier: ^12.26.0
-        version: 12.26.0
+        specifier: ^12.27.0
+        version: 12.27.0
       '@fast-csv/parse':
         specifier: ^4.3.6
         version: 4.3.6
@@ -3008,8 +3008,8 @@ packages:
     resolution: {integrity: sha512-4IXXzcCdLdlXuCG+8UKEwLA1T1NHqUfanhXYHiQTn+6sfWCZXduqbtXDGceg3Ce5QxTGo7EqmbV6Bi+aqKuClQ==}
     engines: {node: '>=18.0.0'}
 
-  '@azure/storage-blob@12.26.0':
-    resolution: {integrity: sha512-SriLPKezypIsiZ+TtlFfE46uuBIap2HeaQVS78e1P7rz5OSbq0rsd52WE1mC5f7vAeLiXqv7I7oRhL3WFZEw3Q==}
+  '@azure/storage-blob@12.27.0':
+    resolution: {integrity: sha512-IQjj9RIzAKatmNca3D6bT0qJ+Pkox1WZGOg2esJF2YLHb45pQKOwGPIAV+w3rfgkj7zV3RMxpn/c6iftzSOZJQ==}
     engines: {node: '>=18.0.0'}
 
   '@babel/cli@7.26.4':
@@ -18517,7 +18517,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@azure/storage-blob@12.26.0':
+  '@azure/storage-blob@12.27.0':
     dependencies:
       '@azure/abort-controller': 2.1.2
       '@azure/core-auth': 1.9.0
