@@ -125,9 +125,9 @@ export function ProductsGrid(): React.ReactElement {
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                { value: "cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }) },
+                { value: "shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
+                { value: "tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
             width: 150,
         },
