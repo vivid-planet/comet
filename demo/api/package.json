@@ -28,7 +28,7 @@
     "dependencies": {
         "@apollo/server": "^4.11.3",
         "@comet/cms-api": "workspace:*",
-        "@faker-js/faker": "^9.6.0",
+        "@faker-js/faker": "^9.8.0",
         "@kubernetes/client-node": "^1.0.0",
         "@mikro-orm/cli": "^6.4.10",
         "@mikro-orm/core": "^6.4.10",

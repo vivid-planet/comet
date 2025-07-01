@@ -280,8 +280,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api/cms-api
       '@faker-js/faker':
-        specifier: ^9.6.0
-        version: 9.6.0
+        specifier: ^9.8.0
+        version: 9.8.0
       '@kubernetes/client-node':
         specifier: ^1.0.0
         version: 1.0.0
@@ -2452,8 +2452,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/eslint-config
       '@faker-js/faker':
-        specifier: ^9.6.0
-        version: 9.6.0
+        specifier: ^9.8.0
+        version: 9.8.0
       '@graphql-mocks/network-msw':
         specifier: ^0.3.0
         version: 0.3.0(graphql-mocks@0.10.0(graphql@15.10.1))(msw@0.35.0)
@@ -4941,8 +4941,8 @@ packages:
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@faker-js/faker@9.6.0':
-    resolution: {integrity: sha512-3vm4by+B5lvsFPSyep3ELWmZfE3kicDtmemVpuwl1yH7tqtnHdsA6hG8fbXedMVdkzgtvzWoRgjSB4Q+FHnZiw==}
+  '@faker-js/faker@9.8.0':
+    resolution: {integrity: sha512-U9wpuSrJC93jZBxx/Qq2wPjCuYISBueyVUGK7qqdmj7r/nxaxwW8AQDCLeRO7wZnjj94sh3p246cAYjUKuqgfg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@fast-csv/format@4.3.5':
@@ -21298,7 +21298,7 @@ snapshots:
       '@eslint/core': 0.12.0
       levn: 0.4.1
 
-  '@faker-js/faker@9.6.0': {}
+  '@faker-js/faker@9.8.0': {}
 
   '@fast-csv/format@4.3.5':
     dependencies:
