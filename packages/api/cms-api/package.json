@@ -52,7 +52,7 @@
         "hasha": "^5.2.2",
         "jose": "^5.10.0",
         "jszip": "^3.10.1",
-        "jwks-rsa": "^3.1.0",
+        "jwks-rsa": "^3.2.0",
         "lodash.isequal": "^4.5.0",
         "lodash.uniqwith": "^4.5.0",
         "mime": "^3.0.0",
