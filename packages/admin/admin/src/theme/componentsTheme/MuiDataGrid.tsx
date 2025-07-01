@@ -130,16 +130,16 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 outline: "none",
             },
 
-            "&.MuiDataGrid-columnHeader--pinnedLeft": {
-                backgroundColor: "white",
-                boxShadow: "4px 0 8px -4px rgba(0,0,0,0.1)",
-                borderRight: "none",
+            [`&.${gridClasses["columnHeader--pinnedLeft"]}.${gridClasses["columnHeader--withRightBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 -8px 0 0)",
+                borderRightWidth: 0,
             },
 
-            "&.MuiDataGrid-columnHeader--pinnedRight": {
-                backgroundColor: "white",
-                boxShadow: "-4px 0 8px -4px rgba(0,0,0,0.1)",
-                borderLeft: "none",
+            [`&.${gridClasses["columnHeader--pinnedRight"]}.${gridClasses["columnHeader--withLeftBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 0 0 -8px)",
+                borderLeftWidth: 0,
             },
         }),
 
@@ -156,13 +156,16 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
             alignContent: "center",
 
-            "&.MuiDataGrid-cell--pinnedLeft": {
-                backgroundColor: "white",
-                boxShadow: "4px 0 8px -4px rgba(0,0,0,0.1)",
+            [`&.${gridClasses["cell--pinnedLeft"]}.${gridClasses["cell--withRightBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 -8px 0 0)",
+                borderRightWidth: 0,
             },
-            "&.MuiDataGrid-cell--pinnedRight": {
-                backgroundColor: "white",
-                boxShadow: "-4px 0 8px -4px rgba(0,0,0,0.1)",
+
+            [`&.${gridClasses["cell--pinnedRight"]}.${gridClasses["cell--withLeftBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 0 0 -8px)",
+                borderLeftWidth: 0,
             },
         }),
         footerContainer: ({ ownerState }) => ({
