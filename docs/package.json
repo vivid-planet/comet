@@ -72,7 +72,7 @@
         "@docusaurus/module-type-aliases": "^3.7.0",
         "@docusaurus/tsconfig": "^3.7.0",
         "@docusaurus/types": "^3.7.0",
-        "@types/react": "^18.3.22",
+        "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "cspell": "^8.19.4",
         "eslint": "^9.22.0",

@@ -792,12 +792,10 @@ You need to modify your `AppModule` as follows:
         backend: config.blob.storage,
 +       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
     }),
-+   ImgproxyModule.register({
-+       imgproxyConfig: config.imgproxy,
-+   }),
++   ImgproxyModule.register(config.imgproxy),
     DamModule.register({
         damConfig: {
-            apiUrl: config.apiUrl,
+-           apiUrl: config.apiUrl,
             secret: config.dam.secret,
             allowedImageSizes: config.dam.allowedImageSizes,
             allowedAspectRatios: config.dam.allowedImageAspectRatios,
@@ -1218,6 +1216,99 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 - <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
 + import { AutocompleteField } from "@comet/admin";
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
+```
+
+### Change type of the `values` prop of `ContentScopeProvider`
+
+The `ContentScopeProvider` now expects a different structure for the `values` prop.
+
+**Before:**
+
+```ts
+const values: ContentScopeValues = [
+    {
+        domain: { label: "Main", value: "main" },
+        language: { label: "English", value: "en" },
+    },
+    {
+        domain: { label: "Main", value: "main" },
+        language: { label: "German", value: "de" },
+    },
+    {
+        domain: { label: "Secondary", value: "secondary" },
+        language: { label: "English", value: "en" },
+    },
+];
+```
+
+**Now:**
+
+```ts
+const values: ContentScopeValues = [
+    {
+        scope: { domain: "main", language: "en" },
+        label: { domain: "Main", language: "English" },
+    },
+    {
+        scope: { domain: "main", language: "de" },
+        label: { domain: "Main", language: "German" },
+    },
+    {
+        scope: { domain: "secondary", language: "en" },
+        label: { domain: "Secondary", language: "English" },
+    },
+];
+```
+
+The following changes are necessary:
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+import {
++   type ContentScope,
+    // ...
+} from "@comet/cms-admin";
++ import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
++ declare module "@comet/cms-admin" {
++     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++     interface ContentScope extends BaseContentScope {}
++ }
+
+- export function useContentScope(): UseContentScopeApi<ContentScope> {
+-    return useContentScopeLibrary<ContentScope>();
+- }
+
+// ...
+
+export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
+
+    // ...
+
+-    const values: ContentScopeValues<ContentScope> = userContentScopes.map((contentScope) => ({
+-        domain: { value: contentScope.domain },
+-        language: { value: contentScope.language, label: contentScope.language.toUpperCase() },
++    const values: ContentScopeValues = userContentScopes.map((contentScope) => ({
++        scope: contentScope,
++        label: { language: contentScope.language.toUpperCase() },
+  }));
+
+  if (user.allowedContentScopes.length === 0) {
+-        throw new Error("User does not have access to any scopes.");
++        return (
++            <>
++                Error: user does not have access to any scopes.
++                {user.impersonated && <StopImpersonationButton />}
++            </>
++        );
+  }
+
+  return (
+-        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={userContentScopes[0]}>
++        <ContentScopeProviderLibrary values={values} defaultValue={userContentScopes[0]}>
+             {children}
+         </ContentScopeProviderLibrary>
+  );
+}
 ```
 
 ### ✅ Merge providers into `CometConfigProvider`
@@ -1691,6 +1782,55 @@ Make sure to remove the generics:
 + import { Button } from "@comet/admin";
 ```
 
+### `FinalFormToggleButtonGroup` deprecated
+
+`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
+
+```diff
+- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
++ import { ToggleGroupButtonField } from "@comet/admin";
+
+...
++ FormValueType = "value1" | "value2";
+
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
+-       { value: "value2", icon: <Error /> },
+-   ]}
+-   optionsPerRow={2}
+- />
++ <ToggleGroupButtonField<FormValueType>
++    name="formValue"
++    label={"Field Label"}
++    options={[
++        { value: "value1", label: <Info /> },
++        { value: "value2", label: <Error /> },
++    ]}
++    optionsPerRow={2}
++    />
+```
+
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
+
+```diff
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
++       { value: "value1", label: <Info /> },
+-       { value: "value2", icon: <Info /> },
++       { value: "value2", label: <Info /> },
+-   ]}
+-   optionsPerRow={2}
+- />
+```
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
@@ -1925,52 +2065,3 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
 </details>
-
-### `FinalFormToggleButtonGroup` deprecated
-
-`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
-
-```diff
-- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
-+ import { ToggleGroupButtonField } from "@comet/admin";
-
-...
-+ FormValueType = "value1" | "value2";
-
-- <Field
--   name="formValue"
--   label={"Field Label"}
--   component={FinalFormToggleButtonGroup}
--   options={[
--       { value: "value1", icon: <Info /> },
--       { value: "value2", icon: <Error /> },
--   ]}
--   optionsPerRow={2}
-- />
-+ <ToggleGroupButtonField<FormValueType>
-+    name="formValue"
-+    label={"Field Label"}
-+    options={[
-+        { value: "value1", label: <Info /> },
-+        { value: "value2", label: <Error /> },
-+    ]}
-+    optionsPerRow={2}
-+    />
-```
-
-The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
-
-```diff
-- <Field
--   name="formValue"
--   label={"Field Label"}
--   component={FinalFormToggleButtonGroup}
--   options={[
--       { value: "value1", icon: <Info /> },
-+       { value: "value1", label: <Info /> },
--       { value: "value2", icon: <Info /> },
-+       { value: "value2", label: <Info /> },
--   ]}
--   optionsPerRow={2}
-- />
-```
