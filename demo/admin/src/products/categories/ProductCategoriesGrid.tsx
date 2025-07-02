@@ -21,7 +21,7 @@ import {
     type GQLCreateProductCategoryMutationVariables,
     type GQLDeleteProductCategoryMutation,
     type GQLDeleteProductCategoryMutationVariables,
-    type GQLProductCategoriesGridFutureFragment,
+    type GQLProductCategoriesGridFragment,
     type GQLProductCategoriesGridQuery,
     type GQLProductCategoriesGridQueryVariables,
     type GQLUpdateProductCategoryPositionMutation,
@@ -29,7 +29,7 @@ import {
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
-    fragment ProductCategoriesGridFuture on ProductCategory {
+    fragment ProductCategoriesGrid on ProductCategory {
         id
         title
         slug
@@ -41,7 +41,7 @@ const productCategoriesQuery = gql`
     query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
         productCategories(offset: $offset, limit: $limit, sort: $sort) {
             nodes {
-                ...ProductCategoriesGridFuture
+                ...ProductCategoriesGrid
             }
             totalCount
         }
@@ -78,7 +78,7 @@ function ProductCategoriesGridToolbar() {
         <DataGridToolbar>
             <FillSpace />
             <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                <FormattedMessage id="productCategory.productCategoriesGridFuture.newEntry" defaultMessage="New Product Category" />
+                <FormattedMessage id="productCategory.productCategoriesGrid.newEntry" defaultMessage="New Product Category" />
             </Button>
         </DataGridToolbar>
     );
@@ -97,7 +97,7 @@ export function ProductCategoriesGrid() {
             refetchQueries: [productCategoriesQuery],
         });
     };
-    const columns: GridColDef<GQLProductCategoriesGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = [
         {
             field: "title",
             headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
