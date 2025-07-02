@@ -30,12 +30,18 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
+
 type UserPermissionsUser {
   id: String!
   name: String!
   email: String!
   permissionsCount: Int!
   contentScopesCount: Int!
+  impersonationAllowed: Boolean!
 }
 
 type CurrentUserPermission {
@@ -51,6 +57,7 @@ type CurrentUser {
   impersonated: Boolean
   authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [ContentScopeWithLabel!]!
 }
 
 type Dependency {
@@ -68,6 +75,18 @@ type Dependency {
 type PaginatedDependencies {
   nodes: [Dependency!]!
   totalCount: Int!
+}
+
+type DamMediaAlternative {
+  id: ID!
+  language: String!
+  type: DamMediaAlternativeType!
+  for: DamFile!
+  alternative: DamFile!
+}
+
+enum DamMediaAlternativeType {
+  captions
 }
 
 type ImageCropArea {
@@ -181,6 +200,11 @@ type KubernetesJob {
   completionTime: DateTime
 }
 
+type PaginatedDamMediaAlternatives {
+  nodes: [DamMediaAlternative!]!
+  totalCount: Int!
+}
+
 type FilenameResponse {
   name: String!
   folderId: ID
@@ -201,6 +225,48 @@ type FileUpload {
 
 type UserPermissionPaginatedUserList {
   nodes: [UserPermissionsUser!]!
+  totalCount: Int!
+}
+
+type WarningSourceInfo {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
+  status: WarningStatus!
+  scope: JSONObject
+  entityInfo: EntityInfo
+}
+
+enum WarningSeverity {
+  high
+  medium
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
+}
+
+type PaginatedWarnings {
+  nodes: [Warning!]!
   totalCount: Int!
 }
 
@@ -243,6 +309,8 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  alternativesForThisFile: [DamMediaAlternative!]!
+  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -276,17 +344,22 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 """Stage root block data"""
 scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
 type AlternativeAddress {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type Address {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddress
 }
@@ -294,14 +367,14 @@ type Address {
 type AlternativeAddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type AddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddable!
 }
@@ -311,6 +384,7 @@ type Manufacturer {
   name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
+  coordinates: Coordinates
   updatedAt: DateTime!
 }
 
@@ -390,14 +464,14 @@ type Product {
   title: String!
   status: ProductStatus!
   slug: String!
-  description: String!
+  description: String
   type: ProductType!
   additionalTypes: [ProductType!]!
   price: Float
   priceRange: ProductPriceRange
   inStock: Boolean!
   soldCount: Int
-  availableSince: Date
+  availableSince: LocalDate
   lastCheckedAt: DateTime
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
@@ -429,9 +503,9 @@ enum ProductType {
 }
 
 """
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+A local date string (i.e., with no associated timezone) in `YYYY-MM-DD` format, e.g. `2020-01-01`.
 """
-scalar Date
+scalar LocalDate
 
 type PageTreeNodeScope {
   domain: String!
@@ -452,7 +526,7 @@ type PageTreeNode {
   category: PageTreeNodeCategory!
   userGroup: UserGroup!
   childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
+  numberOfDescendants: Int!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
@@ -640,6 +714,7 @@ type Redirect {
   target: JSONObject!
   comment: String
   active: Boolean!
+  activatedAt: DateTime
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -687,21 +762,34 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
 input DamScopeInput {
   domain: String!
+}
+
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
 }
 
 input AlternativeAddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressInput
 }
@@ -709,14 +797,14 @@ input AddressInput {
 input AlternativeAddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddableInput!
 }
@@ -764,7 +852,7 @@ type Query {
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
+  userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -792,6 +880,8 @@ type Query {
   damFoldersList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
+  damMediaAlternative(id: ID!): DamMediaAlternative!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
@@ -818,14 +908,16 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
-  manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
+  warning(id: ID!): Warning!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
+  permission: PermissionFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
 }
@@ -834,6 +926,12 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
+}
+
+input PermissionFilter {
   equal: String
   notEqual: String
   isAnyOf: [String!]
@@ -936,6 +1034,19 @@ input FilenameInput {
 
 input FolderFilterInput {
   searchText: String
+}
+
+input DamMediaAlternativeSort {
+  field: DamMediaAlternativeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum DamMediaAlternativeSortField {
+  id
+  language
+  type
+  for
+  alternative
 }
 
 input NewsFilter {
@@ -1045,12 +1156,12 @@ input NumberFilter {
 }
 
 input DateFilter {
-  equal: Date
-  lowerThan: Date
-  greaterThan: Date
-  lowerThanEqual: Date
-  greaterThanEqual: Date
-  notEqual: Date
+  equal: LocalDate
+  lowerThan: LocalDate
+  greaterThan: LocalDate
+  lowerThanEqual: LocalDate
+  greaterThanEqual: LocalDate
+  notEqual: LocalDate
 }
 
 input ManyToOneFilter {
@@ -1162,11 +1273,11 @@ input ManufacturerFilter {
   name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
-  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_zip: StringFilter
   addressAsEmbeddable_country: StringFilter
   addressAsEmbeddable_alternativeAddress_street: StringFilter
   addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
-  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: StringFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
   updatedAt: DateTimeFilter
   and: [ManufacturerFilter!]
@@ -1197,6 +1308,50 @@ input ManufacturerCountryFilter {
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]
+}
+
+input WarningFilter {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  message: StringFilter
+  type: StringFilter
+  severity: WarningSeverityEnumFilter
+  status: WarningStatusEnumFilter
+  scope: ScopeFilter
+  and: [WarningFilter!]
+  or: [WarningFilter!]
+}
+
+input WarningSeverityEnumFilter {
+  isAnyOf: [WarningSeverity!]
+  equal: WarningSeverity
+  notEqual: WarningSeverity
+}
+
+input WarningStatusEnumFilter {
+  isAnyOf: [WarningStatus!]
+  equal: WarningStatus
+  notEqual: WarningStatus
+}
+
+input ScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
+}
+
+input WarningSort {
+  field: WarningSortField!
+  direction: SortDirection! = ASC
+}
+
+enum WarningSortField {
+  createdAt
+  updatedAt
+  message
+  type
+  severity
+  status
 }
 
 type Mutation {
@@ -1234,6 +1389,9 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
+  createDamMediaAlternative(for: ID!, alternative: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
+  updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
+  deleteDamMediaAlternative(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!): News!
   deleteNews(id: ID!): Boolean!
@@ -1393,6 +1551,18 @@ input UpdateDamFolderInput {
   archived: Boolean
 }
 
+input DamMediaAlternativeInput {
+  language: String!
+  type: DamMediaAlternativeType!
+}
+
+input DamMediaAlternativeUpdateInput {
+  language: String
+  type: DamMediaAlternativeType
+  for: ID
+  alternative: ID
+}
+
 input NewsInput {
   slug: String!
   title: String!
@@ -1445,13 +1615,13 @@ input ProductInput {
   title: String!
   status: ProductStatus! = Unpublished
   slug: String!
-  description: String!
+  description: String = null
   type: ProductType!
   additionalTypes: [ProductType!]! = []
   price: Float = null
   priceRange: ProductPriceRangeInput
   inStock: Boolean! = true
-  availableSince: Date = null
+  availableSince: LocalDate = null
   lastCheckedAt: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
@@ -1491,7 +1661,7 @@ input ProductUpdateInput {
   price: Float
   priceRange: ProductPriceRangeInput
   inStock: Boolean
-  availableSince: Date
+  availableSince: LocalDate
   lastCheckedAt: DateTime
   image: DamImageBlockInput
   discounts: [ProductDiscountsInput!]
@@ -1554,10 +1724,12 @@ input ManufacturerInput {
   name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
+  coordinates: CoordinatesInput
 }
 
 input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
+  coordinates: CoordinatesInput
 }

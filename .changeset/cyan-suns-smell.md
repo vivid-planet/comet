@@ -7,7 +7,7 @@ Change type of the `values` prop of ContentScopeProvider
 **Before**
 
 ```ts
-const values: ContentScopeValues<ContentScope> = [
+const values: ContentScopeValues = [
     {
         domain: { label: "Main", value: "main" },
         language: { label: "English", value: "en" },
@@ -26,7 +26,7 @@ const values: ContentScopeValues<ContentScope> = [
 **Now**
 
 ```ts
-const values: ContentScopeValues<ContentScope> = [
+const values: ContentScopeValues = [
     {
         scope: { domain: "main", language: "en" },
         label: { domain: "Main", language: "English" },

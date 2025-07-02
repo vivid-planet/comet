@@ -615,7 +615,6 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
 
 - You must add an `icon` to all top level menu items
 - You must add a `type` to all items. There are four types available:
-
     - `route`
 
         ```diff
@@ -798,7 +797,6 @@ Following steps are necessary to correctly use the new Toolbar:
 4. Page: Correctly configure the `ContentScopeIndicator`
 
     There are three cases:
-
     1. The entity uses the normal `ContentScope`
 
         Do nothing. The `ContentScopeIndicator` uses the scope provided by `useContentScope()` by default.
@@ -1004,31 +1002,26 @@ The code that handles values from these components needs to be adjusted.
 <summary>Expand for details</summary>
 
 - `DatePicker`:
-
     - Replace the `componentsProps` prop with `slotProps`
     - Remove the `DatePickerComponentsProps` type
     - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 - `DateRangePicker`:
-
     - Replace the `componentsProps` prop with `slotProps`
     - Remove the `DateRangePickerComponentsProps` type
     - Rename the `calendar` class-key to `dateRange`
     - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 - `DateTimePicker`:
-
     - Replace the `componentsProps` prop with `slotProps`
     - Remove the `DateTimePickerComponentsProps` type
     - Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
     - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 - `TimePicker`:
-
     - Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 - `TimeRangePicker`:
-
     - Replace the `componentsProps` prop with `slotProps`
     - Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
     - Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`

@@ -49,7 +49,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         folderName: string,
         fileName: string,
         data: NodeJS.ReadableStream | Buffer | string,
-        { headers }: CreateFileOptions,
+        { contentType }: CreateFileOptions,
     ): Promise<void> {
         if (!(await this.folderExists(`${folderName}/${path.dirname(fileName)}`))) {
             await this.createFolder(`${folderName}/${path.dirname(fileName)}`);
@@ -70,9 +70,13 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
                     stream.end();
                 }
             }),
-            await fs.promises.writeFile(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, JSON.stringify(headers), {
-                encoding: "utf-8",
-            }),
+            await fs.promises.writeFile(
+                `${this.path}/${folderName}/${fileName}-${this.headersFile}`,
+                JSON.stringify({ "content-type": contentType }),
+                {
+                    encoding: "utf-8",
+                },
+            ),
         ]);
     }
 
@@ -104,7 +108,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
         return {
             size: stat.size,
             lastModified: stat.mtime,
-            headers,
+            contentType: headers["content-type"],
         };
     }
 

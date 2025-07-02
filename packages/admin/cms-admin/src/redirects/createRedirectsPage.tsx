@@ -8,6 +8,7 @@ import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
 import { type BlockInterface } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
+import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
 
@@ -23,21 +24,30 @@ const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 
+interface RedirectsPageProps {
+    redirectPathAfterChange?: string;
+}
+
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>;
+    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectsLinkBlock to create a custom link block for the redirects
     scopeParts?: string[];
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType {
-    const linkBlock = createOneOfBlock({
+export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInterface>) {
+    return createOneOfBlock({
         supportedBlocks: { internal: RedirectsInternalLinkBlock, external: RedirectsExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
         displayName: <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
         allowEmpty: false,
     });
+}
 
-    function Redirects(): JSX.Element {
+function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
+    const linkBlock = createRedirectsLinkBlock(customTargets);
+
+    function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
         const intl = useIntl();
+        useContentScopeConfig({ redirectPathAfterChange });
 
         const { scope: completeScope } = useContentScope();
         const scope = scopeParts.reduce(

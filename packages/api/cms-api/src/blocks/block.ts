@@ -1,5 +1,6 @@
 import { type Type } from "@nestjs/common";
 import { type ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
+import { type WarningSeverity as WarningSeverityEnum } from "src/warnings/entities/warning-severity.enum";
 
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
@@ -15,6 +16,10 @@ export interface BlockTransformerServiceInterface<
     T = any,
 > {
     transformToPlain(block: Block, context: BlockContext): T | Promise<T>;
+}
+
+export interface BlockWarningsServiceInterface<Block extends BlockDataInterface = BlockDataInterface> {
+    warnings(block: Block): Promise<BlockWarning[]>;
 }
 
 export interface TraversableTransformBlockResponse {
@@ -57,10 +62,18 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
+type WarningSeverity = `${WarningSeverityEnum}`;
+
+export interface BlockWarning {
+    message: string;
+    severity: WarningSeverity;
+}
+
 export interface BlockDataInterface {
     transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformBlockResponse>;
     transformToSave(): TraversableTransformBlockResponse;
     indexData(): BlockIndexData;
+    warnings(): BlockWarning[] | Promise<BlockWarning[]> | Type<BlockWarningsServiceInterface>;
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,6 +94,11 @@ export abstract class BlockData implements BlockDataInterface {
     indexData(): BlockIndexData {
         return {};
     }
+
+    warnings(): BlockWarning[] | Promise<BlockWarning[]> | Type<BlockWarningsServiceInterface> {
+        return [];
+    }
+
     childBlocksInfo(): ChildBlockInfo[] {
         const ret: ChildBlockInfo[] = [];
         for (const key of getFieldKeys({ prototype: Object.getPrototypeOf(this) })) {

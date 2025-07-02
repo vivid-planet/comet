@@ -6,7 +6,8 @@ const packageFolderMapping = {
     "@comet/admin-rte": "packages/admin/admin-rte",
     "@comet/cms-admin": "packages/admin/cms-admin",
     "@comet/cms-api": "packages/api/cms-api",
-    "@comet/cms-site": "packages/site/cms-site",
+    "@comet/site-nextjs": "packages/site/site-nextjs",
+    "@comet/site-react": "packages/site/site-react",
 };
 
 const waitOnPackages = (...packages) => {
@@ -97,16 +98,30 @@ module.exports = {
             waitOn: waitOnPackages("@comet/cms-api"),
         },
 
-        //group cms-site
+        //group site-nextjs
         {
-            name: "cms-site",
-            script: "pnpm --filter @comet/cms-site run dev",
-            group: ["cms-site", "cms"],
+            name: "site-nextjs",
+            script: "pnpm --filter @comet/site-nextjs run dev",
+            group: ["site-nextjs", "cms"],
+            waitOn: [...waitOnPackages("@comet/site-react")],
         },
         {
-            name: "cms-site-codegen-block-types",
-            script: "pnpm --filter @comet/cms-site run generate-block-types:watch",
-            group: ["cms-site", "cms"],
+            name: "site-nextjs-codegen-block-types",
+            script: "pnpm --filter @comet/site-nextjs run generate-block-types:watch",
+            group: ["site-nextjs", "cms"],
+            waitOn: [...waitOnPackages("@comet/site-react")],
+        },
+
+        //group site-react
+        {
+            name: "site-react",
+            script: "pnpm --filter @comet/site-react run dev",
+            group: ["site-react", "site-nextjs", "cms"],
+        },
+        {
+            name: "site-react-codegen-block-types",
+            script: "pnpm --filter @comet/site-react run generate-block-types:watch",
+            group: ["site-react", "site-nextjs", "cms"],
         },
 
         //group demo admin
@@ -136,6 +151,12 @@ module.exports = {
             group: ["demo-api", "demo"],
         },
         {
+            name: "demo-api-generator",
+            script: "pnpm --filter comet-demo-api exec comet-api-generator generate --watch",
+            group: ["demo-api", "demo"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "packages/api/api-generator/lib/apiGenerator.js"],
+        },
+        {
             name: "demo-api",
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
@@ -147,7 +168,7 @@ module.exports = {
             name: "demo-site",
             script: "pnpm --filter comet-demo-site run dev",
             group: ["demo-site", "demo"],
-            waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
+            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-codegen",
@@ -167,7 +188,7 @@ module.exports = {
             name: "demo-site-pages",
             script: "pnpm --filter comet-demo-site-pages run dev",
             group: ["demo-site-pages", "demo"],
-            waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
+            waitOn: [...waitOnPackages("@comet/site-nextjs"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-pages-codegen",

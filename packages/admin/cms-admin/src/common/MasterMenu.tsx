@@ -17,7 +17,7 @@ import { type RouteProps, useRouteMatch } from "react-router-dom";
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 
 type MasterMenuItemBase = {
-    requiredPermission?: string;
+    requiredPermission?: string | string[];
 };
 
 type MasterMenuItemRoute = MasterMenuItemBase &
@@ -96,7 +96,8 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
             }
             return true;
         }
-        return isAllowed(item.requiredPermission);
+        const requiredPermissions = Array.isArray(item.requiredPermission) ? item.requiredPermission : [item.requiredPermission];
+        return requiredPermissions.some((permission) => isAllowed(permission));
     };
 
     const mapFn = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): MenuItem => {

@@ -6,7 +6,7 @@ import { type CrudFieldOptions } from "../decorators/crud-generator.decorator";
 export function hasCrudFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
     const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
     const defaultValue = option == "dedicatedResolverArg" ? false : true;
-    return crudField[option] ?? defaultValue;
+    return !!(crudField[option] ?? defaultValue);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,7 +15,7 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
         .filter((prop) => prop.name != "status")
         .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
-            if (prop.type === "string" || prop.type === "text") {
+            if ((prop.type === "string" || prop.type === "text") && !prop.columnTypes.includes("uuid")) {
                 acc.push(prop.name);
             } else if (prop.kind == "m:1") {
                 if (!prop.targetMeta) {
@@ -27,7 +27,7 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
                         (innerProp) => hasCrudFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"),
                     )
                     .forEach((innerProp) => {
-                        if (innerProp.type === "string" || innerProp.type === "text") {
+                        if ((innerProp.type === "string" || innerProp.type === "text") && !innerProp.columnTypes.includes("uuid")) {
                             acc.push(`${prop.name}.${innerProp.name}`);
                         }
                     });

@@ -54,7 +54,43 @@ export function generateForm(
     const formFragmentName = config.fragmentName ?? `${gqlType}Form`;
     const gqlDocuments: GQLDocumentConfigMap = {};
 
-    const imports: Imports = [];
+    const imports: Imports = [
+        { name: "FormattedMessage", importPath: "react-intl" },
+        { name: "useApolloClient", importPath: "@apollo/client" },
+        { name: "useQuery", importPath: "@apollo/client" },
+        { name: "gql", importPath: "@apollo/client" },
+        { name: "AsyncSelectField", importPath: "@comet/admin" },
+        { name: "CheckboxField", importPath: "@comet/admin" },
+        { name: "Field", importPath: "@comet/admin" },
+        { name: "filterByFragment", importPath: "@comet/admin" },
+        { name: "FinalForm", importPath: "@comet/admin" },
+        { name: "FinalFormInput", importPath: "@comet/admin" },
+        { name: "FinalFormRangeInput", importPath: "@comet/admin" },
+        { name: "FinalFormSelect", importPath: "@comet/admin" },
+        { name: "FinalFormSubmitEvent", importPath: "@comet/admin" },
+        { name: "Loading", importPath: "@comet/admin" },
+        { name: "NumberField", importPath: "@comet/admin" },
+        { name: "RadioGroupField", importPath: "@comet/admin" },
+        { name: "TextAreaField", importPath: "@comet/admin" },
+        { name: "TextField", importPath: "@comet/admin" },
+        { name: "useFormApiRef", importPath: "@comet/admin" },
+        { name: "useStackSwitchApi", importPath: "@comet/admin" },
+        { name: "ArrowLeft", importPath: "@comet/admin-icons" },
+        { name: "Lock", importPath: "@comet/admin-icons" },
+        { name: "DateTimeField", importPath: "@comet/admin-date-time" },
+        { name: "FinalFormDatePicker", importPath: "@comet/admin-date-time" },
+        { name: "BlockState", importPath: "@comet/cms-admin" },
+        { name: "createFinalFormBlock", importPath: "@comet/cms-admin" },
+        { name: "queryUpdatedAt", importPath: "@comet/cms-admin" },
+        { name: "resolveHasSaveConflict", importPath: "@comet/cms-admin" },
+        { name: "useFormSaveConflict", importPath: "@comet/cms-admin" },
+        { name: "FileUploadField", importPath: "@comet/cms-admin" },
+        { name: "IconButton", importPath: "@mui/material" },
+        { name: "MenuItem", importPath: "@mui/material" },
+        { name: "InputAdornment", importPath: "@mui/material" },
+        { name: "FormApi", importPath: "final-form" },
+        { name: "useMemo", importPath: "react" },
+    ];
     const props: Prop[] = [];
 
     const mode = config.mode ?? "all";
@@ -246,10 +282,12 @@ export function generateForm(
             name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}`,
             importPath: `./${baseOutputFilename}.gql.generated`,
         });
-        imports.push({
-            name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}Variables`,
-            importPath: `./${baseOutputFilename}.gql.generated`,
-        });
+        if (type !== "fragment") {
+            imports.push({
+                name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}Variables`,
+                importPath: `./${baseOutputFilename}.gql.generated`,
+            });
+        }
     }
 
     const finalFormSubscription = Object.keys(generatedFields.finalFormConfig?.subscription ?? {});
@@ -288,34 +326,10 @@ export function generateForm(
         filterByFragmentType = `${formFragmentName}Fragment`;
     }
 
-    const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
-    import {
-        AsyncSelectField,
-        CheckboxField,
-        Field,
-        filterByFragment,
-        FinalForm,
-        FinalFormInput,
-        FinalFormRangeInput,
-        FinalFormSelect,
-        FinalFormSubmitEvent,
-        Loading,
-        NumberField,
-        RadioGroupField,
-        TextAreaField,
-        TextField,
-        useFormApiRef,
-        useStackSwitchApi,
-    } from "@comet/admin";
-    import { ArrowLeft, Lock } from "@comet/admin-icons";
-    import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
-    import { BlockState, createFinalFormBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField } from "@comet/cms-admin";
-    import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
-    import { FormApi } from "final-form";
-    import isEqual from "lodash.isequal";
-    import { useMemo } from "react";
-    import { FormattedMessage } from "react-intl";
+    const code = `
     ${generateImportsCode(imports)}
+    import isEqual from "lodash.isequal";
+
     ${
         rootBlockFields.length > 0
             ? `const rootBlocks = {
@@ -327,11 +341,11 @@ export function generateForm(
     ${customFilterByFragment}
 
     type FormValues = ${
-        formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0
-            ? `Omit<${filterByFragmentType}, ${formValuesConfig
-                  .filter((config) => !!config.omitFromFragmentType)
-                  .map((config) => `"${config.omitFromFragmentType}"`)
-                  .join(" | ")}>`
+        formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0 || rootBlockFields.length > 0
+            ? `Omit<${filterByFragmentType}, ${[
+                  ...(rootBlockFields.length > 0 ? ["keyof typeof rootBlocks"] : []),
+                  ...formValuesConfig.filter((config) => !!config.omitFromFragmentType).map((config) => `"${config.omitFromFragmentType}"`),
+              ].join(" | ")}>`
             : `${filterByFragmentType}`
     } ${
         formValuesConfig.filter((config) => !!config.typeCode).length > 0

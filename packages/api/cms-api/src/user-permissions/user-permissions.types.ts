@@ -30,12 +30,22 @@ export interface AccessControlServiceInterface {
 }
 
 export interface UserPermissionsUserServiceInterface {
+    /**
+     * Optional method to get the user for login if a different code path from the default `getUser` is required
+     */
+    getUserForLogin?: (id: string) => Promise<User> | User;
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
 }
 
+type ContentScopeWithLabel = {
+    scope: ContentScope;
+    label?: { [key in keyof ContentScope]?: string };
+};
+export type AvailableContentScope = ContentScope | ContentScopeWithLabel;
+
 export interface UserPermissionsOptions {
-    availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
+    availableContentScopes?: AvailableContentScope[] | (() => Promise<AvailableContentScope[]> | AvailableContentScope[]);
     systemUsers?: string[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {

@@ -1,5 +1,13 @@
 # @comet/admin-icons
 
+## 8.0.0-beta.6
+
+## 8.0.0-beta.5
+
+### Patch Changes
+
+- 5a6efc1: Transform SVG attributes into camelCase to generate valid JSX
+
 ## 8.0.0-beta.4
 
 ## 8.0.0-beta.3
@@ -36,6 +44,20 @@
 
 - 682a674: Add support for React 18
 
+## 7.25.0
+
+## 7.24.0
+
+## 7.23.0
+
+## 7.22.0
+
+## 7.21.1
+
+## 7.21.0
+
+## 7.20.0
+
 ## 7.19.0
 
 ## 7.18.0
@@ -61,7 +83,6 @@
 ### Minor Changes
 
 - 7cea765fe: Add UI for Impersonation Feature
-
     - Add indicator to display when impersonation mode is active in `UserHeaderItem`
     - Add button to allow users to switch on impersonation in the `UserGrid`
     - Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
@@ -268,7 +289,6 @@
 
 - c3b7f992: Add new icons intended to be used in the RTE
 - c3b7f992: Change how `maxVisible` in `FeaturesButtonGroup` works:
-
     - If maxVisible = 4 and there are four features -> all four features (and no dropdown) are shown
     - If maxVisible = 4 and there are five features -> three features and the dropdown (containing two features) are shown
 

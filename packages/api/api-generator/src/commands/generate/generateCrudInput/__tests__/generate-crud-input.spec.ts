@@ -149,10 +149,10 @@ describe("GenerateCrudInput", () => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const prop = structure.properties![0];
                 expect(prop.name).toBe("foo");
-                expect(prop.type).toBe("Date");
+                expect(prop.type).toBe("string");
                 const decorators = prop.decorators?.map((i) => i.name);
                 expect(decorators).toContain("Field");
-                expect(decorators).toContain("IsDate");
+                expect(decorators).toContain("IsDateString");
                 expect(decorators).toContain("IsNotEmpty");
             }
 

@@ -1,4 +1,4 @@
-import { ListBlock, type PropsWithData, withPreview } from "@comet/cms-site";
+import { ListBlock, type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type CallToActionListBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 
@@ -21,7 +21,7 @@ const Root = styled.div`
     flex-flow: row wrap;
     gap: ${({ theme }) => theme.spacing.S300};
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         gap: ${({ theme }) => theme.spacing.S400};
     }
 `;

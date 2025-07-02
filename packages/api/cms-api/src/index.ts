@@ -6,7 +6,7 @@ export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { CometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createBasicAuthService } from "./auth/services/basic.auth-service";
-export { createJwtAuthService } from "./auth/services/jwt.auth-service";
+export { createJwtAuthService, JwtPayload, JwtToUserServiceInterface } from "./auth/services/jwt.auth-service";
 export { createSitePreviewAuthService } from "./auth/services/site-preview.auth-service";
 export { createStaticUserAuthService } from "./auth/services/static-authed-user.auth-service";
 export { createAuthGuardProviders } from "./auth/util/auth-guard.providers";
@@ -36,6 +36,7 @@ export {
     BlockMetaInterface,
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
+    BlockWarning,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
@@ -124,6 +125,7 @@ export {
 } from "./common/decorators/crud-generator.decorator";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
+export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
 export { ExceptionFilter } from "./common/errors/exception.filter";
@@ -189,7 +191,6 @@ export { ImagesService } from "./dam/images/images.service";
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
-export { EntityInfo, EntityInfoServiceInterface } from "./dependencies/decorators/entity-info.decorator";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
@@ -266,3 +267,5 @@ export {
     UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
+export { CreateWarnings } from "./warnings/decorators/create-warnings.decorator";
+export { WarningsModule } from "./warnings/warning.module";

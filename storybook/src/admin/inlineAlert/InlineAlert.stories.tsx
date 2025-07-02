@@ -1,7 +1,7 @@
-import { InlineAlert } from "@comet/admin";
+import { Button, InlineAlert } from "@comet/admin";
 import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
-import { Box, Button } from "@mui/material";
-import type { Meta, StoryObj } from "@storybook/react";
+import { Box } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 type Story = StoryObj<typeof InlineAlert>;
 
@@ -82,7 +82,7 @@ export const InlineAlertWithActions: Story = {
         actions: (
             <Button
                 startIcon={<Reload />}
-                variant="contained"
+                variant="primary"
                 onClick={() => {
                     alert("onRetry clicked");
                 }}
@@ -104,7 +104,7 @@ export const InlineAlertWithMultipleActions: Story = {
             <Box sx={{ display: "flex", gap: 2 }}>
                 <Button
                     startIcon={<Reload />}
-                    variant="contained"
+                    variant="primary"
                     onClick={() => {
                         alert("onRetry clicked");
                     }}

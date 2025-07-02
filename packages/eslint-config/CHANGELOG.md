@@ -1,5 +1,24 @@
 # @comet/eslint-config
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.0.0-beta.6
+
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 6d3c196: Add import restriction for MUI's `Button`
+
+    Buttons used in Comet DXP applications should match the Comet CI.
+    Use `Button` from `@comet/admin` instead.
+
+### Patch Changes
+
+- @comet/eslint-plugin@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Patch Changes
@@ -53,6 +72,48 @@
 ### Minor Changes
 
 - a8edddb: Enable `@typescript-eslint/consistent-type-imports` rule
+
+## 7.25.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.22.0
+
+## 7.21.1
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.21.0
+
+## 7.20.0
+
+### Patch Changes
+
+- @comet/eslint-plugin@7.20.0
 
 ## 7.19.0
 
@@ -333,7 +394,6 @@
     // TODO Move the following introduction to the migration guide before releasing
 
     Requires following changes to site:
-
     - Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
     - Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
     - Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
@@ -348,7 +408,6 @@
         - Use the `path`-part of the return value to redirect to the preview
 
     Requires following changes to admin
-
     - The `SitesConfig` must provide a `sitePreviewApiUrl`
 
 ### Patch Changes
@@ -380,7 +439,6 @@
 - 6cb850567: Fix Prettier peer dependency
 
     The dependency range was incorrectly set to `>= 2`. Change to `^2.0.0` since Prettier v3 isn't supported at the moment.
-
     - @comet/eslint-plugin@6.15.1
 
 ## 6.15.0

@@ -55,7 +55,8 @@
         },
         "packages/admin/cms-admin": {
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["**/*.generated.ts"]
         },
         "packages/admin/admin-generator": {
             "entry": ["./src/adminGenerator.ts", "./src/index.ts"],
@@ -70,14 +71,20 @@
             "entry": ["./src/apiGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/cms-site": {
+        "packages/site/site-react": {
             "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"]
+        },
+        "packages/site/site-nextjs": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/*.generated.ts"]
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.{ts,tsx}"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./src/**/generated/**", "./src/products/future/AssignProductsGrid.tsx"],
+            "ignore": ["./src/**/generated/**", "**/graphql.generated.ts", "**/*.generated.ts"],
             "ignoreDependencies": ["@swc/plugin-emotion", "cosmiconfig-toml-loader", "@babel/core"]
         },
         "demo/api": {
@@ -92,14 +99,15 @@
                 "./src/auth/user.interface.ts",
                 "./src/generator/generate.ts"
             ],
-            "ignore": ["./src/**/generated/**"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"]
+            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"],
+            "ignore": ["./src/**/generated/**", "**/graphql.generated.ts"]
         },
         "demo/site": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts", "./server.ts", "./opentelemetry-metrics.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@babel/core"]
+            "ignoreDependencies": ["@babel/core"],
+            "ignore": ["**/*.generated.ts"]
         },
         "demo/site-pages": {
             "entry": [
@@ -110,7 +118,8 @@
                 "./preBuild/src/publicGenerator/generate.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}", "./preBuild/**/*.ts"],
-            "ignoreDependencies": ["@babel/core"]
+            "ignoreDependencies": ["@babel/core"],
+            "ignore": ["**/*.generated.ts"]
         },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],

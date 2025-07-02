@@ -1,5 +1,6 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { Request } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
@@ -69,14 +70,16 @@ export class AccessLogInterceptor implements NestInterceptor {
             requestData.push(`args: ${JSON.stringify(gqlArgs)}`);
         } else {
             const httpContext = context.switchToHttp();
-            const httpRequest = httpContext.getRequest();
+            const httpRequest = httpContext.getRequest<Request>();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const user = (httpRequest as any).user as CurrentUser;
 
             if (
                 ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
                 (this.config &&
                     this.config.shouldLogRequest &&
                     !this.config.shouldLogRequest({
-                        user: httpRequest.user,
+                        user: user,
                         req: httpRequest,
                     }))
             ) {
@@ -85,7 +88,7 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             const ipAddress = getClientIp(httpRequest);
             requestData.push(`ip: ${ipAddress}`);
-            this.pushUserToRequestData(httpRequest.user, requestData);
+            this.pushUserToRequestData(user, requestData);
 
             requestData.push(
                 ...[`method: ${httpRequest.method}`, `route: ${httpRequest.route.path}`, `params: ${JSON.stringify(httpRequest.params)}`],

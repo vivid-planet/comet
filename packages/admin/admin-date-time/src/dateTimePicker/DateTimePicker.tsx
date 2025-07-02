@@ -14,37 +14,67 @@ export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormContr
 const Root = createComponentSlot("div")<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "root",
-})(css`
-    display: flex;
-    align-items: center;
-`);
+})(
+    ({ theme }) => css`
+        ${theme.breakpoints.up("sm")} {
+            display: flex;
+            align-items: center;
+        }
+    `,
+);
 
 const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "dateFormControl",
 })(
     ({ theme }) => css`
-        flex-grow: 1;
-        margin-right: ${theme.spacing(2)};
+        margin-bottom: ${theme.spacing(2)};
+        width: 100%;
+
+        ${theme.breakpoints.up("sm")} {
+            flex-grow: 1;
+            margin-right: ${theme.spacing(2)};
+            margin-bottom: 0;
+            width: auto;
+        }
     `,
 );
 
 const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timeFormControl",
-})(css`
-    flex-grow: 1;
-`);
+})(
+    ({ theme }) => css`
+        width: 100%;
+        flex-grow: 1;
+
+        ${theme.breakpoints.up("sm")} {
+            width: auto;
+        }
+    `,
+);
 
 const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "datePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timePicker",
-})();
+})(
+    () => css`
+        .MuiInputBase-input {
+            text-overflow: ellipsis;
+        }
+    `,
+);
 
 export interface DateTimePickerProps
     extends ThemedComponentBaseProps<{
@@ -57,12 +87,13 @@ export interface DateTimePickerProps
     onChange?: (value?: Date) => void;
     value?: Date;
     required?: boolean;
+    disabled?: boolean;
     onBlur?: InputBaseProps["onBlur"];
     onFocus?: InputBaseProps["onFocus"];
 }
 
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, required, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
+    const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
@@ -109,6 +140,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     onChange={onChangeDate}
                     fullWidth
                     required={required}
+                    disabled={disabled}
                     {...slotProps?.datePicker}
                     onBlur={(event) => {
                         onBlur?.(event);
@@ -128,6 +160,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     onChange={onChangeTime}
                     fullWidth
                     required={required}
+                    disabled={disabled}
                     {...slotProps?.timePicker}
                     onBlur={(event) => {
                         onBlur?.(event);

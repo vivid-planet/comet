@@ -25,8 +25,6 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         });
 
         const serviceOut = `import { ObjectQuery } from "@mikro-orm/postgresql";
-    import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     
@@ -37,9 +35,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     `;
         generatedFiles.push({ name: `${fileNamePlural}.service.ts`, content: serviceOut, type: "service" });
 
-        const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/postgresql";
+        const resolverOut = `import { FindOptions, EntityManager } from "@mikro-orm/postgresql";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     
@@ -53,22 +49,20 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     }
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
-    import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
-            private readonly entityManager: EntityManager,
-            private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
-            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
+            protected readonly entityManager: EntityManager,
+            protected readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
         ) {}
     
         @Query(() => ${metadata.className}, { nullable: true })
         async ${instanceNameSingular}(
                 ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             ): Promise<${metadata.className} | null> {
-            const ${instanceNamePlural} = await this.repository.find({${scopeProp ? `scope` : ""}});
+            const ${instanceNamePlural} = await this.entityManager.find(${metadata.className}, {${scopeProp ? `scope` : ""}});
             if (${instanceNamePlural}.length > 1) {
                 throw new Error("There must be only one ${instanceNameSingular}");
             }
@@ -81,10 +75,10 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            let ${instanceNameSingular} = await this.repository.findOne({${scopeProp ? `scope` : ""}});
+            let ${instanceNameSingular} = await this.entityManager.findOne(${metadata.className}, {${scopeProp ? `scope` : ""}});
 
             if (!${instanceNameSingular}) {
-                ${instanceNameSingular} = this.repository.create({ 
+                ${instanceNameSingular} = this.entityManager.create(${metadata.className}, {
                     ...input,
                     ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                     ${scopeProp ? `scope,` : ""} 

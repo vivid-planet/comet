@@ -3,18 +3,28 @@ import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import { CometConfigProvider, createDamFileDependency, CurrentUserProvider, MasterMenuRoutes, SitePreview } from "@comet/cms-admin";
+import {
+    CometConfigProvider,
+    type ContentScope,
+    ContentScopeProvider,
+    createDamFileDependency,
+    CurrentUserProvider,
+    MasterMenuRoutes,
+    SitePreview,
+} from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
-import { type ContentScope } from "@src/site-configs";
+import { type ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
+import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router";
 
-import { ContentScopeProvider } from "./common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
@@ -27,6 +37,7 @@ import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import { NewsListBlock } from "./news/blocks/NewsListBlock";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
 import { pageTreeCategories } from "./pageTree/pageTreeCategories";
+import { RedirectDependency } from "./redirects/RedirectsDependency";
 
 const GlobalStyle = () => (
     <Global
@@ -40,6 +51,11 @@ const GlobalStyle = () => (
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 
+declare module "@comet/cms-admin" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface ContentScope extends BaseContentScope {}
+}
+
 export function App() {
     return (
         <CometConfigProvider
@@ -49,6 +65,7 @@ export function App() {
                 categories: pageTreeCategories,
                 documentTypes: pageTreeDocumentTypes,
                 additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
+                scopeParts: ["domain", "language"],
             }}
             dam={{
                 ...config.dam,
@@ -69,6 +86,7 @@ export function App() {
                     Page,
                     Link,
                     News: NewsDependency,
+                    Redirect: RedirectDependency,
                     DamFile: createDamFileDependency(),
                 },
             }}
@@ -105,42 +123,44 @@ export function App() {
         >
             <ApolloProvider client={apolloClient}>
                 <IntlProvider locale="en" messages={getMessages()}>
-                    <MuiThemeProvider theme={theme}>
-                        <DndProvider options={HTML5toTouch}>
-                            <SnackbarProvider>
-                                <ErrorDialogHandler />
-                                <CurrentUserProvider>
-                                    <RouterBrowserRouter>
-                                        <GlobalStyle />
-                                        <ContentScopeProvider>
-                                            {({ match }) => (
-                                                <Switch>
-                                                    <Route
-                                                        path={`${match.path}/preview`}
-                                                        render={(props) => (
-                                                            <SitePreview
-                                                                resolvePath={(path: string, scope) => {
-                                                                    return `/${scope.language}${path}`;
-                                                                }}
-                                                                {...props}
-                                                            />
-                                                        )}
-                                                    />
-                                                    <Route
-                                                        render={() => (
-                                                            <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
-                                                                <MasterMenuRoutes menu={masterMenuData} />
-                                                            </MasterLayout>
-                                                        )}
-                                                    />
-                                                </Switch>
-                                            )}
-                                        </ContentScopeProvider>
-                                    </RouterBrowserRouter>
-                                </CurrentUserProvider>
-                            </SnackbarProvider>
-                        </DndProvider>
-                    </MuiThemeProvider>
+                    <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+                        <MuiThemeProvider theme={theme}>
+                            <DndProvider options={HTML5toTouch}>
+                                <SnackbarProvider>
+                                    <ErrorDialogHandler />
+                                    <CurrentUserProvider>
+                                        <RouterBrowserRouter>
+                                            <GlobalStyle />
+                                            <ContentScopeProvider>
+                                                {({ match }) => (
+                                                    <Switch>
+                                                        <Route
+                                                            path={`${match.path}/preview`}
+                                                            render={(props) => (
+                                                                <SitePreview
+                                                                    resolvePath={(path: string, scope) => {
+                                                                        return `/${scope.language}${path}`;
+                                                                    }}
+                                                                    {...props}
+                                                                />
+                                                            )}
+                                                        />
+                                                        <Route
+                                                            render={() => (
+                                                                <MasterLayout headerComponent={MasterHeader} menuComponent={AppMasterMenu}>
+                                                                    <MasterMenuRoutes menu={masterMenuData} />
+                                                                </MasterLayout>
+                                                            )}
+                                                        />
+                                                    </Switch>
+                                                )}
+                                            </ContentScopeProvider>
+                                        </RouterBrowserRouter>
+                                    </CurrentUserProvider>
+                                </SnackbarProvider>
+                            </DndProvider>
+                        </MuiThemeProvider>
+                    </LocalizationProvider>
                 </IntlProvider>
             </ApolloProvider>
         </CometConfigProvider>

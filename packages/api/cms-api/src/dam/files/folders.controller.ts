@@ -32,6 +32,7 @@ export const createFoldersController = ({ damBasePath }: { damBasePath: string }
 
             res.setHeader("Content-Disposition", `attachment; filename="${folder.name}.zip"`);
             res.setHeader("Content-Type", "application/zip");
+            res.setHeader("cache-control", "no-store");
             zipStream.pipe(res);
         }
     }

@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { type RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { type ExternalLinkBlockData } from "../../blocks.generated";
-import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { type ContentScope, useContentScope } from "../../contentScope/Provider";
 import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
@@ -21,7 +21,7 @@ import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLin
 
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
-    resolvePath?: (path: string, scope: ContentScopeInterface) => string;
+    resolvePath?: (path: string, scope: ContentScope) => string;
     logo?: ReactNode;
 }
 
@@ -47,11 +47,11 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
 function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props) {
     const { scope } = useContentScope();
 
-    //initialPath: path the preview is intialized with; WITHOUT resolvePath called, might be not the path actually used in site
+    //initialPath: path the preview is initialized with; WITHOUT resolvePath called, might be not the path actually used in site
     //doesn't change during navigation within site
     const [initialPath] = useSearchState("path", (v) => v ?? "");
 
-    //sitePath: actual path of site, intialized with initialPath + resolvePath
+    //sitePath: actual path of site, initialized with initialPath + resolvePath
     //use case for resolvePath: i18n urls, for example `/${scope.language}${path}`;
     //changes during navigation within site (iframe bridge reports new path)
     const [sitePath, setSitePath] = useSearchState("sitePath", (v) => {

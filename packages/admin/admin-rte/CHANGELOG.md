@@ -1,5 +1,35 @@
 # @comet/admin-rte
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [9e3e943]
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+- Updated dependencies [9e3e943]
+- Updated dependencies [06d5600]
+- Updated dependencies [15b7dd3]
+- Updated dependencies [d6a004a]
+- Updated dependencies [77b52a8]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
+## 8.0.0-beta.5
+
+### Patch Changes
+
+- Updated dependencies [2cf573b]
+- Updated dependencies [4182a94]
+- Updated dependencies [1d28c90]
+- Updated dependencies [6cfc60d]
+- Updated dependencies [ad9b2a3]
+- Updated dependencies [5a6efc1]
+- Updated dependencies [09c4830]
+- Updated dependencies [bf9b1bb]
+    - @comet/admin@8.0.0-beta.5
+    - @comet/admin-icons@8.0.0-beta.5
+
 ## 8.0.0-beta.4
 
 ### Patch Changes
@@ -86,6 +116,64 @@
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
 
+## 7.25.0
+
+### Patch Changes
+
+- @comet/admin@7.25.0
+- @comet/admin-icons@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- Updated dependencies [fc900f217]
+    - @comet/admin@7.24.0
+    - @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+- @comet/admin@7.23.0
+- @comet/admin-icons@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- Updated dependencies [2cf573b72]
+- Updated dependencies [086774f01]
+    - @comet/admin@7.22.0
+    - @comet/admin-icons@7.22.0
+
+## 7.21.1
+
+### Patch Changes
+
+- Updated dependencies [b771bd6d8]
+    - @comet/admin@7.21.1
+    - @comet/admin-icons@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- Updated dependencies [1a30eb858]
+- Updated dependencies [3e9ea613e]
+    - @comet/admin@7.21.0
+    - @comet/admin-icons@7.21.0
+
+## 7.20.0
+
+### Patch Changes
+
+- Updated dependencies [415a83165]
+- Updated dependencies [99f904f81]
+- Updated dependencies [2d1726543]
+    - @comet/admin@7.20.0
+    - @comet/admin-icons@7.20.0
+
 ## 7.19.0
 
 ### Patch Changes
@@ -136,7 +224,6 @@
 - bb041f7a7: Add content generation capabilities to `createSeoBlock`
 
     The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
-
     - HTML title
     - Meta description
     - Open Graph title
@@ -149,7 +236,6 @@
     `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
 
     The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
-
     - if the state is a string: the string itself
     - otherwise: an empty array
 
@@ -373,7 +459,6 @@
 ### Major Changes
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -452,7 +537,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -576,7 +660,6 @@
 ### Major Changes
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -655,7 +738,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`

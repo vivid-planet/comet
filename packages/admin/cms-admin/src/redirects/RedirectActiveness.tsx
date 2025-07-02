@@ -1,7 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
-import { Button } from "@comet/admin";
-import { Invisible, Visible } from "@comet/admin-icons";
-import { ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { ChevronDown, Invisible, Visible } from "@comet/admin-icons";
+import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
 import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -17,6 +16,7 @@ const updateRedirectActivenessMutation = gql`
         updateRedirectActiveness(id: $id, input: $input) {
             id
             active
+            activatedAt
         }
     }
 `;
@@ -36,9 +36,9 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
     const [updateRedirectActiveness] = useMutation<GQLUpdateRedirectActivenessMutation, GQLUpdateRedirectActivenessMutationVariables>(
         updateRedirectActivenessMutation,
     );
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-    const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (event: MouseEvent) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -57,6 +57,7 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
                     __typename: "Redirect",
                     id: redirect.id,
                     active: active,
+                    activatedAt: active ? new Date() : null,
                 },
             },
         });
@@ -66,17 +67,21 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
 
     return (
         <>
-            <Button
-                variant="textDark"
+            <Chip
+                icon={<ChevronDown />}
+                label={
+                    <FormattedMessage
+                        id="comet.pages.redirects.redirect.activeness"
+                        defaultMessage="{activeness, select, true {activated} other {deactivated} }"
+                        values={{ activeness: redirect.active }}
+                    />
+                }
+                variant="filled"
+                color={redirect.active ? "success" : "default"}
+                clickable
                 onClick={handleMenuOpen}
-                startIcon={redirect.active ? <Visible style={{ color: green[500] }} /> : <Invisible color="disabled" />}
-            >
-                <FormattedMessage
-                    id="comet.pages.redirects.redirect.activeness"
-                    defaultMessage="{activeness, select, true {activated} other {deactivated} }"
-                    values={{ activeness: redirect.active }}
-                />
-            </Button>
+            />
+
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                 <MenuItem onClick={() => handleActivenessClick(true)} disabled={redirect.active}>
                     <ListItemIcon>

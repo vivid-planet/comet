@@ -86,6 +86,28 @@ Now you can run the generator with `npm run api-generator`. The generated files 
 Although this is generated code, it should still be checked into the repository. This enables a quick start of the API.
 :::
 
+### Watch Mode
+
+The api-generator script also supports the `-w` or `--watch` flag. This will watch for changes in the .entity.ts files and regenerate the corresponding files.
+
+```json
+{
+  ...
+  "scripts": {
+    "api-generator:watch": "rimraf 'src/*/generated' && comet-api-generator --watch",
+    ...
+  }
+}
+```
+
+### Generate only for specific entities
+
+If you want to generate only for specific entities, you can pass a file path to an .entity.ts file with the `-f` or `--file` flag
+
+```sh
+npm exec comet-api-generator -f src/products/entities/product.entity.ts
+```
+
 ## Register generated resolvers and services
 
 The resolvers and services created by the API Generator must be registered in the corresponding module:
@@ -116,12 +138,7 @@ You should not reference the generated code externally (except, of course, to pr
 ## Changing the entity
 
 When making changes (e.g., adding a new field) to an entity annotated with the CrudGenerator, the API Generator must be
-run again: `npm run api-generator`. The resulting changes must be checked into the repository.
-
-:::info
-The CI/CD pipeline checks whether the checked-in code matches the generated code. See the
-`lint:generated-files-not-modified` script in `api/package.json`.
-:::
+run again: `npm run api-generator`.
 
 ## Magic fields
 
@@ -187,6 +204,19 @@ export class CustomProductResolver {
 
 GraphQL will automatically "merge" the resolvers if the returned entities in `@Resolver(() => Entity)` is identical.
 
+While it is generally discouraged to extend the generated resolvers, it is possible to do so. This can be useful if you need to modify small parts of the resolver or your custom code needs to reuse code from the generated resolver.
+
+```ts
+@Resolver(() => Product)
+export class CustomProductResolver extends ProductResolver {
+    // ...
+}
+```
+
+:::warning
+Only add the CustomProductResolver to the module if you extend the generated resolver.
+:::
+
 #### Service
 
 You can't add custom code to the generated service directly. Instead, the recommended way is to create a second,
@@ -218,6 +248,8 @@ export class CustomProductsService {
     }
 }
 ```
+
+The custom service can also be extended using inheritance in the same way as the resolver.
 
 ### Scaffolding
 

@@ -431,6 +431,50 @@ Previously, if entities specified a `status` enum, it was automatically added to
 This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
 done with the normal filtering mechanism.
 
+### API Generator - Don't commit generated files [optional]
+
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+
+run api-generator in prebuild:
+
+```diff title="api/package.json"
+scripts: {
+-  "prebuild": "rimraf dist",
++  "prebuild": "rimraf dist && npm run api-generator",
+}
+```
+
+lint script can be removed:
+
+```diff title="api/package.json"
+scripts: {
+-  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+}
+```
+
+Add generated files to eslint ignore:
+
+```diff title="api/eslint.config.mjs"
+scripts: {
+-  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
++  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+}
+```
+
+Add generated files to .gitignore:
+
+```diff title="api/.gitignore"
+scripts: {
++  src/**/generated
+}
+```
+
+And finally delete generated files from git:
+
+```sh
+git rm -r api/src/*/generated
+```
+
 ### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
@@ -748,12 +792,10 @@ You need to modify your `AppModule` as follows:
         backend: config.blob.storage,
 +       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
     }),
-+   ImgproxyModule.register({
-+       imgproxyConfig: config.imgproxy,
-+   }),
++   ImgproxyModule.register(config.imgproxy),
     DamModule.register({
         damConfig: {
-            apiUrl: config.apiUrl,
+-           apiUrl: config.apiUrl,
             secret: config.dam.secret,
             allowedImageSizes: config.dam.allowedImageSizes,
             allowedAspectRatios: config.dam.allowedImageAspectRatios,
@@ -796,6 +838,89 @@ npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
 ```
 
 </details>
+
+### ✅ Change s3 blob-storage config structure
+
+It's now possible to configure the S3-client completely.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-s3-config.ts
+```
+
+:::
+
+Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
+
+```diff title=api/src/config/config.ts
+blob: {
+    storage: {
+        driver: envVars.BLOB_STORAGE_DRIVER,
+        file: {
+            path: envVars.FILE_STORAGE_PATH,
+        },
+        azure: {
+            accountName: envVars.AZURE_ACCOUNT_NAME,
+            accountKey: envVars.AZURE_ACCOUNT_KEY,
+        },
+        s3: {
+            region: envVars.S3_REGION,
+            endpoint: envVars.S3_ENDPOINT,
+            bucket: envVars.S3_BUCKET,
+-            accessKeyId: envVars.S3_ACCESS_KEY_ID,
+-            secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            credentials: {
++                 accessKeyId: envVars.S3_ACCESS_KEY_ID,
++                 secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            },
+        },
+    },
+    storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
+},
+```
+
+</details>
+
+### Use strings for date-only columns
+
+Starting with v6 MikroORM maps date-only columns to `string` instead of `Date`.
+Perform the following changes:
+
+1. Use `string` instead of `Date` for date-only columns:
+
+    ```diff
+    class Product {
+        @Property({ type: types.date, nullable: true })
+        @Field(() => GraphQLDate, { nullable: true })
+    -   availableSince?: Date = undefined;
+    +   availableSince?: string = undefined;
+    }
+    ```
+
+2. Use `GraphQLLocalDate` instead of `GraphQLDate`:
+
+    ```diff
+    - import { GraphQLDate } from "graphql-scalars";
+    + import { GraphQLLocalDate } from "graphql-scalars";
+
+    class Product {
+        @Property({ type: types.date, nullable: true })
+    -   @Field(() => GraphQLDate, { nullable: true })
+    +   @Field(() => GraphQLLocalDate, { nullable: true })
+        availableSince?: string = undefined;
+    }
+    ```
+
+    :::info Why this change?
+
+    The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type, whereas the `GraphQLLocalDate` performs no type coercion.
+
+    :::
 
 ## Admin
 
@@ -1326,48 +1451,6 @@ The `MenuContext` has been removed, use the new `useMainNavigation` hook instead
 
 </details>
 
-### Stay on same page after changing scope
-
-The Admin now stays on the same page per default when changing scopes.
-Perform the following changes:
-
-1.  Remove the `path` prop from the `PagesPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    <PagesPage
-    -   path="/pages/pagetree/main-navigation"
-        allCategories={pageTreeCategories}
-        documentTypes={pageTreeDocumentTypes}
-        category="MainNavigation"
-        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
-    />
-    ```
-
-2.  Remove the `redirectPathAfterChange` prop from the `RedirectsPage` component
-
-    ```diff title="admin/src/common/MasterMenu.tsx"
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
-        route: {
-            path: "/system/redirects",
-    -       render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
-    +       component: RedirectsPage
-        },
-        requiredPermission: "pageTree",
-    },
-    ```
-
-3.  Optional: Remove unnecessary usages of the `useContentScopeConfig` hook
-
-    ```diff
-    export function ProductsPage() {
-        const intl = useIntl();
-
-    -   useContentScopeConfig({ redirectPathAfterChange: "/structured-content/products" });
-    }
-    ```
-
 ### DataGrid-related changes
 
 ### Update usage of `DataGridToolbar`
@@ -1593,7 +1676,209 @@ Example:
 
 </details>
 
+### Adapt to changes in ContentScopeProvider
+
+#### Use interface augmentation for ContentScope
+
+```diff title="admin/src/App.tsx"
++   import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
++   declare module "@comet/cms-admin" {
++       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++       interface ContentScope extends BaseContentScope {}
++   }
+
+    export function App() {
+```
+
+#### Preferably use ContentScopeProvider directly from Comet
+
+Move the scope labels from admin to the API, for example:
+
+```diff
+UserPermissionsModule.forRootAsync({
+    useFactory: (userService: StaticUsersUserService, accessControlService: AccessControlService) => ({
+        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+-           siteConfig.scope.languages.map((language) => ({
+-               domain: siteConfig.scope.domain,
+-               language,
+-           })),
++           siteConfig.scope.languages.map((language) => ({
++               scope: {
++                   domain: siteConfig.scope.domain,
++                   language,
++               },
++               label: { domain: siteConfig.name },
++           })),
+        ),
+        // ...
+    }),
+    // ...
+}),
+```
+
+Then you can use the `ContentScopeProvider` from `@comet/cms-admin` directly in your `App.tsx` and delete `admin/src/common/ContentScopeProvider.tsx`:
+
+```diff title="admin/src/App.tsx"
+-   import { ContentScopeProvider } from "./common/ContentScopeProvider";
++   import { ContentScopeProvider } from "@comet/cms-admin";
+    // Delete `admin/src/common/ContentScopeProvider.tsx`
+```
+
+<details>
+
+<summary>However, if you need custom behavior, you can keep `admin/src/common/ContentScopeProvider.tsx` while skipping above change.</summary>
+
+Make sure to remove the generics:
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+-   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
+-       return useContentScopeConfigLibrary(p);
+-   }
+
+-    ContentScopeValues<ContentScope>
++    ContentScopeValues
+-    <ContentScopeProviderLibrary<ContentScope>>
++    <ContentScopeProviderLibrary>
+```
+
+</details>
+
+### Import `Button` from `@comet/admin` package
+
+```diff
+- import { Button } from "@mui/material";
++ import { Button } from "@comet/admin";
+```
+
+### `FinalFormToggleButtonGroup` deprecated
+
+`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
+
+```diff
+- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
++ import { ToggleGroupButtonField } from "@comet/admin";
+
+...
++ FormValueType = "value1" | "value2";
+
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
+-       { value: "value2", icon: <Error /> },
+-   ]}
+-   optionsPerRow={2}
+- />
++ <ToggleGroupButtonField<FormValueType>
++    name="formValue"
++    label={"Field Label"}
++    options={[
++        { value: "value1", label: <Info /> },
++        { value: "value2", label: <Error /> },
++    ]}
++    optionsPerRow={2}
++    />
+```
+
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
+
+```diff
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
++       { value: "value1", label: <Info /> },
+-       { value: "value2", icon: <Info /> },
++       { value: "value2", label: <Info /> },
+-   ]}
+-   optionsPerRow={2}
+- />
+```
+
+### Add the `LocalDate` scalar to the GraphQL Codegen config
+
+```diff title="admin/codegen.ts"
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
+```
+
+### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
+
+:::note Handled by following upgrade script
+
+```sh
+
+npx @comet/upgrade v8/add-grid-to-latest-content-updates-and-dashboard-widget-root.ts
+```
+
+:::
+
+The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its children in a `<Grid>` component. This means that layout and sizing must now be handled by the parent component.
+
+**Migration steps `DashboardWidgetRoot:**
+
+- **Before:**  
+  `DashboardWidgetRoot` automatically wrapped its content in a grid item, e.g.
+
+    ```tsx
+    <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    ```
+
+- **After:**  
+  You must now wrap `DashboardWidgetRoot` in a `<Grid item>` yourself:
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    </Grid>
+    ```
+
+**Migration steps `LatestContentUpdates`:**
+
+- **Before:**
+
+    ```tsx
+    <LatestContentUpdates />
+    ```
+
+- **After:**
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <LatestContentUpdates />
+    </Grid>
+    ```
+
+**Action required:**  
+Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
+
 ## Site
+
+### Switch from `@comet/cms-site` to `@comet/site-nextjs`
+
+[//]: # "TODO: Upgrade script "
+
+The `@comet/cms-site` package has been reworked and renamed to `@comet/site-nextjs`. Notable changes are
+
+- Styled components is no longer a required peer dependency
+- Instead, SCSS modules are used internally
+- The package is now pure ESM
+
+To switch you must
+
+- uninstall `@comet/cms-site`
+- install `@comet/site-nextjs`
+- change all imports from `@comet/cms-site` to `@comet/site-nextjs`
+- import the css file exported by the package:
+
+```diff title="site/src/app/layout.tsx"
++ import "@comet/site-nextjs/css";
+```
 
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
 
@@ -1630,6 +1915,15 @@ return createGraphQLFetchLibrary(
     }),
     `${process.env.API_URL_INTERNAL}/graphql`,
 );
+```
+
+### Add the `LocalDate` scalar to the GraphQL Codegen config
+
+```diff title="site/codegen.ts"
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
 ```
 
 ## ESLint

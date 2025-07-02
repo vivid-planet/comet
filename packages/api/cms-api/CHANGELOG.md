@@ -1,5 +1,60 @@
 # @comet/cms-api
 
+## 8.0.0-beta.6
+
+### Major Changes
+
+- ef1c645: Add warnings feature
+
+    The warnings module can be used to display application-wide warnings in the admin. See the [docs](https://docs.comet-dxp.com/docs/features-modules/warning-module) for more information.
+
+- 44915b9: Changed format for `useCurrentUser().allowedContentScopes`
+    - Old: `{ [key]: string }[]`
+    - New: `{ scope: ContentScope; label: { [key in keyof ContentScope]: string }; }[]`
+
+    To support a smooth transition the `defaultValue` prop of the `ContentScopeProvider` now must also have the same format.
+
+- c5de11c: Change S3 config for BlobStorage
+
+    Now the config has all fields from `S3ClientConfig` provided by `@aws-sdk/client-s3`, so you override all options in the project.
+
+## 8.0.0-beta.5
+
+### Major Changes
+
+- 9c3f72e: Make impersonation usable for non root users.
+
+    If activated, impersonation is only available if the impersonating user
+    has as many or fewer permissions and content scopes as the user to impersonate.
+    Since this is an expensive calculation the button to impersonate is only
+    available in the detail view of the user and has been removed from the list
+    view.
+
+    When enabling the `impersonation` permission for non root users the
+    permission should also be added to `requiredPermission` for
+    `UserPermissionsPage`. This enables the user to select the user to impersonate.
+    Nevertheless, without the `userPermissions` permission it's not possible to
+    change permission of users.
+
+- e478c6b: Directly pass the entity metadata instead of the repository in `gqlArgsToMikroOrmQuery`
+
+### Minor Changes
+
+- 9cf2160: API Generator: Add new option `single` to `@CrudGenerator` which allows to enable/disable the single query
+- 26dd92a: Add possibility to use service for `convertJwtToUser`
+- 7e97e18: Create a block_index view that contains a flat list of all blocks existing in the project
+- c63817a: Add `getUserForLogin` function in `UserService`.
+
+    This allows implementing a different code path for getting the user to login
+    and the user shown in the administration panel. Examples are caching the currently logged
+    in user or throwing `UnauthorizedException` when not allowed to login.
+
+### Patch Changes
+
+- b63ecc8: RichTextBlock: add childBlocksInfo for embedded links in order to have them in block index
+
+    This fixes missing dependencies for internal links
+
 ## 8.0.0-beta.4
 
 ### Major Changes
@@ -7,7 +62,6 @@
 - b039dcb: Separate `FileUploadsModule` completely from `DamModule`
 
     Multiple changes were necessary to achieve this:
-
     - `ScaledImagesCacheService` was moved to `BlobStorageModule`
     - You must now pass the `cacheDirectory` config option to `BlobStorageModule` (instead of `DamModule`)
     - `ImgproxyService` was moved to its own `ImgproxyModule`
@@ -82,7 +136,6 @@
     Therefore, the `@comet/blocks-api` is merged into this package.
 
     **Breaking changes**
-
     - The `@comet/blocks-api` package doesn't exist anymore
     - The `getFieldKeys` function has been removed from the public API
     - Multiple exports that were too generic have been renamed
@@ -101,7 +154,6 @@
     **How to upgrade**
 
     To upgrade, perform the following changes:
-
     1. Uninstall the `@comet/blocks-api` package
     2. Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
     3. Remove usages of `getFieldKeys` (probably none)
@@ -132,7 +184,6 @@
     We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
 
     To upgrade, perform the following steps:
-
     1. Uninstall `nestjs-console`
     2. Install `nest-commander` and `@types/inquirer`
     3. Update `api/src/console.ts` to use `nest-commander`
@@ -146,7 +197,6 @@
 - cf1a829: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
 
     None of this mimetypes had an actual impact:
-
     - `video/avi` doesn't actually exist
     - `image/psd` doesn't exist / is non-standard
     - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
@@ -157,6 +207,155 @@
 - 58a99bb: Fix input validation for missing child blocks
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
+
+## 7.25.0
+
+### Minor Changes
+
+- b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+- c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+- a1a129e00: Allow uploading .vtt files to the DAM
+
+### Patch Changes
+
+- @comet/blocks-api@7.25.0
+
+## 7.24.0
+
+### Minor Changes
+
+- efeff64ab: API Generator: Allow easier extension of generated resolvers and services
+
+    Even though we don't encourage to extend generated resolvers and services, it should still be possible. Our recommendation is to generate a new resolver but there are cases where it makes sense to extend the existing one (e.g. modifying certain functions or reusing existing code).
+
+    Until now, this was hard to do, because every resolver and service declared it's services as private. If you need to use a service from the base resolver, you had to redeclare all services with a different name.
+
+    ```ts
+        constructor(
+            entityManager: EntityManager,
+            @InjectRepository(Product) private readonly repository2: EntityRepository<Product>,
+            @InjectRepository(ProductCategory) private readonly productCategoryRepository2: EntityRepository<ProductCategory>,
+            @InjectRepository(Manufacturer) private readonly manufacturerRepository2: EntityRepository<Manufacturer>,
+            @InjectRepository(FileUpload) private readonly fileUploadRepository2: EntityRepository<FileUpload>,
+            @InjectRepository(ProductStatistics) private readonly productStatisticsRepository2: EntityRepository<ProductStatistics>,
+            @InjectRepository(ProductColor) private readonly productColorRepository2: EntityRepository<ProductColor>,
+            @InjectRepository(ProductToTag) private readonly productToTagRepository2: EntityRepository<ProductToTag>,
+            @InjectRepository(ProductTag) private readonly productTagRepository2: EntityRepository<ProductTag>,
+            private readonly blocksTransformer2: BlocksTransformerService,
+        ) {
+            super(
+                entityManager,
+                repository2,
+                productCategoryRepository2,
+                manufacturerRepository2,
+                fileUploadRepository2,
+                productStatisticsRepository2,
+                productColorRepository2,
+                productToTagRepository2,
+                productTagRepository2,
+                blocksTransformer2,
+            );
+        }
+
+    ```
+
+    If you tried to use the same name you got the following error:
+
+    ```
+    Class 'CustomProductResolver' incorrectly extends base class 'ProductResolver'.
+      Types have separate declarations of a private property 'repository'.ts(2415)
+    ```
+
+    Now, the constructor can be omitted and the custom resolver can be simplified to:
+
+    ```ts
+    @Resolver(() => Product)
+    @RequiredPermission(["products"], { skipScopeCheck: true })
+    export class CustomProductResolver extends ProductResolver {
+        @Mutation(() => Boolean)
+        async publishAllProducts(): Promise<boolean> {
+            await this.repository.nativeUpdate({ status: { $ne: ProductStatus.Published } }, { status: ProductStatus.Published });
+            return true;
+        }
+    }
+    ```
+
+### Patch Changes
+
+- b6e3f7e3c: Don't replace a file if the new file is identical to the existing one in the DAM
+
+    This previously led to a bug where a file was deleted if it was replaced with the same file.
+
+- 3607c7c22: Extend the browser cache duration for public DAM assets from 1 day to 1 year to reduce the data load for returning users.
+- 2310f8553: Prevent socket exhaustion when streaming files and prevent the API from crashing due to stream errors in the `FileUploadsDownloadController`
+
+    We already added this fix to the DAM in the past.
+
+- 2af3d8187: Ignore UUID columns in `searchToMikroOrmQuery` when inferring fields from entity metadata
+- 34df51db0: Set cache-control headers for file uploads
+    - @comet/blocks-api@7.24.0
+
+## 7.23.0
+
+### Minor Changes
+
+- 80d0c6293: Add new `getFileContent` method to the `FileUploadsService`
+
+    This method allows you to retrieve a file's content as a Buffer.
+    This is needed for cases like embedding images in a PDF or attaching files to emails.
+
+### Patch Changes
+
+- 2cdb87ad5: Add error and close handling for partial ranges in file stream
+- aac00efa8: Limit image title to 150 characters in `AzureOpenAiContentGenerationService`
+- Updated dependencies [201198da3]
+    - @comet/blocks-api@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- @comet/blocks-api@7.22.0
+
+## 7.21.1
+
+### Patch Changes
+
+- @comet/blocks-api@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+- 06920eb59: Fix: Change GraphQL Type of numberOfDescendants from Float to Int
+    - @comet/blocks-api@7.21.0
+
+## 7.20.0
+
+### Minor Changes
+
+- ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+- 557e311ea: AccessLog: Remove some DAM URLs from log
+
+    Hashed URLs and preview URLs are not useful in the logs, so we remove them.
+
+- 21f95adfe: DAM: Fix headers
+
+    While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
+    - Only store the `content-type` header
+    - Prevent imgproxy headers from being passed through to the client
+    - Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
+
+- f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
+
+    Explicitly set `cache-control: no-store` for folder download to prevent caching of the response. Normally this should not be cached by any CDN, because the Request contains a cookie, but it is better to be explicit about it.
+    - @comet/blocks-api@7.20.0
 
 ## 7.19.0
 
@@ -170,7 +369,6 @@
 
     Previously, the scope wasn't considered when loading the node.
     This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
-
     - @comet/blocks-api@7.19.0
 
 ## 7.18.0
@@ -265,7 +463,6 @@
 - bb041f7a7: Add content generation capabilities to `createSeoBlock`
 
     The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
-
     - HTML title
     - Meta description
     - Open Graph title
@@ -278,7 +475,6 @@
     `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
 
     The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
-
     - if the state is a string: the string itself
     - otherwise: an empty array
 
@@ -296,7 +492,6 @@
 - f49370a9e: Improve SVG validation
 
     Following tags are banned in SVGs:
-
     - script
     - \[new\] foreignObject
     - \[new\] use
@@ -307,7 +502,6 @@
     - \[new\] set
 
     Following attributes are banned:
-
     - Event handlers (`onload`, `onclick`, ...)
     - \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
     - @comet/blocks-api@7.13.0
@@ -346,7 +540,6 @@
 - cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
 
     None of this mimetypes had an actual impact:
-
     - `video/avi` doesn't actually exist
     - `image/psd` doesn't exist / is non-standard
     - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
@@ -445,10 +638,8 @@
     This could lead to socket exhaustion, preventing further file delivery.
 
     To resolve this, the following changes were made:
-
     1. Add a close handler to destroy the stream when the client disconnects
     2. Set a 60-second `requestTimeout` to close unused connections
-
     - @comet/blocks-api@7.7.0
 
 ## 7.6.0
@@ -528,7 +719,6 @@
     This is now prevented by treating `null` and `undefined` dimensions as the same when checking the scope.
 
 - 6b0ecebed: DAM: Fix/set cache-control headers
-
     - Public endpoints should cache files for 1 day
     - Private endpoints should cache files for 1 year - but only in local caches (not CDN)
 
@@ -639,7 +829,6 @@
 - c130adc38: `BuildsService`: Start all jobs that match the scope exactly
 
     Previously, the first job that matched the scope exactly would be started, and the rest would be ignored. This has been fixed so that all jobs that match the scope exactly are started.
-
     - @comet/blocks-api@7.3.0
 
 ## 7.2.1
@@ -650,7 +839,6 @@
 
     The block used to crash if no video was selected because the `DamVideoBlockTransformerService` returned an empty object.
     This left the `previewImage` state in the admin `undefined` causing `state2Output` to fail.
-
     - @comet/blocks-api@7.2.1
 
 ## 7.2.0
@@ -696,7 +884,6 @@
 
     This specifically fixes a bug on the UserPermissionsPage:
     When the `availableContentScopes` passed to the `UserPermissionsModule` weren't sorted alphabetically, the allowed scopes wouldn't be displayed correctly in the UI.
-
     - @comet/blocks-api@7.1.0
 
 ## 7.0.0
@@ -727,7 +914,6 @@
     ```
 
     If you want to enable the origin check:
-
     1. Set the following env vars for the API
 
     ```
@@ -766,7 +952,6 @@
     Use `createFileUploadInputFromUrl` instead of `FileUploadService#createFileUploadInputFromUrl`.
 
 - 0588e212c: Remove `language` field from `User` object
-
     - Providing the locale is not mandatory for ID-Tokens
     - Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
 
@@ -830,7 +1015,6 @@
     ```
 
     Adding this new technique results in a few breaking changes:
-
     - Remove dynamic registration of `BlocksModule`
     - Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     - Remove `dependencies` from `BlockData#transformToPlain`
@@ -838,7 +1022,6 @@
     See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 - 9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
-
     - Add foreign id as argument to create mutation
     - Add foreign id as argument to list query
 
@@ -868,7 +1051,6 @@
 
 - 4485d1540: filtersToMikroOrmQuery: Move second argument (`applyFilter` callback) into an options object
 - 28322b422: Refactor auth-decorators
-
     - Remove `@PublicApi()`-decorator
     - Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
 
@@ -880,7 +1062,6 @@
     This leaves room for a future DateFilter that only filters by date, not time.
 
     **Upgrading**
-
     1. Change import
 
     ```diff
@@ -894,7 +1075,6 @@
 
     Some dependencies were incorrectly marked as peer dependencies.
     If you don't use them in your application, you may remove the following dependencies:
-
     - Admin: `axios`
     - API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
 
@@ -904,7 +1084,6 @@
     The feature was therefore renamed to "file uploads".
 
     This requires the following changes:
-
     - Use `FileUploadsModule` instead of `PublicUploadModule`
     - Use `FileUpload` instead of `PublicUpload`
     - Use `FileUploadsService` instead of `PublicUploadsService`
@@ -952,7 +1131,6 @@
 - fe22985d6: API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
 
     **Upgrading**
-
     1. Install graphql-scalars: `npm install graphql-scalars`
     2. Uninstall graphql-type-json: `npm install graphql-type-json`
     3. Update imports:
@@ -1016,7 +1194,6 @@
     ```
 
     This was problematic for two reasons:
-
     1.  The error message would be misleading when trying to create an entity without providing a value for the property. For example, a valid GraphQL mutation
 
         ```graphql
@@ -1141,7 +1318,6 @@
     This leaves room for a future DateFilter that only filters by date, not time.
 
     **Upgrading**
-
     1. Change import
 
     ```diff
@@ -1154,7 +1330,6 @@
 - fe22985d6: API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
 
     **Upgrading**
-
     1. Install graphql-scalars: `npm install graphql-scalars`
     2. Uninstall graphql-type-json: `npm install graphql-type-json`
     3. Update imports:
@@ -1246,7 +1421,6 @@
     ```
 
     If you want to enable the origin check:
-
     1. Set the following env vars for the API
 
     ```
@@ -1282,7 +1456,6 @@
 
 - f74544524: Change language field in User and CurrentUser to locale
 - 0588e212c: Remove `locale`-field from `User`-object
-
     - Providing the locale is not mandatory for ID-Tokens
     - Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
 
@@ -1346,7 +1519,6 @@
     ```
 
     Adding this new technique results in a few breaking changes:
-
     - Remove dynamic registration of `BlocksModule`
     - Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     - Remove `dependencies` from `BlockData#transformToPlain`
@@ -1354,12 +1526,10 @@
     See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 - 9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
-
     - Add foreign id as argument to create mutation
     - Add foreign id as argument to list query
 
 - 28322b422: Refactor auth-decorators
-
     - Remove `@PublicApi()`-decorator
     - Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
 
@@ -1369,7 +1539,6 @@
 
     Some dependencies were incorrectly marked as peer dependencies.
     If you don't use them in your application, you may remove the following dependencies:
-
     - Admin: `axios`
     - API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
 
@@ -1387,7 +1556,6 @@
     // TODO Move the following introduction to the migration guide before releasing
 
     Requires following changes to site:
-
     - Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
     - Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
     - Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
@@ -1402,7 +1570,6 @@
         - Use the `path`-part of the return value to redirect to the preview
 
     Requires following changes to admin
-
     - The `SitesConfig` must provide a `sitePreviewApiUrl`
 
 ### Minor Changes
@@ -1432,7 +1599,6 @@
 - 76ca3bf98: Remove index signature from `ContentScope` interface
 
     This allows using scope DTOs without index signature in `@ScopedEntity()`.
-
     - @comet/blocks-api@6.17.1
 
 ## 6.17.0
@@ -1444,7 +1610,6 @@
     Previously, files in the DAM could be renamed without restrictions.
     Files could have invalid extensions (for their mimetype) or no extension at all.
     This theoretically made the following attack possible:
-
     1. Creating a dangerous .exe file locally
     2. Renaming it to .jpg locally
     3. Uploading the file as a .jpg
@@ -1510,7 +1675,6 @@
 - f7d405dfa: Fix the duplicate filename check in `FilesService#updateByEntity`
 
     Previously, we checked the existing file name (`entity.name`) for the check instead of the new name (`input.name`). This never resulted in an error.
-
     - @comet/blocks-api@6.16.0
 
 ## 6.15.1
@@ -1527,7 +1691,6 @@
 - 0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
 
     The error dialog now presents screens according to the current state. Required to work in all conditions:
-
     - `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
     - `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
 
@@ -1632,7 +1795,6 @@
     Doing so could lead to problems when multiple jobs with overlapping content scopes exist.
     For instance, jobs with the scopes `{ domain: "main", language: "de" }` and `{ domain: "main", language: "en" }` both partially match a change in `{ domain: "main", language: "de" }`.
     To fix this, we either start a single job if the content scope matches exactly or start all jobs with partially matching content scopes.
-
     - @comet/blocks-api@6.12.0
 
 ## 6.11.0
@@ -1671,7 +1833,6 @@
 - d340cabc2: DAM: Fix the duplicate name check when updating a file
 
     Previously, there were two bugs:
-
     1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
     2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
 
@@ -1681,7 +1842,6 @@
 - 584d14d86: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
 
     As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
-
     - @comet/blocks-api@6.10.0
 
 ## 6.9.0
@@ -1766,7 +1926,6 @@
 - 2f64daa9b: Add `title` field to link block
 
     Perform the following steps to use it in an application:
-
     1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
 
         ```ts
@@ -1820,7 +1979,6 @@
     This allows using two different `ImageLink` blocks in one application.
 
     Perform the following steps to override the name:
-
     1. API: Add the name as second argument in the `createImageLinkBlock` factory:
 
         ```diff
@@ -1869,7 +2027,6 @@
 - f1457306: Ignore user permissions when using system user
 
     The `UserPermissionsGuard` didn't allow requests when using a system user (e.g., basic authorization during site build).
-
     - @comet/blocks-api@6.2.1
 
 ## 6.2.0
@@ -1925,7 +2082,6 @@
 ### Major Changes
 
 - d20f59c0: Enhance CronJob module
-
     - Show latest job run on `CronJobsPage`
     - Add option to manually trigger cron jobs to `CronJobsPage`
     - Add subpage to `CronJobsPage` that shows all job runs
@@ -1933,14 +2089,12 @@
     Warning: Only include this module if all your users should be able to trigger cron jobs manually or you have sufficient access control in place.
 
     Includes the following breaking changes:
-
     - Rename `JobStatus` to `KubernetesJobStatus` to avoid naming conflicts
     - Rename `BuildRuntime` to `JobRuntime`
 
 - b3ceaef1: Replace ContentScopeModule with UserPermissionsModule
 
     Breaking changes:
-
     - ContentScope-Module has been removed
     - canAccessScope has been moved to AccessControlService and refactored into isAllowed
     - contentScopes- and permissions-fields have been added to CurrentUser-Object
@@ -2029,12 +2183,10 @@
     For example:
 
     Previously:
-
     - `€.jpg` -> `a.jpg`
     - `ä.jpg` -> `ai.jpg`
 
     Now:
-
     - `€.jpg` -> `euro.jpg`
     - `ä.jpg` -> `ae.jpg`
     - @comet/blocks-api@5.4.0
@@ -2116,13 +2268,11 @@
     To enable DAM scoping, you must
 
     In the API:
-
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
     - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
 
     In the Admin:
-
     - Set `scopeParts` in the `DamConfigProvider` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
     - Render the content scope indicator in the `DamPage`
         ```tsx
@@ -2166,7 +2316,6 @@
 - c91906d2: Rename `BlockIndexService` to `DependenciesService` and move it from the `BlocksModule` to the new `DependenciesModule`.
 
     Following changes were made to the `DependenciesService`:
-
     - A stale-while-revalidate approach for refreshing the view was added to `refreshViews()`. If you need the view to be updated unconditionally, you must call the method with the new `force: true` option.
     - `getDependents()` and `getDependencies()` were added to fetch the dependents or dependencies of an entity instance from the view.
 
@@ -2181,7 +2330,6 @@
 ### Minor Changes
 
 - f2aa78c8: Improve undefined/null handling for update mutations
-
     - Add `@IsUndefinable()` and `@IsNull()` validators intended to be used in input types (similar, but more specific than `@IsOptional()` from `class-validator`)
     - Add custom `PartialType` intended to be used for update input types (similar to `@nestjs/mapped-types` but uses `@IsUndefinable()` instead of `@IsOptional()`)
 
@@ -2211,9 +2359,7 @@
     Note: The `updatedAt` timestamp is set to the current time when the migration is executed. You will need to write an additional migration if you want the timestamp to reflect the `updatedAt` timestamp of the active attached document.
 
 - API CRUD Generator:
-
     - f2aa78c8: Update API CRUD Generator to allow partial update in update mutations:
-
         - passing `null` for a field means: set this field to null (e.g. a relation or a Date)
         - passing `undefined` for a field means: do not change this field (keep the previous value)
 
@@ -2313,7 +2459,6 @@
 
     Currently we use the default propagationPolicy for deleting jobs. This results in pods from jobs being deleted in k8s but not on OpenShift. With the value fixed to "Background", the jobs should get deleted on every system.
     Foreground would be blocking, so we use Background to be non blocking.
-
     - @comet/blocks-api@4.3.0
 
 ## 4.2.0

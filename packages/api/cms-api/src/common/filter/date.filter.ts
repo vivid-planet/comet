@@ -1,36 +1,36 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsDate, IsOptional } from "class-validator";
-import { GraphQLDate } from "graphql-scalars";
+import { IsDateString, IsOptional } from "class-validator";
+import { GraphQLLocalDate } from "graphql-scalars";
 
 @InputType()
 export class DateFilter {
-    @Field(() => GraphQLDate, { nullable: true })
+    @Field(() => GraphQLLocalDate, { nullable: true })
     @IsOptional()
-    @IsDate()
-    equal?: Date;
+    @IsDateString()
+    equal?: string;
 
-    @Field(() => GraphQLDate, { nullable: true })
+    @Field(() => GraphQLLocalDate, { nullable: true })
     @IsOptional()
-    @IsDate()
-    lowerThan?: Date;
+    @IsDateString()
+    lowerThan?: string;
 
-    @Field(() => GraphQLDate, { nullable: true })
+    @Field(() => GraphQLLocalDate, { nullable: true })
     @IsOptional()
-    @IsDate()
-    greaterThan?: Date;
+    @IsDateString()
+    greaterThan?: string;
 
-    @Field(() => GraphQLDate, { nullable: true })
+    @Field(() => GraphQLLocalDate, { nullable: true })
     @IsOptional()
-    @IsDate()
-    lowerThanEqual?: Date;
+    @IsDateString()
+    lowerThanEqual?: string;
 
-    @Field(() => GraphQLDate, { nullable: true })
+    @Field(() => GraphQLLocalDate, { nullable: true })
     @IsOptional()
-    @IsDate()
-    greaterThanEqual?: Date;
+    @IsDateString()
+    greaterThanEqual?: string;
 
-    @Field(() => GraphQLDate, { nullable: true })
+    @Field(() => GraphQLLocalDate, { nullable: true })
     @IsOptional()
-    @IsDate()
-    notEqual?: Date;
+    @IsDateString()
+    notEqual?: string;
 }

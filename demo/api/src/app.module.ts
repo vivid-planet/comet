@@ -17,6 +17,7 @@ import {
     RedirectsModule,
     SentryModule,
     UserPermissionsModule,
+    WarningsModule,
 } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
@@ -53,6 +54,7 @@ import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 import { RedirectTargetUrlService } from "./redirects/redirect-target-url.service";
+import { StatusModule } from "./status/status.module";
 
 @Module({})
 export class AppModule {
@@ -69,7 +71,8 @@ export class AppModule {
                     imports: [BlocksModule],
                     useFactory: (moduleRef: ModuleRef) => ({
                         debug: config.debug,
-                        playground: config.debug,
+                        graphiql: config.debug ? { url: "/api/graphql" } : undefined,
+                        playground: false,
                         autoSchemaFile: "schema.gql",
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
@@ -99,8 +102,8 @@ export class AppModule {
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
                             siteConfig.scope.languages.map((language) => ({
-                                domain: siteConfig.scope.domain,
-                                language,
+                                scope: { domain: siteConfig.scope.domain, language },
+                                label: { domain: siteConfig.name },
                             })),
                         ),
                         userService,
@@ -153,6 +156,7 @@ export class AppModule {
                     File: DamFile,
                     Folder: DamFolder,
                 }),
+                StatusModule,
                 FileUploadsModule.register({
                     maxFileSize: config.fileUploads.maxFileSize,
                     directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
@@ -196,6 +200,7 @@ export class AppModule {
                 }),
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
+                WarningsModule,
             ],
         };
     }

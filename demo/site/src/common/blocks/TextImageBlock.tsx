@@ -1,5 +1,5 @@
 "use client";
-import { type PropsWithData, withPreview } from "@comet/cms-site";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
 import { type TextImageBlockData } from "@src/blocks.generated";
 import styled, { css } from "styled-components";
 
