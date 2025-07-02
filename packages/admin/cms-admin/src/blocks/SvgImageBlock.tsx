@@ -9,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
-import { useDamConfig } from "../dam/config/damConfig";
+import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
@@ -122,13 +122,13 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     AdminComponent: ({ state, updateState }) => {
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const { apiUrl } = useCometConfig();
-        const damConfig = useDamConfig();
+        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
         const { entityDependencyMap } = useDependenciesConfig();
 
-        const previewUrl = createPreviewUrl(state, { apiUrl, damBasePath: damConfig.basePath });
+        const previewUrl = createPreviewUrl(state, { apiUrl, damBasePath });
         const showMenu = Boolean(entityDependencyMap["DamFile"]);
 
         const handleMenuClose = () => {

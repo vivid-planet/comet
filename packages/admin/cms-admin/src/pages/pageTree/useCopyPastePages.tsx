@@ -5,7 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { useCometConfig } from "../../config/CometConfigContext";
 import { type ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { useDamConfig } from "../../dam/config/damConfig";
+import { useDamBasePath } from "../../dam/config/damConfig";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { type GQLDocument, type GQLPageQuery, type GQLPageQueryVariables } from "../../documents/types";
 import { usePageTreeConfig } from "../pageTreeConfig";
@@ -75,7 +75,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const damScope = useDamScope();
     const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
     const errorDialog = useErrorDialog();
-    const damConfig = useDamConfig();
+    const damBasePath = useDamBasePath();
 
     const prepareForClipboard = useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -180,7 +180,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     parentId,
                     pages,
                     options,
-                    { client, scope, documentTypes, apiUrl, damScope, currentCategory, damBasePath: damConfig.basePath },
+                    { client, scope, documentTypes, apiUrl, damScope, currentCategory, damBasePath },
                     updateProgress,
                 );
             } catch (e) {
@@ -195,7 +195,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 updateProgress(undefined); //hides progress dialog
             }
         },
-        [client, scope, documentTypes, apiUrl, damScope, currentCategory, updateProgress, errorDialog, damConfig.basePath],
+        [client, scope, documentTypes, apiUrl, damScope, currentCategory, updateProgress, errorDialog, damBasePath],
     );
 
     return {

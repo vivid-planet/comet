@@ -8,7 +8,7 @@ import { useCometConfig } from "../../../config/CometConfigContext";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import { type GQLLicenseInput } from "../../../graphql.generated";
 import { createHttpClient } from "../../../http/createHttpClient";
-import { useDamConfig } from "../../config/damConfig";
+import { useDamBasePath, useDamConfig } from "../../config/damConfig";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -135,6 +135,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]):
 export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
     const { apiUrl } = useCometConfig();
     const damConfig = useDamConfig();
+    const damBasePath = useDamBasePath();
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
     const scope = useDamScope();
@@ -430,7 +431,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         data: uploadConfig,
                         cancelToken: cancelUpload.current.token,
                         options: { onUploadProgress },
-                        damBasePath: damConfig.basePath,
+                        damBasePath,
                     };
 
                     const response: { data: { id: string } } =

@@ -10,7 +10,7 @@ import { FormattedMessage } from "react-intl";
 import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
-import { useDamConfig } from "../dam/config/damConfig";
+import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/dependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
@@ -157,7 +157,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const [open, setOpen] = useState(false);
         const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const { apiUrl } = useCometConfig();
-        const damConfig = useDamConfig();
+        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
@@ -179,7 +179,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             setAnchorEl(null);
         };
 
-        const previewUrl = createPreviewUrl(state, { apiUrl, resize: { width: 320, height: 320 }, damBasePath: damConfig.basePath });
+        const previewUrl = createPreviewUrl(state, { apiUrl, resize: { width: 320, height: 320 }, damBasePath });
 
         return (
             <SelectPreviewComponent>

@@ -15,7 +15,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     graphQLApiUrl: string;
     adminUrl: string;
     pageTree?: PageTreeConfig;
-    dam?: Omit<DamConfig, "basePath"> & { basePath?: string };
+    dam?: DamConfig;
     dependencies?: DependenciesConfig;
     siteConfigs?: SiteConfigsConfig<SiteConfigs>;
     buildInformation?: BuildInformation;
