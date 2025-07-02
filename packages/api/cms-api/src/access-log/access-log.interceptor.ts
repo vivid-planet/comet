@@ -14,20 +14,23 @@ import { AccessLogConfig } from "./access-log.module";
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
+    private ignoredPaths: string[];
 
     constructor(
         @Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig,
         @Optional() @Inject(DAM_CONFIG) private readonly damConfig?: DamConfig,
-    ) {}
-
-    intercept(context: ExecutionContext, next: CallHandler) {
+    ) {
         const baseDamPath = this.damConfig ? this.damConfig.basePath : "dam";
-        const ignoredPaths = [
+
+        this.ignoredPaths = [
             `/${baseDamPath}/images/`,
             `/${baseDamPath}/files/preview`,
             `/${baseDamPath}/files/download`,
             `/${baseDamPath}/files/:hash/`,
         ];
+    }
+
+    intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
 
         const requestData: string[] = [];
@@ -75,7 +78,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             const user = (httpRequest as any).user as CurrentUser;
 
             if (
-                ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
+                this.ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
                 (this.config &&
                     this.config.shouldLogRequest &&
                     !this.config.shouldLogRequest({
