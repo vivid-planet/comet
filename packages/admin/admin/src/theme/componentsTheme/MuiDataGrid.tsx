@@ -129,11 +129,20 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&:focus-within": {
                 outline: "none",
             },
+
+            [`&.${gridClasses["columnHeader--pinnedLeft"]}.${gridClasses["columnHeader--withRightBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 -8px 0 0)",
+                borderRightWidth: 0,
+            },
+
+            [`&.${gridClasses["columnHeader--pinnedRight"]}.${gridClasses["columnHeader--withLeftBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 0 0 -8px)",
+                borderLeftWidth: 0,
+            },
         }),
-        pinnedColumns: {
-            backgroundColor: "white",
-            boxShadow: shadows[2],
-        },
+
         cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
@@ -146,6 +155,18 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: palette.grey[900],
             },
             alignContent: "center",
+
+            [`&.${gridClasses["cell--pinnedLeft"]}.${gridClasses["cell--withRightBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 -8px 0 0)",
+                borderRightWidth: 0,
+            },
+
+            [`&.${gridClasses["cell--pinnedRight"]}.${gridClasses["cell--withLeftBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 0 0 -8px)",
+                borderLeftWidth: 0,
+            },
         }),
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
