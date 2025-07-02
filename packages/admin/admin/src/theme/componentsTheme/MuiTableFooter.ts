@@ -6,7 +6,7 @@ export const getMuiTableFooter: GetMuiComponentTheme<"MuiTableFooter"> = (compon
     styleOverrides: mergeOverrideStyles<"MuiTableFooter">(component?.styleOverrides, {
         root: {
             ".MuiGrid-root": {
-                gap: "20px",
+                gap: theme.spacing(4),
             },
         },
     }),
