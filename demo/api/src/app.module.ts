@@ -145,8 +145,6 @@ export class AppModule {
                 DamModule.register({
                     damConfig: {
                         ...config.dam,
-                        secret: config.dam.secret,
-                        allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
