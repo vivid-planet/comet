@@ -1846,8 +1846,8 @@ importers:
         specifier: ^11.8.6
         version: 11.8.6
       graphql-parse-resolve-info:
-        specifier: ^4.13.0
-        version: 4.13.0(graphql@16.10.0)
+        specifier: ^4.14.1
+        version: 4.14.1(graphql@16.10.0)
       graphql-scalars:
         specifier: ^1.24.2
         version: 1.24.2(graphql@16.10.0)
@@ -10598,15 +10598,6 @@ packages:
       supports-color:
         optional: true
 
-  debug@4.3.7:
-    resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
   debug@4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
     engines: {node: '>=6.0'}
@@ -12053,8 +12044,8 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  graphql-parse-resolve-info@4.13.0:
-    resolution: {integrity: sha512-VVJ1DdHYcR7hwOGQKNH+QTzuNgsLA8l/y436HtP9YHoX6nmwXRWq3xWthU3autMysXdm0fQUbhTZCx0W9ICozw==}
+  graphql-parse-resolve-info@4.14.1:
+    resolution: {integrity: sha512-WKHukfEuZamP1ZONR84b8iT+4sJgEhtXMDArm1jpXEsU2vTb5EgkCZ4Obfl+v09oNTKXm0CJjPfBUZ5jcJ2Ykg==}
     engines: {node: '>=8.6'}
     peerDependencies:
       graphql: '>=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0'
@@ -28623,10 +28614,6 @@ snapshots:
     dependencies:
       ms: 2.1.2
 
-  debug@4.3.7:
-    dependencies:
-      ms: 2.1.3
-
   debug@4.4.0:
     dependencies:
       ms: 2.1.3
@@ -30481,9 +30468,9 @@ snapshots:
     optionalDependencies:
       sinon: 9.2.4
 
-  graphql-parse-resolve-info@4.13.0(graphql@16.10.0):
+  graphql-parse-resolve-info@4.14.1(graphql@16.10.0):
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       graphql: 16.10.0
       tslib: 2.8.1
     transitivePeerDependencies:
