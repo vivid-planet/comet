@@ -23,10 +23,10 @@ export class AccessLogInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler) {
         const baseDamPath = this.damConfig ? this.damConfig.basePath : "dam";
         const ignoredPaths = [
-            `/${baseDamPath}/images/:hash/:fileId`,
-            `/${baseDamPath}/files/:hash/:fileId`,
-            `/${baseDamPath}/images/preview/:fileId`,
-            `/${baseDamPath}/files/preview/:fileId`,
+            `/${baseDamPath}/images/`,
+            `/${baseDamPath}/files/preview`,
+            `/${baseDamPath}/files/download`,
+            `/${baseDamPath}/files/:hash/`,
         ];
         const requestType = context.getType().toString();
 
