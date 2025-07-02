@@ -90,6 +90,10 @@
         {
             "matchDepTypes": ["peerDependencies"],
             "rangeStrategy": "widen"
+        },
+        {
+            "groupName": "SWC",
+            "matchPackageNames": ["@swc/plugin-emotion", "@vitejs/plugin-react-swc"]
         }
     ],
     "rangeStrategy": "bump",
