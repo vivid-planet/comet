@@ -3,20 +3,30 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
+import { DamConfig } from "../dam/dam.config";
+import { DAM_CONFIG } from "../dam/dam.constants";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
-const IGNORED_PATHS = [`/images/:hash/:fileId`, `/files/:hash/:fileId`, `/images/preview/:fileId`, `/files/preview/:fileId`];
-
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig) {}
+    constructor(
+        @Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig,
+        @Optional() @Inject(DAM_CONFIG) private readonly damConfig?: DamConfig,
+    ) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
+        const baseDamPath = this.damConfig ? this.damConfig.basePath : "dam";
+        const ignoredPaths = [
+            `/${baseDamPath}/images/:hash/:fileId`,
+            `/${baseDamPath}/files/:hash/:fileId`,
+            `/${baseDamPath}/images/preview/:fileId`,
+            `/${baseDamPath}/files/preview/:fileId`,
+        ];
         const requestType = context.getType().toString();
 
         const requestData: string[] = [];
@@ -62,7 +72,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             const httpRequest = httpContext.getRequest();
 
             if (
-                IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
+                ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
                 (this.config &&
                     this.config.shouldLogRequest &&
                     !this.config.shouldLogRequest({
