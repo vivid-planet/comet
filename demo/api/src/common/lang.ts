@@ -13,7 +13,5 @@ const projectMessages = {
 };
 
 export const getMessages = (language: keyof typeof projectMessages): Messages => {
-    return {
-        ...projectMessages[language],
-    };
+    return projectMessages[language];
 };
