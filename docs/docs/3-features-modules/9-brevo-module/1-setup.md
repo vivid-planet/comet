@@ -664,7 +664,7 @@ Brevo must be configured using the `BrevoConfigPage` in your admin interface.
 | Sender                    | The email address and name that will appear as the sender of your email campaigns. The sender address must be verified in your Brevo account.                                                                           |
 | Double Opt-In Template ID | The ID of your double opt-in template. You can create a template and find its ID at [Brevo Templates](https://app.brevo.com/templates/listing).                                                                         |
 | Folder ID                 | The ID of the folder in Brevo where your contacts or campaigns are organized. You can find this in your Brevo account under Contacts > Folders. If you have not changed your folder structure, this is usually `1`.     |
-| Allowed Redirection URL   | Defines the pattern for valid redirection URLs used when creating or importing contacts. Only URLs matching this pattern will be accepted.                                                                              |
+| Allowed Redirection URL   | Defines the pattern for valid redirection URLs used when creating or importing contacts. Only URLs starting with this value will be accepted. 
 | Unsubscription Page ID    | The 24-digit ID of your configured unsubscription page. Go to [Brevo Unsubscription Pages](https://app.brevo.com/campaign/pages/unsubscription), add or edit a page, and copy the ID from the page URL into the config. |
 
 ## Mail Rendering
