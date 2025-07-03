@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 8.0.0-beta.7
+
+### Patch Changes
+
+- bb3e809: Fix layout spacing in `TableComponent` footer: add missing gap between item count and pagination (“Page X of Y”)
+    - @comet/admin-icons@8.0.0-beta.7
+
 ## 8.0.0-beta.6
 
 ### Major Changes
