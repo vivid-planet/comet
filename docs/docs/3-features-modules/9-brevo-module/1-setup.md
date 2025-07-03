@@ -47,14 +47,14 @@ ecgRtrList: {
 
 See the table below for information on how to find the config values and what they are used for:
 
-| Config Key                    | Description                                                                                                       |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `brevo.apiKey`                | Your Brevo API key. Find it in your [Brevo account settings](https://app.brevo.com/settings/keys/api).            |
-| `brevo.redirectUrlForImport`  | The URL in your app to redirect to after importing contacts. Set this to a route in your application.             |
-| `campaign.url`                | The public URL of your campaign frontend (where users can view or interact with campaigns).                       |
-| `campaign.basicAuth.username` | Username for HTTP Basic Auth if your campaign frontend is protected. Set this yourself if needed.                 |
-| `campaign.basicAuth.password` | Password for HTTP Basic Auth if your campaign frontend is protected. Set this yourself if needed.                 |
-| `ecgRtrList.apiKey`           | API key for the ECG RTR List integration. Obtain this from the respective service or your administrator. |
+| Config Key                    | Description                                                                                                                      |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `brevo.apiKey`                | Your Brevo API key. Find it in your [Brevo account settings](https://app.brevo.com/settings/keys/api).                           |
+| `brevo.redirectUrlForImport`  | The URL in your app to redirect to after importing contacts. Set this to a route in your application.                            |
+| `campaign.url`                | The URL where the campaign is rendered, used both for admin preview and for generating the final HTML before it’s sent to Brevo. |
+| `campaign.basicAuth.username` | Username for HTTP Basic Auth if your campaign frontend is protected. Set this yourself if needed.                                |
+| `campaign.basicAuth.password` | Password for HTTP Basic Auth if your campaign frontend is protected. Set this yourself if needed.                                |
+| `ecgRtrList.apiKey`           | API key for the ECG RTR List integration. Obtain this from the respective service or your administrator.                         |
 
 ### Register module
 
@@ -664,7 +664,7 @@ Brevo must be configured using the `BrevoConfigPage` in your admin interface.
 | Sender                    | The email address and name that will appear as the sender of your email campaigns. The sender address must be verified in your Brevo account.                                                                           |
 | Double Opt-In Template ID | The ID of your double opt-in template. You can create a template and find its ID at [Brevo Templates](https://app.brevo.com/templates/listing).                                                                         |
 | Folder ID                 | The ID of the folder in Brevo where your contacts or campaigns are organized. You can find this in your Brevo account under Contacts > Folders. If you have not changed your folder structure, this is usually `1`.     |
-| Allowed Redirection URL   | Defines the pattern for valid redirection URLs used when creating or importing contacts. Only URLs starting with this value will be accepted. 
+| Allowed Redirection URL   | Defines the pattern for valid redirection URLs used when creating or importing contacts. Only URLs starting with this value will be accepted.                                                                           |
 | Unsubscription Page ID    | The 24-digit ID of your configured unsubscription page. Go to [Brevo Unsubscription Pages](https://app.brevo.com/campaign/pages/unsubscription), add or edit a page, and copy the ID from the page URL into the config. |
 
 ## Mail Rendering
