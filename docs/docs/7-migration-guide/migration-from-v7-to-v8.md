@@ -1356,7 +1356,7 @@ This must be done for local development and production.
 
 Add the proxy to your vite config:
 
-```ts title=admin/vite.config.mts
+```ts title="admin/vite.config.mts"
 //...
 server: {
     // ...
@@ -1378,7 +1378,7 @@ server: {
 
 Add the proxy to your admin server:
 
-```diff title=admin/package.json
+```diff title="admin/server/package.json"
 "dependencies": {
     // ...
 +   "http-proxy-middleware": "^3.0.3"
@@ -1386,8 +1386,10 @@ Add the proxy to your admin server:
 },
 ```
 
-```diff title=admin/server/index.js
-// ...
+```diff title="admin/server/index.js"
++   const { createProxyMiddleware } = require("http-proxy-middleware");
+
+    // ...
 
     app.get("/status/health", (req, res) => {
         // ...
@@ -1399,12 +1401,12 @@ Add the proxy to your admin server:
 +   });
 +   app.use("/dam", proxyMiddleware);
 
-// ...
+    // ...
 ```
 
 You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
 
-```diff title=deployment/helm/values.tpl.yaml
+```diff title="deployment/helm/values.tpl.yaml"
 admin:
     env:
         ADMIN_URL: "https://$ADMIN_DOMAIN"
