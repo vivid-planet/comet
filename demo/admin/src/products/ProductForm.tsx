@@ -72,9 +72,10 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image"> & {
+type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string; label: string };
+    lastCheckedAt?: Date | null;
 };
 
 // TODO should we use a deep partial here?
