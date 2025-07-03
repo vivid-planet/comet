@@ -184,7 +184,7 @@ To add the Brevo Admin package, add the following to your `package.json` depende
 
 ### BrevoContactsPageAttributesConfig
 
-To use custom contact attributes in the `BrevoContactsPage`, you need to provide a configuration object. Therefor, create the config named `BrevoContactsPageAttributesConfig` like in this example:
+To use custom contact attributes in the `BrevoContactsPage`, you need to provide a configuration object. Therefore, create the config named `BrevoContactsPageAttributesConfig` like in this example:
 
 ```
 const attributesFragment = gql`
