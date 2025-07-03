@@ -33,7 +33,17 @@ export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps)
 
     const handleButtonClick = () => setOpen(true);
 
-    const defaultCategory = data?.page?.category ?? config.categories[0].category;
+    let defaultCategory: string;
+
+    if (data?.page?.category) {
+        defaultCategory = data.page.category;
+    } else {
+        if (config.categories.length === 0) {
+            throw new Error("No categories defined in the page tree configuration. Please define at least one category.");
+        }
+
+        defaultCategory = config.categories[0].category;
+    }
 
     return (
         <>
