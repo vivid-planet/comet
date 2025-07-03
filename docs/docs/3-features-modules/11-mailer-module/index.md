@@ -66,7 +66,7 @@ MAILER_DEFAULT_FROM='"Comet Demo" <comet-demo@comet-dxp.com>'
 MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 
-#### /api/src/app.module.ts (MailerModule is Global, so no module specific import is needed)
+#### /api/src/app.module.ts
 
 ```
 imports: [
