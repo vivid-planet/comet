@@ -29,7 +29,7 @@ interface RedirectsPageProps {
 }
 
 interface CreateRedirectsPageOptions {
-    link?: BlockInterface;
+    linkBlock?: BlockInterface;
     scopeParts?: string[];
 }
 
@@ -43,7 +43,7 @@ export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInt
 }
 
 function createRedirectsPage({
-    link = createRedirectsLinkBlock(),
+    linkBlock = createRedirectsLinkBlock(),
     scopeParts = [],
 }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
     function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
@@ -65,16 +65,16 @@ function createRedirectsPage({
                 <StackSwitch initialPage="grid">
                     <StackPage name="grid">
                         <StackToolbar scopeIndicator={<ContentScopeIndicator global={isGlobalScoped} scope={isGlobalScoped ? undefined : scope} />} />
-                        <RedirectsGrid linkBlock={link} scope={scope} />
+                        <RedirectsGrid linkBlock={linkBlock} scope={scope} />
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.redirects.edit", defaultMessage: "edit" })}>
                         {(selectedId: string) => {
-                            return <RedirectForm mode="edit" id={selectedId} linkBlock={link} scope={scope} />;
+                            return <RedirectForm mode="edit" id={selectedId} linkBlock={linkBlock} scope={scope} />;
                         }}
                     </StackPage>
                     <StackPage name="add" title={intl.formatMessage({ id: "comet.pages.redirects.create", defaultMessage: "create" })}>
                         {() => {
-                            return <RedirectForm mode="add" linkBlock={link} scope={scope} />;
+                            return <RedirectForm mode="add" linkBlock={linkBlock} scope={scope} />;
                         }}
                     </StackPage>
                 </StackSwitch>
