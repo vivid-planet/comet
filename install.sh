@@ -50,6 +50,7 @@ ln -sf ../../api/src/comet-config.json ./demo/site-pages/src/comet-config.json
 
 # Lang install
 sh ./demo/admin/intl-update.sh
+sh ./demo/api/intl-update.sh
 sh ./demo/site/intl-update.sh
 sh ./demo/site-pages/intl-update.sh
 

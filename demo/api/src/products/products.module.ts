@@ -1,6 +1,7 @@
 import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@src/config/config.module";
 import { ProductColorResolver } from "@src/products/generated/product-color.resolver";
 import { ProductVariantsService } from "@src/products/generated/product-variants.service";
 
@@ -37,6 +38,7 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
             FileUpload,
             ManufacturerCountry,
         ]),
+        ConfigModule,
     ],
     providers: [
         ProductResolver,
