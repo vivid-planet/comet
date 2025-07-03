@@ -11,6 +11,7 @@ const projectMessages = {
     en: project_messages_en,
     de: project_messages_de,
 };
+export type SupportedLanguage = keyof typeof projectMessages;
 
 export const getMessages = (language: keyof typeof projectMessages): Messages => {
     return projectMessages[language];
