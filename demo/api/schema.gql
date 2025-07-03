@@ -924,6 +924,7 @@ input UserPermissionsUserFilter {
 
 input StringFilter {
   contains: String
+  doesNotContain: String
   startsWith: String
   endsWith: String
   equal: String
