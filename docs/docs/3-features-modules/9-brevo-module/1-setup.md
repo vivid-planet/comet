@@ -54,7 +54,7 @@ See the table below for information on how to find the config values and what th
 | `campaign.url`                | The public URL of your campaign frontend (where users can view or interact with campaigns).                       |
 | `campaign.basicAuth.username` | Username for HTTP Basic Auth if your campaign frontend is protected. Set this yourself if needed.                 |
 | `campaign.basicAuth.password` | Password for HTTP Basic Auth if your campaign frontend is protected. Set this yourself if needed.                 |
-| `ecgRtrList.apiKey`           | API key for the ECG RTR List integration, if used. Obtain this from the respective service or your administrator. |
+| `ecgRtrList.apiKey`           | API key for the ECG RTR List integration. Obtain this from the respective service or your administrator. |
 
 ### Register module
 
