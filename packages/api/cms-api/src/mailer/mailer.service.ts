@@ -31,6 +31,8 @@ export class MailerService {
 
     /**
      * Sends a mail and logs it in the database.
+     * If mailerConfig.sendAllMailsTo is set, the mail will be sent to this address instead of the `to` address and `bcc` will be omitted. This can
+     * be used to prevent non-prod environments from sending mails to real customers.
      * @param type Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
      * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
