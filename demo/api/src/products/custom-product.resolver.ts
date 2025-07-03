@@ -2,18 +2,17 @@ import { RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Mutation, Query, Resolver } from "@nestjs/graphql";
-import { getMessages } from "@src/common/lang";
-import { createIntl, createIntlCache, IntlCache } from "react-intl";
+import { TranslationService } from "@src/config/translation.service";
 
 import { Product, ProductStatus } from "./entities/product.entity";
 
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class CustomProductResolver {
-    private readonly intlCache: IntlCache;
-    constructor(@InjectRepository(Product) private readonly repository: EntityRepository<Product>) {
-        this.intlCache = createIntlCache();
-    }
+    constructor(
+        @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
+        private readonly translationService: TranslationService,
+    ) {}
 
     @Mutation(() => Boolean)
     async publishAllProducts(): Promise<boolean> {
@@ -23,21 +22,9 @@ export class CustomProductResolver {
 
     @Query(() => String)
     async myTranslatedString(): Promise<string> {
-        const language = "de"; // TODO correctly set the language, maybe move into the mail template
-        const messages = getMessages(language);
+        const language = "de"; // TODO get the language from anywhere, e.g. from the request context, scope or database
 
-        const intl = createIntl(
-            {
-                // Locale of the application
-                locale: language,
-                // Locale of the fallback defaultMessage
-                defaultLocale: language,
-                messages: messages,
-            },
-            this.intlCache,
-        );
-
-        return intl.formatMessage({
+        return this.translationService.getIntl(language).formatMessage({
             id: "my-translated-string",
             defaultMessage: "Lorem ipsum",
         });
