@@ -1,4 +1,5 @@
 import { DynamicModule, Global, Module } from "@nestjs/common";
+import { TranslationService } from "@src/config/translation.service";
 
 import { Config } from "./config";
 
@@ -15,8 +16,9 @@ export class ConfigModule {
                     provide: CONFIG,
                     useValue: config,
                 },
+                TranslationService,
             ],
-            exports: [CONFIG],
+            exports: [CONFIG, TranslationService],
         };
     }
 }

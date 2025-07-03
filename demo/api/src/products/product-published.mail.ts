@@ -1,6 +1,5 @@
 import { MailTemplate, MailTemplateInterface } from "@comet/cms-api";
-import { getMessages } from "@src/common/lang";
-import { createIntl, createIntlCache, IntlCache } from "react-intl";
+import { TranslationService } from "@src/config/translation.service";
 
 type MailProps = {
     recipient: { name: string; email: string; language: "en" | "de" };
@@ -9,25 +8,10 @@ type MailProps = {
 
 @MailTemplate()
 export class ProductPublishedMail implements MailTemplateInterface<MailProps> {
-    private readonly intlCache: IntlCache;
-    constructor() {
-        this.intlCache = createIntlCache();
-    }
+    constructor(private readonly translationService: TranslationService) {}
 
     async generateMail(props: MailProps) {
-        const messages = getMessages(props.recipient.language);
-
-        const intl = createIntl(
-            {
-                // Locale of the application
-                locale: props.recipient.language,
-                // Locale of the fallback defaultMessage
-                defaultLocale: "en",
-                messages: messages,
-            },
-            this.intlCache,
-        );
-
+        const intl = this.translationService.getIntl(props.recipient.language);
         return {
             mailTypeForLogging: "ProductPublishedMail",
             subject: intl.formatMessage({ id: "product-published-mail.subject", defaultMessage: "All products published" }),
