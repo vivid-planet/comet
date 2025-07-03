@@ -1,5 +1,34 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.7
+
+### Major Changes
+
+- e7ad83b: Remove `Grid` layout responsibility from `DashboardWidgetRoot`.
+
+    The component `DashboardWidgetRoot` no longer wraps its content inside a `<Grid>` component. This change delegates layout responsibility (e.g., grid column sizing) to the parent component.
+
+    **Before:**
+    `DashboardWidgetRoot` was always wrapped in `<Grid size={{ xs: 12, lg: 6 }}>`.
+
+    **After:**
+    No layout assumptions — parent components must now position the widget explicitly.
+
+    This change may require updates where `DashboardWidgetRoot` is used inside grid layouts.
+
+### Minor Changes
+
+- 864e6de: Add the possibility to filter users by permission
+
+### Patch Changes
+
+- adf73a3: Remove the hardcoded default category in the page tree select
+- Updated dependencies [bb3e809]
+    - @comet/admin@8.0.0-beta.7
+    - @comet/admin-date-time@8.0.0-beta.7
+    - @comet/admin-rte@8.0.0-beta.7
+    - @comet/admin-icons@8.0.0-beta.7
+
 ## 8.0.0-beta.6
 
 ### Major Changes
