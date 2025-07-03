@@ -6,7 +6,7 @@ title: Brevo Setup
 
 :::caution
 This documentation refers to Brevo v3 or higher.
-Make sure that your project uses COMET v7.10.0 or later.
+Make sure that your project uses COMET v7.0 or later.
 :::
 
 The Brevo Module provides three packages: `brevo-api`, `brevo-admin`, and the optional `brevo-mail-rendering` package. Please check the latest release [here](https://github.com/vivid-planet/comet-brevo-module/releases).
