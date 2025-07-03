@@ -16,6 +16,7 @@ export interface DamConfig {
     uploadsMaxFileSize: number;
     allowedImageAspectRatios: string[];
     maxSrcResolution: number;
+    basePath?: string;
 }
 
 export function useDamConfig(): DamConfig {
@@ -26,4 +27,10 @@ export function useDamConfig(): DamConfig {
     }
 
     return cometConfig.dam;
+}
+
+export function useDamBasePath(): string {
+    const damConfig = useDamConfig();
+
+    return damConfig.basePath ?? "dam";
 }

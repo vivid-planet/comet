@@ -144,8 +144,7 @@ export class AppModule {
                 ImgproxyModule.register(config.imgproxy),
                 DamModule.register({
                     damConfig: {
-                        secret: config.dam.secret,
-                        allowedImageSizes: config.dam.allowedImageSizes,
+                        ...config.dam,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
