@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { BlockAdminComponentButton } from "../../blocks/common/BlockAdminComponentButton";
 import { BlockAdminComponentNestedButton } from "../../blocks/common/BlockAdminComponentNestedButton";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { type GQLPageTreeSelectDetailQuery, type GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
 import PageTreeSelectDialog, { type GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
@@ -22,6 +23,7 @@ const pageTreeSelectDetail = gql`
 `;
 
 export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps) {
+    const config = usePageTreeConfig();
     const [open, setOpen] = useState(false);
 
     const { data, loading } = useQuery<GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables>(pageTreeSelectDetail, {
@@ -31,7 +33,17 @@ export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps)
 
     const handleButtonClick = () => setOpen(true);
 
-    const selectedCategory = data?.page?.category || "MainNavigation";
+    let defaultCategory: string;
+
+    if (data?.page?.category) {
+        defaultCategory = data.page.category;
+    } else {
+        if (config.categories.length === 0) {
+            throw new Error("No categories defined in the page tree configuration. Please define at least one category.");
+        }
+
+        defaultCategory = config.categories[0].category;
+    }
 
     return (
         <>
@@ -50,7 +62,7 @@ export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps)
                     onClose={() => setOpen(false)}
                     value={value}
                     onChange={onChange}
-                    defaultCategory={selectedCategory}
+                    defaultCategory={defaultCategory}
                 />
             )}
         </>
