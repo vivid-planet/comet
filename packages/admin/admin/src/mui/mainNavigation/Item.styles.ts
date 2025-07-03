@@ -324,7 +324,11 @@ export const Root = createComponentSlot(ListItemButton)<MainNavigationItemClassK
 export const Icon = createComponentSlot(ListItemIcon)<MainNavigationItemClassKey, OwnerState>({
     componentName: "MainNavigationItem",
     slotName: "icon",
-})();
+})(
+    () => css`
+        margin-right: 0;
+    `,
+);
 
 export const Text = createComponentSlot(ListItemText)<MainNavigationItemClassKey, OwnerState>({
     componentName: "MainNavigationItem",

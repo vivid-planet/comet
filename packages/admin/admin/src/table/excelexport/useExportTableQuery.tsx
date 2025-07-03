@@ -24,7 +24,7 @@ export function useExportTableQuery<IVariables extends OperationVariables>(
 
     async function exportTable() {
         if (tableRef != null) {
-            await setLoading(true);
+            setLoading(true);
             try {
                 const query = api.getQuery();
                 const innerOptions = api.getInnerOptions();
@@ -43,7 +43,7 @@ export function useExportTableQuery<IVariables extends OperationVariables>(
             } catch {
                 throw new Error("Error happend while exporting data");
             } finally {
-                await setLoading(false);
+                setLoading(false);
             }
         }
     }

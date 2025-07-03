@@ -8,7 +8,11 @@ import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "./ManufacturerFilter";
 import { ProductTitle } from "./ProductTitle";
 
-const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
+const typeValues = [
+    { value: "Cap", label: { primaryText: "Great cap", icon: { name: "Education" as const, color: "primary" as const } } },
+    "Shirt",
+    "Tie",
+];
 
 export default defineConfig<GQLProduct>({
     type: "grid",
@@ -87,7 +91,7 @@ export default defineConfig<GQLProduct>({
             type: "text",
             renderCell: ({ value, row }) => <ProductTitle title={value} />,
             name: "title",
-            headerName: "Custom",
+            headerName: "Title",
             minWidth: 200,
             visible: "down('md')",
         },
@@ -103,29 +107,12 @@ export default defineConfig<GQLProduct>({
             visible: "up('md')",
         },
         {
-            // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
-            type: "staticSelect",
+            type: "boolean",
             name: "inStock",
             headerName: "In stock",
             flex: 1,
             minWidth: 80,
             visible: "up('md')",
-            values: [
-                {
-                    value: "true",
-                    label: {
-                        primaryText: "In stock",
-                        icon: { name: "StateFilled", color: "success" },
-                    },
-                },
-                {
-                    value: "false",
-                    label: {
-                        primaryText: "Out of stock",
-                        icon: { name: "StateFilled", color: "error" },
-                    },
-                },
-            ],
         },
         // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
         { type: "staticSelect", name: "type", maxWidth: 150, values: typeValues, visible: "up('md')" },

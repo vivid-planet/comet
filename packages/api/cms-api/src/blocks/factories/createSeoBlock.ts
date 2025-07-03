@@ -11,6 +11,7 @@ import {
     blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
+    BlockWarning,
     createBlock,
     ExtractBlockInput,
     SimpleBlockInputInterface,
@@ -134,6 +135,13 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
 
                 alternativeLinks: this.alternativeLinks,
             };
+        }
+
+        warnings(): BlockWarning[] {
+            if (!this.htmlTitle || !this.metaDescription) {
+                return [{ severity: "low", message: "missingSeoMetadata" }];
+            }
+            return [];
         }
     }
 

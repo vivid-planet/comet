@@ -1,61 +1,12 @@
 import "@fontsource-variable/roboto-flex/full.css";
 
-import { MainContent } from "@comet/admin";
-import { DateFnsLocaleProvider } from "@comet/admin-date-time";
-import { GlobalStyles } from "@mui/material";
-import type { Preview } from "@storybook/react";
-import type { GlobalTypes } from "@storybook/types";
-import { type Locale as DateFnsLocale } from "date-fns";
-import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { IntlProvider } from "react-intl";
+import type { Preview } from "@storybook/react-webpack5";
+import { type GlobalTypes } from "storybook/internal/csf";
 
-import { ThemeOptions, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
+import { IntlDecorator, LocaleOption } from "./decorators/IntlProvider.decorator";
+import { LayoutDecorator, LayoutOption } from "./decorators/Layout.decorator";
+import { ThemeOption, ThemeProviderDecorator } from "./decorators/ThemeProvider.decorator";
 import { worker } from "./mocks/browser";
-import { previewGlobalStyles } from "./preview.styles";
-
-type LocaleKey = "de" | "en";
-
-const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
-    de: deLocale,
-    en: enLocale,
-};
-
-// @TODO: use messages from lang-package
-const messages = {
-    en: {
-        "comet.core.deleteMutation.promptDelete": "Delete data?",
-        "comet.core.deleteMutation.yes": "Yes",
-        "comet.core.deleteMutation.no": "No",
-        "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-        "comet.core.editDialog.edit": "Edit",
-        "comet.core.editDialog.add": "Add",
-        "comet.core.editDialog.cancel": "Cancel",
-        "comet.core.editDialog.save": "Save",
-        "comet.core.finalForm.abort": "Cancel",
-        "comet.core.finalForm.save": "Save",
-        "comet.core.router.confirmationDialog.confirm": "OK",
-        "comet.core.router.confirmationDialog.abort": "Cancel",
-        "comet.core.stack.stack.back": "Back",
-        "comet.core.table.addButton": "Add",
-        "comet.core.table.excelExportButton": "Export",
-        "comet.core.table.deleteButton": "Delete",
-        "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
-        "comet.core.table.localChangesToolbar.save": "Save",
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-        "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-        "comet.core.table.tableQuery.error": "Error :( {error}",
-    },
-    de: {
-        "comet.core.table.localChangesToolbar.unsavedItems":
-            "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-        "comet.core.table.tableQuery.error": "Fehler :( {error}",
-    },
-};
-
-function isLocaleKey(value: any): value is LocaleKey {
-    return value === "de" || value === "en";
-}
 
 export const globalTypes: GlobalTypes = {
     theme: {
@@ -64,8 +15,35 @@ export const globalTypes: GlobalTypes = {
             title: "Theme",
             icon: "paintbrush",
             items: [
-                { value: ThemeOptions.Comet, right: "🟩", title: "Comet Theme" },
-                { value: ThemeOptions.Mui, right: "🟦", title: "Mui Theme" },
+                { value: ThemeOption.Comet, right: "🟩", title: "Comet Theme" },
+                { value: ThemeOption.Mui, right: "🟦", title: "Mui Theme" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    locale: {
+        name: "Locale",
+        description: "Locale",
+        toolbar: {
+            title: "Locale",
+            icon: "globe",
+            items: [
+                { value: LocaleOption.English, title: "English", right: "🇺🇸" },
+                { value: LocaleOption.German, title: "German", right: "🇩🇪" },
+            ],
+            showName: true,
+            dynamicTitle: true,
+        },
+    },
+    layout: {
+        description: "Layout",
+        toolbar: {
+            title: "Layout",
+            icon: "switchalt",
+            items: [
+                { value: LayoutOption.Padded, title: "Padded" },
+                { value: LayoutOption.Default, title: "Default" },
             ],
             showName: true,
             dynamicTitle: true,
@@ -74,35 +52,9 @@ export const globalTypes: GlobalTypes = {
 };
 
 const preview: Preview = {
-    argTypes: {
-        locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
-    },
-    args: { locale: "en" },
-    decorators: [
-        ThemeProviderDecorator,
-        (Story, context) => {
-            const { locale: selectedLocale } = context.args;
-
-            return (
-                <IntlProvider locale={selectedLocale} messages={isLocaleKey(selectedLocale) ? messages[selectedLocale] : {}}>
-                    <DateFnsLocaleProvider value={isLocaleKey(selectedLocale) ? dateFnsLocales[selectedLocale] : dateFnsLocales.en}>
-                        <GlobalStyles styles={previewGlobalStyles} />
-                        <>
-                            {context.parameters.layout === "padded" ? (
-                                <MainContent>
-                                    <Story />
-                                </MainContent>
-                            ) : (
-                                <Story />
-                            )}
-                        </>
-                    </DateFnsLocaleProvider>
-                </IntlProvider>
-            );
-        },
-    ],
+    tags: ["autodocs"],
+    decorators: [ThemeProviderDecorator, IntlDecorator, LayoutDecorator],
     parameters: {
-        layout: "padded",
         options: {
             /**
              * Note: according to: https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy#sorting-stories
@@ -182,6 +134,10 @@ const preview: Preview = {
                 const bIdx = order.findIndex((i) => bName.indexOf(i) > -1);
                 return aIdx - bIdx;
             },
+        },
+
+        docs: {
+            codePanel: true,
         },
     },
 };

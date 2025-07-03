@@ -6,7 +6,7 @@
         "compression": "^1.8.0",
         "express": "^4.21.2",
         "helmet": "^7.2.0",
-        "http-proxy-middleware": "^3.0.3"
+        "http-proxy-middleware": "^3.0.5"
     },
     "engines": {
         "node": "22"

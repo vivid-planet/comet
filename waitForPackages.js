@@ -6,7 +6,8 @@ const packageFolderMapping = {
     "@comet/admin-rte": "packages/admin/admin-rte",
     "@comet/cms-admin": "packages/admin/cms-admin",
     "@comet/cms-api": "packages/api/cms-api",
-    "@comet/cms-site": "packages/site/cms-site",
+    "@comet/site-nextjs": "packages/site/site-nextjs",
+    "@comet/site-react": "packages/site/site-react",
 };
 
 const waitForPackages = (...packages) => {

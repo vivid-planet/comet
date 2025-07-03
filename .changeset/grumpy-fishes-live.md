@@ -1,5 +1,5 @@
 ---
-"@comet/cms-site": major
+"@comet/site-nextjs": major
 ---
 
 Remove unused GraphQL client/fetch from site preview handlers

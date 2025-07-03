@@ -16,8 +16,9 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
-import { type ContentScope, useContentScope } from "../../contentScope/Provider";
+import { type ContentScope } from "../../contentScope/Provider";
 import { type Maybe } from "../../graphql.generated";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
@@ -78,7 +79,7 @@ interface PageTreeSelectProps {
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { categories, additionalPageTreeNodeFragment } = usePageTreeConfig();
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
     const [height, setHeight] = useState(200);
@@ -120,6 +121,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
+        // TODO remove hardcoded domain here
         domain: scope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {

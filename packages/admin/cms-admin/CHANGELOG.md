@@ -1,5 +1,42 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.6
+
+### Major Changes
+
+- ef1c645: Add warnings feature
+
+    The warnings module can be used to display application-wide warnings in the admin. See the [docs](https://docs.comet-dxp.com/docs/features-modules/warning-module) for more information.
+
+- 44915b9: Changed format for `useCurrentUser().allowedContentScopes`
+    - Old: `{ [key]: string }[]`
+    - New: `{ scope: ContentScope; label: { [key in keyof ContentScope]: string }; }[]`
+
+    To support a smooth transition the `defaultValue` prop of the `ContentScopeProvider` now must also have the same format.
+
+### Minor Changes
+
+- 77b52a8: Mark `FinalFormToggleButtonGroup` as deprecated. One should prefer using `ToggleButtonGroupField` from `@comet/admin` instead
+- d8ba897: Allow overriding the `uploadEndpoint` of `${apiUrl}/file-uploads/upload` in the `FinalFormFileUpload` component.
+
+### Patch Changes
+
+- e983344: Adapt styling of `RedirectActiveness` dropdown to align with Comet DXP design
+- 286fbfb: Added missing prop types to `FileUploadFieldProps` that are forwarded to `FinalFormFileUpload`, ensuring consistent typing and easier customization.
+- 44915b9: Fix returning duplicated entries in `useCurrentUser().allowedContentScopes`
+- Updated dependencies [9e3e943]
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+- Updated dependencies [9e3e943]
+- Updated dependencies [06d5600]
+- Updated dependencies [15b7dd3]
+- Updated dependencies [d6a004a]
+- Updated dependencies [77b52a8]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-date-time@8.0.0-beta.6
+    - @comet/admin-rte@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Major Changes
@@ -158,13 +195,11 @@
     ```
 
     **Breaking changes**
-
     - Multiple exports have been removed: `CmsBlockContext`, `CmsBlockContextProvider`, `useCmsBlockContext`, `BuildInformationProvider`, `DamConfigProvider`, `useDamConfig`, `DependenciesConfigProvider`, `useDependenciesConfig`, `LocaleProvider`, `SitesConfigProvider`
     - `useLocale` has been renamed to `useContentLanguage`
     - `useSitesConfig` has been renamed to `useSiteConfigs`
 
     **How to upgrade**
-
     1. Add the `CometConfigProvider` to `src/App.tsx`
     2. Move configs for used modules to the new provider
     3. Remove the old config providers
@@ -174,7 +209,6 @@
 - 5b8fe2e: Adapt multiple usages of save buttons to look like the standard `FeedbackButton` and match the Comet DXP design
 
     This applies to:
-
     - `FinalFormSaveButton`
     - `FinalFormSaveCancelButtonsLegacy`
     - `FinalFormSaveSplitButton`
@@ -223,7 +257,6 @@
     Now, as it is the preferred behavior, the Admin will stay on the same page per default.
 
     To upgrade, perform the following changes:
-
     1. Remove the `path` prop from the `PagesPage` component
     2. Remove the `redirectPathAfterChange` prop from the `RedirectsPage` component
     3. Remove unnecessary usages of the `useContentScopeConfig` hook
@@ -318,7 +351,6 @@
     Therefore, the `@comet/blocks-admin` is merged into this package.
 
     **Breaking changes**
-
     - The `@comet/blocks-admin` package doesn't exist anymore
     - Multiple exports that shouldn't be used have been removed from the public API
         - `CannotPasteBlockDialog`
@@ -350,7 +382,6 @@
     **How to upgrade**
 
     To upgrade, perform the following changes:
-
     1. Uninstall the `@comet/blocks-admin` package
     2. Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
     3. Remove usages of removed exports
@@ -398,7 +429,6 @@
 - cf1a829: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
 
     None of this mimetypes had an actual impact:
-
     - `video/avi` doesn't actually exist
     - `image/psd` doesn't exist / is non-standard
     - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
@@ -407,7 +437,6 @@
     So removing them shouldn't have any noticeable effects.
 
 - 9546356: Update default icon of `ContentScopeSelect` and fix mobile styling for `AppHeader` components
-
     - Update the default icon in `ContentScopeSelect` from `<Domain />` to `<Language />`
     - Fix mobile styling of `BuildEntry` and `ContentScopeSelect` and `UserHeaderItem`
 
@@ -431,6 +460,91 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+
+## 7.25.0
+
+### Minor Changes
+
+- b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+- c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+- a1a129e00: Allow uploading .vtt files to the DAM
+
+### Patch Changes
+
+- @comet/admin@7.25.0
+- @comet/admin-date-time@7.25.0
+- @comet/admin-icons@7.25.0
+- @comet/admin-rte@7.25.0
+- @comet/admin-theme@7.25.0
+- @comet/blocks-admin@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- 6d293de63: Consider required permission of ancestors in `MasterMenuRoutes`
+- Updated dependencies [751616321]
+- Updated dependencies [fa611381b]
+- Updated dependencies [fa611381b]
+- Updated dependencies [fc900f217]
+- Updated dependencies [24e046fb3]
+    - @comet/blocks-admin@7.24.0
+    - @comet/admin-date-time@7.24.0
+    - @comet/admin@7.24.0
+    - @comet/admin-theme@7.24.0
+    - @comet/admin-rte@7.24.0
+    - @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Minor Changes
+
+- afaa49d6e: Page Tree: Add support for scope parts
+
+    **Example**
+
+    ```tsx
+    <CmsBlockContextProvider
+        // Dimension "domain" is used for the page tree scope
+        pageTreeScopeParts={["domain"]}
+    >
+        {/* ... */}
+    </CmsBlockContextProvider>
+    ```
+
+### Patch Changes
+
+- @comet/admin@7.23.0
+- @comet/admin-date-time@7.23.0
+- @comet/admin-icons@7.23.0
+- @comet/admin-rte@7.23.0
+- @comet/admin-theme@7.23.0
+- @comet/blocks-admin@7.23.0
+
+## 7.22.0
+
+### Minor Changes
+
+- 2cf573b72: Adapt styling of `DamTable` to align with Comet DXP design
+
+### Patch Changes
+
+- 8b80b254e: Set `altText` and `title` fields to null in the DAM when deleting the field value
+
+    Previously, the `altText` and `title` fields value couldn't be completely removed.
+
+- 6d8159d67: Prevent the `UserPermissionsUserGrid` from losing focus while entering text in the search input
+- Updated dependencies [2cf573b72]
+- Updated dependencies [086774f01]
+    - @comet/admin@7.22.0
+    - @comet/admin-date-time@7.22.0
+    - @comet/admin-icons@7.22.0
+    - @comet/admin-rte@7.22.0
+    - @comet/admin-theme@7.22.0
+    - @comet/blocks-admin@7.22.0
 
 ## 7.21.1
 
@@ -608,7 +722,6 @@
 - bb041f7a7: Add content generation capabilities to `createSeoBlock`
 
     The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
-
     - HTML title
     - Meta description
     - Open Graph title
@@ -621,7 +734,6 @@
     `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
 
     The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
-
     - if the state is a string: the string itself
     - otherwise: an empty array
 
@@ -649,7 +761,6 @@
 - f49370a9e: Improve SVG validation
 
     Following tags are banned in SVGs:
-
     - script
     - \[new\] foreignObject
     - \[new\] use
@@ -660,7 +771,6 @@
     - \[new\] set
 
     Following attributes are banned:
-
     - Event handlers (`onload`, `onclick`, ...)
     - \[new\] `href` and `xlink:href` (if the value starts with `http://`, `https://` or `javascript:`)
 
@@ -691,7 +801,6 @@
 - cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
 
     None of this mimetypes had an actual impact:
-
     - `video/avi` doesn't actually exist
     - `image/psd` doesn't exist / is non-standard
     - `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
@@ -709,7 +818,6 @@
     This allows accessing the DAM scope in the application. This might be necessary when developing integrations with a third-party DAM.
 
 - 954635630: Update default icon of `ContentScopeSelect` and fix mobile styling for `AppHeader` components
-
     - Update the default icon in `ContentScopeSelect` from `<Domain />` to `<Language />`
     - Fix mobile styling of `BuildEntry` and `ContentScopeSelect` and `UserHeaderItem`
 
@@ -796,7 +904,6 @@
 ### Minor Changes
 
 - 7cea765fe: Add UI for Impersonation Feature
-
     - Add indicator to display when impersonation mode is active in `UserHeaderItem`
     - Add button to allow users to switch on impersonation in the `UserGrid`
     - Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
@@ -1233,7 +1340,6 @@
 - 9a8098488: Rework `EditImageDialog`
 
     Changes
-
     - Increase image size
     - Add hover effects for focal points
     - Add "Open in DAM" button
@@ -1294,7 +1400,6 @@
 ### Major Changes
 
 - 0588e212c: Remove `language` field from `User` object
-
     - Providing the locale is not mandatory for ID-Tokens
     - Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
 
@@ -1329,7 +1434,6 @@
     The new `ContentScopeIndicator` has the logic for displaying the current scope built-in. Thus, you can remove your project's `ContentScopeIndicator` implementation and directly use the `ContentScopeIndicator` from this library.
 
     Usage:
-
     - Per default, the `ContentScopeIndicator` displays the current `ContentScope`
     - Pass a scope object via the `scope` prop if your page has a custom scope
     - Pass the `global` prop if your page has no scope
@@ -1338,7 +1442,6 @@
 - c8e7a0496: Restructure `MasterMenuData`
 
     Items now need an explicit `type`. There are four types available:
-
     - `route`
 
         ```diff
@@ -1399,7 +1502,6 @@
 
     Some dependencies were incorrectly marked as peer dependencies.
     If you don't use them in your application, you may remove the following dependencies:
-
     - Admin: `axios`
     - API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
 
@@ -1422,7 +1524,6 @@
     The content scope controls were changed to display all available combinations in a single select.
 
     This requires a few breaking changes:
-
     1. The `values` props of `ContentScopeProvider` has been changed to an array:
 
         **Before**
@@ -1506,7 +1607,6 @@
     Don't forget to also remove/add the mime types in the API's `DamModule`
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -1585,7 +1685,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -1990,7 +2089,6 @@
 
 - f74544524: Change language field in User and CurrentUser to locale
 - 0588e212c: Remove `locale`-field from `User`-object
-
     - Providing the locale is not mandatory for ID-Tokens
     - Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
 
@@ -2006,7 +2104,6 @@
     The new `ContentScopeIndicator` has the logic for displaying the current scope built-in. Thus, you can remove your project's `ContentScopeIndicator` implementation and directly use the `ContentScopeIndicator` from this library.
 
     Usage:
-
     - Per default, the `ContentScopeIndicator` displays the current `ContentScope`
     - Pass a scope object via the `scope` prop if your page has a custom scope
     - Pass the `global` prop if your page has no scope
@@ -2015,7 +2112,6 @@
 - c8e7a0496: Restructure `MasterMenuData`
 
     Items now need an explicit `type`. There are four types available:
-
     - `route`
 
         ```diff
@@ -2071,7 +2167,6 @@
 
     Some dependencies were incorrectly marked as peer dependencies.
     If you don't use them in your application, you may remove the following dependencies:
-
     - Admin: `axios`
     - API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
 
@@ -2080,7 +2175,6 @@
     The content scope controls were changed to display all available combinations in a single select.
 
     This requires a few breaking changes:
-
     1. The `values` props of `ContentScopeProvider` has been changed to an array:
 
         **Before**
@@ -2136,7 +2230,6 @@
     Breaking: `previewUrl`-property of `SiteConfig` has changed to `blockPreviewBaseUrl`
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -2215,7 +2308,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -2239,7 +2331,6 @@
     // TODO Move the following introduction to the migration guide before releasing
 
     Requires following changes to site:
-
     - Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
     - Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
     - Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
@@ -2254,7 +2345,6 @@
         - Use the `path`-part of the return value to redirect to the preview
 
     Requires following changes to admin
-
     - The `SitesConfig` must provide a `sitePreviewApiUrl`
 
 ### Minor Changes
@@ -2380,7 +2470,6 @@
     Previously, files in the DAM could be renamed without restrictions.
     Files could have invalid extensions (for their mimetype) or no extension at all.
     This theoretically made the following attack possible:
-
     1. Creating a dangerous .exe file locally
     2. Renaming it to .jpg locally
     3. Uploading the file as a .jpg
@@ -2491,7 +2580,6 @@
 - 0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
 
     The error dialog now presents screens according to the current state. Required to work in all conditions:
-
     - `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
     - `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
 
@@ -2735,7 +2823,6 @@
 - d340cabc2: DAM: Fix the duplicate name check when updating a file
 
     Previously, there were two bugs:
-
     1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
     2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
 
@@ -2792,7 +2879,6 @@
 - 2db3bc855: Fix `CurrentUserInterface` type
 
     Add missing `id` field, make `name`, `email`, and `language` required.
-
     - @comet/admin@6.7.0
     - @comet/admin-date-time@6.7.0
     - @comet/admin-icons@6.7.0
@@ -2809,7 +2895,6 @@
     Previously, the tab was always shown, even if the feature wasn't configured. Though it didn't cause an error, the tab showed no valuable information.
 
     Now, we hide the tab if no configuration is passed via the `DependenciesConfigProvider`.
-
     - @comet/admin@6.6.2
     - @comet/admin-date-time@6.6.2
     - @comet/admin-icons@6.6.2
@@ -2865,7 +2950,6 @@
 - 2f64daa9b: Add `title` field to link block
 
     Perform the following steps to use it in an application:
-
     1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
 
         ```ts
@@ -2908,7 +2992,6 @@
     This allows using two different `ImageLink` blocks in one application.
 
     Perform the following steps to override the name:
-
     1. API: Add the name as second argument in the `createImageLinkBlock` factory:
 
         ```diff
@@ -2933,7 +3016,6 @@
     The implementation must then be passed to the `DependenciesConfigProvider`.
 
     You can use one of the helper methods to implement the `resolvePath()` method required by `DependencyInterface`:
-
     - `createDocumentDependencyMethods()` for documents
     - `createDependencyMethods()` for all other entities
 
@@ -3022,7 +3104,6 @@
 
     In v6.1.0 a loading indicator was added to the document editor (in `PagesPage`).
     This had an unwanted side effect: Focusing the edit page automatically causes a GraphQL request to check for a newer version of the document. This request also caused the loading indicator to render, thus unmounting the editor (`EditComponent`). Consequently, the local state of the editor was lost.
-
     - @comet/admin@6.2.0
     - @comet/admin-date-time@6.2.0
     - @comet/admin-icons@6.2.0
@@ -3057,7 +3138,6 @@
 ### Major Changes
 
 - d20f59c0: Enhance CronJob module
-
     - Show latest job run on `CronJobsPage`
     - Add option to manually trigger cron jobs to `CronJobsPage`
     - Add subpage to `CronJobsPage` that shows all job runs
@@ -3065,7 +3145,6 @@
     Warning: Only include this module if all your users should be able to trigger cron jobs manually or you have sufficient access control in place.
 
     Includes the following breaking changes:
-
     - Rename `JobStatus` to `KubernetesJobStatus` to avoid naming conflicts
     - Rename `BuildRuntime` to `JobRuntime`
 
@@ -3075,7 +3154,6 @@
     However, as the sites config is solely used in application code, it could be of any shape.
     Therefore, the `SitesConfigProvider` and `useSitesConfig` are made generic.
     The following changes have to be made in the application:
-
     1.  Define the type of your sites config
 
         Preferably this should be done in `config.ts`:
@@ -3184,7 +3262,6 @@
     This prevents leaks between scopes. In practice, this mostly concerns links to documents that don't exist in the target scope.
 
     **Example:**
-
     - Page A links to Page B
     - Page A is copied from Scope A to Scope B
     - Link to Page B is removed from Page A by replacing the `id` with `undefined` (since Page B doesn't exist in Scope B)
@@ -3194,7 +3271,6 @@
 - c4639be5: Clip crop values when cropping an image in the DAM or `PixelImageBlock`
 
     Previously, negative values could occur, causing the image proxy to fail on delivery.
-
     - @comet/admin@5.5.0
     - @comet/admin-date-time@5.5.0
     - @comet/admin-icons@5.5.0
@@ -3290,7 +3366,6 @@
 ### Minor Changes
 
 - 0bed4e7c: Improve the `SaveConflictDialog`
-
     - extend the text in the dialog to explain
         - what happened
         - what the next steps are
@@ -3330,13 +3405,11 @@
 ### Patch Changes
 
 - e1d3f007: Prevent false positive save conflicts while editing documents (e.g. `Page`):
-
     - Stop checking for conflicts while saving is in progress
     - Ensure that all "CheckForChanges" polls are cleared
 
 - 6d69dfac: Fix issue in PixelImageBlock that caused the preview URLs for files without a file extension in their filename to be invalid
 - 21c30931: Improved the EditPageNode dialog ("Page Properties" dialog):
-
     - Execute the asynchronous slug validation less often (increased the debounce wait time from 200ms to 500ms)
     - Cache the slug validation results. Evict the cache on the initial render of the dialog
 
@@ -3361,13 +3434,11 @@
     To enable DAM scoping, you must
 
     In the API:
-
     - Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     - Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
-    - Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+    - Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
 
     In the Admin:
-
     - Set `scopeParts` in the `DamConfigProvider` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
     - Render the content scope indicator in the `DamPage`
         ```tsx
@@ -3381,7 +3452,6 @@
 - 9875e7d4: Support automatically importing DAM files into another scope when copying documents from one scope to another
 
     The copy process was reworked:
-
     - The `DocumentInterface` now requires a `dependencies()` and a `replaceDependenciesInOutput()` method
     - The `BlockInterface` now has an optional `dependencies()` and a required `replaceDependenciesInOutput()` method
     - `rewriteInternalLinks()` was removed from `@comet/cms-admin`. Its functionality is replaced by `replaceDependenciesInOutput()`.
@@ -3407,7 +3477,6 @@
 - 5bae9ab3: Show `LinearProgress` instead of `CircularProgress` when polling after initially loading the PageTree
 - 47a7272c: Add `requireLicense` option to `DamConfig` to allow making DAM license fields required (when updating a file)
 - e26bd900: Add various UI/UX improvements to the DAM
-
     - Replace underlying `Table` with `DataGrid`
     - Add paging to improve performance
     - Add a dialog to move files to another folder (instead of drag and drop)

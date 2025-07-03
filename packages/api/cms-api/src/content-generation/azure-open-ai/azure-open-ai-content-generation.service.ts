@@ -101,7 +101,7 @@ export class AzureOpenAiContentGenerationService implements ContentGenerationSer
         const prompt: Array<ChatCompletionMessageParam> = [
             {
                 role: "system",
-                content: `The user will provide you with an image. Write a short text that can be displayed in the HTML title attribute of this image. Do not put the title inside quotation marks. Answer in the language "${language}".`,
+                content: `The user will provide you with an image. Write a short text with less than 150 characters that can be displayed in the HTML title attribute of this image. Do not put the title inside quotation marks. Answer in the language "${language}".`,
             },
             {
                 role: "user",

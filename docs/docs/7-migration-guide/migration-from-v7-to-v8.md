@@ -792,12 +792,10 @@ You need to modify your `AppModule` as follows:
         backend: config.blob.storage,
 +       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
     }),
-+   ImgproxyModule.register({
-+       imgproxyConfig: config.imgproxy,
-+   }),
++   ImgproxyModule.register(config.imgproxy),
     DamModule.register({
         damConfig: {
-            apiUrl: config.apiUrl,
+-           apiUrl: config.apiUrl,
             secret: config.dam.secret,
             allowedImageSizes: config.dam.allowedImageSizes,
             allowedAspectRatios: config.dam.allowedImageAspectRatios,
@@ -887,6 +885,42 @@ blob: {
 ```
 
 </details>
+
+### Use strings for date-only columns
+
+Starting with v6 MikroORM maps date-only columns to `string` instead of `Date`.
+Perform the following changes:
+
+1. Use `string` instead of `Date` for date-only columns:
+
+    ```diff
+    class Product {
+        @Property({ type: types.date, nullable: true })
+        @Field(() => GraphQLDate, { nullable: true })
+    -   availableSince?: Date = undefined;
+    +   availableSince?: string = undefined;
+    }
+    ```
+
+2. Use `GraphQLLocalDate` instead of `GraphQLDate`:
+
+    ```diff
+    - import { GraphQLDate } from "graphql-scalars";
+    + import { GraphQLLocalDate } from "graphql-scalars";
+
+    class Product {
+        @Property({ type: types.date, nullable: true })
+    -   @Field(() => GraphQLDate, { nullable: true })
+    +   @Field(() => GraphQLLocalDate, { nullable: true })
+        availableSince?: string = undefined;
+    }
+    ```
+
+    :::info Why this change?
+
+    The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type, whereas the `GraphQLLocalDate` performs no type coercion.
+
+    :::
 
 ## Admin
 
@@ -1642,6 +1676,74 @@ Example:
 
 </details>
 
+### Adapt to changes in ContentScopeProvider
+
+#### Use interface augmentation for ContentScope
+
+```diff title="admin/src/App.tsx"
++   import { type ContentScope as BaseContentScope } from "@src/site-configs";
+
++   declare module "@comet/cms-admin" {
++       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++       interface ContentScope extends BaseContentScope {}
++   }
+
+    export function App() {
+```
+
+#### Preferably use ContentScopeProvider directly from Comet
+
+Move the scope labels from admin to the API, for example:
+
+```diff
+UserPermissionsModule.forRootAsync({
+    useFactory: (userService: StaticUsersUserService, accessControlService: AccessControlService) => ({
+        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+-           siteConfig.scope.languages.map((language) => ({
+-               domain: siteConfig.scope.domain,
+-               language,
+-           })),
++           siteConfig.scope.languages.map((language) => ({
++               scope: {
++                   domain: siteConfig.scope.domain,
++                   language,
++               },
++               label: { domain: siteConfig.name },
++           })),
+        ),
+        // ...
+    }),
+    // ...
+}),
+```
+
+Then you can use the `ContentScopeProvider` from `@comet/cms-admin` directly in your `App.tsx` and delete `admin/src/common/ContentScopeProvider.tsx`:
+
+```diff title="admin/src/App.tsx"
+-   import { ContentScopeProvider } from "./common/ContentScopeProvider";
++   import { ContentScopeProvider } from "@comet/cms-admin";
+    // Delete `admin/src/common/ContentScopeProvider.tsx`
+```
+
+<details>
+
+<summary>However, if you need custom behavior, you can keep `admin/src/common/ContentScopeProvider.tsx` while skipping above change.</summary>
+
+Make sure to remove the generics:
+
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+-   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
+-       return useContentScopeConfigLibrary(p);
+-   }
+
+-    ContentScopeValues<ContentScope>
++    ContentScopeValues
+-    <ContentScopeProviderLibrary<ContentScope>>
++    <ContentScopeProviderLibrary>
+```
+
+</details>
+
 ### Import `Button` from `@comet/admin` package
 
 ```diff
@@ -1649,7 +1751,134 @@ Example:
 + import { Button } from "@comet/admin";
 ```
 
+### `FinalFormToggleButtonGroup` deprecated
+
+`FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
+
+```diff
+- import { FinalFormToggleButtonGroup } from "@comet/cms-admin";
++ import { ToggleGroupButtonField } from "@comet/admin";
+
+...
++ FormValueType = "value1" | "value2";
+
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
+-       { value: "value2", icon: <Error /> },
+-   ]}
+-   optionsPerRow={2}
+- />
++ <ToggleGroupButtonField<FormValueType>
++    name="formValue"
++    label={"Field Label"}
++    options={[
++        { value: "value1", label: <Info /> },
++        { value: "value2", label: <Error /> },
++    ]}
++    optionsPerRow={2}
++    />
+```
+
+The `FinalFormToggleButtonGroup` component is still available, but moved from `@comet/cms-admin` to `@comet/admin` package. Furthermore, the value `icon` in the `options` prop has been renamed to `label`.
+
+```diff
+- <Field
+-   name="formValue"
+-   label={"Field Label"}
+-   component={FinalFormToggleButtonGroup}
+-   options={[
+-       { value: "value1", icon: <Info /> },
++       { value: "value1", label: <Info /> },
+-       { value: "value2", icon: <Info /> },
++       { value: "value2", label: <Info /> },
+-   ]}
+-   optionsPerRow={2}
+- />
+```
+
+### Add the `LocalDate` scalar to the GraphQL Codegen config
+
+```diff title="admin/codegen.ts"
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
+```
+
+### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
+
+:::note Handled by following upgrade script
+
+```sh
+
+npx @comet/upgrade v8/add-grid-to-latest-content-updates-and-dashboard-widget-root.ts
+```
+
+:::
+
+The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its children in a `<Grid>` component. This means that layout and sizing must now be handled by the parent component.
+
+**Migration steps `DashboardWidgetRoot:**
+
+- **Before:**  
+  `DashboardWidgetRoot` automatically wrapped its content in a grid item, e.g.
+
+    ```tsx
+    <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    ```
+
+- **After:**  
+  You must now wrap `DashboardWidgetRoot` in a `<Grid item>` yourself:
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <DashboardWidgetRoot>{/* widget content */}</DashboardWidgetRoot>
+    </Grid>
+    ```
+
+**Migration steps `LatestContentUpdates`:**
+
+- **Before:**
+
+    ```tsx
+    <LatestContentUpdates />
+    ```
+
+- **After:**
+    ```tsx
+    <Grid size={{ xs: 12, lg: 6 }}>
+        <LatestContentUpdates />
+    </Grid>
+    ```
+
+**Action required:**  
+Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
+
 ## Site
+
+### Switch from `@comet/cms-site` to `@comet/site-nextjs`
+
+[//]: # "TODO: Upgrade script "
+
+The `@comet/cms-site` package has been reworked and renamed to `@comet/site-nextjs`. Notable changes are
+
+- Styled components is no longer a required peer dependency
+- Instead, SCSS modules are used internally
+- The package is now pure ESM
+
+To switch you must
+
+- uninstall `@comet/cms-site`
+- install `@comet/site-nextjs`
+- change all imports from `@comet/cms-site` to `@comet/site-nextjs`
+- import the css file exported by the package:
+
+```diff title="site/src/app/layout.tsx"
++ import "@comet/site-nextjs/css";
+```
 
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
 
@@ -1686,6 +1915,15 @@ return createGraphQLFetchLibrary(
     }),
     `${process.env.API_URL_INTERNAL}/graphql`,
 );
+```
+
+### Add the `LocalDate` scalar to the GraphQL Codegen config
+
+```diff title="site/codegen.ts"
+scalars: rootBlocks.reduce(
+    (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
++   { LocalDate: "string" }
+)
 ```
 
 ## ESLint

@@ -26,6 +26,7 @@ import { GenerateSeoTagsResolver } from "./src/content-generation/generate-seo-t
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { createDamMediaAlternativeResolver } from "./src/dam/files/dam-media-alternatives/dam-media-alternative.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
@@ -39,6 +40,7 @@ import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
+import { WarningResolver } from "./src/warnings/warning.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -118,6 +120,8 @@ async function generateSchema(): Promise<void> {
         GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+        WarningResolver,
+        createDamMediaAlternativeResolver({ File }),
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

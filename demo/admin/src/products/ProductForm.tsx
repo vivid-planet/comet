@@ -72,9 +72,10 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image"> & {
+type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string; label: string };
+    lastCheckedAt?: Date | null;
 };
 
 // TODO should we use a deep partial here?
@@ -133,7 +134,7 @@ export function ProductForm({ id, width }: FormProps) {
 
         const output = {
             ...formValues,
-            description: formValues.description ?? "",
+            description: formValues.description ?? null,
             image: rootBlocks.image.state2Output(formValues.image),
             type: formValues.type as GQLProductType,
             category: formValues.category ? formValues.category.id : null,
@@ -281,7 +282,6 @@ export function ProductForm({ id, width }: FormProps) {
                     <SelectField
                         name="additionalTypes"
                         label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
-                        required
                         fullWidth
                         multiple
                     >

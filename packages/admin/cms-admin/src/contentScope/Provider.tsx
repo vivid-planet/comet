@@ -1,6 +1,8 @@
 import { createContext, type Dispatch, type ReactNode, type SetStateAction, useCallback, useContext, useMemo, useState } from "react";
 import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
+import { useCurrentUser } from "../userPermissions/hooks/currentUser";
+import { StopImpersonationButton } from "../userPermissions/user/ImpersonationButtons";
 import { defaultCreatePath } from "./utils/defaultCreatePath";
 
 export interface ContentScope {
@@ -45,6 +47,7 @@ export type UseContentScopeApi = {
     match: match;
     setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     supported: boolean;
+    createUrl: (scope: ContentScope) => string;
     values: ContentScopeValues;
 };
 
@@ -112,21 +115,40 @@ export function useContentScope(): UseContentScopeApi {
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
         values: context.values as ContentScopeValues, // @TODO:
+        createUrl: context.location.createUrl,
     };
 }
 
 export interface ContentScopeProviderProps {
-    defaultValue: ContentScope;
-    values: ContentScopeValues;
+    defaultValue?: ContentScope;
+    values?: ContentScopeValues;
     children: (p: { match: match<NonNullRecord<ContentScope>> }) => ReactNode;
     location?: ContentScopeLocation;
 }
 
 export function ContentScopeProvider({ children, defaultValue, values, location = defaultContentScopeLocation }: ContentScopeProviderProps) {
+    const user = useCurrentUser();
+    if (values === undefined) {
+        values = user.allowedContentScopes;
+        defaultValue = user.allowedContentScopes[0]?.scope;
+    } else if (!values || !defaultValue) {
+        throw new Error("ContentScopeProvider: values and defaultValue couldn't be evaluated from currentUser and must therefore be provided.");
+    }
+
     const path = location.createPath(values);
-    const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<ContentScope>>(path);
     const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
+
+    if (values.length === 0) {
+        return (
+            <>
+                Error: user does not have access to any scopes.
+                {user.impersonated && <StopImpersonationButton />}
+            </>
+        );
+    }
+
+    const defaultUrl = location.createUrl(defaultValue);
 
     return (
         <Context.Provider

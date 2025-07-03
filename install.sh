@@ -17,7 +17,6 @@ ln -sf ../../api/cms-api/schema.gql ./packages/admin/cms-admin/schema.gql
 ln -sf ../../api/cms-api/block-meta.json ./packages/admin/cms-admin/block-meta.json
 
 # site CMS
-ln -sf ../../api/cms-api/block-meta.json ./packages/site/cms-site/block-meta.json
 ln -sf ../../api/cms-api/block-meta.json ./packages/site/site-nextjs/block-meta.json
 ln -sf ../../api/cms-api/block-meta.json ./packages/site/site-react/block-meta.json
 

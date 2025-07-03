@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
+import isEqual from "lodash.isequal";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -45,6 +46,10 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
             query ContentScopes($userId: String!) {
                 userContentScopes: userPermissionsContentScopes(userId: $userId)
                 userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
             }
         `,
         {
@@ -58,7 +63,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
         return <Loading />;
     }
 
-    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.userContentScopes);
+    const columns: GridColDef<ContentScope>[] = generateGridColumnsFromContentScopeProperties(data.availableContentScopes);
 
     return (
         <>
@@ -77,7 +82,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                 <CardContent>
                     <DataGrid
                         autoHeight={true}
-                        rows={data.userContentScopes ?? []}
+                        rows={data.userContentScopes}
                         columns={columns}
                         rowCount={data?.userContentScopes.length ?? 0}
                         loading={false}
@@ -118,9 +123,9 @@ const CardToolbar = styled(Toolbar)`
 `;
 
 export function generateGridColumnsFromContentScopeProperties(
-    data: GQLContentScopesQuery["userContentScopes"] | GQLAvailableContentScopesQuery["availableContentScopes"],
+    availableContentScopes: GQLAvailableContentScopesQuery["availableContentScopes"],
 ): GridColDef[] {
-    const uniquePropertyNames = Array.from(new Set(data.flatMap((item) => Object.keys(item))));
+    const uniquePropertyNames = Array.from(new Set(availableContentScopes.flatMap((item) => Object.keys(item.scope))));
     return uniquePropertyNames.map((propertyName) => {
         return {
             field: propertyName,
@@ -129,9 +134,10 @@ export function generateGridColumnsFromContentScopeProperties(
             sortable: false,
             filterable: true,
             headerName: camelCaseToHumanReadable(propertyName),
-            renderCell: ({ row }) => {
-                if (row[propertyName] != null) {
-                    return <Typography variant="subtitle2">{camelCaseToHumanReadable(row[propertyName])}</Typography>;
+            renderCell: ({ row }: { row: ContentScope }) => {
+                const contentScopeWithLabel = availableContentScopes.find((availableContentScope) => isEqual(availableContentScope.scope, row));
+                if (contentScopeWithLabel) {
+                    return <Typography variant="subtitle2">{contentScopeWithLabel.label[propertyName]}</Typography>;
                 } else {
                     return "-";
                 }

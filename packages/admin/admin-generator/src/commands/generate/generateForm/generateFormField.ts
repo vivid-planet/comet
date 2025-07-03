@@ -172,7 +172,6 @@ export function generateFormField({
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
     if (config.type == "text") {
-        const required = config.required !== undefined ? config.required : false; // don't use inferred from gql here, non-nullable textinput allows empty string
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
         <${TextInputComponent}
@@ -194,7 +193,7 @@ export function generateFormField({
             ${validateCode}
         />`;
         if (!config.virtual && !required && !config.readOnly) {
-            formValueToGqlInputCode = `${name}: formValues.${name} ?? "",`;
+            formValueToGqlInputCode = `${name}: formValues.${name} ?? null,`;
         }
     } else if (config.type == "number") {
         code = `
@@ -309,14 +308,6 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        formValuesConfig = [
-            {
-                ...defaultFormValuesConfig,
-                ...{
-                    initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
-                },
-            },
-        ];
     } else if (config.type == "dateTime") {
         code = `<DateTimeField
                 ${required ? "required" : ""}
@@ -341,9 +332,16 @@ export function generateFormField({
                 ...defaultFormValuesConfig,
                 ...{
                     initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                    omitFromFragmentType: name,
+                    typeCode: `${name}${!required ? "?" : ""}: Date${!required ? " | null" : ""};`,
                 },
             },
         ];
+        if (!config.virtual && !config.readOnly) {
+            formValueToGqlInputCode = required
+                ? `${name}: formValues.${name}.toISOString(),`
+                : `${name}: formValues.${name} ? formValues.${name}.toISOString() : null,`;
+        }
     } else if (config.type == "block") {
         code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
