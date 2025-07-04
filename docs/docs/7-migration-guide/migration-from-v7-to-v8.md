@@ -1859,12 +1859,23 @@ Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dash
 
 ### `DataGrid` Date / DateTime filter now uses MUI `DatePicker`
 
-:::note Requires manual changes
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/use-mui-date-picker-in-grid.ts
+```
+
+:::
+
+</details>
 
 This update improves the UX of date filtering by replacing the current date picker solution with MUI's `DatePicker`.
 
 It **requires installation of new dependencies** and setup of `LocalizationProvider` in your app.
-:::
 
 **Migration steps:**
 
@@ -1916,6 +1927,9 @@ const columns: GridColDef[] = [
     },
 ];
 ```
+
+**Action required:**  
+If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
 
 ## Site
 
