@@ -30,7 +30,7 @@ export class UserResolver {
         if (permissionAndFilters && permissionOrFilters) {
             throw new Error("You cannot use both 'and' and 'or' permission filters at the same time.");
         }
-        if (permissionAndFilters) {
+        if (permissionAndFilters && permissionAndFilters.length > 0) {
             await this.userService.warmupHasPermissionCache();
             // If a permission filter is provided, we need to get all users and filter them
             const filteredUsers: User[] = [];
@@ -46,7 +46,7 @@ export class UserResolver {
                 offset += users.length;
             } while (users.length > 0);
             return new UserPermissionPaginatedUserList(filteredUsers.slice(args.offset, args.offset + args.limit), filteredUsers.length);
-        } else if (permissionOrFilters) {
+        } else if (permissionOrFilters && permissionOrFilters.length > 0) {
             await this.userService.warmupHasPermissionCache();
             const matchedUsers = new Set<User>();
             let users: User[] = [];
