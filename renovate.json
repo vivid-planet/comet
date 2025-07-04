@@ -3,6 +3,13 @@
     "extends": ["config:recommended", ":semanticCommitsDisabled"],
     "packageRules": [
         {
+            "groupName": "Low-Risk Patches and Minors",
+            "matchUpdateTypes": ["patch", "minor"],
+            "excludePackagePatterns": ["^next$", "^react", "^@nestjs/", "^@apollo/", "^@docusaurus/", "^@mui/", "^@emotion/"],
+            "matchCurrentVersion": "!/^0\\./",
+            "matchVersionPattern": "!/^0\\/"
+        },
+        {
             "groupName": "babel",
             "matchPackageNames": ["/@babel/*/"]
         },
