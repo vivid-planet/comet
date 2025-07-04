@@ -1,6 +1,7 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
 import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { ProjectPermission } from "@src/common/enum/project-permission.enum";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
@@ -8,7 +9,7 @@ import { Product } from "./product.entity";
 
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: [ProjectPermission.products] })
 export class ProductCategory extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

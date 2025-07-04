@@ -2,6 +2,7 @@ import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
@@ -36,7 +37,7 @@ export function createFoldersResolver({
     @ObjectType()
     class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
 
-    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => Folder)
     class FoldersResolver {
         constructor(private readonly foldersService: FoldersService) {}

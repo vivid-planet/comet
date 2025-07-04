@@ -8,6 +8,7 @@ import isEqual from "lodash.isequal";
 import uniqWith from "lodash.uniqwith";
 import getUuid from "uuid-by-string";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { AbstractAccessControlService } from "./access-control.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "./dto/content-scope";
@@ -88,8 +89,8 @@ export class UserPermissionsService {
                         ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                     ]
                         .flatMap((p) => p.meta.requiredPermission)
-                        .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
-                        .concat(["impersonation"])
+                        .concat([CometPermission.prelogin]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
+                        .concat([CometPermission.impersonation])
                         .filter((p) => p !== DisablePermissionCheck)
                         .sort(),
                 ),
@@ -205,7 +206,7 @@ export class UserPermissionsService {
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
         if (request?.cookies["comet-impersonate-user-id"]) {
             const permissions = await this.getPermissions(authenticatedUser);
-            if (permissions.find((permission) => permission.permission === "impersonation")) {
+            if (permissions.find((permission) => permission.permission === CometPermission.impersonation)) {
                 try {
                     const user = await this.getUser(request?.cookies["comet-impersonate-user-id"]);
                     if (

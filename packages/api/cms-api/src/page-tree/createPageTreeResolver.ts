@@ -2,6 +2,7 @@ import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, createUnionType, ID, Info, Int, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { DocumentInterface } from "../document/dto/document-interface";
@@ -68,7 +69,7 @@ export function createPageTreeResolver({
     });
 
     @Resolver(() => PageTreeNode)
-    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission([CometPermission.pageTree], { skipScopeCheck: !hasNonEmptyScope })
     class PageTreeResolver {
         constructor(
             protected readonly pageTreeService: PageTreeService,

@@ -1,6 +1,7 @@
 import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { AbstractAccessControlService } from "./access-control.service";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
@@ -14,7 +15,7 @@ import { UserPermissionsService } from "./user-permissions.service";
 class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsUser) {}
 
 @Resolver(() => UserPermissionsUser)
-@RequiredPermission(["userPermissions", "impersonation"], { skipScopeCheck: true })
+@RequiredPermission([CometPermission.userPermissions, CometPermission.impersonation], { skipScopeCheck: true })
 export class UserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
 

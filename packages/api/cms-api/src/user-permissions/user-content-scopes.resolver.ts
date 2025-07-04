@@ -5,6 +5,7 @@ import { GraphQLJSONObject } from "graphql-scalars";
 import isEqual from "lodash.isequal";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { ContentScopeWithLabel } from "./dto/content-scope";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
@@ -13,7 +14,7 @@ import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @Resolver()
-@RequiredPermission(["userPermissions"], { skipScopeCheck: true })
+@RequiredPermission([CometPermission.userPermissions], { skipScopeCheck: true })
 export class UserContentScopesResolver {
     constructor(
         @InjectRepository(UserContentScopes) private readonly repository: EntityRepository<UserContentScopes>,

@@ -22,6 +22,7 @@ import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.deco
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { ScaledImagesCacheService } from "../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { calculatePartialRanges } from "../file-utils/files.utils";
 import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../file-utils/images.constants";
 import { getSupportedMimeType } from "../file-utils/images.util";
@@ -225,7 +226,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
         return PublicFileUploadsDownloadController;
     }
 
-    @RequiredPermission("fileUploads", { skipScopeCheck: true })
+    @RequiredPermission(CometPermission.fileUploads, { skipScopeCheck: true })
     class PrivateFileUploadsDownloadController extends BaseFileUploadsDownloadController {
         protected readonly logger = new Logger(PrivateFileUploadsDownloadController.name);
     }

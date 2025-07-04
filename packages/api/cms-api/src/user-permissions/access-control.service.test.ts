@@ -1,5 +1,6 @@
 import { Test, type TestingModule } from "@nestjs/testing";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { AbstractAccessControlService } from "./access-control.service";
 import { type CurrentUser } from "./dto/current-user";
 
@@ -22,14 +23,14 @@ describe("AbstractAccessControlService", () => {
                 id: "b26d86a7-32bb-4c84-ab9d-d167dddd40ff",
                 name: "User",
                 email: "user@example.com",
-                permissions: [{ permission: "pageTree", contentScopes: [{ domain: "main", language: null }] }],
+                permissions: [{ permission: CometPermission.pageTree, contentScopes: [{ domain: "main", language: null }] }],
             };
 
-            expect(service.isAllowed(user, "pageTree", { domain: "main" })).toBe(true);
+            expect(service.isAllowed(user, CometPermission.pageTree, { domain: "main" })).toBe(true);
 
-            expect(service.isAllowed(user, "pageTree", { domain: "main", language: null })).toBe(true);
+            expect(service.isAllowed(user, CometPermission.pageTree, { domain: "main", language: null })).toBe(true);
 
-            expect(service.isAllowed(user, "pageTree", { domain: "main", language: undefined })).toBe(true);
+            expect(service.isAllowed(user, CometPermission.pageTree, { domain: "main", language: undefined })).toBe(true);
         });
     });
 

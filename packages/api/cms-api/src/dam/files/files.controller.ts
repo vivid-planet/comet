@@ -27,6 +27,7 @@ import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.d
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { FileUploadInput } from "../../file-utils/file-upload.input";
 import { calculatePartialRanges, slugifyFilename } from "../../file-utils/files.utils";
@@ -59,7 +60,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     const UploadFileBody = createUploadFileBody({ Scope });
 
     @Controller("dam/files")
-    @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
         private readonly logger = new Logger(FilesController.name);
         constructor(
@@ -87,7 +88,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+            if (scope && !this.accessControlService.isAllowed(user, CometPermission.dam, scope)) {
                 throw new ForbiddenException();
             }
 
@@ -124,7 +125,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+            if (scope && !this.accessControlService.isAllowed(user, CometPermission.dam, scope)) {
                 throw new ForbiddenException();
             }
 
@@ -145,7 +146,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             if (!fileToReplace) {
                 throw new NotFoundException(`File not found`);
             }
-            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+            if (!this.accessControlService.isAllowed(user, CometPermission.dam, fileToReplace.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -177,7 +178,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             if (!fileToReplace) {
                 throw new NotFoundException(`File ${fileId} not found`);
             }
-            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+            if (!this.accessControlService.isAllowed(user, CometPermission.dam, fileToReplace.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -207,7 +208,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, CometPermission.dam, file.scope)) {
                 throw new ForbiddenException();
             }
 
@@ -231,7 +232,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, CometPermission.dam, file.scope)) {
                 throw new ForbiddenException();
             }
 

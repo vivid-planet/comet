@@ -2,6 +2,7 @@ import { AnyEntity } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Args, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { DependenciesService } from "./dependencies.service";
 import { DependenciesArgs } from "./dto/dependencies.args";
@@ -10,7 +11,7 @@ import { PaginatedDependencies } from "./dto/paginated-dependencies";
 export class DependenciesResolverFactory {
     static create<T extends Type<AnyEntity<{ id: string }>>>(classRef: T) {
         @Resolver(() => classRef)
-        @RequiredPermission("dependencies")
+        @RequiredPermission(CometPermission.dependencies)
         class DependenciesResolver {
             constructor(readonly dependenciesService: DependenciesService) {}
 

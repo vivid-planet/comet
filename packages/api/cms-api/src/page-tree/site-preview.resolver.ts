@@ -4,6 +4,7 @@ import { GraphQLJSONObject } from "graphql-scalars";
 import { SignJWT } from "jose";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
@@ -18,7 +19,7 @@ export class SitePreviewResolver {
     constructor(@Inject(SITE_PREVIEW_CONFIG) private readonly config: SitePreviewConfig) {}
 
     @Query(() => String)
-    @RequiredPermission("pageTree")
+    @RequiredPermission(CometPermission.pageTree)
     async sitePreviewJwt(
         @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
         @Args("path") path: string,

@@ -1,4 +1,4 @@
-import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
+import { AffectedEntity, CometPermission, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
@@ -8,7 +8,7 @@ import { PredefinedPageInput } from "./dto/predefined-page.input";
 import { PredefinedPage } from "./entities/predefined-page.entity";
 
 @Resolver(() => PredefinedPage)
-@RequiredPermission("pageTree")
+@RequiredPermission(CometPermission.pageTree)
 export class PredefinedPagesResolver {
     constructor(
         private readonly entityManager: EntityManager,

@@ -1,11 +1,12 @@
 import { Args, Int, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsService } from "./file-uploads.service";
 
 @Resolver(() => FileUpload)
-@RequiredPermission("fileUploads", { skipScopeCheck: true })
+@RequiredPermission(CometPermission.fileUploads, { skipScopeCheck: true })
 export class FileUploadsResolver {
     constructor(private readonly fileUploadsService: FileUploadsService) {}
 

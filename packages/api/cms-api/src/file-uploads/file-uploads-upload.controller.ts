@@ -3,6 +3,7 @@ import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@
 import { rimraf } from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { FileUploadInput } from "../file-utils/file-upload.input";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
@@ -57,7 +58,7 @@ export function createFileUploadsUploadController(options: { public: boolean }):
         return PublicFileUploadsUploadController;
     }
 
-    @RequiredPermission("fileUploads", { skipScopeCheck: true })
+    @RequiredPermission(CometPermission.fileUploads, { skipScopeCheck: true })
     class PrivateFileUploadsUploadController extends BaseFileUploadsUploadController {}
 
     return PrivateFileUploadsUploadController;

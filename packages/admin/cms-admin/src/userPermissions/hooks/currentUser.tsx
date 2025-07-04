@@ -4,12 +4,15 @@ import omit from "lodash.omit";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
+import { type GQLCometPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
-type CurrentUserContext = {
+export type Permission = GQLCometPermission | string;
+
+interface CurrentUserContext {
     currentUser: CurrentUserInterface;
-    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => boolean;
-};
+    isAllowed: (user: CurrentUserInterface, permission: Permission, contentScope?: ContentScope) => boolean;
+}
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
 export interface CurrentUserInterface {
@@ -22,7 +25,7 @@ export interface CurrentUserInterface {
         email: string;
     } | null;
     permissions: {
-        permission: string;
+        permission: Permission;
         contentScopes: ContentScope[];
     }[];
     allowedContentScopes: {
@@ -73,7 +76,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
         },
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScope) => {
+            ((user: CurrentUserInterface, permission: Permission, contentScope?: ContentScope) => {
                 if (user.email === undefined) return false;
                 return user.permissions.some(
                     (p) =>
@@ -92,9 +95,9 @@ export function useCurrentUser(): CurrentUserInterface {
     return ret.currentUser;
 }
 
-export function useUserPermissionCheck(): (permission: string) => boolean {
+export function useUserPermissionCheck(): (permission: Permission) => boolean {
     const context = useContext(CurrentUserContext);
     if (!context) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
     const contentScope = useContentScope();
-    return (permission: string) => context.isAllowed(context.currentUser, permission, contentScope.scope);
+    return (permission) => context.isAllowed(context.currentUser, permission, contentScope.scope);
 }

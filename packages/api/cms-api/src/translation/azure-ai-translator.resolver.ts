@@ -2,13 +2,14 @@ import createClient, { isUnexpected, TextTranslationClient } from "@azure-rest/a
 import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { AzureAiTranslatorConfig } from "./azure-ai-translator.config";
 import { AZURE_AI_TRANSLATOR_CONFIG } from "./azure-ai-translator.constants";
 import { AzureAiTranslationInput } from "./dto/azure-ai-translation.input";
 
 @Resolver()
-@RequiredPermission(["translation"], { skipScopeCheck: true })
+@RequiredPermission([CometPermission.translation], { skipScopeCheck: true })
 export class AzureAiTranslatorResolver {
     private readonly translationClient: TextTranslationClient;
 

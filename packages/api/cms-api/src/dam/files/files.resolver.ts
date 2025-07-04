@@ -7,6 +7,7 @@ import { basename, extname } from "path";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FileValidationService } from "../../file-utils/file-validation.service";
@@ -55,7 +56,7 @@ export function createFilesResolver({
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
-    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => File)
     class FilesResolver {
         constructor(

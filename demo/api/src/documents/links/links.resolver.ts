@@ -1,5 +1,6 @@
 import {
     AffectedEntity,
+    CometPermission,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
@@ -16,7 +17,7 @@ import { LinkInput } from "./dto/link.input";
 import { Link } from "./entities/link.entity";
 
 @Resolver(() => Link)
-@RequiredPermission(["pageTree"])
+@RequiredPermission([CometPermission.pageTree])
 export class LinksResolver {
     constructor(
         @InjectRepository(Link) readonly repository: EntityRepository<Link>,

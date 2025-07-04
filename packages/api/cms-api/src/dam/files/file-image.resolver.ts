@@ -1,13 +1,14 @@
 import { Args, Context, Int, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { ImagesService } from "../images/images.service";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FilesService } from "./files.service";
 
 @Resolver(() => DamFileImage)
-@RequiredPermission(["dam"])
+@RequiredPermission([CometPermission.dam])
 export class FileImagesResolver {
     constructor(
         private readonly imagesService: ImagesService,

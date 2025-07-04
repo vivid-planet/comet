@@ -1,4 +1,4 @@
-import { PageTreeNodeInterface, PageTreeReadApiService, RequiredPermission } from "@comet/cms-api";
+import { CometPermission, PageTreeNodeInterface, PageTreeReadApiService, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Query, Resolver } from "@nestjs/graphql";
@@ -10,7 +10,7 @@ import { MainMenuObject } from "./dto/main-menu.object";
 import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuObject)
-@RequiredPermission("pageTree")
+@RequiredPermission(CometPermission.pageTree)
 export class MenusResolver {
     constructor(
         private readonly pageTreeReadApi: PageTreeReadApiService,

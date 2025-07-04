@@ -844,6 +844,25 @@ input RedirectScopeInput {
   domain: String!
 }
 
+enum CometPermission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+}
+
+enum ProjectPermission {
+  news
+  products
+}
+
 type Query {
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): UserPermissionsUser!

@@ -4,6 +4,7 @@ import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
 import { type ExtractBlockData } from "../blocks/block";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
@@ -56,7 +57,7 @@ export function createRedirectsResolver({
     class PaginatedRedirectsArgs extends PaginatedRedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
-    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission([CometPermission.pageTree], { skipScopeCheck: !hasNonEmptyScope })
     class RedirectsResolver {
         constructor(
             private readonly redirectService: RedirectsService,

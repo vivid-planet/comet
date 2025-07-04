@@ -9,6 +9,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { ScaledImagesCacheService } from "../../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { BASIC_TYPES, MODERN_TYPES } from "../../file-utils/images.constants";
 import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "../../file-utils/images.util";
@@ -29,7 +30,7 @@ const smartImageUrl = `:fileId/crop\\::focalPoint/resize\\::resizeWidth\\::resiz
 const focusImageUrl = `:fileId/crop\\::cropWidth\\::cropHeight\\::focalPoint\\::cropX\\::cropY/resize\\::resizeWidth\\::resizeHeight/:filename`;
 
 @Controller("dam/images")
-@RequiredPermission(["dam"], { skipScopeCheck: true }) // Scopes are checked in Code
+@RequiredPermission([CometPermission.dam], { skipScopeCheck: true }) // Scopes are checked in Code
 export class ImagesController {
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
@@ -61,7 +62,7 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, CometPermission.dam, file.scope)) {
             throw new ForbiddenException();
         }
 
@@ -91,7 +92,7 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, CometPermission.dam, file.scope)) {
             throw new ForbiddenException();
         }
 

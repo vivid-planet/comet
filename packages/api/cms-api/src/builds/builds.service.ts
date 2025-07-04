@@ -5,6 +5,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, LABEL_ANNOTATION, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
@@ -35,7 +36,7 @@ export class BuildsService {
     private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(job) ?? {});
+            return this.accessControlService.isAllowed(user, CometPermission.builds, this.kubernetesService.getContentScope(job) ?? {});
         });
     }
 

@@ -1,6 +1,7 @@
 import { Type } from "@nestjs/common";
 import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { DamScopeInterface } from "../types";
 import { DamItemsService } from "./dam-items.service";
@@ -53,7 +54,7 @@ export function createDamItemsResolver({
         }
     }
 
-    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => DamItem)
     class DamItemsResolver {
         constructor(private readonly damItemsService: DamItemsService) {}

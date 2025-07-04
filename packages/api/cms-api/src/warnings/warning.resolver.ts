@@ -7,6 +7,7 @@ import isEqual from "lodash.isequal";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { EntityInfoObject } from "../common/entityInfo/entity-info.object";
 import { EntityInfoService } from "../common/entityInfo/entity-info.service";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { gqlArgsToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
@@ -17,7 +18,7 @@ import { WarningsArgs } from "./dto/warnings.args";
 import { Warning } from "./entities/warning.entity";
 
 @Resolver(() => Warning)
-@RequiredPermission(["warnings"], { skipScopeCheck: true })
+@RequiredPermission([CometPermission.warnings], { skipScopeCheck: true })
 export class WarningResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -38,7 +39,7 @@ export class WarningResolver {
         @GetCurrentUser() user: CurrentUser,
     ): Promise<PaginatedWarnings> {
         // check if there are any scopes that the user does not have permission to
-        const allowedScopesForUser = user.permissions.find(({ permission }) => permission === "warnings")?.contentScopes;
+        const allowedScopesForUser = user.permissions.find(({ permission }) => permission === CometPermission.warnings)?.contentScopes;
 
         for (const scope of scopes) {
             if (!allowedScopesForUser?.find((allowedScope) => isEqual(allowedScope, scope))) {

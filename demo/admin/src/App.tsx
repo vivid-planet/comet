@@ -17,7 +17,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
-import { type ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
@@ -50,11 +49,6 @@ const GlobalStyle = () => (
 );
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
-
-declare module "@comet/cms-admin" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface ContentScope extends BaseContentScope {}
-}
 
 export function App() {
     return (

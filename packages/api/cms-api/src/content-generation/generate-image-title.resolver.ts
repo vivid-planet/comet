@@ -2,6 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { IsLocale, IsUUID } from "class-validator";
 
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { IsUndefinable } from "../common/validators/is-undefinable";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
@@ -23,7 +24,7 @@ class GenerateImageTitleArgs {
 export class GenerateImageTitleResolver {
     @Inject(CONTENT_GENERATION_SERVICE) private contentGenerationService: ContentGenerationServiceInterface;
 
-    @RequiredPermission(["dam"], { skipScopeCheck: true })
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: true })
     @Mutation(() => String)
     async generateImageTitle(@Args() { fileId, language }: GenerateImageTitleArgs): Promise<string> {
         const imageTitle = await this.contentGenerationService.generateImageTitle?.(fileId, { language: language ?? "en" });

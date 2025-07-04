@@ -4,6 +4,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/g
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { BUILDER_LABEL } from "../builds/builds.constants";
 import { SkipBuild } from "../builds/skip-build.decorator";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
@@ -18,7 +19,7 @@ import { Job } from "./dto/job.object";
 import { JobsService } from "./jobs.service";
 
 @Resolver(() => CronJob)
-@RequiredPermission(["cronJobs"], { skipScopeCheck: true })
+@RequiredPermission([CometPermission.cronJobs], { skipScopeCheck: true })
 @UseGuards(PreventLocalInvocationGuard)
 export class CronJobsResolver {
     constructor(
@@ -37,7 +38,7 @@ export class CronJobsResolver {
             .filter((cronJob) => {
                 const contentScope = this.kubernetesService.getContentScope(cronJob);
                 if (contentScope) {
-                    return this.accessControlService.isAllowed(user, "builds", contentScope);
+                    return this.accessControlService.isAllowed(user, CometPermission.builds, contentScope);
                 }
 
                 return true;
@@ -49,7 +50,7 @@ export class CronJobsResolver {
     async kubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUser): Promise<CronJob> {
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, CometPermission.builds, contentScope)) {
             throw new Error("Access denied");
         }
 
@@ -61,7 +62,7 @@ export class CronJobsResolver {
     async triggerKubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUser): Promise<Job> {
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, CometPermission.builds, contentScope)) {
             throw new Error("Access denied");
         }
 

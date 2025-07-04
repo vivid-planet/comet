@@ -3,6 +3,7 @@ import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { CometPermission } from "../common/enum/comet-permission.enum";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
@@ -17,7 +18,7 @@ import { CreateBuildsInput } from "./dto/create-builds.input";
 import { SkipBuild } from "./skip-build.decorator";
 
 @Resolver(() => Build)
-@RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in code
+@RequiredPermission([CometPermission.builds], { skipScopeCheck: true }) // Scopes are checked in code
 @UseGuards(PreventLocalInvocationGuard)
 export class BuildsResolver {
     constructor(
@@ -39,7 +40,7 @@ export class BuildsResolver {
                 throw new Error("Triggering build from different instance is not allowed");
             }
 
-            if (!this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(cronJob) ?? {})) {
+            if (!this.accessControlService.isAllowed(user, CometPermission.builds, this.kubernetesService.getContentScope(cronJob) ?? {})) {
                 throw new Error("Triggering build not allowed");
             }
 

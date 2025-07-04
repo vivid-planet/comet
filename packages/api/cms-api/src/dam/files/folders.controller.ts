@@ -2,6 +2,7 @@ import { Controller, ForbiddenException, Get, Inject, NotFoundException, Param, 
 import { Response } from "express";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
+import { CometPermission } from "../../common/enum/comet-permission.enum";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
@@ -15,7 +16,7 @@ export class FoldersController {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in method
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: true }) // Scope is checked in method
     @Get("/:folderId/zip")
     async createZip(@Param("folderId") folderId: string, @Res() res: Response, @GetCurrentUser() user: CurrentUser): Promise<void> {
         const folder = await this.foldersService.findOneById(folderId);
@@ -23,7 +24,7 @@ export class FoldersController {
             throw new NotFoundException("Folder not found");
         }
 
-        if (folder.scope && !this.accessControlService.isAllowed(user, "dam", folder.scope)) {
+        if (folder.scope && !this.accessControlService.isAllowed(user, CometPermission.dam, folder.scope)) {
             throw new ForbiddenException("The current user is not allowed to access this scope and download this folder.");
         }
 

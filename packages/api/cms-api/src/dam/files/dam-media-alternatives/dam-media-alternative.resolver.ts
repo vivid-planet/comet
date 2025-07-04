@@ -5,6 +5,7 @@ import { Type } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
+import { CometPermission } from "../../../common/enum/comet-permission.enum";
 import { CometValidationException } from "../../../common/errors/validation.exception";
 import { searchToMikroOrmQuery } from "../../../common/filter/mikro-orm";
 import { extractGraphqlFields } from "../../../common/graphql/extract-graphql-fields";
@@ -27,7 +28,7 @@ export function createDamMediaAlternativeResolver({
     const hasNonEmptyScope = PassedScope != null;
 
     @Resolver(() => DamMediaAlternative)
-    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission([CometPermission.dam], { skipScopeCheck: !hasNonEmptyScope })
     class DamMediaAlternativeResolver {
         constructor(
             private readonly entityManager: EntityManager,
