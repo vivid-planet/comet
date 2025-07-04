@@ -1857,6 +1857,80 @@ The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its
 **Action required:**  
 Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
 
+### `DataGrid` Date / DateTime filter now uses MUI `DatePicker`
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/use-mui-date-picker-in-grid.ts
+```
+
+:::
+
+</details>
+
+This update improves the UX of date filtering by replacing the current date picker solution with MUI's `DatePicker`.
+
+It **requires installation of new dependencies** and setup of `LocalizationProvider` in your app.
+
+**Migration steps:**
+
+- **Install dependencies:**
+  Add the following dependencies to your `package.json`:
+
+```diff
+    "dependencies": {
++       "@mui/x-date-pickers": "^7.29.4",
++       "date-fns": "^4.1.0",
+    }
+```
+
+Update your application root to include `LocalizationProvider from @mui/x-date-pickers:
+
+- **Before:**
+
+    ```tsx
+    <IntlProvider locale="en" messages={getMessages()}>
+        <MuiThemeProvider theme={theme}>{/* App Content */}</MuiThemeProvider>
+    </IntlProvider>
+    ```
+
+- **After:**
+  Wrap your app in `LocalizationProvider`:
+
+    ```tsx
+    import { LocalizationProvider } from "@mui/x-date-pickers";
+    import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+    import { enUS } from "date-fns/locale";
+
+    <IntlProvider locale="en" messages={getMessages()}>
+        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+            <MuiThemeProvider theme={theme}>{/* App Content */}</MuiThemeProvider>
+        </LocalizationProvider>
+    </IntlProvider>;
+    ```
+
+If you are already using the `dataGridDateColumn` or `dataGridDateTimeColumn` helpers, the new MUI DatePicker will be used automatically for filtering:
+
+```tsx
+import { dataGridDateTimeColumn } from "@comet/admin";
+
+const columns: GridColDef[] = [
+    {
+        ...dataGridDateTimeColumn,
+        field: "createdAt",
+        headerName: "Created at",
+    },
+];
+```
+
+**Action required:**  
+If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
