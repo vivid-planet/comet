@@ -149,8 +149,8 @@ const getValueOptionsLabelData = (messageId: string, label: string | StaticSelec
     };
 };
 
-type GridBase = { __typename: string } & GridValidRowModel;
-export function generateGrid<T extends GridBase>(
+type GridConfigRow = { __typename: string } & GridValidRowModel;
+export function generateGrid<T extends GridConfigRow>(
     {
         exportName,
         baseOutputFilename,
