@@ -54,7 +54,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                     {columns.map((column, index) => {
                         const checked = columnVisibilityModel?.[column.field] ?? true;
                         return (
-                            <ListItem key={`columns-management-row${index}`} {...slotProps.listItem}>
+                            <ListItem key={index} {...slotProps.listItem}>
                                 <Switch
                                     name={column.field}
                                     checked={checked}
