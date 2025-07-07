@@ -1,12 +1,11 @@
-import { buildSchema, getIntrospectionQuery, type GraphQLSchema, graphqlSync } from "graphql";
+import { buildSchema, type GraphQLSchema, introspectionFromSchema, type IntrospectionQuery } from "graphql";
 
 import { type GridConfig } from "../../generate-command";
 import { generateGrid } from "../generateGrid";
 
 describe("generateGrid", () => {
     let schema: GraphQLSchema;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let introspection: any;
+    let introspection: IntrospectionQuery;
 
     beforeAll(() => {
         schema = buildSchema(`
@@ -62,16 +61,7 @@ describe("generateGrid", () => {
             }
         `);
 
-        const result = graphqlSync({
-            schema,
-            source: getIntrospectionQuery(),
-        });
-
-        if (result.errors || !result.data) {
-            throw new Error("Failed to generate introspection");
-        }
-
-        introspection = result.data;
+        introspection = introspectionFromSchema(schema, { descriptions: true });
     });
 
     type Book = {
