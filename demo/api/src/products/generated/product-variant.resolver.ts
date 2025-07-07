@@ -26,11 +26,11 @@ import { ProductVariantsService } from "./product-variants.service";
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        private readonly productVariantsService: ProductVariantsService,
-        @InjectRepository(ProductVariant) private readonly repository: EntityRepository<ProductVariant>,
-        @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
-        private readonly blocksTransformer: BlocksTransformerService,
+        protected readonly entityManager: EntityManager,
+        protected readonly productVariantsService: ProductVariantsService,
+        @InjectRepository(ProductVariant) protected readonly repository: EntityRepository<ProductVariant>,
+        @InjectRepository(Product) protected readonly productRepository: EntityRepository<Product>,
+        protected readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
     @Query(() => ProductVariant)

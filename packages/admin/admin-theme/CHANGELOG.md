@@ -1,5 +1,30 @@
 # @comet/admin-theme
 
+## 7.25.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+-   24e046fb3: Data Grid: Fix styling of filter input fields
+    -   @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes

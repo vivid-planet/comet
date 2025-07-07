@@ -10,8 +10,8 @@ import { ProductVariant } from "../entities/product-variant.entity";
 @Injectable()
 export class ProductVariantsService {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(ProductVariant) private readonly repository: EntityRepository<ProductVariant>,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(ProductVariant) protected readonly repository: EntityRepository<ProductVariant>,
     ) {}
 
     async incrementPositions(group: { product: string }, lowestPosition: number, highestPosition?: number) {

@@ -12,6 +12,7 @@ import {
     BlockDataInterface,
     BlockInputFactory,
     BlockInputInterface,
+    ChildBlockInfo,
     ExtractBlockInput,
     registerBlock,
 } from "./block";
@@ -106,6 +107,21 @@ export function createRichTextBlock<LinkBlock extends Block>(
                         return block.text;
                 }
             });
+        }
+
+        childBlocksInfo(): ChildBlockInfo[] {
+            const ret: ChildBlockInfo[] = [];
+            Object.entries(this.draftContent.entityMap).map(([key, entity]) => {
+                if (entity.type === "LINK") {
+                    ret.push({
+                        visible: true,
+                        relJsonPath: ["draftContent", "entityMap", key, "data"],
+                        block: entity.data as BlockDataInterface,
+                        name: LinkBlock.name,
+                    });
+                }
+            });
+            return ret;
         }
     }
 

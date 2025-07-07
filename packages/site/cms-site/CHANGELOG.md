@@ -1,5 +1,23 @@
 # @comet/cms-site
 
+## 7.25.0
+
+### Minor Changes
+
+-   b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+## 7.24.0
+
+## 7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+-   e4327e250: Add missing `"use client"` directive to `useBlockPreviewFetch`
+
 ## 7.21.1
 
 ### Patch Changes

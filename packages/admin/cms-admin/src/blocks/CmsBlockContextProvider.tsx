@@ -22,6 +22,15 @@ export interface CmsBlockContext {
         name: string;
         fragment: DocumentNode;
     };
+    /**
+     * Specifies which dimensions of the content scope should be used for the page tree scope.
+     *
+     * @example
+     * // Dimension "domain" is used for the page tree scope
+     * <CmsBlockContextProvider pageTreeScopeParts={["domain"]} />
+     */
+    // TODO move to CometConfigProvider in Comet v8
+    pageTreeScopeParts?: string[];
 }
 
 interface CmsBlockContextProviderProps extends Omit<CmsBlockContext, "apolloClient"> {

@@ -207,7 +207,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user without one the the required permissions", async () => {
+    it("denies user without one of the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: ["p1", "p2"], // One of the permissions is required
