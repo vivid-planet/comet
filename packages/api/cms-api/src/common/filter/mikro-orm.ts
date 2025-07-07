@@ -65,10 +65,10 @@ export function filterToMikroOrmQuery(
             ret.$in = filterProperty.isAnyOf;
         }
         if (filterProperty.isEmpty) {
-            ret.$eq = null;
+            ret.$or = [{ [propertyName]: { $eq: null } }, { [propertyName]: { $eq: "" } }];
         }
         if (filterProperty.isNotEmpty) {
-            ret.$ne = null;
+            ret.$and = [{ [propertyName]: { $ne: null } }, { [propertyName]: { $ne: "" } }];
         }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
@@ -250,6 +250,23 @@ export function filtersToMikroOrmQuery(
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
+
+                        // $and can't be applied like { field: { $and: [{ ... }] } }.
+                        // It has to be applied like { $and: [{ field: { ... } }] }.
+                        if (query.$and) {
+                            acc.$and ??= [];
+                            acc.$and.push(...query.$and);
+                            delete query.$and;
+                        }
+
+                        // $or can't be applied like { field: { $or: [{ ... }] } }.
+                        // It has to be applied like { $or: [{ field: { ... } }] }.
+                        if (query.$or) {
+                            acc.$or ??= [];
+                            acc.$or.push(...query.$or);
+                            delete query.$or;
+                        }
+
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         if (Object.keys(query as any).length > 0) {
                             acc[filterPropertyName] = query;
