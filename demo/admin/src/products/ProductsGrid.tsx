@@ -46,6 +46,8 @@ import {
     type GQLCreateProductMutationVariables,
     type GQLDeleteProductMutation,
     type GQLDeleteProductMutationVariables,
+    type GQLProductCopyAdditionalQuery,
+    type GQLProductCopyAdditionalQueryVariables,
     type GQLProductGridRelationsQuery,
     type GQLProductGridRelationsQueryVariables,
     type GQLProductsListManualFragment,
@@ -326,12 +328,21 @@ export function ProductsGrid() {
                                 });
                             }}
                             refetchQueries={["ProductsList"]}
-                            copyData={() => {
+                            copyData={async () => {
                                 const {
                                     // Don't copy id, because we want to create a new entity with this data
                                     id,
                                     ...filteredData
                                 } = filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
+
+                                const { data: additionalData } = await client.query<
+                                    GQLProductCopyAdditionalQuery,
+                                    GQLProductCopyAdditionalQueryVariables
+                                >({
+                                    query: productCopyAdditional,
+                                    variables: { id },
+                                });
+
                                 return {
                                     category: filteredData.category?.id ?? null,
                                     datasheets: filteredData.datasheets?.map((dataSheet) => {
@@ -346,21 +357,38 @@ export function ProductsGrid() {
                                     articleNumbers: filteredData.articleNumbers,
                                     availableSince: filteredData.availableSince,
                                     colors: filteredData.colors,
-                                    dimensions: null,
+                                    dimensions: additionalData.product.dimensions
+                                        ? {
+                                              depth: additionalData.product.dimensions.depth,
+                                              height: additionalData.product.dimensions.height,
+                                              width: additionalData.product.dimensions.width,
+                                          }
+                                        : null,
                                     discounts: filteredData.discounts,
                                     inStock: filteredData.inStock,
-                                    lastCheckedAt: null,
+                                    lastCheckedAt: additionalData.product.lastCheckedAt,
                                     description: filteredData.description,
                                     price: filteredData.price,
-                                    priceList: null,
-                                    priceRange: null,
+                                    priceList: additionalData.product.priceList?.id ?? null,
+                                    priceRange:
+                                        additionalData.product.priceRange != null
+                                            ? {
+                                                  max: additionalData.product.priceRange.max,
+                                                  min: additionalData.product.priceRange.min,
+                                              }
+                                            : null,
                                     slug: filteredData.slug,
                                     statistics: {
                                         views: 0,
                                     },
                                     status: filteredData.status,
-                                    tagsWithStatus: [],
-                                    title: filteredData.title,
+                                    tagsWithStatus: additionalData.product.tagsWithStatus.map((tagWithStatus) => {
+                                        return {
+                                            tag: tagWithStatus.tag.id,
+                                            exampleStatus: tagWithStatus.exampleStatus,
+                                        };
+                                    }),
+                                    title: `${filteredData.title} (Copy)`,
                                     type: filteredData.type,
                                 };
                             }}
@@ -470,6 +498,35 @@ const productsFragment = gql`
     }
 `;
 
+const productCopyAdditional = gql`
+    query ProductCopyAdditional($id: ID!) {
+        product(id: $id) {
+            id
+            dimensions {
+                depth
+                height
+                width
+            }
+            priceRange {
+                max
+                min
+            }
+            priceList {
+                id
+                name
+            }
+            tagsWithStatus {
+                id
+                exampleStatus
+                tag {
+                    id
+                    title
+                }
+            }
+            lastCheckedAt
+        }
+    }
+`;
 const productsQuery = gql`
     query ProductsList($offset: Int!, $limit: Int!, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
         products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
