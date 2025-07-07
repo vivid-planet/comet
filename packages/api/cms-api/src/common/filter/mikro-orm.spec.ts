@@ -1,8 +1,22 @@
+import { raw } from "@mikro-orm/postgresql";
+
 import { BooleanFilter } from "./boolean.filter";
 import { DateTimeFilter } from "./date-time.filter";
 import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
+
+// Mock the raw helper to workaround different indices in the keys.
+// See https://github.com/mikro-orm/mikro-orm/blob/master/packages/core/src/utils/RawQueryFragment.ts#L21.
+jest.mock("@mikro-orm/postgresql", () => ({
+    ...jest.requireActual("@mikro-orm/postgresql"),
+    raw: jest.fn((argument) => {
+        if (typeof argument === "function") {
+            return argument("alias");
+        }
+        return argument;
+    }),
+}));
 
 describe("splitSearchString", () => {
     it("should split a simple space-separated string", () => {
@@ -63,34 +77,61 @@ describe("splitSearchString", () => {
 describe("searchToMikroOrmQuery", () => {
     it("should work", async () => {
         expect(searchToMikroOrmQuery("foo", ["title", "description"])).toStrictEqual({
-            $and: [{ $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }] }],
+            $and: [
+                {
+                    $or: [
+                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%foo%" } },
+                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%foo%" } },
+                    ],
+                },
+            ],
         });
     });
     it("should escape %", async () => {
         expect(searchToMikroOrmQuery("fo%o", ["title", "description"])).toStrictEqual({
-            $and: [{ $or: [{ title: { $ilike: "%fo\\%o%" } }, { description: { $ilike: "%fo\\%o%" } }] }],
+            $and: [
+                {
+                    $or: [
+                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%fo\\%o%" } },
+                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%fo\\%o%" } },
+                    ],
+                },
+            ],
         });
     });
     it("should escape _", async () => {
         expect(searchToMikroOrmQuery("fo_o", ["title", "description"])).toStrictEqual({
-            $and: [{ $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }] }],
+            $and: [
+                {
+                    $or: [
+                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%fo\\_o%" } },
+                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%fo\\_o%" } },
+                    ],
+                },
+            ],
         });
     });
     it("should split by spaces", async () => {
         expect(searchToMikroOrmQuery("foo bar", ["title", "description"])).toStrictEqual({
             $and: [
                 {
-                    $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
+                    $or: [
+                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%foo%" } },
+                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%foo%" } },
+                    ],
                 },
                 {
-                    $or: [{ title: { $ilike: "%bar%" } }, { description: { $ilike: "%bar%" } }],
+                    $or: [
+                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%bar%" } },
+                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%bar%" } },
+                    ],
                 },
             ],
         });
     });
     it("should ignore leading and trailing spaces", async () => {
         expect(searchToMikroOrmQuery(" a ", ["title"])).toStrictEqual({
-            $and: [{ $or: [{ title: { $ilike: "%a%" } }] }],
+            $and: [{ $or: [{ [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%a%" } }] }],
         });
     });
 });
