@@ -3,9 +3,10 @@ import {
     type ComponentsOverrides,
     type List as MuiList,
     type ListItem as MuiListItem,
+    type ListItemText,
     type Switch as MuiSwitch,
     type Theme,
-    type Typography,
+    Typography,
     useThemeProps,
 } from "@mui/material";
 import { gridColumnVisibilityModelSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid-pro";
@@ -20,7 +21,7 @@ export type DataGridColumnsManagementProps = ThemedComponentBaseProps<{
     switch: typeof MuiSwitch;
     list: typeof MuiList;
     listItem: typeof MuiListItem;
-    listItemTitle: typeof Typography;
+    listItemTitle: typeof ListItemText;
 }>;
 
 export type DataGridColumnsManagementClassKey = "root" | "body" | "list" | "listItem" | "switch" | "listItemTitle";
@@ -54,7 +55,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                     {columns.map((column, index) => {
                         const checked = columnVisibilityModel?.[column.field] ?? true;
                         return (
-                            <ListItem key={index} {...slotProps.listItem}>
+                            <ListItem key={column.field} {...slotProps.listItem}>
                                 <Switch
                                     name={column.field}
                                     checked={checked}
@@ -62,8 +63,8 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                                     disabled={!column.hideable}
                                     {...slotProps.switch}
                                 />
-                                <ListItemTitle variant={checked ? "subtitle2" : "body2"} {...slotProps.listItemTitle}>
-                                    {column.headerName || column.field}
+                                <ListItemTitle {...slotProps.listItemTitle}>
+                                    <Typography variant={checked ? "subtitle2" : "body2"}>{column.headerName || column.field}</Typography>
                                 </ListItemTitle>
                             </ListItem>
                         );
