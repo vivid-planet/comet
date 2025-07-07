@@ -29,6 +29,8 @@ import {
 import gql from "graphql-tag";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { idFilterFilterOperators } from "./helpers/idFilterFilterOperators";
+
 function ManufacturersGridToolbar() {
     return (
         <DataGridToolbar>
@@ -62,6 +64,7 @@ export function ManufacturersGrid() {
                     </Tooltip>
                 </>
             ),
+            filterOperators: idFilterFilterOperators,
         },
         {
             field: "name",

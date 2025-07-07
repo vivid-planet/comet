@@ -1,6 +1,8 @@
 import { defineConfig } from "@comet/admin-generator";
 import { type GQLManufacturer } from "@src/graphql.generated";
 
+import { idFilterFilterOperators } from "../helpers/idFilterFilterOperators";
+
 export default defineConfig<GQLManufacturer>({
     type: "grid",
     gqlType: "Manufacturer",
@@ -8,7 +10,12 @@ export default defineConfig<GQLManufacturer>({
     queryParamsPrefix: "manufacturers",
     newEntryText: "Add Manufacturer",
     columns: [
-        { type: "text", name: "id", headerName: "ID" },
+        {
+            type: "text",
+            name: "id",
+            headerName: "ID",
+            filterOperators: idFilterFilterOperators,
+        },
         { type: "text", name: "name", headerName: "Name" },
         { type: "text", name: "address.street", headerName: "Street" },
         { type: "number", name: "address.streetNumber", headerName: "Street number" },
