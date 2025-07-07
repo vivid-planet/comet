@@ -173,7 +173,7 @@ export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     name: string;
     queryFields?: UsableFields<T, true>[];
     renderCell: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
-} & Pick<GridColDef, "sortBy"> &
+} & Pick<GridColDef<T>, "sortBy"> &
     BaseColumnConfig;
 
 type InitialFilterConfig = {
