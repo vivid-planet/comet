@@ -1,9 +1,10 @@
 import { type ApolloClient, type RefetchQueriesOptions, useApolloClient } from "@apollo/client";
 import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { type ComponentsOverrides, Divider, type Theme, useThemeProps } from "@mui/material";
+import { type ComponentsOverrides, Divider, Snackbar, type Theme, useThemeProps } from "@mui/material";
 import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Alert } from "../alert/Alert";
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
 import { DeleteDialog as CommonDeleteDialog } from "../common/DeleteDialog";
@@ -13,6 +14,7 @@ import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBasePro
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
+import { useSnackbarApi } from "../snackbar/SnackbarProvider";
 
 export type CrudContextMenuClassKey =
     | "root"
@@ -100,7 +102,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [copyLoading, setCopyLoading] = useState(false);
     const [pasting, setPasting] = useState(false);
-
+    const snackbarApi = useSnackbarApi();
     const handleDeleteClick = async () => {
         if (!onDelete) return;
 
@@ -182,8 +184,21 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                             icon={copyLoading ? copyLoadingIcon : copyIcon}
                             onClick={async () => {
                                 setCopyLoading(true);
-                                await handleCopyClick();
-                                setCopyLoading(false);
+                                try {
+                                    await handleCopyClick();
+                                } catch (e) {
+                                    snackbarApi.showSnackbar(
+                                        <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
+                                            <Alert severity="error">
+                                                <FormattedMessage id="comet.crudContextMenu.copyFailed" defaultMessage="Copy failed" />
+                                            </Alert>
+                                        </Snackbar>,
+                                    );
+
+                                    console.error("Copy failed", e);
+                                } finally {
+                                    setCopyLoading(false);
+                                }
                             }}
                             {...slotProps?.copyItem}
                         >
