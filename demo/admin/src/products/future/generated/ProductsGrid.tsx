@@ -140,7 +140,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "price", sort: "asc" },
             ],
             initialFilter: {
-                items: [{ columnField: "type", operatorValue: "is", value: "Shirt" }],
+                items: [{ columnField: "type", operatorValue: "is", value: "shirt" }],
             },
             queryParamsPrefix: "products",
         }),
@@ -157,9 +157,9 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             sortable: false,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, React.ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
-                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
-                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                    cap: <FormattedMessage id="product.overview.secondaryText.type.cap" defaultMessage="great Cap" />,
+                    shirt: <FormattedMessage id="product.overview.secondaryText.type.shirt" defaultMessage="shirt" />,
+                    tie: <FormattedMessage id="product.overview.secondaryText.type.tie" defaultMessage="tie" />,
                 };
                 const inStockLabels: Record<string, React.ReactNode> = {
                     true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
@@ -276,15 +276,15 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
-                    value: "Cap",
+                    value: "cap",
                     label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
                 },
                 {
-                    value: "Shirt",
+                    value: "shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
-                    value: "Tie",
+                    value: "tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
