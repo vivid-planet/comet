@@ -1857,7 +1857,7 @@ The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its
 **Action required:**  
 Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
 
-### `DataGrid` Date / DateTime filter now uses MUI `DatePicker`
+### `DataGrid` Date / DateTime filters now use MUI pickers
 
 <details>
 
