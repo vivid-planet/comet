@@ -154,6 +154,7 @@ export function generateGrid<T extends { __typename?: string }>(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
+
     config: GridConfig<T>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
