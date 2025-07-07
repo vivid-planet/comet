@@ -34,6 +34,7 @@ import {
     type GridSlotsComponent,
     GridToolbarQuickFilter,
 } from "@mui/x-data-grid-pro";
+import type { GQLProductInput } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -309,26 +310,12 @@ export function ProductsGrid() {
                         <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit />
                         </IconButton>
-                        <CrudContextMenu
+                        <CrudContextMenu<GQLProductInput>
                             onPaste={async ({ input }) => {
                                 await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                                     mutation: createProductMutation,
                                     variables: {
-                                        input: {
-                                            description: input.description,
-                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                            inStock: input.inStock,
-                                            price: input.price,
-                                            slug: input.slug,
-                                            title: input.title,
-                                            type: input.type,
-                                            category: input.category?.id,
-                                            tags: input.tags.map((tag) => tag.id),
-                                            colors: input.colors,
-                                            articleNumbers: input.articleNumbers,
-                                            discounts: input.discounts,
-                                            statistics: { views: 0 },
-                                        },
+                                        input: input,
                                     },
                                 });
                             }}
@@ -340,7 +327,42 @@ export function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
+                                const {
+                                    // Don't copy id, because we want to create a new entity with this data
+                                    id,
+                                    ...filteredData
+                                } = filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
+                                return {
+                                    category: filteredData.category?.id ?? null,
+                                    datasheets: filteredData.datasheets?.map((dataSheet) => {
+                                        return dataSheet.id;
+                                    }),
+                                    manufacturer: filteredData.manufacturer?.id ?? null,
+                                    tags: filteredData.tags?.map((tag) => {
+                                        return tag.id;
+                                    }),
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
+                                    additionalTypes: filteredData.additionalTypes,
+                                    articleNumbers: filteredData.articleNumbers,
+                                    availableSince: filteredData.availableSince,
+                                    colors: filteredData.colors,
+                                    dimensions: null,
+                                    discounts: filteredData.discounts,
+                                    inStock: filteredData.inStock,
+                                    lastCheckedAt: null,
+                                    description: filteredData.description,
+                                    price: filteredData.price,
+                                    priceList: null,
+                                    priceRange: null,
+                                    slug: filteredData.slug,
+                                    statistics: {
+                                        views: 0,
+                                    },
+                                    status: filteredData.status,
+                                    tagsWithStatus: [],
+                                    title: filteredData.title,
+                                    type: filteredData.type,
+                                };
                             }}
                         />
                     </>
@@ -432,6 +454,7 @@ const productsFragment = gql`
             id
         }
         manufacturer {
+            id
             name
         }
         articleNumbers
@@ -440,11 +463,15 @@ const productsFragment = gql`
             price
         }
         availableSince
+        datasheets {
+            id
+            name
+        }
     }
 `;
 
 const productsQuery = gql`
-    query ProductsList($offset: Int, $limit: Int, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
+    query ProductsList($offset: Int!, $limit: Int!, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
         products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id

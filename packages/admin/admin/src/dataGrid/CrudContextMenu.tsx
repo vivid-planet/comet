@@ -15,6 +15,7 @@ import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
 import { useSnackbarApi } from "../snackbar/SnackbarProvider";
+import { type Explicit } from "../utils/Explicit";
 
 export type CrudContextMenuClassKey =
     | "root"
@@ -52,11 +53,11 @@ export interface CrudContextMenuProps<CopyData>
         delete?: ReactNode;
     };
     url?: string;
-    onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
+    onPaste?: (options: { input: Explicit<CopyData>; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
 
     refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
-    copyData?: () => Promise<CopyData> | CopyData;
+    copyData?: () => Promise<Explicit<CopyData>> | Explicit<CopyData>;
     /**
      * Render custom `RowActionsItem` components to be added to the menu.
      */
