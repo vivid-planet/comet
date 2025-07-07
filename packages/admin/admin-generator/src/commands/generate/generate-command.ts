@@ -155,7 +155,7 @@ export type VirtualGridColumnConfig<T extends GridValidRowModel> = {
     name: string;
     queryFields?: UsableFields<T, true>[];
     renderCell: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
-} & Pick<GridColDef, "sortBy"> &
+} & Pick<GridColDef<T>, "sortBy"> &
     BaseColumnConfig;
 
 type InitialFilterConfig = {
@@ -163,13 +163,14 @@ type InitialFilterConfig = {
     linkOperator?: "and" | "or";
 };
 
+export type GridConfigGridColumnDef<T extends GridValidRowModel> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
+    columns: Array<GridConfigGridColumnDef<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;

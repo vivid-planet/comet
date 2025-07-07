@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type GridColDef } from "@comet/admin";
+import { type GridValidRowModel } from "@mui/x-data-grid";
 import {
     type IntrospectionEnumType,
     type IntrospectionInputObjectType,
@@ -16,6 +17,7 @@ import {
     type GQLDocumentConfigMap,
     type GridColumnConfig,
     type GridConfig,
+    type GridConfigGridColumnDef,
     type StaticSelectLabelCellContent,
     type VirtualGridColumnConfig,
 } from "../generate-command";
@@ -147,7 +149,8 @@ const getValueOptionsLabelData = (messageId: string, label: string | StaticSelec
     };
 };
 
-export function generateGrid(
+type GridBase = { __typename: string } & GridValidRowModel;
+export function generateGrid<T extends GridBase>(
     {
         exportName,
         baseOutputFilename,
@@ -155,7 +158,7 @@ export function generateGrid(
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
 
-    config: GridConfig<any>,
+    config: GridConfig<T>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const gqlTypePlural = plural(gqlType);
@@ -220,26 +223,23 @@ export function generateGrid(
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({
-        columns: config.columns.filter((column) => {
-            return (
-                // exclude id because it's always required
-                column.type !== "actions" && column.name !== "id"
-            );
-        }),
+    // Explicitly type the filtered columns to avoid deep type instantiation and "as any[]"
+
+    const filteredColumns: GridConfigGridColumnDef<T>[] = config.columns.filter((column) => {
+        return column.type !== "actions" && column.name !== "id";
+    });
+
+    const fieldList = generateGqlFieldList<T>({
+        columns: filteredColumns,
     });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
-    const rootBlockColumns = config.columns
-        .filter((column) => column.type == "block")
-        .map((column) => {
-            // map is for ts to infer block type correctly
-            if (column.type !== "block") throw new Error("Field is not a block field");
-            return column;
-        });
+    const rootBlockColumns = config.columns.filter((column) => {
+        return column.type == "block";
+    });
 
     rootBlockColumns.forEach((field) => {
         if (rootBlocks[String(field.name)]) {
