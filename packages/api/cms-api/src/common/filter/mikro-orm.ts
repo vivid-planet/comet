@@ -1,4 +1,4 @@
-import { type EntityMetadata, type FilterQuery, type ObjectQuery } from "@mikro-orm/postgresql";
+import { type EntityMetadata, type FilterQuery, type ObjectQuery, raw } from "@mikro-orm/postgresql";
 
 import { getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { BooleanFilter } from "./boolean.filter";
@@ -274,10 +274,15 @@ export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[]
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const or: any = {};
             let nestedFilter = or;
-            for (const fieldPart of field.split(".")) {
+            const fieldParts = field.split(".");
+            const column = fieldParts.pop();
+            if (column === undefined) {
+                continue;
+            }
+            for (const fieldPart of fieldParts) {
                 nestedFilter = nestedFilter[fieldPart] = {};
             }
-            nestedFilter.$ilike = quotedSearch;
+            nestedFilter[raw((alias) => `${alias}."${column}"::text`)] = { $ilike: quotedSearch };
             ors.push(or);
         }
         ands.push({ $or: ors });

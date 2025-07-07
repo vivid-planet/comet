@@ -15,7 +15,7 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
         .filter((prop) => prop.name != "status")
         .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
-            if ((prop.type === "string" || prop.type === "text") && !prop.columnTypes.includes("uuid")) {
+            if (prop.type === "string" || prop.type === "text" || prop.type === "uuid") {
                 acc.push(prop.name);
             } else if (prop.kind == "m:1") {
                 if (!prop.targetMeta) {
@@ -27,7 +27,7 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
                         (innerProp) => hasCrudFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"),
                     )
                     .forEach((innerProp) => {
-                        if ((innerProp.type === "string" || innerProp.type === "text") && !innerProp.columnTypes.includes("uuid")) {
+                        if (innerProp.type === "string" || innerProp.type === "text" || innerProp.type === "uuid") {
                             acc.push(`${prop.name}.${innerProp.name}`);
                         }
                     });
