@@ -112,15 +112,15 @@ export function NewsGrid(): React.ReactElement {
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
-                    value: "Events",
+                    value: "events",
                     label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }),
                 },
                 {
-                    value: "Company",
+                    value: "company",
                     label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }),
                 },
                 {
-                    value: "Awards",
+                    value: "awards",
                     label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }),
                 },
             ],
