@@ -186,7 +186,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                                 setCopyLoading(true);
                                 try {
                                     await handleCopyClick();
-                                } catch (e) {
+                                } catch (error) {
                                     snackbarApi.showSnackbar(
                                         <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
                                             <Alert severity="error">
@@ -195,7 +195,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
                                         </Snackbar>,
                                     );
 
-                                    console.error("Copy failed", e);
+                                    console.error("Copy failed", error);
                                 } finally {
                                     setCopyLoading(false);
                                 }
