@@ -150,7 +150,7 @@ const getValueOptionsLabelData = (messageId: string, label: string | StaticSelec
 };
 
 type GridConfigRow = { __typename: string } & GridValidRowModel;
-export function generateGrid<T extends GridConfigRow>(
+export function generateGrid<Row extends GridConfigRow>(
     {
         exportName,
         baseOutputFilename,
@@ -158,7 +158,7 @@ export function generateGrid<T extends GridConfigRow>(
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
 
-    config: GridConfig<T>,
+    config: GridConfig<Row>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const gqlTypePlural = plural(gqlType);
@@ -225,11 +225,11 @@ export function generateGrid<T extends GridConfigRow>(
 
     // Explicitly type the filtered columns to avoid deep type instantiation and "as any[]"
 
-    const filteredColumns: GridConfigGridColumnDef<T>[] = config.columns.filter((column) => {
+    const filteredColumns: GridConfigGridColumnDef<Row>[] = config.columns.filter((column) => {
         return column.type !== "actions" && column.name !== "id";
     });
 
-    const fieldList = generateGqlFieldList<T>({
+    const fieldList = generateGqlFieldList<Row>({
         columns: filteredColumns,
     });
 
