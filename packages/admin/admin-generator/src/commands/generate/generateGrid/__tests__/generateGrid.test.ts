@@ -61,7 +61,7 @@ describe("generateGrid", () => {
             }
         `);
 
-        introspection = introspectionFromSchema(schema, { descriptions: true });
+        introspection = introspectionFromSchema(schema);
     });
 
     type Book = {
