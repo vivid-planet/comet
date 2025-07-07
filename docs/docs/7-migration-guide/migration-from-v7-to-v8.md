@@ -1917,9 +1917,8 @@ const columns: GridColDef[] = [
 ];
 ```
 
-:::info
+:::info Action required
 
-**Action required:**  
 If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
 
 :::
