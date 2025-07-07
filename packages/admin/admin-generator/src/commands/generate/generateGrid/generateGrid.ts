@@ -224,7 +224,6 @@ export function generateGrid<Row extends GridConfigRow>(
     const props: Prop[] = [];
 
     // Explicitly type the filtered columns to avoid deep type instantiation and "as any[]"
-
     const filteredColumns: GridConfigGridColumnDef<Row>[] = config.columns.filter((column) => {
         return column.type !== "actions" && column.name !== "id";
     });
