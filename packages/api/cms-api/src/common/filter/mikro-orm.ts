@@ -64,6 +64,12 @@ export function filterToMikroOrmQuery(
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
         }
+        if (filterProperty.isEmpty) {
+            ret.$or = [{ [propertyName]: { $eq: null } }, { [propertyName]: { $eq: "" } }];
+        }
+        if (filterProperty.isNotEmpty) {
+            ret.$and = [{ [propertyName]: { $ne: null } }, { [propertyName]: { $ne: "" } }];
+        }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -86,6 +92,12 @@ export function filterToMikroOrmQuery(
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
         }
+        if (filterProperty.isEmpty) {
+            ret.$eq = null;
+        }
+        if (filterProperty.isNotEmpty) {
+            ret.$ne = null;
+        }
     } else if (filterProperty instanceof DateTimeFilter || filterProperty instanceof DateFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -104,6 +116,12 @@ export function filterToMikroOrmQuery(
         }
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isEmpty) {
+            ret.$eq = null;
+        }
+        if (filterProperty.isNotEmpty) {
+            ret.$ne = null;
         }
     } else if (filterProperty instanceof BooleanFilter) {
         if (filterProperty.equal !== undefined) {
@@ -232,6 +250,23 @@ export function filtersToMikroOrmQuery(
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
+
+                        // $and can't be applied like { field: { $and: [{ ... }] } }.
+                        // It has to be applied like { $and: [{ field: { ... } }] }.
+                        if (query.$and) {
+                            acc.$and ??= [];
+                            acc.$and.push(...query.$and);
+                            delete query.$and;
+                        }
+
+                        // $or can't be applied like { field: { $or: [{ ... }] } }.
+                        // It has to be applied like { $or: [{ field: { ... } }] }.
+                        if (query.$or) {
+                            acc.$or ??= [];
+                            acc.$or.push(...query.$or);
+                            delete query.$or;
+                        }
+
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         if (Object.keys(query as any).length > 0) {
                             acc[filterPropertyName] = query;
