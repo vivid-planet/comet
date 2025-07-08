@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
+import { Alert, AsyncSelectField, Button, FinalForm } from "@comet/admin";
 import { Info, WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
@@ -437,6 +437,60 @@ export const AsyncLoadingDataFromApi: Story = {
                             <Alert title="FormState">
                                 <pre>{JSON.stringify(values, null, 2)}</pre>
                             </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const AsnycValidation: Story = {
+    render: () => {
+        interface FormValues {
+            type: string;
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{ type: "value-1" }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncSelectField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 200));
+                                    return ["value-1", "value-2", "value-3", "value-4"];
+                                }}
+                                getOptionLabel={(option) => {
+                                    return option;
+                                }}
+                                name="type"
+                                label="AsyncSelectField"
+                                fullWidth
+                                variant="horizontal"
+                                validate={async (value) => {
+                                    // simulate validation
+                                    await new Promise((resolve) => setTimeout(resolve, 800));
+                                    if (value === "value-2") {
+                                        return "Value 2 is not allowed";
+                                    }
+                                    return undefined;
+                                }}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                            <Button type="submit" variant="primary">
+                                Submit
+                            </Button>
                         </>
                     );
                 }}
