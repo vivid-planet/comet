@@ -109,10 +109,7 @@ export function ContentScopeSelect({
                     <ListItemText
                         slotProps={{
                             primary: {
-                                variant: "body2",
-                                sx: {
-                                    fontWeight: isSelected ? "600 !important" : 250,
-                                },
+                                variant: isSelected ? "subtitle2" : "body2",
                             },
                         }}
                         sx={{ margin: 0 }}
