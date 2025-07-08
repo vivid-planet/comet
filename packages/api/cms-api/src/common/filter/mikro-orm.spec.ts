@@ -79,10 +79,7 @@ describe("searchToMikroOrmQuery", () => {
         expect(searchToMikroOrmQuery("foo", ["title", "description"])).toStrictEqual({
             $and: [
                 {
-                    $or: [
-                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%foo%" } },
-                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%foo%" } },
-                    ],
+                    $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
                 },
             ],
         });
@@ -91,10 +88,7 @@ describe("searchToMikroOrmQuery", () => {
         expect(searchToMikroOrmQuery("fo%o", ["title", "description"])).toStrictEqual({
             $and: [
                 {
-                    $or: [
-                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%fo\\%o%" } },
-                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%fo\\%o%" } },
-                    ],
+                    $or: [{ title: { $ilike: "%fo\\%o%" } }, { description: { $ilike: "%fo\\%o%" } }],
                 },
             ],
         });
@@ -103,10 +97,7 @@ describe("searchToMikroOrmQuery", () => {
         expect(searchToMikroOrmQuery("fo_o", ["title", "description"])).toStrictEqual({
             $and: [
                 {
-                    $or: [
-                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%fo\\_o%" } },
-                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%fo\\_o%" } },
-                    ],
+                    $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }],
                 },
             ],
         });
@@ -115,23 +106,30 @@ describe("searchToMikroOrmQuery", () => {
         expect(searchToMikroOrmQuery("foo bar", ["title", "description"])).toStrictEqual({
             $and: [
                 {
-                    $or: [
-                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%foo%" } },
-                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%foo%" } },
-                    ],
+                    $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
                 },
                 {
-                    $or: [
-                        { [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%bar%" } },
-                        { [raw((alias) => `${alias}."description"::text`)]: { $ilike: "%bar%" } },
-                    ],
+                    $or: [{ title: { $ilike: "%bar%" } }, { description: { $ilike: "%bar%" } }],
                 },
             ],
         });
     });
     it("should ignore leading and trailing spaces", async () => {
         expect(searchToMikroOrmQuery(" a ", ["title"])).toStrictEqual({
-            $and: [{ $or: [{ [raw((alias) => `${alias}."title"::text`)]: { $ilike: "%a%" } }] }],
+            $and: [{ $or: [{ title: { $ilike: "%a%" } }] }],
+        });
+    });
+    it("adds a ::text cast", async () => {
+        expect(searchToMikroOrmQuery("foo", ["title", "description", { name: "id", needsCastToText: true }])).toStrictEqual({
+            $and: [
+                {
+                    $or: [
+                        { title: { $ilike: "%foo%" } },
+                        { description: { $ilike: "%foo%" } },
+                        { [raw((alias) => `${alias}."id"::text`)]: { $ilike: "%foo%" } },
+                    ],
+                },
+            ],
         });
     });
 });

@@ -1,6 +1,6 @@
 import { type EntityMetadata, type FilterQuery, type ObjectQuery, raw } from "@mikro-orm/postgresql";
 
-import { getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
+import { type CrudSearchField, getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
@@ -262,8 +262,16 @@ export const splitSearchString = (search: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[] | EntityMetadata): ObjectQuery<any> {
-    const fields = Array.isArray(fieldsOrMetadata) ? fieldsOrMetadata : getCrudSearchFieldsFromMetadata(fieldsOrMetadata);
+export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: Array<string | CrudSearchField> | EntityMetadata): ObjectQuery<any> {
+    const fields = Array.isArray(fieldsOrMetadata)
+        ? fieldsOrMetadata.map((field) => {
+              if (typeof field === "string") {
+                  return { name: field, needsCastToText: false };
+              }
+
+              return field;
+          })
+        : getCrudSearchFieldsFromMetadata(fieldsOrMetadata);
     const quotedSearchParts = splitSearchString(search);
 
     const ands = [];
@@ -274,7 +282,7 @@ export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[]
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const or: any = {};
             let nestedFilter = or;
-            const fieldParts = field.split(".");
+            const fieldParts = field.name.split(".");
             const column = fieldParts.pop();
             if (column === undefined) {
                 continue;
@@ -282,7 +290,11 @@ export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[]
             for (const fieldPart of fieldParts) {
                 nestedFilter = nestedFilter[fieldPart] = {};
             }
-            nestedFilter[raw((alias) => `${alias}."${column}"::text`)] = { $ilike: quotedSearch };
+            if (field.needsCastToText) {
+                nestedFilter[raw((alias) => `${alias}."${column}"::text`)] = { $ilike: quotedSearch };
+            } else {
+                nestedFilter[column] = { $ilike: quotedSearch };
+            }
             ors.push(or);
         }
         ands.push({ $or: ors });
