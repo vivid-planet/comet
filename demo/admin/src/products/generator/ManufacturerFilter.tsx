@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
+import { ClearInputAdornment } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import Autocomplete from "@mui/material/Autocomplete";
 import { type GridFilterInputValueProps, type GridFilterOperator, useGridRootProps } from "@mui/x-data-grid-pro";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
@@ -35,14 +36,22 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
         },
     });
 
+    const handleApplyValue = useCallback(
+        (value: string | undefined) => {
+            // value can't be "{ id: value.id, name: value.name }" because value is sent to api
+            applyValue({ id: item.id, operator: "equals", value, field: "manufacturer" });
+        },
+        [applyValue, item.id],
+    );
+
     // source https://mui.com/material-ui/react-autocomplete/
     return (
         <Autocomplete
-            size="small"
             options={data?.manufacturers.nodes ?? []}
             autoHighlight
             value={item.value ? item.value : null}
             filterOptions={(x) => x} // disable local filtering
+            disableClearable
             isOptionEqualToValue={(option, value) => {
                 // does only highlight the selected value in options-list but does not trigger getOptionLabel-Call
                 return option.id == value;
@@ -52,19 +61,37 @@ function ManufacturerFilter({ item, applyValue, apiRef }: GridFilterInputValuePr
                 return option.name ?? data?.manufacturers.nodes.find((item) => item.id === option)?.name ?? option;
             }}
             onChange={(event, value, reason) => {
-                // value can't be "{ id: value.id, name: value.name }" because value is sent to api
-                applyValue({ id: item.id, operator: "equals", value: value ? value.id : undefined, field: "manufacturer" });
+                handleApplyValue(value ? value.id : undefined);
             }}
             renderInput={(params) => (
                 <rootProps.slots.baseTextField
                     {...params}
                     autoComplete="off"
+                    variant="standard"
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
                     value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
                     }}
                     label={apiRef.current.getLocaleText("filterPanelInputLabel")}
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                        input: {
+                            ...params.InputProps,
+                            endAdornment: (
+                                <>
+                                    <ClearInputAdornment
+                                        position="end"
+                                        hasClearableContent={Boolean(item.value)}
+                                        onClick={() => handleApplyValue(undefined)}
+                                    />
+                                    {params.InputProps.endAdornment}
+                                </>
+                            ),
+                        },
+                    }}
                 />
             )}
             popupIcon={<ChevronDown />}
