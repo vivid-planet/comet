@@ -25,5 +25,7 @@ declare module "@comet/cms-admin" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface ContentScope extends BaseContentScope {}
 
-    export type Permission = GQLCometPermission | GQLProjectPermission | string;
+    export interface AdditionalPermissionTypes {
+        project: GQLProjectPermission;
+    }
 }

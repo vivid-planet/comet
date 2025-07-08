@@ -7,7 +7,9 @@ import { type ContentScope, useContentScope } from "../../contentScope/Provider"
 import { type GQLCometPermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
-export type Permission = GQLCometPermission | string;
+export interface AdditionalPermissionTypes { }
+
+export type Permission = GQLCometPermission | AdditionalPermissionTypes[keyof AdditionalPermissionTypes];;
 
 interface CurrentUserContext {
     currentUser: CurrentUserInterface;
