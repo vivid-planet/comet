@@ -60,7 +60,7 @@ export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDat
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
-export { dataGridDateColumn, dataGridDateTimeColumn, dataGridIdColumn } from "./dataGrid/gridColumnTypes";
+export { dataGridDateColumn, dataGridDateTimeColumn, dataGridIdColumn, dataGridManyToManyColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
