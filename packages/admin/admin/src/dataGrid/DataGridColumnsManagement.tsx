@@ -6,7 +6,6 @@ import {
     type ListItemText,
     type Switch as MuiSwitch,
     type Theme,
-    Typography,
     useThemeProps,
 } from "@mui/material";
 import { gridColumnVisibilityModelSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid-pro";
@@ -63,8 +62,15 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                                     disabled={!column.hideable}
                                     {...slotProps.switch}
                                 />
-                                <ListItemTitle {...slotProps.listItemTitle}>
-                                    <Typography variant={checked ? "subtitle2" : "body2"}>{column.headerName || column.field}</Typography>
+                                <ListItemTitle
+                                    slotProps={{
+                                        primary: {
+                                            variant: checked ? "subtitle2" : "body2",
+                                        },
+                                    }}
+                                    {...slotProps.listItemTitle}
+                                >
+                                    {column.headerName || column.field}
                                 </ListItemTitle>
                             </ListItem>
                         );
