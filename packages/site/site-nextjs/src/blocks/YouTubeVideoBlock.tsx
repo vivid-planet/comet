@@ -38,19 +38,15 @@ export const YouTubeVideoBlock = withPreview(
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
-        const iframeRef = useRef<HTMLIFrameElement | null>(null);
-        const inViewRef = useRef(null);
+        const iframeRef = useRef<HTMLIFrameElement>(null);
+        const inViewRef = useRef<HTMLDivElement>(null);
 
         const pauseYouTubeVideo = () => {
-            if (iframeRef.current?.contentWindow) {
-                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
-            }
+            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
         };
 
         const playYouTubeVideo = () => {
-            if (iframeRef.current?.contentWindow) {
-                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
-            }
+            iframeRef.current?.contentWindow?.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
         };
 
         useIsElementInViewport(inViewRef, (inView: boolean) => {
@@ -72,6 +68,9 @@ export const YouTubeVideoBlock = withPreview(
         searchParams.append("modestbranding", "1");
         searchParams.append("rel", "0");
         searchParams.append("enablejsapi", "1");
+
+        // start playing the video when the preview image has been hidden
+        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
 
         if (autoplay) searchParams.append("mute", "1");
 
