@@ -20,16 +20,12 @@ export class AccessLogInterceptor implements NestInterceptor {
         @Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig,
         @Optional() @Inject(DAM_CONFIG) private readonly damConfig?: DamConfig,
     ) {
-        this.ignoredPaths = this.damConfig?.basePath
-            ? [
-                  `/${this.damConfig.basePath}/images/`,
-                  `/${this.damConfig.basePath}/files/preview`,
-                  `/${this.damConfig.basePath}/files/download`,
-                  `/${this.damConfig.basePath}/files/:hash/`,
-              ]
+        const damBasePath = this.damConfig?.basePath ?? "dam";
+
+        this.ignoredPaths = this.damConfig
+            ? [`/${damBasePath}/images/`, `/${damBasePath}/files/preview`, `/${damBasePath}/files/download`, `/${damBasePath}/files/:hash/`]
             : [];
     }
-
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
 
