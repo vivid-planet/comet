@@ -1,5 +1,11 @@
 # @comet/site-react
 
+## 7.25.1
+
+### Patch Changes
+
+-   db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
+
 ## 7.25.0
 
 ## 7.24.0

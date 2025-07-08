@@ -1,5 +1,13 @@
 # @comet/eslint-plugin
 
+## 7.25.1
+
+### Patch Changes
+
+-   85e80218f: Support dot separated imports in no-private-sibling-import rule
+
+    This allows, for example, importing from MyBlock.loader.gql.ts in MyBlock.loader.ts
+
 ## 7.25.0
 
 ## 7.24.0
