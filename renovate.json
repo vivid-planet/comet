@@ -28,7 +28,9 @@
                 "opentelemetry/exporter-trace-otlp-http",
                 "opentelemetry/instrumentation-runtime-node",
                 "opentelemetry/sdk-node",
-                "redraft"
+                "redraft",
+                "msw",
+                "knip"
             ]
         },
         {
