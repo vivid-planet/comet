@@ -48,10 +48,10 @@
         "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.7.2",
         "@types/node": "^22.16.0",
-        "knip": "^5.46.0",
         "cspell": "^8.19.4",
         "dotenv-cli": "^7.4.4",
         "husky": "^9.1.7",
+        "knip": "^5.46.0",
         "lint-staged": "^15.5.2",
         "npm-run-all2": "^7.0.2",
         "open-cli": "^8.0.0",
@@ -64,5 +64,9 @@
     "engines": {
         "node": "22",
         "pnpm": "9.15.9"
+    },
+    "dependencies": {
+        "package-json": "^10.0.1",
+        "semver": "^7.7.2"
     }
 }
