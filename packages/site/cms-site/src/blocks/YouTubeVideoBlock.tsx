@@ -109,7 +109,7 @@ export const YouTubeVideoBlock = withPreview(
                     )
                 ) : (
                     <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <YouTubeContainer ref={iframeRef} src={youtubeUrl.toString()} />
+                        <YouTubeContainer ref={iframeRef} allow="autoplay" src={youtubeUrl.toString()} />
                     </VideoContainer>
                 )}
             </>
