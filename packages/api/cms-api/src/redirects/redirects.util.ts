@@ -72,7 +72,7 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
 function stringMatchesFilter(string: string, filter: StringFilter) {
     if (filter.contains && string.includes(filter.contains)) {
         return true;
-    } else if (filter.doesNotContain && !string.includes(filter.doesNotContain)) {
+    } else if (filter.notContains && !string.includes(filter.notContains)) {
         return true;
     } else if (filter.startsWith && string.startsWith(filter.startsWith)) {
         return true;

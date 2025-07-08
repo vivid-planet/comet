@@ -497,7 +497,7 @@ input RedirectFilter {
 
 input StringFilter {
   contains: String
-  doesNotContain: String
+  notContains: String
   startsWith: String
   endsWith: String
   equal: String

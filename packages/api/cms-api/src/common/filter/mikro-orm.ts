@@ -40,8 +40,8 @@ export function filterToMikroOrmQuery(
         if (filterProperty.contains !== undefined) {
             ilike.push(`%${quoteLike(filterProperty.contains)}%`);
         }
-        if (filterProperty.doesNotContain !== undefined) {
-            ret.$not = { $ilike: `%${quoteLike(filterProperty.doesNotContain)}%` };
+        if (filterProperty.notContains !== undefined) {
+            ret.$not = { $ilike: `%${quoteLike(filterProperty.notContains)}%` };
         }
         if (filterProperty.startsWith !== undefined) {
             ilike.push(`${quoteLike(filterProperty.startsWith)}%`);

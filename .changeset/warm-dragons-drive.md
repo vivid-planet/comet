@@ -1,5 +1,6 @@
 ---
+"@comet/admin": minor
 "@comet/cms-api": minor
 ---
 
-Add support for `doesNotContain` to `StringFilter`
+Add support for `notContains` to `StringFilter`

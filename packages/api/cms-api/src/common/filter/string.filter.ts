@@ -11,7 +11,7 @@ export class StringFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    doesNotContain?: string;
+    notContains?: string;
 
     @Field({ nullable: true })
     @IsOptional()
