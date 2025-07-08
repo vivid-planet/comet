@@ -1,5 +1,14 @@
 # @comet/cms-site
 
+## 7.25.1
+
+### Patch Changes
+
+-   db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
+-   d26f346c0: Loosen styled-components peer dependency
+
+    Allow using styled-components v5 in applications.
+
 ## 7.25.0
 
 ### Minor Changes
