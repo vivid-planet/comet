@@ -1,6 +1,14 @@
 import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
-import { type ComponentsOverrides, IconButton, type Theme, type Typography, useMediaQuery, useTheme, useThemeProps } from "@mui/material";
-import { type TablePaginationActionsProps } from "@mui/material/TablePagination/TablePaginationActions";
+import {
+    type ComponentsOverrides,
+    IconButton,
+    type TablePaginationActionsProps,
+    type Theme,
+    type Typography,
+    useMediaQuery,
+    useTheme,
+    useThemeProps,
+} from "@mui/material";
 import { gridPageCountSelector, gridPaginationSelector, useGridApiContext, useGridSelector } from "@mui/x-data-grid-pro";
 import { type ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import { type FunctionComponent, type PropsWithChildren, type ReactNode } from "react";
