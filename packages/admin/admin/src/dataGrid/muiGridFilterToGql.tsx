@@ -4,6 +4,7 @@ import { type GridColDef } from "./GridColDef";
 
 const muiGridOperatorValueToGqlOperator: { [key: string]: string } = {
     contains: "contains",
+    doesNotContain: "notContains",
     equals: "equal",
     doesNotEqual: "notEqual",
     ">": "greaterThan",
