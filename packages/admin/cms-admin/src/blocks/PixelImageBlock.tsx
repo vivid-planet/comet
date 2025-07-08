@@ -215,7 +215,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         );
     },
     previewContent: (state, context) => {
-        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl || !context.damBasePath) {
+        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl || !context?.damBasePath) {
             return [];
         }
         const imageSize = { width: 320, height: 320 };
