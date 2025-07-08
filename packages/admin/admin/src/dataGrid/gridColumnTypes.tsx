@@ -134,7 +134,6 @@ export const dataGridIdColumn: GridColTypeDef = {
 export const dataGridManyToManyColumn: GridColTypeDef = {
     filterOperators: [
         {
-            label: "search", // TODO i18n
             value: "search",
             getApplyFilterFn: () => {
                 throw new Error("not implemented, we filter server side");
