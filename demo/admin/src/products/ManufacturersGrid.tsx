@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
+    dataGridIdColumn,
     DataGridToolbar,
     FillSpace,
     filterByFragment,
@@ -29,8 +30,6 @@ import {
 import gql from "graphql-tag";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { idFilterFilterOperators } from "./helpers/idFilterFilterOperators";
-
 function ManufacturersGridToolbar() {
     return (
         <DataGridToolbar>
@@ -54,6 +53,7 @@ export function ManufacturersGrid() {
 
     const columns: GridColDef<GridValues>[] = [
         {
+            ...dataGridIdColumn,
             field: "id",
             width: 150,
             renderHeader: () => (
@@ -64,7 +64,6 @@ export function ManufacturersGrid() {
                     </Tooltip>
                 </>
             ),
-            filterOperators: idFilterFilterOperators,
         },
         {
             field: "name",
