@@ -122,16 +122,6 @@ export class EnvironmentVariables {
     @IsString()
     S3_BUCKET: string;
 
-    @IsString()
-    MAILER_HOST: string;
-
-    @Type(() => Number)
-    @IsInt()
-    MAILER_PORT: number;
-
-    @IsString()
-    MAILER_DEFAULT_FROM: string;
-
     @IsUndefinable()
     @IsArray()
     @Transform(({ value }) => value.split(","))
