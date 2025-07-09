@@ -23,9 +23,11 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { type ConvertCustomFilterCallback, type GqlFilter } from "@comet/admin/lib/dataGrid/muiGridFilterToGql";
 import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
+import type { GridFilterItem } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GridFilterInputSingleSelect,
@@ -218,6 +220,13 @@ export function ProductsGrid() {
             disableExport: true,
         },
         {
+            field: "titleSlugOrDescription",
+            headerName: "Title, Slug or Description",
+            width: 150,
+            visible: theme.breakpoints.down(0), // always hidden but used for filtering
+            disableExport: true,
+        },
+        {
             field: "category",
             headerName: "Category",
             flex: 1,
@@ -350,9 +359,23 @@ export function ProductsGrid() {
         },
     ];
 
+    const convertCustomFilters: ConvertCustomFilterCallback = (filterItem: GridFilterItem) => {
+        if (filterItem.field === "titleSlugOrDescription") {
+            return {
+                or: [
+                    { title: { contains: filterItem.value } } satisfies GqlFilter,
+                    { slug: { contains: filterItem.value } } satisfies GqlFilter,
+                    { description: { contains: filterItem.value } } satisfies GqlFilter,
+                ],
+            };
+        } else {
+            return false;
+        }
+    };
+
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel, convertCustomFilters),
             offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel, columns),
@@ -371,7 +394,7 @@ export function ProductsGrid() {
     >({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel, convertCustomFilters),
         },
         query: productsQuery,
         resolveQueryNodes: (data) => data.products.nodes,

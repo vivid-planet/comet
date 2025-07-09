@@ -41,7 +41,7 @@ interface GqlNumberFilter {
     greaterThanEqual?: number | null;
     notEqual?: number | null;
 }
-type GqlFilter = {
+export type GqlFilter = {
     [key: string]: GqlStringFilter | GqlNumberFilter; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
 } & {
     and?: GqlFilter[] | null;
@@ -56,7 +56,7 @@ type GqlFilter = {
    + `undefined` to skip this filter item,
    + custom GqlFilter object, joining the other filter objects with the selected logic operator
  */
-type ConvertCustomFilterCallback = (
+export type ConvertCustomFilterCallback = (
     filterItem: GridFilterItem,
     columns: GridColDef[],
     filterModel?: GridFilterModel,
