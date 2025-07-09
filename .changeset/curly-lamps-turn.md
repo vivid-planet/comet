@@ -2,7 +2,7 @@
 "@comet/cms-admin": minor
 ---
 
-Rework `createRedirectsPage` usage to accept `link` instead of `customTargets`.
+Rework `createRedirectsPage` usage to accept `linkBlock` instead of `customTargets`.
 
 Previously, `customTargets` were passed directly:
 
@@ -17,7 +17,7 @@ export const RedirectsLinkBlock = createRedirectsLinkBlock({
     news: NewsLinkBlock,
 });
 
-export const RedirectsPage = createRedirectsPage({ link: RedirectsLinkBlock, scopeParts: ["domain"] });
+export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock, scopeParts: ["domain"] });
 ```
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.

@@ -1925,7 +1925,7 @@ If your application uses internationalization or a language other than English (
 
 :::
 
-### Rework `createRedirectsPage` usage to accept `link` instead of `customTargets`.
+### Rework `createRedirectsPage` usage to accept `linkBlock` instead of `customTargets`.
 
 Previously, `customTargets` were passed directly:
 
@@ -1944,7 +1944,7 @@ export const RedirectsLinkBlock = createRedirectsLinkBlock({
 });
 
 export const RedirectsPage = createRedirectsPage({
-    link: RedirectsLinkBlock,
+    linkBlock: RedirectsLinkBlock,
     scopeParts: ["domain"],
 });
 ```
