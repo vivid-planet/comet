@@ -30,60 +30,72 @@ export const defaultRichTextInlineStyleMap: Renderers["inline"] = {
 /**
  * Define the renderers
  */
-const defaultRichTextRenderers: Renderers = {
-    /**
-     * Those callbacks will be called recursively to render a nested structure
-     */
-    inline: defaultRichTextInlineStyleMap,
-    /**
-     * Blocks receive children and depth
-     * Note that children are an array of blocks with same styling,
-     */
-    blocks: {
-        unstyled: createTextBlockRenderFn({ bottomSpacing: true }),
-        "paragraph-standard": createTextBlockRenderFn({ bottomSpacing: true }),
-        "paragraph-small": createTextBlockRenderFn({ variant: "p200", bottomSpacing: true }),
-        "header-one": createTextBlockRenderFn({ variant: "h600", bottomSpacing: true }),
-        "header-two": createTextBlockRenderFn({ variant: "h550", bottomSpacing: true }),
-        "header-three": createTextBlockRenderFn({ variant: "h500", bottomSpacing: true }),
-        "header-four": createTextBlockRenderFn({ variant: "h450", bottomSpacing: true }),
-        "header-five": createTextBlockRenderFn({ variant: "h400", bottomSpacing: true }),
-        "header-six": createTextBlockRenderFn({ variant: "h350", bottomSpacing: true }),
-        // List
-        // or depth for nested lists
-        "unordered-list-item": (children, { depth, keys }) => (
-            <ul key={keys[keys.length - 1]} className={`ul-level-${depth}`}>
-                {children.map((child, index) => (
-                    <Text as="li" key={keys[index]}>
-                        {child}
-                    </Text>
-                ))}
-            </ul>
-        ),
-        "ordered-list-item": (children, { depth, keys }) => (
-            <ol key={keys.join("|")} className={`ol-level-${depth}`}>
-                {children.map((child, index) => (
-                    <OrderedListItem $depth={depth} as="li" key={keys[index]}>
-                        {child}
-                    </OrderedListItem>
-                ))}
-            </ol>
-        ),
-    },
-    /**
-     * Entities receive children and the entity data
-     */
-    entities: {
-        // key is the entity key value from raw
-        LINK: (children, data: LinkBlockData, { key }) =>
-            isValidLink(data) ? (
-                <InlineLink key={key} data={data}>
-                    {children}
-                </InlineLink>
-            ) : (
-                <span>{children}</span>
+const createDefaultRichTextRenderers = (): Renderers => {
+    const keyIndices = {};
+
+    return {
+        /**
+         * Those callbacks will be called recursively to render a nested structure
+         */
+        inline: defaultRichTextInlineStyleMap,
+        /**
+         * Blocks receive children and depth
+         * Note that children are an array of blocks with same styling,
+         */
+        blocks: {
+            unstyled: createTextBlockRenderFn({ bottomSpacing: true }),
+            "paragraph-standard": createTextBlockRenderFn({ bottomSpacing: true }),
+            "paragraph-small": createTextBlockRenderFn({ variant: "p200", bottomSpacing: true }),
+            "header-one": createTextBlockRenderFn({ variant: "h600", bottomSpacing: true }),
+            "header-two": createTextBlockRenderFn({ variant: "h550", bottomSpacing: true }),
+            "header-three": createTextBlockRenderFn({ variant: "h500", bottomSpacing: true }),
+            "header-four": createTextBlockRenderFn({ variant: "h450", bottomSpacing: true }),
+            "header-five": createTextBlockRenderFn({ variant: "h400", bottomSpacing: true }),
+            "header-six": createTextBlockRenderFn({ variant: "h350", bottomSpacing: true }),
+            // List
+            // or depth for nested lists
+            "unordered-list-item": (children, { depth, keys }) => (
+                <ul key={keys[keys.length - 1]} className={`ul-level-${depth}`}>
+                    {children.map((child, index) => (
+                        <Text as="li" key={keys[index]}>
+                            {child}
+                        </Text>
+                    ))}
+                </ul>
             ),
-    },
+            "ordered-list-item": (children, { depth, keys }) => (
+                <ol key={keys.join("|")} className={`ol-level-${depth}`}>
+                    {children.map((child, index) => (
+                        <OrderedListItem $depth={depth} as="li" key={keys[index]}>
+                            {child}
+                        </OrderedListItem>
+                    ))}
+                </ol>
+            ),
+        },
+        /**
+         * Entities receive children and the entity data
+         */
+        entities: {
+            // key is the entity key value from raw
+            LINK: (children, data: LinkBlockData, { key }) => {
+                // Workaround for two entities with same key caused by inserting a soft hyphen in a link.
+                if (keyIndices[key]) {
+                    keyIndices[key] = keyIndices[key] + 1;
+                } else {
+                    keyIndices[key] = 1;
+                }
+
+                return isValidLink(data) ? (
+                    <InlineLink key={`${key}-${keyIndices[key]}`} data={data}>
+                        {children}
+                    </InlineLink>
+                ) : (
+                    <span>{children}</span>
+                );
+            },
+        },
+    };
 };
 
 interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
@@ -92,8 +104,8 @@ interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
 }
 
 export const RichTextBlock = withPreview(
-    ({ data, renderers = defaultRichTextRenderers, disableLastBottomSpacing }: RichTextBlockProps) => {
-        const rendered = redraft(data.draftContent, renderers);
+    ({ data, renderers, disableLastBottomSpacing }: RichTextBlockProps) => {
+        const rendered = redraft(data.draftContent, renderers ?? createDefaultRichTextRenderers());
 
         return (
             <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
