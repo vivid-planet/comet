@@ -37,8 +37,8 @@
         "immutable": "~3.8.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.27.2",
-        "@babel/core": "^7.27.7",
+        "@babel/cli": "^7.28.0",
+        "@babel/core": "^7.28.0",
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@mui/material": "^7.2.0",
