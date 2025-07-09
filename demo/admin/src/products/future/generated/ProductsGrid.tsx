@@ -231,6 +231,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                     </Tooltip>
                 </>
             ),
+            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
             type: "number",
             flex: 1,
             visible: theme.breakpoints.up("md"),
