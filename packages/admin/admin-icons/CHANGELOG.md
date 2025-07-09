@@ -1,5 +1,6 @@
 # @comet/admin-icons
 
+<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ## 8.0.0-beta.5
@@ -43,6 +44,9 @@
 ### Minor Changes
 
 - 682a674: Add support for React 18
+=======
+## 7.25.1
+>>>>>>> main
 
 ## 7.25.0
 

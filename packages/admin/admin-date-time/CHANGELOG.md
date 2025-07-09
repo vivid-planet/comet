@@ -1,5 +1,6 @@
 # @comet/admin-date-time
 
+<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ### Patch Changes
@@ -116,6 +117,14 @@
 - Updated dependencies [682a674]
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
+=======
+## 7.25.1
+
+### Patch Changes
+
+-   @comet/admin@7.25.1
+-   @comet/admin-icons@7.25.1
+>>>>>>> main
 
 ## 7.25.0
 
