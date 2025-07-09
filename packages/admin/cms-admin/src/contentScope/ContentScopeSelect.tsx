@@ -51,7 +51,7 @@ export function ContentScopeSelect({
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
 
-    const hasMultipleDimensions = Object.keys(value).length > 1;
+    const hasMultipleDimensions = options.some((option) => Object.keys(option).length > 1);
 
     let filteredOptions = options;
 
@@ -86,7 +86,11 @@ export function ContentScopeSelect({
     }
 
     const selectedOption = options.find((option) => {
+<<<<<<< HEAD
         return Object.keys(option.scope).every((key) => value[key] === option.scope[key]);
+=======
+        return valueMatchesOption(value, option);
+>>>>>>> main
     });
 
     if (!selectedOption) {
@@ -307,4 +311,11 @@ export function ContentScopeSelect({
 
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {
     return label ?? capitalCase(value);
+}
+
+function valueMatchesOption<Value extends ContentScopeInterface = ContentScopeInterface>(value: Value, option: Option<Value>) {
+    const optionMatchesAllValueDimensions = Object.keys(value).every((dimension) => value[dimension] === option[dimension]?.value);
+    const valueMatchesAllOptionDimensions = Object.keys(option).every((dimension) => option[dimension]?.value === value[dimension]);
+
+    return optionMatchesAllValueDimensions && valueMatchesAllOptionDimensions;
 }

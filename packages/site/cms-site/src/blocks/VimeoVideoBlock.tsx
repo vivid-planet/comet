@@ -1,11 +1,13 @@
 "use client";
-import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
-import clsx from "clsx";
-import { type ReactElement, type ReactNode, useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 
-import { type VimeoVideoBlockData } from "../blocks.generated";
-import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
-import styles from "./VimeoVideoBlock.module.scss";
+import { VimeoVideoBlockData } from "../blocks.generated";
+import { withPreview } from "../iframebridge/withPreview";
+import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
+import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
+import { PropsWithData } from "./PropsWithData";
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
@@ -26,7 +28,7 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
 interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
-    renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
+    renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
     fill?: boolean;
     previewImageIcon?: ReactNode;
 }
@@ -97,16 +99,36 @@ export const VimeoVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <div
-                        ref={inViewRef}
-                        className={clsx(styles.videoContainer, fill && styles.fill)}
-                        style={!fill ? { "--aspect-ratio": aspectRatio.replace("x", "/") } : undefined}
-                    >
-                        <iframe ref={iframeRef} className={styles.vimeoContainer} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
-                    </div>
+                    <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                        <VimeoContainer ref={iframeRef} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen />
+                    </VideoContainer>
                 )}
             </>
         );
     },
     { label: "Video" },
 );
+
+const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>`
+    overflow: hidden;
+    position: relative;
+
+    ${({ $aspectRatio, $fill }) =>
+        $fill
+            ? css`
+                  width: 100%;
+                  height: 100%;
+              `
+            : css`
+                  aspect-ratio: ${$aspectRatio};
+              `}
+`;
+
+const VimeoContainer = styled.iframe`
+    position: absolute;
+    border: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+`;
