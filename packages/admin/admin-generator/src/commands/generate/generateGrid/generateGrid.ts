@@ -184,6 +184,7 @@ export function generateGrid(
         { name: "GridColDef", importPath: "@comet/admin" },
         { name: "dataGridDateTimeColumn", importPath: "@comet/admin" },
         { name: "dataGridDateColumn", importPath: "@comet/admin" },
+        { name: "dataGridIdColumn", importPath: "@comet/admin" },
         { name: "renderStaticSelectCell", importPath: "@comet/admin" },
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
@@ -526,6 +527,8 @@ export function generateGrid(
                 pinned: column.pinned,
                 disableExport: column.disableExport,
             };
+        } else if (type == "id") {
+            gridColumnType = "...dataGridIdColumn,";
         }
 
         if (
@@ -534,7 +537,8 @@ export function generateGrid(
                 column.type == "boolean" ||
                 column.type == "date" ||
                 column.type == "dateTime" ||
-                column.type == "virtual") &&
+                column.type == "virtual" ||
+                column.type == "id") &&
             column.renderCell
         ) {
             if (isGeneratorConfigCode(column.renderCell)) {

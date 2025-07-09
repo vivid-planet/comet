@@ -1,4 +1,4 @@
-import { getGridDateOperators, type GridColTypeDef, type GridFilterInputValueProps } from "@mui/x-data-grid";
+import { getGridDateOperators, getGridStringOperators, type GridColTypeDef, type GridFilterInputValueProps } from "@mui/x-data-grid";
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { useState } from "react";
@@ -111,4 +111,12 @@ export const dataGridDateTimeColumn: GridColTypeDef = {
             InputComponent: DateTimePickerFilter,
         };
     }),
+};
+
+/**
+ * Data Grid column definition for ID columns.
+ * Sets `filterOperators` to match the `IdFilter` GraphQL input type.
+ */
+export const dataGridIdColumn: GridColTypeDef = {
+    filterOperators: getGridStringOperators().filter((operator) => ["isAnyOf", "equals", "doesNotEqual"].includes(operator.value)),
 };

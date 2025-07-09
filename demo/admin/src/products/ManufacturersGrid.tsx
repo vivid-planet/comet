@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
+    dataGridIdColumn,
     DataGridToolbar,
     FillSpace,
     filterByFragment,
@@ -52,6 +53,7 @@ export function ManufacturersGrid() {
 
     const columns: GridColDef<GridValues>[] = [
         {
+            ...dataGridIdColumn,
             field: "id",
             width: 150,
             renderHeader: () => (
