@@ -27,7 +27,7 @@ import { type ConvertCustomFilterCallback, type GqlFilter } from "@comet/admin/l
 import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-import type { GridFilterItem } from "@mui/x-data-grid";
+import type { GridFilterItem, GridFilterModel } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GridFilterInputSingleSelect,
@@ -359,15 +359,15 @@ export function ProductsGrid() {
         },
     ];
 
-    const convertCustomFilters: ConvertCustomFilterCallback = (filterItem: GridFilterItem) => {
+    const convertCustomFilters: ConvertCustomFilterCallback = (filterItem: GridFilterItem, columns: GridColDef[], filterModel?: GridFilterModel) => {
         if (filterItem.field === "titleSlugOrDescription") {
             return {
                 or: [
-                    { title: { contains: filterItem.value } } satisfies GqlFilter,
-                    { slug: { contains: filterItem.value } } satisfies GqlFilter,
-                    { description: { contains: filterItem.value } } satisfies GqlFilter,
+                    { title: { contains: filterItem.value } },
+                    { slug: { contains: filterItem.value } },
+                    { description: { contains: filterItem.value } },
                 ],
-            };
+            } as GqlFilter;
         } else {
             return false;
         }
