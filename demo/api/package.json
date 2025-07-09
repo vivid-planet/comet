@@ -22,6 +22,7 @@
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
         "start": "$npm_execpath prebuild && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
         "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
+        "repl": "$npm_execpath run start --entryFile repl",
         "start:dev": "$npm_execpath check-node-version && run-p dev:*",
         "start:prod": "node dist/main"
     },
