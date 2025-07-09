@@ -14,10 +14,10 @@ import {
 import { type ReactNode, useEffect } from "react";
 import { type RouteProps, useRouteMatch } from "react-router-dom";
 
-import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
+import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
 
 type MasterMenuItemBase = {
-    requiredPermission?: string | string[];
+    requiredPermission?: Permission | Permission[];
 };
 
 type MasterMenuItemRoute = MasterMenuItemBase &

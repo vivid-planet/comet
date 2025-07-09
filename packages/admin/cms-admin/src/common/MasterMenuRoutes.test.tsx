@@ -5,6 +5,12 @@ jest.mock("../userPermissions/hooks/currentUser", () => ({
     useUserPermissionCheck: () => (permission: string) => permission === "allowed",
 }));
 
+declare module "../userPermissions/hooks/currentUser" {
+    export interface PermissionOverrides {
+        test: "allowed" | "disallowed" | "alsoDisallowed";
+    }
+}
+
 describe("useRoutePropsFromMasterMenuData", () => {
     it("should include item without requiredPermission", () => {
         const items: MasterMenuData = [
