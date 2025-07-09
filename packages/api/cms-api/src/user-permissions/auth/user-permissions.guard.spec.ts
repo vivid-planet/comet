@@ -9,7 +9,14 @@ import { AffectedEntityMeta } from "../decorators/affected-entity.decorator";
 import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { ScopedEntityMeta } from "../decorators/scoped-entity.decorator";
 import { CurrentUser } from "../dto/current-user";
+import { Permission } from "../user-permissions.types";
 import { UserPermissionsGuard } from "./user-permissions.guard";
+
+declare module "../user-permissions.types" {
+    export interface PermissionOverrides {
+        test: "p1" | "p1.write" | "p2" | "p3";
+    }
+}
 
 @Entity()
 class TestEntity extends BaseEntity {
@@ -168,7 +175,7 @@ describe("UserPermissionsGuard", () => {
         expect(
             await guard.canActivate(
                 mockContext({
-                    userPermissions: [{ permission: "", contentScopes: [] }],
+                    userPermissions: [{ permission: "" as Permission, contentScopes: [] }],
                 }),
             ),
         ).toBe(false);
