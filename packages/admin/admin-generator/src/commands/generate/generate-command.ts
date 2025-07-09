@@ -154,7 +154,7 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
           /**
            * The field to use as label for the default renderCell implementation.
            */
-          labelField?: UsableFields<T, true>;
+          labelField?: string;
       }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
