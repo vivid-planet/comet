@@ -1,4 +1,4 @@
-import { type GridFilterModel } from "@mui/x-data-grid";
+import { type GridFilterItem, type GridFilterModel } from "@mui/x-data-grid";
 
 import { type GridColDef } from "./GridColDef";
 
@@ -48,9 +48,31 @@ type GqlFilter = {
     or?: GqlFilter[] | null;
 };
 
-export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
+/**
+ * Use this callback to add custom mui-grid-filter-to-gql-filter conversion logic. If for example your gql filter
+ * does not need the field name, you need some more complex structure.
+   @return
+   + `false` to fall back to default conversion,
+   + `undefined` to skip this filter item,
+   + custom GqlFilter object, joining the other filter objects with the selected logic operator
+ */
+type ConvertCustomFilterCallback = (
+    filterItem: GridFilterItem,
+    columns: GridColDef[],
+    filterModel?: GridFilterModel,
+) => GqlFilter | false | undefined;
+
+export function muiGridFilterToGql(
+    columns: GridColDef[],
+    filterModel?: GridFilterModel,
+    convertCustomFilter?: ConvertCustomFilterCallback,
+): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items.map((filterItem) => {
+        if (convertCustomFilter) {
+            const customFilter = convertCustomFilter(filterItem, columns, filterModel);
+            if (customFilter) return customFilter;
+        }
         if (!filterItem.operator) throw new Error("operator not set");
         const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
         const value = ["isEmpty", "isNotEmpty"].includes(gqlOperator) ? true : filterItem.value;
@@ -62,7 +84,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
     });
     const filter: GqlFilter = {};
     const op: "and" | "or" = filterModel.logicOperator ?? "and";
-    filter[op] = filterItems;
+    filter[op] = filterItems.filter((item) => item !== undefined);
 
     let search: undefined | string = undefined;
 
