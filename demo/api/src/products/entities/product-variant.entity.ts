@@ -9,7 +9,11 @@ import { Product } from "./product.entity";
 @ObjectType()
 @Entity()
 @RootBlockEntity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products", position: { groupByFields: ["product"] } })
+@CrudGenerator({
+    targetDirectory: `${__dirname}/../generated/`,
+    requiredPermission: "products",
+    position: { groupByFields: ["product"] },
+})
 export class ProductVariant extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
