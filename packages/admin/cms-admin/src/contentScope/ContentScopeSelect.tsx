@@ -33,7 +33,7 @@ interface Props {
     searchable?: boolean;
     groupBy?: keyof ContentScope;
     icon?: ReactNode;
-    renderOption?: (option: Option, query?: string) => ReactNode;
+    renderOption?: (option: Option, query?: string, selected?: boolean) => ReactNode;
     renderSelectedOption?: (option: Option) => ReactNode;
 }
 
@@ -94,7 +94,7 @@ export function ContentScopeSelect({
     }
 
     if (!renderOption) {
-        renderOption = (option, query) => {
+        renderOption = (option, query, isSelected) => {
             const text = Object.entries(option.scope)
                 .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
                 .map(([key, value]) => (option.label && option.label[key]) ?? value)
@@ -107,7 +107,11 @@ export function ContentScopeSelect({
                         <Domain />
                     </ListItemIcon>
                     <ListItemText
-                        primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
+                        slotProps={{
+                            primary: {
+                                variant: isSelected ? "subtitle2" : "body2",
+                            },
+                        }}
                         sx={{ margin: 0 }}
                         primary={<MarkedMatches text={text} matches={matches} />}
                     />
@@ -275,10 +279,9 @@ export function ContentScopeSelect({
                                                 selected={isSelected}
                                                 sx={({ spacing }) => ({
                                                     paddingX: spacing(6),
-                                                    fontWeight: isSelected ? 600 : 250,
                                                 })}
                                             >
-                                                {renderOption?.(option, searchValue)}
+                                                {renderOption?.(option, searchValue, isSelected)}
                                             </ListItemButton>
                                         );
                                     })}

@@ -8,7 +8,11 @@ export default defineConfig<GQLManufacturer>({
     queryParamsPrefix: "manufacturers",
     newEntryText: "Add Manufacturer",
     columns: [
-        { type: "text", name: "id", headerName: "ID" },
+        {
+            type: "id",
+            name: "id",
+            headerName: "ID",
+        },
         { type: "text", name: "name", headerName: "Name" },
         { type: "text", name: "address.street", headerName: "Street" },
         { type: "number", name: "address.streetNumber", headerName: "Street number" },

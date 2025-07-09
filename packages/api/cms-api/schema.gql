@@ -497,11 +497,14 @@ input RedirectFilter {
 
 input StringFilter {
   contains: String
+  notContains: String
   startsWith: String
   endsWith: String
   equal: String
   notEqual: String
   isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input BooleanFilter {
@@ -515,6 +518,8 @@ input DateTimeFilter {
   lowerThanEqual: DateTime
   greaterThanEqual: DateTime
   notEqual: DateTime
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input RedirectSort {

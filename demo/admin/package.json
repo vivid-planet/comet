@@ -33,10 +33,10 @@
         "@fontsource-variable/roboto-flex": "^5.2.6",
         "@mui/material": "^7.2.0",
         "@mui/system": "^7.2.0",
-        "@mui/x-data-grid": "^7.29.7",
-        "@mui/x-data-grid-pro": "^7.29.7",
+        "@mui/x-data-grid": "^7.29.8",
+        "@mui/x-data-grid-pro": "^7.29.8",
         "@mui/x-date-pickers": "^7.29.4",
-        "change-case": "^5.2.0",
+        "change-case": "^5.4.4",
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
@@ -57,7 +57,7 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.27.7",
+        "@babel/core": "^7.28.0",
         "@comet/admin-generator": "workspace:*",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
@@ -88,7 +88,7 @@
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
         "typescript": "^5.7.3",
-        "vite": "^5.4.14",
+        "vite": "^5.4.19",
         "vite-plugin-html": "^3.2.2"
     }
 }

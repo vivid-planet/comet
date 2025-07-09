@@ -38,11 +38,11 @@
         "react-intl": "^7.1.11",
         "redraft": "^0.10.2",
         "sitemap": "^8.0.0",
-        "styled-components": "^6.1.16",
+        "styled-components": "^6.1.19",
         "swiper": "^11.2.10"
     },
     "devDependencies": {
-        "@babel/core": "^7.27.7",
+        "@babel/core": "^7.28.0",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^5.0.3",

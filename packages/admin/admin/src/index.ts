@@ -54,16 +54,23 @@ export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "
 export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuContext, CrudMoreActionsMenuItem, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { DataGridColumnsManagement, DataGridColumnsManagementClassKey, DataGridColumnsManagementProps } from "./dataGrid/DataGridColumnsManagement";
 export { DataGridPanel, DataGridPanelClassKey, DataGridPanelProps } from "./dataGrid/DataGridPanel";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
-export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
+export { dataGridDateColumn, dataGridDateTimeColumn, dataGridIdColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
+export { DataGridPagination, DataGridPaginationClassKey, DataGridPaginationProps } from "./dataGrid/pagination/DataGridPagination";
+export {
+    DataGridPaginationActions,
+    DataGridPaginationActionsClassKey,
+    DataGridPaginationActionsProps,
+} from "./dataGrid/pagination/paginationActions/DataGridPaginationActions";
 export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
