@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type CrudGeneratorOptions, getCrudSearchFieldsFromMetadata, hasCrudFieldFeature } from "@comet/cms-api";
+import { isPermission } from "@comet/cms-api/lib/user-permissions/user-permissions.types";
 import { type EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
@@ -1258,7 +1259,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
 
     const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata, generatorOptions);
-    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
+    if (!generatorOptions.requiredPermission && isPermission(instanceNamePlural)) generatorOptions.requiredPermission = [instanceNamePlural]; // TODO: requiredPermission should be required?
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {
