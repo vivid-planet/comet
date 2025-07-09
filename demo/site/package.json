@@ -40,9 +40,9 @@
         "react-dom": "^18.3.1",
         "react-intl": "^7.1.11",
         "redraft": "^0.10.2",
-        "styled-components": "^6.1.16",
+        "styled-components": "^6.1.19",
         "swiper": "^11.2.10",
-        "zod": "^3.25.67"
+        "zod": "^3.25.76"
     },
     "devDependencies": {
         "@babel/core": "^7.28.0",
