@@ -1,4 +1,6 @@
-import { useEffect, useRef } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
 import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch, GraphQLFetch } from "../graphQLFetch/graphQLFetch";
@@ -16,16 +18,19 @@ export function useBlockPreviewFetch(apiUrl: string): { fetch: Fetch; graphQLFet
 export function useBlockPreviewFetch(apiUrl?: string | undefined): { fetch: Fetch; graphQLFetch?: GraphQLFetch };
 export function useBlockPreviewFetch(apiUrl?: string | undefined) {
     const { showOnlyVisible, graphQLApiUrl } = useIFrameBridge();
+    const [graphQLFetch, setGraphQLFetch] = useState<GraphQLFetch | undefined>(() =>
+        apiUrl ? createBlockPreviewFetch(apiUrl, !showOnlyVisible) : undefined,
+    );
 
-    const graphQLFetchRef = useRef(apiUrl ? createBlockPreviewFetch(apiUrl, !showOnlyVisible) : undefined);
     useEffect(() => {
         if (graphQLApiUrl) {
-            graphQLFetchRef.current = createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible);
+            // We need to use an updater function here because createBlockPreviewFetch's return value would otherwise be incorrectly treated as an updater function.
+            setGraphQLFetch(() => createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible));
         }
     }, [showOnlyVisible, graphQLApiUrl]);
 
     return {
-        graphQLFetch: graphQLFetchRef.current,
+        graphQLFetch,
         fetch: cachingFetch,
     };
 }

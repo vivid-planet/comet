@@ -4,9 +4,10 @@ import { ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { sendPages, SendPagesOptions } from "./useCopyPastePages/sendPages";
 import { GQLPageTreePageFragment } from "./usePageTree";
@@ -67,7 +68,7 @@ interface UseCopyPastePagesApi {
 function useCopyPastePages(): UseCopyPastePagesApi {
     const { documentTypes, currentCategory } = usePageTreeContext();
     const client = useApolloClient();
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const damScope = useDamScope();
     const blockContext = useCmsBlockContext();
     const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });

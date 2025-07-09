@@ -91,8 +91,23 @@ class Meta extends AnnotationBlockMeta {
                             nullable: false,
                         },
                         {
+                            name: "mimetype",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                        {
                             name: "scope",
                             kind: BlockMetaFieldKind.Json,
+                            nullable: true,
+                        },
+                        {
+                            name: "altText",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: true,
+                        },
+                        {
+                            name: "title",
+                            kind: BlockMetaFieldKind.String,
                             nullable: true,
                         },
                     ],

@@ -1,5 +1,43 @@
 # @comet/blocks-api
 
+## 7.25.1
+
+## 7.25.0
+
+## 7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+-   201198da3: Include links within RichTextBlocks in the block index
+
+    Previously, links within RichTextBlocks were not indexed, which means they also didn't appear in the DAM's dependents tab.
+
+## 7.22.0
+
+## 7.21.1
+
+## 7.21.0
+
+## 7.20.0
+
+## 7.19.0
+
+## 7.18.0
+
+## 7.17.0
+
+## 7.16.0
+
+## 7.15.0
+
+## 7.14.0
+
+### Patch Changes
+
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+
 ## 7.13.0
 
 ## 7.12.0

@@ -187,6 +187,19 @@ export class CustomProductResolver {
 
 GraphQL will automatically "merge" the resolvers if the returned entities in `@Resolver(() => Entity)` is identical.
 
+While it is generally discouraged to extend the generated resolvers, it is possible to do so. This can be useful if you need to modify small parts of the resolver or your custom code needs to reuse code from the generated resolver.
+
+```ts
+@Resolver(() => Product)
+export class CustomProductResolver extends ProductResolver {
+    // ...
+}
+```
+
+:::warning
+Only add the CustomProductResolver to the module if you extend the generated resolver.
+:::
+
 #### Service
 
 You can't add custom code to the generated service directly. Instead, the recommended way is to create a second,
@@ -218,6 +231,8 @@ export class CustomProductsService {
     }
 }
 ```
+
+The custom service can also be extended using inheritance in the same way as the resolver.
 
 ### Scaffolding
 

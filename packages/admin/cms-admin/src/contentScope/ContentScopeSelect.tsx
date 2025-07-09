@@ -50,7 +50,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
 
-    const hasMultipleDimensions = Object.keys(value).length > 1;
+    const hasMultipleDimensions = options.some((option) => Object.keys(option).length > 1);
 
     let filteredOptions = options;
 
@@ -84,7 +84,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     const selectedOption = options.find((option) => {
-        return Object.keys(option).every((key) => value[key] === option[key].value);
+        return valueMatchesOption(value, option);
     });
 
     if (!selectedOption) {
@@ -101,7 +101,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
             return (
                 <>
-                    <ListItemIcon sx={{ minWidth: "none" }}>
+                    <ListItemIcon>
                         <Domain />
                     </ListItemIcon>
                     <ListItemText
@@ -191,7 +191,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                     PaperProps: {
                         sx: (theme) => ({
                             minWidth: "350px",
-
+                            maxHeight: "calc(100vh - 60px)",
                             [theme.breakpoints.down("md")]: {
                                 width: "100%",
                                 maxWidth: "none",
@@ -313,4 +313,11 @@ function optionToValue<Value extends ContentScopeInterface = ContentScopeInterfa
 
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {
     return label ?? capitalCase(value);
+}
+
+function valueMatchesOption<Value extends ContentScopeInterface = ContentScopeInterface>(value: Value, option: Option<Value>) {
+    const optionMatchesAllValueDimensions = Object.keys(value).every((dimension) => value[dimension] === option[dimension]?.value);
+    const valueMatchesAllOptionDimensions = Object.keys(option).every((dimension) => option[dimension]?.value === value[dimension]);
+
+    return optionMatchesAllValueDimensions && valueMatchesAllOptionDimensions;
 }

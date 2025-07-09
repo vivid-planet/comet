@@ -53,15 +53,15 @@ const PageLayoutContent = styled.div`
     grid-column: 2 / -2;
     position: relative;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         grid-column: 5 / -5;
     }
 
-    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
         grid-column: 6 / -6;
     }
 
-    ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.xl.mediaQuery} {
         grid-column: 7 / -7;
     }
 `;

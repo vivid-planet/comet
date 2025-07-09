@@ -1,6 +1,8 @@
+import { createSitePath } from "@src/util/createSitePath";
+
 export const dynamic = "force-dynamic"; // don't generate at build time
 
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-nextjs";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfig } from "@src/util/siteConfig";
 import { MetadataRoute } from "next";
@@ -40,7 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         const seoBlock = pageTreeNode.document.seo;
                         if (!seoBlock.noIndex) {
                             sitemap.push({
-                                url: `${siteConfig.url}/${language}${pageTreeNode.path}`,
+                                url: `${siteConfig.url}${createSitePath({
+                                    scope: {
+                                        language: language,
+                                    },
+                                    path: pageTreeNode.path,
+                                })}`,
                                 priority: Number(seoBlock.priority.replace("_", ".")),
                                 changeFrequency: seoBlock.changeFrequency,
                                 lastModified: pageTreeNode.document.updatedAt,

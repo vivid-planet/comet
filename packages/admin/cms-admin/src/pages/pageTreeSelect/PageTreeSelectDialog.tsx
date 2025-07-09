@@ -1,15 +1,16 @@
 import { gql, useQuery } from "@apollo/client";
-import { FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
+import { Button, FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface } from "../../contentScope/Provider";
 import { Maybe } from "../../graphql.generated";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
@@ -69,7 +70,7 @@ interface PageTreeSelectProps {
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
-    const { scope } = useContentScope();
+    const scope = usePageTreeScope();
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
     const [height, setHeight] = useState(200);
@@ -111,6 +112,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
+        // TODO remove hardcoded domain here
         domain: scope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
@@ -243,12 +245,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <StyledDialogAction>
                 {value && (
                     <Button
+                        variant="textDark"
                         onClick={() => {
                             onChange(null);
                             onClose();
                         }}
                         startIcon={<Delete />}
-                        color="info"
                     >
                         <FormattedMessage id="comet.pages.pageTreeSelect.removeSelection" defaultMessage="Remove Selection" />
                     </Button>

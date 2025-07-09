@@ -25,10 +25,21 @@ const nextConfig = {
         styledComponents: true,
     },
     experimental: {
-        optimizePackageImports: ["@comet/cms-site"],
+        optimizePackageImports: ["@comet/site-nextjs"],
     },
     cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
+    rewrites: () => {
+        return {
+            afterFiles: [
+                {
+                    // Show a 404 instead of trying to render page for paths starting with /_next/ or /assets/ as they don't get rewritten in DomainRewriteMiddleware and cause errors in ...path page
+                    source: "/:prefix(_next|assets)/:path*",
+                    destination: "/404",
+                },
+            ],
+        };
+    },
 };
 
 export default withBundleAnalyzer(nextConfig);

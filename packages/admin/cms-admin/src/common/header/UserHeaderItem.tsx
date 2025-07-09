@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
-import { AppHeaderDropdown, AppHeaderDropdownProps } from "@comet/admin";
+import { AppHeaderDropdown, AppHeaderDropdownProps, Button } from "@comet/admin";
 import { Account, ImpersonateUser, Logout, ThreeDotSaving } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, AvatarProps, Box, Button, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, AvatarGroup, AvatarProps, Box, Divider, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -77,8 +77,6 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                 <Box padding={4}>
                     <Button
                         fullWidth
-                        variant="contained"
-                        color="primary"
                         disabled={isSigningOut}
                         startIcon={isSigningOut ? <ThreeDotSaving /> : <Logout />}
                         onClick={async () => {

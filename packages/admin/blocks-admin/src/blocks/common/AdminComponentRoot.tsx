@@ -15,12 +15,11 @@ const AdminComponentRoot = (props: PropsWithChildren<Props>) => {
             <StackBreadcrumbs
                 sx={({ palette, spacing }) => ({
                     paddingTop: 0,
-                    paddingBottom: "20px",
+                    paddingBottom: spacing(4),
                     position: "sticky",
                     zIndex: 15,
                     backgroundColor: palette.background.default,
                     top: 0,
-                    marginTop: spacing(-4),
                 })}
             />
             <ChildrenContainer>{children}</ChildrenContainer>
@@ -31,7 +30,7 @@ const AdminComponentRoot = (props: PropsWithChildren<Props>) => {
 export { AdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
-    > .CometAdminRte-root > .CometAdminRteToolbar-root {
+    .CometAdminRte-root > .CometAdminRteToolbar-root {
         top: 70px;
     }
 `;

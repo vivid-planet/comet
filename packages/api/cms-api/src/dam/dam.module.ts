@@ -13,6 +13,8 @@ import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
+import { createDamMediaAlternativeResolver } from "./files/dam-media-alternatives/dam-media-alternative.resolver";
+import { DamMediaAlternative } from "./files/dam-media-alternatives/entities/dam-media-alternative.entity";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
 import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
@@ -80,6 +82,7 @@ export class DamModule {
         const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
+        const DamMediaAlternativeResolver = createDamMediaAlternativeResolver({ File, Scope });
 
         if (Scope) {
             // Scope validation needs to happen after resolver generation. Otherwise the input type metadata has not been defined yet.
@@ -102,7 +105,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea, DamMediaAlternative]), BlobStorageModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
@@ -130,6 +133,7 @@ export class DamModule {
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
                 HasValidFilenameConstraint,
+                DamMediaAlternativeResolver,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

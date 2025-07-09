@@ -1,4 +1,4 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, withPreview } from "@comet/site-nextjs";
 import { TeaserItemBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
@@ -45,7 +45,7 @@ const Link = styled(LinkBlock)`
     gap: ${({ theme }) => theme.spacing.S300};
     color: ${({ theme }) => theme.palette.text.primary};
 
-    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.md.mediaQuery} {
         flex: unset;
         gap: ${({ theme }) => theme.spacing.S400};
         flex-direction: column;
@@ -55,7 +55,7 @@ const Link = styled(LinkBlock)`
 const MediaMobile = styled.div`
     flex: 1;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         display: none;
     }
 `;
@@ -64,7 +64,7 @@ const MediaDesktop = styled.div`
     flex: 1;
     display: none;
 
-    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         display: block;
     }
 `;

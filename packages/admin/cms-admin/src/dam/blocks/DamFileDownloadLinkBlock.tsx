@@ -1,22 +1,12 @@
 import { gql } from "@apollo/client";
-import { Field, FinalFormSelect, messages } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-} from "@comet/blocks-admin";
-import { Box, Divider, MenuItem, Typography } from "@mui/material";
+import { Field, FinalFormSelect } from "@comet/admin";
+import { AdminComponentPaper, BlockCategory, BlockDependency, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
+import { Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
 import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
-import { DamPathLazy } from "../../form/file/DamPathLazy";
 import { FileField } from "../../form/file/FileField";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
@@ -57,6 +47,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         name
                         fileUrl
                         size
+                        mimetype
                     }
                 }
             `,
@@ -70,6 +61,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             name: damFile.name,
             fileUrl: damFile.fileUrl,
             size: damFile.size,
+            mimetype: damFile.mimetype,
         };
 
         return ret;
@@ -121,22 +113,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     openFileType: state.openFileType ?? "Download",
                 }}
             >
-                {state.file === undefined ? (
-                    <Field name="file" component={FileField} fullWidth />
-                ) : (
-                    <AdminComponentPaper disablePadding>
-                        <Box padding={3}>
-                            <Typography variant="subtitle1">{state.file.name}</Typography>
-                            <Typography variant="body1" color="textSecondary">
-                                <DamPathLazy fileId={state.file.id} />
-                            </Typography>
-                        </Box>
-                        <Divider />
-                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
-                            <FormattedMessage {...messages.empty} />
-                        </AdminComponentButton>
-                    </AdminComponentPaper>
-                )}
+                <Field name="file" component={FileField} fullWidth />
                 <Divider />
                 <AdminComponentPaper>
                     <Field
@@ -158,5 +135,14 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                 </AdminComponentPaper>
             </BlocksFinalForm>
         );
+    },
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.file?.altText) contents.push(state.file.altText);
+        if (state.file?.title) contents.push(state.file.title);
+
+        return contents;
     },
 };

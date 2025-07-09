@@ -18,10 +18,10 @@ import { ProductCategoriesService } from "./product-categories.service";
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        private readonly productCategoriesService: ProductCategoriesService,
-        @InjectRepository(ProductCategory) private readonly repository: EntityRepository<ProductCategory>,
-        @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
+        protected readonly entityManager: EntityManager,
+        protected readonly productCategoriesService: ProductCategoriesService,
+        @InjectRepository(ProductCategory) protected readonly repository: EntityRepository<ProductCategory>,
+        @InjectRepository(Product) protected readonly productRepository: EntityRepository<Product>,
     ) {}
 
     @Query(() => ProductCategory)

@@ -27,4 +27,9 @@ export class StringFilter {
     @IsOptional()
     @IsString()
     notEqual?: string;
+
+    @Field(() => [String], { nullable: true })
+    @IsOptional()
+    @IsString({ each: true })
+    isAnyOf?: string[];
 }

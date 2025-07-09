@@ -1,5 +1,5 @@
-import { gql } from "@comet/cms-site";
-import { ExternalLinkBlockData, InternalLinkBlockData } from "@src/blocks.generated";
+import { gql } from "@comet/site-nextjs";
+import { DamFileDownloadLinkBlockData, ExternalLinkBlockData, InternalLinkBlockData } from "@src/blocks.generated";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound, redirect } from "next/navigation";
@@ -43,6 +43,13 @@ export async function Link({ pageTreeNodeId }: Props): Promise<JSX.Element> {
 
         if (content.block?.type === "external") {
             const link = (content.block.props as ExternalLinkBlockData).targetUrl;
+            if (link) {
+                redirect(link);
+            }
+        }
+
+        if (content.block?.type === "damFileDownload") {
+            const link = (content.block.props as DamFileDownloadLinkBlockData).file?.fileUrl.replace("/download", "");
             if (link) {
                 redirect(link);
             }

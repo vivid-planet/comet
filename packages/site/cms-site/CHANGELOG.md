@@ -1,5 +1,95 @@
 # @comet/cms-site
 
+## 7.25.1
+
+### Patch Changes
+
+-   db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
+-   d26f346c0: Loosen styled-components peer dependency
+
+    Allow using styled-components v5 in applications.
+
+## 7.25.0
+
+### Minor Changes
+
+-   b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+## 7.24.0
+
+## 7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+-   e4327e250: Add missing `"use client"` directive to `useBlockPreviewFetch`
+
+## 7.21.1
+
+### Patch Changes
+
+-   c84874edf: Revert "Fix `PixelImageBlock` fixed height, auto width issue" added in v7.20.0
+
+    In v7.20.0, height was set to `100%` for `PixelImageBlock`.
+    This caused issues when the image was not wrapped, as it would inherit the height of the next parent element instead of maintaining its aspect ratio.
+    Thus, we are reverting this change to restore the previous behavior.
+
+## 7.21.0
+
+### Patch Changes
+
+-   904ff5f1d: Deprecated: This package is now deprecated in favor of `@comet/site-nextjs`
+
+## 7.20.0
+
+### Patch Changes
+
+-   a06cac3a7: Fix `PixelImageBlock` issue when setting fixed height and width auto
+
+## 7.19.0
+
+## 7.18.0
+
+## 7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   71642aa07: Export `VideoPreviewImage` component
+
+### Patch Changes
+
+-   636326207: Fix preview overlay alignment for blocks that are scrolled into view when selected from the admin block list, e.g., in slider blocks
+-   4ddeeb09e: Prevent unintended horizontal scrolling in the admin's block preview
+
+    This previously occurred when blocks were rendered outside of the viewport width, such as elements of a slider.
+
+## 7.15.0
+
+### Patch Changes
+
+-   75fb1d0d4: Fix block preview not rendering before user interaction
+
+## 7.14.0
+
+### Minor Changes
+
+-   6163b83a4: Play/pause auto-play videos depending on their visibility
+
+    Start videos in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock` when the block is in or enters the viewport.
+    Pause them when the block is leaving the viewport.
+
+-   d07a6da51: Add comment explaining why we omit the `alt`-prop in `PixelImageBlock`
+
+### Patch Changes
+
+-   6ff1d70f6: Fix `hasRichTextBlockContent` for blocks with no content blocks
+-   8e648a757: Set alt attribute to empty string as default in `SvgImageBlock`
+
 ## 7.13.0
 
 ### Minor Changes

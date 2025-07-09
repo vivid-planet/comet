@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     Alert,
+    Button,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -16,7 +17,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
+import { Box, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -26,6 +27,7 @@ import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig"
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { DocumentInterface, DocumentType } from "../../documents/types";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -56,6 +58,7 @@ export function PagesPage({
 }: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
+    const pageTreeScope = usePageTreeScope();
     const { additionalPageTreeNodeFragment } = useCmsBlockContext();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
@@ -73,7 +76,7 @@ export function PagesPage({
     const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         fetchPolicy: "cache-and-network",
         variables: {
-            contentScope: scope,
+            contentScope: pageTreeScope,
             category,
         },
         context: LocalErrorScopeApolloContext,
@@ -118,7 +121,8 @@ export function PagesPage({
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        domain: scope.domain,
+        // TODO remove hardcoded domain here
+        domain: pageTreeScope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
@@ -138,7 +142,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(pageTreeScope)}>
                             <ToolbarItem sx={{ flexGrow: 1 }}>
                                 <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             </ToolbarItem>
@@ -150,8 +154,6 @@ export function PagesPage({
                             </ToolbarItem>
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         editDialogApi.openAddDialog();

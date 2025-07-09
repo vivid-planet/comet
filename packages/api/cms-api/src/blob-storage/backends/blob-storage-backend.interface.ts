@@ -2,14 +2,14 @@ import { Readable } from "stream";
 
 export type StorageMetaData = {
     size: number;
-    etag?: string;
-    lastModified?: Date;
-    headers: Record<string, string>;
+    etag?: string; // TODO: currently unused, consider removing
+    lastModified?: Date; // TODO: currently unused, consider removing
+    contentType: string;
 };
 
 export type CreateFileOptions = {
     size: number;
-    headers: StorageMetaData["headers"];
+    contentType: string;
 };
 
 export interface BlobStorageBackendInterface {

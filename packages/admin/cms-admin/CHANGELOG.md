@@ -1,5 +1,317 @@
 # @comet/cms-admin
 
+## 7.25.1
+
+### Patch Changes
+
+-   02394453f: Consider all scope dimensions when automatically disabling grouping and matching the selected option in `ContentScopeSelect`
+
+    This solves two issues where for scopes with optional parts
+
+    -   the `ContentScopeSelect` switched between disabled and enabled grouping depending on the selected scope
+    -   the wrong selected scope was shown because the matching didn't consider all dimensions
+    -   @comet/admin@7.25.1
+    -   @comet/admin-date-time@7.25.1
+    -   @comet/admin-icons@7.25.1
+    -   @comet/admin-rte@7.25.1
+    -   @comet/admin-theme@7.25.1
+    -   @comet/blocks-admin@7.25.1
+
+## 7.25.0
+
+### Minor Changes
+
+-   b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+-   c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+-   a1a129e00: Allow uploading .vtt files to the DAM
+
+### Patch Changes
+
+-   @comet/admin@7.25.0
+-   @comet/admin-date-time@7.25.0
+-   @comet/admin-icons@7.25.0
+-   @comet/admin-rte@7.25.0
+-   @comet/admin-theme@7.25.0
+-   @comet/blocks-admin@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+-   6d293de63: Consider required permission of ancestors in `MasterMenuRoutes`
+-   Updated dependencies [751616321]
+-   Updated dependencies [fa611381b]
+-   Updated dependencies [fa611381b]
+-   Updated dependencies [fc900f217]
+-   Updated dependencies [24e046fb3]
+    -   @comet/blocks-admin@7.24.0
+    -   @comet/admin-date-time@7.24.0
+    -   @comet/admin@7.24.0
+    -   @comet/admin-theme@7.24.0
+    -   @comet/admin-rte@7.24.0
+    -   @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Minor Changes
+
+-   afaa49d6e: Page Tree: Add support for scope parts
+
+    **Example**
+
+    ```tsx
+    <CmsBlockContextProvider
+        // Dimension "domain" is used for the page tree scope
+        pageTreeScopeParts={["domain"]}
+    >
+        {/* ... */}
+    </CmsBlockContextProvider>
+    ```
+
+### Patch Changes
+
+-   @comet/admin@7.23.0
+-   @comet/admin-date-time@7.23.0
+-   @comet/admin-icons@7.23.0
+-   @comet/admin-rte@7.23.0
+-   @comet/admin-theme@7.23.0
+-   @comet/blocks-admin@7.23.0
+
+## 7.22.0
+
+### Minor Changes
+
+-   2cf573b72: Adapt styling of `DamTable` to align with Comet DXP design
+
+### Patch Changes
+
+-   8b80b254e: Set `altText` and `title` fields to null in the DAM when deleting the field value
+
+    Previously, the `altText` and `title` fields value couldn't be completely removed.
+
+-   6d8159d67: Prevent the `UserPermissionsUserGrid` from losing focus while entering text in the search input
+-   Updated dependencies [2cf573b72]
+-   Updated dependencies [086774f01]
+    -   @comet/admin@7.22.0
+    -   @comet/admin-date-time@7.22.0
+    -   @comet/admin-icons@7.22.0
+    -   @comet/admin-rte@7.22.0
+    -   @comet/admin-theme@7.22.0
+    -   @comet/blocks-admin@7.22.0
+
+## 7.21.1
+
+### Patch Changes
+
+-   Updated dependencies [b771bd6d8]
+    -   @comet/admin@7.21.1
+    -   @comet/admin-date-time@7.21.1
+    -   @comet/admin-icons@7.21.1
+    -   @comet/admin-rte@7.21.1
+    -   @comet/admin-theme@7.21.1
+    -   @comet/blocks-admin@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+-   Updated dependencies [1a30eb858]
+-   Updated dependencies [1a30eb858]
+-   Updated dependencies [3e9ea613e]
+    -   @comet/admin-date-time@7.21.0
+    -   @comet/admin@7.21.0
+    -   @comet/admin-icons@7.21.0
+    -   @comet/admin-rte@7.21.0
+    -   @comet/admin-theme@7.21.0
+    -   @comet/blocks-admin@7.21.0
+
+## 7.20.0
+
+### Minor Changes
+
+-   ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+-   Updated dependencies [415a83165]
+-   Updated dependencies [99f904f81]
+-   Updated dependencies [2d1726543]
+    -   @comet/admin@7.20.0
+    -   @comet/admin-date-time@7.20.0
+    -   @comet/admin-icons@7.20.0
+    -   @comet/admin-rte@7.20.0
+    -   @comet/admin-theme@7.20.0
+    -   @comet/blocks-admin@7.20.0
+
+## 7.19.0
+
+### Minor Changes
+
+-   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+-   ea932357e: Prevent `ContentScopeSelect` from overlapping the header
+-   Updated dependencies [3544127ad]
+-   Updated dependencies [17b79b581]
+    -   @comet/admin@7.19.0
+    -   @comet/blocks-admin@7.19.0
+    -   @comet/admin-date-time@7.19.0
+    -   @comet/admin-icons@7.19.0
+    -   @comet/admin-rte@7.19.0
+    -   @comet/admin-theme@7.19.0
+
+## 7.18.0
+
+### Minor Changes
+
+-   2dc23dd6d: Remove visual device frames (Mobile, Tablet, Desktop) from Admin Preview
+-   ec9778450: Support multiple paths `ContentScopeProvider` by default
+
+    Change the default implementation of `location.createPath` to create multiple paths based on the content scope shapes.
+
+### Patch Changes
+
+-   0acf80d30: User Permissions: Allow permission-specific content scopes to override by-rule content scopes
+-   Updated dependencies [e6092df34]
+-   Updated dependencies [f496734f8]
+-   Updated dependencies [e6092df34]
+    -   @comet/admin-date-time@7.18.0
+    -   @comet/blocks-admin@7.18.0
+    -   @comet/admin@7.18.0
+    -   @comet/admin-icons@7.18.0
+    -   @comet/admin-rte@7.18.0
+    -   @comet/admin-theme@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+-   4c3b64610: Add `video/webm` to allowedMimetypes of `DamVideoBlock`
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+### Patch Changes
+
+-   ae56e879e: Prevent the content of `ContentScopeIndicator` from breaking on mobile to align with the Comet DXP design
+    -   @comet/admin@7.17.0
+    -   @comet/admin-date-time@7.17.0
+    -   @comet/admin-icons@7.17.0
+    -   @comet/admin-rte@7.17.0
+    -   @comet/admin-theme@7.17.0
+    -   @comet/blocks-admin@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   997b220fa: Adapt styling of the link dialog in `createRichTextBlock` to match the Comet DXP design
+-   ed9282b3b: Improve the block preview of redirect targets
+
+    Display the redirect target in the first line.
+    Move additional information (type, path) to the second line.
+
+### Patch Changes
+
+-   ea014c5e3: Set the correct icon for the button to confirm page actions
+-   e59fffbb2: Adapt styling of the page tree search input to match the Comet DXP design
+-   Updated dependencies [9bd499dcd]
+-   Updated dependencies [ed9282b3b]
+-   Updated dependencies [ec1cf3cf8]
+-   Updated dependencies [bf7b89ffc]
+-   Updated dependencies [5b7c6b4a7]
+    -   @comet/blocks-admin@7.16.0
+    -   @comet/admin-theme@7.16.0
+    -   @comet/admin@7.16.0
+    -   @comet/admin-date-time@7.16.0
+    -   @comet/admin-icons@7.16.0
+    -   @comet/admin-rte@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   46ab330da: Adapt styling of the dashboard header to match the Comet DXP design
+-   Updated dependencies [e056e8f3d]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [faa54eb8e]
+-   Updated dependencies [7d8c36e6c]
+-   Updated dependencies [a189d4ed9]
+-   Updated dependencies [6827982fe]
+-   Updated dependencies [7d8c36e6c]
+    -   @comet/blocks-admin@7.15.0
+    -   @comet/admin@7.15.0
+    -   @comet/admin-theme@7.15.0
+    -   @comet/admin-date-time@7.15.0
+    -   @comet/admin-icons@7.15.0
+    -   @comet/admin-rte@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   97cd0a3dd: User Permissions: Use Data Grid instead of a checkbox list for displaying and selecting content scopes
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+-   c71604e71: Add an `override` argument to all block factories to follow `createCompositeBlock`'s pattern
+
+### Patch Changes
+
+-   Updated dependencies [6b75f20e4]
+-   Updated dependencies [9b190db59]
+-   Updated dependencies [84e063642]
+-   Updated dependencies [948e07bba]
+-   Updated dependencies [bb041f7a7]
+-   Updated dependencies [7f72e82fc]
+    -   @comet/admin@7.14.0
+    -   @comet/admin-theme@7.14.0
+    -   @comet/blocks-admin@7.14.0
+    -   @comet/admin-rte@7.14.0
+    -   @comet/admin-date-time@7.14.0
+    -   @comet/admin-icons@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
@@ -2722,7 +3034,7 @@
 
     -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
-    -   Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
 
     In the Admin:
 

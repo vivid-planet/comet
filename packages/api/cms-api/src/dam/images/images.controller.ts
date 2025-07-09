@@ -54,7 +54,6 @@ export class ImagesController {
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -67,7 +66,7 @@ export class ImagesController {
             throw new ForbiddenException();
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
+        return this.pipeCroppedImage(file, params, accept, res, {
             "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
@@ -84,7 +83,6 @@ export class ImagesController {
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -97,7 +95,7 @@ export class ImagesController {
             throw new ForbiddenException();
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
+        return this.pipeCroppedImage(file, params, accept, res, {
             "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
@@ -110,7 +108,6 @@ export class ImagesController {
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -119,8 +116,8 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        return this.pipeCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         });
     }
 
@@ -132,7 +129,6 @@ export class ImagesController {
         }
 
         const file = await this.filesService.findOneById(params.fileId);
-
         if (file === null) {
             throw new NotFoundException();
         }
@@ -141,8 +137,8 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        return this.pipeCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         });
     }
 
@@ -150,12 +146,12 @@ export class ImagesController {
         return hash === this.imagesService.createHash(imageParams);
     }
 
-    private async getCroppedImage(
+    private async pipeCroppedImage(
         file: FileInterface,
         { cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
         accept: string,
         res: Response,
-        overrideHeaders?: OutgoingHttpHeaders,
+        headers?: OutgoingHttpHeaders,
     ): Promise<void> {
         if (!file.image) {
             throw new NotFoundException();
@@ -223,26 +219,32 @@ export class ImagesController {
 
         const cache = await this.cacheService.get(file.contentHash, path);
         if (!cache) {
-            const response = await fetch(this.imgproxyService.getSignedUrl(path));
-            const headers: Record<string, string> = {};
-            for (const [key, value] of response.headers.entries()) {
-                headers[key] = value;
+            const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
+
+            const contentLength = imgproxyResponse.headers.get("content-length");
+            if (!contentLength) {
+                throw new Error("Content length not found");
             }
 
-            res.writeHead(response.status, { ...headers, ...overrideHeaders });
-            response.body.pipe(new PassThrough()).pipe(res);
+            const contentType = imgproxyResponse.headers.get("content-type");
+            if (!contentType) {
+                throw new Error("Content type not found");
+            }
 
-            if (response.ok) {
+            res.writeHead(imgproxyResponse.status, { ...headers, "content-length": contentLength, "content-type": contentType });
+            imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+
+            if (imgproxyResponse.ok) {
                 await this.cacheService.set(file.contentHash, path, {
-                    file: response.body.pipe(new PassThrough()),
+                    file: imgproxyResponse.body.pipe(new PassThrough()),
                     metaData: {
-                        size: Number(headers["content-length"]),
-                        headers,
+                        size: Number(contentLength),
+                        contentType: contentType,
                     },
                 });
             }
         } else {
-            res.writeHead(200, { ...cache.metaData.headers, ...overrideHeaders });
+            res.writeHead(200, { ...headers, "content-type": cache.metaData.contentType, "content-length": cache.metaData.size });
 
             cache.file.pipe(res);
         }

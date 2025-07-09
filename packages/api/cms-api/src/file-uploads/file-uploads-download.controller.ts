@@ -7,6 +7,7 @@ import {
     GoneException,
     Headers,
     Inject,
+    Logger,
     NotFoundException,
     Param,
     Res,
@@ -16,7 +17,7 @@ import {
 import { Response } from "express";
 import mime from "mime";
 import fetch from "node-fetch";
-import { PassThrough } from "stream";
+import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
@@ -37,6 +38,7 @@ import { FileUploadsService } from "./file-uploads.service";
 export function createFileUploadsDownloadController(options: { public: boolean }): Type<unknown> {
     @Controller("file-uploads")
     class BaseFileUploadsDownloadController {
+        protected readonly logger = new Logger(BaseFileUploadsDownloadController.name);
         constructor(
             @InjectRepository(FileUpload) private readonly fileUploadsRepository: EntityRepository<FileUpload>,
             @Inject(BlobStorageBackendService) private readonly blobStorageBackendService: BlobStorageBackendService,
@@ -74,10 +76,11 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
                 "content-length": file.size,
+                "cache-control": "no-store",
             };
 
             // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
-            let stream: NodeJS.ReadableStream;
+            let stream: Readable;
 
             if (range) {
                 const { start, end, contentLength } = calculatePartialRanges(file.size, range);
@@ -97,6 +100,15 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                     contentLength,
                 );
 
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
+
                 res.writeHead(206, {
                     ...headers,
                     "accept-ranges": "bytes",
@@ -105,6 +117,15 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 });
             } else {
                 stream = await this.blobStorageBackendService.getFile(this.config.directory, createHashedPath(file.contentHash));
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
 
                 res.writeHead(200, headers);
             }
@@ -151,26 +172,36 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
-                const response = await fetch(this.imgproxyService.getSignedUrl(path));
-                const headers: Record<string, string> = {};
-                for (const [key, value] of response.headers.entries()) {
-                    headers[key] = value;
+                const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
+
+                const contentLength = imgproxyResponse.headers.get("content-length");
+                if (!contentLength) {
+                    throw new Error("Content length not found");
                 }
 
-                res.writeHead(response.status, headers);
-                response.body.pipe(new PassThrough()).pipe(res);
+                const contentType = imgproxyResponse.headers.get("content-type");
+                if (!contentType) {
+                    throw new Error("Content type not found");
+                }
 
-                if (response.ok) {
+                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType, "cache-control": "no-store" });
+                imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+
+                if (imgproxyResponse.ok) {
                     await this.cacheService.set(file.contentHash, path, {
-                        file: response.body.pipe(new PassThrough()),
+                        file: imgproxyResponse.body.pipe(new PassThrough()),
                         metaData: {
-                            size: Number(headers["content-length"]),
-                            headers,
+                            size: Number(contentLength),
+                            contentType: contentType,
                         },
                     });
                 }
             } else {
-                res.writeHead(200, cache.metaData.headers);
+                res.writeHead(200, {
+                    "content-type": cache.metaData.contentType,
+                    "content-length": cache.metaData.size,
+                    "cache-control": "no-store",
+                });
 
                 cache.file.pipe(res);
             }
@@ -183,13 +214,17 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
     if (options.public) {
         @DisableCometGuards()
-        class PublicFileUploadsDownloadController extends BaseFileUploadsDownloadController {}
+        class PublicFileUploadsDownloadController extends BaseFileUploadsDownloadController {
+            protected readonly logger = new Logger(PublicFileUploadsDownloadController.name);
+        }
 
         return PublicFileUploadsDownloadController;
     }
 
     @RequiredPermission("fileUploads", { skipScopeCheck: true })
-    class PrivateFileUploadsDownloadController extends BaseFileUploadsDownloadController {}
+    class PrivateFileUploadsDownloadController extends BaseFileUploadsDownloadController {
+        protected readonly logger = new Logger(PrivateFileUploadsDownloadController.name);
+    }
 
     return PrivateFileUploadsDownloadController;
 }

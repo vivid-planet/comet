@@ -1,5 +1,293 @@
 # @comet/cms-api
 
+## 7.25.1
+
+### Patch Changes
+
+-   @comet/blocks-api@7.25.1
+
+## 7.25.0
+
+### Minor Changes
+
+-   b421ed273: Support captions in the `DamVideoBlock`
+
+    The captions can be set uploaded as .vtt files and linked to videos in the DAM.
+
+-   c95365d03: Add the possibility to attach captions (.vtt files) to videos in the DAM
+-   a1a129e00: Allow uploading .vtt files to the DAM
+
+### Patch Changes
+
+-   @comet/blocks-api@7.25.0
+
+## 7.24.0
+
+### Minor Changes
+
+-   efeff64ab: API Generator: Allow easier extension of generated resolvers and services
+
+    Even though we don't encourage to extend generated resolvers and services, it should still be possible. Our recommendation is to generate a new resolver but there are cases where it makes sense to extend the existing one (e.g. modifying certain functions or reusing existing code).
+
+    Until now, this was hard to do, because every resolver and service declared it's services as private. If you need to use a service from the base resolver, you had to redeclare all services with a different name.
+
+    ```ts
+        constructor(
+            entityManager: EntityManager,
+            @InjectRepository(Product) private readonly repository2: EntityRepository<Product>,
+            @InjectRepository(ProductCategory) private readonly productCategoryRepository2: EntityRepository<ProductCategory>,
+            @InjectRepository(Manufacturer) private readonly manufacturerRepository2: EntityRepository<Manufacturer>,
+            @InjectRepository(FileUpload) private readonly fileUploadRepository2: EntityRepository<FileUpload>,
+            @InjectRepository(ProductStatistics) private readonly productStatisticsRepository2: EntityRepository<ProductStatistics>,
+            @InjectRepository(ProductColor) private readonly productColorRepository2: EntityRepository<ProductColor>,
+            @InjectRepository(ProductToTag) private readonly productToTagRepository2: EntityRepository<ProductToTag>,
+            @InjectRepository(ProductTag) private readonly productTagRepository2: EntityRepository<ProductTag>,
+            private readonly blocksTransformer2: BlocksTransformerService,
+        ) {
+            super(
+                entityManager,
+                repository2,
+                productCategoryRepository2,
+                manufacturerRepository2,
+                fileUploadRepository2,
+                productStatisticsRepository2,
+                productColorRepository2,
+                productToTagRepository2,
+                productTagRepository2,
+                blocksTransformer2,
+            );
+        }
+
+    ```
+
+    If you tried to use the same name you got the following error:
+
+    ```
+    Class 'CustomProductResolver' incorrectly extends base class 'ProductResolver'.
+      Types have separate declarations of a private property 'repository'.ts(2415)
+    ```
+
+    Now, the constructor can be omitted and the custom resolver can be simplified to:
+
+    ```ts
+    @Resolver(() => Product)
+    @RequiredPermission(["products"], { skipScopeCheck: true })
+    export class CustomProductResolver extends ProductResolver {
+        @Mutation(() => Boolean)
+        async publishAllProducts(): Promise<boolean> {
+            await this.repository.nativeUpdate({ status: { $ne: ProductStatus.Published } }, { status: ProductStatus.Published });
+            return true;
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   b6e3f7e3c: Don't replace a file if the new file is identical to the existing one in the DAM
+
+    This previously led to a bug where a file was deleted if it was replaced with the same file.
+
+-   3607c7c22: Extend the browser cache duration for public DAM assets from 1 day to 1 year to reduce the data load for returning users.
+-   2310f8553: Prevent socket exhaustion when streaming files and prevent the API from crashing due to stream errors in the `FileUploadsDownloadController`
+
+    We already added this fix to the DAM in the past.
+
+-   2af3d8187: Ignore UUID columns in `searchToMikroOrmQuery` when inferring fields from entity metadata
+-   34df51db0: Set cache-control headers for file uploads
+    -   @comet/blocks-api@7.24.0
+
+## 7.23.0
+
+### Minor Changes
+
+-   80d0c6293: Add new `getFileContent` method to the `FileUploadsService`
+
+    This method allows you to retrieve a file's content as a Buffer.
+    This is needed for cases like embedding images in a PDF or attaching files to emails.
+
+### Patch Changes
+
+-   2cdb87ad5: Add error and close handling for partial ranges in file stream
+-   aac00efa8: Limit image title to 150 characters in `AzureOpenAiContentGenerationService`
+-   Updated dependencies [201198da3]
+    -   @comet/blocks-api@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.22.0
+
+## 7.21.1
+
+### Patch Changes
+
+-   @comet/blocks-api@7.21.1
+
+## 7.21.0
+
+### Patch Changes
+
+-   06920eb59: Fix: Change GraphQL Type of numberOfDescendants from Float to Int
+    -   @comet/blocks-api@7.21.0
+
+## 7.20.0
+
+### Minor Changes
+
+-   ea26f5d89: Add a nullable column `activatedAt` to `Redirects` table to display the latest activation date of a redirect
+
+### Patch Changes
+
+-   557e311ea: AccessLog: Remove some DAM URLs from log
+
+    Hashed URLs and preview URLs are not useful in the logs, so we remove them.
+
+-   21f95adfe: DAM: Fix headers
+
+    While we fixed a few issues with cache control headers in https://github.com/vivid-planet/comet/pull/2653, there are still a few issues which need to be addressed. The following changes are part of a series of changes which will address the issues:
+
+    -   Only store the `content-type` header
+    -   Prevent imgproxy headers from being passed through to the client
+    -   Remove redundantly stored `content-type` for Azure storage accounts and S3 buckets
+
+-   f3b5b57b7: DAM: Set `cache-control: no-store` for folder download
+
+    Explicitly set `cache-control: no-store` for folder download to prevent caching of the response. Normally this should not be cached by any CDN, because the Request contains a cookie, but it is better to be explicit about it.
+
+    -   @comet/blocks-api@7.20.0
+
+## 7.19.0
+
+### Minor Changes
+
+-   91cb37bb9: Add `mimetype` to `DamFileDownloadLinkBlock`
+
+### Patch Changes
+
+-   eceaab1a0: Make `import-redirects` console script consider scope when loading the target `PageTreeNode` for a redirect
+
+    Previously, the scope wasn't considered when loading the node.
+    This resulted in redirects that targeted a node in a different scope -> these redirects didn't work.
+
+    -   @comet/blocks-api@7.19.0
+
+## 7.18.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.18.0
+
+## 7.17.0
+
+### Minor Changes
+
+-   a1bf43670: Add support for searching/filtering redirects by target
+
+    Add a custom target URL service to resolve the URLs of custom redirect targets:
+
+    ```ts
+    @Injectable({ scope: Scope.REQUEST })
+    export class MyRedirectTargetUrlService implements RedirectTargetUrlServiceInterface {
+        constructor() {}
+
+        async resolveTargetUrl(target: ExtractBlockData<RedirectsLinkBlock>["attachedBlocks"][number]): Promise<string | undefined> {
+            // Your custom logic here
+        }
+    }
+    ```
+
+    ```diff
+    RedirectsModule.register({
+        imports: [MikroOrmModule.forFeature([News]), PredefinedPagesModule],
+        customTargets: { news: NewsLinkBlock },
+        Scope: RedirectScope,
+    +   TargetUrlService: MyRedirectTargetUrlService,
+    }),
+    ```
+
+-   e1392ae6a: Add `isAnyOf` filter to `StringFilter`, `NumberFilter`, `OneToManyFilter`, and `ManyToManyFilter`
+
+### Patch Changes
+
+-   @comet/blocks-api@7.17.0
+
+## 7.16.0
+
+### Minor Changes
+
+-   4137cdb03: File Uploads: Add option to disable the GraphQL field resolvers
+
+    Use this when using file uploads without GraphQL.
+
+    ```ts
+    FileUploadsModule.register({
+        /* ... */
+        download: {
+            /* ... */
+            createFieldResolvers: false,
+        },
+    });
+    ```
+
+-   a2dfcc1ad: Export `UserPermissionsService` and `CurrentUserPermission`
+
+    This allows the usage of `getPermissionsAndContentScopes` if projects want to get all rule-based and admin-based permissions for specific users.
+
+### Patch Changes
+
+-   @comet/blocks-api@7.16.0
+
+## 7.15.0
+
+### Patch Changes
+
+-   83b8111d6: Allow `use` tag in SVG again
+
+    `use` can be used to define paths once in a SVG and then integrating them multiple times via anchor links: `<use xlink:href="#path-id" />`. This should not be prohibited.
+
+    It's still not possible to use `use` to reference external files, since we still prohibit `href` and `xlink:href` attributes starting with `http://`, `https://` and `javascript:`.
+
+-   e6f9641db: Add fallback values for users created via ID token
+    -   @comet/blocks-api@7.15.0
+
+## 7.14.0
+
+### Minor Changes
+
+-   99ff0357b: Pass available permissions to `AccessControlService.getPermissionsForUser`
+-   a84d88cf9: Ignore filters in `@AffectedEntity` check
+
+    When using the `@AffectedEntity` decorator we possibly also want to check entities which are filtered by default. Since we don't know how the entity is handled in the resolver we ignore the filters completely.
+
+-   3c47c089e: Allow passing a language to `generateAltText` and `generateImageTitle`
+-   bb041f7a7: Add content generation capabilities to `createSeoBlock`
+
+    The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
+
+    -   HTML title
+    -   Meta description
+    -   Open Graph title
+    -   Open Graph description
+
+    See the [docs](https://docs.comet-dxp.com/docs/features-modules/content-generation/) for instructions on enabling this feature.
+
+-   7f72e82fc: Add `extractTextContents` method to blocks
+
+    `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
+
+    The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
+
+    -   if the state is a string: the string itself
+    -   otherwise: an empty array
+
+### Patch Changes
+
+-   0233d486b: Export `FileUploadInput`
+-   7e7a4aae1: Fix `title` field not added to types in `createLinkBlock`
+-   Updated dependencies [7e7a4aae1]
+    -   @comet/blocks-api@7.14.0
+
 ## 7.13.0
 
 ### Patch Changes
@@ -1827,7 +2115,7 @@
 
     -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
     -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
-    -   Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when initializing the `DamModule`
 
     In the Admin:
 

@@ -21,9 +21,11 @@ import {
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./src/content-generation/generate-image-title.resolver";
+import { GenerateSeoTagsResolver } from "./src/content-generation/generate-seo-tags.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { createDamMediaAlternativeResolver } from "./src/dam/files/dam-media-alternatives/dam-media-alternative.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
@@ -113,8 +115,10 @@ async function generateSchema(): Promise<void> {
         AzureAiTranslatorResolver,
         GenerateAltTextResolver,
         GenerateImageTitleResolver,
+        GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+        createDamMediaAlternativeResolver({ File }),
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

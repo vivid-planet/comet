@@ -39,7 +39,10 @@ export class ScaledImagesCacheService {
         }
 
         const path = [createHashedPath(fileIdentifier), hasha(scaleSettingsCacheKey, { algorithm: "md5" })].join(sep);
-        await this.blobStorageBackendService.createFile(this.config.cacheDirectory, path, file, { size: metaData.size, headers: metaData.headers });
+        await this.blobStorageBackendService.createFile(this.config.cacheDirectory, path, file, {
+            size: metaData.size,
+            contentType: metaData.contentType,
+        });
     }
 
     async delete(fileIdentifier: string, scaleSettingsCacheKey?: string): Promise<void> {

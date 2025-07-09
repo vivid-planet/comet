@@ -66,6 +66,18 @@ type PaginatedDependencies {
   totalCount: Int!
 }
 
+type DamMediaAlternative {
+  id: ID!
+  language: String!
+  type: DamMediaAlternativeType!
+  for: DamFile!
+  alternative: DamFile!
+}
+
+enum DamMediaAlternativeType {
+  captions
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -151,6 +163,13 @@ enum KubernetesJobStatus {
   failed
 }
 
+type SeoTags {
+  htmlTitle: String!
+  metaDescription: String!
+  openGraphTitle: String!
+  openGraphDescription: String!
+}
+
 type KubernetesCronJob {
   id: ID!
   name: String!
@@ -175,6 +194,11 @@ type KubernetesJob {
   status: KubernetesJobStatus!
   startTime: DateTime
   completionTime: DateTime
+}
+
+type PaginatedDamMediaAlternatives {
+  nodes: [DamMediaAlternative!]!
+  totalCount: Int!
 }
 
 type FilenameResponse {
@@ -212,7 +236,7 @@ type PageTreeNode {
   updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
+  numberOfDescendants: Int!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
@@ -251,6 +275,7 @@ type Redirect {
   target: JSONObject!
   comment: String
   active: Boolean!
+  activatedAt: DateTime
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -315,6 +340,8 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  alternativesForThisFile: [DamMediaAlternative!]!
+  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -385,6 +412,8 @@ type Query {
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+  damMediaAlternative(id: ID!): DamMediaAlternative!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
 }
 
 input RedirectScopeInput {
@@ -399,6 +428,7 @@ enum SortDirection {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -412,6 +442,7 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
 }
 
 input BooleanFilter {
@@ -518,6 +549,19 @@ input AzureAiTranslationInput {
   targetLanguage: String!
 }
 
+input DamMediaAlternativeSort {
+  field: DamMediaAlternativeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum DamMediaAlternativeSortField {
+  id
+  language
+  type
+  for
+  alternative
+}
+
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
@@ -552,8 +596,12 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
-  generateAltText(fileId: String!): String!
-  generateImageTitle(fileId: String!): String!
+  generateAltText(fileId: String!, language: String): String!
+  generateImageTitle(fileId: String!, language: String): String!
+  generateSeoTags(content: String!, language: String!): SeoTags!
+  createDamMediaAlternative(for: ID!, alternative: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
+  updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
+  deleteDamMediaAlternative(id: ID!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -661,4 +709,16 @@ input UserPermissionOverrideContentScopesInput {
 
 input UserContentScopesInput {
   contentScopes: [JSONObject!]! = []
+}
+
+input DamMediaAlternativeInput {
+  language: String!
+  type: DamMediaAlternativeType!
+}
+
+input DamMediaAlternativeUpdateInput {
+  language: String
+  type: DamMediaAlternativeType
+  for: ID
+  alternative: ID
 }

@@ -1,4 +1,4 @@
-import { gql } from "@comet/cms-site";
+import { gql } from "@comet/site-nextjs";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
 import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
 import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
@@ -96,7 +96,7 @@ export function withPredefinedPagesMiddleware(middleware: CustomMiddleware) {
         const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
 
         if (predefinedPageRewrite) {
-            return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+            request.nextUrl.pathname = predefinedPageRewrite; //don't use NextResponse.rewrite, as domainRewrite middleware does this (and uses the modified pathname)
         }
 
         return middleware(request);

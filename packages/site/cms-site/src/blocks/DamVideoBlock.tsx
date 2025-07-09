@@ -75,6 +75,9 @@ export const DamVideoBlock = withPreview(
                         $aspectRatio={aspectRatio.replace("x", " / ")}
                         $fill={fill}
                     >
+                        {damFile.captions.map((caption) => {
+                            return <track key={caption.id} src={caption.fileUrl} kind="captions" srcLang={caption.language} />;
+                        })}
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
                     </Video>
                 )}

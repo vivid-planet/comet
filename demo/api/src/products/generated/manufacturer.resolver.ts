@@ -15,8 +15,8 @@ import { PaginatedManufacturers } from "./dto/paginated-manufacturers";
 @RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(Manufacturer) private readonly repository: EntityRepository<Manufacturer>,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(Manufacturer) protected readonly repository: EntityRepository<Manufacturer>,
     ) {}
 
     @Query(() => Manufacturer)

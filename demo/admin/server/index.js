@@ -6,6 +6,7 @@ const fs = require("fs");
 
 const app = express();
 const port = process.env.APP_PORT ?? 3000;
+const host = process.env.SERVER_HOST ?? "localhost";
 
 let indexFile = fs.readFileSync("./build/index.html", "utf8");
 
@@ -37,6 +38,7 @@ app.use(
 );
 
 app.get("/status/health", (req, res) => {
+    res.setHeader("cache-control", "no-store");
     res.send("OK!");
 });
 
@@ -64,6 +66,6 @@ app.get("*", (req, res) => {
     res.send(indexFile);
 });
 
-app.listen(port, () => {
-    console.log(`Admin app listening at http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Admin app listening at http://${host}:${port}`);
 });

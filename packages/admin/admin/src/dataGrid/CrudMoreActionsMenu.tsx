@@ -134,7 +134,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
     return (
         <CrudMoreActionsMenuContext.Provider value={{ closeMenu: handleClose }}>
-            <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
+            <MoreActionsButton variant="textDark" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick} responsive>
                 <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>

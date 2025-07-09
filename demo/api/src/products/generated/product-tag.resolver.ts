@@ -18,10 +18,10 @@ import { ProductTagsArgs } from "./dto/product-tags.args";
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductTagResolver {
     constructor(
-        private readonly entityManager: EntityManager,
-        @InjectRepository(ProductTag) private readonly repository: EntityRepository<ProductTag>,
-        @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
-        @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
+        protected readonly entityManager: EntityManager,
+        @InjectRepository(ProductTag) protected readonly repository: EntityRepository<ProductTag>,
+        @InjectRepository(ProductToTag) protected readonly productToTagRepository: EntityRepository<ProductToTag>,
+        @InjectRepository(Product) protected readonly productRepository: EntityRepository<Product>,
     ) {}
 
     @Query(() => ProductTag)

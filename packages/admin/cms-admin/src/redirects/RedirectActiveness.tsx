@@ -1,6 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
+import { Button } from "@comet/admin";
 import { Invisible, Visible } from "@comet/admin-icons";
-import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
 import { MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -16,6 +17,7 @@ export const updateRedirectActivenessMutation = gql`
         updateRedirectActiveness(id: $id, input: $input) {
             id
             active
+            activatedAt
         }
     }
 `;
@@ -56,6 +58,7 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
                     __typename: "Redirect",
                     id: redirect.id,
                     active: active,
+                    activatedAt: active ? new Date() : null,
                 },
             },
         });
@@ -66,9 +69,9 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
     return (
         <>
             <Button
+                variant="textDark"
                 onClick={handleMenuOpen}
                 startIcon={redirect.active ? <Visible style={{ color: green[500] }} /> : <Invisible color="disabled" />}
-                color="info"
             >
                 <FormattedMessage
                     id="comet.pages.redirects.redirect.activeness"
