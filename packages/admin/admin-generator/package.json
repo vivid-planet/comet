@@ -46,7 +46,7 @@
         "@mui/material": "^7.2.0",
         "@mui/x-data-grid": "^7.29.8",
         "@types/jest": "^29.5.14",
-        "@types/node": "^22.16.0",
+        "@types/node": "^22.16.2",
         "@types/object-path": "^0.11.4",
         "@types/pluralize": "^0.0.33",
         "@types/react": "^18.3.23",
