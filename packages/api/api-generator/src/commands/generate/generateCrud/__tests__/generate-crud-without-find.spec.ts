@@ -15,7 +15,7 @@ export class TestEntityScope {
 @Entity()
 export class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    @CrudField({ filter: false })
+    @CrudField({ filter: false, search: false })
     id: string = uuid();
 
     @Embedded(() => TestEntityScope)
