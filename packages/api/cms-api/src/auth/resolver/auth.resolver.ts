@@ -11,7 +11,7 @@ import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { AccessControlServiceInterface, isPermission } from "../../user-permissions/user-permissions.types";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
 interface AuthResolverConfig {
@@ -51,7 +51,9 @@ export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
 
         @ResolveField(() => [String])
         permissionsForScope(@Parent() user: CurrentUser, @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope): string[] {
-            return user.permissions.map((p) => p.permission).filter((permission) => this.accessControlService.isAllowed(user, permission, scope));
+            return user.permissions
+                .map((p) => p.permission)
+                .filter((permission) => isPermission(permission) && this.accessControlService.isAllowed(user, permission, scope));
         }
 
         @ResolveField(() => [ContentScopeWithLabel])

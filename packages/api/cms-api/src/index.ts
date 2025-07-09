@@ -126,6 +126,7 @@ export {
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
+export { CometPermission } from "./common/enum/comet-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
 export { ExceptionFilter } from "./common/errors/exception.filter";
@@ -262,6 +263,8 @@ export { UserPermissionsPublicService as UserPermissionsService } from "./user-p
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
+    Permission,
+    PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
     UserPermissionsUserServiceInterface,
