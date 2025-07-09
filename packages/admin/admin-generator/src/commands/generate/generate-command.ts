@@ -152,9 +152,9 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
           renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
           queryFields?: UsableFields<T, true>[];
           /**
-           * The field to use as title for the default renderCell implementation.
+           * The field to use as label for the default renderCell implementation.
            */
-          titleField?: UsableFields<T, true>;
+          labelField?: UsableFields<T, true>;
       }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 

@@ -131,7 +131,7 @@ export default defineConfig<GQLProduct>({
             type: "manyToMany",
             name: "tags",
             headerName: "Tags",
-            titleField: "title",
+            labelField: "title",
         },
         {
             type: "actions",

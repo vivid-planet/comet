@@ -30,8 +30,8 @@ export function generateGqlFieldList({
         if (field.type !== "actions") {
             let hasCustomFields = false;
 
-            if ("titleField" in field && field.titleField) {
-                objectPath.set(acc, `${field.name}.${field.titleField}`, true);
+            if ("labelField" in field && field.labelField) {
+                objectPath.set(acc, `${field.name}.${field.labelField}`, true);
                 hasCustomFields = true;
             }
 
