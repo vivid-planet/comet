@@ -2,7 +2,7 @@ import { type DynamicModule, Global, Module } from "@nestjs/common";
 import { createTransport } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
-import { MAILER_MODULE_OPTIONS, MAILER_MODULE_TRANSPORT } from "./mailer.constants";
+import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
 import { MailerService } from "./mailer.service";
 import { SendTestMailCommand } from "./send-test-mail.command";
 
@@ -21,7 +21,7 @@ export class MailerModule {
         return {
             module: MailerModule,
             providers: [
-                { provide: MAILER_MODULE_OPTIONS, useValue: config },
+                { provide: MAILER_SERVICE_CONFIG, useValue: config },
                 { provide: MAILER_MODULE_TRANSPORT, useValue: mailerTransport },
                 MailerService,
                 SendTestMailCommand,

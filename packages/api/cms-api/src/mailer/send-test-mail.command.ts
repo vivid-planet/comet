@@ -2,7 +2,7 @@ import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { Inject, Logger } from "@nestjs/common";
 import { Command, CommandRunner, Option } from "nest-commander";
 
-import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
+import { MAILER_SERVICE_CONFIG } from "./mailer.constants";
 import { MailerModuleConfig } from "./mailer.module";
 import { MailerService } from "./mailer.service";
 
@@ -15,7 +15,7 @@ export class SendTestMailCommand extends CommandRunner {
 
     constructor(
         private readonly orm: MikroORM,
-        @Inject(MAILER_MODULE_OPTIONS) private readonly mailerConfig: MailerModuleConfig,
+        @Inject(MAILER_SERVICE_CONFIG) private readonly mailerConfig: MailerModuleConfig,
         private readonly mailerService: MailerService,
     ) {
         super();
