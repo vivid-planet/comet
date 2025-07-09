@@ -131,8 +131,7 @@ export default defineConfig<GQLProduct>({
             type: "manyToMany",
             name: "tags",
             headerName: "Tags",
-            queryFields: ["tags.title"],
-            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+            titleField: "title",
         },
         {
             type: "actions",

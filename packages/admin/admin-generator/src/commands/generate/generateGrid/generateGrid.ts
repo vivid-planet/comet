@@ -8,7 +8,7 @@ import {
     type IntrospectionObjectType,
     type IntrospectionQuery,
 } from "graphql";
-import { plural } from "pluralize";
+import { plural, singular } from "pluralize";
 import { type ReactNode } from "react";
 
 import {
@@ -551,6 +551,14 @@ export function generateGrid(
             } else {
                 throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
             }
+        }
+
+        if (column.type === "manyToMany" && !column.renderCell) {
+            if (!column.titleField) {
+                throw new Error(`titleField is required for manyToMany column '${name}' if no custom renderCell is provided`);
+            }
+
+            renderCell = `({ row }) => <>{row.${column.name}.map((${singular(column.name)}) => ${singular(column.name)}.${column.titleField}).join(", ")}</>`;
         }
 
         //TODO support n:1 relation with singleSelect

@@ -28,11 +28,21 @@ export function generateGqlFieldList({
 }) {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
         if (field.type !== "actions") {
+            let hasCustomFields = false;
+
+            if ("titleField" in field && field.titleField) {
+                objectPath.set(acc, `${field.name}.${field.titleField}`, true);
+                hasCustomFields = true;
+            }
+
             if ("queryFields" in field) {
-                field.queryFields?.map((queryField) => {
+                field.queryFields?.forEach((queryField) => {
                     objectPath.set(acc, queryField, true);
                 });
-            } else {
+                hasCustomFields = true;
+            }
+
+            if (!hasCustomFields) {
                 objectPath.set(acc, field.name, true);
             }
         }
