@@ -1,4 +1,5 @@
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import { Document, LinkExternal } from "@comet/admin-icons";
 import { BlockInterface, createOneOfBlock } from "@comet/blocks-admin";
 import { ComponentType } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -17,13 +18,19 @@ interface RedirectsPageProps {
 
 const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
     ...InternalLinkBlock,
-    previewContent: (state) => (state.targetPage ? [{ type: "text", content: state.targetPage.path }] : []),
+    previewContent: (state) => [
+        ...(state.targetPage?.path ? [{ type: "text" as const, content: state.targetPage.path }] : []),
+        { type: "icon", content: <Document /> },
+    ],
     dynamicDisplayName: (state) => state.targetPage?.name ?? InternalLinkBlock.displayName,
 };
 
 const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     ...ExternalLinkBlock,
-    previewContent: (state) => (state.targetUrl ? [{ type: "text", content: ExternalLinkBlock.displayName }] : []),
+    previewContent: (state) => [
+        ...(state.targetUrl ? [{ type: "text" as const, content: ExternalLinkBlock.displayName }] : []),
+        { type: "icon", content: <LinkExternal /> },
+    ],
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 
