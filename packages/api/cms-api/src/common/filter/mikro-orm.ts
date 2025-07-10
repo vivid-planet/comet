@@ -1,6 +1,6 @@
-import { type EntityMetadata, type FilterQuery, type ObjectQuery } from "@mikro-orm/postgresql";
+import { type EntityMetadata, type FilterQuery, type ObjectQuery, raw } from "@mikro-orm/postgresql";
 
-import { getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
+import { type CrudSearchField, getCrudSearchFieldsFromMetadata } from "../helper/crud-generator.helper";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
@@ -159,7 +159,7 @@ export function filterToMikroOrmQuery(
             if (!prop.targetMeta) {
                 throw new Error("targetMeta is not defined");
             }
-            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
+            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and?.map((item) => ({ [propertyName]: item }));
         }
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
@@ -183,7 +183,7 @@ export function filterToMikroOrmQuery(
             if (!prop.targetMeta) {
                 throw new Error("targetMeta is not defined");
             }
-            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
+            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and?.map((item) => ({ [propertyName]: item }));
         }
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
@@ -308,8 +308,16 @@ export const splitSearchString = (search: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[] | EntityMetadata): ObjectQuery<any> {
-    const fields = Array.isArray(fieldsOrMetadata) ? fieldsOrMetadata : getCrudSearchFieldsFromMetadata(fieldsOrMetadata);
+export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: Array<string | CrudSearchField> | EntityMetadata): ObjectQuery<any> {
+    const fields = Array.isArray(fieldsOrMetadata)
+        ? fieldsOrMetadata.map((field) => {
+              if (typeof field === "string") {
+                  return { name: field, needsCastToText: false };
+              }
+
+              return field;
+          })
+        : getCrudSearchFieldsFromMetadata(fieldsOrMetadata);
     const quotedSearchParts = splitSearchString(search);
 
     const ands = [];
@@ -320,10 +328,19 @@ export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[]
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const or: any = {};
             let nestedFilter = or;
-            for (const fieldPart of field.split(".")) {
+            const fieldParts = field.name.split(".");
+            const column = fieldParts.pop();
+            if (column === undefined) {
+                continue;
+            }
+            for (const fieldPart of fieldParts) {
                 nestedFilter = nestedFilter[fieldPart] = {};
             }
-            nestedFilter.$ilike = quotedSearch;
+            if (field.needsCastToText) {
+                nestedFilter[raw((alias) => `${alias}."${column}"::text`)] = { $ilike: quotedSearch };
+            } else {
+                nestedFilter[column] = { $ilike: quotedSearch };
+            }
             ors.push(or);
         }
         ands.push({ $or: ors });

@@ -70,6 +70,10 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 return { authenticationError: "No sub found in JWT. Please implement `convertJwtToUser`" };
             }
 
+            if (typeof jwt.name === "string" && typeof jwt.email === "string") {
+                return { user: { id: jwt.sub, name: jwt.name, email: jwt.email } };
+            }
+
             return { userId: jwt.sub };
         }
 

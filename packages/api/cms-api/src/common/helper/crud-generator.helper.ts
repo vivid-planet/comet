@@ -9,14 +9,28 @@ export function hasCrudFieldFeature(metadataClass: any, propName: string, option
     return !!(crudField[option] ?? defaultValue);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
+export type CrudSearchField = {
+    /**
+     * The name of the field, which can be a simple property name or a nested property in the format "relation.property".
+     *
+     * @example
+     * "title" for a simple property,
+     * "author.name" for a nested property in a relation.
+     */
+    name: string;
+    /**
+     * Indicates whether the field needs to be cast to text for the search query.
+     */
+    needsCastToText: boolean;
+};
+
+export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata): CrudSearchField[] {
     return metadata.props
         .filter((prop) => prop.name != "status")
         .filter((prop) => hasCrudFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
-            if ((prop.type === "string" || prop.type === "text") && !prop.columnTypes.includes("uuid")) {
-                acc.push(prop.name);
+            if (prop.type === "string" || prop.type === "text" || prop.type === "uuid") {
+                acc.push({ name: prop.name, needsCastToText: prop.type === "uuid" || prop.columnTypes.includes("uuid") });
             } else if (prop.kind == "m:1") {
                 if (!prop.targetMeta) {
                     throw new Error(`reference ${prop.name} has no targetMeta`);
@@ -27,11 +41,14 @@ export function getCrudSearchFieldsFromMetadata(metadata: EntityMetadata<any>) {
                         (innerProp) => hasCrudFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"),
                     )
                     .forEach((innerProp) => {
-                        if ((innerProp.type === "string" || innerProp.type === "text") && !innerProp.columnTypes.includes("uuid")) {
-                            acc.push(`${prop.name}.${innerProp.name}`);
+                        if (innerProp.type === "string" || innerProp.type === "text" || innerProp.type === "uuid") {
+                            acc.push({
+                                name: `${prop.name}.${innerProp.name}`,
+                                needsCastToText: innerProp.type === "uuid" || innerProp.columnTypes.includes("uuid"),
+                            });
                         }
                     });
             }
             return acc;
-        }, [] as string[]);
+        }, [] as CrudSearchField[]);
 }
