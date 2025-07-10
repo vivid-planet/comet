@@ -1249,6 +1249,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         delete: generatorOptionsParam.delete ?? true,
         list: generatorOptionsParam.list ?? true,
         single: generatorOptionsParam.single ?? true,
+        input: generatorOptionsParam.input ?? false,
     };
     if (!generatorOptions.create && !generatorOptions.update && !generatorOptions.delete && !generatorOptions.list && !generatorOptions.single) {
         throw new Error("At least one of create, update, delete, list or single must be true");
@@ -1330,5 +1331,5 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const crudInput = await generateCrudInput(generatorOptions, metadata);
     const crudResolver = await generateCrudResolver();
 
-    return generatorOptions.create || generatorOptions.update ? [...crudInput, ...crudResolver] : [...crudResolver];
+    return generatorOptions.create || generatorOptions.update || generatorOptions.input ? [...crudInput, ...crudResolver] : [...crudResolver];
 }
