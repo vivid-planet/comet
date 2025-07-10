@@ -142,3 +142,19 @@ export const dataGridManyToManyColumn: GridColTypeDef = {
         },
     ],
 };
+
+/*
+ * Data Grid column definition for one-to-many columns.
+ * Sets `filterOperators` to match the `OneToManyFilter` GraphQL input type.
+ */
+export const dataGridOneToManyColumn: GridColTypeDef = {
+    filterOperators: [
+        {
+            value: "search",
+            getApplyFilterFn: () => {
+                throw new Error("not implemented, we filter server side");
+            },
+            InputComponent: GridFilterInputValue,
+        },
+    ],
+};

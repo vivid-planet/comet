@@ -185,6 +185,7 @@ export function generateGrid(
         { name: "dataGridDateColumn", importPath: "@comet/admin" },
         { name: "dataGridIdColumn", importPath: "@comet/admin" },
         { name: "dataGridManyToManyColumn", importPath: "@comet/admin" },
+        { name: "dataGridOneToManyColumn", importPath: "@comet/admin" },
         { name: "renderStaticSelectCell", importPath: "@comet/admin" },
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
@@ -515,6 +516,8 @@ export function generateGrid(
             gridColumnType = "...dataGridIdColumn,";
         } else if (type == "manyToMany") {
             gridColumnType = "...dataGridManyToManyColumn,";
+        } else if (type == "oneToMany") {
+            gridColumnType = "...dataGridOneToManyColumn,";
         }
 
         if (
@@ -525,7 +528,8 @@ export function generateGrid(
                 column.type == "dateTime" ||
                 column.type == "virtual" ||
                 column.type == "id" ||
-                column.type == "manyToMany") &&
+                column.type == "manyToMany" ||
+                column.type == "oneToMany") &&
             column.renderCell
         ) {
             if (isGeneratorConfigCode(column.renderCell)) {
@@ -536,9 +540,9 @@ export function generateGrid(
             }
         }
 
-        if (column.type === "manyToMany" && !column.renderCell) {
+        if ((column.type === "manyToMany" || column.type === "oneToMany") && !column.renderCell) {
             if (!column.labelField) {
-                throw new Error(`labelField is required for manyToMany column '${name}' if no custom renderCell is provided`);
+                throw new Error(`labelField is required for ${column.type} column '${name}' if no custom renderCell is provided`);
             }
 
             renderCell = `({ row }) => <>{row.${column.name}.map((${singular(column.name)}) => ${singular(column.name)}.${column.labelField}).join(", ")}</>`;
