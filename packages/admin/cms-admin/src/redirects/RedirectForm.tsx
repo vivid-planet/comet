@@ -34,7 +34,6 @@ import {
 } from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
 
-export { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 export { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
 export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
 
