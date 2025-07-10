@@ -49,7 +49,13 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     renderSelectedOption,
 }: Props<Value>) {
     const [storedScope, setStoredScope] = useStoredState<Value | undefined>(localStorageKey, undefined);
-    const value = storedScope ? storedScope : propValue;
+
+    const isStoredScopeValid = storedScope && options.some((option) => valueMatchesOption(storedScope, option));
+    const value = isStoredScopeValid ? storedScope : propValue;
+
+    if (storedScope && !isStoredScopeValid) {
+        setStoredScope(undefined);
+    }
 
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
