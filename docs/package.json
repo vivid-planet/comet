@@ -80,7 +80,7 @@
         "prettier": "^3.6.2",
         "sucrase": "^3.35.0",
         "typescript": "5.7.3",
-        "webpack": "^5.99.9"
+        "webpack": "^5.100.0"
     },
     "engines": {
         "node": ">=18.0"
