@@ -17,7 +17,7 @@ import {
 } from "@comet/admin";
 import { DeleteDialog } from "@comet/admin/lib/common/DeleteDialog";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
+import { DialogContent, IconButton } from "@mui/material";
 import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
 import { type ReactElement, useState } from "react";
@@ -205,14 +205,16 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
             />
             <EditDialog>
                 {selection.id && selection.mode ? (
-                    <MediaAlternativeForm
-                        mode={selection.mode}
-                        id={selection.mode === "edit" ? selection.id : undefined}
-                        fileId={file.id}
-                        selectionApi={selectionApi}
-                        type={type}
-                        direction={direction}
-                    />
+                    <DialogContent>
+                        <MediaAlternativeForm
+                            mode={selection.mode}
+                            id={selection.mode === "edit" ? selection.id : undefined}
+                            fileId={file.id}
+                            selectionApi={selectionApi}
+                            type={type}
+                            direction={direction}
+                        />
+                    </DialogContent>
                 ) : null}
             </EditDialog>
             <DeleteDialog
