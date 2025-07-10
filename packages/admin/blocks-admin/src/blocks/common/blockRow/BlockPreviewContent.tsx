@@ -32,7 +32,7 @@ export function BlockPreviewContent(props: BlockPreviewContentProps): JSX.Elemen
         })
         .slice(0, TEXTS_LIMIT);
     const images = content.filter(isPreviewContentImageRule);
-    const icon = content.filter(isPreviewContentIconRule)[0].content;
+    const icon = content.filter(isPreviewContentIconRule)[0]?.content;
 
     return (
         <sc.Root>
