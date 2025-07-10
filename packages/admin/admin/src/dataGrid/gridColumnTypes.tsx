@@ -145,3 +145,22 @@ export function dataGridManyToManyColumn(intl: IntlShape): GridColTypeDef {
         ],
     };
 }
+
+/*
+ * Data Grid column definition for one-to-many columns.
+ * Sets `filterOperators` to match the `OneToManyFilter` GraphQL input type.
+ */
+export function dataGridOneToManyColumn(intl: IntlShape): GridColTypeDef {
+    return {
+        filterOperators: [
+            {
+                value: "search",
+                label: intl.formatMessage({ id: "comet.dataGrid.filterOperators.search", defaultMessage: "search" }),
+                getApplyFilterFn: () => {
+                    throw new Error("not implemented, we filter server side");
+                },
+                InputComponent: GridFilterInputValue,
+            },
+        ],
+    };
+}
