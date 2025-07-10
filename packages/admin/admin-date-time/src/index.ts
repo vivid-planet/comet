@@ -9,6 +9,36 @@ export { DateTimeField, DateTimeFieldProps } from "./dateTimePicker/DateTimeFiel
 export { DateTimePickerClassKey } from "./dateTimePicker/DateTimePicker";
 export { DateTimePicker, DateTimePickerProps } from "./dateTimePicker/DateTimePicker";
 export { FinalFormDateTimePicker, FinalFormDateTimePickerProps } from "./dateTimePicker/FinalFormDateTimePicker";
+export {
+    /**
+     * @deprecated Never use this, it's only a temporary export for debugging.
+     */
+    FinalFormLegacyDatePicker,
+    /**
+     * @deprecated Never use this, it's only a temporary export for debugging.
+     */
+    FinalFormLegacyDatePickerProps,
+} from "./legacyDatePicker/FinalFormLegacyDatePicker";
+export {
+    /**
+     * @deprecated Never use this, it's only a temporary export for debugging.
+     */
+    LegacyDateField,
+    /**
+     * @deprecated Never use this, it's only a temporary export for debugging.
+     */
+    LegacyDateFieldProps,
+} from "./legacyDatePicker/LegacyDateField";
+export {
+    /**
+     * @deprecated Never use this, it's only a temporary export for debugging.
+     */
+    LegacyDatePicker,
+    /**
+     * @deprecated Never use this, it's only a temporary export for debugging.
+     */
+    LegacyDatePickerProps,
+} from "./legacyDatePicker/LegacyDatePicker";
 export { FinalFormTimePickerProps } from "./timePicker/FinalFormTimePicker";
 export { FinalFormTimePicker } from "./timePicker/FinalFormTimePicker";
 export { TimeField, TimeFieldProps } from "./timePicker/TimeField";
