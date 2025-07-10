@@ -4,7 +4,6 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
-    filterByFragment,
     type GridColDef,
     StackLink,
     useBufferedRowCount,
@@ -17,8 +16,6 @@ import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } f
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
-    type GQLCreateProductCategoryMutation,
-    type GQLCreateProductCategoryMutationVariables,
     type GQLDeleteProductCategoryMutation,
     type GQLDeleteProductCategoryMutationVariables,
     type GQLProductCategoriesGridFragment,
@@ -62,14 +59,6 @@ const updateProductCategoryPositionMutation = gql`
 const deleteProductCategoryMutation = gql`
     mutation DeleteProductCategory($id: ID!) {
         deleteProductCategory(id: $id)
-    }
-`;
-
-const createProductCategoryMutation = gql`
-    mutation CreateProductCategory($input: ProductCategoryInput!) {
-        createProductCategory(input: $input) {
-            id
-        }
     }
 `;
 
@@ -142,17 +131,6 @@ export function ProductCategoriesGrid() {
                             <EditIcon />
                         </IconButton>
                         <CrudContextMenu
-                            copyData={() => {
-                                // Don't copy id, because we want to create a new entity with this data
-                                const { id, ...filteredData } = filterByFragment(productCategoriesFragment, params.row);
-                                return filteredData;
-                            }}
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
-                                    mutation: createProductCategoryMutation,
-                                    variables: { input },
-                                });
-                            }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
                                     mutation: deleteProductCategoryMutation,
