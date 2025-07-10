@@ -1,6 +1,6 @@
-import { css, List as MuiList, ListItem as MuiListItem, ListItemText, Switch as MuiSwitch } from "@mui/material";
+import { css, Divider as MuiDivider, List as MuiList, ListSubheader } from "@mui/material";
 
-import { createComponentSlot } from "../helpers/createComponentSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type DataGridColumnsManagementClassKey } from "./DataGridColumnsManagement";
 
 export const Root = createComponentSlot("div")<DataGridColumnsManagementClassKey>({
@@ -11,27 +11,25 @@ export const Root = createComponentSlot("div")<DataGridColumnsManagementClassKey
 export const List = createComponentSlot(MuiList)<DataGridColumnsManagementClassKey>({
     componentName: "DataGridColumnsManagement",
     slotName: "list",
-})();
-
-export const ListItem = createComponentSlot(MuiListItem)<DataGridColumnsManagementClassKey>({
-    componentName: "DataGridColumnsManagement",
-    slotName: "listItem",
 })(css`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0;
+    width: 100%;
 `);
 
-export const Switch = createComponentSlot(MuiSwitch)<DataGridColumnsManagementClassKey>({
+export const ListHeader = createComponentSlot(ListSubheader)<DataGridColumnsManagementClassKey>({
     componentName: "DataGridColumnsManagement",
-    slotName: "switch",
-})();
+    slotName: "listHeader",
+})(
+    ({ theme }) => css`
+        padding-left: ${theme.spacing(2)};
+    `,
+);
 
-export const ListItemTitle = createComponentSlot(ListItemText)<DataGridColumnsManagementClassKey>({
+export const Divider = createComponentSlot(MuiDivider)<DataGridColumnsManagementClassKey>({
     componentName: "DataGridColumnsManagement",
-    slotName: "listItemTitle",
-})();
+    slotName: "divider",
+})(css`
+    width: 100%;
+`);
 
 export const Body = createComponentSlot("div")<DataGridColumnsManagementClassKey>({
     componentName: "DataGridColumnsManagement",
