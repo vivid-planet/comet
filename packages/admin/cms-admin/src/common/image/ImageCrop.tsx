@@ -35,7 +35,13 @@ export const ImageCrop = (props: ImageCropProps) => {
                         crop={disabled ? {} : { ...value, unit: "%" }}
                         ruleOfThirds={true}
                         disabled={disabled}
-                        imageStyle={{ width: "auto", height: "auto" }}
+                        imageStyle={{
+                            maxHeight: "inherit",
+                            width: "auto",
+                            // maxWidth: "100%",
+                            // maxHeight: "100%",
+                            // objectFit: "contain",
+                        }}
                         onChange={(newCrop, percentCrop) => {
                             // Prevent reset at first rendering
                             if (percentCrop.width === 0 && percentCrop.height === 0 && percentCrop.x === 0 && percentCrop.y === 0) {

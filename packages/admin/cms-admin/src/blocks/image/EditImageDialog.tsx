@@ -64,8 +64,8 @@ interface Props {
 const DialogContent = styled(MuiDialogContent)`
     display: grid;
     grid-template-columns: auto 320px;
-    padding: 0;
-    padding-left: 40px;
+    overflow: hidden;
+    max-height: calc(100vh - 64px);
 `;
 
 export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props) {
@@ -157,7 +157,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                         </DialogTitle>
                         <DialogContent>
                             <ImageCrop src={image.url} imageStyle={imageStyle} disabled={values.useInheritedDamSettings} />
-                            <div>
+                            <Sidebar>
                                 {inheritedDamSettings !== undefined && (
                                     <>
                                         <Box padding={8} paddingTop={0}>
@@ -205,7 +205,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                 <Box padding={8}>
                                     <CropSettingsFields disabled={inheritedDamSettings === undefined ? false : values.useInheritedDamSettings} />
                                 </Box>
-                            </div>
+                            </Sidebar>
                         </DialogContent>
                         <DialogActions>
                             <CancelButton type="button" onClick={onClose} />
@@ -240,4 +240,9 @@ const DialogFormWrapper = styled("form")`
     grid-row-gap: 0px;
     max-height: 100%;
     overflow: hidden;
+`;
+
+const Sidebar = styled("div")`
+    overflow: auto;
+    padding: 32px;
 `;
