@@ -172,4 +172,80 @@ describe("GenerateCrud", () => {
             orm.close();
         });
     });
+
+    describe("input option", () => {
+        it("input should be generated if create is true", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithTextRuntimeType],
+                }),
+            );
+
+            const out = await generateCrud({ targetDirectory: __dirname, create: true }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+
+            expect(out.some((obj) => obj.type === "input")).toBeTruthy();
+
+            orm.close();
+        });
+
+        it("input should be generated if update is true", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithTextRuntimeType],
+                }),
+            );
+
+            const out = await generateCrud({ targetDirectory: __dirname, update: true }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+
+            expect(out.some((obj) => obj.type === "input")).toBeTruthy();
+
+            orm.close();
+        });
+
+        it("input should not be generated if update is false and create is false", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithTextRuntimeType],
+                }),
+            );
+
+            const out = await generateCrud(
+                { targetDirectory: __dirname, create: false, update: false },
+                orm.em.getMetadata().get("TestEntityWithTextRuntimeType"),
+            );
+
+            expect(out.some((obj) => obj.type === "input")).toBeFalsy();
+
+            orm.close();
+        });
+
+        it("input should be generated if update is false, create is false and input is true", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    connect: false,
+                    entities: [TestEntityWithTextRuntimeType],
+                }),
+            );
+
+            const out = await generateCrud(
+                { targetDirectory: __dirname, create: false, update: false, input: true },
+                orm.em.getMetadata().get("TestEntityWithTextRuntimeType"),
+            );
+
+            expect(out.some((obj) => obj.type === "input")).toBeTruthy();
+
+            orm.close();
+        });
+    });
 });
