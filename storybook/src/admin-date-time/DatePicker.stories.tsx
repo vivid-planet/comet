@@ -1,6 +1,6 @@
 import { FieldContainer } from "@comet/admin";
 import { DateField, DatePicker } from "@comet/admin-date-time";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Grid, InputBase, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
 
@@ -22,6 +22,8 @@ export const DatePickerStory = () => {
     const [dateWithInitialValue, setDateWithInitialValue] = useState<string | undefined>("2025-04-01");
     const [disabledDate, setDisabledDate] = useState<string | undefined>();
     const [disabledDateWithInitialValue, setDisabledDateWithInitialValue] = useState<string | undefined>("2025-04-01");
+
+    const [textField, setTextField] = useState<string | undefined>();
 
     return (
         <Grid container spacing={4} padding={4}>
@@ -76,6 +78,33 @@ export const DatePickerStory = () => {
                         </form>
                     )}
                 </Form>
+            </Grid>
+
+            {/* TODO: Remove this and consider fixing in V8 */}
+            <Grid size={{ xs: 12 }}>
+                <Card>
+                    <CardContent>
+                        <Typography variant="h4" gutterBottom>
+                            Make `TextField` work in `FieldContainer`, just like `InputBase`
+                        </Typography>
+                        <Stack spacing={2} direction="row">
+                            <FieldContainer label="TextField" fullWidth>
+                                <TextField
+                                    placeholder="TextField"
+                                    fullWidth
+                                    value={textField}
+                                    onChange={(e) => setTextField(e.target.value)}
+                                    // TODO: What of this can we move to the theme?
+                                    variant="standard"
+                                    slotProps={{ input: { disableUnderline: true } }}
+                                />
+                            </FieldContainer>
+                            <FieldContainer label="InputBase" fullWidth>
+                                <InputBase placeholder="InputBase" fullWidth value={textField} onChange={(e) => setTextField(e.target.value)} />
+                            </FieldContainer>
+                        </Stack>
+                    </CardContent>
+                </Card>
             </Grid>
         </Grid>
     );
