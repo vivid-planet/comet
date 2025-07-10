@@ -1,12 +1,14 @@
 {
     "name": "@comet/admin-generator",
     "version": "8.0.0-beta.6",
+    "description": "Comet Admin Generator CLI tool",
     "repository": {
         "directory": "packages/admin/admin-generator",
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
+    "type": "commonjs",
     "main": "lib/index.js",
     "typings": "lib/index.d.ts",
     "bin": {

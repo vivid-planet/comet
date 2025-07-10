@@ -1,12 +1,14 @@
 {
     "name": "@comet/admin-date-time",
     "version": "8.0.0-beta.6",
+    "description": "Comet Admin Date Time component",
     "repository": {
         "directory": "packages/admin/admin-date-time",
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
     "license": "BSD-2-Clause",
+    "type": "commonjs",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [

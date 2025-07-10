@@ -1,6 +1,8 @@
 {
     "name": "@comet/eslint-plugin",
     "version": "8.0.0-beta.6",
+    "description": "A set of ESLint rules and configurations for Comet projects",
+    "type": "commonjs",
     "main": "lib/index.js",
     "scripts": {
         "build": "$npm_execpath run clean && tsc",

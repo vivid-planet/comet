@@ -2,6 +2,8 @@
     "name": "comet-demo-site-pages",
     "version": "1.0.0",
     "private": true,
+    "description": "Comet Site Pages Demo Application",
+    "type": "commonjs",
     "scripts": {
         "build": "run-s intl:compile && run-p gql:types generate-block-types && $npm_execpath build:preBuild",
         "build:preBuild": "run-s clear:preBuild build:preBuild:tsc",

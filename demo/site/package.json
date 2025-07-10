@@ -2,6 +2,8 @@
     "name": "comet-demo-site",
     "version": "1.0.0",
     "private": true,
+    "description": "Comet Site Demo Application",
+    "type": "commonjs",
     "scripts": {
         "build": "run-s intl:compile && run-p gql:types generate-block-types build-server && next build",
         "build-server": "tsc --project tsconfig.server.json",
