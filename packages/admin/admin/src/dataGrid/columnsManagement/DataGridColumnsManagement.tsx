@@ -75,7 +75,8 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
 
         const currentPosition = apiRef.current.isColumnPinned(field);
 
-        if (currentPosition === false || position !== currentPosition) {
+        const isPinnedToPosition = currentPosition === false || position !== currentPosition;
+        if (isPinnedToPosition) {
             apiRef.current.pinColumn(field, position);
         } else {
             apiRef.current.unpinColumn(field);
