@@ -99,7 +99,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                             {pinnedLeftColumns.map((column, index) => {
                                 return (
                                     <DataGridColumnsManagementListItem
-                                        key={`columns-management-list-item-${index}`}
+                                        key={column.field}
                                         column={column}
                                         checked={columnVisibilityModel?.[column.field] ?? true}
                                         onPinColumnClick={handleOnPinColumn}
@@ -125,7 +125,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                             {nonPinnedColumns.map((column, index) => {
                                 return (
                                     <DataGridColumnsManagementListItem
-                                        key={`columns-management-list-item-${index}`}
+                                        key={column.field}
                                         column={column}
                                         checked={columnVisibilityModel?.[column.field] ?? true}
                                         onPinColumnClick={handleOnPinColumn}
@@ -149,7 +149,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                         {pinnedRightColumns.map((column, index) => {
                             return (
                                 <DataGridColumnsManagementListItem
-                                    key={`columns-management-list-item-${index}`}
+                                    key={column.field}
                                     column={column}
                                     checked={columnVisibilityModel?.[column.field] ?? true}
                                     onPinColumnClick={handleOnPinColumn}
