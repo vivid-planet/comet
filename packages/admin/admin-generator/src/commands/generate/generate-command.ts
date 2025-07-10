@@ -174,7 +174,6 @@ export type GridConfig<T extends { __typename?: string }> = {
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
-    copyPaste?: boolean;
     readOnly?: boolean;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     initialFilter?: InitialFilterConfig;
