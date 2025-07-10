@@ -1,5 +1,13 @@
 import { PinLeft, PinRight } from "@comet/admin-icons";
-import { type ComponentsOverrides, type IconButton, type ListItemText, type Switch as MuiSwitch, type Theme, useThemeProps } from "@mui/material";
+import {
+    type ComponentsOverrides,
+    type IconButton,
+    type ListItem,
+    type ListItemText,
+    type Switch as MuiSwitch,
+    type Theme,
+    useThemeProps,
+} from "@mui/material";
 import { type GridStateColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
 import { GridPinnedColumnPosition, useGridApiContext } from "@mui/x-data-grid-pro";
 import { type ChangeEvent, type FunctionComponent } from "react";
@@ -16,7 +24,7 @@ export type DataGridColumnsManagementListItemClassKey =
     | "pinnedButton";
 
 export type DataGridColumnsManagementListItemProps = ThemedComponentBaseProps<{
-    root: "div";
+    root: typeof ListItem;
     switchTitleContainer: "div";
     switch: typeof MuiSwitch;
     listItemTitle: typeof ListItemText;
@@ -38,6 +46,7 @@ export const DataGridColumnsManagementListItem: FunctionComponent<DataGridColumn
         checked,
         onToggleClicked,
         onPinColumnClick,
+        ...restProps
     } = useThemeProps({
         props: inProps,
         name: "CometAdminDataGridColumnsManagementListItem",
@@ -50,7 +59,7 @@ export const DataGridColumnsManagementListItem: FunctionComponent<DataGridColumn
     const pinPosition = apiRef.current.isColumnPinned(column.field);
 
     return (
-        <Root sx={sx} className={className}>
+        <Root sx={sx} className={className} {...slotProps?.root} {...restProps}>
             <SwitchTitleContainer>
                 <Switch name={column.field} checked={checked} onChange={onToggleClicked} disabled={!column.hideable} {...slotProps.switch} />
                 <ListItemTitle
