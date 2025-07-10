@@ -30,6 +30,7 @@ import { Migration20240814090541 } from "./migrations/Migration20240814090541";
 import { Migration20240814090653 } from "./migrations/Migration20240814090653";
 import { Migration20250403134629 } from "./migrations/Migration20250403134629";
 import { Migration20250623113026 } from "./migrations/Migration20250623113026";
+import { Migration20250709092128 } from "./migrations/Migration20250709092128";
 
 export const PG_UNIQUE_CONSTRAINT_VIOLATION = "23505";
 
@@ -97,6 +98,7 @@ export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptio
                 { name: "Migration20240814090653", class: Migration20240814090653 },
                 { name: "Migration20250403134629", class: Migration20250403134629 },
                 { name: "Migration20250623113026", class: Migration20250623113026 },
+                { name: "Migration20250709092128", class: Migration20250709092128 },
                 ...(migrations?.migrationsList || []),
             ].sort((migrationA, migrationB) => {
                 if (migrationA.name < migrationB.name) {

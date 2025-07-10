@@ -9,6 +9,7 @@ import {
     MainContent,
     RouterTab,
     RouterTabs,
+    SubRoute,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
@@ -257,7 +258,9 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                                 title={<FormattedMessage id="comet.dam.file.captions" defaultMessage="Captions" />}
                                                 disablePadding
                                             >
-                                                <MediaAlternativesGrid file={file} type="captions" direction="for" />
+                                                <SubRoute path="./1">
+                                                    <MediaAlternativesGrid file={file} type="captions" direction="for" />
+                                                </SubRoute>
                                             </FieldSet>
                                         )}
                                         {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
@@ -270,7 +273,59 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                                 }
                                                 disablePadding
                                             >
-                                                <MediaAlternativesGrid file={file} type="captions" direction="alternative" />
+                                                <SubRoute path="./2">
+                                                    <MediaAlternativesGrid file={file} type="captions" direction="alternative" />
+                                                </SubRoute>
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={<FormattedMessage id="comet.dam.file.audioDescriptions" defaultMessage="Audio Descriptions" />}
+                                                disablePadding
+                                            >
+                                                <SubRoute path="./3">
+                                                    <MediaAlternativesGrid file={file} type="audioDescriptions" direction="for" />
+                                                </SubRoute>
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={
+                                                    <FormattedMessage
+                                                        id="comet.dam.file.videosUsingAudioDescriptions"
+                                                        defaultMessage="Videos using these audio descriptions"
+                                                    />
+                                                }
+                                                disablePadding
+                                            >
+                                                <SubRoute path="./4">
+                                                    <MediaAlternativesGrid file={file} type="audioDescriptions" direction="alternative" />
+                                                </SubRoute>
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.video.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={<FormattedMessage id="comet.dam.file.transcripts" defaultMessage="Transcripts" />}
+                                                disablePadding
+                                            >
+                                                <SubRoute path="./5">
+                                                    <MediaAlternativesGrid file={file} type="transcripts" direction="for" />
+                                                </SubRoute>
+                                            </FieldSet>
+                                        )}
+                                        {acceptedMimeTypes.filteredAcceptedMimeTypes.captions.includes(file.mimetype) && (
+                                            <FieldSet
+                                                title={
+                                                    <FormattedMessage
+                                                        id="comet.dam.file.videosUsingTranscripts"
+                                                        defaultMessage="Videos using these transcripts"
+                                                    />
+                                                }
+                                                disablePadding
+                                            >
+                                                <SubRoute path="./6">
+                                                    <MediaAlternativesGrid file={file} type="transcripts" direction="alternative" />
+                                                </SubRoute>
                                             </FieldSet>
                                         )}
                                     </RouterTab>
