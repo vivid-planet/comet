@@ -36,7 +36,7 @@ export function BlockPreviewContent(props: BlockPreviewContentProps): JSX.Elemen
 
     return (
         <sc.Root>
-            {icon && <sc.ImageContainer>{icon} </sc.ImageContainer>}
+            {icon && <sc.IconContainer>{icon} </sc.IconContainer>}
             {images.length > 0 && (
                 <sc.ImageContainer>
                     <StackedImages images={images} />

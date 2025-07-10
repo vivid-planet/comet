@@ -20,3 +20,11 @@ export const TextInnerContainer = styled("div")`
     width: 100%;
     table-layout: fixed;
 `;
+
+export const IconContainer = styled("div")`
+    margin-right: 10px;
+
+    > svg {
+        color: ${({ theme }) => theme.palette.primary.main};
+    }
+`;
