@@ -1,4 +1,4 @@
-import { css, IconButton, ListItem as MuiListItem, Switch as MuiSwitch, Typography } from "@mui/material";
+import { css, IconButton, ListItem as MuiListItem, ListItemText, Switch as MuiSwitch } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type DataGridColumnsManagementListItemClassKey } from "./DataGridColumnsManagementListItem";
@@ -27,7 +27,7 @@ export const Switch = createComponentSlot(MuiSwitch)<DataGridColumnsManagementLi
     slotName: "switch",
 })();
 
-export const ListItemTitle = createComponentSlot(Typography)<DataGridColumnsManagementListItemClassKey>({
+export const ListItemTitle = createComponentSlot(ListItemText)<DataGridColumnsManagementListItemClassKey>({
     componentName: "DataGridColumnsManagementListItem",
     slotName: "listItemTitle",
 })();
