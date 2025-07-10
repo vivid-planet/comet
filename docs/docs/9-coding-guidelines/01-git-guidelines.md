@@ -43,8 +43,6 @@ Squashing combines all commits of a merge request into a single commit during th
 _Activation of squashing in MR_
 
 The squash commit will include the title and description of the merge request.
-![SquashCommit](./images/squash-commit.png)
-_Example Squash Commit_
 
 #### Advantages:
 
