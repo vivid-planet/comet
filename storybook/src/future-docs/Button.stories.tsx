@@ -24,7 +24,7 @@ import {
 import { ArrowRight } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type Decorator } from "@storybook/react";
+import { type Decorator } from "@storybook/react-webpack5";
 import { useState } from "react";
 
 import { heightCommunicationDecorator } from "../helpers/storyDecorators";
