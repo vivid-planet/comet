@@ -134,6 +134,12 @@ export default defineConfig<GQLProduct>({
             labelField: "title",
         },
         {
+            type: "oneToMany",
+            name: "variants",
+            headerName: "Variants",
+            labelField: "name",
+        },
+        {
             type: "actions",
             component: ProductsGridPreviewAction,
         },
