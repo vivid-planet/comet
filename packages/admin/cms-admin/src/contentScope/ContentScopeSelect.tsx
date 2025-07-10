@@ -1,4 +1,4 @@
-import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
+import { AppHeaderDropdown, ClearInputAdornment, useStoredState } from "@comet/admin";
 import { Domain, Language, Search } from "@comet/admin-icons";
 import {
     Box,
@@ -36,8 +36,10 @@ interface Props<Value extends ContentScopeInterface> {
     renderSelectedOption?: (option: Option<Value>) => ReactNode;
 }
 
+const localStorageKey = "contentScopeSelect.selectedScope";
+
 export function ContentScopeSelect<Value extends ContentScopeInterface = ContentScopeInterface>({
-    value,
+    value: propValue,
     onChange,
     options,
     searchable,
@@ -46,6 +48,9 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     renderOption,
     renderSelectedOption,
 }: Props<Value>) {
+    const [storedScope, setStoredScope] = useStoredState<Value | undefined>(localStorageKey, undefined);
+    const value = storedScope ? storedScope : propValue;
+
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
@@ -121,6 +126,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 .join(" / ");
         };
     }
+
+    const handleChange = (selectedScope: Value) => {
+        setStoredScope(selectedScope);
+        onChange(selectedScope);
+    };
 
     return (
         <AppHeaderDropdown
@@ -267,7 +277,8 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                                 key={JSON.stringify(option)}
                                                 onClick={() => {
                                                     hideDropdown();
-                                                    onChange(optionToValue<Value>(option));
+                                                    const selectedScope = optionToValue<Value>(option);
+                                                    handleChange(selectedScope);
                                                     setSearchValue("");
                                                 }}
                                                 selected={isSelected}
