@@ -3,7 +3,6 @@ import { type GridColDef } from "@comet/admin";
 import {
     type IntrospectionEnumType,
     type IntrospectionInputObjectType,
-    type IntrospectionInputValue,
     type IntrospectionNamedTypeRef,
     type IntrospectionObjectType,
     type IntrospectionQuery,
@@ -264,10 +263,8 @@ export function generateGrid(
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
-    const hasCreateMutation = !!createMutationType;
     const hasUpdateMutation = !!updateMutationType;
 
-    const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
     const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
@@ -293,8 +290,8 @@ export function generateGrid(
 
     const forwardRowAction = allowEditing && config.rowActionProp;
 
-    const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
-    const showCrudContextMenuInActionsColumn = allowCopyPaste || allowDeleting;
+    const showActionsColumn = allowEditing || allowDeleting;
+    const showCrudContextMenuInActionsColumn = allowDeleting;
     const showEditInActionsColumn = allowEditing && !forwardRowAction;
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
@@ -373,20 +370,6 @@ export function generateGrid(
         | IntrospectionObjectType
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
-
-    //we load /all/ fields as we need it for copy/paste TODO: lazy load during copy?
-    const fieldsToLoad = schemaEntity.fields
-        .filter((field) => {
-            if (field.name === "id" || field.name === "scope") return false;
-            return true;
-        })
-        .filter((field) => {
-            let type = field.type;
-            if (type.kind == "NON_NULL") type = type.ofType;
-            if (type.kind == "LIST") return false;
-            if (type.kind == "OBJECT") return false; //TODO support nested objects
-            return true;
-        });
 
     const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
     const {
@@ -581,18 +564,6 @@ export function generateGrid(
         });
     });
 
-    let createMutationInputFields: readonly IntrospectionInputValue[] = [];
-    {
-        const inputArg = createMutationType?.args.find((arg) => arg.name === "input");
-        if (inputArg) {
-            const inputType = findInputObjectType(inputArg, gqlIntrospection);
-            if (!inputType) throw new Error("Can't find input type");
-            createMutationInputFields = inputType.inputFields.filter((field) =>
-                fieldsToLoad.some((gridColumnField) => gridColumnField.name == field.name),
-            );
-        }
-    }
-
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
     if (forwardRowAction) {
@@ -724,25 +695,6 @@ export function generateGrid(
             : ""
     }
 
-    ${
-        allowCopyPaste
-            ? `const create${gqlType}Mutation = gql\`
-        mutation Create${gqlType}(${[
-            ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-            ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-            ...[`$input: ${gqlType}Input!`],
-        ].join(", ")}) {
-            create${gqlType}(${[
-                gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-                ...(hasScope ? [`scope: $scope`] : []),
-                ...[`input: $input`],
-            ].join(", ")}) {
-                id
-            }
-        }
-    \`;`
-            : ""
-    }
 
     ${
         renderToolbar
@@ -888,45 +840,6 @@ export function generateGrid(
                                     showCrudContextMenuInActionsColumn
                                         ? `
                                         <CrudContextMenu
-                                            ${
-                                                allowCopyPaste
-                                                    ? `
-                                            copyData={() => {
-                                                // Don't copy id, because we want to create a new entity with this data
-                                                ${
-                                                    createMutationInputFields.filter((field) => rootBlocks[field.name]).length
-                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return {
-                                                            ...filteredData,
-                                                            ${createMutationInputFields
-                                                                .filter((field) => rootBlocks[field.name])
-                                                                .map((field) => {
-                                                                    if (rootBlocks[field.name]) {
-                                                                        const blockName = rootBlocks[field.name].name;
-                                                                        return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
-                                                                    }
-                                                                })
-                                                                .join(",\n")}
-                                                        };`
-                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return filteredData;`
-                                                }
-                                            }}
-                                            onPaste={async ({ input }) => {
-                                                await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
-                                                    mutation: create${gqlType}Mutation,
-                                                    variables: { ${[
-                                                        ...gqlArgs
-                                                            .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                                                            .map((arg) => arg.name),
-                                                        ...(hasScope ? [`scope`] : []),
-                                                        ...["input"],
-                                                    ].join(", ")} },
-                                                });
-                                            }}
-                                            `
-                                                    : ""
-                                            }
                                             ${
                                                 allowDeleting
                                                     ? `
