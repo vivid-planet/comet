@@ -23,7 +23,9 @@
         "docs": {
             "ignore": ["*"],
             "entry": [],
-            "project": []
+            "project": [],
+            "ignoreDependencies": [".*"],
+            "ignoreUnresolved": [".*"]
         },
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
