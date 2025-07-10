@@ -2,6 +2,7 @@
     "name": "comet-storybook",
     "version": "1.0.0",
     "private": true,
+    "description": "Storybook for Comet components",
     "license": "BSD-2-Clause",
     "files": [
         "src"

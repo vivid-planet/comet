@@ -3,7 +3,6 @@
     "version": "0.0.0",
     "private": true,
     "description": "Documentation for Comet",
-    "type": "commonjs",
     "scripts": {
         "build": "docusaurus build",
         "clear": "docusaurus clear",
