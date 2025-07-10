@@ -159,7 +159,7 @@ export function filterToMikroOrmQuery(
             if (!prop.targetMeta) {
                 throw new Error("targetMeta is not defined");
             }
-            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
+            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and?.map((item) => ({ [propertyName]: item }));
         }
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
@@ -183,7 +183,7 @@ export function filterToMikroOrmQuery(
             if (!prop.targetMeta) {
                 throw new Error("targetMeta is not defined");
             }
-            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
+            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and?.map((item) => ({ [propertyName]: item }));
         }
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
