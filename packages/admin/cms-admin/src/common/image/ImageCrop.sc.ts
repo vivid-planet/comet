@@ -4,6 +4,22 @@ import { styled } from "@mui/material/styles";
 import { GQLFocalPoint } from "../../graphql.generated";
 
 export const ImageContainer = styled("div")`
+    //display: flex;
+    //align-items: center;
+    //justify-content: center;
+    ////max-height: 100%;
+    ////max-width: 100%;
+    //overflow: hidden;
+    //
+    //.ReactCrop {
+    //    height: 100%;
+    //    max-width: 100%;
+    //    display: flex;
+    //    align-items: center;
+    //    justify-content: center;
+    //    overflow: hidden;
+    //}
+
     .ReactCrop__crop-selection {
         border: 2px solid ${({ theme }) => theme.palette.primary.main};
     }
