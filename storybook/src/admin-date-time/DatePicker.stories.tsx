@@ -1,38 +1,82 @@
-import { Field } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Card, CardContent } from "@mui/material";
+import { FieldContainer } from "@comet/admin";
+import { DateField, DatePicker } from "@comet/admin-date-time";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 export default {
     title: "@comet/admin-date-time",
 };
 
-export const DatePicker = () => {
-    type Values = {
-        dateOne: string;
-        dateTwo: string;
+export const DatePickerStory = () => {
+    type FinalFormValues = {
+        defaultDate: string;
+        requiredDate: string;
+        disabledDate: string;
+        dateWithInitialValue: string;
+        disabledDateWithInitialValue: string;
     };
 
+    const [defaultDate, setDefaultDate] = useState<string | undefined>();
+    const [requiredDate, setRequiredDate] = useState<string | undefined>();
+    const [dateWithInitialValue, setDateWithInitialValue] = useState<string | undefined>("2025-04-01");
+    const [disabledDate, setDisabledDate] = useState<string | undefined>();
+    const [disabledDateWithInitialValue, setDisabledDateWithInitialValue] = useState<string | undefined>("2025-04-01");
+
     return (
-        <div style={{ width: 500 }}>
-            <Form<Values>
-                onSubmit={() => {}}
-                initialValues={{
-                    dateTwo: "2024-04-01",
-                }}
-            >
-                {({ values }) => (
-                    <form>
-                        <Card>
-                            <CardContent>
-                                <Field name="dateOne" label="Date" fullWidth component={FinalFormDatePicker} />
-                                <Field name="dateTwo" label="Required" fullWidth required component={FinalFormDatePicker} />
-                            </CardContent>
-                        </Card>
-                        <pre>{JSON.stringify(values, null, 4)}</pre>
-                    </form>
-                )}
-            </Form>
-        </div>
+        <Grid container spacing={4} padding={4}>
+            <Grid size={{ xs: 12, sm: 6 }}>
+                <Card>
+                    <CardContent>
+                        <Typography variant="h4" gutterBottom>
+                            DatePicker
+                        </Typography>
+
+                        <FieldContainer label="Default" fullWidth>
+                            <DatePicker fullWidth value={defaultDate} onChange={setDefaultDate} />
+                        </FieldContainer>
+                        <FieldContainer label="Required" fullWidth required>
+                            <DatePicker fullWidth value={requiredDate} onChange={setRequiredDate} required />
+                        </FieldContainer>
+                        <FieldContainer label="With value" fullWidth>
+                            <DatePicker fullWidth value={dateWithInitialValue} onChange={setDateWithInitialValue} />
+                        </FieldContainer>
+                        <FieldContainer label="Disabled" fullWidth disabled>
+                            <DatePicker fullWidth disabled value={disabledDate} onChange={setDisabledDate} />
+                        </FieldContainer>
+                        <FieldContainer label="Disabled with value" fullWidth disabled>
+                            <DatePicker fullWidth disabled value={disabledDateWithInitialValue} onChange={setDisabledDateWithInitialValue} />
+                        </FieldContainer>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+                <Form<FinalFormValues>
+                    onSubmit={() => {}}
+                    initialValues={{
+                        dateWithInitialValue: "2025-04-01",
+                        disabledDateWithInitialValue: "2025-04-01",
+                    }}
+                >
+                    {({ values }) => (
+                        <form>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h4" gutterBottom>
+                                        FinalForm DatePicker
+                                    </Typography>
+                                    <DateField name="defaultDate" label="Default" fullWidth />
+                                    <DateField name="requiredDate" label="Required" fullWidth required />
+                                    <DateField name="dateWithInitialValue" label="With value" fullWidth />
+                                    <DateField name="disabledDate" label="Disabled" fullWidth disabled />
+                                    <DateField name="disabledDateWithInitialValue" label="Disabled with value" fullWidth disabled />
+                                </CardContent>
+                            </Card>
+                            <pre>{JSON.stringify(values, null, 4)}</pre>
+                        </form>
+                    )}
+                </Form>
+            </Grid>
+        </Grid>
     );
 };
