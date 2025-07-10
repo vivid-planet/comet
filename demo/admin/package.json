@@ -83,7 +83,7 @@
         "chokidar-cli": "^3.0.0",
         "cosmiconfig-toml-loader": "^1.0.0",
         "dotenv-cli": "^7.4.4",
-        "eslint": "^9.22.0",
+        "eslint": "^9.30.1",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
