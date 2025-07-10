@@ -7,6 +7,8 @@ import { FILE_ENTITY, FileInterface } from "../../entities/file.entity";
 
 export enum DamMediaAlternativeType {
     captions = "captions",
+    audioDescriptions = "audioDescriptions",
+    transcripts = "transcripts",
 }
 registerEnumType(DamMediaAlternativeType, { name: "DamMediaAlternativeType" });
 

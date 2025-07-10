@@ -64,6 +64,18 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type, dir
               }
             : undefined;
 
+    const allowedMimeTypes: string[] = [];
+
+    if (direction === "for") {
+        allowedMimeTypes.push(...acceptedMimeTypes.filteredAcceptedMimeTypes.captions);
+
+        if (type === "audioDescriptions") {
+            allowedMimeTypes.push(...acceptedMimeTypes.filteredAcceptedMimeTypes.audio);
+        }
+    } else {
+        allowedMimeTypes.push(...acceptedMimeTypes.filteredAcceptedMimeTypes.video);
+    }
+
     return (
         <FinalForm<FormValues>
             mode={mode}
@@ -96,15 +108,7 @@ export const MediaAlternativeForm = ({ mode, selectionApi, fileId, id, type, dir
             onAfterSubmit={() => selectionApi.handleDeselect()}
             initialValues={initialValues}
         >
-            <Field
-                name="alternative"
-                component={FileField}
-                allowedMimetypes={
-                    direction === "for" ? acceptedMimeTypes.filteredAcceptedMimeTypes.captions : acceptedMimeTypes.filteredAcceptedMimeTypes.video
-                }
-                fullWidth
-                required
-            />
+            <Field name="alternative" component={FileField} allowedMimetypes={allowedMimeTypes} fullWidth required />
             <Field
                 label={<FormattedMessage id="comet.dam.mediaAlternativeForm.language.label" defaultMessage="Language" />}
                 name="language"

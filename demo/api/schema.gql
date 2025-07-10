@@ -80,6 +80,8 @@ type DamMediaAlternative {
 
 enum DamMediaAlternativeType {
   captions
+  audioDescriptions
+  transcripts
 }
 
 type ImageCropArea {
