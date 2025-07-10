@@ -55,7 +55,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
         });
     }, [columns, pinnedColumns.left]);
 
-    const scrollableColumns = useMemo(() => {
+    const nonPinnedColumns = useMemo(() => {
         return columns.filter((column) => {
             return !pinnedColumns.left?.includes(column.field) && !pinnedColumns.right?.includes(column.field);
         });
@@ -111,7 +111,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                     </>
                 )}
 
-                {scrollableColumns.length > 0 && (
+                {nonPinnedColumns.length > 0 && (
                     <>
                         <List
                             subheader={
@@ -121,7 +121,7 @@ export const DataGridColumnsManagement = (inProps: DataGridColumnsManagementProp
                             }
                             {...slotProps.list}
                         >
-                            {scrollableColumns.map((column, index) => {
+                            {nonPinnedColumns.map((column, index) => {
                                 return (
                                     <DataGridColumnsManagementListItem
                                         key={`columns-management-list-item-${index}`}
