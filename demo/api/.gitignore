@@ -39,3 +39,5 @@ lerna-debug.log*
 src/reload.ts
 
 src/**/generated
+
+.nestjs_repl_history
