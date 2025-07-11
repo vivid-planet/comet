@@ -1,5 +1,21 @@
 # @comet/admin
 
+## 8.0.0-beta.7
+
+### Minor Changes
+
+- e74ef46: `DateTimePicker` from `@mui/x-date-pickers` is now used inside `DataGrid` filters
+- e15895a: Add new `dataGridIdColumn` column definition
+
+    The column definition sets `filterOperators` to match the `IdFilter` GraphQL input type.
+
+- 1450882: Add support for `notContains` to `StringFilter`
+
+### Patch Changes
+
+- bb3e809: Fix layout spacing in `TableComponent` footer: add missing gap between item count and pagination (“Page X of Y”)
+    - @comet/admin-icons@8.0.0-beta.7
+
 ## 8.0.0-beta.6
 
 ### Major Changes
