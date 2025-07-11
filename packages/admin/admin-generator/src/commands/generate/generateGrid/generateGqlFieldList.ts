@@ -20,7 +20,7 @@ const recursiveStringify = (obj: FieldsObjectType): string => {
     return ret;
 };
 
-export function generateGqlFieldList<T extends { __typename: string }>({ columns }: { columns: Array<GridConfigGridColumnDef<T>> }) {
+export function generateGqlFieldList<T extends { __typename: string }>({ columns }: { columns: GridConfigGridColumnDef<T>[] }): string {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
         if (field.type !== "actions") {
             if (field.type === "virtual") {
