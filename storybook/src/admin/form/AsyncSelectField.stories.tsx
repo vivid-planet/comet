@@ -421,6 +421,7 @@ export const AsyncLoadingDataFromApi: Story = {
                                                 }
                                             }
                                         `,
+                                        fetchPolicy: "network-only", // Ensure we always fetch fresh data
                                     });
 
                                     return data.manufacturers;
