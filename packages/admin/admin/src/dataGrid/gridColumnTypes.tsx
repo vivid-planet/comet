@@ -13,6 +13,7 @@ import { FormattedDate, FormattedMessage } from "react-intl";
 const dateFormat = "yyyy-MM-dd";
 const dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
+// TODO: Use the new CometDatePicker component here
 const DatePickerFilter = ({ item, applyValue }: GridFilterInputValueProps) => {
     const dateValue = item.value ? parse(item.value, dateFormat, new Date()) : null;
     const [internalValue, setInternalValue] = useState<Date | null>(dateValue);
