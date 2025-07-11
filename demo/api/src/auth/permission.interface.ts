@@ -1,7 +1,7 @@
-import { type ProjectPermission } from "@src/common/enum/project-permission.enum";
+import { type AppPermission } from "@src/auth/app-permission.enum";
 
 declare module "@comet/cms-api" {
     export interface PermissionOverrides {
-        project: ProjectPermission;
+        app: AppPermission;
     }
 }
