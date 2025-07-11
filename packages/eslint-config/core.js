@@ -71,6 +71,7 @@ const config = [
         rules: {
             ...packageJson.configs.recommended.rules,
             "package-json/require-type": "off",
+            "package-json/require-description": "off",
         },
     },
     {
