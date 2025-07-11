@@ -1,5 +1,4 @@
-import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
-import { isPermission } from "@comet/cms-api/lib/user-permissions/user-permissions.types";
+import { type CrudSingleGeneratorOptions, hasCrudFieldFeature, isPermission } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
