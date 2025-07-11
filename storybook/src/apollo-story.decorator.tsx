@@ -13,6 +13,11 @@ const createApolloClient = (uri: string) => {
     return new ApolloClient({
         link,
         cache,
+        defaultOptions: {
+            watchQuery: {
+                fetchPolicy: "cache-and-network",
+            },
+        },
     });
 };
 
