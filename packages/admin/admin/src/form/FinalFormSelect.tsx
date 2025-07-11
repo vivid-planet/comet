@@ -100,6 +100,8 @@ export const FinalFormSelect = <T,>({
         );
     }
 
+    const showLoading = loading && options.length === 0 && loadingError == null;
+
     return (
         <Select
             {...selectProps}
@@ -127,7 +129,7 @@ export const FinalFormSelect = <T,>({
                 }
             }}
         >
-            {loading && (
+            {showLoading && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
                 </MenuItemDisabledOverrideOpacity>
@@ -158,7 +160,7 @@ export const FinalFormSelect = <T,>({
                 </MenuItemDisabledOverrideOpacity>
             )}
 
-            {!loading &&
+            {!showLoading &&
                 options.map((option: T) => (
                     <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
                         {getOptionLabel(option)}
