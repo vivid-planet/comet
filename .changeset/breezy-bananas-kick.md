@@ -1,5 +1,5 @@
 ---
-"@comet/cms-admin": patch
+"@comet/cms-admin": minor
 ---
 
-Display icons in `BlockPreviewContent` in `RedirectsGrid`
+Add icons for redirect targets in the grid
