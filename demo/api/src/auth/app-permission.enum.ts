@@ -1,9 +1,9 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum ProjectPermission {
+export enum AppPermission {
     news = "news",
     products = "products",
 }
-registerEnumType(ProjectPermission, {
-    name: "ProjectPermission",
+registerEnumType(AppPermission, {
+    name: "AppPermission",
 });
