@@ -8,7 +8,7 @@ import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorator
 import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
-import { AccessControlServiceInterface, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
+import { AccessControlServiceInterface, isPermission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -50,7 +50,9 @@ export class UserPermissionsGuard implements CanActivate {
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
         if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
-            return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
+            return requiredPermissions
+                .filter((permission) => isPermission(permission))
+                .some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
             if (requiredContentScopes.length === 0)
                 throw new Error(
@@ -61,11 +63,13 @@ export class UserPermissionsGuard implements CanActivate {
             // The first level has to be checked with AND, the second level with OR
             // The first level consists of submitted scopes and affected entities
             // The only case that there is more than one scope in the second level is when the ScopedEntity returns more scopes
-            return requiredPermissions.some((permission) =>
-                requiredContentScopes.every((contentScopes) =>
-                    contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
-                ),
-            );
+            return requiredPermissions
+                .filter((permission) => isPermission(permission))
+                .some((permission) =>
+                    requiredContentScopes.every((contentScopes) =>
+                        contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+                    ),
+                );
         }
     }
 

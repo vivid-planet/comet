@@ -1,6 +1,8 @@
+import { type Permission } from "../../user-permissions/user-permissions.types";
+
 export interface CrudGeneratorOptions {
     targetDirectory: string;
-    requiredPermission?: string[] | string;
+    requiredPermission?: Permission | Permission[];
     create?: boolean;
     update?: boolean;
     delete?: boolean;

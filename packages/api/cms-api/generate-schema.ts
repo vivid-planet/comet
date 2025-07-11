@@ -5,6 +5,7 @@ import { printSchema } from "graphql";
 
 import {
     BuildsResolver,
+    CometPermission,
     createAuthResolver,
     createOneOfBlock,
     createPageTreeResolver,
@@ -94,35 +95,40 @@ async function generateSchema(): Promise<void> {
         }
     }
 
-    const schema = await gqlSchemaFactory.create([
-        BuildsResolver,
-        BuildTemplatesResolver,
-        redirectsResolver,
-        createDamItemsResolver({ File, Folder }),
-        createFilesResolver({ File, Folder }),
-        FileLicensesResolver,
-        FileImagesResolver,
-        createFoldersResolver({ Folder }),
-        pageTreeResolver,
-        CronJobsResolver,
-        JobsResolver,
-        AuthResolver,
-        RedirectsDependenciesResolver,
-        PageTreeDependentsResolver,
-        FileDependentsResolver,
-        UserResolver,
-        UserPermissionResolver,
-        UserContentScopesResolver,
-        MockFileUploadResolver,
-        AzureAiTranslatorResolver,
-        GenerateAltTextResolver,
-        GenerateImageTitleResolver,
-        GenerateSeoTagsResolver,
-        FileUploadsResolver,
-        SitePreviewResolver,
-        WarningResolver,
-        createDamMediaAlternativeResolver({ File }),
-    ]);
+    const schema = await gqlSchemaFactory.create(
+        [
+            BuildsResolver,
+            BuildTemplatesResolver,
+            redirectsResolver,
+            createDamItemsResolver({ File, Folder }),
+            createFilesResolver({ File, Folder }),
+            FileLicensesResolver,
+            FileImagesResolver,
+            createFoldersResolver({ Folder }),
+            pageTreeResolver,
+            CronJobsResolver,
+            JobsResolver,
+            AuthResolver,
+            RedirectsDependenciesResolver,
+            PageTreeDependentsResolver,
+            FileDependentsResolver,
+            UserResolver,
+            UserPermissionResolver,
+            UserContentScopesResolver,
+            MockFileUploadResolver,
+            AzureAiTranslatorResolver,
+            GenerateAltTextResolver,
+            GenerateImageTitleResolver,
+            GenerateSeoTagsResolver,
+            FileUploadsResolver,
+            SitePreviewResolver,
+            WarningResolver,
+            createDamMediaAlternativeResolver({ File }),
+        ],
+        {
+            orphanedTypes: [CometPermission],
+        },
+    );
 
     await writeFile("schema.gql", printSchema(schema));
 

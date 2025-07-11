@@ -52,7 +52,7 @@ The Access Control Service should extend `AbstractAccessControlService` to use t
 export interface AccessControlServiceInterface {
     isAllowed(
         user: CurrentUser | SystemUser,
-        permission: string,
+        permission: Permission,
         contentScope?: ContentScope,
     ): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
