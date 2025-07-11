@@ -66,7 +66,14 @@ const config = [
             "jsonc/sort-keys": "error",
         },
     },
-    packageJson.configs.recommended,
+    {
+        ...packageJson.configs.recommended,
+        rules: {
+            ...packageJson.configs.recommended.rules,
+            "package-json/require-type": "off",
+            "package-json/require-description": "off",
+        },
+    },
     {
         ignores: ["**/*.json"],
         languageOptions: {

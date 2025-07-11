@@ -6,6 +6,8 @@
         "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/admin/admin-babel-preset"
     },
+    "type": "commonjs",
+    "description": "Babel preset for Comet Admin packages",
     "license": "BSD-2-Clause",
     "main": "index.js",
     "dependencies": {
