@@ -30,6 +30,7 @@ import { GridCellContent } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
 import { dataGridDateTimeColumn } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
+import { dataGridIdColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
@@ -93,13 +94,6 @@ import { Excel as ExcelIcon } from "@comet/admin-icons";
                 }
             \`;
 
-    const createBookMutation = gql\`
-        mutation CreateBook($input: BookInput!) {
-            createBook(, input: $input) {
-                id
-            }
-        }
-    \`;
 
     
     function BooksGridToolbar() {
@@ -146,19 +140,6 @@ renderCell: (params) => {
                                             <EditIcon />
                                         </IconButton>
                                         <CrudContextMenu
-                                            
-                                            copyData={() => {
-                                                // Don't copy id, because we want to create a new entity with this data
-                                                const { id, ...filteredData } = filterByFragment(booksFragment, params.row);
-                                                        return filteredData;
-                                            }}
-                                            onPaste={async ({ input }) => {
-                                                await client.mutate<GQLCreateBookMutation, GQLCreateBookMutationVariables>({
-                                                    mutation: createBookMutation,
-                                                    variables: { input },
-                                                });
-                                            }}
-                                            
                                             
                                             onDelete={async () => {
                                                 await client.mutate<GQLDeleteBookMutation, GQLDeleteBookMutationVariables>({
