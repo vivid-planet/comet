@@ -163,7 +163,7 @@ type InitialFilterConfig = {
     linkOperator?: "and" | "or";
 };
 
-export type GridConfigGridColumnDef<T extends GridValidRowModel> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
+export type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
