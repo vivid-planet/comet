@@ -17,7 +17,6 @@ import {
     type GQLDocumentConfigMap,
     type GridColumnConfig,
     type GridConfig,
-    type GridConfigGridColumnDef,
     type StaticSelectLabelCellContent,
     type VirtualGridColumnConfig,
 } from "../generate-command";
@@ -223,13 +222,11 @@ export function generateGrid<Row extends GridConfigRow>(
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    // Explicitly type the filtered columns to avoid deep type instantiation and "as any[]"
-    const filteredColumns: GridConfigGridColumnDef<Row>[] = config.columns.filter((column) => {
-        return column.type !== "actions" && column.name !== "id";
-    });
-
     const fieldList = generateGqlFieldList<Row>({
-        columns: filteredColumns,
+        // exclude id because it's always required
+        columns: config.columns.filter((column) => {
+            return column.type !== "actions" && column.name !== "id";
+        }),
     });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
