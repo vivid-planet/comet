@@ -5,20 +5,17 @@ import DatePickerLocalisation from "./common/DatePickerLocalization.mdx";
 
 <Meta of={DatePickerStories} />
 
-# Date Picker
+# DatePicker
 
-To use the `DatePicker` and `FinalFormDatePicker` components, install the `@comet/admin-date-time` package.
+`DatePicker` is a wrapper around the `DatePicker` from `@mui/x-date-pickers` to make it more consistent with other form components.  
+See the [MUI docs](https://v7.mui.com/x/react-date-pickers/date-picker/) for more information.
 
-## Value type
-
-The `value` prop and the value returned by `onChange` are a string in the format `YYYY-MM-DD`.
-
-<DatePickerLocalisation />
+`DatePickerField` is a further extension to allow usage inside a `FinalForm` form.
 
 ## Basic usage
 
 <Canvas of={DatePickerStories.Basic} />
 
-## Usage inside a Final Form
+## Usage inside a `FinalForm` form
 
 <Canvas of={DatePickerStories.FinalForm} />

@@ -22,7 +22,7 @@ This change replaces the previous `TextField` (which uses `<input type="date" />
 
 ```diff
 +import { LocalizationProvider } from "@mui/x-date-pickers";
-+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
++import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 +import { enUS } from "date-fns/locale";
 
  // ...

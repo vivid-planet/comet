@@ -5,6 +5,7 @@
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",
         "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
+        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"npm run generate-block-types\"",
         "gql:types": "graphql-codegen",
@@ -19,8 +20,7 @@
         "lint:tsc": "tsc --project .",
         "preview": "npm run build && vite preview",
         "serve": "node server",
-        "start": "$npm_execpath check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite",
-        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)"
+        "start": "$npm_execpath check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
         "@apollo/client": "^3.13.8",
@@ -35,7 +35,7 @@
         "@mui/system": "^7.2.0",
         "@mui/x-data-grid": "^7.29.8",
         "@mui/x-data-grid-pro": "^7.29.8",
-        "@mui/x-date-pickers": "^7.29.4",
+        "@mui/x-date-pickers": "^8.8.0",
         "change-case": "^5.4.4",
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",

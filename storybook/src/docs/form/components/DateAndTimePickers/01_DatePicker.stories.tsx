@@ -1,6 +1,8 @@
-import { Field, FieldContainer } from "@comet/admin";
-import { DatePicker, FinalFormDatePicker } from "@comet/admin-date-time";
-import { Grid } from "@mui/material";
+import { ClearInputAdornment, Field, FieldContainer } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { Calendar } from "@comet/admin-icons";
+import { Grid, InputBase } from "@mui/material";
+import { DatePicker, type DatePickerProps } from "@mui/x-date-pickers";
 import { useState } from "react";
 import { Form } from "react-final-form";
 
@@ -8,57 +10,81 @@ export default {
     title: "Docs/Form/Components/Date & Time Pickers/Date Picker",
 };
 
+/**
+ * TODO
+ * - Add clear button
+ * - Do we need to handle `formatDateOptions` prop?
+ * - Implement and use Final-Form variant (`DateField`)
+ */
+
+type SimplifiedDatePickerProps = DatePickerProps & {
+    fullWidth?: boolean;
+    required?: boolean;
+};
+
+const SimplifiedDatePicker = ({ fullWidth, required, slotProps, disabled, value, onChange, ...restProps }: SimplifiedDatePickerProps) => {
+    return (
+        <DatePicker
+            {...restProps}
+            disabled={disabled}
+            value={value}
+            onChange={onChange}
+            slots={{
+                openPickerIcon: Calendar,
+            }}
+            slotProps={{
+                ...slotProps,
+                field: {
+                    openPickerButtonPosition: "start",
+                    ...slotProps?.field,
+                },
+                textField: {
+                    fullWidth,
+                    // variant: "outlined",
+                    required,
+                    ...slotProps?.textField,
+                    InputProps: {
+                        endAdornment:
+                            !required && !disabled ? (
+                                <>
+                                    <ClearInputAdornment
+                                        position="end"
+                                        hasClearableContent={Boolean(value)}
+                                        onClick={() => onChange && onChange(undefined)}
+                                    />
+                                    {slotProps?.textField?.InputProps?.endAdornment}
+                                </>
+                            ) : (
+                                slotProps?.textField?.InputProps?.endAdornment
+                            ),
+                        ...slotProps?.textField?.InputProps,
+                    },
+                },
+            }}
+        />
+    );
+};
+
 export const Basic = () => {
-    const [dateOne, setDateOne] = useState<string | undefined>();
-    const [dateTwo, setDateTwo] = useState<string | undefined>();
-    const [dateThree, setDateThree] = useState<string | undefined>("2024-03-10");
-    const [dateFour, setDateFour] = useState<string | undefined>("2024-03-10");
+    const [dateOne, setDateOne] = useState<Date | null>(null);
+    const [dateTwo, setDateTwo] = useState<Date | null>(new Date("2024-03-10"));
 
     return (
         <Grid container spacing={4}>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 3,
-                }}
-            >
+            <Grid size={{ xs: 4 }}>
                 <FieldContainer label="Date Picker" fullWidth>
-                    <DatePicker fullWidth value={dateOne} onChange={setDateOne} />
+                    <SimplifiedDatePicker value={dateOne} onChange={setDateOne} fullWidth />
                 </FieldContainer>
             </Grid>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 3,
-                }}
-            >
-                <FieldContainer label="Show two months" fullWidth>
-                    <DatePicker fullWidth value={dateTwo} onChange={setDateTwo} monthsToShow={2} />
-                </FieldContainer>
-            </Grid>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 3,
-                }}
-            >
+            <Grid size={{ xs: 4 }}>
                 <FieldContainer label="Required" fullWidth required>
-                    <DatePicker fullWidth value={dateThree} onChange={setDateThree} required />
+                    <SimplifiedDatePicker value={dateTwo} onChange={setDateTwo} fullWidth required />
                 </FieldContainer>
             </Grid>
-            <Grid
-                size={{
-                    xs: 6,
-                    md: 3,
-                }}
-            >
-                <FieldContainer label="Formatted date" fullWidth>
-                    <DatePicker
-                        fullWidth
-                        value={dateFour}
-                        onChange={setDateFour}
-                        formatDateOptions={{ month: "long", day: "numeric", year: "numeric" }}
-                    />
+            <Grid size={{ xs: 4 }}>
+                <FieldContainer label="Required" fullWidth required>
+                    {/* TODO: Remove this after styling of DatePicker matches this */}
+                    <InputBase value="Hello" onChange={() => {}} fullWidth required />
                 </FieldContainer>
             </Grid>
         </Grid>
