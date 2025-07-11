@@ -1,6 +1,33 @@
-export { DateField, DateFieldProps } from "./datePicker/DateField";
-export { DatePicker, DatePickerProps } from "./datePicker/DatePicker";
-export { FinalFormDatePicker, FinalFormDatePickerProps } from "./datePicker/FinalFormDatePicker";
+export {
+    /**
+     * @deprecated Use `DateField` from `@comet/admin` instead
+     */
+    DateField,
+    /**
+     * @deprecated Use `DateField` from `@comet/admin` instead
+     */
+    DateFieldProps,
+} from "./datePicker/DateField";
+export {
+    /**
+     * @deprecated Use `DatePicker` from `@mui/x-date-pickers` instead
+     */
+    DatePicker,
+    /**
+     * @deprecated Use `DatePicker` from `@mui/x-date-pickers` instead
+     */
+    DatePickerProps,
+} from "./datePicker/DatePicker";
+export {
+    /**
+     * @deprecated Use `DateField` from `@comet/admin` instead
+     */
+    FinalFormDatePicker,
+    /**
+     * @deprecated Use `DateField` from `@comet/admin` instead
+     */
+    FinalFormDatePickerProps,
+} from "./datePicker/FinalFormDatePicker";
 export { DatePickerNavigationClassKey, DatePickerNavigationProps } from "./DatePickerNavigation";
 export { DateRangeField, DateRangeFieldProps } from "./dateRangePicker/DateRangeField";
 export { DateRange, DateRangePicker, DateRangePickerProps } from "./dateRangePicker/DateRangePicker";
