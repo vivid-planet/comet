@@ -23,8 +23,4 @@ export const TextInnerContainer = styled("div")`
 
 export const IconContainer = styled("div")`
     margin-right: 10px;
-
-    > svg {
-        color: ${({ theme }) => theme.palette.primary.main};
-    }
 `;
