@@ -8,4 +8,5 @@ export interface DamConfig {
     requireLicense?: boolean;
     enableLicenseFeature?: boolean;
     maxSrcResolution: number;
+    basePath: string;
 }

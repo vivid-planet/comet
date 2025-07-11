@@ -187,7 +187,6 @@ export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";
 export { ImageCropArea } from "./dam/images/entities/image-crop-area.entity";
-export { ImagesController } from "./dam/images/images.controller";
 export { ImagesService } from "./dam/images/images.service";
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";

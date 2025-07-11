@@ -4,19 +4,28 @@ import { Request } from "express";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
+import { DamConfig } from "../dam/dam.config";
+import { DAM_CONFIG } from "../dam/dam.constants";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
-const IGNORED_ROUTES = ["/dam/images/", "/dam/files/preview", "/dam/files/download", "/dam/files/:hash/"];
-
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
+    private ignoredPaths: string[];
 
-    constructor(@Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig) {}
+    constructor(
+        @Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig,
+        @Optional() @Inject(DAM_CONFIG) private readonly damConfig?: DamConfig,
+    ) {
+        const damBasePath = this.damConfig?.basePath ?? "dam";
 
+        this.ignoredPaths = this.damConfig
+            ? [`/${damBasePath}/images/`, `/${damBasePath}/files/preview`, `/${damBasePath}/files/download`, `/${damBasePath}/files/:hash/`]
+            : [];
+    }
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
 
@@ -65,7 +74,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             const user = (httpRequest as any).user as CurrentUser;
 
             if (
-                IGNORED_ROUTES.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
+                this.ignoredPaths.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
                 (this.config &&
                     this.config.shouldLogRequest &&
                     !this.config.shouldLogRequest({
