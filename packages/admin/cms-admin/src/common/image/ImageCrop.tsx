@@ -8,7 +8,11 @@ import * as sc from "./ImageCrop.sc";
 
 const focalPoints: GQLFocalPoint[] = ["CENTER", "NORTHEAST", "NORTHWEST", "SOUTHEAST", "SOUTHWEST"];
 
-type ImageCropProps = Pick<ReactCropProps, "src" | "imageStyle" | "disabled">;
+type ImageCropProps = {
+    src: string;
+    disabled?: ReactCropProps["disabled"];
+    style?: ReactCropProps["style"];
+};
 
 const clipValue = (value?: number) => {
     return value === undefined ? undefined : Math.max(0, Math.min(100, value));
@@ -35,7 +39,7 @@ export const ImageCrop = (props: ImageCropProps) => {
                         crop={disabled ? {} : { ...value, unit: "%" }}
                         ruleOfThirds={true}
                         disabled={disabled}
-                        imageStyle={{ width: "auto", height: "auto" }}
+                        style={{ width: "auto", height: "auto" }}
                         onChange={(newCrop, percentCrop) => {
                             // Prevent reset at first rendering
                             if (percentCrop.width === 0 && percentCrop.height === 0 && percentCrop.x === 0 && percentCrop.y === 0) {
@@ -64,7 +68,9 @@ export const ImageCrop = (props: ImageCropProps) => {
                                 </>
                             );
                         }}
-                    />
+                    >
+                        <img src={props.src} />
+                    </ReactCrop>
                 </sc.ImageContainer>
             )}
         </Field>

@@ -8,5 +8,5 @@ interface Props {
 }
 
 export function ImagePreview({ file }: Props): JSX.Element {
-    return <ImageCrop src={file.fileUrl} imageStyle={imageStyle} />;
+    return <ImageCrop src={file.fileUrl} style={imageStyle} />;
 }

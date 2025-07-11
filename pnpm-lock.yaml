@@ -1520,8 +1520,8 @@ importers:
         specifier: ^3.4.7
         version: 3.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-image-crop:
-        specifier: ^8.6.12
-        version: 8.6.12(react@18.3.1)
+        specifier: ^11.0.10
+        version: 11.0.10(react@18.3.1)
       react-split:
         specifier: ^2.0.14
         version: 2.0.14(react@18.3.1)
@@ -1637,9 +1637,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.23)
-      '@types/react-image-crop':
-        specifier: ^8.1.6
-        version: 8.1.6
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
@@ -8584,9 +8581,6 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
-  '@types/react-image-crop@8.1.6':
-    resolution: {integrity: sha512-mH3qs5sk2lq0JitgAOyyFeQQ8Zlz+yCIhn4CNznmoRyH4PIRMpZUWi+hGqLyUeKTSMAg+daS3txHMR3oBAkkRg==}
-
   '@types/react-router-config@5.0.7':
     resolution: {integrity: sha512-pFFVXUIydHlcJP6wJm7sDii5mD/bCmmAY0wQzq+M+uX7bqS95AQqHZWP1iNMKrWVQSuHIzj5qi9BvrtLX2/T4w==}
 
@@ -9804,10 +9798,6 @@ packages:
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
-
-  clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
 
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
@@ -15350,8 +15340,8 @@ packages:
       react: '>=16.8.1'
       react-dom: '>=16.8.1'
 
-  react-image-crop@8.6.12:
-    resolution: {integrity: sha512-3CNz1xfsRRSH/iH023IDMXxzsb1M6RTHHUVsVcb8uFPcjGiA9WisvQ24G1eRDf2j4NlybupOEEdfK2vT0etN6A==}
+  react-image-crop@11.0.10:
+    resolution: {integrity: sha512-+5FfDXUgYLLqBh1Y/uQhIycpHCbXkI50a+nbfkB1C0xXXUTwkisHDo2QCB1SQJyHCqIuia4FeyReqXuMDKWQTQ==}
     peerDependencies:
       react: '>=16.13.1'
 
@@ -26125,10 +26115,6 @@ snapshots:
     dependencies:
       '@types/react': 18.3.23
 
-  '@types/react-image-crop@8.1.6':
-    dependencies:
-      '@types/react': 18.3.23
-
   '@types/react-router-config@5.0.7':
     dependencies:
       '@types/history': 4.7.11
@@ -27686,8 +27672,6 @@ snapshots:
       mimic-response: 1.0.1
 
   clone@1.0.4: {}
-
-  clsx@1.2.1: {}
 
   clsx@2.1.1: {}
 
@@ -34301,10 +34285,8 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  react-image-crop@8.6.12(react@18.3.1):
+  react-image-crop@11.0.10(react@18.3.1):
     dependencies:
-      clsx: 1.2.1
-      prop-types: 15.8.1
       react: 18.3.1
 
   react-intl@7.1.11(react@18.3.1)(typescript@5.7.3):
