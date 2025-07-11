@@ -117,9 +117,9 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             sortable: false,
             renderCell: ({ row }) => {
                 const typeLabels: Record<string, React.ReactNode> = {
-                    Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
-                    Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
-                    Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
+                    cap: <FormattedMessage id="product.staticSelectType.primaryText.cap" defaultMessage="great Cap" />,
+                    shirt: <FormattedMessage id="product.staticSelectType.primaryText.shirt" defaultMessage="shirt" />,
+                    tie: <FormattedMessage id="product.staticSelectType.primaryText.tie" defaultMessage="tie" />,
                 };
                 return (
                     <GridCellContent primaryText={row.type == null ? "-" : typeLabels[`${row.type}`] ?? row.type} secondaryText={row.type ?? "-"} />

@@ -99,15 +99,15 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
-                    value: "Cap",
+                    value: "cap",
                     label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
                 },
                 {
-                    value: "Shirt",
+                    value: "shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
-                    value: "Tie",
+                    value: "tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
