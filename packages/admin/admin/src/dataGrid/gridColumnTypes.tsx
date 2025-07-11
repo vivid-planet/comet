@@ -1,3 +1,4 @@
+import { inputLabelClasses } from "@mui/material";
 import {
     getGridDateOperators,
     getGridStringOperators,
@@ -5,43 +6,44 @@ import {
     GridFilterInputValue,
     type GridFilterInputValueProps,
 } from "@mui/x-data-grid";
-import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { useState } from "react";
 import { FormattedDate, FormattedMessage } from "react-intl";
+
+import { DatePicker } from "../dateTime/DatePicker";
 
 const dateFormat = "yyyy-MM-dd";
 const dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
 const DatePickerFilter = ({ item, applyValue }: GridFilterInputValueProps) => {
-    const dateValue = item.value ? parse(item.value, dateFormat, new Date()) : null;
-    const [internalValue, setInternalValue] = useState<Date | null>(dateValue);
-
-    const applyDateValue = (newValue: Date | null) => {
-        const stringValue = newValue ? format(newValue, dateFormat) : null;
-        applyValue({ ...item, value: stringValue });
-    };
+    const [internalValue, setInternalValue] = useState<string | undefined>(item.value);
 
     return (
         <DatePicker
             value={internalValue}
-            label={<FormattedMessage id="dataGrid.filterOperator.date.label" defaultMessage="Value" />}
-            onChange={(newValue: Date | null) => {
+            onChange={(newValue: string | undefined) => {
                 setInternalValue(newValue);
             }}
             onAccept={(newValue: Date | null) => {
-                applyDateValue(newValue);
+                const stringValue = newValue ? format(newValue, dateFormat) : null;
+                applyValue({ ...item, value: stringValue });
             }}
             slotProps={{
-                textField: {
-                    variant: "standard",
-                    size: "small",
-                    fullWidth: true,
-                    InputProps: {
-                        disableUnderline: true,
+                root: {
+                    sx: {
+                        [`& .${inputLabelClasses.root}`]: {
+                            // Render the label normally as no `FieldContainer` is used here to be consistent with other inputs in the datagrid filters
+                            display: "block",
+                        },
                     },
-                    onBlur: () => {
-                        applyDateValue(internalValue);
+                    slotProps: {
+                        textField: {
+                            label: <FormattedMessage id="dataGrid.filterOperator.date.label" defaultMessage="Value" />,
+                            onBlur: () => {
+                                applyValue({ ...item, value: internalValue });
+                            },
+                        },
                     },
                 },
             }}
