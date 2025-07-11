@@ -92,7 +92,7 @@
         "@types/lodash.isequal": "^4.5.8",
         "@types/lodash.omit": "^4.5.9",
         "@types/mime-db": "^1.43.6",
-        "@types/node": "^22.16.2",
+        "@types/node": "^22.16.3",
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@types/react-router": "^5.1.20",
