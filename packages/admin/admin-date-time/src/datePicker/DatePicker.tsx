@@ -1,91 +1,79 @@
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
-
-import { ClearInputAdornment, type InputWithPopperProps } from "@comet/admin";
 import { Calendar as CalendarIcon } from "@comet/admin-icons";
 import { type ComponentsOverrides } from "@mui/material";
 import { type Theme, useThemeProps } from "@mui/material/styles";
-import { type FormatDateOptions, useIntl } from "react-intl";
+import { DatePicker as MuiDatePicker, type DatePickerProps as MuiDatePickerProps } from "@mui/x-date-pickers";
+import { type FormatDateOptions } from "react-intl";
 
-import { DatePickerNavigation } from "../DatePickerNavigation";
-import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
-import { Calendar, type DatePickerClassKey, Root, type SlotProps, StartAdornment } from "./DatePicker.slots";
+import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
 
-export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
-    onChange?: (date?: string) => void;
-    value?: string;
+/**
+ * TODO
+ * - Remove prop-dependency on InputWithPopperProps
+ * - Is `monthsToShow` still possible?
+ */
+
+type DatePickerClassKey = "root";
+
+export interface DatePickerProps extends MuiDatePickerProps<Date, false> {
+    // onChange?: (date?: string) => void;
+    // value?: string;
     formatDateOptions?: FormatDateOptions;
     required?: boolean;
-    monthsToShow?: number;
+    disabled?: boolean; // TODO: New prop
+    // monthsToShow?: number;
     maxDate?: Date;
     minDate?: Date;
-    slotProps?: SlotProps;
 }
 
 export const DatePicker = (inProps: DatePickerProps) => {
     const {
-        onChange,
         value,
-        formatDateOptions,
-        required,
-        placeholder,
-        monthsToShow,
+        disabled,
         minDate = defaultMinDate,
         maxDate = defaultMaxDate,
-        slotProps,
-        endAdornment,
-        ...inputWithPopperProps
+        ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
-    const intl = useIntl();
-    const dateFnsLocale = useDateFnsLocale();
     const dateValue = value ? new Date(value) : undefined;
 
     return (
-        <Root
-            value={value ? intl.formatDate(value, formatDateOptions) : ""}
-            startAdornment={
-                <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
-                    <CalendarIcon />
-                </StartAdornment>
-            }
-            placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
-            {...slotProps?.root}
-            {...inputWithPopperProps}
-            readOnly
-            required={required}
-            endAdornment={
-                !required && !inputWithPopperProps.disabled ? (
-                    <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
-                        {endAdornment}
-                    </>
-                ) : (
-                    endAdornment
-                )
-            }
-        >
-            {(closePopper) => (
-                <Calendar
-                    locale={dateFnsLocale}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    weekStartsOn={1}
-                    direction="horizontal"
-                    monthDisplayFormat="MMMM yyyy"
-                    months={monthsToShow}
-                    navigatorRenderer={(focusedDate, changeShownDate) => (
-                        <DatePickerNavigation focusedDate={focusedDate} changeShownDate={changeShownDate} minDate={minDate} maxDate={maxDate} />
-                    )}
-                    date={dateValue}
-                    onChange={(date) => {
-                        closePopper(true);
-                        onChange?.(getIsoDateString(date));
-                    }}
-                    {...slotProps?.calendar}
-                />
-            )}
-        </Root>
+        <MuiDatePicker
+            value={dateValue}
+            disabled={disabled}
+            // onChange={(newValue: Date | null) => {
+            //     // TODO: Do we need to implement this??
+            //     // setInternalValue(newValue);
+            // }}
+            // onAccept={(newValue: Date | null) => {
+            //     // TODO: Do we need to implement this??
+            //     // applyDateValue(newValue);
+            // }}
+            showDaysOutsideCurrentMonth // TODO: Should this be a default-value from the theme?
+            minDate={minDate}
+            maxDate={maxDate}
+            slotProps={{
+                textField: {
+                    variant: "standard",
+                    size: "small",
+                    fullWidth: true,
+                    InputProps: {
+                        disableUnderline: true,
+                    },
+                    onBlur: () => {
+                        // TODO: Do we need to implement this??
+                        // applyDateValue(internalValue);
+                    },
+                },
+            }}
+            slots={{
+                openPickerIcon: CalendarIcon,
+                // clearButton: () => {
+                //     // TODO: Can we get this to work?
+                //     // console.log("### clearButton");
+                //     // return <ClearInputAdornment onClick={() => onChange?.(undefined)} hasClearableContent={Boolean(value)} position="end" />;
+                // },
+            }}
+            {...restProps}
+        />
     );
 };
 
