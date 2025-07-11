@@ -263,6 +263,7 @@ export { UserPermissionsPublicService as UserPermissionsService } from "./user-p
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
+    isPermission,
     Permission,
     PermissionOverrides,
     PermissionsForUser,
