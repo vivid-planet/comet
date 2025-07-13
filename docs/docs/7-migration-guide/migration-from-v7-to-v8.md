@@ -400,81 +400,6 @@ npx @comet/upgrade v8/update-kubernetes-client-node.ts
 
 </details>
 
-### ✅ Add new package @comet/api-generator
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-    ```sh
-    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
-    ```
-
-:::
-
-The API Generator has been moved into a separate package `@comet/api-generator`.
-
-```diff title="api/package.json"
-devDependencies: {
-+  "@comet/api-generator": "^8.0.0",
-}
-```
-
-</details>
-
-### API Generator - Removed Special `status` Field Behavior
-
-Previously, if entities specified a `status` enum, it was automatically added to list queries arguments with a default value.
-
-This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
-done with the normal filtering mechanism.
-
-### API Generator - Don't commit generated files [optional]
-
-The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
-
-run api-generator in prebuild:
-
-```diff title="api/package.json"
-scripts: {
--  "prebuild": "rimraf dist",
-+  "prebuild": "rimraf dist && npm run api-generator",
-}
-```
-
-lint script can be removed:
-
-```diff title="api/package.json"
-scripts: {
--  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
-}
-```
-
-Add generated files to eslint ignore:
-
-```diff title="api/eslint.config.mjs"
-scripts: {
--  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
-+  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
-}
-```
-
-Add generated files to .gitignore:
-
-```diff title="api/.gitignore"
-scripts: {
-+  src/**/generated
-}
-```
-
-And finally delete generated files from git:
-
-```sh
-git rm -r api/src/*/generated
-```
-
 ### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
@@ -522,6 +447,144 @@ To upgrade, perform the following steps:
 4.  Remove usages of removed export `getFieldKeys` (probably none)
 
 </details>
+
+### ✅ Change s3 blob-storage config structure
+
+It's now possible to configure the S3-client completely.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/update-s3-config.ts
+```
+
+:::
+
+Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
+
+```diff title=api/src/config/config.ts
+blob: {
+    storage: {
+        driver: envVars.BLOB_STORAGE_DRIVER,
+        file: {
+            path: envVars.FILE_STORAGE_PATH,
+        },
+        azure: {
+            accountName: envVars.AZURE_ACCOUNT_NAME,
+            accountKey: envVars.AZURE_ACCOUNT_KEY,
+        },
+        s3: {
+            region: envVars.S3_REGION,
+            endpoint: envVars.S3_ENDPOINT,
+            bucket: envVars.S3_BUCKET,
+-            accessKeyId: envVars.S3_ACCESS_KEY_ID,
+-            secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            credentials: {
++                 accessKeyId: envVars.S3_ACCESS_KEY_ID,
++                 secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
++            },
+        },
+    },
+    storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
+},
+```
+
+</details>
+
+### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
+
+The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
+Some structural changes were necessary to achieve this.
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+```
+
+:::
+
+You need to modify your `AppModule` as follows:
+
+```diff title="api/src/app.module.ts"
+    BlobStorageModule.register({
+        backend: config.blob.storage,
++       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+    }),
++   ImgproxyModule.register(config.imgproxy),
+    DamModule.register({
+        damConfig: {
+-           apiUrl: config.apiUrl,
+            secret: config.dam.secret,
+            allowedImageSizes: config.dam.allowedImageSizes,
+            allowedAspectRatios: config.dam.allowedImageAspectRatios,
+            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+-           cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+            maxFileSize: config.dam.uploadsMaxFileSize,
++           maxSrcResolution: config.dam.maxSrcResolution,
+        },
+-       imgproxyConfig: config.imgproxy,
+        Scope: DamScope,
+        File: DamFile,
+        Folder: DamFolder,
+    }),
+```
+
+:::note Handled by following upgrade script
+
+```sh
+npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+```
+
+:::
+
+```diff title="api/src/comet-config.json"
+{
+    "dam": {
+        "allowedImageAspectRatios": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
++       "maxSrcResolution": 70,
+        "uploadsMaxFileSize": 500
+    },
+    "images": {
+        "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        "imageSizes": [16, 32, 48, 64, 96, 128, 256, 320, 384]
+    },
+    "imgproxy": {
+-       "maxSrcResolution": 70,
+        "quality": 80
+    }
+}
+```
+
+</details>
+
+### Import tracing with `import` instead of `require`
+
+```diff title="src/main.ts"
+if (process.env.TRACING_ENABLED === "1") {
+-   require("./tracing");
++   import("./tracing");
+}
+
+// ...
+```
+
+```diff title="src/console.ts"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let tracing: any;
+if (process.env.TRACING_ENABLED) {
+-   tracing = require("./tracing");
++   tracing = import("./tracing");
+}
+```
 
 ### Replace nestjs-console with nest-commander
 
@@ -768,124 +831,6 @@ Import `JwtModule` from `@nestjs/jwt`:
 +   imports: [JwtModule],
 ```
 
-### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
-
-The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
-Some structural changes were necessary to achieve this.
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
-```
-
-:::
-
-You need to modify your `AppModule` as follows:
-
-```diff title="api/src/app.module.ts"
-    BlobStorageModule.register({
-        backend: config.blob.storage,
-+       cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
-    }),
-+   ImgproxyModule.register(config.imgproxy),
-    DamModule.register({
-        damConfig: {
--           apiUrl: config.apiUrl,
-            secret: config.dam.secret,
-            allowedImageSizes: config.dam.allowedImageSizes,
-            allowedAspectRatios: config.dam.allowedImageAspectRatios,
-            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
--           cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
-            maxFileSize: config.dam.uploadsMaxFileSize,
-+           maxSrcResolution: config.dam.maxSrcResolution,
-        },
--       imgproxyConfig: config.imgproxy,
-        Scope: DamScope,
-        File: DamFile,
-        Folder: DamFolder,
-    }),
-```
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
-```
-
-:::
-
-```diff title="api/src/comet-config.json"
-{
-    "dam": {
-        "allowedImageAspectRatios": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
-+       "maxSrcResolution": 70,
-        "uploadsMaxFileSize": 500
-    },
-    "images": {
-        "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-        "imageSizes": [16, 32, 48, 64, 96, 128, 256, 320, 384]
-    },
-    "imgproxy": {
--       "maxSrcResolution": 70,
-        "quality": 80
-    }
-}
-```
-
-</details>
-
-### ✅ Change s3 blob-storage config structure
-
-It's now possible to configure the S3-client completely.
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/update-s3-config.ts
-```
-
-:::
-
-Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
-
-```diff title=api/src/config/config.ts
-blob: {
-    storage: {
-        driver: envVars.BLOB_STORAGE_DRIVER,
-        file: {
-            path: envVars.FILE_STORAGE_PATH,
-        },
-        azure: {
-            accountName: envVars.AZURE_ACCOUNT_NAME,
-            accountKey: envVars.AZURE_ACCOUNT_KEY,
-        },
-        s3: {
-            region: envVars.S3_REGION,
-            endpoint: envVars.S3_ENDPOINT,
-            bucket: envVars.S3_BUCKET,
--            accessKeyId: envVars.S3_ACCESS_KEY_ID,
--            secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
-+            credentials: {
-+                 accessKeyId: envVars.S3_ACCESS_KEY_ID,
-+                 secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
-+            },
-        },
-    },
-    storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
-},
-```
-
-</details>
-
 ### Use strings for date-only columns
 
 Starting with v6 MikroORM maps date-only columns to `string` instead of `Date`.
@@ -921,6 +866,87 @@ Perform the following changes:
     The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type, whereas the `GraphQLLocalDate` performs no type coercion.
 
     :::
+
+### Pass metadata to `gqlArgsToMikroOrmQuery`
+
+```diff title="src/**/your.resolver.ts"
+-       const where = gqlArgsToMikroOrmQuery({ filter, search }, this.repository);
++       const where = gqlArgsToMikroOrmQuery({ filter, search }, this.entityManager.getMetadata(YourEntity));
+```
+
+### ✅ API Generator - Add new package @comet/api-generator
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by following upgrade script
+
+    ```sh
+    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
+    ```
+
+:::
+
+The API Generator has been moved into a separate package `@comet/api-generator`.
+
+```diff title="api/package.json"
+devDependencies: {
++  "@comet/api-generator": "^8.0.0",
+}
+```
+
+</details>
+
+### API Generator - Removed Special `status` Field Behavior
+
+Previously, if entities specified a `status` enum, it was automatically added to list queries arguments with a default value.
+
+This special handling has been removed. The `status` field now behaves like a normal enum. Filtering by `status` can be
+done with the normal filtering mechanism.
+
+### API Generator - Don't commit generated files
+
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+
+run api-generator in prebuild:
+
+```diff title="api/package.json"
+scripts: {
+-  "prebuild": "rimraf dist",
++  "prebuild": "rimraf dist && npm run api-generator",
+}
+```
+
+lint script can be removed:
+
+```diff title="api/package.json"
+scripts: {
+-  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+}
+```
+
+Add generated files to eslint ignore:
+
+```diff title="api/eslint.config.mjs"
+scripts: {
+-  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
++  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+}
+```
+
+Add generated files to .gitignore:
+
+```diff title="api/.gitignore"
++ # API generator
++ src/**/generated
+```
+
+And finally delete generated files from git:
+
+```sh
+git rm -r api/src/*/generated
+```
 
 ## Admin
 
@@ -1374,6 +1400,34 @@ server: {
 //...
 ```
 
+or in your webpack config (for old projects):
+
+```ts title="admin/webpack.config.ts"
+const config = (env: unknown, argv: Argv): webpack.Configuration => {
+    // ...
+    return {
+        // ...
+        devServer: {
+            // ...
+            proxy: process.env.API_URL_INTERNAL
+                ? {
+                      "/dam": {
+                          target: process.env.API_URL_INTERNAL,
+                          changeOrigin: true,
+                          secure: false,
+                      },
+                      "/api": {
+                          target: new URL(process.env.API_URL_INTERNAL).origin,
+                          changeOrigin: true,
+                          secure: false,
+                      },
+                  }
+                : undefined,
+        },
+    };
+};
+```
+
 #### In production:
 
 Add the proxy to your admin server:
@@ -1412,6 +1466,40 @@ admin:
         ADMIN_URL: "https://$ADMIN_DOMAIN"
         API_URL: "https://$ADMIN_DOMAIN/api"
 +       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
+```
+
+### Use admin domain in `API_URL`
+
+```diff title=".env"
+ # api
+ API_PORT=4000
+-API_URL=http://${DEV_DOMAIN:-localhost}${WORKAROUND_DOTENV_ISSUE}:${API_PORT}/api # or similar
++API_URL=$ADMIN_URL/api
+```
+
+This is closer to our deployed setup where all API requests from the admin are routed through the AuthProxy that runs under the admin domain.
+
+You also need to add a proxy for that (only in development):
+
+```ts title="admin/vite.config.mts"
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+        "/api": {
+            target: new URL(process.env.API_URL_INTERNAL).origin,
+            changeOrigin: true,
+            secure: false,
+        },
+        "/dam": {
+            // ...
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
 ```
 
 ### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
@@ -1561,7 +1649,7 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + <DataGrid /* other props */ >
 ```
 
-#### ✅ `useDataGridRemote` Hook - Return Value
+#### `useDataGridRemote` Hook - Return Value
 
 The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
 
@@ -1693,6 +1781,14 @@ Example:
     export function App() {
 ```
 
+The `ContentScopeInterface` export from `@comet/cms-admin` was removed.
+Instead, use `ContentScope` directly:
+
+```diff
+- import { type ContentScopeInterface } from "@comet/cms-admin";
++ import { type ContentScope } from "@comet/cms-admin";
+```
+
 #### Preferably use ContentScopeProvider directly from Comet
 
 Move the scope labels from admin to the API, for example:
@@ -1726,6 +1822,8 @@ Then you can use the `ContentScopeProvider` from `@comet/cms-admin` directly in 
 +   import { ContentScopeProvider } from "@comet/cms-admin";
     // Delete `admin/src/common/ContentScopeProvider.tsx`
 ```
+
+You should also use `useContentScope` from `@comet/cms-admin`.
 
 <details>
 
@@ -1985,6 +2083,20 @@ To switch you must
 + import "@comet/site-nextjs/css";
 ```
 
+- Switch the package in `optimizePackageImports`:
+
+```diff title="site/next.config.mjs"
+const nextConfig = {
+    // ...
+    experimental: {
+        instrumentationHook: true,
+-       optimizePackageImports: ["@comet/cms-site"],
++       optimizePackageImports: ["@comet/site-nextjs"],
+    },
+    // ...
+}
+```
+
 ### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
 
 <details>
@@ -2166,6 +2278,22 @@ It is recommended to perform the following steps separately in the `admin/` and 
 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
 The codemod does not handle all cases, so manual adjustments may still be necessary.
+
+### Add `react-jsx` to `tsconfig.json`
+
+:::warning
+This must be done in admin and site
+:::
+
+```diff title="tsconfig.json"
+{
+    "compilerOptions": {
++       "jsx": "react-jsx",
+        // ..
+    },
+    // ..
+}
+```
 
 ### ✅ Consistent type imports
 
