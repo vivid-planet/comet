@@ -3,7 +3,6 @@ export interface CrudGeneratorOptions {
     requiredPermission?: string[] | string;
     create?: boolean;
     update?: boolean;
-    input?: boolean;
     delete?: boolean;
     list?: boolean;
     single?: boolean;
@@ -15,7 +14,6 @@ export function CrudGenerator({
     requiredPermission,
     create = true,
     update = true,
-    input = false,
     delete: deleteMutation = true,
     list = true,
     single = true,
@@ -25,7 +23,7 @@ export function CrudGenerator({
     return function (target: Function) {
         Reflect.defineMetadata(
             `data:crudGeneratorOptions`,
-            { targetDirectory, requiredPermission, create, update, input, delete: deleteMutation, list, single, position },
+            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, single, position },
             target,
         );
     };
