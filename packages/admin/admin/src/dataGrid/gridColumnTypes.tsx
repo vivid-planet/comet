@@ -8,7 +8,7 @@ import {
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { useState } from "react";
-import { FormattedDate, FormattedMessage, type IntlShape } from "react-intl";
+import { FormattedDate, FormattedMessage } from "react-intl";
 
 const dateFormat = "yyyy-MM-dd";
 const dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
@@ -131,17 +131,14 @@ export const dataGridIdColumn: GridColTypeDef = {
  * Data Grid column definition for many-to-many columns.
  * Sets `filterOperators` to match the `ManyToManyFilter` GraphQL input type.
  */
-export function dataGridManyToManyColumn(intl: IntlShape): GridColTypeDef {
-    return {
-        filterOperators: [
-            {
-                value: "search",
-                label: intl.formatMessage({ id: "comet.dataGrid.filterOperators.search", defaultMessage: "search" }),
-                getApplyFilterFn: () => {
-                    throw new Error("not implemented, we filter server side");
-                },
-                InputComponent: GridFilterInputValue,
+export const dataGridManyToManyColumn: GridColTypeDef = {
+    filterOperators: [
+        {
+            value: "search",
+            getApplyFilterFn: () => {
+                throw new Error("not implemented, we filter server side");
             },
-        ],
-    };
-}
+            InputComponent: GridFilterInputValue,
+        },
+    ],
+};

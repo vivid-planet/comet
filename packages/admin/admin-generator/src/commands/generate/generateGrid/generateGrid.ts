@@ -531,7 +531,7 @@ export function generateGrid(
         } else if (type == "id") {
             gridColumnType = "...dataGridIdColumn,";
         } else if (type == "manyToMany") {
-            gridColumnType = "...dataGridManyToManyColumn(intl),";
+            gridColumnType = "...dataGridManyToManyColumn,";
         }
 
         if (

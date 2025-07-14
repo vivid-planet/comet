@@ -229,7 +229,7 @@ export function ProductsGrid() {
             disableExport: true,
         },
         {
-            ...dataGridManyToManyColumn(intl),
+            ...dataGridManyToManyColumn,
             field: "tags",
             headerName: "Tags",
             flex: 1,
