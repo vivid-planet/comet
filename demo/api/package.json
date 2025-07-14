@@ -18,7 +18,7 @@
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
         "lint": "$npm_execpath run api-generator && run-p lint:prettier lint:eslint lint:tsc lint:generated-files-not-modified",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
-        "lint:generated-files-not-modified": "git diff --exit-code HEAD -- src/**/generated",
+        "lint:generated-files-not-modified": "git diff --exit-code HEAD -- $(find src -type f -path '*/generated/*')",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
