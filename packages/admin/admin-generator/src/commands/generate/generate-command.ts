@@ -163,13 +163,14 @@ type InitialFilterConfig = {
     linkOperator?: "and" | "or";
 };
 
+export type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
+    columns: Array<GridConfigGridColumnDef<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;

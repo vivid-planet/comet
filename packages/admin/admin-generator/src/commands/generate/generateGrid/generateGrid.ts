@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type GridColDef } from "@comet/admin";
+import { type GridValidRowModel } from "@mui/x-data-grid";
 import {
     type IntrospectionEnumType,
     type IntrospectionInputObjectType,
@@ -147,7 +148,8 @@ const getValueOptionsLabelData = (messageId: string, label: string | StaticSelec
     };
 };
 
-export function generateGrid(
+type GridConfigRow = { __typename: string } & GridValidRowModel;
+export function generateGrid<Row extends GridConfigRow>(
     {
         exportName,
         baseOutputFilename,
@@ -155,7 +157,7 @@ export function generateGrid(
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
 
-    config: GridConfig<any>,
+    config: GridConfig<Row>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const gqlTypePlural = plural(gqlType);
@@ -220,12 +222,10 @@ export function generateGrid(
     const iconsToImport: string[] = ["Add", "Edit", "Info", "Excel"];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({
+    const fieldList = generateGqlFieldList<Row>({
+        // exclude id because it's always required
         columns: config.columns.filter((column) => {
-            return (
-                // exclude id because it's always required
-                column.type !== "actions" && column.name !== "id"
-            );
+            return column.type !== "actions" && column.name !== "id";
         }),
     });
 
@@ -233,13 +233,9 @@ export function generateGrid(
     // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
-    const rootBlockColumns = config.columns
-        .filter((column) => column.type == "block")
-        .map((column) => {
-            // map is for ts to infer block type correctly
-            if (column.type !== "block") throw new Error("Field is not a block field");
-            return column;
-        });
+    const rootBlockColumns = config.columns.filter((column) => {
+        return column.type == "block";
+    });
 
     rootBlockColumns.forEach((field) => {
         if (rootBlocks[String(field.name)]) {
