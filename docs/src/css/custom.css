@@ -49,3 +49,7 @@
     font-family: Montserrat;
 }*/
 /* TODO: check, if comet dxp font should be used */
+
+.generated-hidden-text-content-only-used-for-search-indexing {
+    display: none;
+}
