@@ -1,0 +1,35 @@
+export const commonFieldComponentArgTypes = {
+    name: {
+        control: "text",
+    },
+    label: {
+        control: "text",
+    },
+    // TODO: Should we also include error and warning? (doesn't seem to work out of the box)
+    helperText: {
+        control: "text",
+    },
+    placeholder: {
+        control: "text",
+    },
+    required: {
+        control: "boolean",
+    },
+    disabled: {
+        control: "boolean",
+    },
+    variant: {
+        // TODO: Make this work - currently ignored
+        control: "select",
+        options: ["vertical", "horizontal"],
+    },
+    fullWidth: {
+        control: "boolean",
+    },
+} as const;
+
+export const commonFieldComponentArgs = {
+    required: false,
+    disabled: false,
+    fullWidth: false,
+} as const;
