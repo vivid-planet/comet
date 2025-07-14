@@ -30,6 +30,7 @@ export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } 
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
+export { ReadOnlyField, ReadOnlyFieldProps } from "./common/readOnlyField/ReadOnlyField";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,
