@@ -26,12 +26,12 @@ import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
 import { FilesEntityInfoService } from "./files/files-entity-info.service";
-import { FoldersController } from "./files/folders.controller";
+import { createFoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { CalculateDominantImageColorCommand } from "./images/calculateDominantImageColor.command";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
-import { ImagesController } from "./images/images.controller";
+import { createImagesController } from "./images/images.controller";
 import { ImagesService } from "./images/images.service";
 import { IsAllowedImageAspectRatioConstraint } from "./images/validators/is-allowed-aspect-ratio.validator";
 import { IsAllowedImageSizeConstraint } from "./images/validators/is-allowed-image-size.validator";
@@ -39,7 +39,7 @@ import { IsValidImageAspectRatioConstraint } from "./images/validators/is-valid-
 import { DamScopeInterface } from "./types";
 
 interface DamModuleOptions {
-    damConfig: DamConfig;
+    damConfig: Omit<DamConfig, "basePath"> & { basePath?: string };
     Scope?: Type<DamScopeInterface>;
     Folder?: Type<FolderInterface>;
     File?: Type<FileInterface>;
@@ -49,11 +49,16 @@ interface DamModuleOptions {
 @Module({})
 export class DamModule {
     static register({
-        damConfig,
         Scope,
         Folder = createFolderEntity({ Scope }),
         File = createFileEntity({ Scope, Folder }),
+        ...options
     }: DamModuleOptions): DynamicModule {
+        const damConfig = {
+            ...options.damConfig,
+            basePath: options.damConfig.basePath ?? "dam",
+        };
+
         if (File.name !== FILE_ENTITY) {
             throw new Error(`DamModule: Your File entity must be named ${FILE_ENTITY}`);
         }
@@ -130,7 +135,11 @@ export class DamModule {
                 FileWarningService,
                 DamMediaAlternativeResolver,
             ],
-            controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
+            controllers: [
+                createFilesController({ Scope, damBasePath: damConfig.basePath }),
+                createFoldersController({ damBasePath: damConfig.basePath }),
+                createImagesController({ damBasePath: damConfig.basePath }),
+            ],
             exports: [
                 FilesService,
                 FoldersService,

@@ -544,7 +544,7 @@ export class FilesService {
     async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`/dam/files`];
+        const baseUrl = [`/${this.config.basePath}/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
