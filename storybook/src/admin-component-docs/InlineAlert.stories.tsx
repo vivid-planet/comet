@@ -9,7 +9,7 @@ type Story = StoryObj<typeof InlineAlert>;
 
 const config: Meta<typeof InlineAlert> = {
     component: InlineAlert,
-    title: "Future Docs/InlineAlert",
+    title: "Admin Components/InlineAlert",
     argTypes: {
         severity: {
             control: "select",
@@ -21,12 +21,8 @@ const config: Meta<typeof InlineAlert> = {
 
 export default config;
 
-/**
- * Renders the `InlineAlert` component with default settings.
- * Demonstrates the base appearance of the error component.
- */
-export const InlineAlertStory: Story = {};
-InlineAlertStory.storyName = "InlineAlert";
+export const DefaultStory: Story = {};
+DefaultStory.name = "InlineAlert";
 
 /**
  * Displays the `InlineAlert` component with a warning variant.

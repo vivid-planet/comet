@@ -7,7 +7,7 @@ import { type ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 
 const main = async () => {
     console.log("Generating component docs...");
-    const storybookPath = path.resolve(process.cwd(), "../storybook/src/future-docs");
+    const storybookPath = path.resolve(process.cwd(), "../storybook/src/admin-component-docs");
     const storyFiles = findStoryFiles(storybookPath);
     const storyTitles = getTitlesFromStories(storyFiles);
     generateComponentDocs(storyTitles);
@@ -57,7 +57,7 @@ const getTitleFromConfigObject = (configObject: ObjectLiteralExpression): string
         if (titleInitializer) {
             const title = titleInitializer.getLiteralText();
 
-            if (title.startsWith("Future Docs/")) {
+            if (title.startsWith("Admin Components/")) {
                 return title;
             }
         }
