@@ -24,29 +24,74 @@ import {
 import { ArrowRight } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type Decorator } from "@storybook/react-webpack5";
+import { type Decorator, type Meta, type StoryObj } from "@storybook/react-webpack5";
 import { useState } from "react";
 
 import { heightCommunicationDecorator } from "../helpers/storyDecorators";
 
-export default {
-    title: "Future Docs/Button",
+// Prevent rendering components as  `<React.ForwardRef />`
+// TODO: Should we do this in the component itself? Is it needed for anything other than the story?
+// TODO: We may also need this for all icons.
+// @ts-expect-error TODO: Can we fix this type?
+Button.displayName = "Button";
+ArrowRight.displayName = "ArrowRight";
+// @ts-expect-error TODO: Can we fix this type?
+Box.displayName = "Box";
+
+type Story = StoryObj<typeof Button>;
+
+const config: Meta<typeof Button> = {
+    component: Button,
+    title: "Admin Components/Button",
+    argTypes: {
+        children: {
+            control: "text",
+        },
+        disabled: {
+            control: "boolean",
+        },
+        variant: {
+            control: "select",
+            options: [undefined, "primary", "secondary", "outlined", "destructive", "success", "textLight", "textDark"],
+        },
+        startIcon: {
+            control: "select",
+            options: [undefined, "ArrowRight"],
+        },
+        endIcon: {
+            control: "select",
+            options: [undefined, "ArrowRight"],
+        },
+    },
+    args: {
+        children: "Button",
+        disabled: false,
+    },
     decorators: [heightCommunicationDecorator()],
 };
 
-export const BasicExample = {
-    render: () => {
-        return (
-            <Stack direction="row" spacing={4}>
-                <Button>Primary</Button>
-                <Button variant="secondary">Secondary</Button>
-                <Button variant="outlined" startIcon={<ArrowRight />}>
-                    Outlined with icon
-                </Button>
-            </Stack>
+export default config;
+
+export const DefaultStory: Story = {
+    render: ({ startIcon, endIcon, variant, ...props }) => {
+        const buttonNode = (
+            <Button
+                {...props}
+                variant={variant}
+                startIcon={startIcon === "ArrowRight" ? <ArrowRight /> : undefined}
+                endIcon={endIcon === "ArrowRight" ? <ArrowRight /> : undefined}
+            />
         );
+
+        if (variant === "textLight") {
+            // TODO: Is there a way to simply set the background of the story container?
+            return <Box sx={{ backgroundColor: "grey.800", padding: 4 }}>{buttonNode}</Box>;
+        }
+
+        return buttonNode;
     },
 };
+DefaultStory.name = "Button";
 
 const ListOfButtons = styled("div")(({ theme }) => ({
     display: "flex",
