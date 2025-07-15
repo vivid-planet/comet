@@ -24,6 +24,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
         "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
+        "repl": "$npm_execpath run start --entryFile repl",
         "start": "$npm_execpath clean && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
         "start:dev": "$npm_execpath check-node-version && run-p dev:*",
         "start:prod": "node dist/main"
