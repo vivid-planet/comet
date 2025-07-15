@@ -1,7 +1,7 @@
 import { future_GridConfig as GridConfig } from "@comet/cms-admin";
 import { GQLProduct } from "@src/graphql.generated";
 
-const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
+const typeValues = [{ value: "cap", label: "great Cap" }, "shirt", "tie"];
 
 export const ProductsGrid: GridConfig<GQLProduct> = {
     type: "grid",
@@ -17,7 +17,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { field: "price", sort: "asc" },
     ],
     initialFilter: {
-        items: [{ columnField: "type", operatorValue: "is", value: "Shirt" }],
+        items: [{ columnField: "type", operatorValue: "is", value: "shirt" }],
     },
     columns: [
         {

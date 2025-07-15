@@ -30,7 +30,7 @@ export const NewsForm: FormConfig<GQLNews> = {
             label: "Category",
             required: true,
             inputType: "radio",
-            values: ["Events", "Company", "Awards"],
+            values: ["events", "company", "awards"],
         },
         {
             type: "block",

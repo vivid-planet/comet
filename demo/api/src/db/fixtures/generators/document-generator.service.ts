@@ -39,7 +39,7 @@ export class DocumentGeneratorService {
         name,
         scope,
         parentId,
-        category = PageTreeNodeCategory.MainNavigation,
+        category = PageTreeNodeCategory.mainNavigation,
         blockCategory,
     }: GeneratePageInput): Promise<PageTreeNodeInterface> {
         const id = faker.string.uuid();

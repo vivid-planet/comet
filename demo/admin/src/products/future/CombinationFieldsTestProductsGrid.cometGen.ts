@@ -22,7 +22,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
             primaryText: {
                 type: "staticSelect",
                 field: "type",
-                values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                values: [{ value: "cap", label: "great Cap" }, "shirt", "tie"],
             },
             secondaryText: "type",
         },

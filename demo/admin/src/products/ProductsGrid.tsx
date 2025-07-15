@@ -174,7 +174,7 @@ export function ProductsGrid() {
             width: 100,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: ["Cap", "Shirt", "Tie"],
+            valueOptions: ["cap", "shirt", "tie"],
         },
         {
             field: "additionalTypes",
@@ -190,7 +190,7 @@ export function ProductsGrid() {
                     InputComponent: GridFilterInputSingleSelect,
                 },
             ],
-            valueOptions: ["Cap", "Shirt", "Tie"],
+            valueOptions: ["cap", "shirt", "tie"],
             disableExport: true,
         },
         {
