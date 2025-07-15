@@ -128,11 +128,10 @@ export default defineConfig<GQLProduct>({
             filterOperators: ManufacturerFilterOperators,
         },
         {
-            type: "virtual",
+            type: "manyToMany",
             name: "tags",
             headerName: "Tags",
-            queryFields: ["tags.title"],
-            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+            labelField: "title",
         },
         {
             type: "actions",

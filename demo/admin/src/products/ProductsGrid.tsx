@@ -5,6 +5,7 @@ import {
     CrudMoreActionsMenu,
     CrudVisibility,
     dataGridDateColumn,
+    dataGridManyToManyColumn,
     DataGridToolbar,
     type ExportApi,
     FillSpace,
@@ -27,7 +28,6 @@ import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
     DataGridPro,
     GridFilterInputSingleSelect,
-    GridFilterInputValue,
     type GridRowSelectionModel,
     type GridSlotsComponent,
     GridToolbarQuickFilter,
@@ -225,21 +225,12 @@ export function ProductsGrid() {
             disableExport: true,
         },
         {
+            ...dataGridManyToManyColumn,
             field: "tags",
             headerName: "Tags",
             flex: 1,
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
-            filterOperators: [
-                {
-                    label: "Search",
-                    value: "search",
-                    getApplyFilterFn: (filterItem) => {
-                        throw new Error("not implemented, we filter server side");
-                    },
-                    InputComponent: GridFilterInputValue,
-                },
-            ],
             disableExport: true,
         },
         {

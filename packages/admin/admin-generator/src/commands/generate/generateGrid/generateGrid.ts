@@ -7,7 +7,7 @@ import {
     type IntrospectionObjectType,
     type IntrospectionQuery,
 } from "graphql";
-import { plural } from "pluralize";
+import { plural, singular } from "pluralize";
 import { type ReactNode } from "react";
 
 import {
@@ -184,6 +184,7 @@ export function generateGrid(
         { name: "dataGridDateTimeColumn", importPath: "@comet/admin" },
         { name: "dataGridDateColumn", importPath: "@comet/admin" },
         { name: "dataGridIdColumn", importPath: "@comet/admin" },
+        { name: "dataGridManyToManyColumn", importPath: "@comet/admin" },
         { name: "renderStaticSelectCell", importPath: "@comet/admin" },
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
@@ -512,6 +513,8 @@ export function generateGrid(
             };
         } else if (type == "id") {
             gridColumnType = "...dataGridIdColumn,";
+        } else if (type == "manyToMany") {
+            gridColumnType = "...dataGridManyToManyColumn,";
         }
 
         if (
@@ -521,7 +524,8 @@ export function generateGrid(
                 column.type == "date" ||
                 column.type == "dateTime" ||
                 column.type == "virtual" ||
-                column.type == "id") &&
+                column.type == "id" ||
+                column.type == "manyToMany") &&
             column.renderCell
         ) {
             if (isGeneratorConfigCode(column.renderCell)) {
@@ -530,6 +534,14 @@ export function generateGrid(
             } else {
                 throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
             }
+        }
+
+        if (column.type === "manyToMany" && !column.renderCell) {
+            if (!column.labelField) {
+                throw new Error(`labelField is required for manyToMany column '${name}' if no custom renderCell is provided`);
+            }
+
+            renderCell = `({ row }) => <>{row.${column.name}.map((${singular(column.name)}) => ${singular(column.name)}.${column.labelField}).join(", ")}</>`;
         }
 
         //TODO support n:1 relation with singleSelect
