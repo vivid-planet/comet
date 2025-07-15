@@ -688,5 +688,5 @@ To add the Brevo Mail Rendering package, add the following to your `package.json
 ### Register blocks
 
 To use a block from the package, register it in your `NewsletterContentBlock` (or any `BlocksBlock` you use for creating email campaigns).  
-Make sure to register the block in your API, ADMIN, and SITE projects.  
+Make sure to register the block in your API, admin, and site projects.  
 For detailed instructions on working with blocks in Comet, see https://docs.comet-dxp.com/docs/core-concepts/blocks/your-first-block
