@@ -107,7 +107,7 @@ BrevoModule.register({
 
 Brevo contacts are managed and stored directly within the Brevo platform. However, attributes must be set in the application to allow adding contacts according to your project's needs.
 
-Add `BrevoContactAttributes` to store information for each contact, such as names, salutations, or any other data relevant to your use case.
+Add `BrevoContactAttributes` to store information for each contact, such as names, salutations, or any other data relevant to your use case. All attribute names must be defined in **uppercase** to match Brevo's requirements.
 
 `BrevoContactFilterAttributes` can be added for creating target groups that are used to create lists for sending emails to selected users.
 
