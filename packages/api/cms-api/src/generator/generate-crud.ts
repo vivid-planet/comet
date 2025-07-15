@@ -179,10 +179,10 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter, IsUndefinable } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
-    import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+    import { IsNumber, IsString, ValidateNested } from "class-validator";
     ${importsOut}
 
     ${enumFiltersOut}
@@ -195,7 +195,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     const enumName = findEnumName(prop.name, metadata);
                     return `@Field(() => ${enumName}EnumsFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => ${enumName}EnumsFilter)
                     ${prop.name}?: ${enumName}EnumsFilter;
                     `;
@@ -203,28 +203,28 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     const enumName = findEnumName(prop.name, metadata);
                     return `@Field(() => ${enumName}EnumFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => ${enumName}EnumFilter)
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
                 } else if (prop.type === "string" || prop.type === "text") {
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => StringFilter)
                     ${prop.name}?: StringFilter;
                     `;
                 } else if (prop.type === "DecimalType" || prop.type == "number" || integerTypes.includes(prop.type)) {
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => NumberFilter)
                     ${prop.name}?: NumberFilter;
                     `;
                 } else if (prop.type === "boolean" || prop.type === "BooleanType") {
                     return `@Field(() => BooleanFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => BooleanFilter)
                     ${prop.name}?: BooleanFilter;
                     `;
@@ -232,7 +232,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     // ISO Date without time
                     return `@Field(() => DateFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => DateFilter)
                     ${prop.name}?: DateFilter;
                     `;
@@ -240,28 +240,28 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     // DateTime
                     return `@Field(() => DateTimeFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => DateTimeFilter)
                     ${prop.name}?: DateTimeFilter;
                     `;
                 } else if (prop.reference === "m:1") {
                     return `@Field(() => ManyToOneFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => ManyToOneFilter)
                     ${prop.name}?: ManyToOneFilter;
                     `;
                 } else if (prop.reference === "1:m") {
                     return `@Field(() => OneToManyFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => OneToManyFilter)
                     ${prop.name}?: OneToManyFilter;
                     `;
                 } else if (prop.reference === "m:n") {
                     return `@Field(() => ManyToManyFilter, { nullable: true })
                     @ValidateNested()
-                    @IsOptional()
+                    @IsUndefinable()
                     @Type(() => ManyToManyFilter)
                     ${prop.name}?: ManyToManyFilter;
                     `;
@@ -275,13 +275,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         @Field(() => [${classNameSingular}Filter], { nullable: true })
         @Type(() => ${classNameSingular}Filter)
         @ValidateNested({ each: true })
-        @IsOptional()
+        @IsUndefinable()
         and?: ${classNameSingular}Filter[];
 
         @Field(() => [${classNameSingular}Filter], { nullable: true })
         @Type(() => ${classNameSingular}Filter)
         @ValidateNested({ each: true })
-        @IsOptional()
+        @IsUndefinable()
         or?: ${classNameSingular}Filter[];
     }
     `;
@@ -376,8 +376,8 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
     const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
-    import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
-    import { OffsetBasedPaginationArgs } from "@comet/cms-api";
+    import { IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
+    import { IsUndefinable, OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
 
@@ -425,7 +425,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
             hasSearchArg
                 ? `
         @Field({ nullable: true })
-        @IsOptional()
+        @IsUndefinable()
         @IsString()
         search?: string;
         `
@@ -438,7 +438,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         @Field(() => ${classNameSingular}Filter, { nullable: true })
         @ValidateNested()
         @Type(() => ${classNameSingular}Filter)
-        @IsOptional()
+        @IsUndefinable()
         filter?: ${classNameSingular}Filter;
         `
                 : ""
@@ -450,7 +450,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         @Field(() => [${classNameSingular}Sort], { nullable: true })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
-        @IsOptional()
+        @IsUndefinable()
         sort?: ${classNameSingular}Sort[];
         `
                 : ""
