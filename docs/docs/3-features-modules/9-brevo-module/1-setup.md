@@ -59,7 +59,7 @@ See the table below for information on how to find the config values and what th
 ### Register module
 
 To use the Brevo Module in your project, you need to register it in your main `AppModule`.  
-Pass the `scope` to the `resolveConfig` function to use the appropriate values for each scope.  
+If your configuration varies by scope, pass the `scope` to the `resolveConfig` function to use the appropriate values for each scope.  
 You can also register additional entities or features you want to use later on (see the section [Optional Brevo Features](http://localhost:3300/docs/features-modules/brevo-module/features/)).
 
 Example implementation:
