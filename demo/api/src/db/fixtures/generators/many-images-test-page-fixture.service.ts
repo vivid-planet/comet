@@ -50,7 +50,7 @@ export class ManyImagesTestPageFixtureService {
                 // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
-            PageTreeNodeCategory.MainNavigation,
+            PageTreeNodeCategory.mainNavigation,
             scope,
         );
 
@@ -72,7 +72,7 @@ export class ManyImagesTestPageFixtureService {
                 visible: true,
                 type: "image",
                 props: c,
-                userGroup: UserGroup.All,
+                userGroup: UserGroup.all,
             })),
         });
         pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });

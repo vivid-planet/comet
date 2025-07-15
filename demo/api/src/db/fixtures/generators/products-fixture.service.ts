@@ -66,7 +66,7 @@ export class ProductsFixtureService {
                 status: faker.helpers.arrayElement([ProductStatus.Published, ProductStatus.Unpublished]),
                 slug: faker.helpers.slugify(title),
                 description: faker.commerce.productDescription(),
-                type: faker.helpers.arrayElement([ProductType.Cap, ProductType.Shirt, ProductType.Tie]),
+                type: faker.helpers.arrayElement([ProductType.cap, ProductType.shirt, ProductType.tie]),
                 additionalTypes: [],
                 price: faker.datatype.number(),
                 inStock: faker.datatype.boolean(),

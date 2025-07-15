@@ -20,7 +20,7 @@ export const NewsGrid: GridConfig<GQLNews> = {
             type: "staticSelect",
             name: "category",
             headerName: "Category",
-            values: ["Events", "Company", "Awards"],
+            values: ["events", "company", "awards"],
         },
         {
             type: "block",

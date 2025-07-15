@@ -10,7 +10,7 @@ interface Props {
 }
 
 function UserGroupChip({ item }: Props): JSX.Element | null {
-    if (item.userGroup === "All") {
+    if (item.userGroup === "all") {
         return null;
     } else {
         return (

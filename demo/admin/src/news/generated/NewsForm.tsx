@@ -165,15 +165,15 @@ export function NewsForm({ id, scope }: FormProps): React.ReactElement {
                             options={[
                                 {
                                     label: <FormattedMessage id="news.category.events" defaultMessage="Events" />,
-                                    value: "Events",
+                                    value: "events",
                                 },
                                 {
                                     label: <FormattedMessage id="news.category.company" defaultMessage="Company" />,
-                                    value: "Company",
+                                    value: "company",
                                 },
                                 {
                                     label: <FormattedMessage id="news.category.awards" defaultMessage="Awards" />,
-                                    value: "Awards",
+                                    value: "awards",
                                 },
                             ]}
                         />

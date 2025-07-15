@@ -52,7 +52,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
         }
     `,
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
-        if (page.userGroup !== "All") {
+        if (page.userGroup !== "all") {
             return <Chip size="small" label={page.userGroup} />;
         }
         return null;

@@ -13,7 +13,7 @@ export class PredefinedPagesService {
 
         if (!pageTreeNode) {
             switch (type) {
-                case PredefinedPageType.News:
+                case PredefinedPageType.news:
                     return "/news";
             }
         }
