@@ -152,6 +152,8 @@ export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuPro
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
+    if (menuItems.length <= 1) return null;
+
     const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuItemCollapsibleElement["items"]) =>
         items.flatMap((item, index) => {
             if (item.type === "collapsible") {

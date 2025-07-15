@@ -13,4 +13,10 @@ export const staticUsers: User[] = [
         email: "test@test.com",
         isAdmin: false,
     },
+    {
+        id: "3",
+        name: "One-Permission",
+        email: "one@permission.com",
+        isAdmin: false,
+    },
 ];
