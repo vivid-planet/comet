@@ -2,6 +2,8 @@
     "name": "comet-demo-api",
     "version": "1.0.0",
     "private": true,
+    "description": "Comet API Demo Application",
+    "type": "commonjs",
     "scripts": {
         "api-generator": "rimraf --glob 'src/**/generated' && comet-api-generator generate",
         "api-generator:watch": "rimraf --glob 'src/**/generated' && comet-api-generator generate --watch",
@@ -81,7 +83,7 @@
         "check-node-version": "^4.2.1",
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^7.4.4",
-        "eslint": "^9.22.0",
+        "eslint": "^9.30.1",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",

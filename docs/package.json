@@ -2,6 +2,7 @@
     "name": "comet-docs",
     "version": "0.0.0",
     "private": true,
+    "description": "Documentation for Comet",
     "scripts": {
         "build": "docusaurus build",
         "clear": "docusaurus clear",
@@ -75,7 +76,7 @@
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "cspell": "^8.19.4",
-        "eslint": "^9.22.0",
+        "eslint": "^9.30.1",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "sucrase": "^3.35.0",

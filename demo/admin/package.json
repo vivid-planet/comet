@@ -2,9 +2,12 @@
     "name": "comet-demo-admin",
     "version": "1.0.0",
     "private": true,
+    "description": "Comet Admin Demo Application",
+    "type": "commonjs",
     "scripts": {
         "admin-generator": "rimraf --glob 'src/**/generated' && comet-admin-generator generate",
         "build": "run-s admin-generator intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
+        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"block-meta.json\" -c \"npm run generate-block-types\"",
         "gql:types": "graphql-codegen",
@@ -20,8 +23,7 @@
         "lint:tsc": "tsc --project .",
         "preview": "npm run build && vite preview",
         "serve": "node server",
-        "start": "$npm_execpath check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite",
-        "check-node-version": "check-node-version --node $(cat ../../.nvmrc)"
+        "start": "$npm_execpath check-node-version && run-s admin-generator intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- vite"
     },
     "dependencies": {
         "@apollo/client": "^3.13.8",
@@ -84,7 +86,7 @@
         "chokidar-cli": "^3.0.0",
         "cosmiconfig-toml-loader": "^1.0.0",
         "dotenv-cli": "^7.4.4",
-        "eslint": "^9.22.0",
+        "eslint": "^9.30.1",
         "npm-run-all2": "^5.0.2",
         "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
