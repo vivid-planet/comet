@@ -2,7 +2,7 @@ import "@fontsource-variable/roboto-flex/full.css";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { ErrorDialogHandler, MasterLayout, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CometConfigProvider,
     type ContentScope,
@@ -18,7 +18,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import { type ContentScope as BaseContentScope } from "@src/site-configs";
-import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd-multi-backend";
@@ -28,6 +27,7 @@ import { Route, Switch } from "react-router";
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { ThemeProvider } from "./common/ThemeProvider";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
@@ -124,7 +124,7 @@ export function App() {
             <ApolloProvider client={apolloClient}>
                 <IntlProvider locale="en" messages={getMessages()}>
                     <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-                        <MuiThemeProvider theme={theme}>
+                        <ThemeProvider>
                             <DndProvider options={HTML5toTouch}>
                                 <SnackbarProvider>
                                     <ErrorDialogHandler />
@@ -159,7 +159,7 @@ export function App() {
                                     </CurrentUserProvider>
                                 </SnackbarProvider>
                             </DndProvider>
-                        </MuiThemeProvider>
+                        </ThemeProvider>
                     </LocalizationProvider>
                 </IntlProvider>
             </ApolloProvider>

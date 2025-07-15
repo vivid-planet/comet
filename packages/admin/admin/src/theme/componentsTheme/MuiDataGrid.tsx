@@ -40,7 +40,7 @@ const filterDeleteIconSize = 32;
 const filterLeftSectionGap = 5;
 const filterOperatorInputWidth = filtersLeftSectionWidth - filterDeleteIconSize - filterLeftSectionGap;
 
-export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing, breakpoints }) => ({
+export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing, breakpoints }, intl) => ({
     ...component,
     defaultProps: {
         ...component?.defaultProps,
@@ -82,8 +82,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         localeText: {
             ...component?.defaultProps?.localeText,
-            // TODO i18n https://vivid-planet.atlassian.net/browse/COM-2167
-            filterOperatorSearch: "search",
+            filterOperatorSearch: intl.formatMessage({ id: "comet.dataGrid.filterOperators.search", defaultMessage: "search" }),
         },
     },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
