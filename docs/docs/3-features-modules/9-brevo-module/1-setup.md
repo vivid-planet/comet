@@ -64,7 +64,7 @@ You can also register additional entities or features you want to use later on (
 
 Example implementation:
 
-```
+```typescript
 BrevoModule.register({
     brevo: {
         resolveConfig: (scope: EmailCampaignContentScope) => {
@@ -117,7 +117,7 @@ Be aware that at least one attribute in BrevoContactFilterAttributes must be set
 
 To add custom contact attributes, add `BrevoContactAttributes` and `BrevoContactFilterAttributes` to your project, as shown in this example:
 
-```
+```typescript
 import { IsUndefinable } from "@comet/cms-api";
 import { Embeddable, Enum } from "@mikro-orm/core";
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
@@ -186,7 +186,7 @@ To add the Brevo Admin package, add the following to your `package.json` depende
 
 To use custom contact attributes in the `BrevoContactsPage`, you need to provide a configuration object. Therefore, create the config named `BrevoContactsPageAttributesConfig` like in this example:
 
-```
+```typescript
 const attributesFragment = gql`
     fragment BrevoContactAttributesFragment on BrevoContact {
         attributes {
@@ -204,18 +204,27 @@ const salutationOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactS
         value: "MALE",
     },
     {
-        label: <FormattedMessage id="brevoContact.filters.salutation.female" defaultMessage="Female" />,
+        label: (
+            <FormattedMessage id="brevoContact.filters.salutation.female" defaultMessage="Female" />
+        ),
         value: "FEMALE",
     },
 ];
 
 const branchOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactBranch }> = [
     {
-        label: <FormattedMessage id="brevoContact.filters.branch.products" defaultMessage="Products" />,
+        label: (
+            <FormattedMessage id="brevoContact.filters.branch.products" defaultMessage="Products" />
+        ),
         value: "PRODUCTS",
     },
     {
-        label: <FormattedMessage id="brevoContact.filters.branch.marketing" defaultMessage="Marketing" />,
+        label: (
+            <FormattedMessage
+                id="brevoContact.filters.branch.marketing"
+                defaultMessage="Marketing"
+            />
+        ),
         value: "MARKETING",
     },
     {
@@ -245,7 +254,12 @@ export interface BrevoContactConfig {
         name: string;
     };
     input2State: (values?: AdditionalFormConfigInputProps) => {
-        attributes: { BRANCH?: Array<GQLBrevoContactBranch>; SALUTATION?: GQLBrevoContactSalutation; FIRSTNAME?: string; LASTNAME?: string };
+        attributes: {
+            BRANCH?: Array<GQLBrevoContactBranch>;
+            SALUTATION?: GQLBrevoContactSalutation;
+            FIRSTNAME?: string;
+            LASTNAME?: string;
+        };
     };
     exportFields: {
         renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => string;
@@ -258,7 +272,10 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
         additionalGridFields: [
             {
                 field: "attributes.firstName",
-                headerName: intl.formatMessage({ id: "brevoContact.firstName", defaultMessage: "First name" }),
+                headerName: intl.formatMessage({
+                    id: "brevoContact.firstName",
+                    defaultMessage: "First name",
+                }),
                 filterable: false,
                 sortable: false,
                 width: 150,
@@ -266,7 +283,10 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
             },
             {
                 field: "attributes.lastName",
-                headerName: intl.formatMessage({ id: "brevoContact.lastName", defaultMessage: "Last name" }),
+                headerName: intl.formatMessage({
+                    id: "brevoContact.lastName",
+                    defaultMessage: "Last name",
+                }),
                 filterable: false,
                 sortable: false,
                 width: 150,
@@ -276,7 +296,12 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
         additionalFormFields: (
             <>
                 <Field
-                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="Salutation" />}
+                    label={
+                        <FormattedMessage
+                            id="brevoContact.fields.salutation"
+                            defaultMessage="Salutation"
+                        />
+                    }
                     name="attributes.SALUTATION"
                     fullWidth
                 >
@@ -290,7 +315,13 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
                         </FinalFormSelect>
                     )}
                 </Field>
-                <Field label={<FormattedMessage id="brevoContact.fields.branch" defaultMessage="Branch" />} name="attributes.BRANCH" fullWidth>
+                <Field
+                    label={
+                        <FormattedMessage id="brevoContact.fields.branch" defaultMessage="Branch" />
+                    }
+                    name="attributes.BRANCH"
+                    fullWidth
+                >
                     {(props) => (
                         <FinalFormSelect {...props} fullWidth multiple>
                             {branchOptions.map((option) => (
@@ -302,12 +333,22 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
                     )}
                 </Field>
                 <TextField
-                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="First name" />}
+                    label={
+                        <FormattedMessage
+                            id="brevoContact.fields.salutation"
+                            defaultMessage="First name"
+                        />
+                    }
                     name="attributes.FIRSTNAME"
                     fullWidth
                 />
                 <TextField
-                    label={<FormattedMessage id="brevoContact.fields.salutation" defaultMessage="Last name" />}
+                    label={
+                        <FormattedMessage
+                            id="brevoContact.fields.salutation"
+                            defaultMessage="Last name"
+                        />
+                    }
                     name="attributes.LASTNAME"
                     fullWidth
                 />
@@ -329,12 +370,20 @@ export const getBrevoContactConfig = (intl: IntlShape): BrevoContactConfig => {
         },
         exportFields: [
             {
-                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => row.attributes?.FIRSTNAME,
-                headerName: intl.formatMessage({ id: "brevoContact.firstName", defaultMessage: "First name" }),
+                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) =>
+                    row.attributes?.FIRSTNAME,
+                headerName: intl.formatMessage({
+                    id: "brevoContact.firstName",
+                    defaultMessage: "First name",
+                }),
             },
             {
-                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) => row.attributes?.LASTNAME,
-                headerName: intl.formatMessage({ id: "brevoContact.lastName", defaultMessage: "Last name" }),
+                renderValue: (row: GQLBrevoContactAttributesFragmentFragment) =>
+                    row.attributes?.LASTNAME,
+                headerName: intl.formatMessage({
+                    id: "brevoContact.lastName",
+                    defaultMessage: "Last name",
+                }),
             },
         ],
     };
@@ -351,7 +400,7 @@ Attributes must also be added in the Brevo account. Please visit: https://my.bre
 
 The `TargetGroupFormConfig` is used to define the form fields and behavior for creating and editing target groups in the Brevo admin interface. Target groups enable you to segment your contacts based on specific attributes (such as salutation or branch), allowing you to send targeted email campaigns to selected users. The configuration is used, to define the fields for your `TargetGroupForm`.
 
-```
+```typescript
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
 import { EditTargetGroupFinalFormValues } from "@comet/brevo-admin";
@@ -366,18 +415,27 @@ const salutationOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactS
         value: "MALE",
     },
     {
-        label: <FormattedMessage id="targetGroup.filters.salutation.female" defaultMessage="Female" />,
+        label: (
+            <FormattedMessage id="targetGroup.filters.salutation.female" defaultMessage="Female" />
+        ),
         value: "FEMALE",
     },
 ];
 
 const branchOptions: Array<{ label: React.ReactNode; value: GQLBrevoContactBranch }> = [
     {
-        label: <FormattedMessage id="brevoContact.filters.branch.products" defaultMessage="Products" />,
+        label: (
+            <FormattedMessage id="brevoContact.filters.branch.products" defaultMessage="Products" />
+        ),
         value: "PRODUCTS",
     },
     {
-        label: <FormattedMessage id="brevoContact.filters.branch.marketing" defaultMessage="Marketing" />,
+        label: (
+            <FormattedMessage
+                id="brevoContact.filters.branch.marketing"
+                defaultMessage="Marketing"
+            />
+        ),
         value: "MARKETING",
     },
     {
@@ -418,7 +476,16 @@ export const additionalFormConfig = {
     nodeFragment: additionalPageTreeNodeFieldsFragment,
     additionalFormFields: (
         <>
-            <Field label={<FormattedMessage id="targetGroup.fields.salutation" defaultMessage="Salutation" />} name="filters.SALUTATION" fullWidth>
+            <Field
+                label={
+                    <FormattedMessage
+                        id="targetGroup.fields.salutation"
+                        defaultMessage="Salutation"
+                    />
+                }
+                name="filters.SALUTATION"
+                fullWidth
+            >
                 {(props) => (
                     <FinalFormSelect {...props} fullWidth multiple clearable>
                         {salutationOptions.map((option) => (
@@ -429,7 +496,11 @@ export const additionalFormConfig = {
                     </FinalFormSelect>
                 )}
             </Field>
-            <Field label={<FormattedMessage id="targetGroup.fields.branch" defaultMessage="Branch" />} name="filters.BRANCH" fullWidth>
+            <Field
+                label={<FormattedMessage id="targetGroup.fields.branch" defaultMessage="Branch" />}
+                name="filters.BRANCH"
+                fullWidth
+            >
                 {(props) => (
                     <FinalFormSelect {...props} fullWidth clearable multiple>
                         {branchOptions.map((option) => (
@@ -449,7 +520,7 @@ export const additionalFormConfig = {
 
 The Brevo module offers predefined admin pages. Add those to the `MasterMenu`. Also register the BrevoContactConfig in this step. This is an example implementation:
 
-```
+```typescript
 import { Assets, Dashboard, Mail, PageTree, Wrench } from "@comet/admin-icons";
 import {
     BrevoConfigPage,
@@ -470,7 +541,10 @@ import {
     PagesPage,
     PublisherPage,
 } from "@comet/cms-admin";
-import { BrevoContactConfig, getBrevoContactConfig } from "@src/common/brevoModuleConfig/brevoContactsPageAttributesConfig";
+import {
+    BrevoContactConfig,
+    getBrevoContactConfig,
+} from "@src/common/brevoModuleConfig/brevoContactsPageAttributesConfig";
 import { additionalFormConfig } from "@src/common/brevoModuleConfig/targetGroupFormConfig";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
 import { Link } from "@src/documents/links/Link";
@@ -482,7 +556,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 export const pageTreeCategories: AllCategories = [
     {
         category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
+        label: (
+            <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />
+        ),
     },
 ];
 
@@ -493,7 +569,11 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
 };
 const RedirectsPage = createRedirectsPage({ scopeParts: ["domain"] });
 
-const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoContactConfig }): MasterMenuData => {
+const getMasterMenuData = ({
+    brevoContactConfig,
+}: {
+    brevoContactConfig: BrevoContactConfig;
+}): MasterMenuData => {
     const BrevoContactsPage = createBrevoContactsPage({
         additionalAttributesFragment: brevoContactConfig.additionalAttributesFragment,
         additionalGridFields: brevoContactConfig.additionalGridFields,
@@ -544,7 +624,9 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                         allCategories={pageTreeCategories}
                         documentTypes={pageTreeDocumentTypes}
                         category="MainNavigation"
-                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
+                        renderContentScopeIndicator={(scope) => (
+                            <ContentScopeIndicator scope={scope} />
+                        )}
                     />
                 ),
             },
@@ -557,7 +639,12 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
             items: [
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.emailCampaigns" defaultMessage="Email campaigns" />,
+                    primary: (
+                        <FormattedMessage
+                            id="menu.newsletter.emailCampaigns"
+                            defaultMessage="Email campaigns"
+                        />
+                    ),
                     route: {
                         path: "/newsletter/email-campaigns",
                         component: CampaignsPage,
@@ -565,7 +652,12 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.emailCampaigns" defaultMessage="Contacts" />,
+                    primary: (
+                        <FormattedMessage
+                            id="menu.newsletter.emailCampaigns"
+                            defaultMessage="Contacts"
+                        />
+                    ),
                     route: {
                         path: "/newsletter/contacts",
                         render: () => <BrevoContactsPage />,
@@ -573,7 +665,12 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.testContacts" defaultMessage="Test contacts" />,
+                    primary: (
+                        <FormattedMessage
+                            id="menu.newsletter.testContacts"
+                            defaultMessage="Test contacts"
+                        />
+                    ),
                     route: {
                         path: "/newsletter/test-contacts",
                         render: () => <BrevoTestContactsPage />,
@@ -581,7 +678,12 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.targetGroups" defaultMessage="Target groups" />,
+                    primary: (
+                        <FormattedMessage
+                            id="menu.newsletter.targetGroups"
+                            defaultMessage="Target groups"
+                        />
+                    ),
                     route: {
                         path: "/newsletter/target-groups",
                         render: () => <TargetGroupsPage />,
@@ -589,7 +691,9 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
                 },
                 {
                     type: "route",
-                    primary: <FormattedMessage id="menu.newsletter.config" defaultMessage="Config" />,
+                    primary: (
+                        <FormattedMessage id="menu.newsletter.config" defaultMessage="Config" />
+                    ),
                     route: {
                         path: "/newsletter/config",
                         render: () => <BrevoConfigPage />,
@@ -641,7 +745,10 @@ const getMasterMenuData = ({ brevoContactConfig }: { brevoContactConfig: BrevoCo
 export const AppMasterMenu = () => {
     const intl = useIntl();
 
-    const masterMenuDataForScope = React.useMemo(() => getMasterMenuData({ brevoContactConfig: getBrevoContactConfig(intl) }), [intl]);
+    const masterMenuDataForScope = React.useMemo(
+        () => getMasterMenuData({ brevoContactConfig: getBrevoContactConfig(intl) }),
+        [intl],
+    );
 
     return <MasterMenu menu={masterMenuDataForScope} />;
 };
@@ -649,7 +756,10 @@ export const AppMasterMenu = () => {
 export const MasterRoutes = () => {
     const intl = useIntl();
 
-    const masterMenuDataForScope = React.useMemo(() => getMasterMenuData({ brevoContactConfig: getBrevoContactConfig(intl) }), [intl]);
+    const masterMenuDataForScope = React.useMemo(
+        () => getMasterMenuData({ brevoContactConfig: getBrevoContactConfig(intl) }),
+        [intl],
+    );
 
     return <MasterMenuRoutes menu={masterMenuDataForScope} />;
 };
