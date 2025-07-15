@@ -6,6 +6,7 @@ import {
     CrudVisibility,
     dataGridDateColumn,
     dataGridManyToManyColumn,
+    dataGridOneToManyColumn,
     DataGridToolbar,
     type ExportApi,
     FillSpace,
@@ -234,6 +235,15 @@ export function ProductsGrid() {
             disableExport: true,
         },
         {
+            ...dataGridOneToManyColumn,
+            field: "variants",
+            headerName: "Variants",
+            flex: 1,
+            minWidth: 150,
+            renderCell: (params) => <>{params.row.variants.map((variant) => variant.name).join(", ")}</>,
+            disableExport: true,
+        },
+        {
             field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
             type: "boolean",
@@ -392,6 +402,7 @@ const productsFragment = gql`
         }
         variants {
             id
+            name
         }
         manufacturer {
             name

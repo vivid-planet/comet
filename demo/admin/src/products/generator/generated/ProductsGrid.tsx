@@ -18,6 +18,7 @@ import { GridColDef } from "@comet/admin";
 import { dataGridDateTimeColumn } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
 import { dataGridManyToManyColumn } from "@comet/admin";
+import { dataGridOneToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
@@ -46,7 +47,7 @@ import { Education as EducationIcon } from "@comet/admin-icons";
 const productsFragment = gql`
         fragment ProductsGridFuture on Product {
             id
-            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title }
+            category { title } title description price inStock type availableSince createdAt manufacturer { name } tags { title } variants { name }
         }
     `;
 const productsQuery = gql`
@@ -202,6 +203,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
             sortable: false,
             renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+            flex: 1,
+            minWidth: 150, },
+        { ...dataGridOneToManyColumn, field: "variants",
+            headerName: intl.formatMessage({ id: "product.variants", defaultMessage: "Variants" }),
+            sortable: false,
+            renderCell: ({ row }) => <>{row.variants.map((variant) => variant.name).join(", ")}</>,
             flex: 1,
             minWidth: 150, },
         { field: "actions",

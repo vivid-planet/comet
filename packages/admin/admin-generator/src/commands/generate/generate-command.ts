@@ -156,6 +156,15 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
            */
           labelField?: string;
       }
+    | {
+          type: "oneToMany";
+          renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
+          queryFields?: UsableFields<T, true>[];
+          /**
+           * The field to use as label for the default renderCell implementation.
+           */
+          labelField?: string;
+      }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
