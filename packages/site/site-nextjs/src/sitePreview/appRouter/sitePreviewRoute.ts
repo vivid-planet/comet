@@ -20,6 +20,7 @@ export async function sitePreviewRoute(request: NextRequest) {
     }
 
     const cookieJwt = await new SignJWT({
+        userId: data.userId,
         scope: data.scope,
         path: data.path,
         previewData: data.previewData,
