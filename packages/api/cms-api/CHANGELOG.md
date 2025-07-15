@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 7.25.2
+
+### Patch Changes
+
+-   98104babc: API Generator: fix nullable input for many-to-many relations
+    -   @comet/blocks-api@7.25.2
+
 ## 7.25.1
 
 ### Patch Changes
