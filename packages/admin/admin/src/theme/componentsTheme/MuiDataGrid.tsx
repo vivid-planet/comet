@@ -18,7 +18,7 @@ import {
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
-import { DataGridColumnsManagement } from "../../dataGrid/DataGridColumnsManagement";
+import { DataGridColumnsManagement } from "../../dataGrid/columnsManagement/DataGridColumnsManagement";
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
 import { DataGridPagination } from "../../dataGrid/pagination/DataGridPagination";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
@@ -82,6 +82,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         localeText: {
             ...component?.defaultProps?.localeText,
+            // TODO i18n https://vivid-planet.atlassian.net/browse/COM-2167
+            filterOperatorSearch: "search",
         },
     },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {

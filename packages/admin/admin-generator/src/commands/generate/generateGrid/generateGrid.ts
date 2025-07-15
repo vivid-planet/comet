@@ -3,12 +3,11 @@ import { type GridColDef } from "@comet/admin";
 import {
     type IntrospectionEnumType,
     type IntrospectionInputObjectType,
-    type IntrospectionInputValue,
     type IntrospectionNamedTypeRef,
     type IntrospectionObjectType,
     type IntrospectionQuery,
 } from "graphql";
-import { plural } from "pluralize";
+import { plural, singular } from "pluralize";
 import { type ReactNode } from "react";
 
 import {
@@ -185,6 +184,8 @@ export function generateGrid(
         { name: "dataGridDateTimeColumn", importPath: "@comet/admin" },
         { name: "dataGridDateColumn", importPath: "@comet/admin" },
         { name: "dataGridIdColumn", importPath: "@comet/admin" },
+        { name: "dataGridManyToManyColumn", importPath: "@comet/admin" },
+        { name: "dataGridOneToManyColumn", importPath: "@comet/admin" },
         { name: "renderStaticSelectCell", importPath: "@comet/admin" },
         { name: "messages", importPath: "@comet/admin" },
         { name: "muiGridFilterToGql", importPath: "@comet/admin" },
@@ -264,10 +265,8 @@ export function generateGrid(
     const updateMutationType = findMutationType(`update${gqlType}`, gqlIntrospection);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
-    const hasCreateMutation = !!createMutationType;
     const hasUpdateMutation = !!updateMutationType;
 
-    const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
     const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
@@ -293,8 +292,8 @@ export function generateGrid(
 
     const forwardRowAction = allowEditing && config.rowActionProp;
 
-    const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
-    const showCrudContextMenuInActionsColumn = allowCopyPaste || allowDeleting;
+    const showActionsColumn = allowEditing || allowDeleting;
+    const showCrudContextMenuInActionsColumn = allowDeleting;
     const showEditInActionsColumn = allowEditing && !forwardRowAction;
 
     const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
@@ -373,20 +372,6 @@ export function generateGrid(
         | IntrospectionObjectType
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
-
-    //we load /all/ fields as we need it for copy/paste TODO: lazy load during copy?
-    const fieldsToLoad = schemaEntity.fields
-        .filter((field) => {
-            if (field.name === "id" || field.name === "scope") return false;
-            return true;
-        })
-        .filter((field) => {
-            let type = field.type;
-            if (type.kind == "NON_NULL") type = type.ofType;
-            if (type.kind == "LIST") return false;
-            if (type.kind == "OBJECT") return false; //TODO support nested objects
-            return true;
-        });
 
     const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
     const {
@@ -529,6 +514,10 @@ export function generateGrid(
             };
         } else if (type == "id") {
             gridColumnType = "...dataGridIdColumn,";
+        } else if (type == "manyToMany") {
+            gridColumnType = "...dataGridManyToManyColumn,";
+        } else if (type == "oneToMany") {
+            gridColumnType = "...dataGridOneToManyColumn,";
         }
 
         if (
@@ -538,7 +527,9 @@ export function generateGrid(
                 column.type == "date" ||
                 column.type == "dateTime" ||
                 column.type == "virtual" ||
-                column.type == "id") &&
+                column.type == "id" ||
+                column.type == "manyToMany" ||
+                column.type == "oneToMany") &&
             column.renderCell
         ) {
             if (isGeneratorConfigCode(column.renderCell)) {
@@ -547,6 +538,14 @@ export function generateGrid(
             } else {
                 throw new Error(`Unsupported renderCell for column '${name}', only arrow functions are supported`);
             }
+        }
+
+        if ((column.type === "manyToMany" || column.type === "oneToMany") && !column.renderCell) {
+            if (!column.labelField) {
+                throw new Error(`labelField is required for ${column.type} column '${name}' if no custom renderCell is provided`);
+            }
+
+            renderCell = `({ row }) => <>{row.${column.name}.map((${singular(column.name)}) => ${singular(column.name)}.${column.labelField}).join(", ")}</>`;
         }
 
         //TODO support n:1 relation with singleSelect
@@ -570,7 +569,7 @@ export function generateGrid(
             visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
             disableExport: column.disableExport,
-            sortBy: "sortBy" in column && column.sortBy,
+            sortBy: "sortBy" in column ? column.sortBy : undefined,
         };
     });
 
@@ -580,18 +579,6 @@ export function generateGrid(
             importPath: "@comet/admin-icons",
         });
     });
-
-    let createMutationInputFields: readonly IntrospectionInputValue[] = [];
-    {
-        const inputArg = createMutationType?.args.find((arg) => arg.name === "input");
-        if (inputArg) {
-            const inputType = findInputObjectType(inputArg, gqlIntrospection);
-            if (!inputType) throw new Error("Can't find input type");
-            createMutationInputFields = inputType.inputFields.filter((field) =>
-                fieldsToLoad.some((gridColumnField) => gridColumnField.name == field.name),
-            );
-        }
-    }
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
@@ -724,25 +711,6 @@ export function generateGrid(
             : ""
     }
 
-    ${
-        allowCopyPaste
-            ? `const create${gqlType}Mutation = gql\`
-        mutation Create${gqlType}(${[
-            ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-            ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-            ...[`$input: ${gqlType}Input!`],
-        ].join(", ")}) {
-            create${gqlType}(${[
-                gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-                ...(hasScope ? [`scope: $scope`] : []),
-                ...[`input: $input`],
-            ].join(", ")}) {
-                id
-            }
-        }
-    \`;`
-            : ""
-    }
 
     ${
         renderToolbar
@@ -830,7 +798,7 @@ export function generateGrid(
                             : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: (!column.filterOperators && !filterFields.includes(column.name)) || allowRowReordering ? `false` : undefined,
-                        sortable: !sortFields.includes(column.name) || allowRowReordering ? `false` : undefined,
+                        sortable: (!sortFields.includes(column.name) || allowRowReordering) && !column.sortBy ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueFormatter: column.valueFormatter,
                         valueOptions: column.valueOptions,
@@ -889,45 +857,6 @@ export function generateGrid(
                                         ? `
                                         <CrudContextMenu
                                             ${
-                                                allowCopyPaste
-                                                    ? `
-                                            copyData={() => {
-                                                // Don't copy id, because we want to create a new entity with this data
-                                                ${
-                                                    createMutationInputFields.filter((field) => rootBlocks[field.name]).length
-                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return {
-                                                            ...filteredData,
-                                                            ${createMutationInputFields
-                                                                .filter((field) => rootBlocks[field.name])
-                                                                .map((field) => {
-                                                                    if (rootBlocks[field.name]) {
-                                                                        const blockName = rootBlocks[field.name].name;
-                                                                        return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
-                                                                    }
-                                                                })
-                                                                .join(",\n")}
-                                                        };`
-                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return filteredData;`
-                                                }
-                                            }}
-                                            onPaste={async ({ input }) => {
-                                                await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
-                                                    mutation: create${gqlType}Mutation,
-                                                    variables: { ${[
-                                                        ...gqlArgs
-                                                            .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                                                            .map((arg) => arg.name),
-                                                        ...(hasScope ? [`scope`] : []),
-                                                        ...["input"],
-                                                    ].join(", ")} },
-                                                });
-                                            }}
-                                            `
-                                                    : ""
-                                            }
-                                            ${
                                                 allowDeleting
                                                     ? `
                                             onDelete={async () => {
@@ -979,7 +908,7 @@ export function generateGrid(
                         ? [
                               `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
                               `limit: dataGridProps.paginationModel.pageSize`,
-                              `sort: muiGridSortToGql(dataGridProps.sortModel)`,
+                              `sort: muiGridSortToGql(dataGridProps.sortModel, columns)`,
                           ]
                         : // TODO: offset and limit should not be necessary for row reordering but not yet possible to disable in the api generator
                           [`offset: 0`, `limit: 100`, `sort: { field: "position", direction: "ASC" }`]),

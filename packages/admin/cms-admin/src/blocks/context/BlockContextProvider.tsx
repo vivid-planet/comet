@@ -3,7 +3,7 @@ import { type PropsWithChildren } from "react";
 import { type BlockContext, CustomBlockContext } from "./BlockContext";
 
 interface Props {
-    value: Omit<BlockContext, "apiUrl" | "apolloClient">;
+    value: Omit<BlockContext, "apiUrl" | "apolloClient" | "damBasePath">;
 }
 
 export const BlockContextProvider = ({ value, children }: PropsWithChildren<Props>) => {

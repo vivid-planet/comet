@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
 import { useCometConfig } from "../config/CometConfigContext";
+import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
@@ -15,10 +16,10 @@ import { BlockCategory, type BlockDependency, type BlockInterface } from "./type
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
-function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
+function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl, damBasePath }: { apiUrl: string; damBasePath: string }): string {
     if (!damFile) return "";
     return new URL(
-        `${apiUrl}/dam/files/preview/$fileId/$fileName`
+        `${apiUrl}/${damBasePath}/files/preview/$fileId/$fileName`
             .replace("$fileId", damFile.id)
             .replace("$fileName", damFile.name.substr(0, damFile.name.lastIndexOf("."))),
     ).toString();
@@ -37,7 +38,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     createPreviewState: (state, previewContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewContext.apiUrl),
+        urlTemplate: createPreviewUrl(state, { apiUrl: previewContext.apiUrl, damBasePath: previewContext.damBasePath }),
         adminMeta: { route: previewContext.parentUrl },
     }),
 
@@ -112,9 +113,10 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     AdminComponent: ({ state, updateState }) => {
         const { apiUrl } = useCometConfig();
+        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-        const previewUrl = createPreviewUrl(state, apiUrl);
+        const previewUrl = createPreviewUrl(state, { apiUrl, damBasePath });
 
         return (
             <SelectPreviewComponent>
@@ -141,7 +143,10 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
             return [];
         }
         return [
-            { type: "image", content: { src: createPreviewUrl(state, context.apiUrl), width: 320, height: 320 } },
+            {
+                type: "image",
+                content: { src: createPreviewUrl(state, { apiUrl: context.apiUrl, damBasePath: context.damBasePath }), width: 320, height: 320 },
+            },
             { type: "text", content: state.damFile.name },
         ];
     },

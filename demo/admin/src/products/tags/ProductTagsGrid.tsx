@@ -4,7 +4,6 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     FillSpace,
-    filterByFragment,
     type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
@@ -20,8 +19,6 @@ import { DataGridPro, type GridSlotsComponent, GridToolbarQuickFilter } from "@m
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
-    type GQLCreateProductTagMutation,
-    type GQLCreateProductTagMutationVariables,
     type GQLDeleteProductTagMutation,
     type GQLDeleteProductTagMutationVariables,
     type GQLProductTagsGridFragment,
@@ -51,13 +48,7 @@ const deleteProductTagMutation = gql`
         deleteProductTag(id: $id)
     }
 `;
-const createProductTagMutation = gql`
-    mutation CreateProductTag($input: ProductTagInput!) {
-        createProductTag(input: $input) {
-            id
-        }
-    }
-`;
+
 function ProductTagsGridToolbar() {
     return (
         <DataGridToolbar>
@@ -97,17 +88,6 @@ export function ProductTagsGrid() {
                             <EditIcon />
                         </IconButton>
                         <CrudContextMenu
-                            copyData={() => {
-                                // Don't copy id, because we want to create a new entity with this data
-                                const { id, ...filteredData } = filterByFragment(productTagsFragment, params.row);
-                                return filteredData;
-                            }}
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductTagMutation, GQLCreateProductTagMutationVariables>({
-                                    mutation: createProductTagMutation,
-                                    variables: { input },
-                                });
-                            }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteProductTagMutation, GQLDeleteProductTagMutationVariables>({
                                     mutation: deleteProductTagMutation,

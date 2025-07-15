@@ -23,7 +23,9 @@
         "docs": {
             "ignore": ["*"],
             "entry": [],
-            "project": []
+            "project": [],
+            "ignoreDependencies": [".*"],
+            "ignoreUnresolved": [".*"]
         },
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
@@ -123,7 +125,8 @@
         },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
-            "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["ts-dedent"]
         }
     },
     "rules": {

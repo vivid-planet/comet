@@ -50,17 +50,32 @@ export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar
 export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/ToolbarBreadcrumbs";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
+export {
+    DataGridColumnsManagement,
+    DataGridColumnsManagementClassKey,
+    DataGridColumnsManagementProps,
+} from "./dataGrid/columnsManagement/DataGridColumnsManagement";
+export {
+    DataGridColumnsManagementListItem,
+    DataGridColumnsManagementListItemClassKey,
+    DataGridColumnsManagementListItemProps,
+} from "./dataGrid/columnsManagement/DataGridColumnsManagementListItem";
 export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";
 export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuContext, CrudMoreActionsMenuItem, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
-export { DataGridColumnsManagement, DataGridColumnsManagementClassKey, DataGridColumnsManagementProps } from "./dataGrid/DataGridColumnsManagement";
 export { DataGridPanel, DataGridPanelClassKey, DataGridPanelProps } from "./dataGrid/DataGridPanel";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
-export { dataGridDateColumn, dataGridDateTimeColumn, dataGridIdColumn } from "./dataGrid/gridColumnTypes";
+export {
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
+    dataGridIdColumn,
+    dataGridManyToManyColumn,
+    dataGridOneToManyColumn,
+} from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
