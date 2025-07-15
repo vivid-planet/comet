@@ -17,6 +17,7 @@ import { GridCellContent } from "@comet/admin";
 import { GridColDef } from "@comet/admin";
 import { dataGridDateTimeColumn } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
+import { dataGridManyToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
@@ -197,7 +198,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             filterOperators: ManufacturerFilterOperators,
             flex: 1,
             minWidth: 150, },
-        { field: "tags",
+        { ...dataGridManyToManyColumn, field: "tags",
             headerName: intl.formatMessage({ id: "product.tags", defaultMessage: "Tags" }),
             sortable: false,
             renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
