@@ -27,9 +27,3 @@ export const commonFieldComponentArgTypes = {
         control: "boolean",
     },
 } as const;
-
-export const commonFieldComponentArgs = {
-    required: false,
-    disabled: false,
-    fullWidth: false,
-} as const;

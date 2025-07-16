@@ -1,7 +1,7 @@
 import { FinalForm, NumberField } from "@comet/admin";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { commonFieldComponentArgs, commonFieldComponentArgTypes } from "./utils/common";
+import { commonFieldComponentArgTypes } from "./utils/common";
 import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof NumberField>;
@@ -23,8 +23,6 @@ const meta: Meta<typeof NumberField> = {
     args: {
         name: "number",
         label: "Number",
-        clearable: false,
-        ...commonFieldComponentArgs,
     },
 };
 

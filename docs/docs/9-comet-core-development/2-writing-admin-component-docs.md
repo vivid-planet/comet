@@ -2,37 +2,38 @@
 title: Writing Admin component docs
 ---
 
-Each admin-component should have a corresponding documentation page.
+Each admin component should have a corresponding documentation page.
 
-The page should be defined in storybook (`storybook/src/admin-component-docs/`), it will then be used to generate the documentation page in the docs.
+The page should be defined in Storybook (`storybook/src/admin-component-docs/`), it will then be used to generate the documentation page.
 
 ## Minimum requirements
 
 Every docs page should include one `DefaultStory` that shows the minimal usage of the component.
 
-It should allow setting all props using `argTypes`, default values should not be set, unless they are required or basically always used.
+It should allow setting all props using `argTypes`. Default values should not be set unless they are required or commonly used.
 
-### Simple example for the component `MyComponent`
+### Basic example for `MyComponent`
 
 - Create a story file, e.g. `MyComponent.stories.tsx`
-- Define the story config as a default export
+- Define the story `meta` as a default export
+    - Use `commonComponentDocsMeta` to include the basic configuration for the documentation page
     - Set `component` to the component you want to document
     - Set `title` to the name of the component, prefixed with `Admin Components/`
     - Define the props of the component using `argTypes`
-    - Where applicable, define the default values of the props using `args` (optional booleans should always be set to `false` here)
-    - Include `heightCommunicationDecorator` in the `decorators` array to ensure correct rendering in the docs
-- Create the `DefaultStory` and set it's name to the component's name
+    - Where applicable, define the default values of the props using `args`
+- Create the `DefaultStory` and set its name to the component's name
 - Add a concise description of the component above the `DefaultStory` to explain what it's used for
 
 ```tsx
 import { MyComponent } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof MyComponent>;
 
-const config: Meta<typeof MyComponent> = {
+const meta: Meta<typeof MyComponent> = {
+    ...commonComponentDocsMeta,
     component: MyComponent,
     title: "Admin Components/MyComponent",
     argTypes: {
@@ -48,12 +49,11 @@ const config: Meta<typeof MyComponent> = {
         },
     },
     args: {
-        highlighted: false,
+        children: "Hello World",
     },
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 /**
  * Used to display a text in a certain way.
@@ -64,7 +64,7 @@ DefaultStory.name = "MyComponent";
 
 ## Additional information for docs
 
-If you want to add additional information to the docs, e.g., for a special feature or information that may only be relevant in certain use-cases, you can create a separate story in the same docs file with it's own description, in addition to the default story.
+If you want to add additional information to the docs, e.g., for a special feature or information that may only be relevant in specific use cases, you can create a separate story in the same docs file with its own description, in addition to the default story.
 
 `MyComponent.stories.tsx`
 
@@ -72,22 +72,22 @@ If you want to add additional information to the docs, e.g., for a special featu
 /**
  * This explains what happens when using the `highlighted` prop.
  *
- * Something like this example should only be added if this use-case
- * is not obvious or causes possibly unexpected behavior.
+ * Something like this example should only be added if this use case
+ * is not obvious or causes potentially unexpected behavior.
  */
-export const MyComponentHighlightedStory: Story = {
+export const HighlightedExample: Story = {
     render: (props) => {
         return <MyComponent {...props} highlighted />;
     },
 };
-MyComponentHighlightedStory.name = "MyComponentHighlightedStory";
+HighlightedExample.name = "HighlightedExample";
 ```
 
 ## Structure for components that include a field variant
 
-If a component created for usage inside forms and includes a separate variant for usage inside final form, it should mention the existence of the field component but not include the field component in the docs.
+If a component is created for usage inside forms and includes a separate variant for usage inside final form, it should mention the existence of the field component but document the field component separately.
 
-Consider defining `argTypes` and `args` as a separate variable that can be imported by the docs page of the field-variant of the component.
+Consider defining `argTypes` as a separate variable that can be imported by the docs page of the field variant of the component.
 
 `MyInputComponent.stories.tsx`
 
@@ -95,7 +95,7 @@ Consider defining `argTypes` and `args` as a separate variable that can be impor
 import { MyInputComponent } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof MyInputComponent>;
 
@@ -109,19 +109,14 @@ export const argTypes = {
     },
 } as const;
 
-export const args = {
-    highlighted: false,
-} as const;
-
-const config: Meta<typeof MyInputComponent> = {
+const meta: Meta<typeof MyInputComponent> = {
+    ...commonComponentDocsMeta,
     component: MyInputComponent,
     title: "Admin Components/MyInputComponent",
     argTypes,
-    args,
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 /**
  * Used to input a certain type of value in a form.
@@ -148,26 +143,22 @@ import { MyInputComponentField } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { argTypes, args } from "./MyInputComponent.stories";
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
-import { commonFieldComponentArgs, commonFieldComponentArgTypes } from "./utils/common";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { commonFieldComponentArgTypes } from "./utils/common";
 
 type Story = StoryObj<typeof MyInputComponentField>;
 
-const config: Meta<typeof MyInputComponentField> = {
+const meta: Meta<typeof MyInputComponentField> = {
+    ...commonComponentDocsMeta,
     component: MyInputComponentField,
     title: "Admin Components/MyInputComponentField",
     argTypes: {
         ...argTypes,
         ...commonFieldComponentArgTypes,
     },
-    args: {
-        ...args,
-        ...commonFieldComponentArgs,
-    },
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 /**
  * Used to input a certain type of value in a final form.

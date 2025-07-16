@@ -70,7 +70,6 @@ const meta: Meta<typeof Button> = {
     },
     args: {
         children: "Button",
-        disabled: false,
     },
 };
 
