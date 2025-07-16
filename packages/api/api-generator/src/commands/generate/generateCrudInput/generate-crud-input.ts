@@ -1,4 +1,4 @@
-import { hasCrudFieldFeature } from "@comet/cms-api";
+import { type DisablePermissionCheckType, hasCrudFieldFeature, type Permission } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
@@ -42,7 +42,7 @@ function findReferenceTargetType(
 }
 
 export async function generateCrudInput(
-    generatorOptions: { targetDirectory: string },
+    generatorOptions: { targetDirectory: string; requiredPermission: Permission | Permission[] | DisablePermissionCheckType },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
     options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[]; generateUpdateInput?: boolean } = {
