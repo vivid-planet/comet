@@ -63,7 +63,10 @@ describe("GenerateCrudInputEmbedded", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmbedded"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                orm.em.getMetadata().get("TestEntityWithEmbedded"),
+            );
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity-with-embedded.resolver.ts");
             if (!foundFile) throw new Error("File not found");
@@ -163,7 +166,10 @@ describe("GenerateCrudInputEmbedded", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithoutEmbedded"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                orm.em.getMetadata().get("TestEntityWithoutEmbedded"),
+            );
             formattedOut = await formatGeneratedFiles(out);
             const foundFile = formattedOut.find((file) => file.name === "test-entity-without-embedded.resolver.ts");
             if (!foundFile) throw new Error("File not found");
