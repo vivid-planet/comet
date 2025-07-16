@@ -56,7 +56,12 @@ export function isPreviewContentImageRule(content: PreviewContent): content is P
     return content.type === "image";
 }
 
-export type PreviewContent = PreviewContentImage | PreviewContentText;
+export type PreviewContentIcon = { type: "icon"; content: ReactNode };
+export function isPreviewContentIconRule(content: PreviewContent): content is PreviewContentIcon {
+    return content.type === "icon";
+}
+
+export type PreviewContent = PreviewContentImage | PreviewContentText | PreviewContentIcon;
 
 export type BlockDependency = { targetGraphqlObjectType: string; id: string; data?: unknown };
 
