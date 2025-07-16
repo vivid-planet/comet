@@ -3,11 +3,12 @@ import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } fro
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof InlineAlert>;
 
-const config: Meta<typeof InlineAlert> = {
+const meta: Meta<typeof InlineAlert> = {
+    ...commonComponentDocsMeta,
     component: InlineAlert,
     title: "Admin Components/InlineAlert",
     argTypes: {
@@ -16,10 +17,9 @@ const config: Meta<typeof InlineAlert> = {
             options: [undefined, "error", "warning", "info"],
         },
     },
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 export const DefaultStory: Story = {};
 DefaultStory.name = "InlineAlert";

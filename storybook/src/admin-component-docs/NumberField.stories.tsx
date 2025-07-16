@@ -1,12 +1,13 @@
 import { FinalForm, NumberField } from "@comet/admin";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
 import { commonFieldComponentArgs, commonFieldComponentArgTypes } from "./utils/common";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof NumberField>;
 
-const config: Meta<typeof NumberField> = {
+const meta: Meta<typeof NumberField> = {
+    ...commonComponentDocsMeta,
     component: NumberField,
     title: "Admin Components/NumberField",
     argTypes: {
@@ -25,10 +26,9 @@ const config: Meta<typeof NumberField> = {
         clearable: false,
         ...commonFieldComponentArgs,
     },
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 /**
  * Used to add a number input to a final form, its value is stored as a number.

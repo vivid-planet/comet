@@ -2,11 +2,12 @@ import { FieldSet } from "@comet/admin";
 import { Chip } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof FieldSet>;
 
-const config: Meta<typeof FieldSet> = {
+const meta: Meta<typeof FieldSet> = {
+    ...commonComponentDocsMeta,
     component: FieldSet,
     title: "Admin Components/FieldSet",
     argTypes: {
@@ -41,10 +42,9 @@ const config: Meta<typeof FieldSet> = {
         title: "FieldSet Title",
         children: "FieldSet content",
     },
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 // @ts-expect-error TODO: Can we fix this type?
 Chip.displayName = "Chip";

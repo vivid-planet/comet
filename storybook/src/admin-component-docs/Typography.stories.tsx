@@ -1,11 +1,12 @@
 import { Typography } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { heightCommunicationDecorator } from "../helpers/storyDecorators";
+import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof Typography>;
 
-const config: Meta<typeof Typography> = {
+const meta: Meta<typeof Typography> = {
+    ...commonComponentDocsMeta,
     component: Typography,
     title: "Admin Components/Typography",
     argTypes: {
@@ -20,10 +21,9 @@ const config: Meta<typeof Typography> = {
     args: {
         children: "Typography content",
     },
-    decorators: [heightCommunicationDecorator()],
 };
 
-export default config;
+export default meta;
 
 // @ts-expect-error TODO: Can we fix this type?
 Typography.displayName = "Typography";
