@@ -14,6 +14,7 @@ interface SkeletonProps extends PropsWithChildren {
     color?: string;
     title?: ReactNode;
     customContainer?: ReactNode;
+    fill?: boolean;
 }
 
 const PreviewSkeleton = ({
@@ -26,6 +27,7 @@ const PreviewSkeleton = ({
     hasContent,
     color = "#A8A7A8",
     backgroundColor = type === "media" ? "#efefef" : "#E0DDE0",
+    fill = false,
 }: SkeletonProps) => {
     const preview = usePreview();
     const validAspectRatio = getValidAspectRatio(aspectRatio);
@@ -50,17 +52,19 @@ const PreviewSkeleton = ({
                 </div>
             );
         } else if (type === "media") {
-            const height = passedHeight ?? 300;
+            const height = fill ? "100%" : passedHeight ?? 300;
             return (
                 <div
                     className={styles.imageContainer}
-                    style={{
-                        "--background-color": backgroundColor,
-                        "--color": color,
-                        ...(validAspectRatio === undefined
-                            ? { "--height": typeof height === "string" ? height : `${height}px` }
-                            : { "--aspect-ratio": validAspectRatio }),
-                    }}
+                    style={
+                        {
+                            "--background-color": backgroundColor,
+                            "--color": color,
+                            ...(validAspectRatio === undefined || fill
+                                ? { "--height": typeof height === "string" ? height : `${height}px` }
+                                : { "--aspect-ratio": validAspectRatio }),
+                        } as React.CSSProperties
+                    }
                 >
                     {title}
                 </div>
