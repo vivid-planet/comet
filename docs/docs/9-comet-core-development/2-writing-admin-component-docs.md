@@ -21,7 +21,7 @@ It should allow setting all props using `argTypes`. Default values should not be
     - Set `title` to the name of the component, prefixed with `Admin Components/`
     - Define the props of the component using `argTypes`
     - Where applicable, define the default values of the props using `args`
-- Create the `DefaultStory` and set its name to the component's name
+- Create a default story, named `DefaultStory`
 - Add a concise description of the component above the `DefaultStory` to explain what it's used for
 
 ```tsx
@@ -59,7 +59,6 @@ export default meta;
  * Used to display a text in a certain way.
  */
 export const DefaultStory: Story = {};
-DefaultStory.name = "MyComponent";
 ```
 
 ## Additional information for docs
@@ -80,7 +79,6 @@ export const HighlightedExample: Story = {
         return <MyComponent {...props} highlighted />;
     },
 };
-HighlightedExample.name = "HighlightedExample";
 ```
 
 ## Structure for components that include a field variant

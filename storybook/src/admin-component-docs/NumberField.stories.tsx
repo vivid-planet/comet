@@ -40,4 +40,3 @@ export const DefaultStory: Story = {
         );
     },
 };
-DefaultStory.name = "NumberField";

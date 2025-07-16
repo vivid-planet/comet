@@ -58,4 +58,3 @@ export const DefaultStory: Story = {
         return <FieldSet {...props} endAdornment={endAdornment === "Text in Chip" ? <Chip label="Text in Chip" /> : undefined} />;
     },
 };
-DefaultStory.name = "FieldSet";

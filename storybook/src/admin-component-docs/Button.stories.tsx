@@ -94,7 +94,6 @@ export const DefaultStory: Story = {
         return buttonNode;
     },
 };
-DefaultStory.name = "Button";
 
 const ListOfButtons = styled("div")(({ theme }) => ({
     display: "flex",

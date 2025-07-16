@@ -22,7 +22,6 @@ const meta: Meta<typeof InlineAlert> = {
 export default meta;
 
 export const DefaultStory: Story = {};
-DefaultStory.name = "InlineAlert";
 
 /**
  * Displays the `InlineAlert` component with a warning variant.

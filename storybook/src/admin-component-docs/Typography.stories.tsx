@@ -32,7 +32,6 @@ Typography.displayName = "Typography";
  * For rendering basic text, use the [Typography](https://mui.com/material-ui/react-typography/) component provided by MUI.
  */
 export const DefaultStory: Story = {};
-DefaultStory.name = "Typography";
 
 /**
  * When using the theme from `@comet/admin` the following additional variants are available to use when rendering lists:
@@ -40,9 +39,9 @@ DefaultStory.name = "Typography";
  * - `list`
  * - `listItem`
  */
-export const ListVariants: Story = {
+export const CustomListVariants: Story = {
     render: (props) => {
-        // TODO: Fix this story, the typographyies are all redndered as `span` instead of `ul`/`li`.
+        // TODO: Fix this story, the typographyies are all rendered as `span` instead of `ul`/`li`.
         return (
             <>
                 <Typography>You can add unordered lists:</Typography>
@@ -61,4 +60,3 @@ export const ListVariants: Story = {
         );
     },
 };
-ListVariants.name = "Custom list variants";
