@@ -43,7 +43,7 @@ export const commonComponentDocsMeta: Meta = {
                     <Description />
                     <Primary />
                     <Controls />
-                    <Stories includePrimary={false} />
+                    <Stories title="More usage examples" includePrimary={false} />
                 </>
             ),
         },
