@@ -200,6 +200,7 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
                     },
                 }}
             />
+
             <EditDialog>
                 {selection.id && selection.mode ? (
                     <MediaAlternativeForm
