@@ -36,6 +36,10 @@ import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
 Button.displayName = "Button";
 ArrowRight.displayName = "ArrowRight";
 // @ts-expect-error TODO: Can we fix this type?
+Chip.displayName = "Chip";
+// @ts-expect-error TODO: Can we fix this type?
+Stack.displayName = "Stack";
+// @ts-expect-error TODO: Can we fix this type?
 Box.displayName = "Box";
 
 type Story = StoryObj<typeof Button>;
@@ -107,8 +111,8 @@ const DarkListOfButtons = styled(ListOfButtons)(({ theme }) => ({
     padding: theme.spacing(4),
 }));
 
-export const AdvancedExamples = {
-    render: () => {
+export const AdvancedExamples: Story = {
+    render: (props) => {
         return (
             <Stack spacing={10}>
                 <ListOfButtons>
@@ -335,8 +339,8 @@ export const AdvancedExamples = {
     },
 };
 
-export const ResponsiveExample = {
-    render: () => {
+export const ResponsiveExample: Story = {
+    render: (props) => {
         return (
             <Button startIcon={<ArrowRight />} responsive>
                 Responsive Button
@@ -345,8 +349,8 @@ export const ResponsiveExample = {
     },
 };
 
-export const ResponsiveExampleInToolbar = {
-    render: () => {
+export const ResponsiveExampleInToolbar: Story = {
+    render: (props) => {
         return (
             <Toolbar>
                 <ToolbarTitleItem>Toolbar</ToolbarTitleItem>
@@ -393,9 +397,9 @@ const slowAsyncFunctionThatFails = () => {
     });
 };
 
-export const FeedbackButtonExample = {
+export const FeedbackButtonExample: Story = {
     decorators: [spacedElementsDecorator(), moreVerticalSpaceDecorator()],
-    render: () => {
+    render: (props) => {
         return (
             <>
                 <FeedbackButton
@@ -419,10 +423,10 @@ export const FeedbackButtonExample = {
     },
 };
 
-export const FeedbackButtonControlledState = {
+export const FeedbackButtonControlledState: Story = {
     decorators: [spacedElementsDecorator(), moreVerticalSpaceDecorator()],
 
-    render: () => {
+    render: (props) => {
         const [firstButtonLoading, setFirstButtonLoading] = useState(false);
         const [firstButtonHasErrors, setFirstButtonHasErrors] = useState(false);
 
@@ -466,15 +470,15 @@ export const FeedbackButtonControlledState = {
     },
 };
 
-export const SaveButtonExample = {
-    render: () => {
+export const SaveButtonExample: Story = {
+    render: (props) => {
         // TODO: Add proper example when https://github.com/vivid-planet/comet/pull/3589 is merged
         return <SaveButton />;
     },
 };
 
-export const FinalFormSaveButtonExample = {
-    render: () => {
+export const FinalFormSaveButtonExample: Story = {
+    render: (props) => {
         return (
             <FinalForm
                 mode="edit"
@@ -502,8 +506,8 @@ export const FinalFormSaveButtonExample = {
     },
 };
 
-export const SaveBoundarySaveButtonExample = {
-    render: () => {
+export const SaveBoundarySaveButtonExample: Story = {
+    render: (props) => {
         return (
             <SaveBoundary>
                 <StackToolbar>
@@ -533,9 +537,9 @@ export const SaveBoundarySaveButtonExample = {
     },
 };
 
-export const PredefinedButtonsExample = {
+export const PredefinedButtonsExample: Story = {
     decorators: [spacedElementsDecorator()],
-    render: () => {
+    render: (props) => {
         return (
             <>
                 <CancelButton />
