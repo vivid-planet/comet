@@ -9,15 +9,15 @@ export type { GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode.gen
 const userGroupOptions = [
     {
         label: "Show for all",
-        value: "All",
+        value: "all",
     },
     {
         label: "Show only for Group: User",
-        value: "User",
+        value: "user",
     },
     {
         label: "Show only for Group: Admin",
-        value: "Admin",
+        value: "admin",
     },
 ];
 

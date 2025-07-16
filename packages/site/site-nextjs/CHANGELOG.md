@@ -1,5 +1,6 @@
 # @comet/site-nextjs
 
+<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ### Major Changes
@@ -15,6 +16,21 @@
 ### Patch Changes
 
 - @comet/site-react@8.0.0-beta.5
+=======
+## 7.25.2
+
+### Patch Changes
+
+-   @comet/site-react@7.25.2
+
+## 7.25.1
+
+### Patch Changes
+
+-   db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
+-   Updated dependencies [db632346d]
+    -   @comet/site-react@7.25.1
+>>>>>>> main
 
 ## 7.25.0
 
