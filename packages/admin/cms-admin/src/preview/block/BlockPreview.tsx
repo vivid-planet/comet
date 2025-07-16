@@ -1,14 +1,18 @@
+import { useQuery } from "@apollo/client";
 import { Minimize } from "@comet/admin-icons";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import gql from "graphql-tag";
 import { useEffect } from "react";
 
 import { useIFrameBridge } from "../../blocks/iframebridge/useIFrameBridge";
 import { useCometConfig } from "../../config/CometConfigContext";
 import { useContentScope } from "../../contentScope/Provider";
+import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
+import { type GQLBlockPreviewJwtQuery } from "./BlockPreview.generated";
 import { type BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
@@ -34,6 +38,28 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);
     };
+
+    const { blockPreviewApiUrl } = useSiteConfig({ scope });
+    const { data, error } = useQuery<GQLBlockPreviewJwtQuery>(
+        gql`
+            query BlockPreviewJwt($scope: JSONObject!, $url: String!) {
+                blockPreviewJwt(scope: $scope, url: $url)
+            }
+        `,
+        {
+            fetchPolicy: "network-only",
+            variables: {
+                scope,
+                url,
+            },
+            pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
+        },
+    );
+
+    if (error) throw new Error(error.message);
+    if (!data) return <div />;
+    const initialPageUrl = `${blockPreviewApiUrl}?${new URLSearchParams({ jwt: data.blockPreviewJwt }).toString()}`;
+
     return (
         <Root>
             <ActionsContainer>
@@ -51,7 +77,7 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
                     </Grid>
                 </Grid>
             </ActionsContainer>
-            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url} />
+            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={initialPageUrl} />
         </Root>
     );
 }

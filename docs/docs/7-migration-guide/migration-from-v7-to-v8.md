@@ -1951,6 +1951,15 @@ export const RedirectsPage = createRedirectsPage({
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
 
+### ✅ Add block preview API url
+
+The route handler has to be added in site (as described below). The resulting url has to be declared in `resolveSiteConfigForScope` of the `siteConfigs` property of the `CometConfigProvider`.
+
+```diff title="api/src/App.tsx"
++   blockPreviewApiUrl: `${config.previewUrl}/block-preview`,
+    sitePreviewApiUrl: `${config.previewUrl}/site-preview`,
+```
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
@@ -2194,3 +2203,29 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
 </details>
+
+### ✅ Add block preview API handler
+
+Add an API route (just as already exists for site preview) for block preview:
+
+```diff title="site/src/block-preview/route.ts"
++ import { blockPreviewRoute } from "@comet/site-nextjs";
++ import { type NextRequest } from "next/server";
++
++ export const dynamic = "force-dynamic";
++
++ export async function GET(request: NextRequest) {
++     return blockPreviewRoute(request);
++ }
+```
+
+This route has to be allow-listed in the middleware:
+
+```diff title="site/src/middleware/preview.ts"
+    // Block preview is always allowed
+-   if (request.nextUrl.pathname.startsWith("/block-preview/")) {
++   if (request.nextUrl.pathname.startsWith("/block-preview/") || request.nextUrl.pathname === "/block-preview") {
+        // don't apply any other middlewares
+        return NextResponse.next();
+    }
+```

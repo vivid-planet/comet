@@ -5,7 +5,7 @@ import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { type SitePreviewParams, verifySitePreviewJwt } from "../SitePreviewUtils";
+import { type PreviewParams, type SitePreviewParams, verifyPreviewJwt, verifySitePreviewJwt } from "../SitePreviewUtils";
 
 export async function sitePreviewRoute(request: NextRequest) {
     const params = request.nextUrl.searchParams;
@@ -24,7 +24,7 @@ export async function sitePreviewRoute(request: NextRequest) {
         scope: data.scope,
         path: data.path,
         previewData: data.previewData,
-    })
+    } satisfies PreviewParams & SitePreviewParams)
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("1 day")
         .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
@@ -40,14 +40,19 @@ export async function sitePreviewRoute(request: NextRequest) {
  * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
  * @return If SitePreview is active the current preview settings
  */
-export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<SitePreviewParams | null> {
+export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<PreviewParams | null> {
     if (!options.skipDraftModeCheck) {
         if (!draftMode().isEnabled) return null;
     }
 
-    const cookie = cookies().get("__comet_preview");
-    if (cookie) {
-        return verifySitePreviewJwt(cookie.value);
+    const sitePreviewCookie = cookies().get("__comet_preview");
+    if (sitePreviewCookie) {
+        return verifyPreviewJwt(sitePreviewCookie.value);
     }
+    const blockPreviewCookie = cookies().get("__comet_block_preview");
+    if (blockPreviewCookie) {
+        return verifyPreviewJwt(blockPreviewCookie.value);
+    }
+
     return null;
 }

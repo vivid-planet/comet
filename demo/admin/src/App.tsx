@@ -105,6 +105,7 @@ export function App() {
                             siteConfig.scope.domain === "secondary"
                                 ? `${siteConfig.url}/block-preview`
                                 : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                        blockPreviewApiUrl: `${siteConfig.url}/block-preview`,
                         sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
                     };
                 },

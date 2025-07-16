@@ -4,6 +4,7 @@ export interface SiteConfig {
     url: string;
     preloginEnabled: boolean;
     blockPreviewBaseUrl: string;
+    blockPreviewApiUrl: string;
     sitePreviewApiUrl: string;
 }
 
