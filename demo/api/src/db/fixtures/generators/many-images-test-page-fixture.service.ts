@@ -48,7 +48,7 @@ export class ManyImagesTestPageFixtureService {
                     type: "Page",
                 },
                 // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
+                userGroup: UserGroup.all,
             },
             PageTreeNodeCategory.mainNavigation,
             scope,
