@@ -41,10 +41,7 @@ describe("GenerateCrudRelationsNested", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-                orm.em.getMetadata().get("TestEntityProduct"),
-            );
+            const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("TestEntityProduct"));
             const formattedOut = await formatGeneratedFiles(out);
 
             {

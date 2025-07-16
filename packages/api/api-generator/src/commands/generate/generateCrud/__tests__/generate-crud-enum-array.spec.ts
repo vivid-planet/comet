@@ -35,10 +35,7 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-            orm.em.getMetadata().get("TestEntity"),
-        );
+        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.input.ts");
         if (!file) throw new Error("File not found");
@@ -71,10 +68,7 @@ describe("GenerateCrudEnumArray", () => {
             }),
         );
 
-        const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-            orm.em.getMetadata().get("TestEntity"),
-        );
+        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "dto/test-entity.filter.ts");
         if (!file) throw new Error("File not found");

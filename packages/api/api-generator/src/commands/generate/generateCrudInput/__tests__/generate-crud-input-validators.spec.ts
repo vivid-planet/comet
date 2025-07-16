@@ -103,7 +103,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithEmail"),
             );
             const formattedOut = await formatGeneratedFiles(out);
@@ -143,7 +143,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    { targetDirectory: __dirname, requiredPermission: "crud" },
                     orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -183,7 +183,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    { targetDirectory: __dirname, requiredPermission: "crud" },
                     orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -223,7 +223,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    { targetDirectory: __dirname, requiredPermission: "crud" },
                     orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -264,7 +264,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 );
 
                 const out = await generateCrud(
-                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    { targetDirectory: __dirname, requiredPermission: "crud" },
                     orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"),
                 );
                 const formattedOut = await formatGeneratedFiles(out);
@@ -305,7 +305,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"),
             );
             const formattedOut = await formatGeneratedFiles(out);

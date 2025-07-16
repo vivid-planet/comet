@@ -56,7 +56,7 @@ describe("GenerateCrudInputJson", () => {
             );
 
             const out = await generateCrudInput(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"),
             );
             const formattedOut = await formatSource(out[0].content);
@@ -100,7 +100,7 @@ describe("GenerateCrudInputJson", () => {
             );
 
             const out = await generateCrudInput(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithJsonObject"),
             );
             const formattedOut = await formatSource(out[0].content);
@@ -143,7 +143,7 @@ describe("GenerateCrudInputJson", () => {
             );
 
             const out = await generateCrudInput(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithRecord"),
             );
             const formattedOut = await formatSource(out[0].content);

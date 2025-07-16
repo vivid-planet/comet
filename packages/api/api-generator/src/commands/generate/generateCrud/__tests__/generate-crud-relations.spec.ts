@@ -57,10 +57,7 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-                orm.em.getMetadata().get("TestEntityProduct"),
-            );
+            const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("TestEntityProduct"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
             if (!file) throw new Error("File not found");
@@ -91,7 +88,7 @@ describe("GenerateCrudRelations", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityCategory"),
             );
             const formattedOut = await formatGeneratedFiles(out);
@@ -123,10 +120,7 @@ describe("GenerateCrudRelations", () => {
                 }),
             );
 
-            const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-                orm.em.getMetadata().get("TestEntityProduct"),
-            );
+            const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("TestEntityProduct"));
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-product.input.ts");
             if (!file) throw new Error("File not found");

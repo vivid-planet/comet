@@ -7,7 +7,7 @@ import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
-@CrudGenerator({ targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" })
+@CrudGenerator({ targetDirectory: __dirname, requiredPermission: "crud" })
 class TestEntityProductVariant extends BaseEntity {
     @PrimaryKey({ columnType: "text", type: "string" })
     id: string;
@@ -21,7 +21,7 @@ class TestEntityProductVariant extends BaseEntity {
 }
 
 @Entity()
-@CrudGenerator({ targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" })
+@CrudGenerator({ targetDirectory: __dirname, requiredPermission: "crud" })
 class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
@@ -46,7 +46,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityProductVariant"),
             );
             const formattedOut = await formatGeneratedFiles(out);
@@ -75,7 +75,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityProductVariant"),
             );
             const formattedOut = await formatGeneratedFiles(out);
@@ -105,7 +105,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityProductVariant"),
             );
             const formattedOut = await formatGeneratedFiles(out);
