@@ -1,4 +1,4 @@
-import { type CrudSingleGeneratorOptions, hasCrudFieldFeature, isPermission } from "@comet/cms-api";
+import { type CrudSingleGeneratorOptions, hasCrudFieldFeature } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
@@ -13,7 +13,6 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
-    if (!generatorOptions.requiredPermission && isPermission(instanceNamePlural)) generatorOptions.requiredPermission = [instanceNamePlural]; // TODO: requiredPermission should be required?
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         const generatedFiles: GeneratedFile[] = [];
