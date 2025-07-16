@@ -2,7 +2,7 @@ import "@fontsource-variable/roboto-flex/full.css";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MasterLayout, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { CometThemeProvider, ErrorDialogHandler, MasterLayout, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CometConfigProvider,
     type ContentScope,
@@ -13,8 +13,11 @@ import {
     SitePreview,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import { enUS as coreEnUS } from "@mui/material/locale";
+import { enUS as dataGridEnUS } from "@mui/x-data-grid/locales";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { enUS as pickersEnUS } from "@mui/x-date-pickers/locales";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
 import { type ContentScope as BaseContentScope } from "@src/site-configs";
@@ -27,7 +30,6 @@ import { Route, Switch } from "react-router";
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
 import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
-import { ThemeProvider } from "./common/ThemeProvider";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
@@ -124,7 +126,14 @@ export function App() {
             <ApolloProvider client={apolloClient}>
                 <IntlProvider locale="en" messages={getMessages()}>
                     <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-                        <ThemeProvider>
+                        <CometThemeProvider
+                            themeOptions={{ palette: { mode: "light" } }}
+                            themeArgs={[
+                                dataGridEnUS, // x-data-grid translations
+                                pickersEnUS, // x-date-pickers translations
+                                coreEnUS, // core translations
+                            ]}
+                        >
                             <DndProvider options={HTML5toTouch}>
                                 <SnackbarProvider>
                                     <ErrorDialogHandler />
@@ -159,7 +168,7 @@ export function App() {
                                     </CurrentUserProvider>
                                 </SnackbarProvider>
                             </DndProvider>
-                        </ThemeProvider>
+                        </CometThemeProvider>
                     </LocalizationProvider>
                 </IntlProvider>
             </ApolloProvider>

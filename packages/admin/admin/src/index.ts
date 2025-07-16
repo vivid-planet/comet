@@ -273,6 +273,7 @@ export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
 export { breakpointsOptions, breakpointValues } from "./theme/breakpointsOptions";
 export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette, warningPalette } from "./theme/colors";
+export { CometThemeProvider } from "./theme/CometThemeProvider";
 export { createCometTheme } from "./theme/createCometTheme";
 export { paletteOptions } from "./theme/paletteOptions";
 export { shadows } from "./theme/shadows";
