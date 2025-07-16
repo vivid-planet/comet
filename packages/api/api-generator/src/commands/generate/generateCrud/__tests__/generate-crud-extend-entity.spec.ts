@@ -40,7 +40,7 @@ describe("GenerateCrudInputExtendEntity", () => {
         );
 
         const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+            { targetDirectory: __dirname, requiredPermission: "crud" },
             orm.em.getMetadata().get("TestEntityWithTimestamps"),
         );
         const formattedOut = await formatGeneratedFiles(out);

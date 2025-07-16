@@ -45,7 +45,7 @@ describe("GenerateCrud", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithString"),
             );
             const lintedOut = await formatGeneratedFiles(out);
@@ -81,7 +81,7 @@ describe("GenerateCrud", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithString"),
             );
             const formattedOut = await formatGeneratedFiles(out);
@@ -120,7 +120,7 @@ describe("GenerateCrud", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithNumber"),
             );
             const formattedOut = await formatGeneratedFiles(out);
@@ -159,7 +159,7 @@ describe("GenerateCrud", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithTextRuntimeType"),
             );
             const formattedOut = await formatGeneratedFiles(out);

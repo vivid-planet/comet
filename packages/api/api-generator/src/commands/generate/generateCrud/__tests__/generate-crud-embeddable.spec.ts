@@ -64,7 +64,7 @@ describe("GenerateCrudInputEmbedded", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithEmbedded"),
             );
             formattedOut = await formatGeneratedFiles(out);
@@ -167,7 +167,7 @@ describe("GenerateCrudInputEmbedded", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                { targetDirectory: __dirname, requiredPermission: "crud" },
                 orm.em.getMetadata().get("TestEntityWithoutEmbedded"),
             );
             formattedOut = await formatGeneratedFiles(out);

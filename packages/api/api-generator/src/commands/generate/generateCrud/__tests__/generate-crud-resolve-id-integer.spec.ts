@@ -22,7 +22,7 @@ describe("GenerateCrudResolveIdInteger", () => {
         );
 
         const out = await generateCrud(
-            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+            { targetDirectory: __dirname, requiredPermission: "crud" },
             orm.em.getMetadata().get("TestEntityWithIntegerId"),
         );
         const formattedOut = await formatGeneratedFiles(out);

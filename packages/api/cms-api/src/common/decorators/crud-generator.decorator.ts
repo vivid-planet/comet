@@ -1,9 +1,8 @@
-import { type DisablePermissionCheckType } from "../../user-permissions/decorators/required-permission.decorator";
 import { type Permission } from "../../user-permissions/user-permissions.types";
 
 export interface CrudGeneratorOptions {
     targetDirectory: string;
-    requiredPermission: Permission | Permission[] | DisablePermissionCheckType;
+    requiredPermission: Permission | Permission[];
     create?: boolean;
     update?: boolean;
     delete?: boolean;
@@ -34,7 +33,7 @@ export function CrudGenerator({
 
 export interface CrudSingleGeneratorOptions {
     targetDirectory: string;
-    requiredPermission: Permission | Permission[] | DisablePermissionCheckType;
+    requiredPermission: Permission | Permission[];
 }
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {

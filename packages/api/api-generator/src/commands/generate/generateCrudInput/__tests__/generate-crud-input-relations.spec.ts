@@ -34,10 +34,7 @@ describe("GenerateCrudInputRelations", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-            orm.em.getMetadata().get("Product"),
-        );
+        const out = await generateCrudInput({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("Product"));
         const formattedOut = await formatSource(out[0].content);
         const source = parseSource(formattedOut);
 
@@ -71,10 +68,7 @@ describe("GenerateCrudInputRelations", () => {
             }),
         );
 
-        const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
-            orm.em.getMetadata().get("ProductCategory"),
-        );
+        const out = await generateCrudInput({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("ProductCategory"));
         const formattedOut = await formatSource(out[0].content);
         //console.log(formattedOut);
         const source = parseSource(formattedOut);
