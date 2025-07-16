@@ -8,7 +8,7 @@
         "build:docusaurus": "docusaurus build",
         "clear": "run-p clear:docusaurus clear:generated-docs",
         "clear:docusaurus": "docusaurus clear",
-        "clear:generated-docs": "rimraf docs/6-future-admin-components/generated.*",
+        "clear:generated-docs": "rimraf docs/5-admin-components/components/generated.*",
         "deploy": "docusaurus deploy",
         "docusaurus": "docusaurus",
         "generate-component-docs": "ts-node --project tsconfig.ts-node.json src/utils/generateComponentDocs.ts",

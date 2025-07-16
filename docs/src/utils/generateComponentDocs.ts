@@ -14,7 +14,7 @@ const main = async () => {
 };
 
 const generateComponentDocs = (storyTitles: string[]) => {
-    const docsDir = path.resolve(process.cwd(), "docs/6-future-admin-components");
+    const docsDir = path.resolve(process.cwd(), "docs/5-admin-components/components");
 
     storyTitles.forEach((fullStoryTitle) => {
         const componentName = fullStoryTitle.split("/")[1];
@@ -35,7 +35,7 @@ title: ${componentName}
 slug: ${kebabCase(componentName)}
 ---
 
-import { ComponentDoc } from "../../src/components/ComponentDoc";
+import { ComponentDoc } from "../../../src/components/ComponentDoc";
 
 # ${componentName}
 
