@@ -1,4 +1,4 @@
-import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { PageTreeNodeBaseCreateInput, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
@@ -47,9 +47,8 @@ export class ManyImagesTestPageFixtureService {
                     id: uuidDocument,
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.all,
-            },
+            } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
             PageTreeNodeCategory.mainNavigation,
             scope,
         );
