@@ -10,11 +10,6 @@ import { type User } from "./interfaces/user";
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PermissionOverrides {} // This interface can be overwritten to add custom permissions
 export type Permission = `${CometPermission}` | `${PermissionOverrides[keyof PermissionOverrides]}`; // convert enum to string union type
-export function isPermission(value: string): value is Permission;
-export function isPermission(value: string[]): value is Permission[];
-export function isPermission(value: string | string[]): value is Permission | Permission[] {
-    return Array.isArray(value) ? value.every((v) => isPermission(v)) : value !== "disablePermissionCheck";
-}
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",

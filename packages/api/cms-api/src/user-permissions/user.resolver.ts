@@ -9,7 +9,6 @@ import { FindUsersArgs, PermissionFilter } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
 import { User } from "./interfaces/user";
 import { UserPermissionsService } from "./user-permissions.service";
-import { isPermission } from "./user-permissions.types";
 
 @ObjectType()
 class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsUser) {}
@@ -83,9 +82,9 @@ export class UserResolver {
     async permissionAndFiltersApplies(user: User, filters: PermissionFilter[]): Promise<boolean> {
         for (const filter of filters) {
             if (
-                (filter.equal && isPermission(filter.equal) && !(await this.userService.hasPermission(user, filter.equal))) ||
-                (filter.isAnyOf && isPermission(filter.isAnyOf) && !(await this.userService.hasPermission(user, filter.isAnyOf))) ||
-                (filter.notEqual && isPermission(filter.notEqual) && (await this.userService.hasPermission(user, filter.notEqual)))
+                (filter.equal && !(await this.userService.hasPermission(user, filter.equal))) ||
+                (filter.isAnyOf && !(await this.userService.hasPermission(user, filter.isAnyOf))) ||
+                (filter.notEqual && (await this.userService.hasPermission(user, filter.notEqual)))
             ) {
                 return false;
             }
@@ -96,9 +95,9 @@ export class UserResolver {
     async permissionOrFiltersApplies(user: User, filters: PermissionFilter[]): Promise<boolean> {
         for (const filter of filters) {
             if (
-                (filter.equal && isPermission(filter.equal) && (await this.userService.hasPermission(user, filter.equal))) ||
-                (filter.isAnyOf && isPermission(filter.isAnyOf) && (await this.userService.hasPermission(user, filter.isAnyOf))) ||
-                (filter.notEqual && isPermission(filter.notEqual) && !(await this.userService.hasPermission(user, filter.notEqual)))
+                (filter.equal && (await this.userService.hasPermission(user, filter.equal))) ||
+                (filter.isAnyOf && (await this.userService.hasPermission(user, filter.isAnyOf))) ||
+                (filter.notEqual && !(await this.userService.hasPermission(user, filter.notEqual)))
             ) {
                 return true;
             }

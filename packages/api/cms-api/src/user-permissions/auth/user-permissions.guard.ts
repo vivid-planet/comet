@@ -8,7 +8,7 @@ import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorator
 import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
-import { AccessControlServiceInterface, isPermission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
+import { AccessControlServiceInterface, Permission, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -51,7 +51,7 @@ export class UserPermissionsGuard implements CanActivate {
         if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
             return requiredPermissions
-                .filter((permission) => isPermission(permission))
+                .filter((permission): permission is Permission => permission !== DisablePermissionCheck)
                 .some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
             if (requiredContentScopes.length === 0)
@@ -64,7 +64,7 @@ export class UserPermissionsGuard implements CanActivate {
             // The first level consists of submitted scopes and affected entities
             // The only case that there is more than one scope in the second level is when the ScopedEntity returns more scopes
             return requiredPermissions
-                .filter((permission) => isPermission(permission))
+                .filter((permission): permission is Permission => permission !== DisablePermissionCheck)
                 .some((permission) =>
                     requiredContentScopes.every((contentScopes) =>
                         contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
