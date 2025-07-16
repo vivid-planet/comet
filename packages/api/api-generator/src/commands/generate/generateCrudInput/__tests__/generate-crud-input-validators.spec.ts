@@ -102,7 +102,10 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmail"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                orm.em.getMetadata().get("TestEntityWithEmail"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-email.input.ts");
             if (!file) throw new Error("File not found");
@@ -139,7 +142,10 @@ describe("GenerateDefinedValidatorDecorators", () => {
                     }),
                 );
 
-                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"));
+                const out = await generateCrud(
+                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"),
+                );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-case-sensitive-constraint-name.input.ts");
                 if (!file) throw new Error("File not found");
@@ -176,7 +182,10 @@ describe("GenerateDefinedValidatorDecorators", () => {
                     }),
                 );
 
-                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
+                const out = await generateCrud(
+                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"),
+                );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
                 if (!file) throw new Error("File not found");
@@ -213,7 +222,10 @@ describe("GenerateDefinedValidatorDecorators", () => {
                     }),
                 );
 
-                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
+                const out = await generateCrud(
+                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"),
+                );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
                 if (!file) throw new Error("File not found");
@@ -251,7 +263,10 @@ describe("GenerateDefinedValidatorDecorators", () => {
                     }),
                 );
 
-                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"));
+                const out = await generateCrud(
+                    { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                    orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"),
+                );
                 const formattedOut = await formatGeneratedFiles(out);
                 const file = formattedOut.find((file) => file.name === "dto/test-entity-with-relative-import-decorator.input.ts");
                 if (!file) throw new Error("File not found");
@@ -289,7 +304,10 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+                orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-validator-defined-in-file.input.ts");
             if (!file) throw new Error("File not found");

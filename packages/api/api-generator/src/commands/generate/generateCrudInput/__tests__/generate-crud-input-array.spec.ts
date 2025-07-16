@@ -43,7 +43,10 @@ describe("GenerateCrudInputArray", () => {
             }),
         );
 
-        const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityArrayString"));
+        const out = await generateCrudInput(
+            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+            orm.em.getMetadata().get("TestEntityArrayString"),
+        );
         const formattedOut = await formatSource(out[0].content);
         const source = parseSource(formattedOut);
 

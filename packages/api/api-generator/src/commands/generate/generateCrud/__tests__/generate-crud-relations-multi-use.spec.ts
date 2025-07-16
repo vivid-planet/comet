@@ -42,7 +42,10 @@ describe("GenerateCrudRelationsMultiUse", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntitiyProduct"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: "disablePermissionCheck" },
+            orm.em.getMetadata().get("TestEntitiyProduct"),
+        );
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "test-entitiy-product.resolver.ts");
         if (!file) throw new Error("File not found");

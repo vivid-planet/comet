@@ -3,6 +3,12 @@ import { Test, type TestingModule } from "@nestjs/testing";
 import { AbstractAccessControlService } from "./access-control.service";
 import { type CurrentUser } from "./dto/current-user";
 
+declare module "./user-permissions.types" {
+    export interface PermissionOverrides {
+        accessControlServiceTest: "p1" | "p2";
+    }
+}
+
 describe("AbstractAccessControlService", () => {
     class ConcreteAccessControlService extends AbstractAccessControlService {}
 

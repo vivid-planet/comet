@@ -14,7 +14,7 @@ import { UserPermissionsGuard } from "./user-permissions.guard";
 
 declare module "../user-permissions.types" {
     export interface PermissionOverrides {
-        test: "p1" | "p1.write" | "p2" | "p3";
+        userPermissionsGuardTest: "p1" | "p1.write" | "p2" | "p3";
     }
 }
 
