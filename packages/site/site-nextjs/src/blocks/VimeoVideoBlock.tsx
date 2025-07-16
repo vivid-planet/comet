@@ -43,15 +43,13 @@ export const VimeoVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef<HTMLDivElement>(null);
-        const iframeRef = useRef<HTMLIFrameElement | null>(null);
+        const iframeRef = useRef<HTMLIFrameElement>(null);
 
         const handleVisibilityChange = (isVisible: boolean) => {
-            if (iframeRef.current?.contentWindow) {
-                iframeRef.current.contentWindow.postMessage(
-                    JSON.stringify({ method: isVisible && autoplay ? "play" : "pause" }),
-                    "https://player.vimeo.com",
-                );
-            }
+            iframeRef.current?.contentWindow?.postMessage(
+                JSON.stringify({ method: isVisible && autoplay ? "play" : "pause" }),
+                "https://player.vimeo.com",
+            );
         };
 
         useIsElementInViewport(inViewRef, handleVisibilityChange);
@@ -63,6 +61,7 @@ export const VimeoVideoBlock = withPreview(
         const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
         const searchParams = new URLSearchParams();
+        if (hasPreviewImage && !showPreviewImage) searchParams.append("autoplay", "1");
         if (autoplay) searchParams.append("muted", "1");
 
         if (loop !== undefined) searchParams.append("loop", Number(loop).toString());

@@ -49,7 +49,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
         }
     `,
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
-        if (page.userGroup !== "All") {
+        if (page.userGroup !== "all") {
             return <Chip size="small" label={page.userGroup} />;
         }
         return null;

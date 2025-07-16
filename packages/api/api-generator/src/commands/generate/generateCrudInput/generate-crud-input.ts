@@ -277,7 +277,7 @@ export async function generateCrudInput(
             }
         } else if (prop.kind == "m:n") {
             decorators.length = 0;
-            decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable" : "defaultValue: []"}})`);
+            decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
             decorators.push(`@IsArray()`);
 
             if (prop.referencedColumnNames.length > 1) {

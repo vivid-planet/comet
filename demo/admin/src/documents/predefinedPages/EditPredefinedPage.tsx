@@ -116,7 +116,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
                         <SelectField
                             name="type"
                             label={<FormattedMessage id="predefinedPages.type.label" defaultMessage="Type" />}
-                            options={[{ value: "News", label: predefinedPageLabels.News }]}
+                            options={[{ value: "News", label: predefinedPageLabels.news }]}
                             fullWidth
                         />
                     </MainContent>

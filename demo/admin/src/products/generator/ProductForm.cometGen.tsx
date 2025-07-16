@@ -36,7 +36,7 @@ export default defineConfig<GQLProduct>({
                     label: "Type",
                     required: true,
                     inputType: "radio",
-                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                    values: [{ value: "cap", label: "great Cap" }, "shirt", "tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {

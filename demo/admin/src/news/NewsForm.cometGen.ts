@@ -33,7 +33,7 @@ export default defineConfig<GQLNews>({
             label: "Category",
             required: true,
             inputType: "radio",
-            values: ["Events", "Company", "Awards"],
+            values: ["events", "company", "awards"],
         },
         {
             type: "block",
