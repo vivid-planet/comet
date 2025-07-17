@@ -1,5 +1,5 @@
 import { Button, InlineAlert } from "@comet/admin";
-import { Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
+import { ArrowRight, Clear, CometColor, InfoFilled, Reload, RemoveFilled, WarningSolid } from "@comet/admin-icons";
 import { Box } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
@@ -17,16 +17,52 @@ const meta: Meta<typeof InlineAlert> = {
         },
     },
     argTypes: {
+        description: {
+            control: "text",
+        },
+        descriptionMapping: {
+            control: "object",
+        },
+        icon: {
+            control: "select",
+            options: [undefined, "ArrowRight"],
+        },
+        iconMapping: {
+            control: "object",
+        },
         severity: {
             control: "select",
             options: [undefined, "error", "warning", "info"],
+        },
+        actions: {
+            control: "select",
+            options: [undefined, "Retry Button"],
+        },
+        title: {
+            control: "text",
+        },
+        titleMapping: {
+            control: "object",
         },
     },
 };
 
 export default meta;
 
-export const DefaultStory: Story = {};
+/**
+ * Used to display important information to the user inside of an element, e.g., a loading error in a `DataGrid`.
+ */
+export const DefaultStory: Story = {
+    render: ({ icon, actions, ...props }) => {
+        return (
+            <InlineAlert
+                {...props}
+                icon={icon === "ArrowRight" ? <ArrowRight /> : icon}
+                actions={actions === "Retry Button" ? <Button startIcon={<Reload />}>Retry</Button> : actions}
+            />
+        );
+    },
+};
 
 /**
  * Displays the `InlineAlert` component with a warning variant.

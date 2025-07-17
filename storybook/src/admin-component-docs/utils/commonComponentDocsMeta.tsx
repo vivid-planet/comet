@@ -50,7 +50,7 @@ export const DocsPage = ({ defaultStory }: DocsPageProps) => {
             <Description of={defaultStory} />
             <Primary />
             <Controls />
-            <Stories title="More usage examples" includePrimary={false} />
+            <Stories title="" includePrimary={false} />
         </>
     );
 };

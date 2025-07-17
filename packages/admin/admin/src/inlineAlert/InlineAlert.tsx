@@ -24,7 +24,7 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
     description?: ReactNode;
 
     /**
-     * A mapping of descriptions for each error variant.
+     * A mapping of descriptions for each severity.
      */
     descriptionMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
 

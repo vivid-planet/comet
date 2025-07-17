@@ -1,31 +1,8 @@
-import {
-    Button,
-    CancelButton,
-    DeleteButton,
-    FeedbackButton,
-    FieldSet,
-    FillSpace,
-    FinalForm,
-    FinalFormSaveButton,
-    MainContent,
-    OkayButton,
-    SaveBoundary,
-    SaveBoundarySaveButton,
-    SaveButton,
-    StackMainContent,
-    StackToolbar,
-    TextAreaField,
-    TextField,
-    Toolbar,
-    ToolbarActions,
-    ToolbarAutomaticTitleItem,
-    ToolbarTitleItem,
-} from "@comet/admin";
+import { Button } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type Decorator, type Meta, type StoryObj } from "@storybook/react-webpack5";
-import { useState } from "react";
+import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
 import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
 
@@ -57,12 +34,12 @@ const meta: Meta<typeof Button> = {
         children: {
             control: "text",
         },
-        disabled: {
-            control: "boolean",
-        },
         variant: {
             control: "select",
             options: [undefined, "primary", "secondary", "outlined", "destructive", "success", "textLight", "textDark"],
+        },
+        disabled: {
+            control: "boolean",
         },
         startIcon: {
             control: "select",
@@ -71,6 +48,17 @@ const meta: Meta<typeof Button> = {
         endIcon: {
             control: "select",
             options: [undefined, "ArrowRight"],
+        },
+        responsive: {
+            control: "boolean",
+        },
+        mobileIcon: {
+            control: "select",
+            options: [undefined, "ArrowRight"],
+        },
+        mobileBreakpoint: {
+            control: "select",
+            options: ["xs", "sm", "md", "lg", "xl"],
         },
     },
     args: {
@@ -81,13 +69,14 @@ const meta: Meta<typeof Button> = {
 export default meta;
 
 export const DefaultStory: Story = {
-    render: ({ startIcon, endIcon, variant, ...props }) => {
+    render: ({ startIcon, endIcon, variant, mobileIcon, ...props }) => {
         const buttonNode = (
             <Button
                 {...props}
                 variant={variant}
                 startIcon={startIcon === "ArrowRight" ? <ArrowRight /> : undefined}
                 endIcon={endIcon === "ArrowRight" ? <ArrowRight /> : undefined}
+                mobileIcon={mobileIcon === "ArrowRight" ? <ArrowRight /> : undefined}
             />
         );
 
@@ -114,7 +103,7 @@ const DarkListOfButtons = styled(ListOfButtons)(({ theme }) => ({
     padding: theme.spacing(4),
 }));
 
-export const AdvancedExamples: Story = {
+export const AllVariants: Story = {
     render: (props) => {
         return (
             <Stack spacing={10}>
@@ -342,213 +331,20 @@ export const AdvancedExamples: Story = {
     },
 };
 
-export const ResponsiveExample: Story = {
+/**
+ * When using the button in a place where the width can be constrained, such as in a toolbar on a mobile device, you can set the `responsive`.
+ *
+ * This causes the text-content to be hidden on smaller devices and be moved to a tooltip instead.
+ * The button will only show an icon then by default.
+ * This requires either a `startIcon` or `endIcon` to be set, or the `mobileIcon` which is used specifically for this purpose.
+ * The breakpoint at which the button will be responsive can be set using the `mobileBreakpoint` prop.
+ */
+export const ResponsiveBehavior: Story = {
     render: (props) => {
         return (
-            <Button startIcon={<ArrowRight />} responsive>
+            <Button startIcon={<ArrowRight />} responsive {...props}>
                 Responsive Button
             </Button>
-        );
-    },
-};
-
-export const ResponsiveExampleInToolbar: Story = {
-    render: (props) => {
-        return (
-            <Toolbar>
-                <ToolbarTitleItem>Toolbar</ToolbarTitleItem>
-                <FillSpace />
-                <ToolbarActions>
-                    <Button startIcon={<ArrowRight />} responsive>
-                        Responsive Button
-                    </Button>
-                </ToolbarActions>
-            </Toolbar>
-        );
-    },
-};
-
-const moreVerticalSpaceDecorator = (): Decorator => {
-    return (Story) => {
-        return (
-            <Box py={4}>
-                <Story />
-            </Box>
-        );
-    };
-};
-
-const spacedElementsDecorator = (): Decorator => {
-    return (Story) => {
-        return (
-            <Stack direction="row" spacing={4}>
-                <Story />
-            </Stack>
-        );
-    };
-};
-
-const slowAsyncFunctionThatSucceeds = () => {
-    return new Promise((resolve) => {
-        setTimeout(() => resolve(true), 500);
-    });
-};
-
-const slowAsyncFunctionThatFails = () => {
-    return new Promise((_, reject) => {
-        setTimeout(() => reject(false), 500);
-    });
-};
-
-export const FeedbackButtonExample: Story = {
-    decorators: [spacedElementsDecorator(), moreVerticalSpaceDecorator()],
-    render: (props) => {
-        return (
-            <>
-                <FeedbackButton
-                    startIcon={<ArrowRight />}
-                    onClick={async () => {
-                        await slowAsyncFunctionThatSucceeds();
-                    }}
-                >
-                    This will succeed
-                </FeedbackButton>
-                <FeedbackButton
-                    startIcon={<ArrowRight />}
-                    onClick={async () => {
-                        await slowAsyncFunctionThatFails();
-                    }}
-                >
-                    This will fail
-                </FeedbackButton>
-            </>
-        );
-    },
-};
-
-export const FeedbackButtonControlledState: Story = {
-    decorators: [spacedElementsDecorator(), moreVerticalSpaceDecorator()],
-
-    render: (props) => {
-        const [firstButtonLoading, setFirstButtonLoading] = useState(false);
-        const [firstButtonHasErrors, setFirstButtonHasErrors] = useState(false);
-
-        const [secondButtonLoading, setSecondButtonLoading] = useState(false);
-        const [secondButtonHasErrors, setSecondButtonHasErrors] = useState(false);
-
-        return (
-            <>
-                <FeedbackButton
-                    startIcon={<ArrowRight />}
-                    loading={firstButtonLoading}
-                    hasErrors={firstButtonHasErrors}
-                    onClick={() => {
-                        setFirstButtonLoading(true);
-
-                        setTimeout(() => {
-                            setFirstButtonLoading(false);
-                            setFirstButtonHasErrors(false);
-                        }, 500);
-                    }}
-                >
-                    This will succeed
-                </FeedbackButton>
-                <FeedbackButton
-                    startIcon={<ArrowRight />}
-                    loading={secondButtonLoading}
-                    hasErrors={secondButtonHasErrors}
-                    onClick={() => {
-                        setSecondButtonLoading(true);
-
-                        setTimeout(() => {
-                            setSecondButtonLoading(false);
-                            setSecondButtonHasErrors(true);
-                        }, 500);
-                    }}
-                >
-                    This will fail
-                </FeedbackButton>
-            </>
-        );
-    },
-};
-
-export const SaveButtonExample: Story = {
-    render: (props) => {
-        // TODO: Add proper example when https://github.com/vivid-planet/comet/pull/3589 is merged
-        return <SaveButton />;
-    },
-};
-
-export const FinalFormSaveButtonExample: Story = {
-    render: (props) => {
-        return (
-            <FinalForm
-                mode="edit"
-                onSubmit={async () => {
-                    // Submit data
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-                    alert("Form data submitted");
-                }}
-            >
-                <Toolbar>
-                    <ToolbarAutomaticTitleItem />
-                    <FillSpace />
-                    <ToolbarActions>
-                        <FinalFormSaveButton />
-                    </ToolbarActions>
-                </Toolbar>
-                <MainContent>
-                    <FieldSet>
-                        <TextField label="Title" placeholder="Title" name="title" fullWidth variant="horizontal" />
-                        <TextAreaField name="description" placeholder="Description" label="Description" fullWidth variant="horizontal" />
-                    </FieldSet>
-                </MainContent>
-            </FinalForm>
-        );
-    },
-};
-
-export const SaveBoundarySaveButtonExample: Story = {
-    render: (props) => {
-        return (
-            <SaveBoundary>
-                <StackToolbar>
-                    <ToolbarAutomaticTitleItem />
-                    <FillSpace />
-                    <ToolbarActions>
-                        <SaveBoundarySaveButton />
-                    </ToolbarActions>
-                </StackToolbar>
-                <StackMainContent>
-                    <FieldSet>
-                        <FinalForm
-                            onSubmit={async () => {
-                                // Submit data
-                                await new Promise((resolve) => setTimeout(resolve, 1000));
-                                alert("Form data submitted");
-                            }}
-                            mode="edit"
-                        >
-                            <TextField label="Title" placeholder="Title" name="title" fullWidth variant="horizontal" />
-                            <TextAreaField name="description" placeholder="Description" label="Description" fullWidth variant="horizontal" />
-                        </FinalForm>
-                    </FieldSet>
-                </StackMainContent>
-            </SaveBoundary>
-        );
-    },
-};
-
-export const PredefinedButtonsExample: Story = {
-    decorators: [spacedElementsDecorator()],
-    render: (props) => {
-        return (
-            <>
-                <CancelButton />
-                <DeleteButton />
-                <OkayButton />
-            </>
         );
     },
 };

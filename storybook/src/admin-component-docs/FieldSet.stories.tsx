@@ -59,7 +59,7 @@ Chip.displayName = "Chip";
  * It allows the user to show and hide sections of related content on a page.
  */
 export const DefaultStory: Story = {
-    render: ({ endAdornment, ...props }) => {
-        return <FieldSet {...props} endAdornment={endAdornment === "Text in Chip" ? <Chip label="Text in Chip" /> : undefined} />;
+    render: (props) => {
+        return <FieldSet {...props} endAdornment={props.endAdornment === "Text in Chip" ? <Chip label="Text in Chip" /> : undefined} />;
     },
 };
