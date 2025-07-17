@@ -1,5 +1,69 @@
 # @comet/cms-api
 
+## 8.0.0-beta.7
+
+### Major Changes
+
+- b3e73a5: Remove `ImagesController` export from `@comet/cms-api`
+- 8ef9a56: Use `GraphQLLocalDate` instead of `GraphQLDate` for date-only columns
+
+    The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type.
+    This causes problems when used in combination with MikroORM v6, which treats date-only columns as strings.
+    Since using strings is preferred, the `GraphQLLocalDate` scalar is used instead, which performs no type coercion.
+
+    **How to upgrade**
+    1. Use `string` instead of `Date` for date-only columns:
+
+    ```diff
+    class Product {
+        @Property({ type: types.date, nullable: true })
+        @Field(() => GraphQLDate, { nullable: true })
+    -   availableSince?: Date = undefined;
+    +   availableSince?: string = undefined;
+    }
+    ```
+
+    2. Use `GraphQLLocalDate` instead of `GraphQLDate`:
+
+    ```diff
+    - import { GraphQLDate } from "graphql-scalars";
+    + import { GraphQLLocalDate } from "graphql-scalars";
+
+    class Product {
+        @Property({ type: types.date, nullable: true })
+    -   @Field(() => GraphQLDate, { nullable: true })
+    +   @Field(() => GraphQLLocalDate, { nullable: true })
+        availableSince?: string = undefined;
+    }
+    ```
+
+    3. Add the `LocalDate` scalar to `codegen.ts`:
+
+    ```diff
+    scalars: rootBlocks.reduce(
+        (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
+    +   { LocalDate: "string" }
+    )
+    ```
+
+### Minor Changes
+
+- b3e73a5: Add configuration option `basePath` to the DAM settings in `comet-config.json`.
+
+    ```diff
+    {
+        "dam": {
+            ...
+    +        "basePath": "foo"
+        },
+        ...
+    }
+    ```
+
+- cbfa595: Add support for searching UUIDs to `searchToMikroOrmQuery`
+- 1450882: Add support for `notContains` to `StringFilter`
+- 864e6de: Add the possibility to filter users by permission
+
 ## 8.0.0-beta.6
 
 ### Major Changes
