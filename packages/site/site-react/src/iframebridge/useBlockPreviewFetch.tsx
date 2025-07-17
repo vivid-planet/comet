@@ -36,5 +36,8 @@ export function useBlockPreviewFetch(apiUrl?: string | undefined) {
 }
 
 function createBlockPreviewFetch(graphqlApiUrl: string, includeInvisible: boolean) {
-    return createGraphQLFetch(createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }) }), graphqlApiUrl);
+    return createGraphQLFetch(
+        createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }), credentials: "include" }),
+        graphqlApiUrl,
+    );
 }
