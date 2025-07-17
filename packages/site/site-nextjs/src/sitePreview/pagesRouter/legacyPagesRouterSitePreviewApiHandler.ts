@@ -1,6 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-import { type SitePreviewParams, verifyJwt } from "../SitePreviewUtils";
+import { type SitePreviewParams, verifyJwt } from "../previewUtils";
 
 async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse) {
     const params = req.query;

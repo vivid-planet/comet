@@ -5,15 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { type PreviewParams, verifyJwt } from "../SitePreviewUtils";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Scope = Record<string, any>;
-
-type BlockPreviewParams = {
-    scope: Scope;
-    url: string;
-};
+import { type BlockPreviewParams, type PreviewParams, verifyJwt } from "../previewUtils";
 
 export async function blockPreviewRoute(request: NextRequest) {
     const params = request.nextUrl.searchParams;

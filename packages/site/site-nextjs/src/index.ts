@@ -15,12 +15,12 @@ export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { createFetchWithDefaults } from "./graphQLFetch/graphQLFetch";
 export { Image } from "./image/Image";
 export { blockPreviewRoute } from "./sitePreview/appRouter/blockPreviewRoute";
-export { previewParams, sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
+export { sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
+export { previewParams, type SitePreviewParams } from "./sitePreview/previewUtils";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
-export { type SitePreviewParams } from "./sitePreview/SitePreviewUtils";
 export {
     AdminMessageType,
     type BlockLoader,
