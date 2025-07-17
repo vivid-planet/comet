@@ -12,5 +12,5 @@
     },
     "exclude": ["node_modules", "lib"],
     "extends": "../../../tsconfig.core.json",
-    "include": ["./src", "./cms-api.d.ts"]
+    "include": ["./src"]
 }
