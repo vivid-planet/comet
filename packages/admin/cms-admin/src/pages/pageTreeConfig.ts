@@ -12,6 +12,7 @@ export interface PageTreeConfig {
         fragment: DocumentNode;
     };
     scopeParts?: string[];
+    scopePartsForRedirects?: string[];
 }
 
 export function usePageTreeConfig(): PageTreeConfig {
