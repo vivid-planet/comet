@@ -27,7 +27,7 @@ import { styled } from "@mui/material/styles";
 import { type Decorator, type Meta, type StoryObj } from "@storybook/react-webpack5";
 import { useState } from "react";
 
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
 
 // Prevent rendering components as  `<React.ForwardRef />`
 // TODO: Should we do this in the component itself? Is it needed for anything other than the story?
@@ -45,9 +45,14 @@ Box.displayName = "Box";
 type Story = StoryObj<typeof Button>;
 
 const meta: Meta<typeof Button> = {
-    ...commonComponentDocsMeta,
     component: Button,
     title: "Admin Components/Button",
+    decorators: [heightCommunicationDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes: {
         children: {
             control: "text",

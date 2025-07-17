@@ -1,9 +1,8 @@
-import { Controls, Description, Primary, Stories } from "@storybook/addon-docs/blocks";
+import { Controls, Description, type Of, Primary, Stories } from "@storybook/addon-docs/blocks";
 import { type Decorator } from "@storybook/react/*";
-import { type Meta } from "@storybook/react-webpack5";
 import { useEffect } from "react";
 
-const heightCommunicationDecorator = (): Decorator => {
+export const heightCommunicationDecorator = (): Decorator => {
     return (Story) => {
         useEffect(() => {
             const isEmbeddedInDocs = window.location.search.includes("isEmbeddedInDocs=true");
@@ -41,18 +40,17 @@ const heightCommunicationDecorator = (): Decorator => {
     };
 };
 
-export const commonComponentDocsMeta: Meta = {
-    decorators: [heightCommunicationDecorator()],
-    parameters: {
-        docs: {
-            page: () => (
-                <>
-                    <Description />
-                    <Primary />
-                    <Controls />
-                    <Stories title="More usage examples" includePrimary={false} />
-                </>
-            ),
-        },
-    },
+type DocsPageProps = {
+    defaultStory: Of;
+};
+
+export const DocsPage = ({ defaultStory }: DocsPageProps) => {
+    return (
+        <>
+            <Description of={defaultStory} />
+            <Primary />
+            <Controls />
+            <Stories title="More usage examples" includePrimary={false} />
+        </>
+    );
 };

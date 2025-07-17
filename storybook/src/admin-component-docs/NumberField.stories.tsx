@@ -2,14 +2,19 @@ import { FinalForm, NumberField } from "@comet/admin";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
 import { commonFieldComponentArgTypes } from "./utils/common";
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof NumberField>;
 
 const meta: Meta<typeof NumberField> = {
-    ...commonComponentDocsMeta,
     component: NumberField,
     title: "Admin Components/NumberField",
+    decorators: [heightCommunicationDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes: {
         clearable: {
             // TODO: Should this be deprecated (work automatically, depending on required and value)?

@@ -2,14 +2,19 @@ import { FieldSet } from "@comet/admin";
 import { Chip } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof FieldSet>;
 
 const meta: Meta<typeof FieldSet> = {
-    ...commonComponentDocsMeta,
     component: FieldSet,
     title: "Admin Components/FieldSet",
+    decorators: [heightCommunicationDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes: {
         // TODO: Can we move the prop descriptions to the component itself?
         title: {

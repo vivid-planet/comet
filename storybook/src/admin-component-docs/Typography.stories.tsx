@@ -1,14 +1,19 @@
 import { Typography } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof Typography>;
 
 const meta: Meta<typeof Typography> = {
-    ...commonComponentDocsMeta,
     component: Typography,
     title: "Admin Components/Typography",
+    decorators: [heightCommunicationDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes: {
         children: {
             control: "text",
