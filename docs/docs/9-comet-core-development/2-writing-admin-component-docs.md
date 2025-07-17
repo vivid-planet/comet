@@ -16,26 +16,30 @@ It should allow setting all props using `argTypes`. Default values should not be
 
 - Create a story file, e.g. `MyComponent.stories.tsx`
 - Define the story `meta` as a default export
-    - Use `commonComponentDocsMeta` to include the basic configuration for the documentation page
     - Set `component` to the component you want to document
     - Set `title` to the name of the component, prefixed with `Admin Components/`
-    - Define the props of the component using `argTypes`
-    - Where applicable, define the default values of the props using `args`
-- Create a default story, named `DefaultStory`
-- Add a concise description of the component above the `DefaultStory` to explain what it's used for
+    - Set the value of `decorators` and `parameters` as seen below to ensure the correct configuration of the page
+    - Define the component's props using `argTypes`
+    - For props that are necessary for the basic usage of the component, define the default values using `args`
+- Create a story, named `DefaultStory` and add a concise description of the component in a comment above it
 
 ```tsx
 import { MyComponent } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
 
 type Story = StoryObj<typeof MyComponent>;
 
 const meta: Meta<typeof MyComponent> = {
-    ...commonComponentDocsMeta,
     component: MyComponent,
     title: "Admin Components/MyComponent",
+    decorators: [heightCommunicationDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes: {
         children: {
             control: "text",
@@ -56,9 +60,31 @@ const meta: Meta<typeof MyComponent> = {
 export default meta;
 
 /**
- * Used to display a text in a certain way.
+ * This is a basic description of the component.
+ * It's used to display a text in a certain way.
  */
 export const DefaultStory: Story = {};
+```
+
+## All Variants story
+
+The figma design of some components may define a "All Variants" or "Story Variants" screen, if that is the case, create an additional `AllVariants` story in the same file to implement that screen.
+
+This is used as an overview of what the component can be used for and to easily compare the implementation and the design.
+
+```tsx
+export const AllVariants: Story = {
+    render: (props) => {
+        return (
+            <Stack spacing={4}>
+                <MyComponent {...props} />
+                <MyComponent {...props} variant="secondary" />
+                <MyComponent {...props} highlighted />
+                <MyComponent {...props} variant="secondary" highlighted />
+            </Stack>
+        );
+    },
+};
 ```
 
 ## Additional information for docs
