@@ -2259,7 +2259,7 @@ declare module "@comet/cms-api" {
 +@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["news"] })
 ```
 
-5. Create a new file and add also module augmentation for `PermissionOverrides` with creaded types from GraphQL Codegen:
+5. Create a new file and add also module augmentation for `PermissionOverrides` with created types from GraphQL Codegen:
 
 ```diff title="demo/admin/src/App.tsx"
 +import type { GQLAppPermission } from "@src/graphql.generated";
