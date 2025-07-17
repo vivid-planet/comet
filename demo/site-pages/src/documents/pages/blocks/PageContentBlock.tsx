@@ -16,6 +16,7 @@ import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock
 import { FullWidthImageBlock } from "@src/documents/pages/blocks/FullWidthImageBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
+import { ProductListCarouselBlock } from "@src/common/blocks/ProductListCarouselBlock";
 
 const supportedBlocks: SupportedBlocks = {
     accordion: (props) => <PageContentAccordionBlock data={props} />,
@@ -23,6 +24,7 @@ const supportedBlocks: SupportedBlocks = {
     billboardTeaser: (props) => <BillboardTeaserBlock data={props} />,
     space: (props) => <SpaceBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
+    productCarousel: (props) => <ProductListCarouselBlock data={props} />,
     richtext: (props) => <PageContentRichTextBlock data={props} disableLastBottomSpacing />,
     heading: (props) => <PageContentStandaloneHeadingBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,

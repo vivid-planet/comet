@@ -18,6 +18,7 @@ import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock
 import { FullWidthImageBlock } from "@src/documents/pages/blocks/FullWidthImageBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { SliderBlock } from "@src/documents/pages/blocks/SliderBlock";
+import { ProductListCarouselBlock } from "@src/common/blocks/ProductListCarouselBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
@@ -37,6 +38,7 @@ const supportedBlocks: SupportedBlocks = {
     contentGroup: (props) => <ContentGroupBlock data={props} />,
     mediaGallery: (props) => <PageContentMediaGalleryBlock data={props} />,
     slider: (props) => <SliderBlock data={props} />,
+    productCarousel: (props) => <ProductListCarouselBlock data={props} />,
 
     newsList: (props) => <NewsListBlock data={props} />,
     newsDetail: (props) => <NewsDetailBlock data={props} />,
