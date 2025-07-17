@@ -1330,5 +1330,5 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const crudInput = await generateCrudInput(generatorOptions, metadata);
     const crudResolver = await generateCrudResolver();
 
-    return generatorOptions.create || generatorOptions.update ? [...crudInput, ...crudResolver] : [...crudResolver];
+    return [...crudInput, ...crudResolver];
 }
