@@ -2215,16 +2215,16 @@ Search for all `@CrudGenerator` or `@RequiredPermission` decorators and move all
 1. Create a new file and register the `AppPermission` enum:
 
 ```typescript title="api/src/auth/app-permission.enum.ts"
-    import { registerEnumType } from "@nestjs/graphql";
+import { registerEnumType } from "@nestjs/graphql";
 
-    export enum AppPermission {
-        news = "news",
-        products = "products",
-        manufacturers = "manufacturers",
-    }
-    registerEnumType(AppPermission, {
-        name: "AppPermission",
-    });
+export enum AppPermission {
+    news = "news",
+    products = "products",
+    manufacturers = "manufacturers",
+}
+registerEnumType(AppPermission, {
+    name: "AppPermission",
+});
 ```
 
 2. Register `CorePermission` and `AppPermission` types in the GraphQL schema by creating a new file `api/src/auth/permission.enum.ts`:
@@ -2272,3 +2272,4 @@ declare module "@comet/cms-admin" {
 +       app: GQLAppPermission;
 +   }
 }
+```
