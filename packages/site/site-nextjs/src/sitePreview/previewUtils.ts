@@ -1,5 +1,5 @@
 import { type PreviewData } from "@comet/site-react";
-import { errors, jwtVerify } from "jose";
+import { errors, jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,14 +45,18 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
         if (!draftMode().isEnabled) return null;
     }
 
-    const sitePreviewCookie = cookies().get("__comet_preview");
-    if (sitePreviewCookie) {
-        return verifyJwt<PreviewParams>(sitePreviewCookie.value);
-    }
-    const blockPreviewCookie = cookies().get("__comet_block_preview");
-    if (blockPreviewCookie) {
-        return verifyJwt<PreviewParams>(blockPreviewCookie.value);
+    const cookie = cookies().get("__comet_preview");
+    if (cookie) {
+        return verifyJwt<PreviewParams>(cookie.value);
     }
 
     return null;
+}
+
+export async function setPreviewParams(payload: PreviewParams & { [key: string]: unknown }) {
+    const jwt = await new SignJWT(payload)
+        .setProtectedHeader({ alg: "HS256" })
+        .setExpirationTime("1 day")
+        .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
+    cookies().set("__comet_preview", jwt, { httpOnly: true, sameSite: "lax" });
 }

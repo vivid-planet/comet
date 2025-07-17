@@ -1,11 +1,10 @@
 import "server-only";
 
-import { SignJWT } from "jose";
-import { cookies, draftMode } from "next/headers";
+import { draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { type PreviewParams, type SitePreviewParams, verifyJwt } from "../previewUtils";
+import { setPreviewParams, type SitePreviewParams, verifyJwt } from "../previewUtils";
 
 export async function sitePreviewRoute(request: NextRequest) {
     const params = request.nextUrl.searchParams;
@@ -19,16 +18,11 @@ export async function sitePreviewRoute(request: NextRequest) {
         return NextResponse.json({ error: "JWT-validation failed." }, { status: 400 });
     }
 
-    const cookieJwt = await new SignJWT({
-        userId: data.userId,
+    await setPreviewParams({
         scope: data.scope,
-        path: data.path,
         previewData: data.previewData,
-    } satisfies PreviewParams & SitePreviewParams)
-        .setProtectedHeader({ alg: "HS256" })
-        .setExpirationTime("1 day")
-        .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
-    cookies().set("__comet_preview", cookieJwt, { httpOnly: true, sameSite: "lax" });
+        userId: data.userId, // for SitePreviewAuthService
+    });
 
     draftMode().enable();
 
