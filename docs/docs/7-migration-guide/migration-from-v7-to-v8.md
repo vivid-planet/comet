@@ -2204,7 +2204,7 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 
 </details>
 
-### ✅ Add block preview API handler
+### Add block preview API handler
 
 Add an API route (just as already exists for site preview) for block preview:
 
