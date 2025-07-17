@@ -1,6 +1,7 @@
 ---
 "@comet/site-nextjs": major
 "@comet/cms-admin": major
+"@comet/cms-api": major
 ---
 
 Require API route for block preview
