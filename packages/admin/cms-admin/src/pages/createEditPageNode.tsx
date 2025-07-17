@@ -12,6 +12,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
 
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
+import { useContentScope } from "../contentScope/Provider";
 import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
 import { type GQLSlugAvailability } from "../graphql.generated";
@@ -25,9 +26,12 @@ import {
     type GQLEditPageParentNodeQueryVariables,
     type GQLIsPathAvailableQuery,
     type GQLIsPathAvailableQueryVariables,
+    type GQLRedirectSourceAvailableQuery,
+    type GQLRedirectSourceAvailableQueryVariables,
     type GQLUpdatePageNodeMutation,
     type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
+import { usePageTreeConfig } from "./pageTreeConfig";
 
 type SerializedInitialValues = string;
 
@@ -104,6 +108,17 @@ export function createEditPageNode({
         const apollo = useApolloClient();
         const scope = usePageTreeScope();
         const language = useContentLanguage({ scope });
+        const { scopePartsForRedirects } = usePageTreeConfig();
+
+        const { scope: completeScope } = useContentScope();
+        const [isRedirectSourceAvailable, setIsRedirectSourceAvailable] = useState(true);
+        const redirectScope = (scopePartsForRedirects ?? []).reduce(
+            (acc, scopePartsForRedirects) => {
+                acc[scopePartsForRedirects] = completeScope[scopePartsForRedirects];
+                return acc;
+            },
+            {} as { [key: string]: unknown },
+        );
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
 
@@ -167,6 +182,23 @@ export function createEditPageNode({
             [apollo, scope, parentId, slug],
         );
 
+        const checkForExistingRedirects = useCallback(
+            async (value: string): Promise<boolean> => {
+                const redirectSource = parentPath ? `${parentPath}/${value}` : `/${value}`;
+
+                const { data: redirectData } = await apollo.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
+                    query: redirectSourceAvailableForPageEdit,
+                    variables: {
+                        scope: redirectScope,
+                        source: redirectSource,
+                    },
+                });
+
+                return redirectData.redirectSourceAvailable;
+            },
+            [apollo, redirectScope, parentPath],
+        );
+
         const validateSlug = async (value: string) => {
             if (!isValidSlug(value)) {
                 return intl.formatMessage({
@@ -192,6 +224,12 @@ export function createEditPageNode({
                 }
             }
         };
+
+        useEffect(() => {
+            if (mode === "edit" && slug) {
+                checkForExistingRedirects(slug).then(setIsRedirectSourceAvailable);
+            }
+        }, [mode, slug, checkForExistingRedirects]);
 
         const isActivePage = data?.page?.visibility === "Published";
 
@@ -219,7 +257,7 @@ export function createEditPageNode({
                             name: values.name,
                             slug: values.slug,
                             hideInMenu: values.hideInMenu,
-                            createAutomaticRedirectsOnSlugChange: values.createAutomaticRedirectsOnSlugChange,
+                            createAutomaticRedirectsOnSlugChange: isRedirectSourceAvailable ? values.createAutomaticRedirectsOnSlugChange : false,
                             attachedDocument: {
                                 id: values.documentType === data?.page?.documentType ? data?.page?.document?.id : undefined,
                                 type: values.documentType,
@@ -347,7 +385,7 @@ export function createEditPageNode({
                                                               : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
-                                                {mode === "edit" && dirtyFields.slug && (
+                                                {mode === "edit" && dirtyFields.slug && isRedirectSourceAvailable && (
                                                     <Box mt={3}>
                                                         <FieldContainer
                                                             variant="horizontal"
@@ -420,6 +458,16 @@ export function createEditPageNode({
                                                             />
                                                         </FieldContainer>
                                                     </Box>
+                                                )}
+                                                {mode === "edit" && dirtyFields.slug && !isRedirectSourceAvailable && (
+                                                    <FieldContainer variant="horizontal">
+                                                        <Typography>
+                                                            <FormattedMessage
+                                                                id="comet.pages.pages.page.redirectAlreadyExists"
+                                                                defaultMessage="The slug was changed, but a redirect for the old path already exists. You can check or manage redirects in System → Redirects."
+                                                            />
+                                                        </Typography>
+                                                    </FieldContainer>
                                                 )}
                                             </>
                                         );
@@ -521,6 +569,12 @@ const transformToSlug = (name: string, locale: string) => {
 const isValidSlug = (value: string) => {
     return /^[a-zA-Z0-9][a-zA-Z0-9-_]*$/.test(value);
 };
+
+const redirectSourceAvailableForPageEdit = gql`
+    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+        redirectSourceAvailable(scope: $scope, source: $source)
+    }
+`;
 
 interface InitialValues {
     parent: null | string;
