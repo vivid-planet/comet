@@ -98,16 +98,21 @@ export function App() {
                     });
 
                     if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
-                    return {
-                        url: siteConfig.url,
-                        preloginEnabled: siteConfig.preloginEnabled || false,
-                        blockPreviewBaseUrl:
-                            siteConfig.scope.domain === "secondary"
-                                ? `${siteConfig.url}/block-preview`
-                                : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
-                        blockPreviewApiUrl: `${siteConfig.url}/block-preview`,
-                        sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
-                    };
+                    return siteConfig.scope.domain === "secondary"
+                        ? {
+                              url: siteConfig.url,
+                              preloginEnabled: siteConfig.preloginEnabled || false,
+                              blockPreviewBaseUrl: `${siteConfig.url}/block-preview`,
+                              blockPreviewApiUrl: `${siteConfig.url}/api/block-preview`,
+                              sitePreviewApiUrl: `${siteConfig.url}/api/site-preview`,
+                          }
+                        : {
+                              url: siteConfig.url,
+                              preloginEnabled: siteConfig.preloginEnabled || false,
+                              blockPreviewBaseUrl: `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                              blockPreviewApiUrl: `${siteConfig.url}/block-preview`,
+                              sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
+                          };
                 },
             }}
             buildInformation={{ date: config.buildDate, number: config.buildNumber, commitHash: config.commitSha }}
