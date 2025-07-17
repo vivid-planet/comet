@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { type GeneratedFile } from "../../utils/write-generated-files";
 import { generateCrud } from "../generate-crud";
 
@@ -64,7 +64,7 @@ describe("GenerateCrudInputEmbedded", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "crud" },
+                { targetDirectory: __dirname, requiredPermission: testPermission },
                 orm.em.getMetadata().get("TestEntityWithEmbedded"),
             );
             formattedOut = await formatGeneratedFiles(out);
@@ -167,7 +167,7 @@ describe("GenerateCrudInputEmbedded", () => {
             );
 
             const out = await generateCrud(
-                { targetDirectory: __dirname, requiredPermission: "crud" },
+                { targetDirectory: __dirname, requiredPermission: testPermission },
                 orm.em.getMetadata().get("TestEntityWithoutEmbedded"),
             );
             formattedOut = await formatGeneratedFiles(out);

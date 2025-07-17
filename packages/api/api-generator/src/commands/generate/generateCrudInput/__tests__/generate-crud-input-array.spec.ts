@@ -3,7 +3,7 @@ import { Field } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatSource, parseSource } from "../../utils/test-helper";
+import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrudInput } from "../generate-crud-input";
 
 @Entity()
@@ -44,7 +44,7 @@ describe("GenerateCrudInputArray", () => {
         );
 
         const out = await generateCrudInput(
-            { targetDirectory: __dirname, requiredPermission: "crud" },
+            { targetDirectory: __dirname, requiredPermission: testPermission },
             orm.em.getMetadata().get("TestEntityArrayString"),
         );
         const formattedOut = await formatSource(out[0].content);

@@ -3,7 +3,7 @@ import { BaseEntity, Collection, defineConfig, Entity, ManyToMany, MikroORM, Pri
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -43,7 +43,10 @@ describe("GenerateCrudResolveField", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: "crud" }, orm.em.getMetadata().get("TestEntityProduct"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityProduct"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "test-entity-product.resolver.ts");
             if (!file) throw new Error("File not found");
