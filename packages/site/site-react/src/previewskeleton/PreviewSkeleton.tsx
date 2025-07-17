@@ -56,15 +56,13 @@ const PreviewSkeleton = ({
             return (
                 <div
                     className={styles.imageContainer}
-                    style={
-                        {
-                            "--background-color": backgroundColor,
-                            "--color": color,
-                            ...(validAspectRatio === undefined || fill
-                                ? { "--height": typeof height === "string" ? height : `${height}px` }
-                                : { "--aspect-ratio": validAspectRatio }),
-                        } as React.CSSProperties
-                    }
+                    style={{
+                        "--background-color": backgroundColor,
+                        "--color": color,
+                        ...(validAspectRatio === undefined || fill
+                            ? { "--height": typeof height === "string" ? height : `${height}px` }
+                            : { "--aspect-ratio": validAspectRatio }),
+                    }}
                 >
                     {title}
                 </div>
