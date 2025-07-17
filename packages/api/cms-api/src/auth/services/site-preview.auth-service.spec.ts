@@ -33,10 +33,10 @@ describe("createSitePreviewAuthService", () => {
         expect(await service.authenticateUser(mockRequest(jwt))).toStrictEqual(authenticationError);
     });
 
-    it("returns authenticationError on wrong payload", async () => {
+    it("returns SKIP_AUTH_SERVICE on wrong payload", async () => {
         const service = instantianteService({ sitePreviewSecret: "secret" });
         const jwt = await new SignJWT({ user: "1" }).setProtectedHeader({ alg: "HS256" }).sign(new TextEncoder().encode("secret"));
-        expect(await service.authenticateUser(mockRequest(jwt))).toStrictEqual(authenticationError);
+        expect(await service.authenticateUser(mockRequest(jwt))).toBe(SKIP_AUTH_SERVICE);
     });
 
     it("returns userId on correct site-preview-jwt", async () => {
