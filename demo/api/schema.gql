@@ -5,7 +5,7 @@
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
-  permission: String!
+  permission: CombinedPermission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -18,6 +18,23 @@ type UserPermission {
 enum UserPermissionSource {
   MANUAL
   BY_RULE
+}
+
+enum CombinedPermission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  news
+  products
+  manufacturers
 }
 
 """
@@ -45,7 +62,7 @@ type UserPermissionsUser {
 }
 
 type CurrentUserPermission {
-  permission: String!
+  permission: CombinedPermission!
   contentScopes: [JSONObject!]!
 }
 
@@ -955,9 +972,9 @@ input StringFilter {
 }
 
 input PermissionFilter {
-  equal: String
-  notEqual: String
-  isAnyOf: [String!]
+  equal: CombinedPermission
+  notEqual: CombinedPermission
+  isAnyOf: [CombinedPermission!]
 }
 
 input UserPermissionsUserSort {
@@ -1450,7 +1467,7 @@ type Mutation {
 }
 
 input UserPermissionInput {
-  permission: String!
+  permission: CombinedPermission!
   validFrom: DateTime
   validTo: DateTime
   reason: String

@@ -1,6 +1,6 @@
 import { type ModuleMetadata, type Type } from "@nestjs/common";
 
-import { type CorePermission } from "../common/enum/core-permission.enum";
+import { CorePermission } from "../common/enum/core-permission.enum";
 import { type CurrentUser } from "./dto/current-user";
 import { type FindUsersArgs } from "./dto/paginated-user-list";
 import { type UserPermission } from "./entities/user-permission.entity";
@@ -55,6 +55,7 @@ export interface UserPermissionsOptions {
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;
     AccessControlService: Type<AccessControlServiceInterface>;
+    AppPermission?: Record<string, string>;
 }
 
 export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
@@ -73,4 +74,9 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     useClass?: Type<UserPermissionsOptionsFactory>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useFactory?: (...args: any[]) => Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
+    AppPermission?: Record<string, string>;
 }
+
+export const CombinedPermission: Record<string, string> = {
+    ...CorePermission,
+};

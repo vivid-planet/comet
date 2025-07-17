@@ -115,6 +115,7 @@ export class AppModule {
                     }),
                     inject: [UserService, AccessControlService],
                     imports: [authModule],
+                    AppPermission,
                 }),
                 BlocksModule,
                 DependenciesModule,
