@@ -1,15 +1,16 @@
 import { FinalForm, NumberField } from "@comet/admin";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { commonFieldComponentArgTypes } from "./utils/common";
-import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
+import { commonFieldComponentArgTypes } from "./utils/commonFieldComponentArgTypes";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof NumberField>;
 
 const meta: Meta<typeof NumberField> = {
     component: NumberField,
-    title: "Admin Components/NumberField",
-    decorators: [heightCommunicationDecorator()],
+    title: "Component Docs/NumberField",
+    decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
             page: () => <DocsPage defaultStory={DefaultStory} />,

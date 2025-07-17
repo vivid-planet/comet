@@ -122,7 +122,7 @@ const preview: Preview = {
                     ...orderIcons,
                     ...orderBestPractices,
                     ...orderDevelopment,
-                    "admin-",
+                    "component-docs-",
                     "comet-",
                     "stories-",
                 ];

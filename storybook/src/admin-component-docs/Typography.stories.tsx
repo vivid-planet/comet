@@ -1,14 +1,15 @@
 import { Typography } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof Typography>;
 
 const meta: Meta<typeof Typography> = {
     component: Typography,
-    title: "Admin Components/Typography",
-    decorators: [heightCommunicationDecorator()],
+    title: "Component Docs/Typography",
+    decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
             page: () => <DocsPage defaultStory={DefaultStory} />,
@@ -45,9 +46,6 @@ const meta: Meta<typeof Typography> = {
 };
 
 export default meta;
-
-// @ts-expect-error TODO: Can we fix this type?
-Typography.displayName = "Typography";
 
 /**
  * For rendering basic text, use the [Typography](https://mui.com/material-ui/react-typography/) component provided by MUI.

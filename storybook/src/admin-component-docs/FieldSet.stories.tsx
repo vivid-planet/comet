@@ -2,14 +2,15 @@ import { FieldSet } from "@comet/admin";
 import { Chip } from "@mui/material";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof FieldSet>;
 
 const meta: Meta<typeof FieldSet> = {
     component: FieldSet,
-    title: "Admin Components/FieldSet",
-    decorators: [heightCommunicationDecorator()],
+    title: "Component Docs/FieldSet",
+    decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
             page: () => <DocsPage defaultStory={DefaultStory} />,
@@ -50,9 +51,6 @@ const meta: Meta<typeof FieldSet> = {
 };
 
 export default meta;
-
-// @ts-expect-error TODO: Can we fix this type?
-Chip.displayName = "Chip";
 
 /**
  * The `FieldSet` component is intended for better structuring of big forms.

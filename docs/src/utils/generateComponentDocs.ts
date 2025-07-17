@@ -57,7 +57,7 @@ const getTitleFromConfigObject = (configObject: ObjectLiteralExpression): string
         if (titleInitializer) {
             const title = titleInitializer.getLiteralText();
 
-            if (title.startsWith("Admin Components/")) {
+            if (title.startsWith("Component Docs/")) {
                 return title;
             }
         }

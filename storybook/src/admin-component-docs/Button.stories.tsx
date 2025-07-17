@@ -4,27 +4,15 @@ import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
-
-// Prevent rendering components as  `<React.ForwardRef />`
-// TODO: Should we do this in the component itself? Is it needed for anything other than the story?
-// TODO: We may also need this for all icons.
-// @ts-expect-error TODO: Can we fix this type?
-Button.displayName = "Button";
-ArrowRight.displayName = "ArrowRight";
-// @ts-expect-error TODO: Can we fix this type?
-Chip.displayName = "Chip";
-// @ts-expect-error TODO: Can we fix this type?
-Stack.displayName = "Stack";
-// @ts-expect-error TODO: Can we fix this type?
-Box.displayName = "Box";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof Button>;
 
 const meta: Meta<typeof Button> = {
     component: Button,
-    title: "Admin Components/Button",
-    decorators: [heightCommunicationDecorator()],
+    title: "Component Docs/Button",
+    decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
             page: () => <DocsPage defaultStory={DefaultStory} />,

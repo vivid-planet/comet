@@ -14,7 +14,7 @@ export const ComponentDoc = ({ title }: Props) => {
 const IFrame = ({ title }: Props) => {
     const pathName = title.toLowerCase();
     const storybookDomain = getStorybookDomain();
-    const storybookDocsUrl = `${storybookDomain}/iframe.html?viewMode=docs&id=admin-components-${pathName}--docs&isEmbeddedInDocs=true`;
+    const storybookDocsUrl = `${storybookDomain}/iframe.html?viewMode=docs&id=component-docs-${pathName}--docs&isEmbeddedInDocs=true`;
     const { iframeContentHeight, iframeRef } = useIframeContentHeight();
 
     return <iframe src={storybookDocsUrl} width="100%" height={iframeContentHeight} ref={iframeRef} />;

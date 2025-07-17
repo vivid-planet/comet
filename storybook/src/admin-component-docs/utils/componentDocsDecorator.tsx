@@ -1,8 +1,7 @@
-import { Controls, Description, type Of, Primary, Stories } from "@storybook/addon-docs/blocks";
 import { type Decorator } from "@storybook/react/*";
 import { useEffect } from "react";
 
-export const heightCommunicationDecorator = (): Decorator => {
+export const componentDocsDecorator = (): Decorator => {
     return (Story) => {
         useEffect(() => {
             const isEmbeddedInDocs = window.location.search.includes("isEmbeddedInDocs=true");
@@ -38,19 +37,4 @@ export const heightCommunicationDecorator = (): Decorator => {
 
         return <Story />;
     };
-};
-
-type DocsPageProps = {
-    defaultStory: Of;
-};
-
-export const DocsPage = ({ defaultStory }: DocsPageProps) => {
-    return (
-        <>
-            <Description of={defaultStory} />
-            <Primary />
-            <Controls />
-            <Stories title="" includePrimary={false} />
-        </>
-    );
 };

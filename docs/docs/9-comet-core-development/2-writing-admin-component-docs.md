@@ -17,7 +17,7 @@ It should allow setting all props using `argTypes`. Default values should not be
 - Create a story file, e.g. `MyComponent.stories.tsx`
 - Define the story `meta` as a default export
     - Set `component` to the component you want to document
-    - Set `title` to the name of the component, prefixed with `Admin Components/`
+    - Set `title` to the name of the component, prefixed with `Component Docs/`
     - Set the value of `decorators` and `parameters` as seen below to ensure the correct configuration of the page
     - Define the component's props using `argTypes`
     - For props that are necessary for the basic usage of the component, define the default values using `args`
@@ -27,14 +27,15 @@ It should allow setting all props using `argTypes`. Default values should not be
 import { MyComponent } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import { DocsPage, heightCommunicationDecorator } from "./utils/commonComponentDocsMeta";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof MyComponent>;
 
 const meta: Meta<typeof MyComponent> = {
     component: MyComponent,
-    title: "Admin Components/MyComponent",
-    decorators: [heightCommunicationDecorator()],
+    title: "Component Docs/MyComponent",
+    decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
             page: () => <DocsPage defaultStory={DefaultStory} />,
@@ -73,6 +74,8 @@ The figma design of some components may define a "All Variants" or "Story Varian
 This is used as an overview of what the component can be used for and to easily compare the implementation and the design.
 
 ```tsx
+// Imports, meta, DefaultStory, etc.
+
 export const AllVariants: Story = {
     render: (props) => {
         return (
@@ -94,6 +97,8 @@ If you want to add additional information to the docs, e.g., for a special featu
 `MyComponent.stories.tsx`
 
 ```tsx
+// Imports, meta, DefaultStory, etc.
+
 /**
  * This explains what happens when using the `highlighted` prop.
  *
@@ -119,7 +124,8 @@ Consider defining `argTypes` as a separate variable that can be imported by the 
 import { MyInputComponent } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof MyInputComponent>;
 
@@ -134,9 +140,14 @@ export const argTypes = {
 } as const;
 
 const meta: Meta<typeof MyInputComponent> = {
-    ...commonComponentDocsMeta,
     component: MyInputComponent,
-    title: "Admin Components/MyInputComponent",
+    title: "Component Docs/MyInputComponent",
+    decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes,
 };
 
@@ -167,15 +178,21 @@ import { MyInputComponentField } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { argTypes, args } from "./MyInputComponent.stories";
-import { commonComponentDocsMeta } from "./utils/commonComponentDocsMeta";
-import { commonFieldComponentArgTypes } from "./utils/common";
+import { commonFieldComponentArgTypes } from "./utils/commonFieldComponentArgTypes";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof MyInputComponentField>;
 
 const meta: Meta<typeof MyInputComponentField> = {
-    ...commonComponentDocsMeta,
     component: MyInputComponentField,
-    title: "Admin Components/MyInputComponentField",
+    title: "Component Docs/MyInputComponentField",
+    decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={DefaultStory} />,
+        },
+    },
     argTypes: {
         ...argTypes,
         ...commonFieldComponentArgTypes,
