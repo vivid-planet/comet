@@ -257,7 +257,7 @@ export function createEditPageNode({
                             name: values.name,
                             slug: values.slug,
                             hideInMenu: values.hideInMenu,
-                            createAutomaticRedirectsOnSlugChange: values.createAutomaticRedirectsOnSlugChange,
+                            createAutomaticRedirectsOnSlugChange: isRedirectSourceAvailable ? values.createAutomaticRedirectsOnSlugChange : false,
                             attachedDocument: {
                                 id: values.documentType === data?.page?.documentType ? data?.page?.document?.id : undefined,
                                 type: values.documentType,
@@ -454,7 +454,6 @@ export function createEditPageNode({
                                                                         </div>
                                                                     </Typography>
                                                                 }
-                                                                disabled={!isRedirectSourceAvailable}
                                                                 name="createAutomaticRedirectsOnSlugChange"
                                                             />
                                                         </FieldContainer>
