@@ -428,7 +428,7 @@ input WarningSourceInfoInput {
   jsonPath: String
 }
 
-enum CometPermission {
+enum CorePermission {
   builds
   dam
   pageTree
