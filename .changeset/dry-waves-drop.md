@@ -2,4 +2,4 @@
 "@comet/site-react": patch
 ---
 
-Fix display of images with the `fill` property in the `previewSkeleton` component
+Fix the aspect ratio of the preview skeleton of images when using `fill`
