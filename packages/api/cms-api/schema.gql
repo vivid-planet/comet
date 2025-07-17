@@ -428,6 +428,20 @@ input WarningSourceInfoInput {
   jsonPath: String
 }
 
+enum CorePermission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+}
+
 type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!

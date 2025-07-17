@@ -14,7 +14,7 @@ import {
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { GeneratedFile } from "../../utils/write-generated-files";
 import { generateCrud } from "../generate-crud";
 
@@ -65,7 +65,7 @@ describe("GenerateCrud Relation n:m with additional column", () => {
         );
 
         const out = await generateCrud(
-            { targetDirectory: __dirname, create: false, update: true, delete: false },
+            { targetDirectory: __dirname, requiredPermission: testPermission, create: false, update: true, delete: false },
             orm.em.getMetadata().get("Product"),
         );
         const formattedOut = await formatGeneratedFiles(out);

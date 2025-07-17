@@ -7,6 +7,7 @@ import {
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
     ContentGenerationModule,
+    CorePermission,
     CronJobsModule,
     DamModule,
     DependenciesModule,
@@ -24,6 +25,7 @@ import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apoll
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
+import { AppPermission } from "@src/auth/app-permission.enum";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
@@ -90,6 +92,7 @@ export class AppModule {
                         },
                         useGlobalPrefix: true,
                         buildSchemaOptions: {
+                            orphanedTypes: [CorePermission, AppPermission],
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level

@@ -99,6 +99,7 @@
                 "./src/db/fixtures/**/*.ts",
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
+                "./src/auth/permission.interface.ts",
                 "./src/generator/generate.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],

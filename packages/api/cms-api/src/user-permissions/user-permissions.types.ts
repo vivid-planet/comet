@@ -1,11 +1,15 @@
 import { type ModuleMetadata, type Type } from "@nestjs/common";
 
+import { type CorePermission } from "../common/enum/core-permission.enum";
 import { type CurrentUser } from "./dto/current-user";
 import { type FindUsersArgs } from "./dto/paginated-user-list";
 import { type UserPermission } from "./entities/user-permission.entity";
 import { type ContentScope } from "./interfaces/content-scope.interface";
 import { type User } from "./interfaces/user";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface PermissionOverrides {} // This interface can be overwritten to add custom permissions
+export type Permission = `${CorePermission}` | `${PermissionOverrides[keyof PermissionOverrides]}`; // convert enum to string union type
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",
@@ -16,7 +20,7 @@ export type Users = [User[], number];
 export type SystemUser = string;
 
 type PermissionForUser = {
-    permission: string;
+    permission: Permission;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
@@ -24,8 +28,8 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
-    getPermissionsForUser?: (user: User, availablePermissions: string[]) => Promise<PermissionsForUser> | PermissionsForUser;
+    isAllowed(user: CurrentUser | SystemUser, permission: Permission, contentScope?: ContentScope): boolean;
+    getPermissionsForUser?: (user: User, availablePermissions: Permission[]) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
