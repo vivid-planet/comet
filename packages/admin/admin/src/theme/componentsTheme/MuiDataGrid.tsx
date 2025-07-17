@@ -82,8 +82,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         localeText: {
             ...component?.defaultProps?.localeText,
-            // TODO i18n https://vivid-planet.atlassian.net/browse/COM-2167
-            filterOperatorSearch: "search",
         },
     },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
