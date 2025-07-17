@@ -5,7 +5,7 @@ import { printSchema } from "graphql";
 
 import {
     BuildsResolver,
-    CometPermission,
+    CorePermission,
     createAuthResolver,
     createOneOfBlock,
     createPageTreeResolver,
@@ -126,7 +126,7 @@ async function generateSchema(): Promise<void> {
             createDamMediaAlternativeResolver({ File }),
         ],
         {
-            orphanedTypes: [CometPermission],
+            orphanedTypes: [CorePermission],
         },
     );
 

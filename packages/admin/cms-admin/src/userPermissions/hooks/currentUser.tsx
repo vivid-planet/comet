@@ -4,12 +4,12 @@ import omit from "lodash.omit";
 import { createContext, type PropsWithChildren, useContext } from "react";
 
 import { type ContentScope, useContentScope } from "../../contentScope/Provider";
-import { type GQLCometPermission } from "../../graphql.generated";
+import { type GQLCorePermission } from "../../graphql.generated";
 import { type GQLCurrentUserQuery } from "./currentUser.generated";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PermissionOverrides {} // This interface can be overwritten to add custom permissions
-export type Permission = GQLCometPermission | PermissionOverrides[keyof PermissionOverrides];
+export type Permission = GQLCorePermission | PermissionOverrides[keyof PermissionOverrides];
 
 interface CurrentUserContext {
     currentUser: CurrentUserInterface;

@@ -844,7 +844,7 @@ input RedirectScopeInput {
   domain: String!
 }
 
-enum CometPermission {
+enum CorePermission {
   builds
   dam
   pageTree
@@ -861,6 +861,7 @@ enum CometPermission {
 enum AppPermission {
   news
   products
+  manufacturers
 }
 
 type Query {

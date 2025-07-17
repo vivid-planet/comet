@@ -1,6 +1,6 @@
 import { type ModuleMetadata, type Type } from "@nestjs/common";
 
-import { type CometPermission } from "../common/enum/comet-permission.enum";
+import { type CorePermission } from "../common/enum/core-permission.enum";
 import { type CurrentUser } from "./dto/current-user";
 import { type FindUsersArgs } from "./dto/paginated-user-list";
 import { type UserPermission } from "./entities/user-permission.entity";
@@ -9,7 +9,7 @@ import { type User } from "./interfaces/user";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PermissionOverrides {} // This interface can be overwritten to add custom permissions
-export type Permission = `${CometPermission}` | `${PermissionOverrides[keyof PermissionOverrides]}`; // convert enum to string union type
+export type Permission = `${CorePermission}` | `${PermissionOverrides[keyof PermissionOverrides]}`; // convert enum to string union type
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",

@@ -1,6 +1,6 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum CometPermission {
+export enum CorePermission {
     builds = "builds",
     dam = "dam",
     pageTree = "pageTree",
@@ -13,6 +13,6 @@ export enum CometPermission {
     dependencies = "dependencies",
     warnings = "warnings",
 }
-registerEnumType(CometPermission, {
-    name: "CometPermission",
+registerEnumType(CorePermission, {
+    name: "CorePermission",
 });
