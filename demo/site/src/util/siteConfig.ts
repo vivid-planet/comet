@@ -14,13 +14,20 @@ export function getSiteConfigForDomain(domain: string) {
     return siteConfig;
 }
 
-export async function getSiteConfigForHost(host: string) {
+export async function getSiteConfigForHeaders(headers: Headers) {
     const sitePreviewParams = await previewParams({ skipDraftModeCheck: true });
     if (sitePreviewParams?.scope) {
         const siteConfig = getSiteConfigs().find((siteConfig) => siteConfig.scope.domain === sitePreviewParams.scope.domain);
         if (siteConfig) return siteConfig;
     }
-    return getSiteConfigs().find((siteConfig) => siteConfig.domains.main === host || siteConfig.domains.preliminary === host);
+
+    if (headers.has("x-comet-block-preview-domain")) {
+        const domain = headers.get("x-comet-block-preview-domain");
+        return getSiteConfigs().find((siteConfig) => siteConfig.scope.domain === domain);
+    } else {
+        const host = getHostByHeaders(headers);
+        return getSiteConfigs().find((siteConfig) => siteConfig.domains.main === host || siteConfig.domains.preliminary === host);
+    }
 }
 
 let siteConfigs: PublicSiteConfig[];
@@ -35,8 +42,7 @@ export function getSiteConfigs() {
 
 // Used for getting SiteConfig in server-components where params is not available (e.g. sitemap, not-found - see https://github.com/vercel/next.js/discussions/43179)
 export async function getSiteConfig() {
-    const host = getHostByHeaders(headers());
-    const siteConfig = await getSiteConfigForHost(host);
-    if (!siteConfig) throw new Error(`SiteConfig not found for host ${host}`);
+    const siteConfig = await getSiteConfigForHeaders(headers());
+    if (!siteConfig) throw new Error(`SiteConfig not found for host ${getHostByHeaders(headers())}`);
     return siteConfig;
 }

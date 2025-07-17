@@ -1,7 +1,7 @@
 import { gql } from "@comet/site-nextjs";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
 import { createGraphQLFetchMiddleware } from "@src/util/graphQLClientMiddleware";
-import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
+import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHeaders } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { memoryCache } from "./cache";
@@ -78,11 +78,9 @@ async function fetchPredefinedPages(domain: string) {
 
 export function withPredefinedPagesMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
-        const headers = request.headers;
-        const host = getHostByHeaders(headers);
-        const siteConfig = await getSiteConfigForHost(host);
+        const siteConfig = await getSiteConfigForHeaders(request.headers);
         if (!siteConfig) {
-            throw new Error(`Cannot get siteConfig for host ${host}`);
+            throw new Error(`Cannot get siteConfig for host ${getHostByHeaders(request.headers)}`);
         }
 
         const { pathname } = new URL(request.url);

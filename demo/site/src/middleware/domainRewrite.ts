@@ -1,5 +1,5 @@
 import { previewParams } from "@comet/site-nextjs";
-import { getHostByHeaders, getSiteConfigForHost } from "@src/util/siteConfig";
+import { getHostByHeaders, getSiteConfigForHeaders } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { type CustomMiddleware } from "./chain";
@@ -9,10 +9,9 @@ export type VisibilityParam = "default" | "invisiblePages" | "invisibleBlocks";
 export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
         const headers = request.headers;
-        const host = getHostByHeaders(headers);
-        const siteConfig = await getSiteConfigForHost(host);
+        const siteConfig = await getSiteConfigForHeaders(headers);
         if (!siteConfig) {
-            throw new Error(`Cannot get siteConfig for host ${host}`);
+            throw new Error(`Cannot get siteConfig for host ${getHostByHeaders(headers)}`);
         }
 
         const preview = await previewParams({ skipDraftModeCheck: true });

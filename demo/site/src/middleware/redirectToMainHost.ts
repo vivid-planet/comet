@@ -1,5 +1,5 @@
 import type { PublicSiteConfig } from "@src/site-configs";
-import { getHostByHeaders, getSiteConfigForHost, getSiteConfigs } from "@src/util/siteConfig";
+import { getHostByHeaders, getSiteConfigForHeaders, getSiteConfigs } from "@src/util/siteConfig";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { type CustomMiddleware } from "./chain";
@@ -24,7 +24,7 @@ export function withRedirectToMainHostMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
         const headers = request.headers;
         const host = getHostByHeaders(headers);
-        const siteConfig = await getSiteConfigForHost(host);
+        const siteConfig = await getSiteConfigForHeaders(headers);
 
         if (!siteConfig) {
             // Redirect to Main Host
