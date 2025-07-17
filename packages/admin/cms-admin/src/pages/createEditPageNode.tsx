@@ -385,7 +385,7 @@ export function createEditPageNode({
                                                               : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
-                                                {mode === "edit" && dirtyFields.slug && (
+                                                {mode === "edit" && dirtyFields.slug && isRedirectSourceAvailable && (
                                                     <Box mt={3}>
                                                         <FieldContainer
                                                             variant="horizontal"
