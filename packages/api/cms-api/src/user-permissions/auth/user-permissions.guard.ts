@@ -51,7 +51,7 @@ export class UserPermissionsGuard implements CanActivate {
         if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
             return requiredPermissions
-                .filter((permission): permission is Permission => permission !== DisablePermissionCheck)
+                .filter((permission) => permission !== DisablePermissionCheck)
                 .some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
             if (requiredContentScopes.length === 0)
