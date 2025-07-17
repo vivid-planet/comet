@@ -1955,7 +1955,7 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 The route handler has to be added in site (as described below). The resulting url has to be declared in `resolveSiteConfigForScope` of the `siteConfigs` property of the `CometConfigProvider`.
 
-```diff title="api/src/App.tsx"
+```diff title="admin/src/App.tsx"
 +   blockPreviewApiUrl: `${config.previewUrl}/block-preview`,
     sitePreviewApiUrl: `${config.previewUrl}/site-preview`,
 ```
