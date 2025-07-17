@@ -37,4 +37,16 @@ export class SitePreviewResolver {
             .setExpirationTime("10 seconds")
             .sign(new TextEncoder().encode(this.config.secret));
     }
+
+    @Query(() => String)
+    @RequiredPermission("pageTree")
+    async blockPreviewJwt(@Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope, @Args("url") url: string): Promise<string> {
+        return new SignJWT({
+            scope,
+            url,
+        })
+            .setProtectedHeader({ alg: "HS256" })
+            .setExpirationTime("10 seconds")
+            .sign(new TextEncoder().encode(this.config.secret));
+    }
 }
