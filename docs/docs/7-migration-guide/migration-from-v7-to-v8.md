@@ -1951,7 +1951,7 @@ export const RedirectsPage = createRedirectsPage({
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
 
-### ✅ Add block preview API url
+### Add block preview API url
 
 The route handler has to be added in site (as described below). The resulting url has to be declared in `resolveSiteConfigForScope` of the `siteConfigs` property of the `CometConfigProvider`.
 
