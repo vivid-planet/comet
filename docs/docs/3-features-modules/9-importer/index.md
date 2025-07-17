@@ -4,11 +4,11 @@ title: Importer
 
 # Importer
 
-The Importer package provides a standardized way to import data. It uses Node.js streams to process data efficiently, reducing memory usage when dealing with large datasets.
+The Importer module provides a standardized way to import data. It uses Node.js streams to process data efficiently, reducing memory usage when dealing with large datasets.
 
 ## Overview
 
-The Importer package uses a pipeline-based architecture that processes data through a series of transformation steps(pipes). This architecture provides:
+The Importer module uses a pipeline-based architecture that processes data through a series of transformation steps(pipes). This architecture provides:
 
 -   Memory-efficient processing via Node.js streams
 -   Multiple data sources (currently local files, with API requests and S3 buckets planned)
@@ -18,7 +18,7 @@ The Importer package uses a pipeline-based architecture that processes data thro
 
 ## Getting Started
 
-To use the Importer package, you'll need to create:
+To use the Importer module, you'll need to create:
 
 1. An input class that defines the structure of your imported data
 2. A custom importer class that sets up the data pipeline
