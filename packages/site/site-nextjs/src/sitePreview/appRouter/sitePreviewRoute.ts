@@ -5,7 +5,7 @@ import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { type PreviewParams, type SitePreviewParams, verifyPreviewJwt, verifySitePreviewJwt } from "../SitePreviewUtils";
+import { type PreviewParams, type SitePreviewParams, verifyJwt } from "../SitePreviewUtils";
 
 export async function sitePreviewRoute(request: NextRequest) {
     const params = request.nextUrl.searchParams;
@@ -14,7 +14,7 @@ export async function sitePreviewRoute(request: NextRequest) {
         return NextResponse.json({ error: "JWT-Parameter is missing." }, { status: 400 });
     }
 
-    const data = await verifySitePreviewJwt(jwt);
+    const data = await verifyJwt<SitePreviewParams>(jwt);
     if (!data) {
         return NextResponse.json({ error: "JWT-validation failed." }, { status: 400 });
     }
@@ -47,11 +47,11 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
 
     const sitePreviewCookie = cookies().get("__comet_preview");
     if (sitePreviewCookie) {
-        return verifyPreviewJwt(sitePreviewCookie.value);
+        return verifyJwt<PreviewParams>(sitePreviewCookie.value);
     }
     const blockPreviewCookie = cookies().get("__comet_block_preview");
     if (blockPreviewCookie) {
-        return verifyPreviewJwt(blockPreviewCookie.value);
+        return verifyJwt<PreviewParams>(blockPreviewCookie.value);
     }
 
     return null;

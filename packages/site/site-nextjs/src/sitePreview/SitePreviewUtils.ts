@@ -11,15 +11,7 @@ export type SitePreviewParams = {
     previewData?: PreviewData;
 };
 
-export async function verifySitePreviewJwt(jwt: string): Promise<SitePreviewParams | null> {
-    return verifyJwt<SitePreviewParams>(jwt);
-}
-
 export type PreviewParams = Pick<SitePreviewParams, "scope" | "previewData">;
-
-export async function verifyPreviewJwt(jwt: string): Promise<PreviewParams | null> {
-    return verifyJwt<PreviewParams>(jwt);
-}
 
 export async function verifyJwt<T>(jwt: string): Promise<T | null> {
     if (!process.env.SITE_PREVIEW_SECRET) {
