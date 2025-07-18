@@ -1,11 +1,14 @@
 import { Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+
 type Story = StoryObj<typeof Typography>;
 
 const meta: Meta<typeof Typography> = {
     component: Typography,
     title: "Component Docs/Typography",
+    decorators: [componentDocsDecorator()],
     argTypes: {
         children: {
             control: "text",

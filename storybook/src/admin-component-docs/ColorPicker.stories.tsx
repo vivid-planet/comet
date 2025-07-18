@@ -4,6 +4,8 @@ import { ArrowRight } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+
 type Story = StoryObj<typeof ColorPicker>;
 
 export const argTypes = {
@@ -63,6 +65,7 @@ export const argTypes = {
 const meta: Meta<typeof ColorPicker> = {
     component: ColorPicker,
     title: "Component Docs/ColorPicker",
+    decorators: [componentDocsDecorator()],
     argTypes: argTypes,
     excludeStories: ["argTypes"],
 };

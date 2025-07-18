@@ -4,11 +4,14 @@ import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+
 type Story = StoryObj<typeof Button>;
 
 const meta: Meta<typeof Button> = {
     component: Button,
     title: "Component Docs/Button",
+    decorators: [componentDocsDecorator()],
     argTypes: {
         children: {
             control: "text",

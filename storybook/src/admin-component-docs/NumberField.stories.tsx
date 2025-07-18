@@ -2,12 +2,14 @@ import { FinalForm, NumberField } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 
 type Story = StoryObj<typeof NumberField>;
 
 const meta: Meta<typeof NumberField> = {
     component: NumberField,
     title: "Component Docs/NumberField",
+    decorators: [componentDocsDecorator()],
     argTypes: {
         clearable: {
             control: "boolean",

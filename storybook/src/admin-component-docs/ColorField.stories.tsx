@@ -6,12 +6,14 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { argTypes } from "./ColorPicker.stories";
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 
 type Story = StoryObj<typeof ColorField>;
 
 const meta: Meta<typeof ColorField> = {
     component: ColorField,
     title: "Component Docs/ColorField",
+    decorators: [componentDocsDecorator()],
     argTypes: {
         ...argTypes,
         ...commonFieldComponentArgTypes,

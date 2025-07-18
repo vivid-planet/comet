@@ -2,11 +2,14 @@ import { FieldSet } from "@comet/admin";
 import { Chip } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
+import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+
 type Story = StoryObj<typeof FieldSet>;
 
 const meta: Meta<typeof FieldSet> = {
     component: FieldSet,
     title: "Component Docs/FieldSet",
+    decorators: [componentDocsDecorator()],
     argTypes: {
         title: {
             control: "text",
