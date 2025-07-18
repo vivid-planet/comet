@@ -4,6 +4,13 @@ import { useEffect } from "react";
 export const componentDocsDecorator = (): Decorator => {
     return (Story) => {
         useEffect(() => {
+            const isEmbeddedInDocs = window.location.search.includes("isEmbeddedInDocs=true");
+            const sbdocs = document.querySelector(".sbdocs");
+
+            if (isEmbeddedInDocs && sbdocs instanceof HTMLElement) {
+                sbdocs.classList.add("isEmbeddedInDocs");
+            }
+
             const sendHeightToParent = () => {
                 if (window.parent !== window) {
                     window.parent.postMessage({ type: "document-height", height: document.body.scrollHeight }, "*");
