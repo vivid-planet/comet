@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof NumberField>;
 
@@ -10,6 +11,11 @@ const meta: Meta<typeof NumberField> = {
     component: NumberField,
     title: "Component Docs/NumberField",
     decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={Default} />,
+        },
+    },
     argTypes: {
         clearable: {
             control: "boolean",

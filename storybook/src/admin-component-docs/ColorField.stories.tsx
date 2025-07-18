@@ -7,6 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { argTypes } from "./ColorPicker.stories";
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof ColorField>;
 
@@ -14,6 +15,11 @@ const meta: Meta<typeof ColorField> = {
     component: ColorField,
     title: "Component Docs/ColorField",
     decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={Default} />,
+        },
+    },
     argTypes: {
         ...argTypes,
         ...commonFieldComponentArgTypes,

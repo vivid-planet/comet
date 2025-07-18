@@ -5,6 +5,7 @@ import { InputAdornment } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof ColorPicker>;
 
@@ -66,6 +67,11 @@ const meta: Meta<typeof ColorPicker> = {
     component: ColorPicker,
     title: "Component Docs/ColorPicker",
     decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={Default} />,
+        },
+    },
     argTypes: argTypes,
     excludeStories: ["argTypes"],
 };

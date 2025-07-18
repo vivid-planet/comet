@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof Button>;
 
@@ -12,6 +13,11 @@ const meta: Meta<typeof Button> = {
     component: Button,
     title: "Component Docs/Button",
     decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={Default} />,
+        },
+    },
     argTypes: {
         children: {
             control: "text",

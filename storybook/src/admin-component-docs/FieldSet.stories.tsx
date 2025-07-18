@@ -3,6 +3,7 @@ import { Chip } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof FieldSet>;
 
@@ -10,6 +11,11 @@ const meta: Meta<typeof FieldSet> = {
     component: FieldSet,
     title: "Component Docs/FieldSet",
     decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={Default} />,
+        },
+    },
     argTypes: {
         title: {
             control: "text",

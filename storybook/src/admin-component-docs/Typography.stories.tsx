@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
+import { DocsPage } from "./utils/DocsPage";
 
 type Story = StoryObj<typeof Typography>;
 
@@ -9,6 +10,11 @@ const meta: Meta<typeof Typography> = {
     component: Typography,
     title: "Component Docs/Typography",
     decorators: [componentDocsDecorator()],
+    parameters: {
+        docs: {
+            page: () => <DocsPage defaultStory={Default} />,
+        },
+    },
     argTypes: {
         children: {
             control: "text",
