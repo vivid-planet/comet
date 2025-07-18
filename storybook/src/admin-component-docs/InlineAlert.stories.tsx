@@ -14,7 +14,7 @@ const meta: Meta<typeof InlineAlert> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -53,7 +53,7 @@ export default meta;
 /**
  * Used to display important information to the user inside of an element, e.g., a loading error in a `DataGrid`.
  */
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: ({ icon, actions, ...props }) => {
         return (
             <InlineAlert

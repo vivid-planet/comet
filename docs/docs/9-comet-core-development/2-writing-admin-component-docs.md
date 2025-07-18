@@ -8,20 +8,20 @@ The page should be defined in Storybook (`storybook/src/admin-component-docs/`),
 
 ## Minimum requirements
 
-Every docs page should include one `DefaultStory` that shows the minimal usage of the component.
+Every docs page should include one `Default` story that shows the minimal usage of the component.
 
 It should allow setting all props using `argTypes`. Default values should not be set unless they are required or commonly used.
 
 ### Basic example for `MyComponent`
 
 - Create a story file, e.g. `MyComponent.stories.tsx`
-- Define the story `meta` as a default export
+- Define the story `meta` (configuration) as a default export
     - Set `component` to the component you want to document
     - Set `title` to the name of the component, prefixed with `Component Docs/`
     - Set the value of `decorators` and `parameters` as seen below to ensure the correct configuration of the page
     - Define the component's props using `argTypes`
     - For props that are necessary for the basic usage of the component, define the default values using `args`
-- Create a story, named `DefaultStory` and add a concise description of the component in a comment above it
+- Create a story, named `Default` and add a concise description of the component in a comment above it
 
 ```tsx
 import { MyComponent } from "@comet/admin";
@@ -38,7 +38,7 @@ const meta: Meta<typeof MyComponent> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -64,7 +64,7 @@ export default meta;
  * This is a basic description of the component.
  * It's used to display a text in a certain way.
  */
-export const DefaultStory: Story = {};
+export const Default: Story = {};
 ```
 
 ## All Variants story
@@ -74,7 +74,7 @@ The figma design of some components may define a "All Variants" or "Story Varian
 This is used as an overview of what the component can be used for and to easily compare the implementation and the design.
 
 ```tsx
-// Imports, meta, DefaultStory, etc.
+// Imports, meta, Default, etc.
 
 export const AllVariants: Story = {
     render: (props) => {
@@ -97,7 +97,7 @@ If you want to add additional information to the docs, e.g., for a special featu
 `MyComponent.stories.tsx`
 
 ```tsx
-// Imports, meta, DefaultStory, etc.
+// Imports, meta, Default, etc.
 
 /**
  * This explains what happens when using the `highlighted` prop.
@@ -112,12 +112,11 @@ export const HighlightedExample: Story = {
 };
 ```
 
-## Structure for components that include a field variant
+## Structure for form components
 
-If a component is created for usage inside forms and includes a separate variant for usage inside final form, it should mention the existence of the field component but document the field component separately.
+If a component is created for usage inside forms and includes a separate variant for usage inside Final Form, it should mention the existence of the field component but document the field component separately.
 
 Consider defining `argTypes` as a separate variable that can be imported by the docs page of the field variant of the component.
-
 _Note that you then need to add `excludeStories: ["argTypes"]` to the meta object of the field component to avoid creating an unnecessary `argTypes` story._
 
 `MyInputComponent.stories.tsx`
@@ -147,7 +146,7 @@ const meta: Meta<typeof MyInputComponent> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes,
@@ -159,20 +158,19 @@ export default meta;
 /**
  * Used to input a certain type of value in a form.
  *
- * For usage inside final-form, use the `MyInputComponentField` component.
+ * For usage inside Final Form, use the `MyInputComponentField` component.
  */
-export const DefaultStory: Story = {};
-DefaultStory.name = "MyInputComponent";
+export const Default: Story = {};
 ```
 
 ## Structure for field components
 
-Create a separate docs page for the field variant of a component.  
+Create a separate docs page for the field variant of a form component.  
 Mention the non-field variant of the component in the default story's description.
 
-Make sure to define the same props the non-field component would use and also include the common props of field components.
+Make sure to define the same props the non-field component would use (import it's `argTypes` variable) and also include the common props of field components (`commonFieldComponentArgTypes`).
 
-Additionally, the default story must render a final-form as a wrapper, as this is necessary for the component to function.
+Additionally, the default story must render a Final Form as a wrapper, as this is necessary for the component to function.
 
 `MyInputComponentField.stories.tsx`
 
@@ -205,11 +203,11 @@ const meta: Meta<typeof MyInputComponentField> = {
 export default meta;
 
 /**
- * Used to input a certain type of value in a final form.
+ * Used to input a certain type of value in a Final Form.
  *
- * For usage outside of final-form, use the `MyInputComponent` component.
+ * For usage outside of Final Form, use the `MyInputComponent` component.
  */
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: (props) => {
         return (
             <FinalForm mode="edit" onSubmit={() => {}}>
@@ -218,5 +216,4 @@ export const DefaultStory: Story = {
         );
     },
 };
-DefaultStory.name = "MyInputComponentField";
 ```

@@ -2,7 +2,7 @@ import { Button } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Box, Chip, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
@@ -15,7 +15,7 @@ const meta: Meta<typeof Button> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -56,7 +56,7 @@ const meta: Meta<typeof Button> = {
 
 export default meta;
 
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: ({ startIcon, endIcon, variant, mobileIcon, ...props }) => {
         const buttonNode = (
             <Button

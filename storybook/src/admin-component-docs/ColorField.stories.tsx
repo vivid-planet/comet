@@ -2,7 +2,7 @@ import { FinalForm } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { ArrowRight } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { argTypes } from "./ColorPicker.stories";
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
@@ -17,7 +17,7 @@ const meta: Meta<typeof ColorField> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -33,11 +33,11 @@ const meta: Meta<typeof ColorField> = {
 export default meta;
 
 /**
- * The `ColorField` component is used to select colors in a final form, e.g., a HEX code or an RGBA string.
+ * The `ColorField` component is used to select colors in a Final Form, e.g., a HEX code or an RGBA string.
  *
- * For usage outside of final form, use the `ColorPicker` component.
+ * For usage outside of Final Form, use the `ColorPicker` component.
  */
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: ({ startAdornment, endAdornment, ...props }) => {
         return (
             <FinalForm mode="edit" onSubmit={() => {}}>

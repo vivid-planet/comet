@@ -1,6 +1,6 @@
 import { FieldSet } from "@comet/admin";
 import { Chip } from "@mui/material";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
@@ -13,7 +13,7 @@ const meta: Meta<typeof FieldSet> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -55,7 +55,7 @@ export default meta;
  * The `FieldSet` component is intended for better structuring of big forms.
  * It allows the user to show and hide sections of related content on a page.
  */
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: (props) => {
         return <FieldSet {...props} endAdornment={props.endAdornment === "Text in Chip" ? <Chip label="Text in Chip" /> : undefined} />;
     },

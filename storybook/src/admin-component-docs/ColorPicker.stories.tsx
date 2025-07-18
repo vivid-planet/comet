@@ -2,7 +2,7 @@ import { FieldContainer } from "@comet/admin";
 import { ColorPicker } from "@comet/admin-color-picker";
 import { ArrowRight } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
@@ -69,7 +69,7 @@ const meta: Meta<typeof ColorPicker> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: argTypes,
@@ -81,9 +81,9 @@ export default meta;
 /**
  * The `ColorPicker` component is used to select colors in a form, e.g., a HEX code or an RGBA string.
  *
- * For usage inside final form, use the `ColorField` component.
+ * For usage inside Final Form, use the `ColorField` component.
  */
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: ({ startAdornment, endAdornment, ...props }) => {
         return (
             <ColorPicker

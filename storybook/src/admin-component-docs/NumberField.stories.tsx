@@ -1,5 +1,5 @@
 import { FinalForm, NumberField } from "@comet/admin";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
@@ -13,7 +13,7 @@ const meta: Meta<typeof NumberField> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -34,9 +34,9 @@ const meta: Meta<typeof NumberField> = {
 export default meta;
 
 /**
- * Used to add a number input to a final form, its value is stored as a number.
+ * Used to add a number input to a Final Form, its value is stored as a number.
  */
-export const DefaultStory: Story = {
+export const Default: Story = {
     render: (props) => {
         return (
             <FinalForm mode="edit" onSubmit={() => {}}>

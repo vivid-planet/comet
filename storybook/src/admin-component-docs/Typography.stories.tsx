@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { type Meta, type StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
@@ -12,7 +12,7 @@ const meta: Meta<typeof Typography> = {
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
-            page: () => <DocsPage defaultStory={DefaultStory} />,
+            page: () => <DocsPage defaultStory={Default} />,
         },
     },
     argTypes: {
@@ -41,7 +41,7 @@ const meta: Meta<typeof Typography> = {
         },
     },
     args: {
-        children: "Typography content",
+        children: "Example content",
     },
 };
 
@@ -49,8 +49,10 @@ export default meta;
 
 /**
  * For rendering basic text, use the [Typography](https://mui.com/material-ui/react-typography/) component provided by MUI.
+ *
+ * _Comet Admin does not provide it's own `Typography`, it only adds additional functionality to the MUI `Typography` component._
  */
-export const DefaultStory: Story = {};
+export const Default: Story = {};
 
 /**
  * When using the theme from `@comet/admin` the following additional variants are available to use when rendering lists:
