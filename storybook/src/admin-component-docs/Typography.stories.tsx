@@ -60,7 +60,6 @@ export const DefaultStory: Story = {};
  */
 export const CustomListVariants: Story = {
     render: (props) => {
-        // TODO: Fix this story, the typographyies are all rendered as `span` instead of `ul`/`li`.
         return (
             <>
                 <Typography>You can add unordered lists:</Typography>

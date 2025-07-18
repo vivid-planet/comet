@@ -17,7 +17,6 @@ const meta: Meta<typeof FieldSet> = {
         },
     },
     argTypes: {
-        // TODO: Can we move the prop descriptions to the component itself?
         title: {
             control: "text",
             description: "Title of the FieldSet",

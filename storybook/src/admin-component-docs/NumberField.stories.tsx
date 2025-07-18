@@ -18,7 +18,6 @@ const meta: Meta<typeof NumberField> = {
     },
     argTypes: {
         clearable: {
-            // TODO: Should this be deprecated (work automatically, depending on required and value)?
             control: "boolean",
         },
         decimals: {

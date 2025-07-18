@@ -69,7 +69,6 @@ export const DefaultStory: Story = {
         );
 
         if (variant === "textLight") {
-            // TODO: Is there a way to simply set the background of the story container?
             return <Box sx={{ backgroundColor: "grey.800", padding: 4 }}>{buttonNode}</Box>;
         }
 

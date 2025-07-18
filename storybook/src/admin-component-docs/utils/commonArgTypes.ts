@@ -19,7 +19,6 @@ export const commonFieldComponentArgTypes = {
         control: "boolean",
     },
     variant: {
-        // TODO: Make this work - currently ignored
         control: "select",
         options: ["vertical", "horizontal"],
     },
