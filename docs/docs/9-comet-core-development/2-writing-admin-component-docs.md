@@ -118,6 +118,8 @@ If a component is created for usage inside forms and includes a separate variant
 
 Consider defining `argTypes` as a separate variable that can be imported by the docs page of the field variant of the component.
 
+_Note that you then need to add `excludeStories: ["argTypes"]` to the meta object of the field component to avoid creating an unnecessary `argTypes` story._
+
 `MyInputComponent.stories.tsx`
 
 ```tsx
@@ -149,6 +151,7 @@ const meta: Meta<typeof MyInputComponent> = {
         },
     },
     argTypes,
+    excludeStories: ["argTypes"],
 };
 
 export default meta;
@@ -178,7 +181,7 @@ import { MyInputComponentField } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { argTypes, args } from "./MyInputComponent.stories";
-import { commonFieldComponentArgTypes } from "./utils/commonFieldComponentArgTypes";
+import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
 

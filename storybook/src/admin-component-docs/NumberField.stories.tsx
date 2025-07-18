@@ -1,7 +1,7 @@
 import { FinalForm, NumberField } from "@comet/admin";
 import { type Meta, type StoryObj } from "@storybook/react-webpack5";
 
-import { commonFieldComponentArgTypes } from "./utils/commonFieldComponentArgTypes";
+import { commonFieldComponentArgTypes } from "./utils/commonArgTypes";
 import { componentDocsDecorator } from "./utils/componentDocsDecorator";
 import { DocsPage } from "./utils/DocsPage";
 
