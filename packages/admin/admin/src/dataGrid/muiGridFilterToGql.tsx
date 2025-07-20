@@ -62,16 +62,12 @@ export type ConvertCustomFilterCallback = (
     filterModel?: GridFilterModel,
 ) => GqlFilter | false | undefined;
 
-export function muiGridFilterToGql(
-    columns: GridColDef[],
-    filterModel?: GridFilterModel,
-    convertCustomFilter?: ConvertCustomFilterCallback,
-): { filter: GqlFilter; search?: string } {
+export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items.map((filterItem) => {
-        if (convertCustomFilter) {
-            const customFilter = convertCustomFilter(filterItem, columns, filterModel);
-            if (customFilter) return customFilter;
+        const column = columns.find((col) => col.field === filterItem.field);
+        if (column?.toGqlFilter) {
+            return column.toGqlFilter(filterItem);
         }
         if (!filterItem.operator) throw new Error("operator not set");
         const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
