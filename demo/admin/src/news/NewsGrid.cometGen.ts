@@ -23,7 +23,7 @@ export default defineConfig<GQLNews>({
             type: "staticSelect",
             name: "category",
             headerName: "Category",
-            values: ["Events", "Company", "Awards"],
+            values: ["events", "company", "awards"],
         },
         {
             type: "block",
