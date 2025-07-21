@@ -13,7 +13,7 @@ Many changes can be handled by upgrade scripts. **Use them!**
 
 The 🤖 emoji marks changes that can be handled by an upgrade script.
 You just have to execute the script.
-Below the command there always is a details drawer that describes the changes made.
+Below the command there usually is a details drawer that describes the changes made.
 :::
 
 ## Prerequisites
@@ -413,6 +413,20 @@ Yes, you can do that before updating everything else to v8.
 6. Commit your changes **without** `--no-verify`. There should be no remaining errors.
 
 **Now open a PR from `update-eslint-to-v9` to `main`**
+
+## Update process
+
+Once all the above PRs are merged, you can now start the actual v8 update.
+We recommend doing it service-by-service like this:
+
+1. API
+    1. Update the versions in package.json
+    2. Execute `npm install`
+    3. Execute all the steps in the migration guide. Commit with `--no-verify` after each step
+    4. Run `npm run lint` and fix all remaining errors
+    5. Start the API. Fix runtime errors if there are any.
+2. Repeat for admin
+3. Repeat for site
 
 ## API
 
