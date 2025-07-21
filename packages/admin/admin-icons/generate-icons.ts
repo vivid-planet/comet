@@ -84,6 +84,7 @@ const getSVGData = (icon: Icon) => {
 };
 
 const writeComponent = async (icon: Icon, svgString: string) => {
+    const searchWords = icon.name.replace(/\.[^/.]+$/, "");
     const component = `
         import { SvgIcon, type SvgIconProps } from "@mui/material";
         import { forwardRef } from "react";
@@ -102,6 +103,8 @@ const writeComponent = async (icon: Icon, svgString: string) => {
                 </SvgIcon>
             );
         });
+
+        export const ${icon.componentName}SearchWords = "${searchWords}";
     `;
     if (icon.componentName != null && component != null) {
         writeFileSync(`src/generated/${icon.componentName}.tsx`, component);
@@ -117,7 +120,7 @@ const writeGeneratedTypesFile = async (icons: Icon[]) => {
 
 const writeIndexFile = async (icons: Icon[]) => {
     const exports = icons.map((icon) => {
-        return `export { ${icon.componentName} } from "./${icon.componentName}";`;
+        return `export { ${icon.componentName}, ${icon.componentName}SearchWords } from "./${icon.componentName}";`;
     });
 
     const indexFile = await exports.join("\n");
