@@ -1,4 +1,4 @@
-import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
+import { AppHeaderDropdown, ClearInputAdornment, useStoredState } from "@comet/admin";
 import { Domain, Language, Search } from "@comet/admin-icons";
 import {
     Box,
@@ -37,8 +37,10 @@ interface Props {
     renderSelectedOption?: (option: Option) => ReactNode;
 }
 
+const localStorageKey = "contentScopeSelect.selectedScope";
+
 export function ContentScopeSelect({
-    value,
+    value: propValue,
     onChange,
     options,
     searchable,
@@ -52,6 +54,8 @@ export function ContentScopeSelect({
     const theme = useTheme();
 
     const hasMultipleDimensions = options.some((option) => Object.keys(option.scope).length > 1);
+    const [storedScope, setStoredScope] = useStoredState<ContentScope | undefined>(localStorageKey, undefined);
+    const value = storedScope ? storedScope : propValue;
 
     let filteredOptions = options;
 
@@ -127,6 +131,11 @@ export function ContentScopeSelect({
                 .join(" / ");
         };
     }
+
+    const handleChange = (selectedScope: ContentScope) => {
+        setStoredScope(selectedScope);
+        onChange(selectedScope);
+    };
 
     return (
         <AppHeaderDropdown
@@ -273,7 +282,7 @@ export function ContentScopeSelect({
                                                 key={JSON.stringify(option)}
                                                 onClick={() => {
                                                     hideDropdown();
-                                                    onChange(option.scope);
+                                                    handleChange(option.scope);
                                                     setSearchValue("");
                                                 }}
                                                 selected={isSelected}
