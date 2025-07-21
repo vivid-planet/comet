@@ -344,6 +344,58 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 """Stage root block data"""
 scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type NewsComment {
+  id: ID!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News {
+  id: ID!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  status: NewsStatus!
+  date: DateTime!
+  category: NewsCategory!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  comments: [NewsComment!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum NewsStatus {
+  active
+  deleted
+}
+
+enum NewsCategory {
+  events
+  company
+  awards
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input DependencyFilter {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
+}
+
 type Coordinates {
   latitude: Float!
   longitude: Float!
@@ -439,9 +491,6 @@ type ProductVariant {
   product: Product!
   image: DamImageBlockData!
 }
-
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type ProductDiscounts {
   quantity: Float!
@@ -592,12 +641,6 @@ type Footer {
 """FooterContent root block data"""
 scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-input DependencyFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
-}
-
 type MainMenuItem {
   id: ID!
   node: PageTreeNode!
@@ -613,49 +656,6 @@ scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/pu
 type MainMenu {
   items: [MainMenuItem!]!
 }
-
-type NewsComment {
-  id: ID!
-  comment: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-type News {
-  id: ID!
-  scope: NewsContentScope!
-  slug: String!
-  title: String!
-  status: NewsStatus!
-  date: DateTime!
-  category: NewsCategory!
-  image: DamImageBlockData!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  comments: [NewsComment!]!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-}
-
-enum NewsStatus {
-  active
-  deleted
-}
-
-enum NewsCategory {
-  events
-  company
-  awards
-}
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type PaginatedNews {
   nodes: [News!]!
@@ -774,6 +774,11 @@ input DamScopeInput {
   domain: String!
 }
 
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
 input CoordinatesInput {
   latitude: Float!
   longitude: Float!
@@ -831,11 +836,6 @@ input PageTreeNodeScopeInput {
 }
 
 input FooterScopeInput {
-  domain: String!
-  language: String!
-}
-
-input NewsContentScopeInput {
   domain: String!
   language: String!
 }
