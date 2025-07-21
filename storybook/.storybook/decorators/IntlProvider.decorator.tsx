@@ -1,6 +1,6 @@
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { type Decorator } from "@storybook/react";
 import { de, enUS } from "date-fns/locale";
 import { IntlProvider } from "react-intl";

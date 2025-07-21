@@ -38,7 +38,7 @@
         "@mui/system": "^7.2.0",
         "@mui/x-data-grid": "^7.29.8",
         "@mui/x-data-grid-pro": "^7.29.8",
-        "@mui/x-date-pickers": "^7.29.4",
+        "@mui/x-date-pickers": "^8.8.0",
         "change-case": "^5.4.4",
         "date-fns": "^4.1.0",
         "dnd-core": "^16.0.1",
