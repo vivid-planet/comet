@@ -28,6 +28,7 @@ import { DocumentGeneratorService } from "./generators/document-generator.servic
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFixtureService } from "./generators/image-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { NewsFixtureService } from "./generators/news-fixture.service";
 import { ProductsFixtureService } from "./generators/products-fixture.service";
 import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 import { VideoFixtureService } from "./generators/video-fixture.service";
@@ -69,6 +70,7 @@ export class FixturesConsole {
         private readonly pageTreeService: PageTreeService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly videoFixtureService: VideoFixtureService,
+        private readonly newsFixtureService: NewsFixtureService,
     ) {}
 
     barOptions: Options = {
@@ -201,11 +203,13 @@ export class FixturesConsole {
         this.logger.log("Generate Redirects...");
         await this.redirectsFixtureService.generateRedirects();
 
+        await this.productsFixtureService.generate();
+
+        await this.newsFixtureService.generate();
+
         multiBar.stop();
 
         await this.dependenciesService.createViews();
-
-        await this.productsFixtureService.generate();
 
         await this.orm.em.flush();
     }
