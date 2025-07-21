@@ -1,5 +1,12 @@
 # @comet/admin-rte
 
+## 7.25.3
+
+### Patch Changes
+
+-   @comet/admin@7.25.3
+-   @comet/admin-icons@7.25.3
+
 ## 7.25.2
 
 ### Patch Changes

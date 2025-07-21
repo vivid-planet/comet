@@ -1,5 +1,11 @@
 # @comet/site-react
 
+## 7.25.3
+
+### Patch Changes
+
+-   e300d66d2: Fix the aspect ratio of the preview skeleton of images when using `fill`
+
 ## 7.25.2
 
 ## 7.25.1
