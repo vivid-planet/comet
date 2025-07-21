@@ -58,6 +58,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
     const { drawerVariant } = useContext(MenuContext);
     const itemLevel: MenuItemLevel = level ?? 1;
     const hasSelectedChild = useRef(false);
+
     const location = useLocation();
 
     const [isSubmenuOpen, setIsSubmenuOpen] = useState<boolean>(openByDefault || hasSelectedChild.current);
@@ -78,7 +79,6 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
             // child is selected
             if (checkIfPathInLocation(child)) {
                 hasSelectedChild.current = true;
-                setIsSubmenuOpen(true);
             }
 
             // sub child is selected
@@ -86,7 +86,6 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
                 "children" in child.props ? Children.map(child?.props?.children, (child: MenuChild) => child) : ([] as MenuChild[]);
             if (subChildElements?.some((child: MenuChild) => child.props && checkIfPathInLocation(child))) {
                 hasSelectedChild.current = true;
-                setIsSubmenuOpen(true);
             }
 
             const newItemLevel = itemLevel + 1;
@@ -94,10 +93,15 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
             return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
                 level: newItemLevel === 1 || newItemLevel === 2 || newItemLevel === 3 ? newItemLevel : undefined,
                 isMenuOpen,
-                isCollapsibleOpen: isSubmenuOpen,
             });
         });
-    }, [children, isMenuOpen, isSubmenuOpen, itemLevel, location.pathname]);
+    }, [children, isMenuOpen, itemLevel, location.pathname]);
+
+    useEffect(() => {
+        if (hasSelectedChild.current) {
+            setIsSubmenuOpen(true);
+        }
+    }, [children, isMenuOpen, itemLevel, location.pathname]);
 
     const closeMenu = () => {
         setAnchorEl(null);
