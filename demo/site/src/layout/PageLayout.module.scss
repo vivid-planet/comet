@@ -1,0 +1,12 @@
+$pageLayoutGridTotalColumns: 24;
+$pageLayoutMaxWidth: 1920px;
+
+.root {
+    max-width: $pageLayoutMaxWidth;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat($pageLayoutGridTotalColumns, 1fr);
+}
