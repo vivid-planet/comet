@@ -1,7 +1,12 @@
 {
     "name": "@comet/site-nextjs",
+<<<<<<< HEAD
     "version": "8.0.0-beta.6",
     "description": "Comet Site Next.js package",
+=======
+    "type": "module",
+    "version": "7.25.3",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",

@@ -1,8 +1,24 @@
 # @comet/site-react
 
+<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ## 8.0.0-beta.5
+=======
+## 7.25.3
+
+### Patch Changes
+
+-   e300d66d2: Fix the aspect ratio of the preview skeleton of images when using `fill`
+
+## 7.25.2
+
+## 7.25.1
+
+### Patch Changes
+
+-   db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
+>>>>>>> main
 
 ## 7.25.0
 

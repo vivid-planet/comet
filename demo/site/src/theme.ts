@@ -76,7 +76,13 @@ export const theme = {
     },
 };
 
+<<<<<<< HEAD
 type Theme = typeof theme;
+=======
+export default theme;
+
+export type Theme = typeof theme;
+>>>>>>> main
 
 declare module "styled-components" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type

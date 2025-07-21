@@ -174,6 +174,7 @@ export function ProductsGrid() {
             width: 100,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
+<<<<<<< HEAD
             valueOptions: [
                 {
                     value: "Cap",
@@ -195,6 +196,9 @@ export function ProductsGrid() {
                 },
             ],
             renderCell: renderStaticSelectCell,
+=======
+            valueOptions: ["cap", "shirt", "tie"],
+>>>>>>> main
         },
         {
             type: "singleSelect",
@@ -211,7 +215,7 @@ export function ProductsGrid() {
                     InputComponent: GridFilterInputSingleSelect,
                 },
             ],
-            valueOptions: ["Cap", "Shirt", "Tie"],
+            valueOptions: ["cap", "shirt", "tie"],
             disableExport: true,
         },
         {

@@ -1,5 +1,6 @@
 # @comet/cms-admin
 
+<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ### Major Changes
@@ -460,6 +461,46 @@
     - @comet/admin-date-time@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
     - @comet/admin-rte@8.0.0-beta.0
+=======
+## 7.25.3
+
+### Patch Changes
+
+-   @comet/admin@7.25.3
+-   @comet/admin-date-time@7.25.3
+-   @comet/admin-icons@7.25.3
+-   @comet/admin-rte@7.25.3
+-   @comet/admin-theme@7.25.3
+-   @comet/blocks-admin@7.25.3
+
+## 7.25.2
+
+### Patch Changes
+
+-   @comet/admin@7.25.2
+-   @comet/admin-date-time@7.25.2
+-   @comet/admin-icons@7.25.2
+-   @comet/admin-rte@7.25.2
+-   @comet/admin-theme@7.25.2
+-   @comet/blocks-admin@7.25.2
+
+## 7.25.1
+
+### Patch Changes
+
+-   02394453f: Consider all scope dimensions when automatically disabling grouping and matching the selected option in `ContentScopeSelect`
+
+    This solves two issues where for scopes with optional parts
+
+    -   the `ContentScopeSelect` switched between disabled and enabled grouping depending on the selected scope
+    -   the wrong selected scope was shown because the matching didn't consider all dimensions
+    -   @comet/admin@7.25.1
+    -   @comet/admin-date-time@7.25.1
+    -   @comet/admin-icons@7.25.1
+    -   @comet/admin-rte@7.25.1
+    -   @comet/admin-theme@7.25.1
+    -   @comet/blocks-admin@7.25.1
+>>>>>>> main
 
 ## 7.25.0
 

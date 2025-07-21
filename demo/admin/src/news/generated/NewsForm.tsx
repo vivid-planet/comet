@@ -118,6 +118,7 @@ export function NewsForm({ id, scope }: FormProps) {
 
         <TextField required variant="horizontal" fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title"/>}/>
 
+<<<<<<< HEAD
             <Field required variant="horizontal" fullWidth name="date" component={FinalFormDatePicker} label={<FormattedMessage id="news.date" defaultMessage="Date"/>}/>
         <RadioGroupField required variant="horizontal" fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category"/>} options={[
                 {
@@ -140,4 +141,66 @@ export function NewsForm({ id, scope }: FormProps) {
                         </>
                     </>)}
             </FinalForm>);
+=======
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
+                        />
+
+                        <Field
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="date"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
+                        />
+                        <RadioGroupField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="category"
+                            label={<FormattedMessage id="news.category" defaultMessage="Category" />}
+                            options={[
+                                {
+                                    label: <FormattedMessage id="news.category.events" defaultMessage="Events" />,
+                                    value: "events",
+                                },
+                                {
+                                    label: <FormattedMessage id="news.category.company" defaultMessage="Company" />,
+                                    value: "company",
+                                },
+                                {
+                                    label: <FormattedMessage id="news.category.awards" defaultMessage="Awards" />,
+                                    value: "awards",
+                                },
+                            ]}
+                        />
+                        <Field
+                            name="image"
+                            isEqual={isEqual}
+                            label={<FormattedMessage id="news.image" defaultMessage="Image" />}
+                            variant="horizontal"
+                            fullWidth
+                        >
+                            {createFinalFormBlock(rootBlocks.image)}
+                        </Field>
+                        <Field
+                            name="content"
+                            isEqual={isEqual}
+                            label={<FormattedMessage id="news.content" defaultMessage="Content" />}
+                            variant="horizontal"
+                            fullWidth
+                        >
+                            {createFinalFormBlock(rootBlocks.content)}
+                        </Field>
+                    </>
+                </>
+            )}
+        </FinalForm>
+    );
+>>>>>>> main
 }
