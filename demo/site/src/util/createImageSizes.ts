@@ -1,4 +1,4 @@
-import theme, { Theme } from "@src/theme";
+import { type Theme, theme } from "@src/theme";
 
 type BreakpointWidths = { default: string | number } & Partial<Record<keyof Theme["breakpoints"], string | number>>;
 

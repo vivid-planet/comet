@@ -28,8 +28,6 @@ typesafe
 Undeprecate
 blocklist
 cbdf
-<<<<<<< HEAD
-=======
 Timr
 Bundlephobia
 myproject
@@ -43,6 +41,5 @@ uuidv
 Colocating
 Lightbox
 kwfscripts
->>>>>>> main
 codegen
 usehooks

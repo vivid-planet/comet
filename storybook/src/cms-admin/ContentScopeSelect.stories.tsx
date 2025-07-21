@@ -262,50 +262,47 @@ export const ThreeDimensions = function () {
 ThreeDimensions.storyName = "Three dimensions";
 
 export const GroupingWithOptionalScopeParts = function () {
-    interface ContentScope {
-        country: string;
-        company?: string;
-    }
-
     const [value, setValue] = useState({ country: "at" });
     return (
-        <ContentScopeSelect<ContentScope>
+        <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { country: string; company?: string }) => {
                 setValue(value);
             }}
             options={[
                 {
-                    country: { label: "AT Overview", value: "at" },
+                    scope: { country: "at" },
+                    label: { country: "AT Overview" },
                 },
                 {
-                    country: { label: "DE Overview", value: "de" },
+                    scope: { country: "de" },
+                    label: { country: "DE Overview" },
                 },
                 {
-                    country: { label: "Austria", value: "at" },
-                    company: { label: "A Inc.", value: "a-inc" },
+                    scope: { country: "at", company: "a-inc" },
+                    label: { country: "Austria", company: "A Inc." },
                 },
                 {
-                    country: { label: "Austria", value: "at" },
-                    company: { label: "B Inc.", value: "b-inc" },
+                    scope: { country: "at", company: "b-inc" },
+                    label: { country: "Austria", company: "B Inc." },
                 },
                 {
-                    country: { label: "Germany", value: "de" },
-                    company: { label: "A Inc.", value: "a-inc" },
+                    scope: { country: "de", company: "a-inc" },
+                    label: { country: "Germany", company: "A Inc." },
                 },
                 {
-                    country: { label: "Germany", value: "de" },
-                    company: { label: "B Inc.", value: "b-inc" },
+                    scope: { country: "de", company: "b-inc" },
+                    label: { country: "Germany", company: "B Inc." },
                 },
             ]}
             groupBy="country"
             searchable
-            renderOption={(option, query) => {
+            renderOption={(option, query, isSelected) => {
                 let text: string;
-                if (option.company?.value === undefined) {
-                    text = option.country.label ?? option.country.value;
+                if (option.scope.company === undefined) {
+                    text = option.label?.country ?? option.scope.country;
                 } else {
-                    text = option.company.label ?? option.company.value;
+                    text = option.label?.company ?? option.scope.company;
                 }
 
                 const matches = findTextMatches(text, query);
@@ -316,7 +313,7 @@ export const GroupingWithOptionalScopeParts = function () {
                             <Domain />
                         </ListItemIcon>
                         <ListItemText
-                            primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
+                            slotProps={{ primary: { variant: isSelected ? "subtitle2" : "body2" } }}
                             sx={{ margin: 0 }}
                             primary={<MarkedMatches text={text} matches={matches} />}
                         />

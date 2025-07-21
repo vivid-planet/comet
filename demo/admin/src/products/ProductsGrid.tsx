@@ -174,10 +174,9 @@ export function ProductsGrid() {
             width: 100,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-<<<<<<< HEAD
             valueOptions: [
                 {
-                    value: "Cap",
+                    value: "cap",
                     label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
                     cellContent: (
                         <GridCellContent
@@ -187,18 +186,15 @@ export function ProductsGrid() {
                     ),
                 },
                 {
-                    value: "Shirt",
+                    value: "shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
-                    value: "Tie",
+                    value: "tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
             renderCell: renderStaticSelectCell,
-=======
-            valueOptions: ["cap", "shirt", "tie"],
->>>>>>> main
         },
         {
             type: "singleSelect",

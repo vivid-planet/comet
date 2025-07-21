@@ -1,7 +1,3 @@
-<<<<<<< HEAD:demo/api/src/db/fixtures/fixtures.command.ts
-import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
-import { faker } from "@faker-js/faker";
-=======
 import {
     BlobStorageBackendService,
     DependenciesService,
@@ -10,8 +6,7 @@ import {
     PageTreeNodeVisibility,
     PageTreeService,
 } from "@comet/cms-api";
-import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
->>>>>>> main:demo/api/src/db/fixtures/fixtures.console.ts
+import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Inject, Logger } from "@nestjs/common";

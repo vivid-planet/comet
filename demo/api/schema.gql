@@ -884,11 +884,7 @@ type Query {
   damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-<<<<<<< HEAD
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
-=======
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
->>>>>>> main
   newsListByIds(ids: [ID!]!): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!

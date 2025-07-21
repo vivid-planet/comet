@@ -15,12 +15,8 @@ export const CallToActionBlock = createCompositeBlock(
             },
             variant: {
                 block: createCompositeBlockSelectField<CallToActionBlockData["variant"]>({
-<<<<<<< HEAD
                     label: <FormattedMessage id="callToActionBlock.variant" defaultMessage="Variant" />,
-                    defaultValue: "Contained",
-=======
                     defaultValue: "contained",
->>>>>>> main
                     options: [
                         { value: "contained", label: <FormattedMessage id="callToActionBlock.variant.contained" defaultMessage="Contained" /> },
                         { value: "outlined", label: <FormattedMessage id="callToActionBlock.variant.outlined" defaultMessage="Outlined" /> },

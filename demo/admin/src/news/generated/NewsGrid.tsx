@@ -79,30 +79,15 @@ export function NewsGrid() {
         { field: "category",
             headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
             type: "singleSelect",
-<<<<<<< HEAD
             valueFormatter: (value, row) => row.category?.toString(),
             valueOptions: [{
-                    value: "Events",
-                    label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }),
-                }, {
-                    value: "Company",
-                    label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }),
-                }, {
-                    value: "Awards",
-=======
-            valueFormatter: ({ value }) => value?.toString(),
-            valueOptions: [
-                {
                     value: "events",
                     label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }),
-                },
-                {
+                }, {
                     value: "company",
                     label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }),
-                },
-                {
+                }, {
                     value: "awards",
->>>>>>> main
                     label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }),
                 },],
             renderCell: renderStaticSelectCell,

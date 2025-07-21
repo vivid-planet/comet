@@ -1,6 +1,5 @@
 # @comet/admin
 
-<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ### Major Changes
@@ -433,28 +432,27 @@
 - Updated dependencies [04e308a]
 - Updated dependencies [682a674]
     - @comet/admin-icons@8.0.0-beta.0
-=======
+
 ## 7.25.3
 
 ### Patch Changes
 
--   @comet/admin-icons@7.25.3
--   @comet/admin-theme@7.25.3
+- @comet/admin-icons@7.25.3
+- @comet/admin-theme@7.25.3
 
 ## 7.25.2
 
 ### Patch Changes
 
--   @comet/admin-icons@7.25.2
--   @comet/admin-theme@7.25.2
+- @comet/admin-icons@7.25.2
+- @comet/admin-theme@7.25.2
 
 ## 7.25.1
 
 ### Patch Changes
 
--   @comet/admin-icons@7.25.1
--   @comet/admin-theme@7.25.1
->>>>>>> main
+- @comet/admin-icons@7.25.1
+- @comet/admin-theme@7.25.1
 
 ## 7.25.0
 

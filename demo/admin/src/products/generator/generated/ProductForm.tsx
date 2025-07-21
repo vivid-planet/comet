@@ -160,13 +160,13 @@ export function ProductForm({ id }: FormProps) {
         <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={[
                 {
                     label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap"/>,
-                    value: "Cap",
+                    value: "cap",
                 }, {
                     label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt"/>,
-                    value: "Shirt",
+                    value: "shirt",
                 }, {
                     label: <FormattedMessage id="product.type.tie" defaultMessage="Tie"/>,
-                    value: "Tie",
+                    value: "tie",
                 }
             ]}/>
         <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {

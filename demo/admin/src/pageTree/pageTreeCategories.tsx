@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 import { type AllCategories } from "@comet/cms-admin";
 import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import { kebabCase, pascalCase } from "change-case";
-=======
-import { AllCategories } from "@comet/cms-admin";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { camelCase, kebabCase } from "change-case";
->>>>>>> main
 import { FormattedMessage } from "react-intl";
 
 export const pageTreeCategories: AllCategories = [

@@ -1,11 +1,7 @@
 {
     "name": "@comet/cms-admin",
-<<<<<<< HEAD
     "version": "8.0.0-beta.6",
     "description": "Comet CMS Admin package",
-=======
-    "version": "7.25.3",
->>>>>>> main
     "repository": {
         "directory": "packages/admin/cms-admin",
         "type": "git",

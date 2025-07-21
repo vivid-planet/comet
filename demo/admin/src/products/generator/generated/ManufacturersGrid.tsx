@@ -109,6 +109,7 @@ export function ManufacturersGrid() {
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" }),
             filterable: false,
             sortable: false,
             valueGetter: (params, row) => row.address?.alternativeAddress?.street,
@@ -121,6 +122,7 @@ export function ManufacturersGrid() {
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
             type: "number",
             filterable: false,
             sortable: false,
@@ -137,6 +139,7 @@ export function ManufacturersGrid() {
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.zip", defaultMessage: "Alt-Zip" }),
             filterable: false,
             sortable: false,
             valueGetter: (params, row) => row.address?.alternativeAddress?.zip,

@@ -15,17 +15,17 @@ Be sparing with unnecessary logging, as it causes significant costs. Enable debu
 
 ## Standard Environments
 
--   **dev:** Auto-deployment from main/master. Mainly serves as an integration test (Does deployment work? Do migrations work? Does the API start?). The pipeline
-    must ALWAYS be functional. If the pipeline is red, NOTHING may be merged that does not contribute to fixing the pipeline.
-    **Automatically deleted after 12 hours without deployment (data is retained).**
+- **dev:** Auto-deployment from main/master. Mainly serves as an integration test (Does deployment work? Do migrations work? Does the API start?). The pipeline
+  must ALWAYS be functional. If the pipeline is red, NOTHING may be merged that does not contribute to fixing the pipeline.
+  **Automatically deleted after 12 hours without deployment (data is retained).**
 
--   **test:** For internal tests, demos of unmerged or in-progress features allowed. Pushing without review permitted.
-    **Automatically deleted after 7 days without deployment (data is retained).**
+- **test:** For internal tests, demos of unmerged or in-progress features allowed. Pushing without review permitted.
+  **Automatically deleted after 7 days without deployment (data is retained).**
 
--   **staging:** For customer acceptance. Serves as the base for future production deployments. Only `master/main` may be reset here (= only reviewed code).
-    **Permanently operational (= features can be tested here, demo content maintained, etc.).**
+- **staging:** For customer acceptance. Serves as the base for future production deployments. Only `master/main` may be reset here (= only reviewed code).
+  **Permanently operational (= features can be tested here, demo content maintained, etc.).**
 
--   **prod:** Manual deployment from staging.
+- **prod:** Manual deployment from staging.
 
 ## Replicas
 
@@ -43,17 +43,17 @@ Amount of memory/CPU guaranteed for your container.
 
 Amount of memory/CPU your container cannot exceed.
 
--   Exceed CPU → Process throttled
--   Exceed RAM → Process killed, exit code 137 (OOM Killed)
+- Exceed CPU → Process throttled
+- Exceed RAM → Process killed, exit code 137 (OOM Killed)
 
 Containers are always scheduled based on the Request.
 
 ### Which values for request/limit?
 
--   DO NOT over-commit memory (limit higher than request).
--   DO NOT limit CPU (we set 2 because we almost always use NodeJS, which is single-threaded).
--   CPU-Request: Used CPU at average load.
--   RAM-Request: Used RAM at average load + safety margin.
+- DO NOT over-commit memory (limit higher than request).
+- DO NOT limit CPU (we set 2 because we almost always use NodeJS, which is single-threaded).
+- CPU-Request: Used CPU at average load.
+- RAM-Request: Used RAM at average load + safety margin.
 
 ### Example
 

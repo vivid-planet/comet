@@ -1,6 +1,5 @@
 # @comet/site-nextjs
 
-<<<<<<< HEAD
 ## 8.0.0-beta.6
 
 ### Major Changes
@@ -16,12 +15,12 @@
 ### Patch Changes
 
 - @comet/site-react@8.0.0-beta.5
-=======
+
 ## 7.25.3
 
 ### Patch Changes
 
--   b1701abf4: Include `@comet/site-react` in the bundle of `@comet/site-nextjs`
+- b1701abf4: Include `@comet/site-react` in the bundle of `@comet/site-nextjs`
 
     Previously, `@comet/site-react` was treated as an external dependency.
 
@@ -47,23 +46,22 @@
 
     Bundling `@comet/site-react` with `@comet/site-nextjs` prevents this behavior and the associated error.
 
--   Updated dependencies [e300d66d2]
-    -   @comet/site-react@7.25.3
+- Updated dependencies [e300d66d2]
+    - @comet/site-react@7.25.3
 
 ## 7.25.2
 
 ### Patch Changes
 
--   @comet/site-react@7.25.2
+- @comet/site-react@7.25.2
 
 ## 7.25.1
 
 ### Patch Changes
 
--   db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
--   Updated dependencies [db632346d]
-    -   @comet/site-react@7.25.1
->>>>>>> main
+- db632346d: YouTube and Vimeo Video Block: fixed bug where the video does not start after clicking the play button in the preview image.
+- Updated dependencies [db632346d]
+    - @comet/site-react@7.25.1
 
 ## 7.25.0
 

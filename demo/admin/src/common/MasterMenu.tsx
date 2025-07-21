@@ -39,16 +39,6 @@ import { Redirect, type RouteComponentProps } from "react-router";
 
 import { EditPageNode } from "./EditPageNode";
 
-<<<<<<< HEAD
-=======
-export const pageTreeCategories: AllCategories = [
-    {
-        category: "mainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-];
-
->>>>>>> main
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
     Page,

@@ -13,14 +13,6 @@ export class NewsListArgs extends OffsetBasedPaginationArgs {
     @ValidateNested()
     @Type(() => NewsContentScope)
     scope: NewsContentScope;
-<<<<<<< HEAD
-=======
-
-    @Field(() => [NewsStatus], { defaultValue: [NewsStatus.active] })
-    @IsEnum(NewsStatus, { each: true })
-    status: NewsStatus[];
-
->>>>>>> main
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
