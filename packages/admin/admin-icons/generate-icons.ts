@@ -59,7 +59,7 @@ const main = async () => {
     await writeIndexFile(icons);
 };
 
-const getComponentName = (fileName: string) => pascalCase(fileName.split(/[_\.]/)[0], { transform: pascalCaseTransformMerge });
+const getComponentName = (fileName: string) => pascalCase(fileName.split(/[_.]/)[0], { transform: pascalCaseTransformMerge });
 
 const getSVGData = (icon: Icon) => {
     const fileContents = readFileSync(icon.path);
