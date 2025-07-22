@@ -103,7 +103,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const dataGridProps = { ...useDataGridRemote({ initialSort: [{ field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" }],
             initialFilter: {
-                items: [{ field: "type", operator: "is", value: "Shirt" }],
+                items: [{ field: "type", operator: "is", value: "shirt" }],
             },
             queryParamsPrefix: "products",
         }), ...usePersistentColumnState("ProductsGrid") };
