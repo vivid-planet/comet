@@ -10,6 +10,7 @@ import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
+import { useDebounce } from "use-debounce";
 
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
 import { useContentScope } from "../contentScope/Provider";
@@ -111,7 +112,6 @@ export function createEditPageNode({
         const { scopePartsForRedirects } = usePageTreeConfig();
 
         const { scope: completeScope } = useContentScope();
-        const [isRedirectSourceAvailable, setIsRedirectSourceAvailable] = useState(true);
         const redirectScope = (scopePartsForRedirects ?? []).reduce(
             (acc, scopePartsForRedirects) => {
                 acc[scopePartsForRedirects] = completeScope[scopePartsForRedirects];
@@ -182,22 +182,23 @@ export function createEditPageNode({
             [apollo, scope, parentId, slug],
         );
 
-        const checkForExistingRedirects = useCallback(
-            async (value: string): Promise<boolean> => {
-                const redirectSource = parentPath ? `${parentPath}/${value}` : `/${value}`;
+        const redirectSource = slug && parentPath ? `${parentPath}/${slug}` : slug ? `/${slug}` : null;
+        const [debouncedRedirectSource] = useDebounce(redirectSource, 500);
 
-                const { data: redirectData } = await apollo.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
-                    query: redirectSourceAvailableForPageEdit,
-                    variables: {
-                        scope: redirectScope,
-                        source: redirectSource,
-                    },
-                });
-
-                return redirectData.redirectSourceAvailable;
+        const { data: redirectQueryData } = useQuery<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>(
+            redirectSourceAvailableForPageEdit,
+            {
+                variables: debouncedRedirectSource
+                    ? {
+                          scope: redirectScope,
+                          source: debouncedRedirectSource,
+                      }
+                    : undefined,
+                skip: !debouncedRedirectSource,
             },
-            [apollo, redirectScope, parentPath],
         );
+
+        const isRedirectSourceAvailable = redirectQueryData?.redirectSourceAvailable ?? true;
 
         const validateSlug = async (value: string) => {
             if (!isValidSlug(value)) {
@@ -224,12 +225,6 @@ export function createEditPageNode({
                 }
             }
         };
-
-        useEffect(() => {
-            if (mode === "edit" && slug) {
-                checkForExistingRedirects(slug).then(setIsRedirectSourceAvailable);
-            }
-        }, [mode, slug, checkForExistingRedirects]);
 
         const isActivePage = data?.page?.visibility === "Published";
 
