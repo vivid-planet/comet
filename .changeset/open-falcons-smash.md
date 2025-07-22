@@ -1,5 +1,5 @@
 ---
-"@comet/cms-admin": patch
+"@comet/cms-admin": minor
 ---
 
-Save selected `ContentScope` to local storage to redirect the user to the most recently visited scope, if no scope is provided in the domain
+Redirect to the most recently visited content scope when returning to the application
