@@ -176,7 +176,7 @@ export function ProductsGrid() {
             visible: theme.breakpoints.up("md"),
             valueOptions: [
                 {
-                    value: "Cap",
+                    value: "cap",
                     label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
                     cellContent: (
                         <GridCellContent
@@ -186,11 +186,11 @@ export function ProductsGrid() {
                     ),
                 },
                 {
-                    value: "Shirt",
+                    value: "shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
-                    value: "Tie",
+                    value: "tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
@@ -211,7 +211,7 @@ export function ProductsGrid() {
                     InputComponent: GridFilterInputSingleSelect,
                 },
             ],
-            valueOptions: ["Cap", "Shirt", "Tie"],
+            valueOptions: ["cap", "shirt", "tie"],
             disableExport: true,
         },
         {
