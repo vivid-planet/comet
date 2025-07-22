@@ -42,7 +42,7 @@ import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
 import { WarningResolver } from "./src/warnings/warning.resolver";
-import { CombinedPermission } from "./src/user-permissions/user-permissions.types";
+import { Permission } from "./src/user-permissions/user-permissions.types";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -96,7 +96,7 @@ async function generateSchema(): Promise<void> {
         }
     }
 
-    registerEnumType(CombinedPermission, { name: "CombinedPermission" });
+    registerEnumType(Permission, { name: "Permission" });
 
     const schema = await gqlSchemaFactory.create(
         [

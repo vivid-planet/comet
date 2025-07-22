@@ -1,7 +1,7 @@
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
-  permission: CombinedPermission!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -16,7 +16,7 @@ enum UserPermissionSource {
   BY_RULE
 }
 
-enum CombinedPermission {
+enum Permission {
   builds
   dam
   pageTree
@@ -55,7 +55,7 @@ type UserPermissionsUser {
 }
 
 type CurrentUserPermission {
-  permission: CombinedPermission!
+  permission: Permission!
   contentScopes: [JSONObject!]!
 }
 
@@ -627,9 +627,9 @@ input UserPermissionsUserFilter {
 }
 
 input PermissionFilter {
-  equal: CombinedPermission
-  notEqual: CombinedPermission
-  isAnyOf: [CombinedPermission!]
+  equal: Permission
+  notEqual: Permission
+  isAnyOf: [Permission!]
 }
 
 input UserPermissionsUserSort {
@@ -836,7 +836,7 @@ input PageTreeNodeCreateInput {
 }
 
 input UserPermissionInput {
-  permission: CombinedPermission!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
