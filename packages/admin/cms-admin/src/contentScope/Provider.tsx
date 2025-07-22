@@ -149,12 +149,14 @@ export function ContentScopeProvider({ children, defaultValue, values, location 
         );
     }
 
-    let defaultUrl = location.createUrl(defaultValue);
-
     const storedScope = localStorage.getItem(contentScopeLocalStorageKey);
+
+    let defaultUrl: string;
 
     if (storedScope && storedScope !== "undefined") {
         defaultUrl = location.createUrl(JSON.parse(storedScope));
+    } else {
+        defaultUrl = location.createUrl(defaultValue);
     }
 
     return (
