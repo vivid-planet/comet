@@ -459,7 +459,7 @@ export function createEditPageNode({
                                                         <Typography>
                                                             <FormattedMessage
                                                                 id="comet.pages.pages.page.redirectAlreadyExists"
-                                                                defaultMessage="The slug was changed, but a redirect for the old path already exists. You can check or manage redirects in System → Redirects."
+                                                                defaultMessage="The slug was changed, but a redirect for the old path already exists."
                                                             />
                                                         </Typography>
                                                     </FieldContainer>
