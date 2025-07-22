@@ -7,7 +7,6 @@ import {
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
     ContentGenerationModule,
-    CorePermission,
     CronJobsModule,
     DamModule,
     DependenciesModule,
@@ -92,7 +91,6 @@ export class AppModule {
                         },
                         useGlobalPrefix: true,
                         buildSchemaOptions: {
-                            orphanedTypes: [CorePermission, AppPermission],
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level

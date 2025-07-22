@@ -861,26 +861,6 @@ input RedirectScopeInput {
   domain: String!
 }
 
-enum CorePermission {
-  builds
-  dam
-  pageTree
-  cronJobs
-  translation
-  userPermissions
-  prelogin
-  impersonation
-  fileUploads
-  dependencies
-  warnings
-}
-
-enum AppPermission {
-  news
-  products
-  manufacturers
-}
-
 type Query {
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): UserPermissionsUser!
