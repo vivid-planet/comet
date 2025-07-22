@@ -42,6 +42,7 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
+    encryptedContentScope: string;
     graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
@@ -62,6 +63,7 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
+    encryptedContentScope: "",
     graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
@@ -79,6 +81,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | null>(null);
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
+    const [encryptedContentScope, setEncryptedContentScope] = useState<string>("");
     const [graphQLApiUrl, setGraphQLApiUrl] = useState<string>("");
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
@@ -218,6 +221,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                     break;
                 case AdminMessageType.ContentScope:
                     setContentScope(message.data.contentScope);
+                    setEncryptedContentScope(message.data.encryptedContentScope);
                     break;
                 case AdminMessageType.GraphQLApiUrl:
                     setGraphQLApiUrl(message.data.graphQLApiUrl);
@@ -285,6 +289,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             },
             sendMessage,
             contentScope,
+            encryptedContentScope,
             graphQLApiUrl,
             previewElementsData,
             addPreviewElement,
@@ -298,6 +303,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             hoveredAdminRoute,
             sendMessage,
             contentScope,
+            encryptedContentScope,
             graphQLApiUrl,
             previewElementsData,
             addPreviewElement,

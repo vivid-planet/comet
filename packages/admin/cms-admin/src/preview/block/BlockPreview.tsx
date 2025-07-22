@@ -1,14 +1,12 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Minimize } from "@comet/admin-icons";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import gql from "graphql-tag";
 import { useEffect } from "react";
 
 import { useIFrameBridge } from "../../blocks/iframebridge/useIFrameBridge";
 import { useCometConfig } from "../../config/CometConfigContext";
 import { useContentScope } from "../../contentScope/Provider";
-import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
@@ -27,19 +25,6 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
 
     const { graphQLApiUrl } = useCometConfig();
 
-    useEffect(() => {
-        if (iFrameBridge.iFrameReady) {
-            iFrameBridge.sendBlockState(previewState);
-            iFrameBridge.sendContentScope(scope);
-            iFrameBridge.sendGraphQLApiUrl(graphQLApiUrl);
-        }
-    }, [iFrameBridge, previewState, scope, graphQLApiUrl]);
-
-    const handleMinimizeClick = () => {
-        setMinimized((minimized) => !minimized);
-    };
-
-    const { blockPreviewApiUrl } = useSiteConfig({ scope });
     const { data, error } = useQuery<GQLBlockPreviewJwtQuery>(
         gql`
             query BlockPreviewJwt($scope: JSONObject!, $url: String!) {
@@ -55,10 +40,19 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
             pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
         },
     );
-
     if (error) throw new Error(error.message);
-    if (!data) return <div />;
-    const initialPageUrl = `${blockPreviewApiUrl}?${new URLSearchParams({ jwt: data.blockPreviewJwt }).toString()}`;
+
+    useEffect(() => {
+        if (iFrameBridge.iFrameReady && data?.blockPreviewJwt) {
+            iFrameBridge.sendBlockState(previewState);
+            iFrameBridge.sendContentScope(scope, data.blockPreviewJwt);
+            iFrameBridge.sendGraphQLApiUrl(graphQLApiUrl);
+        }
+    }, [iFrameBridge, previewState, scope, graphQLApiUrl, data]);
+
+    const handleMinimizeClick = () => {
+        setMinimized((minimized) => !minimized);
+    };
 
     return (
         <Root>
@@ -77,7 +71,7 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
                     </Grid>
                 </Grid>
             </ActionsContainer>
-            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={initialPageUrl} />
+            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url} />
         </Root>
     );
 }

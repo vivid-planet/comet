@@ -46,7 +46,7 @@ export class SitePreviewResolver {
             url,
         })
             .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime("10 seconds")
+            .setExpirationTime("1 day")
             .sign(new TextEncoder().encode(this.config.secret));
     }
 }

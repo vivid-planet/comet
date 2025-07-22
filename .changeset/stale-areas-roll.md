@@ -1,9 +1,9 @@
 ---
-"@comet/site-nextjs": major
-"@comet/cms-admin": major
-"@comet/cms-api": major
+"@comet/site-nextjs": minor
+"@comet/cms-admin": minor
+"@comet/cms-api": minor
 ---
 
-Require API route for block preview
+Support block preview scope for BFF requests
 
-Eliminates `Cannot get siteConfig for host ${preview-domain}` error in `withDomainRewriteMiddleware` when using BFF requests in block preview.
+The current scope will be sent via a monkey patched fetch and interpreted in `previewParams()`.

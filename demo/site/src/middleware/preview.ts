@@ -6,7 +6,7 @@ import { type CustomMiddleware } from "./chain";
 export function withPreviewMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
         // Block preview is always allowed
-        if (request.nextUrl.pathname.startsWith("/block-preview/") || request.nextUrl.pathname === "/block-preview") {
+        if (request.nextUrl.pathname.startsWith("/block-preview/")) {
             // don't apply any other middlewares
             return NextResponse.next();
         }

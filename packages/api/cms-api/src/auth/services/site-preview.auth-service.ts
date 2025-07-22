@@ -24,7 +24,9 @@ export function createSitePreviewAuthService({ sitePreviewSecret }: SitePreviewA
                     payload: { userId },
                 } = await jwtVerify<{ userId: string }>(cookieValue, new TextEncoder().encode(sitePreviewSecret));
                 if (typeof userId !== "string") {
-                    return SKIP_AUTH_SERVICE;
+                    return {
+                        authenticationError: "SitePreviewAuthService: token does not contain userId.",
+                    };
                 }
                 return {
                     userId,

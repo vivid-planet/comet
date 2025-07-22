@@ -1,6 +1,6 @@
 import { type PreviewData } from "@comet/site-react";
 import { errors, jwtVerify, SignJWT } from "jose";
-import { cookies, draftMode } from "next/headers";
+import { cookies, draftMode, headers as getHeaders } from "next/headers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Scope = Record<string, any>;
@@ -41,6 +41,14 @@ export type PreviewParams = {
  * @return If SitePreview is active the current preview settings
  */
 export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<PreviewParams | null> {
+    const headers = getHeaders();
+    if (headers.has("x-block-preview")) {
+        return verifyJwt<PreviewParams>(headers.get("x-block-preview") || "");
+    }
+    if (!options.skipDraftModeCheck) {
+        if (!draftMode().isEnabled) return null;
+    }
+
     if (!options.skipDraftModeCheck) {
         if (!draftMode().isEnabled) return null;
     }
