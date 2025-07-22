@@ -12,11 +12,6 @@ export type SitePreviewParams = {
     previewData?: PreviewData;
 };
 
-export type BlockPreviewParams = {
-    scope: Scope;
-    url: string;
-};
-
 export async function verifyJwt<T>(jwt: string): Promise<T | null> {
     if (!process.env.SITE_PREVIEW_SECRET) {
         throw new Error("SITE_PREVIEW_SECRET environment variable is required.");
