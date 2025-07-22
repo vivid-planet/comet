@@ -77,6 +77,6 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     AppPermission?: Record<string, string>;
 }
 
-export const CombinedPermission: Record<string, string> = {
+export const Permission: Record<string, string> = {
     ...CorePermission,
 };
