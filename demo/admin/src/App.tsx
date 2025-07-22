@@ -17,7 +17,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
-import type { GQLAppPermission } from "@src/graphql.generated";
+import type { GQLPermission } from "@src/graphql.generated";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
@@ -57,7 +57,7 @@ declare module "@comet/cms-admin" {
     interface ContentScope extends BaseContentScope {}
 
     export interface PermissionOverrides {
-        app: GQLAppPermission;
+        app: GQLPermission;
     }
 }
 

@@ -2227,17 +2227,17 @@ registerEnumType(AppPermission, {
 });
 ```
 
-2. Register `CorePermission` and `AppPermission` types in the GraphQL schema by creating a new file `api/src/auth/permission.enum.ts`:
+2. Add `AppPermission` to `UserPermissionsModule`:
 
 ```diff title="api/src/app.module.ts"
-GraphQLModule.forRootAsync<ApolloDriverConfig>({
-    ...
-    buildSchemaOptions: {
-+       orphanedTypes: [CorePermission, AppPermission],
-        fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
-    },
-    ...
-})
+UserPermissionsModule.forRootAsync({
+    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
+        ...
+    }),
+    inject: [UserService, AccessControlService],
+    imports: [authModule],
++   AppPermission,
+}),
 ```
 
 3. Create a new file and add module augmentation for `PermissionOverrides`:
@@ -2262,14 +2262,14 @@ declare module "@comet/cms-api" {
 5. Create a new file and add also module augmentation for `PermissionOverrides` with created types from GraphQL Codegen:
 
 ```diff title="demo/admin/src/App.tsx"
-+import type { GQLAppPermission } from "@src/graphql.generated";
++import type { GQLPermission } from "@src/graphql.generated";
 ...
 declare module "@comet/cms-admin" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface ContentScope extends BaseContentScope {}
 +
 +   export interface PermissionOverrides {
-+       app: GQLAppPermission;
++       app: GQLPermission;
 +   }
 }
 ```
