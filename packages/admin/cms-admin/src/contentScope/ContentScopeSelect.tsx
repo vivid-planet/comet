@@ -37,7 +37,7 @@ interface Props {
     renderSelectedOption?: (option: Option) => ReactNode;
 }
 
-const localStorageKey = "contentScopeSelect.selectedScope";
+export const contentScopeLocalStorageKey = "contentScopeSelect.selectedScope";
 
 export function ContentScopeSelect({
     value,
@@ -131,7 +131,7 @@ export function ContentScopeSelect({
     }
 
     const handleChange = (selectedScope: ContentScope) => {
-        localStorage.setItem(localStorageKey, JSON.stringify(selectedScope));
+        localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(selectedScope));
         onChange(selectedScope);
     };
 

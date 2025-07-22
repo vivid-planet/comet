@@ -3,6 +3,7 @@ import { type match, Redirect, Route, Switch, useHistory, useRouteMatch } from "
 
 import { useCurrentUser } from "../userPermissions/hooks/currentUser";
 import { StopImpersonationButton } from "../userPermissions/user/ImpersonationButtons";
+import { contentScopeLocalStorageKey } from "./ContentScopeSelect";
 import { defaultCreatePath } from "./utils/defaultCreatePath";
 
 export interface ContentScope {
@@ -150,7 +151,7 @@ export function ContentScopeProvider({ children, defaultValue, values, location 
 
     let defaultUrl = location.createUrl(defaultValue);
 
-    const storedScope = localStorage.getItem("contentScopeSelect.selectedScope");
+    const storedScope = localStorage.getItem(contentScopeLocalStorageKey);
 
     if (storedScope && storedScope !== "undefined") {
         defaultUrl = location.createUrl(JSON.parse(storedScope));
