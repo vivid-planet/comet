@@ -39,12 +39,12 @@ const IconWrapper = styled("div")`
 `;
 
 const SearchIcon = imports.Search;
-const icons = Object.fromEntries(Object.entries(imports).filter(([key]) => !key.endsWith("SearchWords") && key !== "__esModule"));
+const icons = Object.fromEntries(Object.entries(imports).filter(([key]) => !key.endsWith("SearchTerms") && key !== "__esModule"));
 
-const searchWords = Object.fromEntries(
+const searchTerms = Object.fromEntries(
     Object.keys(icons)
         .map((key) => {
-            const searchKey = `${key}SearchWords`;
+            const searchKey = `${key}SearchTerms`;
             return searchKey in imports ? [key, (imports as unknown as Record<string, string>)[searchKey]] : null;
         })
         .filter(Boolean) as [string, string][],
@@ -53,7 +53,7 @@ const searchWords = Object.fromEntries(
 const IconsGrid = ({ searchQuery }: { searchQuery: string }) => (
     <Grid container spacing={4}>
         {Object.keys(icons).map((key) => {
-            const searchString = searchWords[key] ?? key;
+            const searchString = searchTerms[key] ?? key;
             if (matchesSearchQuery(searchString, searchQuery)) {
                 const Icon = icons[key] as ComponentType<SvgIconProps>;
                 return (
