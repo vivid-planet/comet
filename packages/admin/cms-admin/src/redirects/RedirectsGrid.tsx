@@ -86,7 +86,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => {
                 return (
                     <TargetWrapper>
-                        <BlockPreviewContent block={linkBlock} input={params.value} />
+                        <BlockPreviewContent block={linkBlock} input={params.value} showIcon />
                     </TargetWrapper>
                 );
             },
