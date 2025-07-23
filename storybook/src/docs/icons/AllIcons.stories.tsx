@@ -1,5 +1,5 @@
 import { ClearInputAdornment } from "@comet/admin";
-import * as imports from "@comet/admin-icons";
+import * as icons from "@comet/admin-icons";
 import { Grid, InputAdornment, InputBase, type SvgIconProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type ComponentType, useState } from "react";
@@ -38,24 +38,17 @@ const IconWrapper = styled("div")`
     margin-right: 10px;
 `;
 
-const SearchIcon = imports.Search;
-const icons = Object.fromEntries(Object.entries(imports).filter(([key]) => !key.endsWith("SearchTerms") && key !== "__esModule"));
-
-const searchTerms = Object.fromEntries(
-    Object.keys(icons)
-        .map((key) => {
-            const searchKey = `${key}SearchTerms`;
-            return searchKey in imports ? [key, (imports as unknown as Record<string, string>)[searchKey]] : null;
-        })
-        .filter(Boolean) as [string, string][],
-);
+const SearchIcon = icons.Search;
 
 const IconsGrid = ({ searchQuery }: { searchQuery: string }) => (
     <Grid container spacing={4}>
-        {Object.keys(icons).map((key) => {
-            const searchString = searchTerms[key] ?? key;
+        {Object.entries(icons).map(([key, IconComponent]) => {
+            let searchString = key;
+            if (IconComponent && typeof (IconComponent as any).searchTerms === "string") {
+                searchString = (IconComponent as any).searchTerms;
+            }
             if (matchesSearchQuery(searchString, searchQuery)) {
-                const Icon = icons[key] as ComponentType<SvgIconProps>;
+                const Icon = IconComponent as ComponentType<SvgIconProps>;
                 return (
                     <Grid
                         key={key}
