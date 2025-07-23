@@ -2,6 +2,6 @@
 "@comet/cms-admin": patch
 ---
 
-Validate path parameter in Site preview
+Validate path parameter in site preview
 
-Prevents phishing attacks
+Prevents phishing attacks.
