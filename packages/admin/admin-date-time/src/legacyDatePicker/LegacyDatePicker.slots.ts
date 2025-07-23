@@ -6,7 +6,7 @@ import { Calendar as CalendarBase } from "react-date-range";
 
 import { getReactDateRangeStyles } from "../utils/getReactDateRangeStyles";
 
-export type DatePickerClassKey = InputWithPopperClassKey | "calendar" | "startAdornment";
+export type LegacyDatePickerClassKey = InputWithPopperClassKey | "calendar" | "startAdornment";
 
 export type SlotProps = ThemedComponentBaseProps<{
     root: typeof InputWithPopper;
@@ -14,18 +14,18 @@ export type SlotProps = ThemedComponentBaseProps<{
     calendar: typeof CalendarBase;
 }>["slotProps"];
 
-export const Root = createComponentSlot(InputWithPopper)<DatePickerClassKey>({
-    componentName: "DatePicker",
+export const Root = createComponentSlot(InputWithPopper)<LegacyDatePickerClassKey>({
+    componentName: "LegacyDatePicker",
     slotName: "root",
 })();
 
-export const StartAdornment = createComponentSlot(InputAdornment)<DatePickerClassKey>({
-    componentName: "DatePicker",
+export const StartAdornment = createComponentSlot(InputAdornment)<LegacyDatePickerClassKey>({
+    componentName: "LegacyDatePicker",
     slotName: "startAdornment",
 })();
 
-export const Calendar = createComponentSlot(CalendarBase)<DatePickerClassKey>({
-    componentName: "DatePicker",
+export const Calendar = createComponentSlot(CalendarBase)<LegacyDatePickerClassKey>({
+    componentName: "LegacyDatePicker",
     slotName: "calendar",
 })(({ theme }) =>
     deepmerge<CSSProperties>(getReactDateRangeStyles(theme), {
