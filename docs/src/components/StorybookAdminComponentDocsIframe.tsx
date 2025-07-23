@@ -53,11 +53,11 @@ const getStorybookDomain = () => {
 
         if (originParts.length) {
             if (originParts[0].includes("next")) {
-                return `https://next--comet-admin.netlify.app`;
+                return `https://next.storybook.comet-dxp.com`;
             }
 
             if (originParts[0].includes("deploy-preview")) {
-                return `${originParts[0]}--comet-admin.netlify.app`;
+                return `${originParts[0]}.storybook.comet-dxp.com`;
             }
         }
     }
