@@ -5,7 +5,7 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     Loading,
     messages,
     SwitchField,
@@ -15,49 +15,43 @@ import {
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Collapse, Divider } from "@mui/material";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createManufacturerMutation, manufacturerFormFragment, manufacturerQuery, updateManufacturerMutation } from "./ManufacturerForm.gql";
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
-    GQLManufacturerFormDetailsFragment,
-    GQLManufacturerQuery,
-    GQLManufacturerQueryVariables,
-    GQLUpdateManufacturerMutation,
-    GQLUpdateManufacturerMutationVariables,
+    type GQLCreateManufacturerMutation,
+    type GQLCreateManufacturerMutationVariables,
+    type GQLManufacturerFormDetailsFragment,
+    type GQLManufacturerQuery,
+    type GQLManufacturerQueryVariables,
+    type GQLUpdateManufacturerMutation,
+    type GQLUpdateManufacturerMutationVariables,
 } from "./ManufacturerForm.gql.generated";
 
 type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressAsEmbeddable"> & {
     useAlternativeAddress: boolean;
     address:
-        | (Omit<NonNullable<GQLManufacturerFormDetailsFragment["address"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
+        | (Omit<NonNullable<GQLManufacturerFormDetailsFragment["address"]>, "streetNumber" | "alternativeAddress"> & {
               streetNumber: string | null;
-              zip: string;
               alternativeAddress:
-                  | (Omit<NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["address"]>["alternativeAddress"]>, "streetNumber" | "zip"> & {
+                  | (Omit<NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["address"]>["alternativeAddress"]>, "streetNumber"> & {
                         streetNumber: string | null;
-                        zip: string;
                     })
                   | null;
           })
         | null;
-    addressAsEmbeddable:
-        | Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
-              streetNumber: string | null;
-              zip: string;
-              alternativeAddress:
-                  | Omit<
-                        NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
-                        "streetNumber" | "zip"
-                    > & {
-                        streetNumber: string | null;
-                        zip: string;
-                    };
-          };
+    addressAsEmbeddable: Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "alternativeAddress"> & {
+        streetNumber: string | null;
+        alternativeAddress: Omit<
+            NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
+            "streetNumber"
+        > & {
+            streetNumber: string | null;
+        };
+    };
 };
 
 interface FormProps {
@@ -85,14 +79,12 @@ export function ManufacturerForm({ id }: FormProps) {
                 ? {
                       ...filteredData.address,
                       streetNumber: filteredData.address.streetNumber ? String(filteredData.address.streetNumber) : null,
-                      zip: String(filteredData.address.zip),
                       alternativeAddress: filteredData.address.alternativeAddress
                           ? {
                                 ...filteredData.address.alternativeAddress,
                                 streetNumber: filteredData.address.alternativeAddress.streetNumber
                                     ? String(filteredData.address.alternativeAddress.streetNumber)
                                     : null,
-                                zip: String(filteredData.address.alternativeAddress.zip),
                             }
                           : undefined,
                   }
@@ -100,13 +92,11 @@ export function ManufacturerForm({ id }: FormProps) {
             addressAsEmbeddable: {
                 ...filteredData.addressAsEmbeddable,
                 streetNumber: filteredData.addressAsEmbeddable.streetNumber ? String(filteredData.addressAsEmbeddable.streetNumber) : null,
-                zip: String(filteredData.addressAsEmbeddable.zip),
                 alternativeAddress: {
                     ...filteredData.addressAsEmbeddable.alternativeAddress,
                     streetNumber: filteredData.addressAsEmbeddable.alternativeAddress.streetNumber
                         ? String(filteredData.addressAsEmbeddable.alternativeAddress.streetNumber)
                         : null,
-                    zip: String(filteredData.addressAsEmbeddable.alternativeAddress.zip),
                 },
             },
         };
@@ -131,7 +121,6 @@ export function ManufacturerForm({ id }: FormProps) {
                 ? {
                       ...formValues.address,
                       streetNumber: formValues.address?.streetNumber ? parseInt(formValues.address.streetNumber) : null,
-                      zip: parseInt(formValues.address.zip),
                       alternativeAddress:
                           useAlternativeAddress && formValues.address?.alternativeAddress
                               ? {
@@ -139,7 +128,6 @@ export function ManufacturerForm({ id }: FormProps) {
                                     streetNumber: formValues.address?.alternativeAddress.streetNumber
                                         ? parseInt(formValues.address.alternativeAddress.streetNumber)
                                         : null,
-                                    zip: parseInt(formValues.address.alternativeAddress.zip),
                                 }
                               : undefined,
                   }
@@ -147,13 +135,11 @@ export function ManufacturerForm({ id }: FormProps) {
             addressAsEmbeddable: {
                 ...formValues.addressAsEmbeddable,
                 streetNumber: formValues.addressAsEmbeddable?.streetNumber ? parseInt(formValues.addressAsEmbeddable.streetNumber) : null,
-                zip: parseInt(formValues.addressAsEmbeddable.zip),
                 alternativeAddress: {
                     ...formValues.addressAsEmbeddable.alternativeAddress,
                     streetNumber: formValues.addressAsEmbeddable?.alternativeAddress.streetNumber
                         ? parseInt(formValues.addressAsEmbeddable.alternativeAddress.streetNumber)
                         : null,
-                    zip: parseInt(formValues.addressAsEmbeddable.alternativeAddress.zip),
                 },
             },
         };
@@ -219,12 +205,10 @@ export function ManufacturerForm({ id }: FormProps) {
                             type="number"
                             label={<FormattedMessage id="manufacturer.address.streetNumber" defaultMessage="Address Street Number" />}
                         />
-                        <Field
+                        <TextField
                             required
                             fullWidth
                             name="address.zip"
-                            component={FinalFormInput}
-                            type="number"
                             label={<FormattedMessage id="manufacturer.address.zip" defaultMessage="Address Zip" />}
                         />
                         <TextField
@@ -267,12 +251,10 @@ export function ManufacturerForm({ id }: FormProps) {
                                                 />
                                             }
                                         />
-                                        <Field
+                                        <TextField
                                             required
                                             fullWidth
                                             name="address.alternativeAddress.zip"
-                                            component={FinalFormInput}
-                                            type="number"
                                             label={
                                                 <FormattedMessage id="manufacturer.address.alternativeAddress.zip" defaultMessage="Alt-Address Zip" />
                                             }
@@ -310,12 +292,10 @@ export function ManufacturerForm({ id }: FormProps) {
                             type="number"
                             label={<FormattedMessage id="manufacturer.address.streetNumber" defaultMessage="Address Street Number" />}
                         />
-                        <Field
+                        <TextField
                             required
                             fullWidth
                             name="addressAsEmbeddable.zip"
-                            component={FinalFormInput}
-                            type="number"
                             label={<FormattedMessage id="manufacturer.address.zip" defaultMessage="Address Zip" />}
                         />
                         <TextField
@@ -342,12 +322,10 @@ export function ManufacturerForm({ id }: FormProps) {
                                 />
                             }
                         />
-                        <Field
+                        <TextField
                             required
                             fullWidth
                             name="addressAsEmbeddable.alternativeAddress.zip"
-                            component={FinalFormInput}
-                            type="number"
                             label={<FormattedMessage id="manufacturer.address.alternativeAddress.zip" defaultMessage="Alt-Address Zip" />}
                         />
                         <TextField

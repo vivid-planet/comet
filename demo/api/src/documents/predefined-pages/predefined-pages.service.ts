@@ -6,7 +6,10 @@ import { PredefinedPage, PredefinedPageType } from "./entities/predefined-page.e
 
 @Injectable()
 export class PredefinedPagesService {
-    constructor(private readonly pageTreeService: PageTreeService, private readonly pageTreeReadApi: PageTreeReadApiService) {}
+    constructor(
+        private readonly pageTreeService: PageTreeService,
+        private readonly pageTreeReadApi: PageTreeReadApiService,
+    ) {}
 
     async predefinedPagePath(type: PredefinedPageType, scope: PageTreeNodeScope): Promise<string> {
         const pageTreeNode = await this.pageTreeNodeForPredefinedPage(type, scope);

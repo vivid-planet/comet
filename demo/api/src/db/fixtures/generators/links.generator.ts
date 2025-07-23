@@ -1,8 +1,8 @@
 import { InternalLinkBlock } from "@comet/cms-api";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { type EntityRepository } from "@mikro-orm/postgresql";
 import { LinkBlock } from "@src/common/blocks/link.block";
-import { PageTreeNodesFixtures } from "@src/db/fixtures/fixtures.console";
-import { Link } from "@src/documents/links/entities/link.entity";
+import { type PageTreeNodesFixtures } from "@src/db/fixtures/fixtures.command";
+import { type Link } from "@src/documents/links/entities/link.entity";
 
 export const generateLinks = async (linksRepository: EntityRepository<Link>, pageTreeNodes: PageTreeNodesFixtures): Promise<void> => {
     await linksRepository.getEntityManager().persistAndFlush(

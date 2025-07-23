@@ -1,27 +1,21 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Video } from "@comet/admin-icons";
-import {
-    AdminComponentSection,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    createBlockSkeleton,
-    resolveNewState,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { type DamVideoBlockData, type DamVideoBlockInput } from "../blocks.generated";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { useBlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSection } from "./common/BlockAdminComponentSection";
+import { type GQLVideoBlockDamFileQuery, type GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, type BlockDependency, type BlockInterface, type BlockState } from "./types";
+import { resolveNewState } from "./utils";
 
 type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
@@ -46,7 +40,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         showControls: state.showControls,
     }),
 
-    output2State: async (output, context: CmsBlockContext) => {
+    output2State: async (output, context) => {
         if (!output.damFileId) {
             return { previewImage: await PixelImageBlock.output2State(output.previewImage, context) };
         }
@@ -121,7 +115,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const isInPaper = useAdminComponentPaper();
+        const isInPaper = useBlockAdminComponentPaper();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
@@ -134,14 +128,14 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                         preview={<Video fontSize="large" color="primary" />}
                     />
                     <VideoOptionsFields />
-                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                    <BlockAdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
                                 updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
                             }}
                         />
-                    </AdminComponentSection>
+                    </BlockAdminComponentSection>
                 </BlocksFinalForm>
             </Box>
         );

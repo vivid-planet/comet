@@ -3,12 +3,12 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum } from "class-validator";
@@ -58,7 +58,7 @@ class LayoutBlockInput extends BlockInput {
     text2: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): LayoutBlockData {
-        return inputToData(LayoutBlockData, this);
+        return blockInputToData(LayoutBlockData, this);
     }
 }
 

@@ -5,17 +5,17 @@ sidebar_position: -5
 
 ## General
 
--   Prefer Function Components over Class Components.
--   Create one file per "logical component." Multiple Function Components per file are allowed for structuring, styling, etc.
--   Always use JSX (use React.createElement only for app initialization).
--   Use `React.PropsWithChildren` instead of defining children manually.
--   Inject dependencies to services/APIs via Context.
--   How to structure folders? "Move files around until it feels right"
-    Recommendation: Separate by modules instead of by type ([File Structure – React](https://legacy.reactjs.org/docs/faq-structure.html#grouping-by-features-or-routes)).
+- Prefer Function Components over Class Components.
+- Create one file per "logical component." Multiple Function Components per file are allowed for structuring, styling, etc.
+- Always use JSX (use React.createElement only for app initialization).
+- Use `React.PropsWithChildren` instead of defining children manually.
+- Inject dependencies to services/APIs via Context.
+- How to structure folders? "Move files around until it feels right"
+  Recommendation: Separate by modules instead of by type ([File Structure – React](https://legacy.reactjs.org/docs/faq-structure.html#grouping-by-features-or-routes)).
 
 ## Naming
 
--   Use PascalCase for React components and camelCase for instances
+- Use PascalCase for React components and camelCase for instances
 
 :::warning Bad
 
@@ -35,7 +35,7 @@ const carItem = <CarCard />;
 
 :::
 
--   Use filename as component name
+- Use filename as component name
 
 :::warning Bad
 
@@ -53,8 +53,8 @@ import Footer from "./Footer";
 
 :::
 
--   Speaking component filename  
-    Include the component name in the filename.
+- Speaking component filename  
+  Include the component name in the filename.
 
 :::warning Bad
 
@@ -98,7 +98,7 @@ Do not use DOM props as component props unless they are intended for that purpos
 
 :::
 
--   Always use camelCase for prop names.
+- Always use camelCase for prop names.
 
 :::warning Bad
 
@@ -116,11 +116,11 @@ Do not use DOM props as component props unless they are intended for that purpos
 
 :::
 
--   Always name React.useState like this: const [variable, setVariable] = React.useState()
+- Always name React.useState like this: const [variable, setVariable] = React.useState()
 
 ## Conventions
 
--   If the property is true, then do not pass the value
+- If the property is true, then do not pass the value
 
 :::warning Bad
 
@@ -138,7 +138,7 @@ Do not use DOM props as component props unless they are intended for that purpos
 
 :::
 
--   Boolean props should always be optional
+- Boolean props should always be optional
 
 :::warning Bad
 
@@ -168,12 +168,12 @@ Use `parameter?: type` instead of `parameter: type | undefined`, otherwise `para
 
 ### Recommendations
 
--   If a component becomes too complex:
-    -   Move GraphQL and styled components into separate files with `.gql.ts` and `.sc.ts` extensions.  
-        :::caution  
-        These files should be treated as **private** and must **not** be imported from other files.  
-        :::
-    -   Split the component into smaller sub-components.
+- If a component becomes too complex:
+    - Move GraphQL and styled components into separate files with `.gql.ts` and `.sc.ts` extensions.  
+      :::caution  
+      These files should be treated as **private** and must **not** be imported from other files.  
+      :::
+    - Split the component into smaller sub-components.
 
 ### Working with SVGs
 
@@ -236,7 +236,7 @@ import Icon from "../assets/icon.svg"
 These are common pitfalls, not strict rules that must always be followed.
 :::
 
--   **Do not use array index as `key`** (Explanation: [Index as a key is considered an anti-pattern](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318))
+- **Do not use array index as `key`** (Explanation: [Index as a key is considered an anti-pattern](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318))
 
 :::warning Bad
 
@@ -258,7 +258,7 @@ These are common pitfalls, not strict rules that must always be followed.
 
 :::
 
--   **Use `&&` with `0` or `""`**
+- **Use `&&` with `0` or `""`**
 
 :::warning Bad
 
@@ -274,7 +274,7 @@ export default function PostList({ posts }) {
 
 :::
 
--   **Renders `0` instead of `null` for an empty list!**
+- **Renders `0` instead of `null` for an empty list!**
 
 :::tip Good
 
@@ -426,5 +426,5 @@ the child component is not directly affected by changes in the parent query, for
 
 ### Further reading / sources:
 
--   [Hello World - React](https://legacy.reactjs.org/docs/hello-world.html)
--   [TypeScript and React](https://fettblog.eu/typescript-react/)
+- [Hello World - React](https://legacy.reactjs.org/docs/hello-world.html)
+- [TypeScript and React](https://fettblog.eu/typescript-react/)

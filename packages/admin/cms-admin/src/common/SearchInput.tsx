@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
 import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
 import { useDebouncedCallback } from "use-debounce";
 

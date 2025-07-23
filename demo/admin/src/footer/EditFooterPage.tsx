@@ -1,19 +1,19 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
-import { Save } from "@comet/admin-icons";
-import { AdminComponentRoot, BlockState } from "@comet/blocks-admin";
 import {
+    BlockAdminComponentRoot,
     BlockPreviewWithTabs,
+    type BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
+    useBlockContext,
     useBlockPreview,
-    useCmsBlockContext,
+    useContentScope,
     useContentScopeConfig,
     useSaveConflictQuery,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { FooterContentBlockInput } from "@src/blocks.generated";
-import { useContentScope } from "@src/common/ContentScopeProvider";
+import { type FooterContentBlockInput } from "@src/blocks.generated";
 import isEqual from "lodash.isequal";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -21,12 +21,12 @@ import { useRouteMatch } from "react-router";
 
 import { FooterContentBlock } from "./blocks/FooterContentBlock";
 import {
-    GQLCheckForChangesFooterQuery,
-    GQLCheckForChangesFooterQueryVariables,
-    GQLFooterQuery,
-    GQLFooterQueryVariables,
-    GQLSaveFooterMutation,
-    GQLSaveFooterMutationVariables,
+    type GQLCheckForChangesFooterQuery,
+    type GQLCheckForChangesFooterQueryVariables,
+    type GQLFooterQuery,
+    type GQLFooterQueryVariables,
+    type GQLSaveFooterMutation,
+    type GQLSaveFooterMutationVariables,
     namedOperations,
 } from "./EditFooterPage.generated";
 
@@ -38,7 +38,7 @@ export function EditFooterPage(): JSX.Element | null {
     const [referenceContent, setReferenceContent] = useState<FooterContentBlockInput | null>(null);
     const match = useRouteMatch();
     const previewApi = useBlockPreview();
-    const blockContext = useCmsBlockContext();
+    const blockContext = useBlockContext();
 
     useContentScopeConfig({ redirectPathAfterChange: "/project-snips/footer" });
 
@@ -104,7 +104,7 @@ export function EditFooterPage(): JSX.Element | null {
         }
 
         const input = { content: FooterContentBlock.state2Output(footerState) };
-        return update({
+        await update({
             variables: { input, scope },
         });
     };
@@ -114,9 +114,9 @@ export function EditFooterPage(): JSX.Element | null {
             key: "content",
             label: <FormattedMessage {...messages.content} />,
             content: (
-                <AdminComponentRoot>
+                <BlockAdminComponentRoot>
                     <FooterContentBlock.AdminComponent state={footerState} updateState={setFooterState} />
-                </AdminComponentRoot>
+                </BlockAdminComponentRoot>
             ),
         },
     ];
@@ -135,17 +135,7 @@ export function EditFooterPage(): JSX.Element | null {
                 </ToolbarTitleItem>
                 <FillSpace />
                 <ToolbarActions>
-                    <SaveButton
-                        disabled={!hasChanges}
-                        color="primary"
-                        variant="contained"
-                        saving={saving}
-                        hasErrors={hasSaveErrors != null}
-                        onClick={handleSavePage}
-                        startIcon={<Save />}
-                    >
-                        <FormattedMessage {...messages.save} />
-                    </SaveButton>
+                    <SaveButton disabled={!hasChanges} loading={saving} hasErrors={hasSaveErrors != null} onClick={handleSavePage} />
                 </ToolbarActions>
             </StackToolbar>
             <MainContent disablePaddingBottom>

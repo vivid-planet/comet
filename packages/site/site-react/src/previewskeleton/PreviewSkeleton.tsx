@@ -52,7 +52,7 @@ const PreviewSkeleton = ({
                 </div>
             );
         } else if (type === "media") {
-            const height = fill ? "100%" : passedHeight ?? 300;
+            const height = fill ? "100%" : (passedHeight ?? 300);
             return (
                 <div
                     className={styles.imageContainer}

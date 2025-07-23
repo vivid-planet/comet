@@ -1,9 +1,9 @@
-import { BlockContext, BlockDataInterface } from "@comet/blocks-api";
 import { Inject, Injectable } from "@nestjs/common";
 import { ContextIdFactory, ModuleRef } from "@nestjs/core";
 import { CONTEXT } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
+import { BlockContext, BlockDataInterface } from "./block";
 import { transformToPlain } from "./blocks-transformer";
 
 @Injectable()
@@ -17,7 +17,6 @@ export class BlocksTransformerService {
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
         let previewDamUrls = false;
-        let relativeDamUrls = false;
         if (context) {
             let headers;
             if (context.req) {
@@ -31,10 +30,9 @@ export class BlocksTransformerService {
 
             includeInvisibleBlocks = ctx.includeInvisibleBlocks;
             previewDamUrls = ctx.previewDamUrls;
-            relativeDamUrls = ctx.relativeDamUrls;
         }
 
-        this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls };
+        this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

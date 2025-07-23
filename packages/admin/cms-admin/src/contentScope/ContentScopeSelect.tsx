@@ -15,28 +15,29 @@ import {
     useTheme,
 } from "@mui/material";
 import { capitalCase } from "change-case";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
-import { ContentScopeInterface } from "./Provider";
+import { type ContentScope } from "./Provider";
 
-type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
-    [Key in keyof Value]: { label?: string; value: Value[Key] };
+type Option = {
+    scope: ContentScope;
+    label?: { [Key in keyof ContentScope]?: string };
 };
 
-interface Props<Value extends ContentScopeInterface> {
-    value: Value;
-    onChange: (value: Value) => void;
-    options: Array<Option<Value>>;
+interface Props {
+    value: ContentScope;
+    onChange: (value: ContentScope) => void;
+    options: Array<Option>;
     searchable?: boolean;
-    groupBy?: keyof Value;
+    groupBy?: keyof ContentScope;
     icon?: ReactNode;
-    renderOption?: (option: Option<Value>, query?: string) => ReactNode;
-    renderSelectedOption?: (option: Option<Value>) => ReactNode;
+    renderOption?: (option: Option, query?: string, selected?: boolean) => ReactNode;
+    renderSelectedOption?: (option: Option) => ReactNode;
 }
 
-export function ContentScopeSelect<Value extends ContentScopeInterface = ContentScopeInterface>({
+export function ContentScopeSelect({
     value,
     onChange,
     options,
@@ -45,34 +46,35 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     icon = <Language />,
     renderOption,
     renderSelectedOption,
-}: Props<Value>) {
+}: Props) {
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
 
-    const hasMultipleDimensions = options.some((option) => Object.keys(option).length > 1);
+    const hasMultipleDimensions = options.some((option) => Object.keys(option.scope).length > 1);
 
     let filteredOptions = options;
 
     if (searchable) {
         filteredOptions = options.filter((option) => {
-            return Object.values(option).some(({ label, value }) => {
-                return value.toLowerCase().includes(searchValue.toLowerCase()) || label?.toLowerCase().includes(searchValue.toLowerCase());
-            });
+            return (
+                Object.values(option.scope).some((value) => value.toLowerCase().includes(searchValue.toLowerCase())) ||
+                Object.values(option.label || []).some((value) => value?.toLowerCase().includes(searchValue.toLowerCase()))
+            );
         });
     }
 
-    let groups: Array<{ value: string; label: string | undefined; options: Option<Value>[] }> = [];
+    let groups: Array<{ value: string; label: string | undefined; options: Option[] }> = [];
 
     if (groupBy) {
         if (hasMultipleDimensions) {
             for (const option of filteredOptions) {
-                const groupForOption = groups.find((group) => group.value === option[groupBy].value);
+                const groupForOption = groups.find((group) => group.value === option.scope[groupBy]);
 
                 if (groupForOption) {
                     groupForOption.options.push(option);
                 } else {
-                    groups.push({ value: option[groupBy].value, label: option[groupBy].label, options: [option] });
+                    groups.push({ value: option.scope[groupBy], label: option.label ? option.label[groupBy] : undefined, options: [option] });
                 }
             }
         } else {
@@ -92,10 +94,10 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     if (!renderOption) {
-        renderOption = (option, query) => {
-            const text = Object.entries(option)
+        renderOption = (option, query, isSelected) => {
+            const text = Object.entries(option.scope)
                 .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
-                .map(([, option]) => option.label ?? option.value)
+                .map(([key, value]) => (option.label && option.label[key]) ?? value)
                 .join(" – ");
             const matches = findTextMatches(text, query);
 
@@ -105,7 +107,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                         <Domain />
                     </ListItemIcon>
                     <ListItemText
-                        primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
+                        slotProps={{
+                            primary: {
+                                variant: isSelected ? "subtitle2" : "body2",
+                            },
+                        }}
                         sx={{ margin: 0 }}
                         primary={<MarkedMatches text={text} matches={matches} />}
                     />
@@ -116,8 +122,8 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
     if (!renderSelectedOption) {
         renderSelectedOption = (option) => {
-            return Object.values(option)
-                .map((option) => humanReadableLabel(option))
+            return Object.keys(option.scope)
+                .map((key) => humanReadableLabel({ label: option.label ? option.label[key] : undefined, value: option.scope[key] }))
                 .join(" / ");
         };
     }
@@ -247,14 +253,14 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
                                         <ListSubheader
-                                            sx={({ spacing }) => ({
-                                                paddingX: spacing(3),
-                                                paddingTop: spacing(4),
-                                                paddingBottom: spacing(2),
+                                            sx={(theme) => ({
+                                                paddingX: theme.spacing(3),
+                                                paddingTop: theme.spacing(4),
+                                                paddingBottom: theme.spacing(2),
                                                 lineHeight: "inherit",
                                             })}
                                         >
-                                            <Typography variant="overline" color={(theme) => theme.palette.grey[500]}>
+                                            <Typography variant="overline" sx={(theme) => ({ color: theme.palette.grey[500] })}>
                                                 {matches ? <MarkedMatches text={groupLabel} matches={matches} /> : groupLabel}
                                             </Typography>
                                         </ListSubheader>
@@ -267,17 +273,15 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                                 key={JSON.stringify(option)}
                                                 onClick={() => {
                                                     hideDropdown();
-                                                    onChange(optionToValue<Value>(option));
+                                                    onChange(option.scope);
                                                     setSearchValue("");
                                                 }}
                                                 selected={isSelected}
                                                 sx={({ spacing }) => ({
                                                     paddingX: spacing(6),
-                                                    gap: spacing(2),
-                                                    fontWeight: isSelected ? 600 : 250,
                                                 })}
                                             >
-                                                {renderOption?.(option, searchValue)}
+                                                {renderOption?.(option, searchValue, isSelected)}
                                             </ListItemButton>
                                         );
                                     })}
@@ -301,23 +305,13 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     );
 }
 
-function optionToValue<Value extends ContentScopeInterface = ContentScopeInterface>(option: Option<Value>): Value {
-    const value: Record<string, unknown> = {};
-
-    Object.keys(option).forEach((key) => {
-        value[key] = option[key].value;
-    });
-
-    return value as Value;
-}
-
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {
     return label ?? capitalCase(value);
 }
 
-function valueMatchesOption<Value extends ContentScopeInterface = ContentScopeInterface>(value: Value, option: Option<Value>) {
-    const optionMatchesAllValueDimensions = Object.keys(value).every((dimension) => value[dimension] === option[dimension]?.value);
-    const valueMatchesAllOptionDimensions = Object.keys(option).every((dimension) => option[dimension]?.value === value[dimension]);
+function valueMatchesOption(value: ContentScope, option: Option) {
+    const optionMatchesAllValueDimensions = Object.keys(value).every((dimension) => value[dimension] === option.scope[dimension]);
+    const valueMatchesAllOptionDimensions = Object.keys(option.scope).every((dimension) => option.scope[dimension] === value[dimension]);
 
     return optionMatchesAllValueDimensions && valueMatchesAllOptionDimensions;
 }

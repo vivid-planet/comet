@@ -4,20 +4,20 @@ import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons"
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { DamFileDetails } from "./EditFile";
+import { type DamFileDetails } from "./EditFile";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import {
-    GQLArchiveFileMutation,
-    GQLArchiveFileMutationVariables,
-    GQLDeleteDamFileMutation,
-    GQLDeleteDamFileMutationVariables,
-    GQLRestoreFileMutation,
-    GQLRestoreFileMutationVariables,
+    type GQLArchiveFileMutation,
+    type GQLArchiveFileMutationVariables,
+    type GQLDeleteDamFileMutation,
+    type GQLDeleteDamFileMutationVariables,
+    type GQLRestoreFileMutation,
+    type GQLRestoreFileMutationVariables,
 } from "./FilePreview.gql.generated";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";

@@ -8,8 +8,8 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
+import { faker } from "@faker-js/faker";
 import { Box, Divider, Typography } from "@mui/material";
-import faker from "faker";
 
 interface IFilterValues {
     expressDelivery: boolean;
@@ -93,7 +93,7 @@ export const FilterbarWithCombinedFieldsFilterPriceDelivery = {
         const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
             return {
                 id: i,
-                price: faker.commerce.price(100, 1000, 2),
+                price: faker.commerce.price({ min: 100, max: 1000, dec: 2 }),
                 expressDelivery: faker.datatype.boolean(),
             };
         });

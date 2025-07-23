@@ -1,5 +1,5 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
-import { AccordionContentBlockData, AccordionItemBlockData } from "@src/blocks.generated";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks, withPreview } from "@comet/site-nextjs";
+import { type AccordionContentBlockData, type AccordionItemBlockData } from "@src/blocks.generated";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";

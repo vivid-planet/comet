@@ -1,11 +1,11 @@
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { TeaserItemBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type TeaserItemBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { Renderers } from "redraft";
+import { type Renderers } from "redraft";
 import styled from "styled-components";
 
 const descriptionRenderers: Renderers = {

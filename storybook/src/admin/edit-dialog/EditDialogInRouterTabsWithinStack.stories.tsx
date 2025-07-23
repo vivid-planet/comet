@@ -4,7 +4,7 @@ import {
     EditDialog,
     FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
@@ -20,12 +20,11 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { ReactNode, RefObject, useRef } from "react";
+import { DialogContent, IconButton, Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -82,17 +81,19 @@ const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="name" label="Name" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="name" label="Name" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
@@ -110,36 +111,40 @@ const AddStocksDialog = ({ dialogApiRef }: DialogProps) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="amount" label="Amount" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="amount" label="Amount" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
+function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <Typography>
-                    <FormattedMessage
-                        id="toolbar.helperText"
-                        defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
-                    />
-                </Typography>
-            </ToolbarItem>
+            <Typography>
+                <FormattedMessage
+                    id="toolbar.helperText"
+                    defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
+                />
+            </Typography>
             <FillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            {toolbarAction}
         </DataGridToolbar>
     );
 }
@@ -201,17 +206,17 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                     },
                                 ]}
                                 rows={rows}
-                                components={{
-                                    Toolbar: Toolbar,
+                                slots={{
+                                    toolbar: Toolbar,
                                 }}
-                                componentsProps={{
+                                slotProps={{
                                     toolbar: {
                                         toolbarAction: (
                                             <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                 <FormattedMessage {...messages.add} />
                                             </Button>
                                         ),
-                                    },
+                                    } as ToolbarProps,
                                 }}
                             />
                         </MainContent>
@@ -280,17 +285,17 @@ export const EditDialogInRouterTabsWithinStack = {
                                         },
                                     ]}
                                     rows={products}
-                                    components={{
-                                        Toolbar: Toolbar,
+                                    slots={{
+                                        toolbar: Toolbar,
                                     }}
-                                    componentsProps={{
+                                    slotProps={{
                                         toolbar: {
                                             toolbarAction: (
                                                 <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     <FormattedMessage {...messages.add} />
                                                 </Button>
                                             ),
-                                        },
+                                        } as ToolbarProps,
                                     }}
                                 />
                             </MainContent>

@@ -1,23 +1,25 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, IPreviewContext, SelectPreviewComponent } from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
+import { type SvgImageBlockData, type SvgImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
+import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
-import { useCmsBlockContext } from "./useCmsBlockContext";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { type GQLSvgImageBlockDamFileQuery, type GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
-export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
+type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
-export function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
+function createPreviewUrl({ damFile }: SvgImageBlockState, { apiUrl, damBasePath }: { apiUrl: string; damBasePath: string }): string {
     if (!damFile) return "";
     return new URL(
-        `${apiUrl}/dam/files/preview/$fileId/$fileName`
+        `${apiUrl}/${damBasePath}/files/preview/$fileId/$fileName`
             .replace("$fileId", damFile.id)
             .replace("$fileName", damFile.name.substr(0, damFile.name.lastIndexOf("."))),
     ).toString();
@@ -34,10 +36,10 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: IPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
-        adminMeta: { route: previewCtx.parentUrl },
+        urlTemplate: createPreviewUrl(state, { apiUrl: previewContext.apiUrl, damBasePath: previewContext.damBasePath }),
+        adminMeta: { route: previewContext.parentUrl },
     }),
 
     state2Output: (v) => {
@@ -49,7 +51,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<SvgImageBlockState> => {
+    output2State: async (output, { apolloClient }): Promise<SvgImageBlockState> => {
         if (!output.damFileId) {
             return {};
         }
@@ -110,10 +112,11 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const context = useCmsBlockContext();
+        const { apiUrl } = useCometConfig();
+        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl);
+        const previewUrl = createPreviewUrl(state, { apiUrl, damBasePath });
 
         return (
             <SelectPreviewComponent>
@@ -135,12 +138,15 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
             </SelectPreviewComponent>
         );
     },
-    previewContent: (state, ctx) => {
-        if (!state.damFile || !state.damFile?.fileUrl || !ctx?.damConfig?.apiUrl) {
+    previewContent: (state, context) => {
+        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl) {
             return [];
         }
         return [
-            { type: "image", content: { src: createPreviewUrl(state, ctx.damConfig.apiUrl), width: 320, height: 320 } },
+            {
+                type: "image",
+                content: { src: createPreviewUrl(state, { apiUrl: context.apiUrl, damBasePath: context.damBasePath }), width: 320, height: 320 },
+            },
             { type: "text", content: state.damFile.name },
         ];
     },

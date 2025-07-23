@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface, TraversableTransformResponse } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../../blocks/block";
 import { FilesService } from "../../files/files.service";
 import { DamScopeInterface } from "../../types";
 import { DamVideoBlockData } from "./dam-video.block";
@@ -27,8 +27,8 @@ type TransformResponse = {
 export class DamVideoBlockTransformerService implements BlockTransformerServiceInterface<DamVideoBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
-    async transformToPlain(block: DamVideoBlockData, { previewDamUrls, relativeDamUrls }: BlockContext) {
-        const ret: TraversableTransformResponse = {
+    async transformToPlain(block: DamVideoBlockData, { previewDamUrls }: BlockContext) {
+        const ret: TraversableTransformBlockResponse = {
             autoplay: block.autoplay,
             loop: block.loop,
             showControls: block.showControls,
@@ -47,7 +47,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 captions.push({
                     id: caption.id,
                     language: caption.language,
-                    fileUrl: await this.filesService.createFileUrl(await caption.alternative.load(), { previewDamUrls, relativeDamUrls }),
+                    fileUrl: await this.filesService.createFileUrl(await caption.alternative.loadOrFail(), { previewDamUrls }),
                 });
             }
 
@@ -61,7 +61,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 altText: file.altText,
                 archived: file.archived,
                 scope: file.scope,
-                fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls }),
                 captions: captions,
             };
         }

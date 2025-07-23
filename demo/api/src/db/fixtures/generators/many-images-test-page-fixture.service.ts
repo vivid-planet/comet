@@ -1,4 +1,5 @@
 import { PageTreeNodeBaseCreateInput, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
@@ -10,7 +11,6 @@ import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
-import faker from "faker";
 
 import { generateImageBlock } from "./blocks/image.generator";
 import { generateSeoBlock } from "./blocks/seo.generator";
@@ -67,7 +67,7 @@ export class ManyImagesTestPageFixtureService {
         pageInput.seo = generateSeoBlock();
         pageInput.content = PageContentBlock.blockInputFactory({
             blocks: imageBlocks.map((c) => ({
-                key: faker.datatype.uuid(),
+                key: faker.string.uuid(),
                 visible: true,
                 type: "image",
                 props: c,

@@ -1,12 +1,12 @@
 "use client";
 import {
-    type ImageDimensions,
-    type PropsWithData,
     calculateInheritAspectRatio,
     generateImageUrl,
     getMaxDimensionsFromArea,
+    type ImageDimensions,
     parseAspectRatio,
     PreviewSkeleton,
+    type PropsWithData,
     withPreview,
 } from "@comet/site-react";
 // eslint-disable-next-line no-restricted-imports

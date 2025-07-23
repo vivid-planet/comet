@@ -1,5 +1,26 @@
 # @comet/eslint-plugin
 
+## 8.0.0-beta.6
+
+## 8.0.0-beta.5
+
+## 8.0.0-beta.4
+
+## 8.0.0-beta.3
+
+## 8.0.0-beta.2
+
+### Major Changes
+
+- f904b71: Require Node v22
+
+    The minimum required Node version is now v22.0.0.
+    See the migration guide for instructions on how to upgrade your project.
+
+## 8.0.0-beta.1
+
+## 8.0.0-beta.0
+
 ## 7.25.3
 
 ## 7.25.2
@@ -8,7 +29,7 @@
 
 ### Patch Changes
 
--   85e80218f: Support dot separated imports in no-private-sibling-import rule
+- 85e80218f: Support dot separated imports in no-private-sibling-import rule
 
     This allows, for example, importing from MyBlock.loader.gql.ts in MyBlock.loader.ts
 
@@ -152,7 +173,7 @@
 
 ### Minor Changes
 
--   ec0582e6: Add new ESLint rule to enforce absolute imports when importing from other modules
+- ec0582e6: Add new ESLint rule to enforce absolute imports when importing from other modules
 
     For instance, an import `import { AThingInModuleA } from "../moduleA/AThingInModuleA"` in module `B` needs to be imported as `import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"`.
     The default source root `"./src"` and alias `"@src"` can be changed via the rule's `sourceRoot` and `sourceRootAlias` options.

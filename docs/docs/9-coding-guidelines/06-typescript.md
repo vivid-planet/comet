@@ -38,18 +38,18 @@ getSortedJobs({
 
 :::
 
--   Use named exports only (Exception: Default exports are allowed only if technically required)  
-    **Reason:** They are harder to locate and refactor.
+- Use named exports only (Exception: Default exports are allowed only if technically required)  
+  **Reason:** They are harder to locate and refactor.
 
--   Use relative imports only for sibling or child files within a module (for anything else, use imports via @src)
+- Use relative imports only for sibling or child files within a module (for anything else, use imports via @src)
 
--   Prefer async/await over callbacks
+- Prefer async/await over callbacks
 
--   Prefer for...of loops
-    Supports all iterators, async/await, and control statements
-    (See: [Should one use for-of or forEach when iterating through an array?](https://stackoverflow.com/questions/50844095/should-one-use-for-of-or-foreach-when-iterating-through-an-array/50844413#50844413))
+- Prefer for...of loops
+  Supports all iterators, async/await, and control statements
+  (See: [Should one use for-of or forEach when iterating through an array?](https://stackoverflow.com/questions/50844095/should-one-use-for-of-or-foreach-when-iterating-through-an-array/50844413#50844413))
 
--   Use default arguments instead of short-circuiting or conditional logic
+- Use default arguments instead of short-circuiting or conditional logic
 
 :::warning Bad
 
@@ -78,9 +78,9 @@ See [Libraries and Techniques](./libraries-and-techniques)
 
 ## Further Reading / Sources
 
--   [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)
--   [Clean Code concepts adapted for JavaScript – GitHub by ryanmcdermott](https://github.com/ryanmcdermott/clean-code-javascript)
--   [oida.dev | TypeScript, JavaScript, Rust](https://fettblog.eu/)
+- [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)
+- [Clean Code concepts adapted for JavaScript – GitHub by ryanmcdermott](https://github.com/ryanmcdermott/clean-code-javascript)
+- [oida.dev | TypeScript, JavaScript, Rust](https://fettblog.eu/)
 
 ## Naming Conventions
 

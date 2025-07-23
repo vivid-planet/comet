@@ -3,7 +3,7 @@ import { IsEnum } from "class-validator";
 
 import { SortDirection } from "../../../../common/sorting/sort-direction.enum";
 
-export enum DamMediaAlternativeSortField {
+enum DamMediaAlternativeSortField {
     id = "id",
     language = "language",
     type = "type",

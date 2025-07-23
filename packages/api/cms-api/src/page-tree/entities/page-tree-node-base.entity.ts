@@ -1,28 +1,27 @@
-import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { PageTreeNodeCategory, PageTreeNodeVisibility } from "../types";
+import { PAGE_TREE_ENTITY } from "../page-tree.constants";
+import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
-export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"> {
-    static tableName = "PageTreeNode";
+export abstract class PageTreeNodeBase extends BaseEntity {
+    static readonly tableName = PAGE_TREE_ENTITY;
     [OptionalProps]?: "createdAt" | "updatedAt" | "hideInMenu";
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
 
-    @Property({ columnType: "uuid", nullable: true })
+    @Property({ columnType: "uuid", nullable: true, persist: false })
     @Field(() => String, { nullable: true })
     parentId: string | null;
 
-    // not possible in lib
-
-    // @ManyToOne(() => PageTreeNode)
-    // @Index()
-    // parent?: PageTreeNode;
+    @ManyToOne(() => PAGE_TREE_ENTITY, { nullable: true, joinColumn: "parentId" })
+    @Index()
+    parent?: PageTreeNodeInterface;
 
     @Property()
     @Field(() => Int)

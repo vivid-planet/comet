@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Fragment } from "react";
 
-import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
+import { type GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import * as sc from "./Breadcrumbs.sc";
 import { GridRoot } from "./Breadcrumbs.sc";
 

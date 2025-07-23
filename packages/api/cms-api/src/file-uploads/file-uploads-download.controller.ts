@@ -16,18 +16,17 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import mime from "mime";
-import fetch from "node-fetch";
 import { PassThrough, Readable } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
+import { ScaledImagesCacheService } from "../blob-storage/cache/scaled-images-cache.service";
 import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
-import { ScaledImagesCacheService } from "../dam/cache/scaled-images-cache.service";
-import { calculatePartialRanges } from "../dam/files/files.utils";
-import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../dam/images/images.constants";
-import { getSupportedMimeType } from "../dam/images/images.util";
-import { Extension, ResizingType } from "../dam/imgproxy/imgproxy.enum";
-import { ImgproxyService } from "../dam/imgproxy/imgproxy.service";
+import { calculatePartialRanges } from "../file-utils/files.utils";
+import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../file-utils/images.constants";
+import { getSupportedMimeType } from "../file-utils/images.util";
+import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
+import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { DownloadParams, HashDownloadParams, HashImageParams, ImageParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
@@ -172,24 +171,29 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
             const cache = await this.cacheService.get(file.contentHash, path);
             if (!cache) {
-                const imgproxyResponse = await fetch(this.imgproxyService.getSignedUrl(path));
+                const response = await fetch(this.imgproxyService.getSignedUrl(path));
+                if (response.body === null) {
+                    throw new Error("Response body is null");
+                }
 
-                const contentLength = imgproxyResponse.headers.get("content-length");
+                const contentLength = response.headers.get("content-length");
                 if (!contentLength) {
                     throw new Error("Content length not found");
                 }
 
-                const contentType = imgproxyResponse.headers.get("content-type");
+                const contentType = response.headers.get("content-type");
                 if (!contentType) {
                     throw new Error("Content type not found");
                 }
 
-                res.writeHead(imgproxyResponse.status, { "content-length": contentLength, "content-type": contentType, "cache-control": "no-store" });
-                imgproxyResponse.body.pipe(new PassThrough()).pipe(res);
+                res.writeHead(response.status, { "content-length": contentLength, "content-type": contentType, "cache-control": "no-store" });
 
-                if (imgproxyResponse.ok) {
+                const readableBody = Readable.fromWeb(response.body);
+                readableBody.pipe(new PassThrough()).pipe(res);
+
+                if (response.ok) {
                     await this.cacheService.set(file.contentHash, path, {
-                        file: imgproxyResponse.body.pipe(new PassThrough()),
+                        file: readableBody.pipe(new PassThrough()),
                         metaData: {
                             size: Number(contentLength),
                             contentType: contentType,

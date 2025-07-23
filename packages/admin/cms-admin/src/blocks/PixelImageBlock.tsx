@@ -1,27 +1,32 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Crop } from "@comet/admin-icons";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, IPreviewContext, SelectPreviewComponent } from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
+import { type PixelImageBlockData, type PixelImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
+import { useDamBasePath } from "../dam/config/damConfig";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
-import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
-import { useCmsBlockContext } from "./useCmsBlockContext";
+import { type GQLImageBlockDamFileQuery, type GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "./types";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
 
-export const urlTemplateRoute = "/dam/images/preview/$fileId/crop:$crop/resize:$resizeWidth:$resizeHeight/$fileName";
-export function createPreviewUrl({ damFile, cropArea }: ImageBlockState, apiUrl: string, resize?: { width: number; height: number }): string {
+function createPreviewUrl(
+    { damFile, cropArea }: ImageBlockState,
+    { apiUrl, damBasePath, resize }: { apiUrl: string; resize?: { width: number; height: number }; damBasePath: string },
+): string {
     if (!damFile || !damFile.image) return "";
 
+    const urlTemplateRoute = `/${damBasePath}/images/preview/$fileId/crop:$crop/resize:$resizeWidth:$resizeHeight/$fileName`;
     const imageCropArea = cropArea ? cropArea : damFile.image.cropArea;
     const crop =
         imageCropArea.focalPoint === "SMART"
@@ -54,10 +59,10 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx: IPreviewContext & CmsBlockContext) => ({
+    createPreviewState: (state, previewContext) => ({
         ...state,
-        urlTemplate: createPreviewUrl(state, previewCtx.damConfig.apiUrl),
-        adminMeta: { route: previewCtx.parentUrl },
+        urlTemplate: createPreviewUrl(state, { apiUrl: previewContext.apiUrl, damBasePath: previewContext.damBasePath }),
+        adminMeta: { route: previewContext.parentUrl },
     }),
 
     state2Output: (v) => {
@@ -71,7 +76,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         };
     },
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<ImageBlockState> => {
+    output2State: async (output, { apolloClient }): Promise<ImageBlockState> => {
         if (!output.damFileId) {
             return {};
         }
@@ -144,7 +149,8 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     AdminComponent: ({ state, updateState }) => {
         const [open, setOpen] = useState(false);
-        const context = useCmsBlockContext();
+        const { apiUrl } = useCometConfig();
+        const damBasePath = useDamBasePath();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
         // useSyncImageAttributes({ state, updateState });
@@ -157,7 +163,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             setOpen(true);
         };
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl, { width: 320, height: 320 });
+        const previewUrl = createPreviewUrl(state, { apiUrl, resize: { width: 320, height: 320 }, damBasePath });
 
         return (
             <SelectPreviewComponent>
@@ -208,13 +214,19 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             </SelectPreviewComponent>
         );
     },
-    previewContent: (state, ctx) => {
-        if (!state.damFile || !state.damFile?.fileUrl || !ctx?.damConfig?.apiUrl) {
+    previewContent: (state, context) => {
+        if (!state.damFile || !state.damFile?.fileUrl || !context?.apiUrl || !context?.damBasePath) {
             return [];
         }
         const imageSize = { width: 320, height: 320 };
         return [
-            { type: "image", content: { src: createPreviewUrl(state, ctx.damConfig.apiUrl, imageSize), ...imageSize } },
+            {
+                type: "image",
+                content: {
+                    src: createPreviewUrl(state, { apiUrl: context.apiUrl, resize: imageSize, damBasePath: context.damBasePath }),
+                    ...imageSize,
+                },
+            },
             { type: "text", content: state.damFile.name },
         ];
     },

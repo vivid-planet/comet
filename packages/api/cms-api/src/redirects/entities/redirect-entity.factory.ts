@@ -1,10 +1,12 @@
-import { Block, BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
+import { Block, BlockDataInterface } from "../../blocks/block";
+import { RootBlock } from "../../blocks/decorators/root-block";
+import { RootBlockEntity } from "../../blocks/decorators/root-block-entity";
 import { RootBlockType } from "../../blocks/root-block-type";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { RedirectScopeInterface } from "../types";
@@ -46,7 +48,7 @@ export class RedirectEntityFactory {
             source: string;
 
             @RootBlock(linkBlock)
-            @Property({ customType: new RootBlockType(linkBlock) })
+            @Property({ type: new RootBlockType(linkBlock) })
             @Field(() => GraphQLJSONObject)
             target: BlockDataInterface;
 

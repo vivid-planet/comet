@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
 import { DamFileDownloadLinkBlockData, OpenFileTypeMethod } from "./dam-file-download-link.block";
@@ -25,7 +25,7 @@ type TransformResponse = {
 export class DamFileDownloadLinkBlockTransformerService implements BlockTransformerServiceInterface<DamFileDownloadLinkBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
-    async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
+    async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls }: BlockContext) {
         const ret: TransformResponse = {
             openFileType: block.openFileType,
         };
@@ -40,7 +40,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
             const retFile: Omit<File, "fileUrl"> = {
                 id: file.id,
                 name: file.name,
-                size: Number(file.size),
+                size: file.size,
                 mimetype: file.mimetype,
                 scope: file.scope,
                 altText: file.altText,
@@ -50,12 +50,12 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
             if (block.openFileType === "NewTab") {
                 ret.file = {
                     ...retFile,
-                    fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                    fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls }),
                 };
             } else if (block.openFileType === "Download") {
                 ret.file = {
                     ...retFile,
-                    fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
+                    fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls }),
                 };
             }
         }

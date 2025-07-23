@@ -1,4 +1,4 @@
-import { createListBlock } from "@comet/blocks-api";
+import { createListBlock } from "@comet/cms-api";
 
 import { BasicStageBlock } from "./basic-stage.block";
 

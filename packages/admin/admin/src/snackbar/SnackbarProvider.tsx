@@ -1,8 +1,8 @@
-import { SnackbarCloseReason, SnackbarProps } from "@mui/material";
-import { cloneElement, createContext, ReactElement, ReactNode, SyntheticEvent, useContext, useState } from "react";
+import { type SnackbarCloseReason, type SnackbarProps } from "@mui/material";
+import { cloneElement, createContext, type ReactElement, type ReactNode, type SyntheticEvent, useContext, useState } from "react";
 import { v4 as uuid } from "uuid";
 
-import { UndoSnackbarProps } from "./UndoSnackbar";
+import { type UndoSnackbarProps } from "./UndoSnackbar";
 
 export interface SnackbarApi {
     showSnackbar: (newSnackbar: ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>) => void;
