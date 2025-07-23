@@ -19,12 +19,6 @@ export const Column = styled("div")<ColumnProps>`
     height: ${({ height }) => height}px;
 `;
 
-export const ScrollingContent = styled("div")`
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-`;
-
 export const Split = styled(ReactSplit)`
     min-height: 0;
     flex: 1;

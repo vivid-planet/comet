@@ -1,7 +1,7 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import { ContentState } from "draft-js";
-import { PropsWithChildren } from "react";
+import { type ContentState } from "draft-js";
+import { type PropsWithChildren } from "react";
 
 interface Props {
     contentState: ContentState;

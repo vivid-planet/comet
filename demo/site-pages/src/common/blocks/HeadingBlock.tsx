@@ -1,7 +1,7 @@
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
-import { HeadingBlockData } from "@src/blocks.generated";
+import { hasRichTextBlockContent, PreviewSkeleton, type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type HeadingBlockData } from "@src/blocks.generated";
 import { Typography } from "@src/common/components/Typography";
-import { Renderers } from "redraft";
+import { type Renderers } from "redraft";
 import styled from "styled-components";
 
 import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "./RichTextBlock";

@@ -1,8 +1,8 @@
-import { BooleanFilter } from "../common/filter/boolean.filter";
-import { DateTimeFilter } from "../common/filter/date-time.filter";
-import { StringFilter } from "../common/filter/string.filter";
-import { RedirectFilter } from "./dto/redirects.filter";
-import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { type BooleanFilter } from "../common/filter/boolean.filter";
+import { type DateTimeFilter } from "../common/filter/date-time.filter";
+import { type StringFilter } from "../common/filter/string.filter";
+import { type RedirectFilter } from "./dto/redirects.filter";
+import { type RedirectInterface } from "./entities/redirect-entity.factory";
 
 export type FilterableRedirect = Pick<RedirectInterface, "generationType" | "source" | "active" | "createdAt" | "updatedAt"> & { target?: string };
 
@@ -71,6 +71,8 @@ export function redirectMatchesFilter(redirect: FilterableRedirect, filter: Redi
 
 function stringMatchesFilter(string: string, filter: StringFilter) {
     if (filter.contains && string.includes(filter.contains)) {
+        return true;
+    } else if (filter.notContains && !string.includes(filter.notContains)) {
         return true;
     } else if (filter.startsWith && string.startsWith(filter.startsWith)) {
         return true;

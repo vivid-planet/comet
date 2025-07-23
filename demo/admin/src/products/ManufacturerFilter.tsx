@@ -1,12 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
 import { InputBase } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
-import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { type GridFilterInputValueProps, type GridFilterOperator } from "@mui/x-data-grid-pro";
+import { useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
-import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
+import { type GQLManufacturersFilterQuery, type GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
 
 const manufacturersQuery = gql`
     query ManufacturersFilter($offset: Int!, $limit: Int!, $search: String) {
@@ -23,7 +23,7 @@ const manufacturersQuery = gql`
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
 function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     const intl = useIntl();
-    const [search, setSearch] = React.useState<string | undefined>(undefined);
+    const [search, setSearch] = useState<string | undefined>(undefined);
     const [debouncedSearch] = useDebounce(search, 500);
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
@@ -52,7 +52,7 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
             }}
             onChange={(event, value, reason) => {
                 // value can't be "{ id: value.id, name: value.name }" because value is sent to api
-                applyValue({ id: item.id, operatorValue: "equals", value: value ? value.id : undefined, columnField: "manufacturer" });
+                applyValue({ id: item.id, operator: "equals", value: value ? value.id : undefined, field: "manufacturer" });
             }}
             renderInput={(params) => (
                 <InputBase

@@ -2,14 +2,14 @@ import { gql, useMutation } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
-import { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
+import { type GQLPageTreeNodeVisibility } from "../../graphql.generated";
+import { type GQLUpdatePageVisibilityMutation, type GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
-import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
+import { type GQLPageTreePageFragment, type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 export const updatePageVisibilityMutation = gql`

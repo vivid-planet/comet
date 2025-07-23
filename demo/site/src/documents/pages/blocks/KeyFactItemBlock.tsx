@@ -1,8 +1,8 @@
-import { hasRichTextBlockContent, PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
-import { KeyFactsItemBlockData } from "@src/blocks.generated";
+import { hasRichTextBlockContent, type PropsWithData, SvgImageBlock, withPreview } from "@comet/site-nextjs";
+import { type KeyFactsItemBlockData } from "@src/blocks.generated";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
-import { Renderers } from "redraft";
+import { type Renderers } from "redraft";
 import styled from "styled-components";
 
 const descriptionRenderers: Renderers = {

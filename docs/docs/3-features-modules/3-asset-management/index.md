@@ -8,9 +8,9 @@ COMET DXP has a built-in digital asset management interface (DAM). The DAM's pur
 
 The DAM can be configured to use different storage backends. The following storage backends are supported:
 
--   Local Filesystem
--   Azure Storage
--   S3 Compatible Storage
+- Local Filesystem
+- Azure Storage
+- S3 Compatible Storage
 
 ## Image Optimization
 

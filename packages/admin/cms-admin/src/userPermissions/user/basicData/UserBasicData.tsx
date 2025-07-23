@@ -4,7 +4,7 @@ import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
+import { type GQLUserBasicDataQuery, type GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
 export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: string }) => {
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(

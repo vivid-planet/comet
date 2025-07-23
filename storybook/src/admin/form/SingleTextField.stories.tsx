@@ -1,7 +1,7 @@
 import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 
 export default {
     title: "@comet/admin/form",
@@ -16,7 +16,7 @@ export const SingleTextField = {
         return (
             <div style={{ width: 400 }}>
                 <Grid container spacing={4}>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Card variant="outlined">
                             <CardContent>
                                 <Typography variant="h4" gutterBottom>
@@ -38,7 +38,7 @@ export const SingleTextField = {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Card variant="outlined">
                             <CardContent>
                                 <Typography variant="h4" gutterBottom>

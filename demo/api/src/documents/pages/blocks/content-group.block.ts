@@ -1,16 +1,16 @@
 import {
+    AnchorBlock,
     BlockData,
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     createBlocksBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { AnchorBlock } from "@comet/cms-api";
+} from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
@@ -65,7 +65,7 @@ class ContentGroupBlockInput extends BlockInput {
     backgroundColor: BackgroundColor;
 
     transformToBlockData(): ContentGroupBlockData {
-        return inputToData(ContentGroupBlockData, this);
+        return blockInputToData(ContentGroupBlockData, this);
     }
 }
 

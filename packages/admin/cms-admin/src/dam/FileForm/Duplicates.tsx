@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import { Alert, Button, FormSection, useStackApi } from "@comet/admin";
 import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@comet/admin-icons";
-import { IconButton, Link, List as MuiList, ListItem, ListItemIcon as MuiListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
+import { IconButton, List as MuiList, ListItem, ListItemIcon as MuiListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
+import { type GQLDamFileDuplicatesQuery, type GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
 
-export const damFileDuplicatesQuery = gql`
+const damFileDuplicatesQuery = gql`
     query DamFileDuplicates($id: ID!) {
         damFile(id: $id) {
             duplicates {
@@ -70,10 +70,10 @@ const Duplicates = ({ fileId }: { fileId: string }) => {
                                 <ListItemText primary={file.name} secondary={`/${folderPath.join("/")}`} />
                             </ListItemTextWrapper>
                             <ListItemSecondaryAction>
-                                <IconButton component={Link} underline="none" href={href} size="large">
+                                <IconButton href={href} size="large">
                                     <LinkIcon />
                                 </IconButton>
-                                <IconButton component={Link} underline="none" href={href} target="_blank" size="large">
+                                <IconButton href={href} target="_blank" size="large">
                                     <OpenNewTabIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>

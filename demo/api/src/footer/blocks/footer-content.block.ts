@@ -3,13 +3,13 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
+    DamImageBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+} from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsString } from "class-validator";
@@ -43,7 +43,7 @@ class FooterContentBlockInput extends BlockInput {
     copyrightNotice: string;
 
     transformToBlockData(): FooterContentBlockData {
-        return inputToData(FooterContentBlockData, this);
+        return blockInputToData(FooterContentBlockData, this);
     }
 }
 

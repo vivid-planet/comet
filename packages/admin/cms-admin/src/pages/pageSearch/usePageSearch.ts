@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 import escapeRegExp from "lodash.escaperegexp";
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
-import { TextMatch } from "../../common/MarkedMatches";
-import { PageTreePage } from "../pageTree/usePageTree";
-import { GQLPageSearchFragment } from "./usePageSearch.generated";
+import { type TextMatch } from "../../common/MarkedMatches";
+import { type PageTreePage } from "../pageTree/usePageTree";
+import { type GQLPageSearchFragment } from "./usePageSearch.generated";
 
 export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] }; where: "name" | "path" };
 

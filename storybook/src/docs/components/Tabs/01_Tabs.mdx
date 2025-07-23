@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
 import dedent from "ts-dedent";
 
 import * as TabsStories from "./01_Tabs.stories";
@@ -15,17 +15,17 @@ The Comet Admin `Tabs` are based on [Material UI's `Tabs`](https://mui.com/mater
 
 `Tabs` has the following props:
 
--   `tabComponent` for passing a custom tab component.
-    Per default, [Material UI's `Tab` component](https://v4.mui.com/api/tab/) is used
--   `defaultIndex` for setting the initially active tab
--   `tabsState` can be used to pass a custom state object.
-    It replaces the internal state, keeping track of the active tab
+- `tabComponent` for passing a custom tab component.
+  Per default, [Material UI's `Tab` component](https://v4.mui.com/api/tab/) is used
+- `defaultIndex` for setting the initially active tab
+- `tabsState` can be used to pass a custom state object.
+  It replaces the internal state, keeping track of the active tab
 
 As children, an array of `Tab` elements should be passed to `Tabs`.
 `Tab` has following props:
 
--   a `label` that is shown in the tab bar
--   optionally a [forceRender flag](#tabs-and-forcerender)
+- a `label` that is shown in the tab bar
+- optionally a [forceRender flag](#tabs-and-forcerender)
 
 <Canvas of={TabsStories.Basic} />
 

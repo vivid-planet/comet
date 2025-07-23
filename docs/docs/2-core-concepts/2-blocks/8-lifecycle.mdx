@@ -24,17 +24,17 @@ class AnyEntity {
 
     @RootBlock(DamImageBlock)
     // highlight-next-line
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     image: BlockDataInterface;
 }
 ```
 
 When a block is converted to the database value, it is split into two fields, `data` and `index`.
 
--   `data` contains the actual data of the block.
--   `index` contains the index data of the block.
-    The index data is a flat representation of all child blocks in a root block, including some meta information such as the block's path and visibility.
-    The index can be used for different use cases, for instance, [linking to a block's dependencies](../dependencies).
+- `data` contains the actual data of the block.
+- `index` contains the index data of the block.
+  The index data is a flat representation of all child blocks in a root block, including some meta information such as the block's path and visibility.
+  The index can be used for different use cases, for instance, [linking to a block's dependencies](../dependencies).
 
 When a block is converted to the JavaScript value, the index data is ignored, and only the block data is used.
 
@@ -72,12 +72,12 @@ When a block is converted to the JavaScript value, the index data is ignored, an
 
 In the API, the block can have one of the four states: _data_, _plain_, _input_, or _save_.
 
--   Block data is the data of a block instance in the API.
--   Block plain is a block's data that is sent to the clients.
-    It consists of the block data and optional additional fields.
-    For instance, it may add a loaded DAM image to the block data, whereas the data only contains the image ID.
--   Block input is the data that's coming from the Admin. It is used to create the block data.
--   Block save is the block's data that is to be saved in the database.
+- Block data is the data of a block instance in the API.
+- Block plain is a block's data that is sent to the clients.
+  It consists of the block data and optional additional fields.
+  For instance, it may add a loaded DAM image to the block data, whereas the data only contains the image ID.
+- Block input is the data that's coming from the Admin. It is used to create the block data.
+- Block save is the block's data that is to be saved in the database.
 
 <!-- TODO add a dedicated page on block plain transformation -->
 
@@ -106,37 +106,37 @@ flowchart LR;
 
 The following methods are used to transition between the different block states:
 
--   The `BlockInput#transformToBlockData` method is used to transition from input to data.
-    You can usually use the `inputToData` helper for this.
+- The `BlockInput#transformToBlockData` method is used to transition from input to data.
+  You can usually use the `blockInputToData` helper for this.
 
     ```ts
     class HeadlineBlockInput extends BlockInput {
         /* ... */
 
         transformToBlockData(): HeadlineBlockData {
-            return inputToData(HeadlineBlockData, this);
+            return blockInputToData(HeadlineBlockData, this);
         }
     }
     ```
 
--   The `transformToSave` function is used to transition from data to save.
-    You likely won't call this function directly, since `RootBlockType` takes care of this.
+- The `transformToSave` function is used to transition from data to save.
+  You likely won't call this function directly, since `RootBlockType` takes care of this.
 
     ```ts
     const headlineBlockData = /* Block instance in the API */;
     const headlineBlockSave = transformToSave(headlineBlockData);
     ```
 
--   The `Block#blockDataFactory` method is used to transition from save to data.
-    `RootBlockType` also takes care of this.
+- The `Block#blockDataFactory` method is used to transition from save to data.
+  `RootBlockType` also takes care of this.
 
     ```ts
     const headlineBlockSave = /* Loaded from the database */;
     const headlineBlockData = HeadlineBlock.blockDataFactory(headlineBlockSave);
     ```
 
--   The `transformToPlain` function is used to transition from data to plain.
-    You will likely use the `BlocksTransformerService` for this.
+- The `transformToPlain` function is used to transition from data to plain.
+  You will likely use the `BlocksTransformerService` for this.
 
     ```ts
     class PagesResolver {
@@ -151,10 +151,10 @@ The following methods are used to transition between the different block states:
 
 In the Admin, the block can have one of the four states: _input_, _state_, _output_, or _preview state_.
 
--   Block input is the data (transformed to plain) of a block coming from the API.
--   Block state is the data of a block while editing.
--   Block output is the data sent to the API when saving a block.
--   Block preview state is the data sent to the preview while editing.
+- Block input is the data (transformed to plain) of a block coming from the API.
+- Block state is the data of a block while editing.
+- Block output is the data sent to the API when saving a block.
+- Block preview state is the data sent to the preview while editing.
 
 :::tip
 
@@ -181,29 +181,29 @@ flowchart LR;
 
 The following methods are used to transition between the different block states:
 
--   The `BlockInterface#input2State` method is used to transition from input to state.
+- The `BlockInterface#input2State` method is used to transition from input to state.
 
     ```ts
     const headlineBlockInput = /* Block data from the API */;
     const headlineBlockState = HeadlineBlock.input2State(headlineBlockInput);
     ```
 
--   The `BlockInterface#state2Output` method is used to transition from state to output.
+- The `BlockInterface#state2Output` method is used to transition from state to output.
 
     ```ts
     const headlineBlockState = /* Block state in the Admin */;
     const headlineBlockOutput = HeadlineBlock.state2Output(headlineBlockState);
     ```
 
--   The `BlockInterface#output2State` method is used to transition from output to state.
+- The `BlockInterface#output2State` method is used to transition from output to state.
 
     ```ts
     const headlineBlockOutput = /* Block output from the Admin */;
     const headlineBlockState = await HeadlineBlock.output2State(headlineBlockOutput);
     ```
 
--   The `BlockInterface#createPreviewState` method is used to create a preview state.
-    The preview state, together with the preview context, displays the block currently being edited in the block preview.
+- The `BlockInterface#createPreviewState` method is used to create a preview state.
+  The preview state, together with the preview context, displays the block currently being edited in the block preview.
 
     ```ts
     const previewContext = /* Context for the preview, e.g., showVisibleOnly */

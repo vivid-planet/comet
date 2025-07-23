@@ -5,21 +5,21 @@ sidebar_position: -5
 
 ## General
 
--   In principle, we follow the concept of [trunk-based development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development).
--   We aim for a high level of quality in our source code.
--   The Git commit history should be clean and understandable to make it easier to trace changes.
+- In principle, we follow the concept of [trunk-based development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development).
+- We aim for a high level of quality in our source code.
+- The Git commit history should be clean and understandable to make it easier to trace changes.
 
 A clean Git history can be achieved in two ways:
 
--   **Recommended:** On merge request level **(requires [squashing](https://www.geeksforgeeks.org/git/git-squash/))**
--   On commit level
+- **Recommended:** On merge request level **(requires [squashing](https://www.geeksforgeeks.org/git/git-squash/))**
+- On commit level
 
 ## Merge Requests
 
 ### Rules
 
--   One merge request per change (feature, fix, or refactoring)
--   If the `main` pipeline is red (i.e., not passing), nothing may be merged unless it contributes to fixing the issue (see also environments in [Kubernetes](./kubernetes))
+- One merge request per change (feature, fix, or refactoring)
+- If the `main` pipeline is red (i.e., not passing), nothing may be merged unless it contributes to fixing the issue (see also environments in [Kubernetes](./kubernetes))
 
 ### Goal
 
@@ -27,14 +27,14 @@ Make the review process as easy as possible for the reviewer.
 
 ### Possible measures:
 
--   Link the relevant JIRA ticket
--   Add the **Timr** time tracking entry
--   Generate the MR description (JIRA ticket + Timr) using the GitLab button in JIRA
--   Link the screen design
--   Attach screenshots or screen recordings
--   Keep merge requests as small as possible
--   Avoid unnecessary dependencies (only add them if absolutely necessary)
--   Do not combine multiple tasks in a single MR (e.g., bugfix and new feature in the same MR)
+- Link the relevant JIRA ticket
+- Add the **Timr** time tracking entry
+- Generate the MR description (JIRA ticket + Timr) using the GitLab button in JIRA
+- Link the screen design
+- Attach screenshots or screen recordings
+- Keep merge requests as small as possible
+- Avoid unnecessary dependencies (only add them if absolutely necessary)
+- Do not combine multiple tasks in a single MR (e.g., bugfix and new feature in the same MR)
 
 ### Squashing
 
@@ -46,34 +46,34 @@ The squash commit will include the title and description of the merge request.
 
 #### Advantages:
 
--   Improved integration between GitLab, Git, and IDEs  
-    (Title, description, and links are included in the squash commit; the related MR can be more easily identified in the IDE)
--   Commit messages within the MR become irrelevant. Suggestions can be applied directly without needing amends or force-pushes.  
-    Concerns can be addressed in individual commits during the review.
--   Title and description can be edited directly in GitLab, making it easier for reviewers or lead developers to adjust wording.
+- Improved integration between GitLab, Git, and IDEs  
+  (Title, description, and links are included in the squash commit; the related MR can be more easily identified in the IDE)
+- Commit messages within the MR become irrelevant. Suggestions can be applied directly without needing amends or force-pushes.  
+  Concerns can be addressed in individual commits during the review.
+- Title and description can be edited directly in GitLab, making it easier for reviewers or lead developers to adjust wording.
 
 #### Disadvantages:
 
--   Stacked MRs always cause conflicts (rebasing is required).
--   Individual commits of the MR are no longer visible in the `main` branch.  
-    You need to navigate to the MR in GitLab to view them.
+- Stacked MRs always cause conflicts (rebasing is required).
+- Individual commits of the MR are no longer visible in the `main` branch.  
+  You need to navigate to the MR in GitLab to view them.
 
 #### Rules:
 
--   Squashing is the recommended default setting.
--   If a merge request has a messy commit history, it **must** be squashed.  
-    :::caution
-    All dependent (stacked) MRs must then be rebased.
-    :::
--   Even if the commit history is clean, squashing is still allowed.
+- Squashing is the recommended default setting.
+- If a merge request has a messy commit history, it **must** be squashed.  
+  :::caution
+  All dependent (stacked) MRs must then be rebased.
+  :::
+- Even if the commit history is clean, squashing is still allowed.
 
 ### Selecting Reviewers
 
--   All merge requests must go through peer review.
--   The project's lead developer should generally review every merge request in the project.
--   For infrastructure changes: always select someone from the **infra team**.
--   For styling changes: always select someone from the **styling focus group**.
--   A merge request can only be merged **after all reviewers have approved**.
+- All merge requests must go through peer review.
+- The project's lead developer should generally review every merge request in the project.
+- For infrastructure changes: always select someone from the **infra team**.
+- For styling changes: always select someone from the **styling focus group**.
+- A merge request can only be merged **after all reviewers have approved**.
 
 :::caution
 Always use **reviewers**, not approvers. The review system is better integrated into GitLab.
@@ -81,12 +81,12 @@ Always use **reviewers**, not approvers. The review system is better integrated 
 
 ### Conventions
 
--   Merge requests prefixed with `Draft:` should only be reviewed if a reviewer has been explicitly assigned.
+- Merge requests prefixed with `Draft:` should only be reviewed if a reviewer has been explicitly assigned.
 
 ### Concerns
 
--   Concerns should always be resolved by the **reviewer** (exception: obvious things like typos).
--   A merge request may **only be merged once all concerns are resolved**.
+- Concerns should always be resolved by the **reviewer** (exception: obvious things like typos).
+- A merge request may **only be merged once all concerns are resolved**.
 
 ### Commits
 
@@ -96,14 +96,14 @@ The following rules apply **if the merge request is _not_ squashed**
 Even if squashing is used, commit cleanliness is still important for easier reviews.
 :::
 
--   Commits should be **atomic** (i.e., the code should be in a runnable state).  
-    Exception: if a CodeMod or CRUD generator is used, the generated changes should be in a **separate commit**, so they can be excluded from review.
--   Prefer multiple small commits (e.g., separate docs and feature work).
--   One commit per **logical change**.
--   Write **clear and descriptive commit messages**:
-    -   Avoid vague messages like `fix`, `polish`, `wip`, or `another try`. These may be used temporarily, but must be cleaned up before merging.
-    -   Start commit messages with a **capital letter**.
--   We recommend using **English** for all commit messages.
+- Commits should be **atomic** (i.e., the code should be in a runnable state).  
+  Exception: if a CodeMod or CRUD generator is used, the generated changes should be in a **separate commit**, so they can be excluded from review.
+- Prefer multiple small commits (e.g., separate docs and feature work).
+- One commit per **logical change**.
+- Write **clear and descriptive commit messages**:
+    - Avoid vague messages like `fix`, `polish`, `wip`, or `another try`. These may be used temporarily, but must be cleaned up before merging.
+    - Start commit messages with a **capital letter**.
+- We recommend using **English** for all commit messages.
 
 #### Meaningful Commits for Suggestions
 
@@ -146,10 +146,10 @@ Use `git commit --amend` to update existing commits (force push required).
 :::note
 Multi-line commit messages automatically fill the **description field** in GitLab MRs. This is preferred over writing explanations in the MR description, because:
 
--   The information is stored directly in Git.
--   It is more visible and better integrated into IDEs (e.g., via GitLens or JetBrains tools).
-    :::
-    ![MultiLineComments](./images/multi-line-comments.png)
+- The information is stored directly in Git.
+- It is more visible and better integrated into IDEs (e.g., via GitLens or JetBrains tools).
+  :::
+  ![MultiLineComments](./images/multi-line-comments.png)
 
 Results In:
 ![Result](./images/result.png)
@@ -160,33 +160,33 @@ Reviews are intended to ensure our quality standards are met. They should never 
 
 #### Objectives
 
--   Keep the **bigger picture** in mind
-    -   Is the chosen technique appropriate?
-    -   Are the requirements fully covered?
--   Identify potential bugs
--   Check adherence to coding best practices
--   Question security and data privacy concerns
+- Keep the **bigger picture** in mind
+    - Is the chosen technique appropriate?
+    - Are the requirements fully covered?
+- Identify potential bugs
+- Check adherence to coding best practices
+- Question security and data privacy concerns
 
 #### Non-Objectives
 
--   Imposing your own personal style on the developer
--   Nitpicking
--   Verifying code correctness (This is usually not possible and is the clear responsibility of the developer)
+- Imposing your own personal style on the developer
+- Nitpicking
+- Verifying code correctness (This is usually not possible and is the clear responsibility of the developer)
 
 #### Conventions
 
 Optional suggestions can be marked with:
 
--   `OPT:`
--   `Note:`
--   `Nit:`
+- `OPT:`
+- `Note:`
+- `Nit:`
 
 These are not mandatory to fix but are intended to support communication and knowledge sharing.
 
 #### Tips for Reviewers
 
--   If possible (e.g., typos), use **[GitLab Suggestions](https://docs.gitlab.com/user/project/merge_requests/reviews/suggestions/)** to make it easy to fix or highlight what should change.
--   For naming concerns, provide a concrete improvement proposal.
+- If possible (e.g., typos), use **[GitLab Suggestions](https://docs.gitlab.com/user/project/merge_requests/reviews/suggestions/)** to make it easy to fix or highlight what should change.
+- For naming concerns, provide a concrete improvement proposal.
 
 ### Feature Branches
 
@@ -209,12 +209,12 @@ Protection only works if the branch name **starts with `feature/`**.
 
 If the `master/main` branch has changed and causes conflicts in your feature branch:
 
--   You cannot fix it via `rebase` (due to branch protection).
--   Instead:
-    -   Create a **new branch**.
-    -   **Merge `master/main` into it**.
-    -   Fix the conflicts.
-    -   Create a new **Merge Request** for this branch.
+- You cannot fix it via `rebase` (due to branch protection).
+- Instead:
+    - Create a **new branch**.
+    - **Merge `master/main` into it**.
+    - Fix the conflicts.
+    - Create a new **Merge Request** for this branch.
 
 #### How to Merge?
 

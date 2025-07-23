@@ -1,9 +1,9 @@
 import { Accept, Copy } from "@comet/admin-icons";
-import { ComponentsOverrides, css, Grow, IconButton, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { type ComponentsOverrides, css, Grow, IconButton, type Theme, useThemeProps } from "@mui/material";
+import { type ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export interface CopyToClipboardButtonProps
     extends ThemedComponentBaseProps<{
@@ -65,7 +65,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps) => {
                         {...slotProps?.copyButton}
                         onClick={(e) => {
                             copyTextToClipboard();
-                            slotProps?.copyButton?.onClick && slotProps.copyButton.onClick(e);
+                            slotProps?.copyButton?.onClick?.(e);
                         }}
                     >
                         {copyIcon}
@@ -79,7 +79,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps) => {
                         {...slotProps?.successButton}
                         onClick={(e) => {
                             copyTextToClipboard();
-                            slotProps?.successButton?.onClick && slotProps.successButton.onClick(e);
+                            slotProps?.successButton?.onClick?.(e);
                         }}
                     >
                         {successIcon}

@@ -1,7 +1,7 @@
 import { Clear } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { ButtonBase, type ButtonBaseProps, type ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 

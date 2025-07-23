@@ -1,6 +1,6 @@
 import { Field, FinalForm, FinalFormInput, FinalFormSaveCancelButtonsLegacy } from "@comet/admin";
 import { Box, Card, CardContent } from "@mui/material";
-import { SubmissionErrors } from "final-form";
+import { type SubmissionErrors } from "final-form";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];

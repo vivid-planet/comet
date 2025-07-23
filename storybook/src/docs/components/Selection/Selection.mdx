@@ -1,4 +1,4 @@
-import { Canvas, Meta } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as SelectionStories from "./Selection.stories";
 
@@ -10,12 +10,12 @@ In Comet Admin, a _selection_ can be used to manage which item of a list or tabl
 
 The two most common use cases for selections are
 
--   creating and editing items in a dialog.
-    Comet Admin has a dedicated `EditDialog` component that uses selection internally.
-    You can find more infos in the [EditDialog docs](?path=/docs/docs-components-edit-dialog--docs#editdialog-and-table).
+- creating and editing items in a dialog.
+  Comet Admin has a dedicated `EditDialog` component that uses selection internally.
+  You can find more infos in the [EditDialog docs](?path=/docs/docs-components-edit-dialog--docs#editdialog-and-table).
 
--   selecting items from a table to edit them in an adjacent form.
-    An example can be found in the [Selection Table docs](?path=/docs/docs-components-table-selection-table--docs).
+- selecting items from a table to edit them in an adjacent form.
+  An example can be found in the [Selection Table docs](?path=/docs/docs-components-table-selection-table--docs).
 
 ## Selection (without URL State)
 
@@ -26,8 +26,8 @@ You can either use the `useSelection()` hook or the `Selection` component to imp
 The `useSelection()` hook returns an array containing two objects.
 The first object contains two values:
 
--   `id` holds the id of the currently selected item.
--   `mode` specifies the goal of the selection. Either `add` (add a new item) or `edit` (edit an existing item).
+- `id` holds the id of the currently selected item.
+- `mode` specifies the goal of the selection. Either `add` (add a new item) or `edit` (edit an existing item).
 
 The second object is the [Selection API](#selection-api).
 
@@ -39,9 +39,9 @@ The `Selection` component passes its values to its children via child function.
 
 It provides the same values as `useSelection()`, but the variable names are slightly different:
 
--   `selectedId` instead of `id`
--   `selectionMode` instead of `mode`
--   `selectionApi` contains the [Selection API](#selection-api)
+- `selectedId` instead of `id`
+- `selectionMode` instead of `mode`
+- `selectionApi` contains the [Selection API](#selection-api)
 
 <Canvas of={SelectionStories.SelectionComponent} />
 
@@ -74,6 +74,6 @@ You can use it exactly like `Selection` since it provides the same values.
 
 The Selection API provides three functions to select and deselect items:
 
--   `handleSelectId()` for selecting an existing item
--   `handleAdd()` for "selecting" a new item. It accepts an optional `id` parameter if you generate the new id on the client-side.
--   `handleDeselect()` for deselection
+- `handleSelectId()` for selecting an existing item
+- `handleAdd()` for "selecting" a new item. It accepts an optional `id` parameter if you generate the new id on the client-side.
+- `handleDeselect()` for deselection

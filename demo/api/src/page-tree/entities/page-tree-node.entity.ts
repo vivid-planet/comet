@@ -1,5 +1,5 @@
 import { PageTreeNodeBase } from "@comet/cms-api";
-import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/core";
+import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/postgresql";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { UserGroup } from "@src/user-groups/user-group";
 

@@ -1,5 +1,5 @@
 import { type PropsWithData } from "@comet/site-react";
-import { type ReactElement, cloneElement } from "react";
+import { cloneElement, type ReactElement } from "react";
 
 import { type EmailLinkBlockData } from "../blocks.generated";
 

@@ -11,18 +11,34 @@ import {
     ToolbarBackButton,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Add, Delete, Preview, Save } from "@comet/admin-icons";
-import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/blocks-admin";
-import { ContentScopeIndicator, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
+import { Add, Delete, Preview } from "@comet/admin-icons";
+import {
+    BlockAdminComponentRoot,
+    type BlockOutputApi,
+    type BlockState,
+    ContentScopeIndicator,
+    HiddenInSubroute,
+    IFrameBridgeProvider,
+    openSitePreviewWindow,
+    resolveNewState,
+    SplitPreview,
+    useBlockContext,
+    useBlockPreview,
+    useContentScope,
+    useSiteConfig,
+} from "@comet/cms-admin";
 import { Box } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
-import { GQLEditMainMenuItemFragment, GQLUpdateMainMenuItemMutation, GQLUpdateMainMenuItemMutationVariables } from "./EditMainMenuItem.generated";
+import {
+    type GQLEditMainMenuItemFragment,
+    type GQLUpdateMainMenuItemMutation,
+    type GQLUpdateMainMenuItemMutationVariables,
+} from "./EditMainMenuItem.generated";
 
 export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
 
@@ -69,7 +85,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
     const { match: contentScopeMatch, scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
     const intl = useIntl();
-    const blockContext = useCmsBlockContext();
+    const blockContext = useBlockContext();
 
     useEffect(() => {
         setContent(item.content ? RichTextBlock.input2State(item.content) : null);
@@ -98,8 +114,8 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
         setContent(null);
     };
 
-    const handleSaveClick = () => {
-        return updateMainMenuItem({
+    const handleSaveClick = async () => {
+        await updateMainMenuItem({
             variables: {
                 pageTreeNodeId: item.node.id,
                 input: { content: content ? RichTextBlock.state2Output(content) : null },
@@ -134,17 +150,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                     >
                         <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
-                    <SaveButton
-                        disabled={!hasChanges}
-                        startIcon={<Save />}
-                        saving={saving}
-                        hasErrors={saveError != null}
-                        color="primary"
-                        variant="contained"
-                        onClick={handleSaveClick}
-                    >
-                        <FormattedMessage {...messages.save} />
-                    </SaveButton>
+                    <SaveButton disabled={!hasChanges} loading={saving} hasErrors={saveError != null} onClick={handleSaveClick} />
                 </ToolbarActions>
             </Toolbar>
             {hasChanges && (
@@ -161,7 +167,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                     <SplitPreview url={`${siteConfig.blockPreviewBaseUrl}/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
-                                <AdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
+                                <BlockAdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
                                     <RichTextBlock.AdminComponent
                                         state={content}
                                         updateState={(setStateAction) => {
@@ -174,7 +180,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
                                             <FormattedMessage id="mainMenu.removeContent" defaultMessage="Remove content" />
                                         </Button>
                                     </HiddenInSubroute>
-                                </AdminComponentRoot>
+                                </BlockAdminComponentRoot>
                             ) : (
                                 <Button startIcon={<Add />} onClick={handleAddContentClick}>
                                     <FormattedMessage id="mainMenu.addContent" defaultMessage="Add content" />

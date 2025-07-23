@@ -1,12 +1,12 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { type ThemedComponentBaseProps } from "@comet/admin";
+import { type ComponentsOverrides, type Theme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { createElement } from "react";
 
-import { IControlProps } from "../../types";
-import { Root, RteToolbarClassKey, Slot } from "./Toolbar.styles";
+import { type IControlProps } from "../../types";
+import { Root, type RteToolbarClassKey, Slot } from "./Toolbar.styles";
 
-export interface RteToolbarProps
+interface RteToolbarProps
     extends IControlProps,
         ThemedComponentBaseProps<{
             root: "div";

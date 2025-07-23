@@ -1,6 +1,6 @@
-import { createSpaceBlock } from "@comet/blocks-admin";
-import { SpaceBlockData } from "@src/blocks.generated";
-import { ReactNode } from "react";
+import { createSpaceBlock } from "@comet/cms-admin";
+import { type SpaceBlockData } from "@src/blocks.generated";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 const options: { value: SpaceBlockData["spacing"]; label: ReactNode }[] = [

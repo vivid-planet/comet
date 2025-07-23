@@ -67,7 +67,7 @@
         },
         {
             "groupName": "Mui",
-            "matchPackageNames": ["/@mui/material/", "/@mui/system/", "/@mui/utils/", "/@mui/lab/"]
+            "matchPackageNames": ["/@mui/material/", "/@mui/system/", "/@mui/utils/"]
         },
         {
             "groupName": "emotion",
@@ -90,7 +90,7 @@
             "groupName": "@apollo/server"
         },
         {
-            "matchPackageNames": ["@apollo/client", "apollo-link-rest", "graphql-anywhere", "graphql-tag"],
+            "matchPackageNames": ["@apollo/client", "apollo-link-rest", "graphql-tag"],
             "groupName": "@apollo/client and related dependencies"
         },
         {
@@ -127,7 +127,6 @@
             "matchPackageNames": ["@swc/plugin-emotion", "@vitejs/plugin-react-swc"]
         }
     ],
-    "rangeStrategy": "bump",
     "labels": ["dependencies"],
     "baseBranches": ["next"]
 }

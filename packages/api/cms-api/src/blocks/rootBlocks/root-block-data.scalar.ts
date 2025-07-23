@@ -1,6 +1,7 @@
-import { Block } from "@comet/blocks-api";
 import { GraphQLScalarType } from "graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
+
+import { type Block } from "../block";
 
 const rootBlockDataScalars = new Map<string, GraphQLScalarType>();
 

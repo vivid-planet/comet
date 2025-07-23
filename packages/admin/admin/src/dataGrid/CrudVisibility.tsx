@@ -1,5 +1,5 @@
 import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";

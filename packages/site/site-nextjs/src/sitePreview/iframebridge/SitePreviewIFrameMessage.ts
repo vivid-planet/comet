@@ -8,7 +8,7 @@ export enum SitePreviewIFrameMessageType {
     SitePreviewLocation = "SitePreviewLocation",
 }
 
-export interface SitePreviewIFrameOpenLinkMessage {
+interface SitePreviewIFrameOpenLinkMessage {
     cometType: SitePreviewIFrameMessageType.OpenLink;
     data: {
         link: ExternalLinkBlockData;

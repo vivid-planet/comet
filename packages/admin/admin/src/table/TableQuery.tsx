@@ -1,13 +1,13 @@
-import { ApolloError } from "@apollo/client";
-import { ComponentsOverrides, Paper } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ApolloError } from "@apollo/client";
+import { type ComponentsOverrides, Paper } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -21,7 +21,7 @@ export const parseIdFromIri = (iri: string) => {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IDefaultVariables {}
 
 /**

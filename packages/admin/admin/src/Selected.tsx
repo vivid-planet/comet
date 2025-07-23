@@ -1,7 +1,7 @@
-import { ApolloError, useQuery } from "@apollo/client";
+import { type ApolloError, useQuery } from "@apollo/client";
 import { Box, Card, Typography } from "@mui/material";
-import { DocumentNode } from "graphql";
-import { ComponentType, Fragment, ReactNode } from "react";
+import { type DocumentNode } from "graphql";
+import { type ComponentType, Fragment, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "./common/Loading";

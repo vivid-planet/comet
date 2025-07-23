@@ -1,7 +1,10 @@
-import { future_GridConfig as GridConfig } from "@comet/cms-admin";
-import { GQLNews } from "@src/graphql.generated";
+import { defineConfig } from "@comet/admin-generator";
+import { DamImageBlock } from "@comet/cms-admin";
+import { type GQLNews } from "@src/graphql.generated";
 
-export const NewsGrid: GridConfig<GQLNews> = {
+import { NewsContentBlock } from "./blocks/NewsContentBlock";
+
+export default defineConfig<GQLNews>({
     type: "grid",
     gqlType: "News",
     fragmentName: "NewsGrid",
@@ -26,13 +29,13 @@ export const NewsGrid: GridConfig<GQLNews> = {
             type: "block",
             name: "image",
             headerName: "Image",
-            block: { name: "DamImageBlock", import: "@comet/cms-admin" },
+            block: DamImageBlock,
         },
         {
             type: "block",
             name: "content",
             headerName: "Content",
-            block: { name: "NewsContentBlock", import: "../blocks/NewsContentBlock" },
+            block: NewsContentBlock,
         },
     ],
-};
+});

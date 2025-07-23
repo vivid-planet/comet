@@ -2,7 +2,7 @@ import { PageLink } from "@src/layout/header/PageLink";
 import { gql } from "graphql-request";
 import styled from "styled-components";
 
-import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.generated";
+import { type GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.generated";
 
 interface Props {
     data: GQLTopMenuPageTreeNodeFragment[];

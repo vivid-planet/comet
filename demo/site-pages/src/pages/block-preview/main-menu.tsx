@@ -1,4 +1,4 @@
-import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/cms-site";
+import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/site-nextjs";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 
 const PreviewMainMenu = () => {

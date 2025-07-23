@@ -1,4 +1,3 @@
-import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
@@ -7,11 +6,13 @@ import { printSchema } from "graphql";
 import {
     BuildsResolver,
     createAuthResolver,
+    createOneOfBlock,
     createPageTreeResolver,
     createRedirectsResolver,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
+    ExternalLinkBlock,
     FileImagesResolver,
     FileUpload,
     InternalLinkBlock,
@@ -39,6 +40,7 @@ import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
+import { WarningResolver } from "./src/warnings/warning.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -118,6 +120,7 @@ async function generateSchema(): Promise<void> {
         GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+        WarningResolver,
         createDamMediaAlternativeResolver({ File }),
     ]);
 

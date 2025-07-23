@@ -4,7 +4,7 @@ import {
     DataGridToolbar,
     FillSpace,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     messages,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -17,20 +17,21 @@ import {
 } from "@comet/admin";
 import { DeleteDialog } from "@comet/admin/lib/common/DeleteDialog";
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { ReactElement, useState } from "react";
+import { DialogContent, IconButton } from "@mui/material";
+import { DataGrid, type GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
+import { type ReactElement, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLDamMediaAlternativeType } from "../../graphql.generated";
+import { type GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { VideoPreviewCaptionsQueryName } from "../FileForm/previews/VideoPreview";
 import { MediaAlternativeForm } from "./MediaAlternativeForm";
 import {
-    GQLDamMediaAlternativeGridFragment,
-    GQLDamMediaAlternativesQuery,
-    GQLDamMediaAlternativesQueryVariables,
-    GQLDeleteDamMediaAlternativeMutation,
-    GQLDeleteDamMediaAlternativeMutationVariables,
+    type GQLDamMediaAlternativeGridFragment,
+    type GQLDamMediaAlternativesQuery,
+    type GQLDamMediaAlternativesQueryVariables,
+    type GQLDeleteDamMediaAlternativeMutation,
+    type GQLDeleteDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativesGrid.generated";
 
 const damMediaAlternativeFragment = gql`
@@ -79,7 +80,11 @@ const deleteDamMediaAlternativeMutation = gql`
 
 export const mediaAlternativesGridRefetchQueries = [damMediaAlternativesQuery, VideoPreviewCaptionsQueryName];
 
-function MediaAlternativesGridToolbar({ handleAdd }: { handleAdd: () => void }) {
+interface MediaAlternativesGridToolbarProps extends GridToolbarProps {
+    handleAdd: () => void;
+}
+
+function MediaAlternativesGridToolbar({ handleAdd }: MediaAlternativesGridToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -169,8 +174,8 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
     const { data, loading, error } = useQuery<GQLDamMediaAlternativesQuery, GQLDamMediaAlternativesQueryVariables>(damMediaAlternativesQuery, {
         variables: {
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
             for: direction === "for" ? file.id : undefined,
             alternative: direction === "alternative" ? file.id : undefined,
@@ -186,30 +191,30 @@ export function MediaAlternativesGrid({ file, type, direction }: MediaAlternativ
             <DataGrid
                 {...dataGridProps}
                 autoHeight={true}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: MediaAlternativesGridToolbar,
+                slots={{
+                    toolbar: MediaAlternativesGridToolbar as GridSlotsComponent["toolbar"],
                 }}
-                componentsProps={{
-                    toolbar: {
-                        handleAdd: () => editDialogApi.openAddDialog(file.id),
-                    },
+                slotProps={{
+                    toolbar: { handleAdd: () => editDialogApi.openAddDialog(file.id) } as MediaAlternativesGridToolbarProps,
                 }}
             />
             <EditDialog>
                 {selection.id && selection.mode ? (
-                    <MediaAlternativeForm
-                        mode={selection.mode}
-                        id={selection.mode === "edit" ? selection.id : undefined}
-                        fileId={file.id}
-                        selectionApi={selectionApi}
-                        type={type}
-                        direction={direction}
-                    />
+                    <DialogContent>
+                        <MediaAlternativeForm
+                            mode={selection.mode}
+                            id={selection.mode === "edit" ? selection.id : undefined}
+                            fileId={file.id}
+                            selectionApi={selectionApi}
+                            type={type}
+                            direction={direction}
+                        />
+                    </DialogContent>
                 ) : null}
             </EditDialog>
             <DeleteDialog

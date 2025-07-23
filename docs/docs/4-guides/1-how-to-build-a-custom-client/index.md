@@ -43,18 +43,18 @@ query Pages($contentScope: PageTreeNodeScopeInput!, $category: String!) {
 
 A response will then look similar to this:
 
-```graphql
+```json
 {
-  "data": {
-    "pageTreeNodeList": [
-      {
-        "id": "7c151a7f-7e0c-4103-8d34-216421f4cdcf",
-        "name": "test",
-        "path": "/test",
-        "slug": "test"
-      }
-    ]
-  }
+    "data": {
+        "pageTreeNodeList": [
+            {
+                "id": "7c151a7f-7e0c-4103-8d34-216421f4cdcf",
+                "name": "test",
+                "path": "/test",
+                "slug": "test"
+            }
+        ]
+    }
 }
 ```
 
@@ -422,14 +422,14 @@ Example:
 
 **Block structure**
 
--   `key`: A unique identifier for the block
--   `visible`: A boolean indicating whether the block is visible
--   `type`: The type of the block, in this case, "headline"
--   `props`: An object containing the block-specific data:
-    -   `eyebrow`: An optional string for additional text above the headline
-    -   `headline`: An object containing the `draftContent`, which is a rich text structure
-    -   `level`: The level of the headline, e.g., "header-one"
--   `userGroup`: Specifies the user group that can view the block, e.g., "All"
+- `key`: A unique identifier for the block
+- `visible`: A boolean indicating whether the block is visible
+- `type`: The type of the block, in this case, "headline"
+- `props`: An object containing the block-specific data:
+    - `eyebrow`: An optional string for additional text above the headline
+    - `headline`: An object containing the `draftContent`, which is a rich text structure
+    - `level`: The level of the headline, e.g., "header-one"
+- `userGroup`: Specifies the user group that can view the block, e.g., "All"
 
 This block data structure is an example. The block data is very flexible and can look different depending on the block type and implementation in the project.
 
@@ -465,11 +465,11 @@ With these tools in place, TypeScript files can be generated for the block data,
 
 ```typescript title="blocks.generated.ts"
 export interface PageContentBlockData {
-  blocks: Array<{
-    key: string;
-    visible: boolean;
-    type: string;
-    props:
+    blocks: Array<{
+        key: string;
+        visible: boolean;
+        type: string;
+        props:
             | DemoSpaceBlockData
             | RichTextBlockData
             | HeadlineBlockData
@@ -486,14 +486,14 @@ export interface PageContentBlockData {
             | ImageLinkBlockData
             | NewsListBlockData
             | LayoutBlockData;
-    userGroup: "All" | "Admin" | "User";
-  }>;
+        userGroup: "All" | "Admin" | "User";
+    }>;
 }
 
 export interface HeadlineBlockData {
-  eyebrow?: string;
-  headline: RichTextBlockData;
-  level: "header-one" | "header-two" | "header-three" | "header-four" | "header-five" | "header-six";
+    eyebrow?: string;
+    headline: RichTextBlockData;
+    level: "header-one" | "header-two" | "header-three" | "header-four" | "header-five" | "header-six";
 }
 
 # and other block data interfaces
@@ -507,10 +507,10 @@ You can find example implementations [in the demo project in the comet repositor
 
 The `@comet/site-react` package provides implementations for some important helper blocks:
 
--   [BlocksBlock](/docs/core-concepts/blocks/factories#site-blocksblock)
--   [ListBlock](/docs/core-concepts/blocks/factories#site-listblock)
--   [OneOfBlock](/docs/core-concepts/blocks/factories#site-oneofblock)
--   [OptionalBlock](/docs/core-concepts/blocks/factories#site-optionalblock)
+- [BlocksBlock](/docs/core-concepts/blocks/factories#site-blocksblock)
+- [ListBlock](/docs/core-concepts/blocks/factories#site-listblock)
+- [OneOfBlock](/docs/core-concepts/blocks/factories#site-oneofblock)
+- [OptionalBlock](/docs/core-concepts/blocks/factories#site-optionalblock)
 
 Once you have implemented the block components, you can use them to render the blocks in your page content.
 
@@ -543,10 +543,10 @@ The PixelImageBlock is a bit more complex because pixel images are automatically
 The API returns a **url template** that can be used to generate the image URL with the desired width and height.
 You must implement the `PixelImageBlock` yourself, but the `@comet/site-react` package provides helper methods to generate the image URL based on the block data:
 
--   `generateImageUrl`: Takes the url template, width and aspect ratio and returns the actual image URL
--   `parseAspectRatio`: Converts an aspect ratio string (e.g., "16:9") or number into a number representing the aspect ratio (e.g., 1.7777777777777777 for "16:9")
--   `calculateInheritAspectRatio`: Takes the width, height and cropping settings of an image and calculates the aspect ratio
--   `getMaxDimensionsFromArea`: Calculates the maximum width and height of the rendered image based on the width, height and aspect ratio
+- `generateImageUrl`: Takes the url template, width and aspect ratio and returns the actual image URL
+- `parseAspectRatio`: Converts an aspect ratio string (e.g., "16:9") or number into a number representing the aspect ratio (e.g., 1.7777777777777777 for "16:9")
+- `calculateInheritAspectRatio`: Takes the width, height and cropping settings of an image and calculates the aspect ratio
+- `getMaxDimensionsFromArea`: Calculates the maximum width and height of the rendered image based on the width, height and aspect ratio
 
 The urlTemplate returned by the API is either an absolute URL (default) or a relative URL.
 This depends on the `x-relative-dam-urls` sent by the site.
@@ -715,6 +715,6 @@ More information on how to integrate and work with COMET's block preview can be 
 
 ## Further Reading / Information
 
--   [Comet Starter - Next Site - Blueprint for new Comet Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
--   [Comet Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
--   [Comet Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)
+- [Comet Starter - Next Site - Blueprint for new Comet Projects](https://github.com/vivid-planet/comet-starter/tree/main/site)
+- [Comet Starter - Page Tree Node Query](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/Page.tsx)
+- [Comet Starter - Rendering blocks with Blocks Block](https://github.com/vivid-planet/comet-starter/blob/main/site/src/documents/pages/blocks/PageContentBlock.tsx)

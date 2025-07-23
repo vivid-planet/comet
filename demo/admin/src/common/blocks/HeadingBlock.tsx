@@ -1,6 +1,5 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { createRichTextBlock } from "@comet/cms-admin";
-import { HeadingBlockData } from "@src/blocks.generated";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField, createRichTextBlock } from "@comet/cms-admin";
+import { type HeadingBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 import { LinkBlock } from "./LinkBlock";
@@ -72,6 +71,7 @@ export const HeadingBlock = createCompositeBlock(
             },
             htmlTag: {
                 block: createCompositeBlockSelectField<HeadingBlockData["htmlTag"]>({
+                    label: <FormattedMessage id="headingBlock.htmlTag" defaultMessage="HTML tag" />,
                     defaultValue: "h2",
                     options: [
                         { value: "h1", label: <FormattedMessage id="headingBlock.headline1" defaultMessage="Headline 1" /> },
@@ -81,8 +81,6 @@ export const HeadingBlock = createCompositeBlock(
                         { value: "h5", label: <FormattedMessage id="headingBlock.headline5" defaultMessage="Headline 5" /> },
                         { value: "h6", label: <FormattedMessage id="headingBlock.headline6" defaultMessage="Headline 6" /> },
                     ],
-                    label: <FormattedMessage id="headingBlock.htmlTag" defaultMessage="HTML tag" />,
-                    fullWidth: true,
                 }),
             },
         },

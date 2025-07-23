@@ -1,4 +1,5 @@
-import { BlockMigration, BlockMigrationInterface } from "@comet/blocks-api";
+import { BlockMigration } from "../../migrations/BlockMigration";
+import { type BlockMigrationInterface } from "../../migrations/types";
 
 interface From {
     youtubeIdentifier?: string;

@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { type SitePreviewParams, verifySitePreviewJwt } from "../SitePreviewUtils";
 
-export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unknown /* deprecated: remove argument in v8 */) {
+export async function sitePreviewRoute(request: NextRequest) {
     const params = request.nextUrl.searchParams;
     const jwt = params.get("jwt");
     if (!jwt) {
@@ -20,6 +20,7 @@ export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unkn
     }
 
     const cookieJwt = await new SignJWT({
+        userId: data.userId,
         scope: data.scope,
         path: data.path,
         previewData: data.previewData,

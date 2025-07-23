@@ -1,5 +1,5 @@
+import { useDamConfig } from "./damConfig";
 import { damDefaultAcceptedMimeTypes } from "./damDefaultAcceptedMimeTypes";
-import { useDamConfig } from "./useDamConfig";
 
 const isSvgImage = (mimeType: string): boolean => {
     return mimeType === "image/svg+xml";

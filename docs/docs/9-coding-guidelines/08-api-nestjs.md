@@ -13,8 +13,8 @@ See: [What is the NestJS Runtime - Trilon Consulting](https://trilon.io/blog/wha
 
 ## Logging
 
--   Only log **warnings and errors** by default.
--   Additional logs (for debugging/profiling) should be toggleable via flags/settings.
+- Only log **warnings and errors** by default.
+- Additional logs (for debugging/profiling) should be toggleable via flags/settings.
 
 :::note
 **Recommendation:** Use the built-in [NestJS Logger](https://docs.nestjs.com/techniques/logger).
@@ -22,43 +22,43 @@ See: [What is the NestJS Runtime - Trilon Consulting](https://trilon.io/blog/wha
 
 ## Services vs. Controller/Resolver
 
--   **Controller/Resolver:** Represent the HTTP or GraphQL layer.
--   **Service:** Represents the **business logic** layer.
+- **Controller/Resolver:** Represent the HTTP or GraphQL layer.
+- **Service:** Represents the **business logic** layer.
 
 ### Service Best Practices
 
--   Services should be **decoupled from the HTTP/GraphQL layer** (e.g., avoid using `InputTypes` directly).
-    -   This allows them to be reused (e.g., in console jobs) without mocking types.
--   Prefer passing the entire **entity** rather than just the ID.
--   Services should be **easily testable**. ([Using MikroORM with NestJS framework](https://mikro-orm.io/docs/usage-with-nestjs#testing))
--   Use **Dependency Injection (DI)** to control access to services and enforce clear module boundaries/interfaces.
+- Services should be **decoupled from the HTTP/GraphQL layer** (e.g., avoid using `InputTypes` directly).
+    - This allows them to be reused (e.g., in console jobs) without mocking types.
+- Prefer passing the entire **entity** rather than just the ID.
+- Services should be **easily testable**. ([Using MikroORM with NestJS framework](https://mikro-orm.io/docs/usage-with-nestjs#testing))
+- Use **Dependency Injection (DI)** to control access to services and enforce clear module boundaries/interfaces.
 
 ### Service FAQs
 
--   **Is a service always required?**  
-    No — don’t create pass-through methods just for the sake of it.  
-    Yes — if business logic is reused or the HTTP layer becomes messy.
+- **Is a service always required?**  
+  No — don’t create pass-through methods just for the sake of it.  
+  Yes — if business logic is reused or the HTTP layer becomes messy.
 
--   **Can I create utility files?**  
-    Yes, as long as they are **stateless helper functions**.  
-    Do **not** consume other services or repositories within them.
-    :::note
-    Give them specific names — avoid generic `utils` dump folders.
-    :::
+- **Can I create utility files?**  
+  Yes, as long as they are **stateless helper functions**.  
+  Do **not** consume other services or repositories within them.
+  :::note
+  Give them specific names — avoid generic `utils` dump folders.
+  :::
 
 ### Access Control Lists (ACL) / Authorization Checks
 
--   Place ACL logic in a **dedicated ACL service** (e.g., `products.acl.service.ts`) or inline in the controller/resolver for specific permission checks.
--   **Do not** perform ACL checks in shared services: Console jobs, for instance, have no authenticated user and may lead to double-checking permissions.
--   ACLs should be **covered by unit tests**.
+- Place ACL logic in a **dedicated ACL service** (e.g., `products.acl.service.ts`) or inline in the controller/resolver for specific permission checks.
+- **Do not** perform ACL checks in shared services: Console jobs, for instance, have no authenticated user and may lead to double-checking permissions.
+- ACLs should be **covered by unit tests**.
 
 ## Avoid Using `process.env` Directly
 
 Directly accessing environment variables in the code has downsides:
 
--   Not testable (no dependency injection)
--   No central place to manage environment variables
--   No validation
+- Not testable (no dependency injection)
+- No central place to manage environment variables
+- No validation
 
 **Exception:** It's technically necessary in some cases, such as in app entry points (`main.ts`, `bootstrap.ts`).
 
@@ -81,14 +81,14 @@ We do not use rollbacks; issues are resolved with a new deployment.
 
 ### Data Types
 
--   Always use `uuidv4` as the primary key whenever possible.
-    -   Prevent listing or guessing of IDs (e.g., when they are part of a URL).
-    -   Can be generated "offline" (without a connection to the database), making the ID available in the code before insertion.
-    -   Are globally unique, which can sometimes be helpful.
-    -   Use `columnType: "uuid"` for UUID columns.
--   Always use `columnType: text` for strings. Explanation: See [Don't Do This - PostgreSQL wiki.](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_varchar.28n.29_by_default)
--   Prefer `jsonb` over `json`. Explanation: See [8.14. JSON Types](https://www.postgresql.org/docs/current/datatype-json.html)
--   For timestamps, always use `columnType: "timestamp with time zone"`.
+- Always use `uuidv4` as the primary key whenever possible.
+    - Prevent listing or guessing of IDs (e.g., when they are part of a URL).
+    - Can be generated "offline" (without a connection to the database), making the ID available in the code before insertion.
+    - Are globally unique, which can sometimes be helpful.
+    - Use `columnType: "uuid"` for UUID columns.
+- Always use `columnType: text` for strings. Explanation: See [Don't Do This - PostgreSQL wiki.](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_varchar.28n.29_by_default)
+- Prefer `jsonb` over `json`. Explanation: See [8.14. JSON Types](https://www.postgresql.org/docs/current/datatype-json.html)
+- For timestamps, always use `columnType: "timestamp with time zone"`.
 
 ### DB Defaults
 

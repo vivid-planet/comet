@@ -17,11 +17,11 @@ Security must be considered from the very beginning by all project participants.
 
 **Technical measures (examples):**
 
--   Input validation: The more precise, the better, e.g. use `IsUrl` instead of just `IsString`. This also helps limit further attacks (e.g., in XSS, where a URL allows much less exploitation than free text).
--   Canonicalization:
-    -   For email addresses (A@b.com vs. a@b.com) to prevent duplicate accounts and thereby prevent many other attacks (email spoofing or exploiting bugs where email addresses are compared canonically).
-    -   For URLs (https://www.a.com vs. https://www.a.com/ vs. https://www.a.com:443/) e.g., to prevent bypassing Allow or Deny lists.
--   Generate random numbers only with cryptographically secure means (e.g., [Node.js v24.2.0 Crypto Documentation](https://nodejs.org/api/crypto.html)).
+- Input validation: The more precise, the better, e.g. use `IsUrl` instead of just `IsString`. This also helps limit further attacks (e.g., in XSS, where a URL allows much less exploitation than free text).
+- Canonicalization:
+    - For email addresses (A@b.com vs. a@b.com) to prevent duplicate accounts and thereby prevent many other attacks (email spoofing or exploiting bugs where email addresses are compared canonically).
+    - For URLs (https://www.a.com vs. https://www.a.com/ vs. https://www.a.com:443/) e.g., to prevent bypassing Allow or Deny lists.
+- Generate random numbers only with cryptographically secure means (e.g., [Node.js v24.2.0 Crypto Documentation](https://nodejs.org/api/crypto.html)).
 
 ## Privacy by Design
 
@@ -31,9 +31,9 @@ Privacy must be considered from the very beginning by all project participants. 
 
 **Technical measures (examples):**
 
--   Store data only when necessary.
--   Privacy-friendly default settings.
--   Delete data after processing (e.g., delete contact requests after one year).
+- Store data only when necessary.
+- Privacy-friendly default settings.
+- Delete data after processing (e.g., delete contact requests after one year).
 
 ## Least Privilege
 
@@ -41,7 +41,7 @@ The software or user must not request or use more system permissions than absolu
 
 **Technical measures (examples):**
 
--   User authorization always starts with no rights and only grants what is necessary — not the other way around.
+- User authorization always starts with no rights and only grants what is necessary — not the other way around.
 
 ## Defense in Depth
 
@@ -49,8 +49,8 @@ Many mechanisms — on many levels — provide good protection against threats.
 
 **Technical measures (examples):**
 
--   Combination of IP blocking + authentication.
--   Rate limiting.
+- Combination of IP blocking + authentication.
+- Rate limiting.
 
 ## Fail-Secure / Fail-Safe
 
@@ -58,8 +58,8 @@ It should be defined how the software reacts in case of failure. Forced failure 
 
 **Technical measures (examples):**
 
--   Deny-Access-By-Default (if a request is not specifically allowed, it is denied; e.g., ACLs query the positive case and deny access by default).
--   Database transactions to avoid partial updates (A bank transfer is only successful if both account balances have been updated. If only one balance could be changed, it must be rolled back).
+- Deny-Access-By-Default (if a request is not specifically allowed, it is denied; e.g., ACLs query the positive case and deny access by default).
+- Database transactions to avoid partial updates (A bank transfer is only successful if both account balances have been updated. If only one balance could be changed, it must be rolled back).
 
 ## Keep it Simple
 
@@ -75,7 +75,7 @@ Administrative interfaces should be separated from non-administrative ones as mu
 
 **Technical measures (examples):**
 
--   Access to the API from the site (without authentication) should only occur via BFF (Backend for Frontend).
+- Access to the API from the site (without authentication) should only occur via BFF (Backend for Frontend).
 
 ## Psychological Acceptability
 
@@ -95,5 +95,5 @@ Security components should ideally be developed only once, well tested, maintain
 
 **Technical measures (examples):**
 
--   Use libraries or proven technologies.
--   Comet offers all necessary tools for authentication / authorization.
+- Use libraries or proven technologies.
+- Comet offers all necessary tools for authentication / authorization.

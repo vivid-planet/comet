@@ -15,7 +15,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft, ArrowRight } from "@comet/admin-icons";
-import { IconButton, Link } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
@@ -312,15 +312,15 @@ export const StackLinkMuiLink = {
                 <StackSwitch>
                     <StackPage name="page1">
                         <h3>Page 1</h3>
-                        <Link component={StackLink} pageName="page2" payload="test">
+                        <StackLink pageName="page2" payload="test">
                             StackLink-based MuiLink to page2
-                        </Link>
+                        </StackLink>
                     </StackPage>
                     <StackPage name="page2">
                         <h3>Page 2</h3>
-                        <Link component={StackLink} pageName="page1" payload="test">
+                        <StackLink pageName="page1" payload="test">
                             StackLink-based MuiLink to page1
-                        </Link>
+                        </StackLink>
                     </StackPage>
                 </StackSwitch>
             </Stack>
@@ -340,7 +340,7 @@ export const StackLinkButton = {
                         <Button component={StackLink} pageName="page2" payload="test">
                             StackLink-based Button to page2
                         </Button>
-                        <Tooltip trigger="hover" title="StackLink-based IconButton to page2">
+                        <Tooltip title="StackLink-based IconButton to page2">
                             <IconButton component={StackLink} pageName="page2" payload="test">
                                 <ArrowRight />
                             </IconButton>
@@ -351,7 +351,7 @@ export const StackLinkButton = {
                         <Button component={StackLink} pageName="page1" payload="test">
                             StackLink-based Button to page1
                         </Button>
-                        <Tooltip trigger="hover" title="StackLink-based IconButton to page1">
+                        <Tooltip title="StackLink-based IconButton to page1">
                             <IconButton component={StackLink} pageName="page1" payload="test">
                                 <ArrowLeft />
                             </IconButton>

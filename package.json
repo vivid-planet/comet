@@ -5,35 +5,36 @@
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
+    "description": "Comet Monorepo",
     "license": "BSD-2-Clause",
     "scripts": {
         "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
-        "build:storybook": "pnpm recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
-        "build:packages": "pnpm recursive --filter '@comet/*' run build",
-        "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
-        "clean": "pnpm recursive run clean",
+        "build:storybook": "pnpm --recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
+        "build:packages": "pnpm --recursive --filter '@comet/*' run build",
+        "build:docs": "pnpm --recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter '!@comet/admin-generator' --filter 'comet-docs' run build",
+        "clean": "pnpm --recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
         "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
         "dev:admin": "dev-pm start @comet-admin",
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",
         "dev:cms:api": "dev-pm start @cms-api",
-        "dev:cms:site": "dev-pm start @cms-site",
         "dev:cms:site-nextjs": "dev-pm start @site-nextjs",
         "dev:cms:site-react": "dev-pm start @site-react",
         "dev:demo": "dev-pm start @demo",
         "dev:demo:admin": "dev-pm start @demo-admin",
         "dev:demo:api": "dev-pm start @demo-api",
         "dev:demo:site": "dev-pm start @demo-site",
-        "postinstall": "husky install",
-        "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
-        "lint": "pnpm lint:root && pnpm recursive run lint",
-        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
-        "lint:eslint": "pnpm recursive run lint:eslint",
-        "lint:tsc": "pnpm recursive run lint:tsc",
+        "dev:docs": "dev-pm start docs",
+        "intl:extract": "formatjs extract './packages/admin/**/*.{ts,tsx}' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
+        "lint": "pnpm lint:root && pnpm --recursive run lint && pnpm lint:knip",
+        "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
+        "lint:eslint": "pnpm --recursive run lint:eslint",
+        "lint:tsc": "pnpm --recursive run lint:tsc",
+        "lint:knip": "pnpm --recursive run api-generator && pnpm --recursive run gql:types && pnpm --recursive run build:preBuild && pnpm --recursive run build-server && knip --exports --files --dependencies --tags=-knipignore --no-gitignore",
         "storybook": "dev-pm start storybook",
-        "docs": "dev-pm start docs",
-        "test": "pnpm recursive run test",
+        "test": "pnpm --recursive run test",
+        "prepare": "husky",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:packages && $npm_execpath changeset publish",
         "browser:demo": "run-p browser:demo:api browser:demo:admin browser:demo:site browser:demo:jaeger",
@@ -43,57 +44,26 @@
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.29.5",
         "@comet/cli": "workspace:*",
-        "@comet/dev-process-manager": "^2.5.1",
-        "@comet/eslint-plugin": "workspace:*",
-        "@formatjs/cli": "^6.0.0",
-        "@types/node": "^22.0.0",
-        "cspell": "^8.15.4",
-        "dotenv-cli": "^7.0.0",
-        "husky": "^7.0.4",
-        "lint-staged": "^12.3.7",
-        "open-cli": "^8.0.0",
+        "@comet/dev-process-manager": "^2.7.0",
+        "@formatjs/cli": "^6.7.2",
+        "@types/node": "^22.16.3",
+        "knip": "^5.61.3",
+        "cspell": "^8.19.4",
+        "dotenv-cli": "^7.4.4",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.5.2",
         "npm-run-all2": "^7.0.2",
-        "prettier": "^2.0.0",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.2.2",
+        "open-cli": "^8.0.0",
+        "prettier": "^3.6.2",
+        "rimraf": "^6.0.1",
+        "typescript": "^5.7.3",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@8.15.5",
+    "packageManager": "pnpm@10.13.1",
     "engines": {
         "node": "22",
-        "pnpm": "8"
-    },
-    "dependencies": {
-        "@changesets/cli": "^2.26.0"
-    },
-    "pnpm": {
-        "packageExtensions": {
-            "@docusaurus/theme-live-codeblock": {
-                "peerDependencies": {
-                    "react-live": "^2.4.1"
-                }
-            },
-            "next@14": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            },
-            "styled-components": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            },
-            "react-intl": {
-                "peerDependencies": {
-                    "@types/react": "*"
-                }
-            },
-            "swiper": {
-                "peerDependencies": {
-                    "@types/react": "^18.0.0"
-                }
-            }
-        }
+        "pnpm": "10.13.1"
     }
 }

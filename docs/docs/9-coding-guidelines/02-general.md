@@ -60,8 +60,8 @@ Abbreviations make it harder read code. Even more for new Devs or Devs who are n
 
 ### Exceptions:
 
--   Well-known abbreviations such as protocols (HTML, CSS, TCP, IP, SSO, API, …)
--   Abbreviations coming from a 3rd party (API, Library, …)
+- Well-known abbreviations such as protocols (HTML, CSS, TCP, IP, SSO, API, …)
+- Abbreviations coming from a 3rd party (API, Library, …)
 
 When using PascalCase or camelCase abbreviations must not violate it.
 

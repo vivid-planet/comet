@@ -6,7 +6,7 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormRangeInput,
-    FinalFormSubmitEvent,
+    type FinalFormSubmitEvent,
     Loading,
     OnChangeField,
     SelectField,
@@ -16,45 +16,45 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { DateField, DateTimeField } from "@comet/admin-date-time";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
+    type BlockState,
+    createFinalFormBlock,
     DamImageBlock,
     FileUploadField,
-    GQLFinalFormFileUploadFragment,
+    type GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { InputAdornment, MenuItem } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
+import { type GQLProductType } from "@src/graphql.generated";
 import {
-    GQLManufacturerCountriesQuery,
-    GQLManufacturerCountriesQueryVariables,
-    GQLManufacturersQuery,
-    GQLManufacturersQueryVariables,
+    type GQLManufacturerCountriesQuery,
+    type GQLManufacturerCountriesQueryVariables,
+    type GQLManufacturersQuery,
+    type GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
-import { FormApi } from "final-form";
+import { type FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "./helpers/FutureProductNotice";
 import {
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
-    GQLProductTagsSelectQuery,
-    GQLProductTagsSelectQueryVariables,
+    type GQLProductCategoriesSelectQuery,
+    type GQLProductCategoriesSelectQueryVariables,
+    type GQLProductTagsSelectQuery,
+    type GQLProductTagsSelectQueryVariables,
 } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLProductFormManualFragment,
-    GQLProductQuery,
-    GQLProductQueryVariables,
-    GQLUpdateProductMutation,
-    GQLUpdateProductMutationVariables,
+    type GQLCreateProductMutation,
+    type GQLCreateProductMutationVariables,
+    type GQLProductFormManualFragment,
+    type GQLProductQuery,
+    type GQLProductQueryVariables,
+    type GQLUpdateProductMutation,
+    type GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 
 interface FormProps {
@@ -72,9 +72,10 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image"> & {
+type FormValues = Omit<ProductFormManualFragment, "image" | "lastCheckedAt"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string; label: string };
+    lastCheckedAt?: Date | null;
 };
 
 // TODO should we use a deep partial here?
@@ -133,9 +134,10 @@ export function ProductForm({ id, width }: FormProps) {
 
         const output = {
             ...formValues,
+            description: formValues.description ?? null,
             image: rootBlocks.image.state2Output(formValues.image),
             type: formValues.type as GQLProductType,
-            category: formValues.category?.id,
+            category: formValues.category ? formValues.category.id : null,
             tags: formValues.tags.map((i) => i.id),
             articleNumbers: [],
             discounts: [],
@@ -199,12 +201,7 @@ export function ProductForm({ id, width }: FormProps) {
                         startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         disableSlider
                     />
-                    <TextAreaField
-                        required
-                        fullWidth
-                        name="description"
-                        label={<FormattedMessage id="product.description" defaultMessage="Description" />}
-                    />
+                    <TextAreaField fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description" />} />
                     <DateField
                         required
                         fullWidth
@@ -285,7 +282,6 @@ export function ProductForm({ id, width }: FormProps) {
                     <SelectField
                         name="additionalTypes"
                         label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
-                        required
                         fullWidth
                         multiple
                     >

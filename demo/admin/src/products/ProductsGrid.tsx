@@ -5,12 +5,13 @@ import {
     CrudMoreActionsMenu,
     CrudVisibility,
     dataGridDateColumn,
+    dataGridManyToManyColumn,
+    dataGridOneToManyColumn,
     DataGridToolbar,
-    ExportApi,
+    type ExportApi,
     FillSpace,
-    filterByFragment,
     GridCellContent,
-    GridColDef,
+    type GridColDef,
     GridColumnsButton,
     GridFilterButton,
     messages,
@@ -18,17 +19,20 @@ import {
     muiGridSortToGql,
     renderStaticSelectCell,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Disabled, Edit, Excel, Online, StateFilled as StateFilledIcon } from "@comet/admin-icons";
-import { DamImageBlock } from "@comet/cms-admin";
+import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import {
+    DataGridPro,
+    GridFilterInputSingleSelect,
+    type GridRowSelectionModel,
+    type GridSlotsComponent,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -36,87 +40,82 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
-    GQLCreateProductMutation,
-    GQLCreateProductMutationVariables,
-    GQLDeleteProductMutation,
-    GQLDeleteProductMutationVariables,
-    GQLProductGridRelationsQuery,
-    GQLProductGridRelationsQueryVariables,
-    GQLProductsListManualFragment,
-    GQLProductsListQuery,
-    GQLProductsListQueryVariables,
-    GQLUpdateProductStatusMutation,
-    GQLUpdateProductStatusMutationVariables,
+    type GQLDeleteProductMutation,
+    type GQLDeleteProductMutationVariables,
+    type GQLProductGridRelationsQuery,
+    type GQLProductGridRelationsQueryVariables,
+    type GQLProductsListManualFragment,
+    type GQLProductsListQuery,
+    type GQLProductsListQueryVariables,
+    type GQLUpdateProductStatusMutation,
+    type GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar({ exportApi, selectionModel }: { exportApi: ExportApi; selectionModel: GridSelectionModel }) {
+type ProductsGridToolbarProps = {
+    exportApi: ExportApi;
+    selectionModel: GridRowSelectionModel;
+};
+
+function ProductsGridToolbar({ exportApi, selectionModel }: ProductsGridToolbarProps) {
     const client = useApolloClient();
     const theme = useTheme();
 
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <ToolbarItem>
-                <GridColumnsButton />
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
+            <GridColumnsButton />
             <FillSpace />
-            <ToolbarActions>
-                <CrudMoreActionsMenu
-                    overallActions={[
-                        {
-                            label: <FormattedMessage {...messages.downloadAsExcel} />,
-                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
-                            onClick: () => exportApi.exportGrid(),
-                            disabled: exportApi.loading,
+            <CrudMoreActionsMenu
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                    <PublishAllProducts key="publish" />,
+                ]}
+                selectiveActions={[
+                    {
+                        label: "Publish",
+                        icon: <Online htmlColor={theme.palette.success.main} />,
+                        onClick: () => {
+                            for (const id of selectionModel) {
+                                client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: id as string, status: "Published" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: id as string, status: "Published" },
+                                    },
+                                });
+                            }
                         },
-                        <PublishAllProducts key="publish" />,
-                    ]}
-                    selectiveActions={[
-                        {
-                            label: "Publish",
-                            icon: <Online htmlColor={theme.palette.success.main} />,
-                            onClick: () => {
-                                for (const id of selectionModel) {
-                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                        mutation: updateProductStatusMutation,
-                                        variables: { id: id as string, status: "Published" },
-                                        optimisticResponse: {
-                                            __typename: "Mutation",
-                                            updateProduct: { __typename: "Product", id: id as string, status: "Published" },
-                                        },
-                                    });
-                                }
-                            },
+                    },
+                    {
+                        label: "Unpublish",
+                        icon: <Disabled />,
+                        onClick: () => {
+                            for (const id of selectionModel) {
+                                client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: id as string, status: "Unpublished" },
+                                    optimisticResponse: {
+                                        __typename: "Mutation",
+                                        updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
+                                    },
+                                });
+                            }
                         },
-                        {
-                            label: "Unpublish",
-                            icon: <Disabled />,
-                            onClick: () => {
-                                for (const id of selectionModel) {
-                                    client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                        mutation: updateProductStatusMutation,
-                                        variables: { id: id as string, status: "Unpublished" },
-                                        optimisticResponse: {
-                                            __typename: "Mutation",
-                                            updateProduct: { __typename: "Product", id: id as string, status: "Unpublished" },
-                                        },
-                                    });
-                                }
-                            },
-                        },
-                    ]}
-                    selectionSize={selectionModel.length}
-                />
-                <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
-                </Button>
-            </ToolbarActions>
+                    },
+                ]}
+                selectionSize={selectionModel.length}
+            />
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -128,7 +127,7 @@ export function ProductsGrid() {
     const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
-    const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -150,6 +149,7 @@ export function ProductsGrid() {
                 return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
             disableExport: true,
+            filterable: false,
         },
         {
             field: "title",
@@ -174,9 +174,30 @@ export function ProductsGrid() {
             width: 100,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: ["cap", "shirt", "tie"],
+            valueOptions: [
+                {
+                    value: "cap",
+                    label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.type.cap.primary" defaultMessage="Great cap" />}
+                            icon={<EducationIcon color="primary" />}
+                        />
+                    ),
+                },
+                {
+                    value: "shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
         },
         {
+            type: "singleSelect",
             field: "additionalTypes",
             headerName: "Additional Types",
             width: 150,
@@ -205,50 +226,27 @@ export function ProductsGrid() {
             disableExport: true,
         },
         {
+            ...dataGridManyToManyColumn,
             field: "tags",
             headerName: "Tags",
             flex: 1,
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
-            filterOperators: [
-                {
-                    label: "Search",
-                    value: "search",
-                    getApplyFilterFn: (filterItem) => {
-                        throw new Error("not implemented, we filter server side");
-                    },
-                    InputComponent: GridFilterInputValue,
-                },
-            ],
+            disableExport: true,
+        },
+        {
+            ...dataGridOneToManyColumn,
+            field: "variants",
+            headerName: "Variants",
+            flex: 1,
+            minWidth: 150,
+            renderCell: (params) => <>{params.row.variants.map((variant) => variant.name).join(", ")}</>,
             disableExport: true,
         },
         {
             field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
-            type: "singleSelect",
-            valueOptions: [
-                {
-                    value: true,
-                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
-                    cellContent: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
-                            icon={<StateFilledIcon color="success" />}
-                        />
-                    ),
-                },
-                {
-                    value: false,
-                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
-                    cellContent: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
-                            icon={<StateFilledIcon color="error" />}
-                        />
-                    ),
-                },
-            ],
-            renderCell: renderStaticSelectCell,
+            type: "boolean",
             flex: 1,
             minWidth: 80,
             disableExport: true,
@@ -265,7 +263,7 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 130,
             type: "boolean",
-            valueGetter: (params) => params.row.status == "Published",
+            valueGetter: (params, row) => row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
@@ -289,12 +287,13 @@ export function ProductsGrid() {
             field: "manufacturer",
             headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
             sortable: false,
-            valueGetter: ({ value }) => value?.name,
+            valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: [ManufacturerFilterOperator],
             disableExport: true,
         },
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
@@ -308,28 +307,6 @@ export function ProductsGrid() {
                             <Edit />
                         </IconButton>
                         <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
-                                    mutation: createProductMutation,
-                                    variables: {
-                                        input: {
-                                            description: input.description,
-                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                            inStock: input.inStock,
-                                            price: input.price,
-                                            slug: input.slug,
-                                            title: input.title,
-                                            type: input.type,
-                                            category: input.category?.id,
-                                            tags: input.tags.map((tag) => tag.id),
-                                            colors: input.colors,
-                                            articleNumbers: input.articleNumbers,
-                                            discounts: input.discounts,
-                                            statistics: { views: 0 },
-                                        },
-                                    },
-                                });
-                            }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
                                     mutation: deleteProductMutation,
@@ -337,9 +314,6 @@ export function ProductsGrid() {
                                 });
                             }}
                             refetchQueries={["ProductsList"]}
-                            copyData={() => {
-                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
-                            }}
                         />
                     </>
                 );
@@ -351,11 +325,14 @@ export function ProductsGrid() {
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            sort: muiGridSortToGql(sortModel, columns),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
@@ -379,22 +356,20 @@ export function ProductsGrid() {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            error={error}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { exportApi, selectionModel },
+            slotProps={{
+                toolbar: { exportApi, selectionModel } as ProductsGridToolbarProps,
             }}
             checkboxSelection
             keepNonExistentRowsSelected
-            selectionModel={selectionModel}
-            onSelectionModelChange={(selectionModel) => {
+            rowSelectionModel={selectionModel}
+            onRowSelectionModelChange={(selectionModel) => {
                 setSelectionModel(selectionModel);
             }}
         />
@@ -427,6 +402,7 @@ const productsFragment = gql`
         }
         variants {
             id
+            name
         }
         manufacturer {
             name
@@ -473,14 +449,6 @@ const productRelationsQuery = gql`
 const deleteProductMutation = gql`
     mutation DeleteProduct($id: ID!) {
         deleteProduct(id: $id)
-    }
-`;
-
-const createProductMutation = gql`
-    mutation CreateProduct($input: ProductInput!) {
-        createProduct(input: $input) {
-            id
-        }
     }
 `;
 

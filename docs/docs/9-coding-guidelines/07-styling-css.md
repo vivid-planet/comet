@@ -5,7 +5,7 @@ sidebar_position: -5
 
 ## Theme
 
--   A theme should help developers style quickly and consistently. It should contain definitions/variables for: colors, buttons, forms, fonts, breakpoints, easings, typography.
+- A theme should help developers style quickly and consistently. It should contain definitions/variables for: colors, buttons, forms, fonts, breakpoints, easings, typography.
 
 ### Color Naming
 

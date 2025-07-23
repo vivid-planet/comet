@@ -1,15 +1,15 @@
 "use client";
 
 import isEqual from "lodash.isequal";
-import { type PropsWithChildren, createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
 import styles from "./IFrameBridge.module.scss";
-import { type AdminMessage, type IFrameMessage, AdminMessageType, IFrameMessageType } from "./IFrameMessage";
+import { type AdminMessage, AdminMessageType, type IFrameMessage, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
 import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement, PREVIEW_ELEMENT_SCROLLED_INTO_VIEW_EVENT } from "./utils";
 
-export type PreviewElement = {
+type PreviewElement = {
     element: HTMLElement;
     adminRoute: string;
     label: string;
@@ -240,7 +240,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 if (message.hasOwnProperty("cometType")) {
                     onReceiveMessage(message as AdminMessage);
                 }
-            } catch (e) {
+            } catch {
                 // empty
             }
         };

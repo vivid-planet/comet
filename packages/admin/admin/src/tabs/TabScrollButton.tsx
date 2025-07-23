@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseProps, ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { ButtonBase, type ButtonBaseProps, type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
 import isMobile from "is-mobile";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";

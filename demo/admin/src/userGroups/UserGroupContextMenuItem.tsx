@@ -1,7 +1,15 @@
 import { CancelButton, OkayButton, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
-import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
-import { GQLUserGroup } from "@src/graphql.generated";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    ListItemIcon,
+    MenuItem,
+} from "@mui/material";
+import { type GQLUserGroup } from "@src/graphql.generated";
 import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";

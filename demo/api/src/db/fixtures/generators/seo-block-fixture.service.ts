@@ -1,5 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
+import { ExtractBlockInputFactoryProps, SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";

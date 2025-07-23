@@ -1,19 +1,16 @@
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
-import { BlockInterface, createOneOfBlock } from "@comet/blocks-admin";
-import { ComponentType } from "react";
+import { type ComponentType } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
+import { createOneOfBlock } from "../blocks/factories/createOneOfBlock";
 import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
+import { type BlockInterface } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { RedirectForm } from "./RedirectForm";
 import { RedirectsGrid } from "./RedirectsGrid";
-
-interface RedirectsPageProps {
-    redirectPathAfterChange?: string;
-}
 
 const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
     ...InternalLinkBlock,
@@ -27,28 +24,40 @@ const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 
+interface RedirectsPageProps {
+    redirectPathAfterChange?: string;
+}
+
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>;
+    linkBlock?: BlockInterface;
     scopeParts?: string[];
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
-    const linkBlock = createOneOfBlock({
+export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInterface>) {
+    return createOneOfBlock({
         supportedBlocks: { internal: RedirectsInternalLinkBlock, external: RedirectsExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
         displayName: <FormattedMessage id="comet.blocks.link" defaultMessage="Link" />,
         allowEmpty: false,
     });
+}
 
+function createRedirectsPage({
+    linkBlock = createRedirectsLinkBlock(),
+    scopeParts = [],
+}: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
     function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
         const intl = useIntl();
         useContentScopeConfig({ redirectPathAfterChange });
 
         const { scope: completeScope } = useContentScope();
-        const scope = scopeParts.reduce((acc, scopePart) => {
-            acc[scopePart] = completeScope[scopePart];
-            return acc;
-        }, {} as { [key: string]: unknown });
+        const scope = scopeParts.reduce(
+            (acc, scopePart) => {
+                acc[scopePart] = completeScope[scopePart];
+                return acc;
+            },
+            {} as { [key: string]: unknown },
+        );
         const isGlobalScoped = Object.keys(scope).length === 0;
 
         return (

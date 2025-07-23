@@ -1,13 +1,15 @@
-import { Button, ButtonProps, ComponentsOverrides, IconButton, Tooltip } from "@mui/material";
-import { css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
+// eslint-disable-next-line no-restricted-imports
+import { Button, type ButtonProps, type ComponentsOverrides, IconButton } from "@mui/material";
+import { css, type Theme, useTheme, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../../helpers/useWindowSize";
+import { Tooltip } from "../../Tooltip";
 
 export type ToolbarActionButtonClassKey = "root" | "tooltip" | "button" | "iconButton" | "text" | "outlined" | "contained";
 
-type ToolbarActionButtonProps = ButtonProps &
+type ToolbarActionButtonProps = Omit<ButtonProps, "loading"> &
     ThemedComponentBaseProps<{
         tooltip: typeof Tooltip;
         iconButton: typeof IconButton;
@@ -36,19 +38,16 @@ const StyledIconButton = createComponentSlot(IconButton)<ToolbarActionButtonClas
             background: ${theme.palette.primary.main};
             color: ${theme.palette.primary.contrastText};
             border-radius: 4px;
-
             &:hover {
                 background: ${theme.palette.primary.dark};
             }
         `}
-
         ${ownerState.variant === "outlined" &&
         css`
             border-radius: 4px;
             border-width: 1px;
             border-style: solid;
             border-color: ${theme.palette.grey[200]};
-
             &:hover {
                 background-color: ${theme.palette.grey[50]};
                 border-color: ${theme.palette.grey[200]};
