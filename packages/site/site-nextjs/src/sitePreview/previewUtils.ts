@@ -45,7 +45,7 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
         if (!draftMode().isEnabled) return null;
     }
 
-    const cookie = cookies().get("__comet_preview");
+    const cookie = cookies().get("__comet_site_preview");
     if (cookie) {
         return verifyJwt<PreviewParams>(cookie.value);
     }
@@ -58,5 +58,5 @@ export async function setSitePreviewParams(payload: PreviewParams & { [key: stri
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("1 day")
         .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
-    cookies().set("__comet_preview", jwt, { httpOnly: true, sameSite: "lax" });
+    cookies().set("__comet_site_preview", jwt, { httpOnly: true, sameSite: "lax" });
 }
