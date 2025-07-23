@@ -3,7 +3,7 @@ import { errors, jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode, headers as getHeaders } from "next/headers";
 
 // Return type of previewParams function
-export type PreviewParams = {
+type PreviewParams = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     scope: Record<string, any>;
     previewData?: PreviewData;
