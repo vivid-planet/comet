@@ -2,10 +2,6 @@
 title: Coding Guidelines
 ---
 
-## Context
-
-We are a company with many projects. Our projects are long-term (spanning several years), and developers frequently switch between them. This must be taken into account in all aspects of development.
-
 ## Scope
 
 These coding best practices were primarily developed for Comet projects. However, many of the principles are generally applicable.
