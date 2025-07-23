@@ -53,7 +53,7 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
     return null;
 }
 
-export async function setPreviewParams(payload: PreviewParams & { [key: string]: unknown }) {
+export async function setSitePreviewParams(payload: PreviewParams & { [key: string]: unknown }) {
     const jwt = await new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("1 day")
