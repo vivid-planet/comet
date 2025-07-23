@@ -93,7 +93,7 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
             body = data;
         }
 
-        if (this.isNodeJSReadableStream(body)) {
+        if ("pipe" in body) {
             const upload = new Upload({
                 client: this.client,
                 params: {
@@ -164,9 +164,5 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
 
     getBackendFilePathPrefix(): string {
         return "s3://";
-    }
-
-    private isNodeJSReadableStream(data: NodeJS.ReadableStream | Buffer): data is NodeJS.ReadableStream {
-        return "pipe" in data && typeof data.pipe === "function";
     }
 }
