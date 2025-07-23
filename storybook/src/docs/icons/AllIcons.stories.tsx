@@ -1,8 +1,8 @@
 import { ClearInputAdornment } from "@comet/admin";
 import * as imports from "@comet/admin-icons";
-import { Grid, InputAdornment, InputBase, type SvgIconProps, Typography } from "@mui/material";
+import { Grid, InputAdornment, InputBase, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { type ComponentType, useState } from "react";
+import { useState } from "react";
 import { useDebounce } from "use-debounce";
 
 const matchesSearchQuery = (str: string, query: string): boolean => {
@@ -39,26 +39,22 @@ const IconWrapper = styled("div")`
 `;
 
 const SearchIcon = imports.Search;
-const icons = Object.fromEntries(Object.entries(imports).filter(([key]) => !key.endsWith("SearchTerms") && key !== "__esModule"));
 
-const searchTerms = Object.fromEntries(
-    Object.keys(icons)
-        .map((key) => {
-            const searchKey = `${key}SearchTerms`;
-            return searchKey in imports ? [key, (imports as unknown as Record<string, string>)[searchKey]] : null;
-        })
-        .filter(Boolean) as [string, string][],
-);
+const iconsWithSearchTerms = Object.keys(imports)
+    .filter((key) => !key.endsWith("SearchTerms") && key !== "__esModule")
+    .map((key) => ({
+        name: key,
+        Icon: imports[key as keyof typeof imports],
+        searchTerms: (imports as any)[`${key}SearchTerms`] || "",
+    }));
 
 const IconsGrid = ({ searchQuery }: { searchQuery: string }) => (
     <Grid container spacing={4}>
-        {Object.keys(icons).map((key) => {
-            const searchString = searchTerms[key] ?? key;
-            if (matchesSearchQuery(searchString, searchQuery)) {
-                const Icon = icons[key] as ComponentType<SvgIconProps>;
+        {iconsWithSearchTerms.map(({ name, searchTerms, Icon }) => {
+            if (matchesSearchQuery(searchTerms, searchQuery)) {
                 return (
                     <Grid
-                        key={key}
+                        key={name}
                         size={{
                             xs: 12,
                             sm: 6,
@@ -70,11 +66,12 @@ const IconsGrid = ({ searchQuery }: { searchQuery: string }) => (
                             <IconWrapper>
                                 <Icon fontSize="large" />
                             </IconWrapper>
-                            <Typography>{key}</Typography>
+                            <Typography>{name}</Typography>
                         </IconContainer>
                     </Grid>
                 );
             }
+            return null;
         })}
     </Grid>
 );
