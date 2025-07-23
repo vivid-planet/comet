@@ -1,6 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-import { type SitePreviewParams, verifyJwt } from "../previewUtils";
+import { type SitePreviewJwtPayload, verifyJwt } from "../previewUtils";
 
 async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse) {
     const params = req.query;
@@ -10,7 +10,7 @@ async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: 
         return res.status(400).json({ error: "JWT-Parameter is missing." });
     }
 
-    const data = await verifyJwt<SitePreviewParams>(jwt);
+    const data = await verifyJwt<SitePreviewJwtPayload>(jwt);
     if (!data) {
         return res.status(400).json({ error: "JWT-validation failed." });
     }

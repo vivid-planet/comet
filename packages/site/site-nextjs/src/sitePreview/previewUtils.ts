@@ -2,14 +2,21 @@ import { type PreviewData } from "@comet/site-react";
 import { errors, jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode, headers as getHeaders } from "next/headers";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Scope = Record<string, any>;
-
-export type SitePreviewParams = {
-    userId: string;
-    scope: Scope;
-    path: string;
+// Return type of previewParams function
+export type PreviewParams = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    scope: Record<string, any>;
     previewData?: PreviewData;
+};
+
+// For site preview cookie, used by SitePreviewAuthService
+export type SitePreviewParams = PreviewParams & {
+    userId: string;
+};
+
+// Type created by sitePreviewJwt resolver in cms-api
+export type SitePreviewJwtPayload = SitePreviewParams & {
+    path: string;
 };
 
 export async function verifyJwt<T>(jwt: string): Promise<T | null> {
@@ -25,10 +32,14 @@ export async function verifyJwt<T>(jwt: string): Promise<T | null> {
     }
 }
 
-export type PreviewParams = {
-    scope: Scope;
-    previewData?: PreviewData;
-};
+export async function setSitePreviewParams(payload: SitePreviewParams) {
+    const jwt = await new SignJWT(payload)
+        .setProtectedHeader({ alg: "HS256" })
+        .setExpirationTime("1 day")
+        .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
+    cookies().set("__comet_site_preview", jwt, { httpOnly: true, sameSite: "lax" });
+    draftMode().enable();
+}
 
 /**
  * Helper for SitePreview
@@ -51,12 +62,4 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
     }
 
     return null;
-}
-
-export async function setSitePreviewParams(payload: PreviewParams & { [key: string]: unknown }) {
-    const jwt = await new SignJWT(payload)
-        .setProtectedHeader({ alg: "HS256" })
-        .setExpirationTime("1 day")
-        .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
-    cookies().set("__comet_site_preview", jwt, { httpOnly: true, sameSite: "lax" });
 }
