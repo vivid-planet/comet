@@ -77,9 +77,6 @@ export class EnvironmentVariables {
     @IsString()
     IMGPROXY_KEY: string;
 
-    @IsInt()
-    IMGPROXY_QUALITY = 80;
-
     @IsString()
     @MinLength(16)
     DAM_SECRET: string;
