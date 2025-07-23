@@ -40,9 +40,6 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
     if (headers.has("x-block-preview")) {
         return verifyJwt<PreviewParams>(headers.get("x-block-preview") || "");
     }
-    if (!options.skipDraftModeCheck) {
-        if (!draftMode().isEnabled) return null;
-    }
 
     if (!options.skipDraftModeCheck) {
         if (!draftMode().isEnabled) return null;
