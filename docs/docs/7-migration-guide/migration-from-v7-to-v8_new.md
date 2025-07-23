@@ -5,39 +5,33 @@ sidebar_position: -8
 
 # Migrating from v7 to v8
 
-:::warning Use the upgrade scripts
+The following sections go over all necessary changes.
+They also give recommendations on how to structure your PRs and commits.
 
-Start by executing the upgrade script in the root of your project:
+:::warning
+Many changes can be handled by upgrade scripts. **Use them!**
 
-```sh
-npx @comet/upgrade@latest v8
-```
-
-That handles most of the necessary changes.
-
+The 🤖 emoji marks changes that can be handled by an upgrade script.
+You just have to execute the script.
+Below the command there usually is a details drawer that describes the changes made.
 :::
 
-The following sections go over all necessary changes.
-All changes handled by the upgrade script are hidden in closed accordions.
-Refer to the hidden content if you face issues with the upgrade scripts.
+## Prerequisites
+
+There are some steps that are necessary for the COMET v8 update but can be done beforehand:
+
+### Step 1: Upgrade node to v22 (PR #1)
 
 :::info
-
-You can re-execute individual upgrade scripts if needed: `npx @comet/upgrade@latest v8/[upgrade-script-name].ts`
-
+You can skip this step if your project already uses node v22
 :::
 
-## General
+**Create a branch `node-22`.**
+Then make the following changes:
 
-### ✅ Upgrade Node to v22
+#### 🤖 In development:
 
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-#### In development:
-
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/replace-node-with-v22-locally.ts
@@ -45,6 +39,7 @@ npx @comet/upgrade v8/replace-node-with-v22-locally.ts
 
 :::
 
+<details>
 ```diff title=.nvmrc
 - 20
 + 22
@@ -55,9 +50,11 @@ npx @comet/upgrade v8/replace-node-with-v22-locally.ts
 + "@types/node": "^22.0.0",
 ```
 
-#### In pipeline and deployment:
+</details>
 
-:::note Handled by following upgrade script
+#### 🤖 In pipeline and deployment:
+
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/replace-node-with-v22-in-gitlab-ci-files.ts
@@ -65,6 +62,7 @@ npx @comet/upgrade v8/replace-node-with-v22-in-gitlab-ci-files.ts
 
 :::
 
+<details>
 Make sure you use Node 22 in your CI files.
 When using Gitlab CI, check all files in the .gitlab-ci folders.
 Make sure to extend the correct jobs and replace all images and base images.
@@ -81,6 +79,354 @@ Make sure to extend the correct jobs and replace all images and base images.
 ```
 
 </details>
+
+**Now open a PR from `node-22` to `main`**
+
+### Step 2: Update Typescript to v5 (PR #2)
+
+:::info
+You can skip this step if your project already uses typescript v5 **everywhere**
+:::
+
+**Create a branch `typescript-5`.**
+
+1. Make the following changes:
+
+    ```diff title="package.json"
+    -        "typescript": "^4.2.3",
+    +        "typescript": "^5.8.3",
+    ```
+
+    ```diff title="api/package.json"
+    -        "typescript": "^4.2.3",
+    +        "typescript": "^5.8.3",
+    ```
+
+    ```diff title="admin/package.json"
+    -        "typescript": "^4.2.3",
+    +        "typescript": "^5.8.3",
+    ```
+
+    ```diff title="site/package.json"
+    -        "typescript": "^4.2.3",
+    +        "typescript": "^5.8.3",
+    ```
+
+2. Execute `npm install` in each folder (`/api`, `/admin`, `/site`, `/`)
+
+    Check carefully for errors during the install.
+    Errors might occur because of other packages that depend on typescript v4.
+    Update such packages to make the errors disappear.
+
+3. Execute `npm run lint` in the root directory.
+
+    Fix occurring errors.
+
+    You might also see a warning like this:
+
+    ```
+    =============
+
+    WARNING: You are currently running a version of TypeScript which is not officially supported by @typescript-eslint/typescript-estree.
+
+    You may find that it works just fine, or you may not.
+
+    SUPPORTED TYPESCRIPT VERSIONS: >=3.3.1 <5.2.0
+
+    YOUR TYPESCRIPT VERSION: 5.8.3
+
+    Please only submit bug reports when using the officially supported version.
+
+    =============
+    ```
+
+    Ignore this warning for now.
+
+4. Check if the app still starts
+
+**Now open a PR from `typescript-5` to `main`**
+
+### Step 3: Switch from `@comet/cms-site` to `@comet/site-nextjs` (PR #3)
+
+:::info
+You can skip this step if your project doesn't have a site
+:::
+
+:::warning
+This doesn't work if you use other packages that depend on `@comet/cms-site`.
+In that case, skip this step for now and do it later during the v8 update.
+:::
+
+The `@comet/cms-site` package has been reworked and renamed to `@comet/site-nextjs`. Notable changes are
+
+- Styled components is no longer a required peer dependency
+- Instead, SCSS modules are used internally
+- The package is now pure ESM
+
+To switch you must
+
+1. Create a branch `switch-to-site-nextjs`
+2. `cd site`
+3. `npm uninstall @comet/cms-site`
+4. `npm install @comet/site-nextjs@7`
+5. Change all imports from `@comet/cms-site` to `@comet/site-nextjs` (with search and replace in your IDE)
+6. Import the css file exported by the package:
+
+    ```diff title="site/src/app/layout.tsx"
+    + import "@comet/site-nextjs/css";
+    ```
+
+7. Switch the package in `optimizePackageImports`:
+
+    ```diff title="site/next.config.mjs"
+    const nextConfig = {
+        // ...
+        experimental: {
+            instrumentationHook: true,
+    -       optimizePackageImports: ["@comet/cms-site"],
+    +       optimizePackageImports: ["@comet/site-nextjs"],
+        },
+        // ...
+    }
+    ```
+
+**Now open a PR from `switch-to-site-nextjs` to `main`**
+
+### Step 4: Update eslint and prettier (PR #4)
+
+**Create a branch `update-eslint-to-v9`**
+
+#### 🤖 Upgrade ESLint from v8 to v9 with ESM
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade v8/eslint-dev-dependencies.ts
+```
+
+:::
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+Update ESLint to v9
+
+`package.json`
+
+```diff
+- "eslint": "^8.0.0",
++ "eslint": "^9.0.0",
+```
+
+An ESM compatible ESLint config is required. Delete the related `.eslintrc.json` and move the configured rules to the new ESLint flat configuration `eslint.config.mjs`.
+
+Migration Guide of ESLint 9.0 can be found here: [Migration Guide](https://eslint.org/docs/latest/use/migrate-to-9.0.0)
+
+##### `admin/eslint.config.mjs`
+
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts"],
+    },
+    ...cometConfig
+];
+
+export default config;
+```
+
+##### `api/eslint.config.mjs`
+
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+import cometConfig from "@comet/eslint-config/nestjs.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
+    },
+    ...cometConfig,
+];
+
+export default config;
+```
+
+##### `site/eslint.config.mjs`
+
+```
+import cometConfig from "@comet/eslint-config/react.js";
+
+/** @type {import('eslint')} */
+import cometConfig from "@comet/eslint-config/nextjs.js";
+
+/** @type {import('eslint')} */
+const config = [
+    {
+        ignores: ["**/**/*.generated.ts", "dist/**", "lang/**", "lang-compiled/**", "lang-extracted/**", ".next/**", "public/**"],
+    },
+    ...cometConfig,
+];
+
+export default config;
+
+```
+
+</details>
+
+After executing the script, create a commit with `--no-verify`.
+
+#### Migrate custom eslint rules
+
+:::warning
+
+The upgrade script only creates a simple version of the new `eslint.config.mjs`.
+It adds the old config from `.eslintrc.json` to the new file as a comment at the top.
+You must now manually go through all the eslint configs and migrate your custom rules (if you have any).
+
+:::
+
+1. Check `api/eslint.config.mjs`, `api/eslint.config.mjs` and `api/eslint.config.mjs`
+2. Migrate custom rules
+3. Remove the comment from the file
+4. Create a commit with `--no-verify`
+
+#### Upgrade Prettier from v2 to v3
+
+:::note Execute the following upgrade script
+
+```sh
+npx @comet/upgrade v8/prettier-dev-dependencies.ts
+```
+
+:::
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+```diff
+-        "prettier": "^2.8.1",
++        "prettier": "^3.4.2",
+```
+
+</details>
+
+After executing the script, create a commit with `--no-verify`.
+
+#### Upgrade `@comet/eslint-config` to v8
+
+Yes, you can do that before updating everything else to v8.
+
+1. Change the version numbers:
+
+    ```diff title="api/package.json"
+    -       "@comet/eslint-config": "7.24.0",
+    +       "@comet/eslint-config": "8.0.0",
+    ```
+
+    ```diff title="admin/package.json"
+    -       "@comet/eslint-config": "7.24.0",
+    +       "@comet/eslint-config": "8.0.0",
+    ```
+
+    ```diff title="site/package.json"
+    -       "@comet/eslint-config": "7.24.0",
+    +       "@comet/eslint-config": "8.0.0",
+    ```
+
+2. Execute `npm install` (it might be necessary to use `npm install --force`)
+3. Create a commit with `--no-verify`
+
+#### API
+
+1. Run `npm run lint:eslint -- --fix` to autofix all fixable issues
+2. Commit your changes with `--no-verify`
+3. Run `npm run lint` and manually fix all open issues
+4. Commit your changes with `--no-verify`
+
+#### Admin
+
+1. Run `npm run lint:eslint -- --fix` to autofix all fixable issues
+2. Commit your changes with `--no-verify`
+3. Add `react-jsx` to your `tsconfig.json`:
+
+    ```diff
+    -       "jsx": "react",
+    +       "jsx": "react-jsx",
+    ```
+
+4. Remove React barrel imports
+
+    Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+    Use individual named imports instead, e.g, `import { useState } from "react"`.
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/remove-react-barrel-imports-admin.ts
+    ```
+
+    :::
+
+5. Commit your changes with `--no-verify`
+
+6. Ignore import restrictions for `@mui/material` (this is done temporarily, we'll fix this later during the v8 update)
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/ignore-restricted-imports-admin.ts
+    ```
+
+    :::
+
+7. Commit your changes with `--no-verify`
+8. Run `npm run lint` and manually fix all open issues
+9. Commit your changes with `--no-verify`
+
+#### Site
+
+1. Run `npm run lint:eslint -- --fix` to autofix all fixable issues
+2. Commit your changes with `--no-verify`
+3. Remove React barrel imports
+
+    Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+    Use individual named imports instead, e.g, `import { useState } from "react"`.
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/remove-react-barrel-imports-site.ts
+    ```
+
+    :::
+
+4. Commit your changes with `--no-verify`
+5. Run `npm run lint` and manually fix all open issues
+6. Commit your changes **without** `--no-verify`. There should be no remaining errors.
+
+**Now open a PR from `update-eslint-to-v9` to `main`**
+
+## Update process
+
+Once all the above PRs are merged, you can now start the actual v8 update.
+We recommend doing it service-by-service like this:
+
+1. API
+    1. Update the versions in package.json
+    2. Execute `npm install`
+    3. Execute all the steps in the migration guide. Commit with `--no-verify` after each step
+    4. Run `npm run lint` and fix all remaining errors
+    5. Start the API. Fix runtime errors if there are any.
+2. Repeat for admin
+3. Repeat for site
 
 ## API
 
@@ -2048,17 +2394,6 @@ export const RedirectsPage = createRedirectsPage({
 ```
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
-
-### Ensure that `MuiThemeProvider` is wrapped by `IntlProvider`
-
-This is necessary to support translating the labels for custom Data Grid filter operators, namely "search". Make sure that `MuiThemeProvider` is wrapped by `IntlProvider` in your application:
-
-```tsx
-// IntlProvider needs to be rendered before MuiThemeProvider.
-<IntlProvider locale="en" messages={getMessages()}>
-    <MuiThemeProvider theme={theme}>{/* ... */}</MuiThemeProvider>
-</IntlProvider>
-```
 
 ## Site
 
