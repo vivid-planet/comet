@@ -17,7 +17,7 @@ Define buttons or form elements very specifically to reuse the theme structure i
 
 :::tip Good
 
-```css
+```
 buttons: {
     primaryBg: "#ea5d1a",
     primaryBgHover: "#f08d5e",
@@ -31,6 +31,7 @@ buttons: {
     primaryHeightDesktop: "46px",
     primaryFontSizeDesktop: "16px",
     ...
+}
 ```
 
 :::
@@ -41,7 +42,7 @@ For Typography you can take a step further and use css in theme:
 
 :::tip Good
 
-```ts
+```
 typography: {
       headline650: (disableMargin?: boolean) => css`
           font-size: 30px;
@@ -95,7 +96,7 @@ One major part for consistent look and easy styling is defined spacing. Dynamic 
 
 :::tip Good
 
-```css
+```
 const spacingValues: SpacingValues = {
     none: {
         xs: 0,
@@ -130,6 +131,8 @@ Check support with [CanIUse.com](https://caniuse.com).
 
 Relevant value: **“All Users/Europe”**
 
+![CanIUse](./images/can-i-use.png)
+
 ### Frontend/Site
 
 Anything with a usage share of **>= 93%** can be used freely.
@@ -147,7 +150,7 @@ Use CSS Grid and Flexbox to align elements. But only use them when necessary —
 
 :::tip Good
 
-```tsx
+```
 export const Wrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
