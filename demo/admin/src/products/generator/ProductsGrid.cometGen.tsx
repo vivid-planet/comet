@@ -28,7 +28,7 @@ export default defineConfig<GQLProduct>({
         { field: "price", sort: "asc" },
     ],
     initialFilter: {
-        items: [{ field: "type", operator: "is", value: "Shirt" }],
+        items: [{ field: "type", operator: "is", value: "shirt" }],
     },
     columns: [
         {
