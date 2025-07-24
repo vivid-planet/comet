@@ -111,6 +111,6 @@ export class UserPermissionsModule {
                 CombinedPermission[key] = value;
             });
         }
-        registerEnumType(CombinedPermission, { name: "CombinedPermission" });
+        registerEnumType(CombinedPermission, { name: "Permission" });
     }
 }

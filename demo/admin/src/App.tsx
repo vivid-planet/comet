@@ -31,7 +31,7 @@ import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/M
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
-import { type GQLCombinedPermission } from "./graphql.generated";
+import { type GQLPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
@@ -57,7 +57,7 @@ declare module "@comet/cms-admin" {
     interface ContentScope extends BaseContentScope {}
 
     export interface PermissionOverrides {
-        permission: GQLCombinedPermission;
+        permission: GQLPermission;
     }
 }
 
