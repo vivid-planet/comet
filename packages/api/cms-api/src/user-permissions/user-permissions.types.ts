@@ -77,6 +77,10 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     AppPermission?: Record<string, string>;
 }
 
+/**
+ * Used to combine both the library and the application permissions into a single enum for the GraphQL schema. The application permissions are
+ * injected into this enum at runtime in `UserPermissionsModule.registerCombinedPermission`.
+ */
 export const CombinedPermission: Record<string, string> = {
     ...CorePermission,
 };
