@@ -39,6 +39,8 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
     const [currentMatchIndex, setCurrentMatchIndex] = useState<number | null>(null);
     const [query, setQuery] = useState("");
 
+    const domainHost = new URL(domain).host;
+
     const inorderPages = useMemo(() => {
         const buildPagesForParent = (parentId = "root", ancestorIds: string[] = []) => {
             const returnValue: Array<{ id: string; parentId: string | null; name: string; ancestorIds: string[]; path: string }> = [];
@@ -94,7 +96,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         try {
             const url = new URL(query);
 
-            if (!url.host.includes(domain)) {
+            if (!url.host.includes(domainHost)) {
                 return;
             }
 
@@ -141,7 +143,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         setCurrentMatchIndex(0);
 
         expandTreeForMatches(matches);
-    }, [query, inorderPages, domain, expandTreeForMatches]);
+    }, [query, inorderPages, expandTreeForMatches, domainHost]);
 
     const pagesToRenderWithMatches = useMemo(
         () => pagesToRender.map((c) => ({ ...c, matches: matches?.filter((match) => match.page.id === c.id) ?? [] })),
