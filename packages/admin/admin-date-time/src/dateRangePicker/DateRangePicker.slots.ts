@@ -15,17 +15,17 @@ export type SlotProps = ThemedComponentBaseProps<{
 }>["slotProps"];
 
 export const Root = createComponentSlot(InputWithPopper)<DateRangePickerClassKey>({
-    componentName: "DateRangePicker",
+    componentName: "DTDateRangePicker",
     slotName: "root",
 })();
 
 export const StartAdornment = createComponentSlot(InputAdornment)<DateRangePickerClassKey>({
-    componentName: "DateRangePicker",
+    componentName: "DTDateRangePicker",
     slotName: "startAdornment",
 })();
 
 export const DateRange = createComponentSlot(ReactDateRange)<DateRangePickerClassKey>({
-    componentName: "DateRangePicker",
+    componentName: "DTDateRangePicker",
     slotName: "dateRange",
 })(({ theme }) =>
     deepmerge<CSSProperties>(getReactDateRangeStyles(theme), {

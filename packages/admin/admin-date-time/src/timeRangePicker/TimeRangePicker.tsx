@@ -16,7 +16,7 @@ export type TimeRangePickerClassKey =
     | "separator";
 
 const Root = createComponentSlot("div")<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "DTTimeRangePicker",
     slotName: "root",
 })(css`
     display: flex;
@@ -24,31 +24,31 @@ const Root = createComponentSlot("div")<TimeRangePickerClassKey>({
 `);
 
 const StartFormControl = createComponentSlot(FormControl)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "DTTimeRangePicker",
     slotName: "startFormControl",
 })(css`
     flex-grow: 1;
 `);
 
 const EndFormControl = createComponentSlot(FormControl)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "DTTimeRangePicker",
     slotName: "endFormControl",
 })(css`
     flex-grow: 1;
 `);
 
 const StartTimePicker = createComponentSlot(TimePickerBase)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "DTTimeRangePicker",
     slotName: "startTimePicker",
 })();
 
 const EndTimePicker = createComponentSlot(TimePickerBase)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "DTTimeRangePicker",
     slotName: "endTimePicker",
 })();
 
 const Separator = createComponentSlot(Typography)<TimeRangePickerClassKey>({
-    componentName: "TimeRangePicker",
+    componentName: "DTTimeRangePicker",
     slotName: "separator",
 })(
     ({ theme }) => css`
@@ -93,7 +93,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
         required,
         slotProps,
         ...propsForBothTimePickers
-    } = useThemeProps({ props: inProps, name: "CometAdminTimeRangePicker" });
+    } = useThemeProps({ props: inProps, name: "CometAdminDTTimeRangePicker" });
     const intl = useIntl();
 
     const [startTime, setStartTime] = useState<IndividualTimeValue>(value?.start);
@@ -180,17 +180,17 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminTimeRangePicker: TimeRangePickerClassKey;
+        CometAdminDTTimeRangePicker: TimeRangePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminTimeRangePicker: TimeRangePickerProps;
+        CometAdminDTTimeRangePicker: TimeRangePickerProps;
     }
 
     interface Components {
-        CometAdminTimeRangePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimeRangePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimeRangePicker"];
+        CometAdminDTTimeRangePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDTTimeRangePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDTTimeRangePicker"];
         };
     }
 }
