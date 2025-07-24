@@ -28,7 +28,7 @@ export const FooterContentBlock = withPreview(
                                     <LinksWrapper>
                                         {linkList.blocks.map((block) => (
                                             <Link key={block.key}>
-                                                <LinkText key={block.key} as={LinkBlock} data={block.props.link} variant="p200">
+                                                <LinkText as={LinkBlock} data={block.props.link} variant="p200">
                                                     {block.props.text}
                                                 </LinkText>
                                             </Link>
