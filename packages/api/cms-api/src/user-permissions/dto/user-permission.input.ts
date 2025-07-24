@@ -3,7 +3,7 @@ import { IsArray, IsBoolean, IsDate, IsObject, IsOptional, IsString, IsUUID } fr
 import { GraphQLJSONObject } from "graphql-scalars";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
-import { Permission } from "../user-permissions.types";
+import { CombinedPermission, Permission } from "../user-permissions.types";
 
 @InputType()
 export class UserPermissionOverrideContentScopesInput {
@@ -23,7 +23,7 @@ export class UserPermissionOverrideContentScopesInput {
 
 @InputType()
 export class UserPermissionInput {
-    @Field(() => Permission)
+    @Field(() => CombinedPermission)
     @IsString()
     permission: Permission;
 

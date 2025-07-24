@@ -4,7 +4,7 @@ import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
-import { Permission } from "../user-permissions.types";
+import { CombinedPermission, Permission } from "../user-permissions.types";
 
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
@@ -27,7 +27,7 @@ export class UserPermission extends BaseEntity {
     @Field(() => UserPermissionSource)
     source: UserPermissionSource;
 
-    @Field(() => Permission)
+    @Field(() => CombinedPermission)
     @Property({ columnType: "text" })
     permission: Permission;
 

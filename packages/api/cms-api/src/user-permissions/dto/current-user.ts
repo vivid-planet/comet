@@ -2,12 +2,12 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
-import { Permission } from "../user-permissions.types";
+import { CombinedPermission, Permission } from "../user-permissions.types";
 import { UserPermissionsUser } from "./user";
 
 @ObjectType()
 export class CurrentUserPermission {
-    @Field(() => Permission)
+    @Field(() => CombinedPermission)
     permission: Permission;
     @Field(() => [GraphQLJSONObject])
     contentScopes: ContentScope[];
