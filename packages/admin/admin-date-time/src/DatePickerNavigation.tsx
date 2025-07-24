@@ -22,7 +22,7 @@ export interface DatePickerNavigationProps
 export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
     const { focusedDate, changeShownDate, minDate, maxDate, slotProps, ...restProps } = useThemeProps({
         props: inProps,
-        name: "CometAdminDatePickerNavigation",
+        name: "CometAdminDTDatePickerNavigation",
     });
     const intl = useIntl();
 
@@ -119,7 +119,7 @@ export type DatePickerNavigationClassKey =
     | "selectYearMenu";
 
 const Root = createComponentSlot("div")<DatePickerNavigationClassKey>({
-    componentName: "DatePickerNavigation",
+    componentName: "DTDatePickerNavigation",
     slotName: "root",
 })(
     ({ theme }) => css`
@@ -134,7 +134,7 @@ const Root = createComponentSlot("div")<DatePickerNavigationClassKey>({
 );
 
 const SelectMonthButton = createComponentSlot(Button)<DatePickerNavigationClassKey>({
-    componentName: "DatePickerNavigation",
+    componentName: "DTDatePickerNavigation",
     slotName: "selectMonthButton",
     classesResolver() {
         return ["selectButton"];
@@ -157,7 +157,7 @@ const SelectMonthButton = createComponentSlot(Button)<DatePickerNavigationClassK
 );
 
 const SelectYearButton = createComponentSlot(Button)<DatePickerNavigationClassKey>({
-    componentName: "DatePickerNavigation",
+    componentName: "DTDatePickerNavigation",
     slotName: "selectYearButton",
     classesResolver() {
         return ["selectButton"];
@@ -180,7 +180,7 @@ const SelectYearButton = createComponentSlot(Button)<DatePickerNavigationClassKe
 );
 
 const SelectMonthMenu = createComponentSlot(Menu)<DatePickerNavigationClassKey>({
-    componentName: "DatePickerNavigation",
+    componentName: "DTDatePickerNavigation",
     slotName: "selectMonthMenu",
     classesResolver() {
         return ["selectMenu"];
@@ -193,7 +193,7 @@ const SelectMonthMenu = createComponentSlot(Menu)<DatePickerNavigationClassKey>(
 `);
 
 const SelectYearMenu = createComponentSlot(Menu)<DatePickerNavigationClassKey>({
-    componentName: "DatePickerNavigation",
+    componentName: "DTDatePickerNavigation",
     slotName: "selectYearMenu",
     classesResolver() {
         return ["selectMenu"];
@@ -207,17 +207,17 @@ const SelectYearMenu = createComponentSlot(Menu)<DatePickerNavigationClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminDatePickerNavigation: DatePickerNavigationClassKey;
+        CometAdminDTDatePickerNavigation: DatePickerNavigationClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminDatePickerNavigation: DatePickerNavigationProps;
+        CometAdminDTDatePickerNavigation: DatePickerNavigationProps;
     }
 
     interface Components {
-        CometAdminDatePickerNavigation?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePickerNavigation"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePickerNavigation"];
+        CometAdminDTDatePickerNavigation?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDTDatePickerNavigation"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDTDatePickerNavigation"];
         };
     }
 }

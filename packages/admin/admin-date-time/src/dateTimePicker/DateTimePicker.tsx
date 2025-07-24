@@ -12,7 +12,7 @@ import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHe
 export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
 
 const Root = createComponentSlot("div")<DateTimePickerClassKey>({
-    componentName: "DateTimePicker",
+    componentName: "DTDateTimePicker",
     slotName: "root",
 })(
     ({ theme }) => css`
@@ -24,7 +24,7 @@ const Root = createComponentSlot("div")<DateTimePickerClassKey>({
 );
 
 const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
-    componentName: "DateTimePicker",
+    componentName: "DTDateTimePicker",
     slotName: "dateFormControl",
 })(
     ({ theme }) => css`
@@ -41,7 +41,7 @@ const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>
 );
 
 const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
-    componentName: "DateTimePicker",
+    componentName: "DTDateTimePicker",
     slotName: "timeFormControl",
 })(
     ({ theme }) => css`
@@ -55,7 +55,7 @@ const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>
 );
 
 const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
-    componentName: "DateTimePicker",
+    componentName: "DTDateTimePicker",
     slotName: "datePicker",
 })(
     () => css`
@@ -66,7 +66,7 @@ const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
 );
 
 const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
-    componentName: "DateTimePicker",
+    componentName: "DTDateTimePicker",
     slotName: "timePicker",
 })(
     () => css`
@@ -95,7 +95,7 @@ export interface DateTimePickerProps
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const { onChange, value, required, disabled, slotProps, onBlur, onFocus, ...restProps } = useThemeProps({
         props: inProps,
-        name: "CometAdminDateTimePicker",
+        name: "CometAdminDTDateTimePicker",
     });
     const intl = useIntl();
     const datePickerRef = useRef<HTMLElement>(null);
@@ -178,17 +178,17 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminDateTimePicker: DateTimePickerClassKey;
+        CometAdminDTDateTimePicker: DateTimePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminDateTimePicker: DateTimePickerProps;
+        CometAdminDTDateTimePicker: DateTimePickerProps;
     }
 
     interface Components {
-        CometAdminDateTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDateTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateTimePicker"];
+        CometAdminDTDateTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDTDateTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDTDateTimePicker"];
         };
     }
 }

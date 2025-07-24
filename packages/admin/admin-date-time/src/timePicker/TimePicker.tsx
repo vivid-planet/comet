@@ -25,22 +25,22 @@ type SlotProps = ThemedComponentBaseProps<{
 }>["slotProps"];
 
 const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "DTTimePicker",
     slotName: "root",
 })();
 
 const StartAdornment = createComponentSlot(InputAdornment)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "DTTimePicker",
     slotName: "startAdornment",
 })();
 
 const TimeOptionsList = createComponentSlot(MenuList)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "DTTimePicker",
     slotName: "timeOptionsList",
 })();
 
 const TimeOptionItem = createComponentSlot(MenuItem)<TimePickerClassKey>({
-    componentName: "TimePicker",
+    componentName: "DTTimePicker",
     slotName: "timeOptionItem",
 })(
     ({ theme }) => css`
@@ -72,7 +72,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         max = "23:59",
         slotProps,
         ...inputWithPopperProps
-    } = useThemeProps({ props: inProps, name: "CometAdminTimePicker" });
+    } = useThemeProps({ props: inProps, name: "CometAdminDTTimePicker" });
     const intl = useIntl();
     const focusedItemRef = useRef<HTMLLIElement>(null);
 
@@ -163,17 +163,17 @@ export const TimePicker = (inProps: TimePickerProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminTimePicker: TimePickerClassKey;
+        CometAdminDTTimePicker: TimePickerClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminTimePicker: TimePickerProps;
+        CometAdminDTTimePicker: TimePickerProps;
     }
 
     interface Components {
-        CometAdminTimePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
+        CometAdminDTTimePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDTTimePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDTTimePicker"];
         };
     }
 }
