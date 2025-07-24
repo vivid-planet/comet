@@ -27,11 +27,11 @@ export const FooterContentBlock = withPreview(
                                 {linkList.blocks.length > 0 && (
                                     <LinksWrapper>
                                         {linkList.blocks.map((block) => (
-                                            <Link key={block.key}>
+                                            <li key={block.key}>
                                                 <LinkText as={LinkBlock} data={block.props.link} variant="p200">
                                                     {block.props.text}
                                                 </LinkText>
-                                            </Link>
+                                            </li>
                                         ))}
                                     </LinksWrapper>
                                 )}
@@ -129,9 +129,6 @@ const LinksWrapper = styled.ul`
     gap: ${({ theme }) => theme.spacing.S500};
     flex-wrap: wrap;
     justify-content: center;
-`;
-
-const Link = styled.li`
     list-style: none;
 `;
 
