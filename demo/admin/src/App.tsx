@@ -57,7 +57,7 @@ declare module "@comet/cms-admin" {
     interface ContentScope extends BaseContentScope {}
 
     export interface PermissionOverrides {
-        app: GQLPermission;
+        permission: GQLPermission;
     }
 }
 
