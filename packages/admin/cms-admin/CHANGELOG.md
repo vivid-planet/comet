@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 7.25.4
+
+### Patch Changes
+
+-   404317584: Validate path parameter in site preview
+
+    Prevents phishing attacks.
+
+    -   @comet/admin@7.25.4
+    -   @comet/admin-date-time@7.25.4
+    -   @comet/admin-icons@7.25.4
+    -   @comet/admin-rte@7.25.4
+    -   @comet/admin-theme@7.25.4
+    -   @comet/blocks-admin@7.25.4
+
 ## 7.25.3
 
 ### Patch Changes
