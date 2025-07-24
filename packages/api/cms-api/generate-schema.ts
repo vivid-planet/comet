@@ -96,7 +96,7 @@ async function generateSchema(): Promise<void> {
         }
     }
 
-    registerEnumType(CombinedPermission, { name: "CombinedPermission" });
+    registerEnumType(CombinedPermission, { name: "Permission" });
 
     const schema = await gqlSchemaFactory.create(
         [

@@ -2257,14 +2257,14 @@ declare module "@comet/cms-api" {
 5. Create a new file and add also module augmentation for `PermissionOverrides` with created types from GraphQL Codegen:
 
 ```diff title="demo/admin/src/App.tsx"
-+import type { GQLCombinedPermission } from "@src/graphql.generated";
++import type { GQLPermission } from "@src/graphql.generated";
 ...
 declare module "@comet/cms-admin" {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface ContentScope extends BaseContentScope {}
 +
 +   export interface PermissionOverrides {
-+       permission: GQLCombinedPermission;
++       permission: GQLPermission;
 +   }
 }
 ```
