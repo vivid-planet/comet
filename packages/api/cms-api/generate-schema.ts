@@ -127,10 +127,7 @@ async function generateSchema(): Promise<void> {
             SitePreviewResolver,
             WarningResolver,
             createDamMediaAlternativeResolver({ File }),
-        ],
-        {
-            orphanedTypes: [CorePermission],
-        },
+        ]
     );
 
     await writeFile("schema.gql", printSchema(schema));

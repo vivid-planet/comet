@@ -1,5 +1,3 @@
-import { registerEnumType } from "@nestjs/graphql";
-
 export enum CorePermission {
     builds = "builds",
     dam = "dam",
@@ -13,6 +11,3 @@ export enum CorePermission {
     dependencies = "dependencies",
     warnings = "warnings",
 }
-registerEnumType(CorePermission, {
-    name: "CorePermission",
-});

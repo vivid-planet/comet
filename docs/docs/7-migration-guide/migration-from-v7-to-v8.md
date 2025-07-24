@@ -2212,19 +2212,14 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
 
 Search for all `@CrudGenerator` or `@RequiredPermission` decorators and move all permissions into the AppPermission enum. Add also module augmentation for `PermissionOverrides` to include the new `AppPermission` enum.
 
-1. Create a new file and register the `AppPermission` enum:
+1. Create a new `AppPermission` enum:
 
 ```typescript title="api/src/auth/app-permission.enum.ts"
-import { registerEnumType } from "@nestjs/graphql";
-
 export enum AppPermission {
     news = "news",
     products = "products",
     manufacturers = "manufacturers",
 }
-registerEnumType(AppPermission, {
-    name: "AppPermission",
-});
 ```
 
 2. Add `AppPermission` to `UserPermissionsModule`:
@@ -2269,7 +2264,7 @@ declare module "@comet/cms-admin" {
     interface ContentScope extends BaseContentScope {}
 +
 +   export interface PermissionOverrides {
-+       app: GQLPermission;
++       permission: GQLPermission;
 +   }
 }
 ```
