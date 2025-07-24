@@ -17,7 +17,7 @@ Define buttons or form elements very specifically to reuse the theme structure i
 
 :::tip Good
 
-```
+```ts
 buttons: {
     primaryBg: "#ea5d1a",
     primaryBgHover: "#f08d5e",
@@ -42,7 +42,7 @@ For Typography you can take a step further and use css in theme:
 
 :::tip Good
 
-```
+```ts
 typography: {
       headline650: (disableMargin?: boolean) => css`
           font-size: 30px;
@@ -96,7 +96,7 @@ One major part for consistent look and easy styling is defined spacing. Dynamic 
 
 :::tip Good
 
-```
+```ts
 const spacingValues: SpacingValues = {
     none: {
         xs: 0,
@@ -150,7 +150,7 @@ Use CSS Grid and Flexbox to align elements. But only use them when necessary —
 
 :::tip Good
 
-```
+```ts
 export const Wrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
