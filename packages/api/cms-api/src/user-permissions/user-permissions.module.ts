@@ -15,7 +15,7 @@ import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER
 import { UserPermissionsPublicService } from "./user-permissions.public.service";
 import { UserPermissionsService } from "./user-permissions.service";
 import {
-    Permission,
+    CombinedPermission,
     UserPermissionsAsyncOptions,
     UserPermissionsModuleAsyncOptions,
     UserPermissionsModuleSyncOptions,
@@ -41,7 +41,7 @@ import {
 })
 export class UserPermissionsModule {
     static forRoot({ AppPermission, ...options }: UserPermissionsModuleSyncOptions): DynamicModule {
-        this.registerPermissionEnum(AppPermission);
+        this.registerCombinedPermission(AppPermission);
 
         return {
             module: UserPermissionsModule,
@@ -67,7 +67,7 @@ export class UserPermissionsModule {
     }
 
     static forRootAsync({ AppPermission, ...options }: UserPermissionsModuleAsyncOptions): DynamicModule {
-        this.registerPermissionEnum(AppPermission);
+        this.registerCombinedPermission(AppPermission);
 
         return {
             module: UserPermissionsModule,
@@ -105,12 +105,12 @@ export class UserPermissionsModule {
         };
     }
 
-    private static registerPermissionEnum(AppPermission?: Record<string, string>): void {
+    private static registerCombinedPermission(AppPermission?: Record<string, string>): void {
         if (AppPermission) {
             Object.entries(AppPermission).forEach(([key, value]) => {
-                Permission[key] = value;
+                CombinedPermission[key] = value;
             });
         }
-        registerEnumType(Permission, { name: "Permission" });
+        registerEnumType(CombinedPermission, { name: "CombinedPermission" });
     }
 }

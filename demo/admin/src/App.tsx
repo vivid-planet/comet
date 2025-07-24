@@ -17,7 +17,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { createConfig } from "@src/config";
-import type { GQLPermission } from "@src/graphql.generated";
 import type { ContentScope as BaseContentScope } from "@src/site-configs";
 import { theme } from "@src/theme";
 import { enUS } from "date-fns/locale";
@@ -32,6 +31,7 @@ import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/M
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
+import { type GQLCombinedPermission } from "./graphql.generated";
 import { getMessages } from "./lang";
 import { NewsDetailBlock } from "./news/blocks/NewsDetailBlock";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
@@ -57,7 +57,7 @@ declare module "@comet/cms-admin" {
     interface ContentScope extends BaseContentScope {}
 
     export interface PermissionOverrides {
-        permission: GQLPermission;
+        permission: GQLCombinedPermission;
     }
 }
 

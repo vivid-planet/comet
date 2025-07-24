@@ -5,21 +5,21 @@ import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 import { StringFilter } from "../../common/filter/string.filter";
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { Permission } from "../user-permissions.types";
+import { CombinedPermission, Permission } from "../user-permissions.types";
 
 @InputType()
 export class PermissionFilter {
-    @Field(() => Permission, { nullable: true })
+    @Field(() => CombinedPermission, { nullable: true })
     @IsOptional()
     @IsString()
     equal?: Permission;
 
-    @Field(() => Permission, { nullable: true })
+    @Field(() => CombinedPermission, { nullable: true })
     @IsOptional()
     @IsString()
     notEqual?: Permission;
 
-    @Field(() => [Permission], { nullable: true })
+    @Field(() => [CombinedPermission], { nullable: true })
     @IsOptional()
     @IsString({ each: true })
     isAnyOf?: Permission[];
