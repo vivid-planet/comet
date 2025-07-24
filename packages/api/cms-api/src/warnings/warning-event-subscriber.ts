@@ -111,10 +111,10 @@ export class WarningEventSubscriber implements EventSubscriber {
             }
 
             const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
-            if (createWarnings && args.changeSet?.originalEntity?.id) {
+            if (createWarnings && args.entity.id) {
                 const repository: EntityRepository<{ id: string; scope: ContentScope }> = this.entityManager.getRepository(entity);
 
-                const row = await repository.findOneOrFail(args.changeSet.originalEntity.id);
+                const row = await repository.findOneOrFail(args.entity.id);
 
                 let warnings: WarningData[] = [];
                 if (this.isService(createWarnings)) {
