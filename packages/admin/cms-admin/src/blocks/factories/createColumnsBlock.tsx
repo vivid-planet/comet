@@ -65,10 +65,11 @@ interface CreateColumnsBlockOptions<T extends BlockInterface> {
     category?: BlockCategory | CustomBlockCategory;
     contentBlock: T;
     layouts: ColumnsBlockLayout[];
+    tags?: Array<ReactNode>;
 }
 
 export function createColumnsBlock<T extends BlockInterface>(
-    { name, displayName, category = BlockCategory.Layout, contentBlock, layouts }: CreateColumnsBlockOptions<T>,
+    { name, displayName, category = BlockCategory.Layout, contentBlock, layouts, tags }: CreateColumnsBlockOptions<T>,
     override?: (
         block: BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>>,
     ) => BlockInterface<ColumnsBlockFragment<T>, ColumnsBlockState<T>, ColumnsBlockFragment<T>>,
@@ -94,6 +95,8 @@ export function createColumnsBlock<T extends BlockInterface>(
         name,
 
         displayName,
+
+        tags,
 
         category,
 

@@ -43,7 +43,7 @@ interface CreateCompositeBlockOptionsBase {
     category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
-
+    tags?: Array<ReactNode>;
     /**
      * Function to determine the order of the blocks in the admin component. If a block is not included in the array, it will not be rendered.
      * @param state The current state of the composite block
@@ -84,7 +84,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         block: CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
     ) => CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
 ): CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>> => {
-    const { name, displayName, category = BlockCategory.Other, visibleOrderedBlocksForState } = options;
+    const { name, displayName, category = BlockCategory.Other, tags, visibleOrderedBlocksForState } = options;
 
     let groups: Record<string, GroupConfiguration>;
 
@@ -127,6 +127,8 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         displayName,
 
         category,
+
+        tags,
 
         createPreviewState: (state, previewContext) => {
             const blockPreviewState = block.createPreviewState(state, previewContext);

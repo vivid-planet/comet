@@ -24,6 +24,10 @@ export const StandaloneCallToActionListBlock = createCompositeBlock(
                 hiddenInSubroute: true,
             },
         },
+        tags: [
+            <FormattedMessage id="callToActionBlock.tag.link" defaultMessage="Link" />,
+            <FormattedMessage id="callToActionBlock.tag.button" defaultMessage="Button" />,
+        ],
     },
     (block) => {
         block.category = BlockCategory.Navigation;

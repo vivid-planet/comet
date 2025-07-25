@@ -67,6 +67,7 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
     allowEmpty?: T;
+    tags?: Array<ReactNode>;
 }
 
 export const createOneOfBlock = <T extends boolean = boolean>(
@@ -77,6 +78,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         category = BlockCategory.Other,
         variant = "select",
         allowEmpty: passedAllowEmpty,
+        tags,
     }: CreateOneOfBlockOptions<T>,
     override?: (
         block: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState>,
@@ -122,6 +124,8 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         name,
 
         displayName,
+
+        tags,
 
         category,
 

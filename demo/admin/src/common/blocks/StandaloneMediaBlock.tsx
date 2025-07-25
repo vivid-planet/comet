@@ -20,6 +20,12 @@ export const StandaloneMediaBlock = createCompositeBlock(
                 }),
             },
         },
+        tags: [
+            <FormattedMessage id="standaloneMedia.tag.image" defaultMessage="Image" />,
+            <FormattedMessage id="standaloneMedia.tag.video" defaultMessage="Video" />,
+            <FormattedMessage id="standaloneMedia.tag.youtube" defaultMessage="Youtube" />,
+            <FormattedMessage id="standaloneMedia.tag.vimeo" defaultMessage="Vimeo" />,
+        ],
     },
     (block) => {
         block.category = BlockCategory.Media;
