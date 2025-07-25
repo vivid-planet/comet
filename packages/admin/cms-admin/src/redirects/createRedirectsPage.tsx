@@ -29,7 +29,7 @@ interface RedirectsPageProps {
 }
 
 interface CreateRedirectsPageOptions {
-    customTargets?: Record<string, BlockInterface>; // TODO: Remove customTargets here and instead use createRedirectsLinkBlock to create a custom link block for the redirects
+    linkBlock?: BlockInterface;
     scopeParts?: string[];
 }
 
@@ -42,9 +42,10 @@ export function createRedirectsLinkBlock(customTargets?: Record<string, BlockInt
     });
 }
 
-function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
-    const linkBlock = createRedirectsLinkBlock(customTargets);
-
+function createRedirectsPage({
+    linkBlock = createRedirectsLinkBlock(),
+    scopeParts = [],
+}: CreateRedirectsPageOptions = {}): ComponentType<RedirectsPageProps> {
     function Redirects({ redirectPathAfterChange }: RedirectsPageProps): JSX.Element {
         const intl = useIntl();
         useContentScopeConfig({ redirectPathAfterChange });

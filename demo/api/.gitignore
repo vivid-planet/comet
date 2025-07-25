@@ -38,4 +38,4 @@ lerna-debug.log*
 # Hot reloading for API packages
 src/reload.ts
 
-src/**/generated
+.nestjs_repl_history

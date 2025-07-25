@@ -147,6 +147,24 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "staticSelect"; values?: Array<StaticSelectValue | StaticSelectValueObject> }
     | { type: "block"; block: BlockInterface }
     | { type: "id"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
+    | {
+          type: "manyToMany";
+          renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
+          queryFields?: UsableFields<T, true>[];
+          /**
+           * The field to use as label for the default renderCell implementation.
+           */
+          labelField?: string;
+      }
+    | {
+          type: "oneToMany";
+          renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element;
+          queryFields?: UsableFields<T, true>[];
+          /**
+           * The field to use as label for the default renderCell implementation.
+           */
+          labelField?: string;
+      }
 ) & { name: UsableFields<T>; filterOperators?: GridFilterOperator[] } & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ComponentType<GridCellParams> } & BaseColumnConfig;
@@ -174,7 +192,6 @@ export type GridConfig<T extends { __typename?: string }> = {
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
-    copyPaste?: boolean;
     readOnly?: boolean;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     initialFilter?: InitialFilterConfig;

@@ -5,6 +5,7 @@ import { errors, jwtVerify } from "jose";
 type Scope = Record<string, any>;
 
 export type SitePreviewParams = {
+    userId: string;
     scope: Scope;
     path: string;
     previewData?: PreviewData;

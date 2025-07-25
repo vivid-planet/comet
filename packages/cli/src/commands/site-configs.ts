@@ -54,7 +54,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
             if (options.base64) {
                 return Buffer.from(ret).toString("base64");
             }
-            return ret;
+            return ret.replace(/\\/g, "\\\\");
         });
 
         str = str.replace(/"({{ site:\/\/domains\/.*\/.* }})"/g, "$1"); // remove quotes in array

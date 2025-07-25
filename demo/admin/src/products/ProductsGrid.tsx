@@ -5,10 +5,11 @@ import {
     CrudMoreActionsMenu,
     CrudVisibility,
     dataGridDateColumn,
+    dataGridManyToManyColumn,
+    dataGridOneToManyColumn,
     DataGridToolbar,
     type ExportApi,
     FillSpace,
-    filterByFragment,
     GridCellContent,
     type GridColDef,
     GridColumnsButton,
@@ -24,12 +25,10 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
-import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
     DataGridPro,
     GridFilterInputSingleSelect,
-    GridFilterInputValue,
     type GridRowSelectionModel,
     type GridSlotsComponent,
     GridToolbarQuickFilter,
@@ -41,8 +40,6 @@ import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import { PublishAllProducts } from "./helpers/PublishAllProducts";
 import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
-    type GQLCreateProductMutation,
-    type GQLCreateProductMutationVariables,
     type GQLDeleteProductMutation,
     type GQLDeleteProductMutationVariables,
     type GQLProductGridRelationsQuery,
@@ -179,7 +176,7 @@ export function ProductsGrid() {
             visible: theme.breakpoints.up("md"),
             valueOptions: [
                 {
-                    value: "Cap",
+                    value: "cap",
                     label: intl.formatMessage({ id: "product.type.cap.primary", defaultMessage: "Great cap" }),
                     cellContent: (
                         <GridCellContent
@@ -189,11 +186,11 @@ export function ProductsGrid() {
                     ),
                 },
                 {
-                    value: "Shirt",
+                    value: "shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
-                    value: "Tie",
+                    value: "tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
@@ -214,7 +211,7 @@ export function ProductsGrid() {
                     InputComponent: GridFilterInputSingleSelect,
                 },
             ],
-            valueOptions: ["Cap", "Shirt", "Tie"],
+            valueOptions: ["cap", "shirt", "tie"],
             disableExport: true,
         },
         {
@@ -229,21 +226,21 @@ export function ProductsGrid() {
             disableExport: true,
         },
         {
+            ...dataGridManyToManyColumn,
             field: "tags",
             headerName: "Tags",
             flex: 1,
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
-            filterOperators: [
-                {
-                    label: "Search",
-                    value: "search",
-                    getApplyFilterFn: (filterItem) => {
-                        throw new Error("not implemented, we filter server side");
-                    },
-                    InputComponent: GridFilterInputValue,
-                },
-            ],
+            disableExport: true,
+        },
+        {
+            ...dataGridOneToManyColumn,
+            field: "variants",
+            headerName: "Variants",
+            flex: 1,
+            minWidth: 150,
+            renderCell: (params) => <>{params.row.variants.map((variant) => variant.name).join(", ")}</>,
             disableExport: true,
         },
         {
@@ -310,28 +307,6 @@ export function ProductsGrid() {
                             <Edit />
                         </IconButton>
                         <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
-                                    mutation: createProductMutation,
-                                    variables: {
-                                        input: {
-                                            description: input.description,
-                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                            inStock: input.inStock,
-                                            price: input.price,
-                                            slug: input.slug,
-                                            title: input.title,
-                                            type: input.type,
-                                            category: input.category?.id,
-                                            tags: input.tags.map((tag) => tag.id),
-                                            colors: input.colors,
-                                            articleNumbers: input.articleNumbers,
-                                            discounts: input.discounts,
-                                            statistics: { views: 0 },
-                                        },
-                                    },
-                                });
-                            }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
                                     mutation: deleteProductMutation,
@@ -339,9 +314,6 @@ export function ProductsGrid() {
                                 });
                             }}
                             refetchQueries={["ProductsList"]}
-                            copyData={() => {
-                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
-                            }}
                         />
                     </>
                 );
@@ -430,6 +402,7 @@ const productsFragment = gql`
         }
         variants {
             id
+            name
         }
         manufacturer {
             name
@@ -476,14 +449,6 @@ const productRelationsQuery = gql`
 const deleteProductMutation = gql`
     mutation DeleteProduct($id: ID!) {
         deleteProduct(id: $id)
-    }
-`;
-
-const createProductMutation = gql`
-    mutation CreateProduct($input: ProductInput!) {
-        createProduct(input: $input) {
-            id
-        }
     }
 `;
 

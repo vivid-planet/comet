@@ -1,4 +1,10 @@
-import { getGridDateOperators, getGridStringOperators, type GridColTypeDef, type GridFilterInputValueProps } from "@mui/x-data-grid";
+import {
+    getGridDateOperators,
+    getGridStringOperators,
+    type GridColTypeDef,
+    GridFilterInputValue,
+    type GridFilterInputValueProps,
+} from "@mui/x-data-grid";
 import { DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import { format, parse } from "date-fns";
 import { useState } from "react";
@@ -119,4 +125,36 @@ export const dataGridDateTimeColumn: GridColTypeDef = {
  */
 export const dataGridIdColumn: GridColTypeDef = {
     filterOperators: getGridStringOperators().filter((operator) => ["isAnyOf", "equals", "doesNotEqual"].includes(operator.value)),
+};
+
+/*
+ * Data Grid column definition for many-to-many columns.
+ * Sets `filterOperators` to match the `ManyToManyFilter` GraphQL input type.
+ */
+export const dataGridManyToManyColumn: GridColTypeDef = {
+    filterOperators: [
+        {
+            value: "search",
+            getApplyFilterFn: () => {
+                throw new Error("not implemented, we filter server side");
+            },
+            InputComponent: GridFilterInputValue,
+        },
+    ],
+};
+
+/*
+ * Data Grid column definition for one-to-many columns.
+ * Sets `filterOperators` to match the `OneToManyFilter` GraphQL input type.
+ */
+export const dataGridOneToManyColumn: GridColTypeDef = {
+    filterOperators: [
+        {
+            value: "search",
+            getApplyFilterFn: () => {
+                throw new Error("not implemented, we filter server side");
+            },
+            InputComponent: GridFilterInputValue,
+        },
+    ],
 };

@@ -5,6 +5,7 @@
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
+    "description": "Comet Monorepo",
     "license": "BSD-2-Clause",
     "scripts": {
         "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
@@ -47,8 +48,8 @@
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.7.2",
-        "@types/node": "^22.16.0",
-        "knip": "^5.46.0",
+        "@types/node": "^22.16.3",
+        "knip": "^5.61.3",
         "cspell": "^8.19.4",
         "dotenv-cli": "^7.4.4",
         "husky": "^9.1.7",
@@ -60,9 +61,9 @@
         "typescript": "^5.7.3",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@9.15.9",
+    "packageManager": "pnpm@10.13.1",
     "engines": {
         "node": "22",
-        "pnpm": "9.15.9"
+        "pnpm": "10.13.1"
     }
 }

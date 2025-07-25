@@ -1925,6 +1925,43 @@ If your application uses internationalization or a language other than English (
 
 :::
 
+### Rework `createRedirectsPage` usage to accept `linkBlock` instead of `customTargets`.
+
+Previously, `customTargets` were passed directly:
+
+```ts
+const RedirectsPage = createRedirectsPage({
+    customTargets: { news: NewsLinkBlock },
+    scopeParts: ["domain"],
+});
+```
+
+Now, you should first create the `RedirectsLinkBlock` and then provide it to `createRedirectsPage`:
+
+```ts
+export const RedirectsLinkBlock = createRedirectsLinkBlock({
+    news: NewsLinkBlock,
+});
+
+export const RedirectsPage = createRedirectsPage({
+    linkBlock: RedirectsLinkBlock,
+    scopeParts: ["domain"],
+});
+```
+
+This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
+
+### Ensure that `MuiThemeProvider` is wrapped by `IntlProvider`
+
+This is necessary to support translating the labels for custom Data Grid filter operators, namely "search". Make sure that `MuiThemeProvider` is wrapped by `IntlProvider` in your application:
+
+```tsx
+// IntlProvider needs to be rendered before MuiThemeProvider.
+<IntlProvider locale="en" messages={getMessages()}>
+    <MuiThemeProvider theme={theme}>{/* ... */}</MuiThemeProvider>
+</IntlProvider>
+```
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
