@@ -18,6 +18,7 @@ import { FixedSizeList as List, type ListChildComponentProps } from "react-windo
 
 import { type ContentScope } from "../../contentScope/Provider";
 import { type Maybe } from "../../graphql.generated";
+import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
 import { usePageTreeScope } from "../config/usePageTreeScope";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -85,6 +86,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const [height, setHeight] = useState(200);
     const refDialogContent = useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
+    const siteConfig = useSiteConfig({ scope });
 
     const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
 
@@ -121,8 +123,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        // TODO remove hardcoded domain here
-        domain: scope.domain,
+        domain: siteConfig.url,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
