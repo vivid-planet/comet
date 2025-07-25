@@ -117,6 +117,7 @@ interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, u
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
+    tags?: Array<ReactNode>;
 }
 
 export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
@@ -128,6 +129,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         additionalItemFields,
         AdditionalItemContextMenuItems,
         AdditionalItemContent,
+        tags,
     }: CreateBlocksBlockOptions<AdditionalItemFields>,
     override?: (
         block: BlockInterface<
@@ -163,6 +165,8 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         name,
 
         displayName,
+
+        tags,
 
         defaultValues: () => ({ blocks: [] }),
 

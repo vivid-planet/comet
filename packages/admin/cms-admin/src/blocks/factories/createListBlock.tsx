@@ -83,6 +83,7 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
+    tags?: Array<ReactNode>;
 }
 
 export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(
@@ -98,6 +99,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         additionalItemFields,
         AdditionalItemContextMenuItems,
         AdditionalItemContent,
+        tags,
     }: CreateListBlockOptions<T, AdditionalItemFields>,
     override?: (
         block: BlockInterface<
@@ -136,6 +138,8 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         name,
 
         displayName,
+
+        tags,
 
         defaultValues: () => ({
             blocks:

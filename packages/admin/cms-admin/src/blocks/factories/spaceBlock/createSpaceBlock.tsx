@@ -12,12 +12,14 @@ interface SpaceBlockFactoryOptions<T> {
     name?: string;
     defaultValue: T;
     options: { value: T; label: ReactNode }[];
+    tags?: Array<ReactNode>;
 }
 
 export const createSpaceBlock = <T extends string | number>({
     name = "Space",
     defaultValue,
     options,
+    tags,
 }: SpaceBlockFactoryOptions<T>): BlockInterface => {
     const SpaceBlock: BlockInterface<{ spacing: T }, { spacing: T }, { spacing: T }> = {
         ...createBlockSkeleton(),
@@ -27,6 +29,8 @@ export const createSpaceBlock = <T extends string | number>({
         displayName: <FormattedMessage id="comet.blocks.space" defaultMessage="Space" />,
 
         category: BlockCategory.Layout,
+
+        tags,
 
         defaultValues: () => ({ spacing: defaultValue }),
 
