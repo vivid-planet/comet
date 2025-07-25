@@ -83,6 +83,16 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
+        mailer: {
+            defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
+            sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
+            sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
+
+            transport: {
+                host: "localhost",
+                port: 1025,
+            },
+        },
         cdn: {
             originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
         },
