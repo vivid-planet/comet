@@ -390,7 +390,7 @@ export function ProductsGrid() {
     >({
         columns,
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel, convertCustomFilters),
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
         },
         query: productsQuery,
         resolveQueryNodes: (data) => data.products.nodes,
