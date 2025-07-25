@@ -1,5 +1,5 @@
 import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
-import { EntityClass, EntityManager, MikroORM } from "@mikro-orm/postgresql";
+import { EntityClass, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
@@ -111,32 +111,30 @@ export class WarningEventSubscriber implements EventSubscriber {
             }
 
             const createWarnings = this.reflector.getAllAndOverride<CreateWarningsMeta>("createWarnings", [entity]);
-            if (createWarnings) {
-                const repository = this.entityManager.getRepository(entity);
+            if (createWarnings && args.entity.id) {
+                const repository: EntityRepository<{ id: string; scope: ContentScope }> = this.entityManager.getRepository(entity);
 
-                const rows = await repository.find();
+                const row = await repository.findOneOrFail(args.entity.id);
 
-                for (const row of rows) {
-                    let warnings: WarningData[] = [];
-                    if (this.isService(createWarnings)) {
-                        const service = this.moduleRef.get(createWarnings, { strict: false });
-                        warnings = await service.createWarnings(row);
-                    } else {
-                        warnings = await createWarnings(row);
-                    }
-                    const startDate = new Date();
-                    const sourceInfo = {
-                        rootEntityName: entity.name,
-                        rootPrimaryKey: args.meta.primaryKeys[0],
-                        targetId: row.id,
-                    };
-                    await this.warningService.saveWarnings({
-                        warnings,
-                        sourceInfo,
-                        scope: row.scope,
-                    });
-                    await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
+                let warnings: WarningData[] = [];
+                if (this.isService(createWarnings)) {
+                    const service = this.moduleRef.get(createWarnings, { strict: false });
+                    warnings = await service.createWarnings(row);
+                } else {
+                    warnings = await createWarnings(row);
                 }
+                const startDate = new Date();
+                const sourceInfo = {
+                    rootEntityName: entity.name,
+                    rootPrimaryKey: args.meta.primaryKeys[0],
+                    targetId: row.id,
+                };
+                await this.warningService.saveWarnings({
+                    warnings,
+                    sourceInfo,
+                    scope: row.scope,
+                });
+                await this.warningService.deleteOutdatedWarnings({ date: startDate, sourceInfo });
             }
         }
     }
