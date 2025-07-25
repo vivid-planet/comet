@@ -29,6 +29,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
 import {
     DataGridPro,
+    getGridStringOperators,
     GridFilterInputSingleSelect,
     GridFilterInputValue,
     type GridRowSelectionModel,
@@ -224,6 +225,7 @@ export function ProductsGrid() {
             width: 150,
             visible: theme.breakpoints.down(0), // always hidden but used for filtering
             disableExport: true,
+            filterOperators: getGridStringOperators().filter((operator) => operator.value === "contains"),
             toGqlFilter: (filterItem) => {
                 return {
                     or: [
