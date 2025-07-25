@@ -1,3 +1,4 @@
+import { gql, useQuery } from "@apollo/client";
 import { Minimize } from "@comet/admin-icons";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -9,6 +10,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
+import { type GQLBlockPreviewJwtQuery } from "./BlockPreview.generated";
 import { type BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
@@ -23,17 +25,35 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
 
     const { graphQLApiUrl } = useCometConfig();
 
+    const { data, error } = useQuery<GQLBlockPreviewJwtQuery>(
+        gql`
+            query BlockPreviewJwt($scope: JSONObject!, $url: String!) {
+                blockPreviewJwt(scope: $scope, url: $url)
+            }
+        `,
+        {
+            fetchPolicy: "network-only",
+            variables: {
+                scope,
+                url,
+            },
+            pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
+        },
+    );
+    if (error) throw new Error(error.message);
+
     useEffect(() => {
-        if (iFrameBridge.iFrameReady) {
+        if (iFrameBridge.iFrameReady && data?.blockPreviewJwt) {
             iFrameBridge.sendBlockState(previewState);
-            iFrameBridge.sendContentScope(scope);
+            iFrameBridge.sendContentScope(scope, data.blockPreviewJwt);
             iFrameBridge.sendGraphQLApiUrl(graphQLApiUrl);
         }
-    }, [iFrameBridge, previewState, scope, graphQLApiUrl]);
+    }, [iFrameBridge, previewState, scope, graphQLApiUrl, data]);
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);
     };
+
     return (
         <Root>
             <ActionsContainer>

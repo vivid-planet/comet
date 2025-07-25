@@ -19,7 +19,7 @@ export interface IFrameBridgeContext {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sendContentScope(contentScope: any): void;
+    sendContentScope(contentScope: any, encryptedContentScope: string): void;
     sendGraphQLApiUrl(apiUrl: string): void;
     sendShowOnlyVisible: (showOnlyVisible: boolean) => void;
     iFrameReady: boolean;
@@ -154,10 +154,10 @@ export const IFrameBridgeProvider = ({ children, onReceiveMessage }: PropsWithCh
                                 const message: IAdminHoverComponentMessage = { cometType: AdminMessageType.HoverComponent, data: { adminRoute } };
                                 sendMessage(message);
                             },
-                            sendContentScope: (contentScope) => {
+                            sendContentScope: (contentScope, encryptedContentScope) => {
                                 const message: IAdminContentScopeMessage = {
                                     cometType: AdminMessageType.ContentScope,
-                                    data: { contentScope },
+                                    data: { contentScope, encryptedContentScope },
                                 };
                                 sendMessage(message);
                             },
