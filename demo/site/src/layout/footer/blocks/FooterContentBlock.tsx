@@ -130,6 +130,8 @@ const LinksWrapper = styled.ul`
     flex-wrap: wrap;
     justify-content: center;
     list-style: none;
+    margin: 0;
+    padding: 0;
 `;
 
 const CopyrightNotice = styled(Typography)`
