@@ -17,13 +17,13 @@ export interface VideoPreviewImageProps {
 
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon />, className }: VideoPreviewImageProps) => {
     return (
-        <div className={clsx(styles.root, fill && styles.fill, className)}>
+        <div className={clsx(styles.root, fill && styles.fill, className)} tabIndex={-1}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
-            <button className={styles.iconWrapper} onClick={onPlay}>
+            <button className={styles.iconWrapper} onClick={onPlay} tabIndex={-1}>
                 {icon}
             </button>
         </div>
     );
 };
 
-const PlayIcon = () => <span className={styles.playIcon} />;
+const PlayIcon = () => <span className={styles.playIcon} tabIndex={0} />;
