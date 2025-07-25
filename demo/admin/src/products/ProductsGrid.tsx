@@ -23,7 +23,6 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { type GqlFilter } from "@comet/admin/lib/dataGrid/muiGridFilterToGql";
 import { Add as AddIcon, Disabled, Edit, Education as EducationIcon, Excel, Online } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, IconButton, useTheme } from "@mui/material";
@@ -233,7 +232,7 @@ export function ProductsGrid() {
                         { slug: { contains: filterItem.value } },
                         { description: { contains: filterItem.value } },
                     ],
-                } as GqlFilter;
+                };
             },
         },
         {

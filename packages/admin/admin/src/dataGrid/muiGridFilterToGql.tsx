@@ -42,7 +42,7 @@ interface GqlNumberFilter {
     notEqual?: number | null;
 }
 export type GqlFilter = {
-    [key: string]: GqlStringFilter | GqlNumberFilter; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
+    [key: string]: GqlStringFilter | GqlNumberFilter | undefined; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
 } & {
     and?: GqlFilter[] | null;
     or?: GqlFilter[] | null;
