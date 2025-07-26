@@ -100,6 +100,7 @@
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
                 "./src/generator/generate.ts",
+                "./src/auth/permission.interface.ts",
                 "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],

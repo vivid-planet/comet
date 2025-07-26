@@ -2,7 +2,7 @@ import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey, Property } from
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -44,7 +44,10 @@ describe("GenerateCrud", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithString"),
+            );
             const lintedOut = await formatGeneratedFiles(out);
 
             const file = lintedOut.find((file) => file.name === "test-entity-with-string.resolver.ts");
@@ -77,7 +80,10 @@ describe("GenerateCrud", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithString"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
 
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-string.filter.ts");
@@ -113,7 +119,10 @@ describe("GenerateCrud", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithNumber"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithNumber"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
 
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-number.filter.ts");
@@ -149,7 +158,10 @@ describe("GenerateCrud", () => {
                 }),
             );
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+            const out = await generateCrud(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithTextRuntimeType"),
+            );
             const formattedOut = await formatGeneratedFiles(out);
             const file = formattedOut.find((file) => file.name === "dto/test-entity-with-text-runtime-type.filter.ts");
             if (!file) throw new Error("File not found");

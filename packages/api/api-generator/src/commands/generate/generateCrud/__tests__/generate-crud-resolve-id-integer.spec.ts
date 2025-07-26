@@ -1,7 +1,7 @@
 import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Entity()
@@ -21,7 +21,10 @@ describe("GenerateCrudResolveIdInteger", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithIntegerId"));
+        const out = await generateCrud(
+            { targetDirectory: __dirname, requiredPermission: testPermission },
+            orm.em.getMetadata().get("TestEntityWithIntegerId"),
+        );
         const formattedOut = await formatGeneratedFiles(out);
         const file = formattedOut.find((file) => file.name === "test-entity-with-integer-id.resolver.ts");
         if (!file) throw new Error("File not found");

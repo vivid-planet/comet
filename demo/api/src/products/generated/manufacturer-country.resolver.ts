@@ -7,7 +7,7 @@ import { ManufacturerCountriesArgs } from "./dto/manufacturer-countries.args";
 import { ManufacturerCountry } from "../entities/manufacturer-country.entity";
 import { RequiredPermission, gqlArgsToMikroOrmQuery } from "@comet/cms-api";
 @Resolver(() => ManufacturerCountry)
-@RequiredPermission(["manufacturerCountries"], { skipScopeCheck: true })
+@RequiredPermission(["manufacturers"], { skipScopeCheck: true })
 export class ManufacturerCountryResolver {
     constructor(protected readonly entityManager: EntityManager) { }
     @Query(() => PaginatedManufacturerCountries)

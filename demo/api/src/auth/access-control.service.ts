@@ -1,13 +1,13 @@
-import { AbstractAccessControlService, ContentScopesForUser, PermissionsForUser, User, UserPermissions } from "@comet/cms-api";
+import { AbstractAccessControlService, ContentScopesForUser, Permission, PermissionsForUser, User, UserPermissions } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {
-    getPermissionsForUser(user: User, availablePermissions: string[]): PermissionsForUser {
+    getPermissionsForUser(user: User, availablePermissions: Permission[]): PermissionsForUser {
         if (user.isAdmin) {
             return UserPermissions.allPermissions;
         } else {
-            const deniedPermissions = ["userPermissions"];
+            const deniedPermissions: Permission[] = ["userPermissions"];
             return availablePermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission }));
         }
     }
