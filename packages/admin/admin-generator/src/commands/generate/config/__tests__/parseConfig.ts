@@ -157,6 +157,38 @@ describe("parseConfig", () => {
         expect(config.fields[0].validate).toEqual({ code: "() => true", imports: [] });
     });
 
+    it("executes import when not import is not directly supported", async () => {
+        const configImportString = `
+            export const typeValues = ["Cap", "Shirt", "Tie"];
+        `;
+        await fs.writeFile(`${__dirname}/.test7-import.cometGen.tsx`, configImportString);
+        const configString = `
+            import { defineConfig } from "../../generate-command";
+            import { typeValues } from "./.test7-import.cometGen";
+            type GQLProduct = {
+                __typename?: "Product";
+                id: string;
+                name: string;
+                type: string;
+            }
+
+            export default defineConfig<GQLProduct>({
+                type: "grid",
+                gqlType: "Product",
+                columns: [
+                    { type: "staticSelect", name: "type", values: typeValues,
+                ]
+            });
+        `;
+        await fs.writeFile(`${__dirname}/.test7.cometGen.tsx`, configString);
+        const config = await parseConfig(`${__dirname}/.test7.cometGen.tsx`);
+        expect(config.columns[0]).toEqual({
+            type: "staticSelect",
+            name: "type",
+            values: ["Cap", "Shirt", "Tie"],
+        });
+    });
+
     afterAll(async () => {
         for await (const file of fs.glob(`${__dirname}/.test*.cometGen.tsx`)) {
             await fs.rm(file);
