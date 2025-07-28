@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import styled from "styled-components";
 
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
@@ -10,22 +11,28 @@ interface Props {
 }
 
 function Header({ header }: Props): JSX.Element {
+    const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+    const handleToggleMenu = (id: string) => {
+        setOpenMenuId(openMenuId === id ? null : id);
+    };
+
     return (
         <Root>
             <nav>
                 <TopLevelNavigation>
                     {header.items.map((item) => (
-                        <TopLevelLinkContainer key={item.id}>
+                        <TopLevelLinkContainer key={item.id} $isOpen={openMenuId === item.id}>
                             <Link page={item.node} activeClassName="active">
                                 {item.node.name}
                             </Link>
                             {item.node.childNodes.length > 0 && (
-                                <ToggleSubLevelNavigationButton>
+                                <ToggleSubLevelNavigationButton onClick={() => handleToggleMenu(item.id)}>
                                     <Chevron />
                                 </ToggleSubLevelNavigationButton>
                             )}
                             {item.node.childNodes.length > 0 && (
-                                <SubLevelNavigation>
+                                <SubLevelNavigation $isOpen={openMenuId === item.id}>
                                     {item.node.childNodes.map((node) => (
                                         <li key={node.id}>
                                             <Link page={node} activeClassName="active">
@@ -53,8 +60,8 @@ const TopLevelNavigation = styled.ol`
     padding: 0;
 `;
 
-const SubLevelNavigation = styled.ol`
-    display: none;
+const SubLevelNavigation = styled.ol<{ $isOpen: boolean }>`
+    display: ${(props) => (props.$isOpen ? "block" : "none")};
     position: absolute;
     min-width: 100px;
     list-style-type: none;
@@ -63,7 +70,7 @@ const SubLevelNavigation = styled.ol`
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const TopLevelLinkContainer = styled.li`
+const TopLevelLinkContainer = styled.li<{ $isOpen: boolean }>`
     position: relative;
 
     &:hover {
