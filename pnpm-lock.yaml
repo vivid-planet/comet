@@ -505,9 +505,6 @@ importers:
       swiper:
         specifier: ^11.2.10
         version: 11.2.10
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
     devDependencies:
       '@babel/core':
         specifier: ^7.28.0
