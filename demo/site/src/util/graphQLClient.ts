@@ -19,7 +19,7 @@ async function sha256(query: string): Promise<string> {
         .join("");
 }
 
-export function createPersistedQueryGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
+function createPersistedQueryGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
     return async function <T, V>(query: string, variables?: V, init?: RequestInit): Promise<T> {
         const hash = await sha256(query.trim());
         let response;
