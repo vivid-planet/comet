@@ -1,9 +1,8 @@
-// app/api/graphql/route.ts
 import { queryMap } from "@src/queryMap.generated";
 
 const GRAPHQL_TARGET = `${process.env.API_URL_INTERNAL}/graphql`;
 
-export async function handler(req: Request) {
+async function handler(req: Request) {
     let hash: string | null | undefined;
     let variables: unknown;
 
