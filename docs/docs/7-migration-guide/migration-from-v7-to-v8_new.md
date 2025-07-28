@@ -362,7 +362,7 @@ Yes, you can do that before updating everything else to v8.
     +       "jsx": "react-jsx",
     ```
 
-4. Remove React barrel imports
+4. 🤖 Remove React barrel imports
 
     Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
     Use individual named imports instead, e.g, `import { useState } from "react"`.
@@ -377,7 +377,7 @@ Yes, you can do that before updating everything else to v8.
 
 5. Commit your changes with `--no-verify`
 
-6. Ignore import restrictions for `@mui/material` (this is done temporarily, we'll fix this later during the v8 update)
+6. 🤖 Ignore import restrictions for `@mui/material` (this is done temporarily, we'll fix this later during the v8 update)
 
     :::note Execute the following upgrade script:
 
@@ -395,7 +395,7 @@ Yes, you can do that before updating everything else to v8.
 
 1. Run `npm run lint:eslint -- --fix` to autofix all fixable issues
 2. Commit your changes with `--no-verify`
-3. Remove React barrel imports
+3. 🤖 Remove React barrel imports
 
     Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
     Use individual named imports instead, e.g, `import { useState } from "react"`.
@@ -430,106 +430,72 @@ We recommend doing it service-by-service like this:
 
 ## API
 
-### ✅ Upgrade peer dependencies
+Before installing, we must update the following dependency versions:
 
-#### NestJS
+### 🤖 Upgrade peer dependencies
 
-1.  Upgrade all your dependencies to support NestJS v11
+:::note Execute the following upgrade script:
 
-    <details>
+```sh
+npx @comet/upgrade v8/api/before-install
+```
 
-    <summary>Handled by @comet/upgrade</summary>
+:::
 
-    :::note Handled by following upgrade script
+#### ✅ NestJS
 
-    ```sh
-    npx @comet/upgrade v8/update-nest-dependencies.ts
-    ```
+Upgrade all your dependencies to support NestJS v11
 
-    :::
+<details>
 
-    ```diff title=api/package.json
-    {
-        "dependencies": {
-    +       "@apollo/server": "^4.0.0",
-    -       "@nestjs/apollo": "^10.0.0",
-    -       "@nestjs/common": "^9.0.0",
-    -       "@nestjs/config": "^2.0.0",
-    -       "@nestjs/core": "^9.0.0",
-    -       "@nestjs/graphql": "^10.0.0",
-    -       "@nestjs/passport": "^9.0.0",
-    -       "@nestjs/platform-express": "^9.0.0",
-    +       "@nestjs/apollo": "^13.0.0",
-    +       "@nestjs/common": "^11.0.0",
-    +       "@nestjs/core": "^11.0.0",
-    +       "@nestjs/graphql": "^13.0.0",
-    +       "@nestjs/passport": "^11.0.0",
-    +       "@nestjs/platform-express": "^11.0.0",
-    -       "apollo-server-core": "^3.0.0",
-    -       "apollo-server-express": "^3.0.0",
-    -       "express": "^4.0.0",
-    +       "express": "^5.0.0",
-    -       "graphql": "^15.0.0",
-    +       "graphql": "^16.10.0",
-        },
-        "devDependencies": {
-    -       "@nestjs/cli": "^9.0.0",
-    -       "@nestjs/schematics": "^9.0.0",
-    -       "@nestjs/testing": "^9.0.0",
-    +       "@nestjs/cli": "^11.0.0",
-    +       "@nestjs/schematics": "^11.0.0",
-    +       "@nestjs/testing": "^11.0.0",
-    -       "@types/express": "^4.0.0",
-    +       "@types/express": "^5.0.0",
-        }
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade v8/update-nest-dependencies.ts
+```
+
+:::
+
+```diff title=api/package.json
+{
+    "dependencies": {
++       "@apollo/server": "^4.0.0",
+-       "@nestjs/apollo": "^10.0.0",
+-       "@nestjs/common": "^9.0.0",
+-       "@nestjs/config": "^2.0.0",
+-       "@nestjs/core": "^9.0.0",
+-       "@nestjs/graphql": "^10.0.0",
+-       "@nestjs/passport": "^9.0.0",
+-       "@nestjs/platform-express": "^9.0.0",
++       "@nestjs/apollo": "^13.0.0",
++       "@nestjs/common": "^11.0.0",
++       "@nestjs/core": "^11.0.0",
++       "@nestjs/graphql": "^13.0.0",
++       "@nestjs/passport": "^11.0.0",
++       "@nestjs/platform-express": "^11.0.0",
+-       "apollo-server-core": "^3.0.0",
+-       "apollo-server-express": "^3.0.0",
+-       "express": "^4.0.0",
++       "express": "^5.0.0",
+-       "graphql": "^15.0.0",
++       "graphql": "^16.10.0",
+    },
+    "devDependencies": {
+-       "@nestjs/cli": "^9.0.0",
+-       "@nestjs/schematics": "^9.0.0",
+-       "@nestjs/testing": "^9.0.0",
++       "@nestjs/cli": "^11.0.0",
++       "@nestjs/schematics": "^11.0.0",
++       "@nestjs/testing": "^11.0.0",
+-       "@types/express": "^4.0.0",
++       "@types/express": "^5.0.0",
     }
-    ```
+}
+```
 
-    </details>
-
-2.  Update the custom `formatError` function to hide GraphQL field suggestions
-
-    <details>
-
-    <summary>Handled by @comet/upgrade</summary>
-
-    :::note Handled by following upgrade script
-
-    ```sh
-    npx @comet/upgrade v8/update-graphql-format-error.ts
-    ```
-
-    :::
-
-    ```diff title=api/src/app.module.ts
-    - import { ValidationError } from "apollo-server-express";
-    + import { ValidationError } from "@nestjs/apollo";
-
-    /* ... */
-
-    GraphQLModule.forRootAsync<ApolloDriverConfig>({
-        /* ... */
-        useFactory: (moduleRef: ModuleRef) => ({
-            /* ... */,
-            formatError: (error) => {
-                // Disable GraphQL field suggestions in production
-                if (process.env.NODE_ENV !== "development") {
-    -               if (error instanceof ValidationError) {
-    +               if (error.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
-                        return new ValidationError("Invalid request.");
-                    }
-                }
-                return error;
-            },
-
-        }),
-    }),
-    ```
-
-    </details>
-
-3.  You may need to update some of your routes to support Express v5.
-    See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
+</details>
 
 #### ✅ Add NestJS peer dependencies
 
@@ -539,7 +505,7 @@ Peer dependencies defined by NestJS have been added as peer dependencies to `@co
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Handled by
 
 ```sh
 npx @comet/upgrade v8/nest-peer-dependencies.ts
@@ -563,91 +529,40 @@ To upgrade, install the dependencies in your project:
 
 </details>
 
-#### MikroORM
+#### ✅ MikroORM
 
-1.  Upgrade all your dependencies:
+Upgrade all MikroORM dependencies to v6.
 
-    <details>
+<details>
 
-    <summary>Handled by @comet/upgrade</summary>
+<summary>Handled by @comet/upgrade</summary>
 
-    :::note Handled by following upgrade script
+:::note Handled by
 
-    ```sh
-    npx @comet/upgrade v8/update-mikro-orm-dependencies.ts
-    ```
+```sh
+npx @comet/upgrade v8/update-mikro-orm-dependencies.ts
+```
 
-    :::
+:::
 
-    ```diff title=api/package.json
-    {
-        "dependencies": {
-    -   "@mikro-orm/cli": "^5.9.8",
-    -   "@mikro-orm/core": "^5.9.8",
-    -   "@mikro-orm/migrations": "^5.9.8",
-    -   "@mikro-orm/nestjs": "^5.2.3",
-    -   "@mikro-orm/postgresql": "^5.9.8",
-    +   "@mikro-orm/cli": "^6.4.0",
-    +   "@mikro-orm/core": "^6.4.0",
-    +   "@mikro-orm/migrations": "^6.4.0",
-    +   "@mikro-orm/nestjs": "^6.0.2",
-    +   "@mikro-orm/postgresql": "^6.4.0",
-        },
-    }
-    ```
+```diff title=api/package.json
+{
+    "dependencies": {
+-   "@mikro-orm/cli": "^5.9.8",
+-   "@mikro-orm/core": "^5.9.8",
+-   "@mikro-orm/migrations": "^5.9.8",
+-   "@mikro-orm/nestjs": "^5.2.3",
+-   "@mikro-orm/postgresql": "^5.9.8",
++   "@mikro-orm/cli": "^6.4.0",
++   "@mikro-orm/core": "^6.4.0",
++   "@mikro-orm/migrations": "^6.4.0",
++   "@mikro-orm/nestjs": "^6.0.2",
++   "@mikro-orm/postgresql": "^6.4.0",
+    },
+}
+```
 
-    </details>
-
-2.  Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
-
-    :::note Partially handled by upgrade scripts
-
-    We provide upgrade scripts for basic migrations.
-    Please note that these scripts might not cover all necessary migrations.
-
-    <details>
-
-    <summary>Changes handled by @comet/upgrade</summary>
-
-    Remove generic from `BaseEntity`:
-
-    ```sh
-    npx @comet/upgrade v8/mikro-orm-base-entity-generic.ts
-    ```
-
-    Rename `customType` to `type`:
-
-    ```sh
-    npx @comet/upgrade v8/mikro-orm-custom-type.ts
-    ```
-
-    Rename `onDelete` to `deleteRule`:
-
-    ```sh
-    npx @comet/upgrade v8/mikro-orm-delete-rule.ts
-    ```
-
-    Add a `mikro-orm` script with a dotenv call to `package.json`:
-
-    ```sh
-    npx @comet/upgrade v8/mikro-orm-dotenv.ts
-    ```
-
-    Change all imports from `@mikro-orm/core` to `@mikro-orm/postgresql`:
-
-    ```sh
-    npx @comet/upgrade v8/mikro-orm-imports.ts
-    ```
-
-    Wrap config in `defineConfig`:
-
-    ```sh
-    npx @comet/upgrade v8/mikro-orm-ormconfig.ts
-    ```
-
-    </details>
-
-    :::
+</details>
 
 #### ✅ class-validator
 
@@ -657,7 +572,7 @@ The class-validator peer dependency has been bumped to v0.14.0.
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Handled by
 
 ```sh
 npx @comet/upgrade v8/update-class-validator.ts
@@ -684,7 +599,7 @@ The Sentry dependency has been bumped to v9.
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Handled by
 
 ```sh
 npx @comet/upgrade v8/update-sentry.ts
@@ -727,7 +642,7 @@ The `@kubernetes/client-node` peer dependency has been bumped to v1.
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Handled by
 
 ```sh
 npx @comet/upgrade v8/update-kubernetes-client-node.ts
@@ -746,7 +661,7 @@ npx @comet/upgrade v8/update-kubernetes-client-node.ts
 
 </details>
 
-### ✅ Remove `@comet/blocks-api`
+#### ✅ Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
 
@@ -756,12 +671,12 @@ The `@comet/blocks-api` package has been merged into the `@comet/cms-api` packag
 
 To upgrade, perform the following steps:
 
-1.  Remove the package:
+Remove the package:
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/remove-blocks-packages.ts
+    npx @comet/upgrade v8/remove-blocks-packages-api.ts
     ```
 
     :::
@@ -770,45 +685,233 @@ To upgrade, perform the following steps:
     - "@comet/blocks-api": "^7.x.x",
     ```
 
-2.  Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
-
-    :::note Handled by following upgrade script
-
-    ```sh
-    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
-    ```
-
-    :::
-
-3.  Update imports that have been renamed
-
-    :::note Handled by following upgrade script
-
-    ```sh
-    npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
-    ```
-
-    :::
-
-4.  Remove usages of removed export `getFieldKeys` (probably none)
-
 </details>
 
-### ✅ Change s3 blob-storage config structure
+#### ✅ Remove nestjs-console and install nest-commander
 
-It's now possible to configure the S3-client completely.
+The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
+We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
+
+The upgrade script will remove the `nestjs-console` package and install `nest-commander` and `@types/inquirer`.
 
 <details>
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Handled by
+
+```sh
+npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
+```
+
+:::
+
+1. Uninstall `nestjs-console`
+2. Install `nest-commander` and `@types/inquirer`
+ </details>
+
+#### ✅ Remove passport
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade v8/remove-passport.ts
+```
+
+:::
+
+Remove all passport-dependencies and add @nestjs/jwt
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@nestjs/passport": "^9.0.0",
+-       ...other passport dependencies
++       "@nestjs/jwt": "^10.2.0",
+    }
+}
+```
+
+</details>
+
+### API Generator - Add new package @comet/api-generator
+
+The API Generator has been moved into a separate package `@comet/api-generator`.
+
+```diff title="api/package.json"
+devDependencies: {
++  "@comet/api-generator": "8.0.0", // replace with the current COMET version
+}
+```
+
+### Install
+
+Now it's time to run npm install:
+
+1. Enter the /api folder: `cd api`
+2. `npm install`
+
+    :::warning ‼️ It's likely that the install fails ‼️
+    The upgrade scripts only updates the packages we have in the starter.
+    You probably have more packages that rely on NestJS or MikroORM in your project.
+    **Update them by hand based on the errors you are getting and rerun the install!**
+    :::
+
+3. Once the install passed, commit your changes with `--no-verify`
+
+### Necessary NestJS changes
+
+1. 🤖 Update the custom `formatError` function to hide GraphQL field suggestions
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/update-graphql-format-error.ts
+    ```
+
+    :::
+
+    <details>
+
+    ```diff title=api/src/app.module.ts
+    - import { ValidationError } from "apollo-server-express";
+    + import { ValidationError } from "@nestjs/apollo";
+
+    /* ... */
+
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+        /* ... */
+        useFactory: (moduleRef: ModuleRef) => ({
+            /* ... */,
+            formatError: (error) => {
+                // Disable GraphQL field suggestions in production
+                if (process.env.NODE_ENV !== "development") {
+    -               if (error instanceof ValidationError) {
+    +               if (error.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
+                        return new ValidationError("Invalid request.");
+                    }
+                }
+                return error;
+            },
+
+        }),
+    }),
+    ```
+
+    </details>
+
+2. You may need to update some of your routes to support Express v5.
+   See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
+
+### Necessary MikroORM changes
+
+Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+
+We provide upgrade scripts for basic migrations.
+**Please note that these scripts might not cover all necessary migrations.**
+
+1. 🤖 Remove generic from `BaseEntity`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-base-entity-generic.ts
+    ```
+
+    :::
+
+2. 🤖 Rename `customType` to `type`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-custom-type.ts
+    ```
+
+    :::
+
+3. 🤖 Rename `onDelete` to `deleteRule`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-delete-rule.ts
+    ```
+
+    :::
+
+4. 🤖 Add a `mikro-orm` script with a dotenv call to `package.json`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-dotenv.ts
+    ```
+
+    :::
+
+5. 🤖 Change all imports from `@mikro-orm/core` to `@mikro-orm/postgresql`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-imports.ts
+    ```
+
+    :::
+
+6. 🤖 Wrap config in `defineConfig`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-ormconfig.ts
+    ```
+
+    :::
+
+### 🤖 Remove `@comet/blocks-api`
+
+The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
+Thus, all imports must be updated.
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+```
+
+:::
+
+<details>
+
+To upgrade, perform the following steps:
+
+1. Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
+
+2. Update imports that have been renamed
+
+3. Remove usages of removed export `getFieldKeys` (probably none)
+
+</details>
+
+### 🤖 Change s3 blob-storage config structure
+
+It's now possible to configure the S3-client completely.
+
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/update-s3-config.ts
 ```
 
 :::
+
+<details>
 
 Previously configuration had its own structure, now credentials are nested under `credentials` and the `accessKeyId` and `secretAccessKey` are no longer top-level properties. Bucket is not part of s3-config but still required, so it's passed as a top-level property.
 
@@ -841,22 +944,20 @@ blob: {
 
 </details>
 
-### Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
+### 🤖 Add `ImgproxyModule` and change config of `BlobStorageModule` and `DamModule`
 
 The `FileUploadsModule` has been completely separated from the `DamModule` and now works independently.
 Some structural changes were necessary to achieve this.
 
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
 ```
 
 :::
+
+<details>
 
 You need to modify your `AppModule` as follows:
 
@@ -884,7 +985,7 @@ You need to modify your `AppModule` as follows:
     }),
 ```
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
@@ -937,24 +1038,6 @@ if (process.env.TRACING_ENABLED) {
 The [nestjs-console](https://github.com/Pop-Code/nestjs-console) package isn't actively maintained anymore.
 We therefore replace it with [nest-command](https://nest-commander.jaymcdoniel.dev/).
 
-The upgrade script will remove the `nestjs-console` package and install `nest-commander` and `@types/inquirer`.
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
-```
-
-:::
-
-1. Uninstall `nestjs-console`
-2. Install `nest-commander` and `@types/inquirer`
- </details>
-
 You have to perform the following steps manually:
 
 1. Update `api/src/console.ts` to use `nest-commander`. Minimum example:
@@ -983,7 +1066,7 @@ You have to perform the following steps manually:
     bootstrap();
     ```
 
-2. Update your commands to the new `nest-commander` syntax
+2. Update your commands to the new `nest-commander` syntax:
 
 #### Migrating nestjs-console commands to nest-commander
 
@@ -1111,71 +1194,55 @@ This section highlights the necessary changes to convert a nestjs-console comman
 
 ### Remove passport
 
-The passport dependencies were removed by the upgrade script.
+The passport dependencies were removed before the install. The following steps must be done manually:
 
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-```sh
-npx @comet/upgrade v8/remove-passport.ts
-```
-
+:::info
+If you're unsure about how to structure the AuthModule, look at the [COMET Starter version](https://github.com/vivid-planet/comet-starter/blob/main/api/src/auth/auth.module.ts).
 :::
 
-Remove all passport-dependencies and add @nestjs/jwt
+1. Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`:
 
-```diff title=api/package.json
-{
-    "dependencies": {
--       "@nestjs/passport": "^9.0.0",
--       ...other passport dependencies
-+       "@nestjs/jwt": "^10.2.0",
-    }
-}
-```
+    ```diff title=api/src/auth/auth.module.ts
+    -   createStaticCredentialsBasicStrategy({ ... }),
+    -   createAuthProxyJwtStrategy({ ... }),
+    -   createStaticAuthedUserStrategy({ ... }),
+    +   ...createAuthGuardProviders(
+    +       createBasicAuthService({ ... }),
+    +       createJwtAuthService({ ... }),
+    +       createStaticUserAuthService({ ... }),
+    +   ),
+    ```
 
-</details>
+    :::note Configuration changes
+    The configuration of the AuthServices have changed slightly compared to the strategies, however they remain similar. Consulting the code completion should help to adapt.
+    :::
 
-Following steps must be done manually:
+2. Add the new `createSitePreviewAuthService`:
 
-Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`:
+    ```diff title=api/src/auth/auth.module.ts
+        ...createAuthGuardProviders(
+            // ...
+    +       createSitePreviewAuthService({ ... }),
+        ),
+    ```
 
-```diff title=api/src/auth/auth.module.ts
--   createStaticCredentialsBasicStrategy({ ... }),
--   createAuthProxyJwtStrategy({ ... }),
--   createStaticCredentialsBasicStrategy({ ... }),
-+   ...createAuthGuardProviders(
-+       createBasicAuthService({ ... }),
-+       createJwtAuthService({ ... }),
-+       createSitePreviewAuthService({ ... }),
-+       createStaticUserAuthService({ ... }),
-+   ),
-```
+3. Replace `createAuthResolver` with the class name:
 
-:::note Configuration changes
-The configuration of the AuthServices have changed slightly compared to the strategies, however they remain similar. Consulting the code completion should help to adapt.
-:::
+    ```diff title=api/src/auth/auth.module.ts
+    -   useClass: createCometAuthGuard([...]),
+    +   useClass: CometAuthGuard,
+    ```
 
-Replace `createAuthResolver` with the class name:
+    :::note Passport not supported anymore
+    `CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
+    :::
 
-```diff title=api/src/auth/auth.module.ts
--   useClass: createCometAuthGuard([...]),
-+   useClass: CometAuthGuard,
-```
+4. Import `JwtModule` from `@nestjs/jwt`:
 
-:::note Passport not supported anymore
-`CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
-:::
-
-Import `JwtModule` from `@nestjs/jwt`:
-
-```diff title=api/src/auth/auth.module.ts
-    exports: [UserService, AccessControlService],
-+   imports: [JwtModule],
-```
+    ```diff title=api/src/auth/auth.module.ts
+        exports: [UserService, AccessControlService],
+    +   imports: [JwtModule],
+    ```
 
 ### Use strings for date-only columns
 
@@ -1215,34 +1282,12 @@ Perform the following changes:
 
 ### Pass metadata to `gqlArgsToMikroOrmQuery`
 
+You now need to pass the entity metadata instead of the repository to `gqlArgsToMikroOrmQuery`:
+
 ```diff title="src/**/your.resolver.ts"
 -       const where = gqlArgsToMikroOrmQuery({ filter, search }, this.repository);
 +       const where = gqlArgsToMikroOrmQuery({ filter, search }, this.entityManager.getMetadata(YourEntity));
 ```
-
-### ✅ API Generator - Add new package @comet/api-generator
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Handled by following upgrade script
-
-    ```sh
-    npx @comet/upgrade v8/api-generator-dev-dependencies.ts
-    ```
-
-:::
-
-The API Generator has been moved into a separate package `@comet/api-generator`.
-
-```diff title="api/package.json"
-devDependencies: {
-+  "@comet/api-generator": "^8.0.0",
-}
-```
-
-</details>
 
 ### API Generator - Removed Special `status` Field Behavior
 
@@ -1253,46 +1298,47 @@ done with the normal filtering mechanism.
 
 ### API Generator - Don't commit generated files
 
-The improved performance of API Generator doesn't make it necessary anymore to add generated files to git. You can remove previously generated files and generate them on demand:
+The improved performance of API Generator doesn't make it necessary anymore to add generated files to git.
+You can remove previously generated files and generate them on demand:
 
-run api-generator in prebuild:
+1. run api-generator in prebuild:
 
-```diff title="api/package.json"
-scripts: {
--  "prebuild": "rimraf dist",
-+  "prebuild": "rimraf dist && npm run api-generator",
-}
-```
+    ```diff title="api/package.json"
+    scripts: {
+    -  "prebuild": "rimraf dist",
+    +  "prebuild": "rimraf dist && npm run api-generator",
+    }
+    ```
 
-lint script can be removed:
+2. lint script can be removed:
 
-```diff title="api/package.json"
-scripts: {
--  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
-}
-```
+    ```diff title="api/package.json"
+    scripts: {
+    -  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+    }
+    ```
 
-Add generated files to eslint ignore:
+3. Add generated files to eslint ignore:
 
-```diff title="api/eslint.config.mjs"
-scripts: {
--  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
-+  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
-}
-```
+    ```diff title="api/eslint.config.mjs"
+    scripts: {
+    -  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts"],
+    +  ignores: ["src/db/migrations/**", "dist/**", "src/**/*.generated.ts", "src/**/generated/**"],
+    }
+    ```
 
-Add generated files to .gitignore:
+4. Add generated files to .gitignore:
 
-```diff title="api/.gitignore"
-+ # API generator
-+ src/**/generated
-```
+    ```diff title="api/.gitignore"
+    + # API generator
+    + src/**/generated
+    ```
 
-And finally delete generated files from git:
+5. And finally delete generated files from git:
 
-```sh
-git rm -r api/src/*/generated
-```
+    ```sh
+    git rm -r api/src/*/generated
+    ```
 
 ## Admin
 
@@ -1308,7 +1354,7 @@ The React dependency has been bumped to v18.
 
      <summary>Handled by @comet/upgrade</summary>
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/update-react-dependencies.ts
@@ -1353,7 +1399,7 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
 
      <summary>Handled by @comet/upgrade</summary>
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
          ```sh
          npx @comet/upgrade v8/update-mui-dependencies.ts
@@ -1382,7 +1428,7 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
 
      <summary>Handled by @comet/upgrade</summary>
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/mui-codemods.ts
@@ -1405,7 +1451,7 @@ The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to
 
 In `package.json` update the version of the MUI X packages to `^7.22.3`.
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/update-mui-x-dependencies.ts
@@ -1425,7 +1471,7 @@ npx @comet/upgrade v8/update-mui-x-dependencies.ts
 
 A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/mui-x-codemods.ts
@@ -1476,7 +1522,7 @@ Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid,
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/update-swc-dependencies.ts
@@ -1499,7 +1545,7 @@ npx @comet/upgrade v8/update-swc-dependencies.ts
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
@@ -1529,7 +1575,7 @@ To upgrade, perform the following steps:
 
 1.  Remove the package:
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/remove-blocks-packages.ts
@@ -1543,7 +1589,7 @@ To upgrade, perform the following steps:
 
 2.  Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
@@ -1553,7 +1599,7 @@ To upgrade, perform the following steps:
 
 3.  Update imports that have been renamed
 
-    :::note Handled by following upgrade script
+    :::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
@@ -1577,7 +1623,7 @@ Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateActio
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/merge-admin-theme-into-admin.ts
@@ -1603,7 +1649,7 @@ The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/remove-comet-admin-react-select-dependency.ts
@@ -1634,7 +1680,7 @@ The separate providers for CMS features (e.g, `DamConfigProvider`) have been mer
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/comet-config-provider.ts
@@ -1854,7 +1900,7 @@ server: {
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/rename-menu-components-in-admin.ts
@@ -1925,7 +1971,7 @@ The new usage simplifies the component structure - children can now be passed di
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
@@ -1964,7 +2010,7 @@ const persistentColumnState = usePersistentColumnState("persistent_column_state"
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
@@ -2018,7 +2064,7 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/update-import-of-dialog.ts
@@ -2039,7 +2085,7 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/add-dialog-content-to-edit-dialog.ts
@@ -2071,7 +2117,7 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/tooltip-1-update-import.ts
@@ -2092,7 +2138,7 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
     ```sh
     npx @comet/upgrade v8/tooltip-2-remove-trigger-prop.ts
@@ -2257,7 +2303,7 @@ scalars: rootBlocks.reduce(
 
 ### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 
@@ -2309,7 +2355,7 @@ Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dash
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/use-mui-date-picker-in-grid.ts
@@ -2438,7 +2484,7 @@ const nextConfig = {
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
@@ -2486,7 +2532,7 @@ scalars: rootBlocks.reduce(
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/eslint-dev-dependencies.ts
@@ -2570,13 +2616,13 @@ If you have custom rules in your `.eslintrc.json`, you need to manually move the
 
 :::
 
-### Upgrade Prettier from v2 to v3
+### 🤖 Upgrade Prettier from v2 to v3
 
 <details>
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Handled by following upgrade script
+:::note Execute the following upgrade script:
 
 ```sh
 npx @comet/upgrade v8/prettier-dev-dependencies.ts
