@@ -128,8 +128,7 @@ export interface IAdminHoverComponentMessage {
 export interface IAdminContentScopeMessage {
     cometType: AdminMessageType.ContentScope;
     data: {
-        contentScope: unknown;
-        encryptedContentScope?: string;
+        contentScopeJwt: string;
     };
 }
 

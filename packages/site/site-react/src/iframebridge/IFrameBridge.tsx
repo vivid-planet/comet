@@ -42,7 +42,7 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
-    encryptedContentScope: string;
+    contentScopeJwt: string;
     graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
@@ -63,7 +63,7 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
-    encryptedContentScope: "",
+    contentScopeJwt: "",
     graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
@@ -74,6 +74,32 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
     },
 });
 
+function parseJwt(token: string) {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+        window
+            .atob(base64)
+            .split("")
+            .map(function (c) {
+                return `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`;
+            })
+            .join(""),
+    );
+
+    return JSON.parse(jsonPayload);
+}
+
+function getContentScopeFromJwt(jwt: string): unknown {
+    try {
+        const parsedJwt = parseJwt(jwt);
+        return parsedJwt.scope;
+    } catch (e) {
+        console.error("Failed to parse content scope JWT", e);
+        return undefined;
+    }
+}
+
 export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [block, setBlock] = useState<unknown | undefined>(undefined);
     const [showOnlyVisible, setShowOnlyVisible] = useState<boolean>(false);
@@ -81,7 +107,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | null>(null);
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
-    const [encryptedContentScope, setEncryptedContentScope] = useState<string>("");
+    const [contentScopeJwt, setContentScopeJwt] = useState<string>("");
     const [graphQLApiUrl, setGraphQLApiUrl] = useState<string>("");
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
@@ -220,8 +246,8 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                     debounceDeactivateOutlines();
                     break;
                 case AdminMessageType.ContentScope:
-                    setContentScope(message.data.contentScope);
-                    setEncryptedContentScope(message.data.encryptedContentScope);
+                    setContentScope(getContentScopeFromJwt(message.data.contentScopeJwt));
+                    setContentScopeJwt(message.data.contentScopeJwt);
                     break;
                 case AdminMessageType.GraphQLApiUrl:
                     setGraphQLApiUrl(message.data.graphQLApiUrl);
@@ -289,7 +315,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             },
             sendMessage,
             contentScope,
-            encryptedContentScope,
+            contentScopeJwt,
             graphQLApiUrl,
             previewElementsData,
             addPreviewElement,
@@ -303,7 +329,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             hoveredAdminRoute,
             sendMessage,
             contentScope,
-            encryptedContentScope,
+            contentScopeJwt,
             graphQLApiUrl,
             previewElementsData,
             addPreviewElement,
