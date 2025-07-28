@@ -11,7 +11,8 @@ if (typeof window !== "undefined") {
     const originalFetch = window.fetch;
     window.fetch = async (input, init: RequestInit = {}) => {
         const headers = new Headers(init.headers);
-        if (currentContentScopeJwt) {
+        const url = new URL(typeof input === "string" ? input : input.toString(), window.location.origin);
+        if (url.host === window.location.host && currentContentScopeJwt) {
             headers.set("X-Block-Preview", currentContentScopeJwt);
         }
         return originalFetch(input, { ...init, headers });
