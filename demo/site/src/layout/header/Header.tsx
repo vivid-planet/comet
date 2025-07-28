@@ -40,7 +40,7 @@ function Header({ header }: Props): JSX.Element {
             <nav>
                 <TopLevelNavigation>
                     {header.items.map((item) => (
-                        <TopLevelLinkContainer key={item.id} $isOpen={openMenuId === item.id}>
+                        <TopLevelLinkContainer key={item.id}>
                             <Link page={item.node} activeClassName="active">
                                 {item.node.name}
                             </Link>
@@ -50,17 +50,19 @@ function Header({ header }: Props): JSX.Element {
                                 </ToggleSubLevelNavigationButton>
                             )}
                             {item.node.childNodes.length > 0 && (
-                                <FocusLock disabled={openMenuId !== item.id}>
-                                    <SubLevelNavigation $isOpen={openMenuId === item.id}>
-                                        {item.node.childNodes.map((node) => (
-                                            <li key={node.id}>
-                                                <Link page={node} activeClassName="active">
-                                                    {node.name}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </SubLevelNavigation>
-                                </FocusLock>
+                                <SubLevelNavigationRoot $isOpen={openMenuId === item.id}>
+                                    <FocusLock disabled={openMenuId !== item.id}>
+                                        <SubLevelNavigation>
+                                            {item.node.childNodes.map((node) => (
+                                                <li key={node.id}>
+                                                    <Link page={node} activeClassName="active">
+                                                        {node.name}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </SubLevelNavigation>
+                                    </FocusLock>
+                                </SubLevelNavigationRoot>
                             )}
                         </TopLevelLinkContainer>
                     ))}
@@ -80,23 +82,27 @@ const TopLevelNavigation = styled.ol`
     padding: 0;
 `;
 
-const SubLevelNavigation = styled.ol<{ $isOpen: boolean }>`
+const SubLevelNavigationRoot = styled.div<{ $isOpen: boolean }>`
     display: ${(props) => (props.$isOpen ? "block" : "none")};
+`;
+
+const SubLevelNavigation = styled.ol`
     position: absolute;
     min-width: 100px;
     list-style-type: none;
     padding: 5px;
     background-color: white;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
 `;
 
-const TopLevelLinkContainer = styled.li<{ $isOpen: boolean }>`
+const TopLevelLinkContainer = styled.li`
     position: relative;
 
     &:hover {
         text-decoration: underline;
 
-        & > ${SubLevelNavigation} {
+        & > ${SubLevelNavigationRoot} {
             display: block;
         }
     }
