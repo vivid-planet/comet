@@ -4,6 +4,7 @@ import { type FormConfig, type FormLayoutConfig, type GQLDocumentConfigMap } fro
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { type Imports } from "../utils/generateImportsCode";
 import { generateFields, type GenerateFieldsReturn } from "./generateFields";
+import { type Prop } from "./generateForm";
 
 export function generateFormLayout({
     gqlIntrospection,
@@ -34,6 +35,7 @@ export function generateFormLayout({
     const formFragmentFields: string[] = [];
     const gqlDocuments: GQLDocumentConfigMap = {};
     const imports: Imports = [];
+    const props: Prop[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
@@ -57,6 +59,7 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        props.push(...generatedFields.props);
         formValuesConfig.push(...generatedFields.formValuesConfig);
 
         finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generatedFields.finalFormConfig?.subscription };
@@ -187,6 +190,7 @@ export function generateFormLayout({
     }
     return {
         code,
+        props,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields,

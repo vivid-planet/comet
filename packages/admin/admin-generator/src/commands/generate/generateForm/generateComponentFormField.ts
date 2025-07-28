@@ -18,6 +18,7 @@ export function generateComponentFormField({ config }: { config: ComponentFormFi
         formValuesConfig: [],
         finalFormConfig: undefined,
         code,
+        props: [],
         gqlDocuments: {},
     };
 }

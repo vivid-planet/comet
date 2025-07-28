@@ -51,6 +51,9 @@ type InputBaseFieldConfig = {
 };
 
 export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
+export function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
+    return arg && arg.type !== undefined && ["component"].includes(arg.type);
+}
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
@@ -73,7 +76,7 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          filter?: { type: "field" | "prop"; name: string; gqlName?: string };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
@@ -89,7 +92,7 @@ export type FormFieldConfig<T> = (
 };
 
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
-    return !isFormLayoutConfig(arg);
+    return !isFormLayoutConfig(arg) && !isComponentFormFieldConfig(arg);
 }
 
 type OptionalNestedFieldsConfig<T> = {
