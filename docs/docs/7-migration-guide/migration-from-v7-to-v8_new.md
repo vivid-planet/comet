@@ -874,6 +874,16 @@ We provide upgrade scripts for basic migrations.
 
     :::
 
+7. Replace `UseRequestContext` with `CreateRequestContext`:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-create-request-context.ts
+    ```
+
+    :::
+
 ### 🤖 Remove `@comet/blocks-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
@@ -898,6 +908,16 @@ To upgrade, perform the following steps:
 3. Remove usages of removed export `getFieldKeys` (probably none)
 
 </details>
+
+### 🤖 Use graphiql instead of GraphQL Playground:
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade v8/replace-playground-with-graphiql.ts
+```
+
+:::
 
 ### 🤖 Change s3 blob-storage config structure
 
@@ -1446,16 +1466,6 @@ In `package.json` update the version of the MUI X packages to `^7.22.3`.
 + "@mui/x-data-grid-premium": "^7.22.3",
 ```
 
-A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
-
-:::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade v8/mui-x-codemods.ts
-    ```
-
-:::
-
 </details>
 
 #### ✅ Vite / SWC
@@ -1600,7 +1610,7 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
 
 The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to v7.
 
-1. Search for columns with the `type: "dateTime`. You must add a `valueGetter`:
+1.  Search for columns with the `type: "dateTime`. You must add a `valueGetter`:
 
     ```diff
         <DataGrid
@@ -1614,7 +1624,7 @@ The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to
         />
     ```
 
-2. Search for `valueGetter` and `valueFormatter`
+2.  Search for `valueGetter` and `valueFormatter`
 
     Change the arguments passed to the functions.
     Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
@@ -1634,6 +1644,18 @@ The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to
         />
     ```
 
+3.  A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/).
+
+    There is also a codemod from MUI which handles most of the changes:
+
+    :::note Execute the following upgrade script:
+
+        ```sh
+        npx @comet/upgrade v8/mui-x-codemods.ts
+        ```
+
+    :::
+
 ### Remove `@comet/blocks-admin`
 
 The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
@@ -1643,6 +1665,7 @@ The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` pa
     :::note Execute the following upgrade script:
 
     ```sh
+    npx @comet/upgrade v8/clipboard-helpers.ts
     npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
     ```
 
@@ -2465,7 +2488,7 @@ Now it's time to run npm install:
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
+npx @comet/upgrade v8/remove-graphql-client-from-site-preview-handlers.ts
 ```
 
 :::
