@@ -753,7 +753,9 @@ devDependencies: {
 Now it's time to run npm install:
 
 1. Enter the /api folder: `cd api`
-2. `npm install`
+2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
+3. Update `@comet/` packages to v8
+4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
     The upgrade scripts only updates the packages we have in the starter.
@@ -761,7 +763,7 @@ Now it's time to run npm install:
     **Update them by hand based on the errors you are getting and rerun the install!**
     :::
 
-3. Once the install passed, commit your changes with `--no-verify`
+5. Once the install passed, commit your changes with `--no-verify`
 
 ### Necessary NestJS changes
 
@@ -1566,7 +1568,9 @@ devDependencies: {
 Now it's time to run npm install:
 
 1. Enter the /admin folder: `cd admin`
-2. `npm install`
+2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
+3. Update `@comet/` packages to v8
+4. `npm install`
 
     :::warning ‼️ It's likely that the install fails ‼️
     The upgrade scripts only updates the packages we have in the starter.
@@ -1574,7 +1578,7 @@ Now it's time to run npm install:
     **Update them by hand based on the errors you are getting and rerun the install!**
     :::
 
-3. Once the install passed, commit your changes with `--no-verify`
+5. Once the install passed, commit your changes with `--no-verify`
 
 ### React
 
@@ -2480,8 +2484,10 @@ Otherwise, go back and do it now.
 Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
-2. `npm install`
-3. Once the install passed, commit your changes with `--no-verify`
+2. Delete `node_modules` and `package-lock.json` to avoid false positive errors: `rm package-lock.json && rm -rf node_modules`
+3. Update `@comet/` packages to v8
+4. `npm install`
+5. Once the install passed, commit your changes with `--no-verify`
 
 ### 🤖 Remove `graphQLFetch` from `sitePreviewRoute` calls
 
