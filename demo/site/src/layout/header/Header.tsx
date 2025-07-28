@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import FocusLock from "react-focus-lock";
 import styled from "styled-components";
 
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
@@ -17,6 +18,23 @@ function Header({ header }: Props): JSX.Element {
         setOpenMenuId(openMenuId === id ? null : id);
     };
 
+    const useEscapeKeyPressed = (keyPressed: () => void) => {
+        useEffect(() => {
+            const handleKeyDown = (event: KeyboardEvent) => {
+                if (event.key === "Escape") keyPressed();
+            };
+
+            window.addEventListener("keydown", handleKeyDown);
+            return () => {
+                window.removeEventListener("keydown", handleKeyDown);
+            };
+        }, [keyPressed]);
+    };
+
+    useEscapeKeyPressed(() => {
+        setOpenMenuId(null);
+    });
+
     return (
         <Root>
             <nav>
@@ -32,15 +50,17 @@ function Header({ header }: Props): JSX.Element {
                                 </ToggleSubLevelNavigationButton>
                             )}
                             {item.node.childNodes.length > 0 && (
-                                <SubLevelNavigation $isOpen={openMenuId === item.id}>
-                                    {item.node.childNodes.map((node) => (
-                                        <li key={node.id}>
-                                            <Link page={node} activeClassName="active">
-                                                {node.name}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </SubLevelNavigation>
+                                <FocusLock disabled={openMenuId !== item.id}>
+                                    <SubLevelNavigation $isOpen={openMenuId === item.id}>
+                                        {item.node.childNodes.map((node) => (
+                                            <li key={node.id}>
+                                                <Link page={node} activeClassName="active">
+                                                    {node.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </SubLevelNavigation>
+                                </FocusLock>
                             )}
                         </TopLevelLinkContainer>
                     ))}
