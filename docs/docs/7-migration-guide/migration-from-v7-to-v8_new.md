@@ -34,7 +34,7 @@ Then make the following changes:
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/replace-node-with-v22-locally.ts
+npx @comet/upgrade@latest v8/replace-node-with-v22-locally.ts
 ```
 
 :::
@@ -57,7 +57,7 @@ npx @comet/upgrade v8/replace-node-with-v22-locally.ts
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/replace-node-with-v22-in-gitlab-ci-files.ts
+npx @comet/upgrade@latest v8/replace-node-with-v22-in-gitlab-ci-files.ts
 ```
 
 :::
@@ -201,7 +201,7 @@ To switch you must
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/eslint-dev-dependencies.ts
+npx @comet/upgrade@latest v8/eslint-dev-dependencies.ts
 ```
 
 :::
@@ -302,7 +302,7 @@ You must now manually go through all the eslint configs and migrate your custom 
 :::note Execute the following upgrade script
 
 ```sh
-npx @comet/upgrade v8/prettier-dev-dependencies.ts
+npx @comet/upgrade@latest v8/prettier-dev-dependencies.ts
 ```
 
 :::
@@ -370,7 +370,7 @@ Yes, you can do that before updating everything else to v8.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/remove-react-barrel-imports-admin.ts
+    npx @comet/upgrade@latest v8/remove-react-barrel-imports-admin.ts
     ```
 
     :::
@@ -382,7 +382,7 @@ Yes, you can do that before updating everything else to v8.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/ignore-restricted-imports-admin.ts
+    npx @comet/upgrade@latest v8/ignore-restricted-imports-admin.ts
     ```
 
     :::
@@ -403,7 +403,7 @@ Yes, you can do that before updating everything else to v8.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/remove-react-barrel-imports-site.ts
+    npx @comet/upgrade@latest v8/remove-react-barrel-imports-site.ts
     ```
 
     :::
@@ -437,7 +437,7 @@ Before installing, we must update the following dependency versions:
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/api/before-install
+npx @comet/upgrade@latest v8/api/before-install
 ```
 
 :::
@@ -453,7 +453,7 @@ Upgrade all your dependencies to support NestJS v11
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-nest-dependencies.ts
+npx @comet/upgrade@latest v8/api/before-install/update-nest-dependencies.ts
 ```
 
 :::
@@ -508,7 +508,7 @@ Peer dependencies defined by NestJS have been added as peer dependencies to `@co
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/nest-peer-dependencies.ts
+npx @comet/upgrade@latest v8/api/before-install/nest-peer-dependencies.ts
 ```
 
 :::
@@ -540,7 +540,7 @@ Upgrade all MikroORM dependencies to v6.
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-mikro-orm-dependencies.ts
+npx @comet/upgrade@latest v8/api/before-install/update-mikro-orm-dependencies.ts
 ```
 
 :::
@@ -575,7 +575,7 @@ The class-validator peer dependency has been bumped to v0.14.0.
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-class-validator.ts
+npx @comet/upgrade@latest v8/api/before-install/update-class-validator.ts
 ```
 
 :::
@@ -602,7 +602,7 @@ The Sentry dependency has been bumped to v9.
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-sentry.ts
+npx @comet/upgrade@latest v8/api/before-install/update-sentry.ts
 ```
 
 :::
@@ -618,20 +618,6 @@ npx @comet/upgrade v8/update-sentry.ts
 }
 ```
 
-2. Update your `main.ts` file to remove all `Sentry.Handlers` and add `Sentry.setupExpressErrorHandler(app)`:
-
-```diff
--   app.use(Sentry.Handlers.requestHandler());
--   app.use(Sentry.Handlers.tracingHandler());
--   app.use(Sentry.Handlers.errorHandler());
-+   Sentry.setupExpressErrorHandler(app);
-```
-
-None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
-
-- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
-- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
-
 </details>
 
 #### ✅ `@kubernetes/client-node`
@@ -645,7 +631,7 @@ The `@kubernetes/client-node` peer dependency has been bumped to v1.
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-kubernetes-client-node.ts
+npx @comet/upgrade@latest v8/api/before-install/update-kubernetes-client-node.ts
 ```
 
 :::
@@ -676,7 +662,7 @@ Remove the package:
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/remove-blocks-packages-api.ts
+    npx @comet/upgrade@latest v8/api/before-install/remove-blocks-packages-api.ts
     ```
 
     :::
@@ -701,7 +687,7 @@ The upgrade script will remove the `nestjs-console` package and install `nest-co
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
+npx @comet/upgrade@latest v8/api/before-install/replace-nestjs-console-with-nest-commander.ts
 ```
 
 :::
@@ -719,7 +705,7 @@ npx @comet/upgrade v8/replace-nestjs-console-with-nest-commander.ts
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/remove-passport.ts
+npx @comet/upgrade@latest v8/api/before-install/remove-passport.ts
 ```
 
 :::
@@ -772,7 +758,7 @@ Now it's time to run npm install:
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/update-graphql-format-error.ts
+    npx @comet/upgrade@latest v8/api/after-install/update-graphql-format-error.ts
     ```
 
     :::
@@ -821,7 +807,7 @@ We provide upgrade scripts for basic migrations.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-base-entity-generic.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-base-entity-generic.ts
     ```
 
     :::
@@ -831,7 +817,7 @@ We provide upgrade scripts for basic migrations.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-custom-type.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-custom-type.ts
     ```
 
     :::
@@ -841,7 +827,7 @@ We provide upgrade scripts for basic migrations.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-delete-rule.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-delete-rule.ts
     ```
 
     :::
@@ -851,7 +837,7 @@ We provide upgrade scripts for basic migrations.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-dotenv.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-dotenv.ts
     ```
 
     :::
@@ -861,7 +847,7 @@ We provide upgrade scripts for basic migrations.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-imports.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-imports.ts
     ```
 
     :::
@@ -871,17 +857,17 @@ We provide upgrade scripts for basic migrations.
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-ormconfig.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-ormconfig.ts
     ```
 
     :::
 
-7. Replace `UseRequestContext` with `CreateRequestContext`:
+7. 🤖 Replace `UseRequestContext` with `CreateRequestContext`:
 
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mikro-orm-create-request-context.ts
+    npx @comet/upgrade@latest v8/api/after-install/mikro-orm-create-request-context.ts
     ```
 
     :::
@@ -894,7 +880,7 @@ Thus, all imports must be updated.
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/merge-blocks-api-into-cms-api.ts
+npx @comet/upgrade@latest v8/api/after-install/merge-blocks-api-into-cms-api.ts
 ```
 
 :::
@@ -911,12 +897,42 @@ To upgrade, perform the following steps:
 
 </details>
 
+### 🤖 Sentry
+
+The Sentry dependency has been bumped to v9.
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade@latest v8/api/after-install/change-sentry-setup.ts
+```
+
+:::
+
+<details>
+
+Update your `main.ts` file to remove all `Sentry.Handlers` and add `Sentry.setupExpressErrorHandler(app)`:
+
+```diff
+-   app.use(Sentry.Handlers.requestHandler());
+-   app.use(Sentry.Handlers.tracingHandler());
+-   app.use(Sentry.Handlers.errorHandler());
++   Sentry.setupExpressErrorHandler(app);
+```
+
+None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
+
+- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
+- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
+
+</details>
+
 ### 🤖 Use graphiql instead of GraphQL Playground:
 
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/replace-playground-with-graphiql.ts
+npx @comet/upgrade@latest v8/api/after-install/replace-playground-with-graphiql.ts
 ```
 
 :::
@@ -928,7 +944,7 @@ It's now possible to configure the S3-client completely.
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/update-s3-config.ts
+npx @comet/upgrade@latest v8/api/after-install/update-s3-config.ts
 ```
 
 :::
@@ -974,7 +990,7 @@ Some structural changes were necessary to achieve this.
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/src/v8/update-dam-configuration.ts
+npx @comet/upgrade@latest v8/api/after-install/update-dam-configuration.ts
 ```
 
 :::
@@ -1010,7 +1026,7 @@ You need to modify your `AppModule` as follows:
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/move-maxSrcResolution-in-comet-config.ts
+npx @comet/upgrade@latest v8/api/after-install/move-maxSrcResolution-in-comet-config.ts
 ```
 
 :::
@@ -1369,7 +1385,7 @@ You can remove previously generated files and generate them on demand:
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/admin/before-install
+npx @comet/upgrade@latest v8/admin/before-install
 ```
 
 :::
@@ -1385,7 +1401,7 @@ The React dependency has been bumped to v18.
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-react-dependencies.ts
+npx @comet/upgrade@latest v8/admin/before-install/update-react-dependencies.ts
 ```
 
 :::
@@ -1420,7 +1436,7 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
 :::note Handled by
 
      ```sh
-     npx @comet/upgrade v8/update-mui-dependencies.ts
+     npx @comet/upgrade@latest v8/admin/before-install/update-mui-dependencies.ts
      ```
 
 :::
@@ -1451,7 +1467,7 @@ The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/update-mui-x-dependencies.ts
+npx @comet/upgrade@latest v8/admin/before-install/update-mui-x-dependencies.ts
 ```
 
 :::
@@ -1479,7 +1495,7 @@ In `package.json` update the version of the MUI X packages to `^7.22.3`.
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/update-swc-dependencies.ts
+npx @comet/upgrade@latest v8/admin/before-install/update-swc-dependencies.ts
 ```
 
 :::
@@ -1506,7 +1522,7 @@ Remove the package:
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/remove-blocks-packages-admin.ts
+npx @comet/upgrade@latest v8/admin/before-install/remove-blocks-packages-admin.ts
 ```
 
 :::
@@ -1526,7 +1542,7 @@ npx @comet/upgrade v8/remove-blocks-packages-admin.ts
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/remove-admin-theme-package.ts
+npx @comet/upgrade@latest v8/admin/before-install/remove-admin-theme-package.ts
 ```
 
 :::
@@ -1542,7 +1558,7 @@ npx @comet/upgrade v8/remove-admin-theme-package.ts
 :::note Handled by
 
 ```sh
-npx @comet/upgrade v8/remove-comet-admin-react-select-dependency.ts
+npx @comet/upgrade@latest v8/admin/before-install/remove-comet-admin-react-select-dependency.ts
 ```
 
 :::
@@ -1601,7 +1617,7 @@ The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/mui-codemods.ts
+    npx @comet/upgrade@latest v8/admin/after-install/mui-codemods.ts
     ```
 
     :::
@@ -1655,7 +1671,7 @@ The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to
     :::note Execute the following upgrade script:
 
         ```sh
-        npx @comet/upgrade v8/mui-x-codemods.ts
+        npx @comet/upgrade@latest v8/admin/after-install/mui-x-codemods.ts
         ```
 
     :::
@@ -1669,8 +1685,8 @@ The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` pa
     :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/clipboard-helpers.ts
-    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    npx @comet/upgrade@latest v8/admin/after-install/clipboard-helpers.ts
+    npx @comet/upgrade@latest v8/admin/after-install/merge-blocks-admin-into-cms-admin.ts
     ```
 
     :::
@@ -1696,7 +1712,7 @@ The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` pa
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/merge-admin-theme-into-admin.ts
+npx @comet/upgrade@latest v8/admin/after-install/merge-admin-theme-into-admin.ts
 ```
 
 :::
@@ -1735,7 +1751,7 @@ The separate providers for CMS features (e.g, `DamConfigProvider`) have been mer
 :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/comet-config-provider.ts
+    npx @comet/upgrade@latest v8/admin/after-install/comet-config-provider.ts
     ```
 
     **Note:** This upgrade script is experimental and might not work as expected in your application.
@@ -1955,7 +1971,7 @@ server: {
 :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/rename-menu-components-in-admin.ts
+    npx @comet/upgrade@latest v8/admin/after-install/rename-menu-components-in-admin.ts
     ```
 
 :::
@@ -2026,7 +2042,7 @@ The new usage simplifies the component structure - children can now be passed di
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
+npx @comet/upgrade@latest v8/admin/after-install/mui-grid-sort-to-gql.ts
 ```
 
 **Note:** This upgrade script will naively change the second argument of `muiGridSortToGql` function to `columns`, assuming that `columns` is available in the current scope.
@@ -2063,7 +2079,7 @@ const persistentColumnState = usePersistentColumnState("persistent_column_state"
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
+npx @comet/upgrade@latest v8/admin/after-install/mui-data-grid-remove-error-prop.ts
 ```
 
 **Note:** Error handling must be implemented manually, the upgrade script simply removes all usages of the error prop on DataGrids and adds a TODO: comment.
@@ -2113,7 +2129,7 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/use-mui-date-picker-in-grid.ts
+npx @comet/upgrade@latest v8/admin/after-install/use-mui-date-picker-in-grid.ts
 ```
 
 :::
@@ -2177,7 +2193,7 @@ If your application uses internationalization or a language other than English (
 :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/update-import-of-dialog.ts
+    npx @comet/upgrade@latest v8/admin/after-install/update-import-of-dialog.ts
     ```
 
 :::
@@ -2196,7 +2212,7 @@ If your application uses internationalization or a language other than English (
 :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/add-dialog-content-to-edit-dialog.ts
+    npx @comet/upgrade@latest v8/admin/after-install/add-dialog-content-to-edit-dialog.ts
     ```
 
 :::
@@ -2226,7 +2242,7 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/tooltip-1-update-import.ts
+    npx @comet/upgrade@latest v8/admin/after-install/tooltip-1-update-import.ts
     ```
 
 :::
@@ -2245,7 +2261,7 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 :::note Execute the following upgrade script:
 
     ```sh
-    npx @comet/upgrade v8/tooltip-2-remove-trigger-prop.ts
+    npx @comet/upgrade@latest v8/admin/after-install/tooltip-2-remove-trigger-prop.ts
     ```
 
 :::
@@ -2494,7 +2510,7 @@ Now it's time to run npm install:
 :::note Execute the following upgrade script:
 
 ```sh
-npx @comet/upgrade v8/remove-graphql-client-from-site-preview-handlers.ts
+npx @comet/upgrade@latest v8/site/after-install/remove-graphql-client-from-site-preview-handlers.ts
 ```
 
 :::
