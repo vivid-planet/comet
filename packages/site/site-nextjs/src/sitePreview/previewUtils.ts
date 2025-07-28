@@ -1,5 +1,6 @@
 import { type PreviewData } from "@comet/site-react";
 import { errors, jwtVerify, SignJWT } from "jose";
+import { type NextApiRequest } from "next";
 import { cookies, draftMode, headers as getHeaders } from "next/headers";
 
 // Return type of previewParams function
@@ -61,5 +62,16 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
         return verifyJwt<PreviewParams>(cookie.value);
     }
 
+    return null;
+}
+
+export async function previewParamsForRequest(req: NextApiRequest): Promise<PreviewParams | null> {
+    if (req.headers["x-block-preview"]) {
+        return verifyJwt<PreviewParams>(req.headers["x-block-preview"].toString());
+    }
+
+    if (req.previewData) {
+        return req.previewData as PreviewParams;
+    }
     return null;
 }
