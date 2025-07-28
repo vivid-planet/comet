@@ -328,17 +328,17 @@ Yes, you can do that before updating everything else to v8.
 
     ```diff title="api/package.json"
     -       "@comet/eslint-config": "7.24.0",
-    +       "@comet/eslint-config": "8.0.0",
+    +       "@comet/eslint-config": "8.0.0", // replace with the newest v8 version
     ```
 
     ```diff title="admin/package.json"
     -       "@comet/eslint-config": "7.24.0",
-    +       "@comet/eslint-config": "8.0.0",
+    +       "@comet/eslint-config": "8.0.0", // replace with the newest v8 version
     ```
 
     ```diff title="site/package.json"
     -       "@comet/eslint-config": "7.24.0",
-    +       "@comet/eslint-config": "8.0.0",
+    +       "@comet/eslint-config": "8.0.0", // replace with the newest v8 version
     ```
 
 2. Execute `npm install` (it might be necessary to use `npm install --force`)
@@ -419,14 +419,30 @@ Yes, you can do that before updating everything else to v8.
 Once all the above PRs are merged, you can now start the actual v8 update.
 We recommend doing it service-by-service like this:
 
-1. API
+1. Root
+2. API
     1. Update the versions in package.json
     2. Execute `npm install`
     3. Execute all the steps in the migration guide. Commit with `--no-verify` after each step
     4. Run `npm run lint` and fix all remaining errors
     5. Start the API. Fix runtime errors if there are any.
-2. Repeat for admin
-3. Repeat for site
+3. Repeat for admin
+4. Repeat for site
+
+## Root
+
+1. Create a `update-to-comet-v8` branch
+2. Open the root `package.json`
+3. Change the version for `@comet/cli`:
+
+    ```diff
+    - "@comet/cli": "7.25.4",
+    + "@comet/cli": "8.0.0", // replace with the newest v8 version
+    ```
+
+4. Execute `npm install`
+5. Execute `npm run create-site-configs-env`
+6. Create a commit
 
 ## API
 
@@ -441,6 +457,10 @@ npx @comet/upgrade@latest v8/api/before-install
 ```
 
 :::
+
+<details>
+
+<summary>Updates handled by this batch upgrade script</summary>
 
 #### ✅ NestJS
 
@@ -724,13 +744,15 @@ Remove all passport-dependencies and add @nestjs/jwt
 
 </details>
 
+</details>
+
 ### API Generator - Add new package @comet/api-generator
 
 The API Generator has been moved into a separate package `@comet/api-generator`.
 
 ```diff title="api/package.json"
 devDependencies: {
-+  "@comet/api-generator": "8.0.0", // replace with the current COMET version
++  "@comet/api-generator": "8.0.0", // replace with newest v8 version
 }
 ```
 
@@ -751,7 +773,7 @@ Now it's time to run npm install:
 
 5. Once the install passed, commit your changes with `--no-verify`
 
-### Necessary NestJS changes
+### NestJS-related changes
 
 1. 🤖 Update the custom `formatError` function to hide GraphQL field suggestions
 
@@ -795,7 +817,7 @@ Now it's time to run npm install:
 2. You may need to update some of your routes to support Express v5.
    See the [migration guide](https://docs.nestjs.com/migration-guide#express-v5) for more information.
 
-### Necessary MikroORM changes
+### MikroORM-related changes
 
 Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
 
@@ -872,7 +894,7 @@ We provide upgrade scripts for basic migrations.
 
     :::
 
-### 🤖 Remove `@comet/blocks-api`
+### 🤖 Replace `@comet/blocks-api` imports with `@comet/cms-api`
 
 The `@comet/blocks-api` package has been merged into the `@comet/cms-api` package.
 Thus, all imports must be updated.
@@ -897,7 +919,13 @@ To upgrade, perform the following steps:
 
 </details>
 
-### 🤖 Sentry
+### Execute API generator
+
+```shell
+npm run api-generator
+```
+
+### 🤖 Update sentry setup code
 
 The Sentry dependency has been bumped to v9.
 
@@ -990,6 +1018,7 @@ Some structural changes were necessary to achieve this.
 :::note Execute the following upgrade script:
 
 ```sh
+npx @comet/upgrade@latest v8/api/after-install/move-maxSrcResolution-in-comet-config.ts
 npx @comet/upgrade@latest v8/api/after-install/update-dam-configuration.ts
 ```
 
@@ -1339,7 +1368,7 @@ done with the normal filtering mechanism.
 The improved performance of API Generator doesn't make it necessary anymore to add generated files to git.
 You can remove previously generated files and generate them on demand:
 
-1. run api-generator in prebuild:
+1. Run api-generator in prebuild:
 
     ```diff title="api/package.json"
     scripts: {
@@ -1375,8 +1404,38 @@ You can remove previously generated files and generate them on demand:
 5. And finally delete generated files from git:
 
     ```sh
-    git rm -r api/src/*/generated
+    git rm -r --cached api/src/*/generated
     ```
+
+### Fix linting errors
+
+#### EsLint
+
+1. `cd api`
+2. `npm run lint:eslint -- --fix`
+3. Commit with `--no-verify`
+4. Manually fix all remaining errors
+5. Commit with `--no-verify`
+
+#### Type errors
+
+1. `npm run lint:tsc`
+2. Fix all occurring errors
+3. Commit with `--no-verify`
+
+#### Overall lint
+
+1. `npm run lint`
+2. Fix all occurring errors
+3. Commit **without** `--no-verify`
+
+### Fix runtime errors
+
+1. Start docker with `dpm start docker`
+2. Start the api with `dpm start api`
+3. Check the logs with `dpm logs api`
+4. Fix occurring errors
+5. Once the API runs without problems: Commit **without** `--no-verify`
 
 ## Admin
 
@@ -1575,7 +1634,7 @@ The Admin Generator has been moved into a separate package `@comet/admin-generat
 
 ```diff title="admin/package.json"
 devDependencies: {
-+  "@comet/admin-generator": "8.0.0",
++  "@comet/admin-generator": "8.0.0", // replace with the newest v8 version
 }
 ```
 
