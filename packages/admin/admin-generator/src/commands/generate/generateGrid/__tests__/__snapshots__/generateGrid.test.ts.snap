@@ -31,6 +31,8 @@ import { GridColDef } from "@comet/admin";
 import { dataGridDateTimeColumn } from "@comet/admin";
 import { dataGridDateColumn } from "@comet/admin";
 import { dataGridIdColumn } from "@comet/admin";
+import { dataGridManyToManyColumn } from "@comet/admin";
+import { dataGridOneToManyColumn } from "@comet/admin";
 import { renderStaticSelectCell } from "@comet/admin";
 import { messages } from "@comet/admin";
 import { muiGridFilterToGql } from "@comet/admin";
@@ -160,7 +162,7 @@ renderCell: (params) => {
 
         const { data, loading, error } = useQuery<GQLBooksGridQuery, GQLBooksGridQueryVariables>(booksQuery, {
             variables: {
-                filter: gqlFilter, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel)
+                filter: gqlFilter, offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize, limit: dataGridProps.paginationModel.pageSize, sort: muiGridSortToGql(dataGridProps.sortModel, columns)
             },
         });
         const rowCount = useBufferedRowCount(data?.books.totalCount);
