@@ -37,6 +37,8 @@ interface Props {
     renderSelectedOption?: (option: Option) => ReactNode;
 }
 
+export const contentScopeLocalStorageKey = "contentScopeSelect.selectedScope";
+
 export function ContentScopeSelect({
     value,
     onChange,
@@ -127,6 +129,11 @@ export function ContentScopeSelect({
                 .join(" / ");
         };
     }
+
+    const handleChange = (selectedScope: ContentScope) => {
+        localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(selectedScope));
+        onChange(selectedScope);
+    };
 
     return (
         <AppHeaderDropdown
@@ -273,7 +280,7 @@ export function ContentScopeSelect({
                                                 key={JSON.stringify(option)}
                                                 onClick={() => {
                                                     hideDropdown();
-                                                    onChange(option.scope);
+                                                    handleChange(option.scope);
                                                     setSearchValue("");
                                                 }}
                                                 selected={isSelected}
