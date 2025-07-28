@@ -660,7 +660,7 @@ export function generateFormField({
                         }\`${
                             filterConfig
                                 ? `, variables: { ${
-                                      filterConfig.filterVarName == filterConfig.filterVarValue
+                                      filterConfig.filterVarName === filterConfig.filterVarValue
                                           ? filterConfig.filterVarName
                                           : `${filterConfig.filterVarName}: ${filterConfig.filterVarValue}`
                                   } }`
