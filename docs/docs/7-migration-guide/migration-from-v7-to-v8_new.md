@@ -1342,106 +1342,83 @@ You can remove previously generated files and generate them on demand:
 
 ## Admin
 
-### Upgrade peer dependencies
+### 🤖 Upgrade peer dependencies
 
-#### React
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade v8/admin/before-install
+```
+
+:::
+
+#### ✅ React
 
 The React dependency has been bumped to v18.
 
-1. Upgrade all your dependencies
+<details>
 
-    <details>
+ <summary>Handled by @comet/upgrade</summary>
 
-     <summary>Handled by @comet/upgrade</summary>
+:::note Handled by
 
-    :::note Execute the following upgrade script:
+```sh
+npx @comet/upgrade v8/update-react-dependencies.ts
+```
 
-    ```sh
-    npx @comet/upgrade v8/update-react-dependencies.ts
-    ```
+:::
 
-    :::
-
-    ```diff title=admin/package.json
-    {
-        "dependencies": {
-    -       "react": "^17.0.2",
-    -       "react-dom": "^17.0.2",
-    +       "react": "^18.3.1",
-    +       "react-dom": "^18.3.1"
-        },
-        "devDependencies": {
-    -       "@types/react": "^17.0.83",
-    -       "@types/react-dom": "^17.0.26",
-    +       "@types/react": "^18.3.18",
-    +       "@types/react-dom": "^18.3.5"
-        }
+```diff title=admin/package.json
+{
+    "dependencies": {
+-       "react": "^17.0.2",
+-       "react-dom": "^17.0.2",
++       "react": "^18.3.1",
++       "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+-       "@types/react": "^17.0.83",
+-       "@types/react-dom": "^17.0.26",
++       "@types/react": "^18.3.18",
++       "@types/react-dom": "^18.3.5"
     }
-    ```
+}
+```
 
-     </details>
+</details>
 
-2. Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
-
-    :::tip
-
-    Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
-
-    :::
-
-#### MUI
+#### ✅ MUI
 
 The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
 
-1.  Upgrade your MUI dependencies
+<details>
 
-     <details>
+ <summary>Handled by @comet/upgrade</summary>
 
-     <summary>Handled by @comet/upgrade</summary>
+:::note Handled by
 
-    :::note Execute the following upgrade script:
+     ```sh
+     npx @comet/upgrade v8/update-mui-dependencies.ts
+     ```
 
-         ```sh
-         npx @comet/upgrade v8/update-mui-dependencies.ts
-         ```
+:::
 
-    :::
+```diff
+-       "@mui/icons-material": "^5.0.0",
+-       "@mui/lab": "^5.0.0-alpha.76",
+-       "@mui/material": "^5.0.0",
+-       "@mui/system": "^5.0.0",
+-       "@mui/utils": "^5.0.0",
++       "@mui/icons-material": "^7.0.0",
++       "@mui/lab": "^7.0.0-beta.9",
++       "@mui/material": "^7.0.0",
++       "@mui/system": "^7.0.0",
++       "@mui/utils": "^7.0.0",
+```
 
-    ```diff
-    -       "@mui/icons-material": "^5.0.0",
-    -       "@mui/lab": "^5.0.0-alpha.76",
-    -       "@mui/material": "^5.0.0",
-    -       "@mui/system": "^5.0.0",
-    -       "@mui/utils": "^5.0.0",
-    +       "@mui/icons-material": "^7.0.0",
-    +       "@mui/lab": "^7.0.0-beta.9",
-    +       "@mui/material": "^7.0.0",
-    +       "@mui/system": "^7.0.0",
-    +       "@mui/utils": "^7.0.0",
-    ```
+</details>
 
-    </details>
-
-2.  Execute MUI codemods to update your code
-
-     <details>
-
-     <summary>Handled by @comet/upgrade</summary>
-
-    :::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade v8/mui-codemods.ts
-    ```
-
-    :::
-    </details>
-
-3.  Follow the official migration guides to upgrade:
-    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
-    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
-
-#### MUI X (DataGrid)
+#### ✅ MUI X (DataGrid)
 
 The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to v7.
 
@@ -1449,15 +1426,15 @@ The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to
 
 <summary>Handled by @comet/upgrade</summary>
 
-In `package.json` update the version of the MUI X packages to `^7.22.3`.
-
-:::note Execute the following upgrade script:
+:::note Handled by
 
 ```sh
 npx @comet/upgrade v8/update-mui-x-dependencies.ts
 ```
 
 :::
+
+In `package.json` update the version of the MUI X packages to `^7.22.3`.
 
 ```diff
 - "@mui/x-data-grid": "^5.x.x",
@@ -1480,41 +1457,6 @@ A lots of props have been renamed from MUI, for a detailed look, see the officia
 :::
 
 </details>
-
-:::warning
-
-Be aware if you have a date in the data grid, you will need to add a `valueGetter`
-
-:::
-
-```diff
-    <DataGrid
-        //other props
-        columns=[
-        {
-            field: "updatedAt",
-            type: "dateTime",
-+           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
-        }]
-    />
-```
-
-Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
-
-```diff
-    <DataGrid
-        //other props
-        columns=[
-        {
-            field: "updatedAt",
-            type: "dateTime",
--           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
-+           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
--           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-+           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-        }]
-    />
-```
 
 #### ✅ Vite / SWC
 
@@ -1539,31 +1481,7 @@ npx @comet/upgrade v8/update-swc-dependencies.ts
 
 </details>
 
-### ✅ Add new package @comet/admin-generator
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade v8/admin-generator-dev-dependencies.ts
-    ```
-
-:::
-
-The Admin Generator has been moved into a separate package `@comet/admin-generator`.
-
-```diff title="admin/package.json"
-devDependencies: {
-+  "@comet/admin-generator": "^8.0.0",
-}
-```
-
-</details>
-
-### ✅ Remove `@comet/blocks-admin`
+#### ✅ Remove `@comet/blocks-admin`
 
 The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
 
@@ -1571,85 +1489,45 @@ The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` pa
 
 <summary>Handled by @comet/upgrade</summary>
 
-To upgrade, perform the following steps:
+Remove the package:
 
-1.  Remove the package:
+:::note Handled by
 
-    :::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade v8/remove-blocks-packages.ts
-    ```
-
-    :::
-
-    ```diff title="admin/package.json"
-    - "@comet/blocks-admin": "^7.x.x",
-    ```
-
-2.  Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
-
-    :::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
-    ```
-
-    :::
-
-3.  Update imports that have been renamed
-
-    :::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
-    ```
-
-    :::
-
-</details>
-
-Manually remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
-
-:::tip
-
-Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateAction`.
+```sh
+npx @comet/upgrade v8/remove-blocks-packages-admin.ts
+```
 
 :::
 
-### ✅ Remove `@comet/admin-theme`
+```diff title="admin/package.json"
+- "@comet/blocks-admin": "^7.x.x",
+```
+
+</details>
+
+#### ✅ Remove `@comet/admin-theme`
 
 <details>
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Execute the following upgrade script:
+:::note Handled by
 
 ```sh
-npx @comet/upgrade v8/merge-admin-theme-into-admin.ts
 npx @comet/upgrade v8/remove-admin-theme-package.ts
 ```
 
 :::
 
-The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the imports accordingly:
-
-```diff
-- import { createCometTheme } from "@comet/admin-theme";
-+ import { createCometTheme } from "@comet/admin";
-
-  const theme = createCometTheme();
-```
-
 </details>
 
-### ✅ Remove `@comet/admin-react-select`
+#### ✅ Remove `@comet/admin-react-select`
 
 <details>
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Execute the following upgrade script:
+:::note Handled by
 
 ```sh
 npx @comet/upgrade v8/remove-comet-admin-react-select-dependency.ts
@@ -1663,6 +1541,157 @@ npx @comet/upgrade v8/remove-comet-admin-react-select-dependency.ts
 
 </details>
 
+### Add new package @comet/admin-generator
+
+The Admin Generator has been moved into a separate package `@comet/admin-generator`.
+
+```diff title="admin/package.json"
+devDependencies: {
++  "@comet/admin-generator": "8.0.0",
+}
+```
+
+### Install
+
+Now it's time to run npm install:
+
+1. Enter the /admin folder: `cd admin`
+2. `npm install`
+
+    :::warning ‼️ It's likely that the install fails ‼️
+    The upgrade scripts only updates the packages we have in the starter.
+    You probably have more packages that rely on MUI or React in your project.
+    **Update them by hand based on the errors you are getting and rerun the install!**
+    :::
+
+3. Once the install passed, commit your changes with `--no-verify`
+
+### React
+
+The React dependency has been bumped to v18.
+
+Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
+
+:::tip
+
+Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
+
+:::
+
+### MUI
+
+The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
+
+1. 🤖 Execute MUI codemods to update your code
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/mui-codemods.ts
+    ```
+
+    :::
+
+2. Follow the official migration guides to upgrade:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+
+### MUI X (DataGrid)
+
+The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to v7.
+
+1. Search for columns with the `type: "dateTime`. You must add a `valueGetter`:
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+            }]
+        />
+    ```
+
+2. Search for `valueGetter` and `valueFormatter`
+
+    Change the arguments passed to the functions.
+    Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    -           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+    -           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+    +           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            }]
+        />
+    ```
+
+### Remove `@comet/blocks-admin`
+
+The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
+
+1. 🤖 Update all imports:
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade v8/merge-blocks-admin-into-cms-admin.ts
+    ```
+
+    :::
+
+    <details>
+
+    To upgrade, perform the following steps:
+    1. Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
+    2. Update imports that have been renamed
+
+    </details>
+
+2. Manually remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
+
+    :::tip
+
+    Use `Dispatch<SetStateAction<T>>` from `react` instead of `DispatchSetStateAction`.
+
+    :::
+
+### 🤖 Remove `@comet/admin-theme`
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade v8/merge-admin-theme-into-admin.ts
+```
+
+:::
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+The `@comet/admin-theme` package has been merged into `@comet/admin`, adjust the imports accordingly:
+
+```diff
+- import { createCometTheme } from "@comet/admin-theme";
++ import { createCometTheme } from "@comet/admin";
+
+  const theme = createCometTheme();
+```
+
+</details>
+
+### Remove `@comet/admin-react-select`
+
+`@comet/admin-react-select` was removed.
 It is recommended to use the `AutocompleteField` or the `SelectField` components from `@comet/admin` instead:
 
 ```diff
@@ -1672,13 +1701,9 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
 ```
 
-### ✅ Merge providers into `CometConfigProvider`
+### 🤖 Merge providers into `CometConfigProvider`
 
 The separate providers for CMS features (e.g, `DamConfigProvider`) have been merged into a `CometConfigProvider`.
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
 
 :::note Execute the following upgrade script:
 
@@ -1690,6 +1715,10 @@ The separate providers for CMS features (e.g, `DamConfigProvider`) have been mer
     Review the result carefully.
 
 :::
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
 
 Wrap your application with the `CometConfigProvider`:
 
@@ -1894,11 +1923,7 @@ server: {
 //...
 ```
 
-### ✅ Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
+### 🤖 Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
 :::note Execute the following upgrade script:
 
@@ -1907,6 +1932,10 @@ server: {
     ```
 
 :::
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
 
 To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
 
@@ -1935,7 +1964,7 @@ The `MenuContext` has been removed, use the new `useMainNavigation` hook instead
 
 ### DataGrid-related changes
 
-### Update usage of `DataGridToolbar`
+#### Update usage of `DataGridToolbar`
 
 `DataGridToolbar` has been simplified to a basic wrapper component. Props and features from the standard `Toolbar` component have been removed, along with the `density` prop since density is now controlled by the `DataGrid`.
 
@@ -1965,11 +1994,7 @@ The new usage simplifies the component structure - children can now be passed di
   </DataGridToolbar>
 ```
 
-#### ✅ Pass columns instead of apiRef to `muiGridSortToGql` Function
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
+#### 🤖 Pass columns instead of apiRef to `muiGridSortToGql` Function
 
 :::note Execute the following upgrade script:
 
@@ -1980,6 +2005,8 @@ npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
 **Note:** This upgrade script will naively change the second argument of `muiGridSortToGql` function to `columns`, assuming that `columns` is available in the current scope.
 
 :::
+
+<details>
 
 The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
 
@@ -2006,10 +2033,6 @@ const persistentColumnState = usePersistentColumnState("persistent_column_state"
 >
 > – [MUI migration guide](https://mui.com/x/migration/migration-data-grid-v5/#removed-props)
 
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
 :::note Execute the following upgrade script:
 
 ```sh
@@ -2019,8 +2042,6 @@ npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
 **Note:** Error handling must be implemented manually, the upgrade script simply removes all usages of the error prop on DataGrids and adds a TODO: comment.
 
 :::
-
-</details>
 
 :::warning Error handling must be implemented manually
 
@@ -2056,13 +2077,75 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 :::
 
-### ✅ Dialog-related changes
-
-#### ✅ Import `Dialog` from `@comet/admin` package
+#### `DataGrid` Date / DateTime filters now use MUI pickers
 
 <details>
 
 <summary>Handled by @comet/upgrade</summary>
+
+:::note Execute the following upgrade script:
+
+```sh
+npx @comet/upgrade v8/use-mui-date-picker-in-grid.ts
+```
+
+:::
+
+</details>
+
+This update improves the UX of date filtering by replacing the current date picker solution with MUI's `DatePicker`.
+
+It **requires installation of new dependencies** and setup of `LocalizationProvider` in your app.
+
+**Migration steps:**
+
+- **Install dependencies:**
+  Add the following dependencies to your `package.json`:
+
+```diff
+    "dependencies": {
++       "@mui/x-date-pickers": "^7.29.4",
++       "date-fns": "^4.1.0",
+    }
+```
+
+Update your application root to include `LocalizationProvider from @mui/x-date-pickers:
+
+```diff
++    import { LocalizationProvider } from "@mui/x-date-pickers";
++    import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
++    import { enUS } from "date-fns/locale";
+
+    <IntlProvider locale="en" messages={getMessages()}>
++        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+            <MuiThemeProvider theme={theme}>{/* App Content */}</MuiThemeProvider>
++        </LocalizationProvider>
+    </IntlProvider>;
+```
+
+If you are already using the `dataGridDateColumn` or `dataGridDateTimeColumn` helpers, the new MUI DatePicker will be used automatically for filtering:
+
+```tsx
+import { dataGridDateTimeColumn } from "@comet/admin";
+
+const columns: GridColDef[] = [
+    {
+        ...dataGridDateTimeColumn,
+        field: "createdAt",
+        headerName: "Created at",
+    },
+];
+```
+
+:::info Action required
+
+If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
+
+:::
+
+### Dialog-related changes
+
+#### 🤖 Import `Dialog` from `@comet/admin` package
 
 :::note Execute the following upgrade script:
 
@@ -2072,6 +2155,8 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 :::
 
+<details>
+
 ```diff
 - import { Dialog } from "@mui/material";
 + import { Dialog } from "@comet/admin";
@@ -2079,11 +2164,7 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 </details>
 
-#### ✅ Add `DialogContent` to `EditDialog`
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
+#### 🤖 Add `DialogContent` to `EditDialog`
 
 :::note Execute the following upgrade script:
 
@@ -2092,6 +2173,8 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
     ```
 
 :::
+
+<details>
 
 The `DialogContent` inside `EditDialog` has been removed.
 To maintain the existing styling of `EditDialog`, such as for forms and text, manually wrap the content with `DialogContent` to ensure proper spacing.
@@ -2109,13 +2192,9 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 </details>
 
-### ✅ Tooltip-related Changes
+### Tooltip-related Changes
 
-#### ✅ Import `Tooltip` from `@comet/admin` package
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
+#### 🤖 Import `Tooltip` from `@comet/admin` package
 
 :::note Execute the following upgrade script:
 
@@ -2125,6 +2204,8 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 :::
 
+<details>
+
 ```diff
 - import { Tooltip } from "@mui/material";
 + import { Tooltip } from "@comet/admin";
@@ -2132,11 +2213,7 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
 
 </details>
 
-#### ✅ Remove `trigger` prop from `Tooltip`
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
+#### 🤖 Remove `trigger` prop from `Tooltip`
 
 :::note Execute the following upgrade script:
 
@@ -2145,6 +2222,8 @@ For grids or other elements that already handle their own spacing (e.g., `DataGr
     ```
 
 :::
+
+<details>
 
 The `trigger` prop has been removed. The combined `hover`/`focus` trigger is now the only supported behavior.
 
@@ -2303,15 +2382,6 @@ scalars: rootBlocks.reduce(
 
 ### `DashboardWidgetRoot` / `LatestContentUpdates` no longer handles Grid layout
 
-:::note Execute the following upgrade script:
-
-```sh
-
-npx @comet/upgrade v8/add-grid-to-latest-content-updates-and-dashboard-widget-root.ts
-```
-
-:::
-
 The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its children in a `<Grid>` component. This means that layout and sizing must now be handled by the parent component.
 
 **Migration steps `DashboardWidgetRoot:**
@@ -2348,72 +2418,6 @@ The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its
 
 **Action required:**  
 Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
-
-### `DataGrid` Date / DateTime filters now use MUI pickers
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
-
-:::note Execute the following upgrade script:
-
-```sh
-npx @comet/upgrade v8/use-mui-date-picker-in-grid.ts
-```
-
-:::
-
-</details>
-
-This update improves the UX of date filtering by replacing the current date picker solution with MUI's `DatePicker`.
-
-It **requires installation of new dependencies** and setup of `LocalizationProvider` in your app.
-
-**Migration steps:**
-
-- **Install dependencies:**
-  Add the following dependencies to your `package.json`:
-
-```diff
-    "dependencies": {
-+       "@mui/x-date-pickers": "^7.29.4",
-+       "date-fns": "^4.1.0",
-    }
-```
-
-Update your application root to include `LocalizationProvider from @mui/x-date-pickers:
-
-```diff
-+    import { LocalizationProvider } from "@mui/x-date-pickers";
-+    import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-+    import { enUS } from "date-fns/locale";
-
-    <IntlProvider locale="en" messages={getMessages()}>
-+        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-            <MuiThemeProvider theme={theme}>{/* App Content */}</MuiThemeProvider>
-+        </LocalizationProvider>
-    </IntlProvider>;
-```
-
-If you are already using the `dataGridDateColumn` or `dataGridDateTimeColumn` helpers, the new MUI DatePicker will be used automatically for filtering:
-
-```tsx
-import { dataGridDateTimeColumn } from "@comet/admin";
-
-const columns: GridColDef[] = [
-    {
-        ...dataGridDateTimeColumn,
-        field: "createdAt",
-        headerName: "Created at",
-    },
-];
-```
-
-:::info Action required
-
-If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
-
-:::
 
 ### Rework `createRedirectsPage` usage to accept `linkBlock` instead of `customTargets`.
 
@@ -2454,13 +2458,6 @@ Now it's time to run npm install:
 
 1. Enter the /site folder: `cd site`
 2. `npm install`
-
-    :::warning ‼️ It's likely that the install fails ‼️
-    The upgrade scripts only updates the packages we have in the starter.
-    You probably have more packages that rely on NestJS or MikroORM in your project.
-    **Update them by hand based on the errors you are getting and rerun the install!**
-    :::
-
 3. Once the install passed, commit your changes with `--no-verify`
 
 ### 🤖 Remove `graphQLFetch` from `sitePreviewRoute` calls
