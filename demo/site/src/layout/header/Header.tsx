@@ -20,6 +20,11 @@ function Header({ header }: Props): JSX.Element {
                                 {item.node.name}
                             </Link>
                             {item.node.childNodes.length > 0 && (
+                                <ToggleSubLevelNavigationButton>
+                                    <Chevron />
+                                </ToggleSubLevelNavigationButton>
+                            )}
+                            {item.node.childNodes.length > 0 && (
                                 <SubLevelNavigation>
                                     {item.node.childNodes.map((node) => (
                                         <li key={node.id}>
@@ -82,6 +87,30 @@ const Link = styled(PageLink)`
     &.active {
         color: ${({ theme }) => theme.palette.primary.main};
     }
+`;
+
+const ToggleSubLevelNavigationButton = styled.button`
+    position: absolute;
+    top: 50%;
+    right: 0;
+    border: none;
+    width: 10px;
+    height: 10px;
+    transform: translate(0, -50%);
+    background-color: transparent;
+    opacity: 0;
+
+    &:focus-visible {
+        opacity: 1;
+    }
+`;
+
+const Chevron = styled.div`
+    width: 5px;
+    height: 5px;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    transform: rotate(45deg);
 `;
 
 export { Header };
