@@ -1377,11 +1377,15 @@ You can remove previously generated files and generate them on demand:
     }
     ```
 
-2. lint script can be removed:
+2. `lint:generated-files-not-modified` script can be removed:
 
     ```diff title="api/package.json"
     scripts: {
     -  "lint:generated-files-not-modified": "npm run api-generator && git diff --exit-code HEAD -- src/**/generated",
+    -  "lint": "npm run lint:eslint && npm run lint:tsc",
+    -  "lint:ci": "npm run lint && npm run lint:generated-files-not-modified",
+    +  "lint": "npm run api-generator && run-p lint:eslint lint:tsc",
+    +  "lint:ci": "npm run lint",
     }
     ```
 
