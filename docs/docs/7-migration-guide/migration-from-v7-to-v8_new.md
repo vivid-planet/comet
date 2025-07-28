@@ -2445,44 +2445,25 @@ This change was made because `RedirectsLinkBlock` is also needed by `RedirectDep
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
 
-[//]: # "TODO: Upgrade script "
+Ignore this if you already did it beforehand in [step 3](#step-3-switch-from-cometcms-site-to-cometsite-nextjs-pr-3).
+Otherwise, go back and do it now.
 
-The `@comet/cms-site` package has been reworked and renamed to `@comet/site-nextjs`. Notable changes are
+### Install
 
-- Styled components is no longer a required peer dependency
-- Instead, SCSS modules are used internally
-- The package is now pure ESM
+Now it's time to run npm install:
 
-To switch you must
+1. Enter the /site folder: `cd site`
+2. `npm install`
 
-- uninstall `@comet/cms-site`
-- install `@comet/site-nextjs`
-- change all imports from `@comet/cms-site` to `@comet/site-nextjs`
-- import the css file exported by the package:
+    :::warning ‼️ It's likely that the install fails ‼️
+    The upgrade scripts only updates the packages we have in the starter.
+    You probably have more packages that rely on NestJS or MikroORM in your project.
+    **Update them by hand based on the errors you are getting and rerun the install!**
+    :::
 
-```diff title="site/src/app/layout.tsx"
-+ import "@comet/site-nextjs/css";
-```
+3. Once the install passed, commit your changes with `--no-verify`
 
-- Switch the package in `optimizePackageImports`:
-
-```diff title="site/next.config.mjs"
-const nextConfig = {
-    // ...
-    experimental: {
-        instrumentationHook: true,
--       optimizePackageImports: ["@comet/cms-site"],
-+       optimizePackageImports: ["@comet/site-nextjs"],
-    },
-    // ...
-}
-```
-
-### ✅ Remove `graphQLFetch` from `sitePreviewRoute` calls
-
-<details>
-
-<summary>Handled by @comet/upgrade</summary>
+### 🤖 Remove `graphQLFetch` from `sitePreviewRoute` calls
 
 :::note Execute the following upgrade script:
 
@@ -2491,6 +2472,8 @@ npx @comet/upgrade v8/remove-graphql-fetch-from-site-preview-route.ts
 ```
 
 :::
+
+<details>
 
 ```diff title="site/src/app/site-preview/route.ts"
 -    return sitePreviewRoute(request, createGraphQLFetch());
