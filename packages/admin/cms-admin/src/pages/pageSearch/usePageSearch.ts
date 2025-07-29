@@ -39,7 +39,14 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
     const [currentMatchIndex, setCurrentMatchIndex] = useState<number | null>(null);
     const [query, setQuery] = useState("");
 
-    const domainHost = new URL(domain).host;
+    let domainHost: string;
+
+    try {
+        domainHost = new URL(domain).host;
+    } catch (error) {
+        console.error("Invalid domain provided:", domain, error);
+        domainHost = "";
+    }
 
     const inorderPages = useMemo(() => {
         const buildPagesForParent = (parentId = "root", ancestorIds: string[] = []) => {
