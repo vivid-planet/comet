@@ -450,6 +450,8 @@ Before installing, we must update the following dependency versions:
 
 ### 🤖 Upgrade peer dependencies
 
+The following upgrade script will update peer dependency versions and make some minor changes in the code.
+
 :::note Execute the following upgrade script:
 
 ```sh
@@ -629,14 +631,28 @@ npx @comet/upgrade@latest v8/api/before-install/update-sentry.ts
 
 1. Upgrade the "@sentry/node" dependency in your `package.json` file:
 
-```diff title=api/package.json
-{
-    "dependencies": {
--       "@sentry/node": "^7.0.0",
-+       "@sentry/node": "^9.0.0",
-    },
-}
-```
+    ```diff title=api/package.json
+    {
+        "dependencies": {
+    -       "@sentry/node": "^7.0.0",
+    +       "@sentry/node": "^9.0.0",
+        },
+    }
+    ```
+
+2. Update your `main.ts` file to remove all `Sentry.Handlers` and add `Sentry.setupExpressErrorHandler(app)`:
+
+    ```diff
+    -   app.use(Sentry.Handlers.requestHandler());
+    -   app.use(Sentry.Handlers.tracingHandler());
+    -   app.use(Sentry.Handlers.errorHandler());
+    +   Sentry.setupExpressErrorHandler(app);
+    ```
+
+None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
+
+- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
+- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
 
 </details>
 
@@ -924,36 +940,6 @@ To upgrade, perform the following steps:
 ```shell
 npm run api-generator
 ```
-
-### 🤖 Update sentry setup code
-
-The Sentry dependency has been bumped to v9.
-
-:::note Execute the following upgrade script:
-
-```sh
-npx @comet/upgrade@latest v8/api/after-install/change-sentry-setup.ts
-```
-
-:::
-
-<details>
-
-Update your `main.ts` file to remove all `Sentry.Handlers` and add `Sentry.setupExpressErrorHandler(app)`:
-
-```diff
--   app.use(Sentry.Handlers.requestHandler());
--   app.use(Sentry.Handlers.tracingHandler());
--   app.use(Sentry.Handlers.errorHandler());
-+   Sentry.setupExpressErrorHandler(app);
-```
-
-None of the other breaking changes in `@sentry/node` should affect us. If you still encounter problems, consult the official migration guides:
-
-- [Migration from v7 to v8](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/)
-- [Migration from v8 to v9](https://docs.sentry.io/platforms/javascript/guides/node/migration/v8-to-v9/)
-
-</details>
 
 ### 🤖 Use graphiql instead of GraphQL Playground:
 
@@ -1445,6 +1431,8 @@ You can remove previously generated files and generate them on demand:
 
 ### 🤖 Upgrade peer dependencies
 
+The following upgrade script will update peer dependency versions and make some minor changes in the code.
+
 :::note Execute the following upgrade script:
 
 ```sh
@@ -1452,6 +1440,10 @@ npx @comet/upgrade@latest v8/admin/before-install
 ```
 
 :::
+
+<details>
+
+<summary>Updates handled by this batch upgrade script</summary>
 
 #### ✅ React
 
@@ -1632,6 +1624,97 @@ npx @comet/upgrade@latest v8/admin/before-install/remove-comet-admin-react-selec
 
 </details>
 
+#### ✅ Remove ignore-restricted-imports comments
+
+Removes the comments we added in [step 4](#step-4-update-eslint-and-prettier-pr-4).
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/admin/before-install/remove-v8-eslint-disable-comments-admin.ts
+```
+
+:::
+
+```diff
+-// TODO v8: remove eslint-disable-next-line
+-// eslint-disable-next-line no-restricted-imports
+```
+
+</details>
+
+#### Use MUI pickers for `DataGrid` Date / DateTime filters
+
+<details>
+
+<summary>Handled by @comet/upgrade</summary>
+
+:::note Handled by
+
+```sh
+npx @comet/upgrade@latest v8/admin/before-install/use-mui-date-picker-in-grid.ts
+```
+
+:::
+
+This update improves the UX of date filtering by replacing the current date picker solution with MUI's `DatePicker`.
+
+It **requires installation of new dependencies** and setup of `LocalizationProvider` in your app.
+
+**Migration steps:**
+
+- **Install dependencies:**
+  Add the following dependencies to your `package.json`:
+
+```diff
+    "dependencies": {
++       "@mui/x-date-pickers": "^7.29.4",
++       "date-fns": "^4.1.0",
+    }
+```
+
+Update your application root to include `LocalizationProvider from @mui/x-date-pickers:
+
+```diff
++    import { LocalizationProvider } from "@mui/x-date-pickers";
++    import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
++    import { enUS } from "date-fns/locale";
+
+    <IntlProvider locale="en" messages={getMessages()}>
++        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
+            <MuiThemeProvider theme={theme}>{/* App Content */}</MuiThemeProvider>
++        </LocalizationProvider>
+    </IntlProvider>;
+```
+
+If you are already using the `dataGridDateColumn` or `dataGridDateTimeColumn` helpers, the new MUI DatePicker will be used automatically for filtering:
+
+```tsx
+import { dataGridDateTimeColumn } from "@comet/admin";
+
+const columns: GridColDef[] = [
+    {
+        ...dataGridDateTimeColumn,
+        field: "createdAt",
+        headerName: "Created at",
+    },
+];
+```
+
+</details>
+
+:::info Action required
+
+If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
+
+:::
+
+</details>
+
 ### Add new package @comet/admin-generator
 
 The Admin Generator has been moved into a separate package `@comet/admin-generator`.
@@ -1659,86 +1742,6 @@ Now it's time to run npm install:
 
 5. Once the install passed, commit your changes with `--no-verify`
 
-### React
-
-The React dependency has been bumped to v18.
-
-Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
-
-:::tip
-
-Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
-
-:::
-
-### MUI
-
-The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
-
-1. 🤖 Execute MUI codemods to update your code
-
-    :::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade@latest v8/admin/after-install/mui-codemods.ts
-    ```
-
-    :::
-
-2. Follow the official migration guides to upgrade:
-    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
-    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
-
-### MUI X (DataGrid)
-
-The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to v7.
-
-1.  Search for columns with the `type: "dateTime`. You must add a `valueGetter`:
-
-    ```diff
-        <DataGrid
-            //other props
-            columns=[
-            {
-                field: "updatedAt",
-                type: "dateTime",
-    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
-            }]
-        />
-    ```
-
-2.  Search for `valueGetter` and `valueFormatter`
-
-    Change the arguments passed to the functions.
-    Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
-
-    ```diff
-        <DataGrid
-            //other props
-            columns=[
-            {
-                field: "updatedAt",
-                type: "dateTime",
-    -           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
-    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
-    -           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-    +           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
-            }]
-        />
-    ```
-
-3.  A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/).
-
-    There is also a codemod from MUI which handles most of the changes:
-
-    :::note Execute the following upgrade script:
-
-        ```sh
-        npx @comet/upgrade@latest v8/admin/after-install/mui-x-codemods.ts
-        ```
-
-    :::
-
 ### Remove `@comet/blocks-admin`
 
 The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` package.
@@ -1754,13 +1757,13 @@ The `@comet/blocks-admin` package has been merged into the `@comet/cms-admin` pa
 
     :::
 
-    <details>
+     <details>
 
     To upgrade, perform the following steps:
     1. Update all your imports from `@comet/blocks-admin` to `@comet/cms-admin`
     2. Update imports that have been renamed
 
-    </details>
+     </details>
 
 2. Manually remove usages of removed exports `CannotPasteBlockDialog`, `ClipboardContent`, `useBlockClipboard`, `Collapsible`, `CollapsibleSwitchButtonHeader`, `usePromise`, `DispatchSetStateAction`, `SetStateAction`, and `SetStateFn`
 
@@ -1805,6 +1808,117 @@ It is recommended to use the `AutocompleteField` or the `SelectField` components
 - <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
 + import { AutocompleteField } from "@comet/admin";
 + <AutocompleteField name="color" label="Color" options={options} fullWidth />;
+```
+
+### Add proxy for `/api` and `/dam` URLs
+
+In our deployed setup, all API requests from the admin are routed through the AuthProxy that runs under the admin domain.
+To be closer to this setup, we now also do that locally:
+
+```diff title=".env"
+ # api
+ API_PORT=4000
+-API_URL=http://${DEV_DOMAIN:-localhost}${WORKAROUND_DOTENV_ISSUE}:${API_PORT}/api # or similar
++API_URL=$ADMIN_URL/api
+```
+
+Also, the API now only returns relative URLs for DAM assets.
+You must proxy the `/dam` URLs in your application to the API.
+This must be done for local development and production.
+
+#### In development:
+
+Add the proxy to your vite config:
+
+```ts title="admin/vite.config.mts"
+//...
+server: {
+    // ...
+    proxy: process.env.API_URL_INTERNAL
+    ? {
+         "/api": {
+            target: new URL(process.env.API_URL_INTERNAL).origin,
+            changeOrigin: true,
+            secure: false,
+         },
+        "/dam": {
+            target: process.env.API_URL_INTERNAL,
+            changeOrigin: true,
+            secure: false,
+        },
+    }
+    : undefined,
+    // ...
+},
+//...
+```
+
+or in your webpack config (for old projects):
+
+```ts title="admin/webpack.config.ts"
+const config = (env: unknown, argv: Argv): webpack.Configuration => {
+    // ...
+    return {
+        // ...
+        devServer: {
+            // ...
+            proxy: process.env.API_URL_INTERNAL
+                ? {
+                      "/api": {
+                          target: new URL(process.env.API_URL_INTERNAL).origin,
+                          changeOrigin: true,
+                          secure: false,
+                      },
+                      "/dam": {
+                          target: process.env.API_URL_INTERNAL,
+                          changeOrigin: true,
+                          secure: false,
+                      },
+                  }
+                : undefined,
+        },
+    };
+};
+```
+
+#### In production:
+
+Add the proxy to your admin server:
+
+```diff title="admin/server/package.json"
+"dependencies": {
+    // ...
++   "http-proxy-middleware": "^3.0.3"
+    // ...
+},
+```
+
+```diff title="admin/server/index.js"
++   const { createProxyMiddleware } = require("http-proxy-middleware");
+
+    // ...
+
+    app.get("/status/health", (req, res) => {
+        // ...
+    });
+
++   const proxyMiddleware = createProxyMiddleware({
++       target: process.env.API_URL_INTERNAL + "/dam",
++       changeOrigin: true,
++   });
++   app.use("/dam", proxyMiddleware);
+
+    // ...
+```
+
+You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
+
+```diff title="deployment/helm/values.tpl.yaml"
+admin:
+    env:
+        ADMIN_URL: "https://$ADMIN_DOMAIN"
+        API_URL: "https://$ADMIN_DOMAIN/api"
++       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
 ```
 
 ### 🤖 Merge providers into `CometConfigProvider`
@@ -1899,176 +2013,177 @@ Remove the `allCategories` prop from `PagesPage`:
 
 :::
 
-### Add proxy for `/dam` URLs
+### Adapt to changes in ContentScopeProvider
 
-The API now only returns relative URLs for DAM assets.
-You must proxy the `/dam` URLs in your application to the API.
-This must be done for local development and production.
+#### Use interface augmentation for ContentScope
 
-#### In development:
+```diff title="admin/src/App.tsx"
++   import { type ContentScope as BaseContentScope } from "@src/site-configs";
 
-Add the proxy to your vite config:
++   declare module "@comet/cms-admin" {
++       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
++       interface ContentScope extends BaseContentScope {}
++   }
 
-```ts title="admin/vite.config.mts"
-//...
-server: {
-    // ...
-    proxy: process.env.API_URL_INTERNAL
-    ? {
-        "/dam": {
-            target: process.env.API_URL_INTERNAL,
-            changeOrigin: true,
-            secure: false,
-        },
-    }
-    : undefined,
-    // ...
-},
-//...
+    export function App() {
 ```
 
-or in your webpack config (for old projects):
+The `ContentScopeInterface` export from `@comet/cms-admin` was removed.
+Instead, use `ContentScope` directly:
 
-```ts title="admin/webpack.config.ts"
-const config = (env: unknown, argv: Argv): webpack.Configuration => {
-    // ...
-    return {
+```diff
+- import { type ContentScopeInterface } from "@comet/cms-admin";
++ import { type ContentScope } from "@comet/cms-admin";
+```
+
+#### Preferably use ContentScopeProvider directly from Comet
+
+Move the scope labels **from admin to the API**, for example:
+
+```diff title="api/src/app.module"
+UserPermissionsModule.forRootAsync({
+    useFactory: (userService: StaticUsersUserService, accessControlService: AccessControlService) => ({
+        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+-           siteConfig.scope.languages.map((language) => ({
+-               domain: siteConfig.scope.domain,
+-               language,
+-           })),
++           siteConfig.scope.languages.map((language) => ({
++               scope: {
++                   domain: siteConfig.scope.domain,
++                   language,
++               },
++               label: { domain: siteConfig.name },
++           })),
+        ),
         // ...
-        devServer: {
-            // ...
-            proxy: process.env.API_URL_INTERNAL
-                ? {
-                      "/dam": {
-                          target: process.env.API_URL_INTERNAL,
-                          changeOrigin: true,
-                          secure: false,
-                      },
-                      "/api": {
-                          target: new URL(process.env.API_URL_INTERNAL).origin,
-                          changeOrigin: true,
-                          secure: false,
-                      },
-                  }
-                : undefined,
-        },
-    };
-};
+    }),
+    // ...
+}),
 ```
 
-#### In production:
+Then you can use the `ContentScopeProvider` from `@comet/cms-admin` directly in your `App.tsx` and delete `admin/src/common/ContentScopeProvider.tsx`:
 
-Add the proxy to your admin server:
-
-```diff title="admin/server/package.json"
-"dependencies": {
-    // ...
-+   "http-proxy-middleware": "^3.0.3"
-    // ...
-},
+```diff title="admin/src/App.tsx"
+-   import { ContentScopeProvider } from "./common/ContentScopeProvider";
++   import { ContentScopeProvider } from "@comet/cms-admin";
+    // Delete `admin/src/common/ContentScopeProvider.tsx`
 ```
 
-```diff title="admin/server/index.js"
-+   const { createProxyMiddleware } = require("http-proxy-middleware");
-
-    // ...
-
-    app.get("/status/health", (req, res) => {
-        // ...
-    });
-
-+   const proxyMiddleware = createProxyMiddleware({
-+       target: process.env.API_URL_INTERNAL + "/dam",
-+       changeOrigin: true,
-+   });
-+   app.use("/dam", proxyMiddleware);
-
-    // ...
-```
-
-You might also need to add `API_URL_INTERNAL` to your `values.tpl.yaml` for deployment:
-
-```diff title="deployment/helm/values.tpl.yaml"
-admin:
-    env:
-        ADMIN_URL: "https://$ADMIN_DOMAIN"
-        API_URL: "https://$ADMIN_DOMAIN/api"
-+       API_URL_INTERNAL: "http://$APP_NAME-$APP_ENV-api:3000/api"
-```
-
-### Use admin domain in `API_URL`
-
-```diff title=".env"
- # api
- API_PORT=4000
--API_URL=http://${DEV_DOMAIN:-localhost}${WORKAROUND_DOTENV_ISSUE}:${API_PORT}/api # or similar
-+API_URL=$ADMIN_URL/api
-```
-
-This is closer to our deployed setup where all API requests from the admin are routed through the AuthProxy that runs under the admin domain.
-
-You also need to add a proxy for that (only in development):
-
-```ts title="admin/vite.config.mts"
-//...
-server: {
-    // ...
-    proxy: process.env.API_URL_INTERNAL
-    ? {
-        "/api": {
-            target: new URL(process.env.API_URL_INTERNAL).origin,
-            changeOrigin: true,
-            secure: false,
-        },
-        "/dam": {
-            // ...
-        },
-    }
-    : undefined,
-    // ...
-},
-//...
-```
-
-### 🤖 Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
-
-:::note Execute the following upgrade script:
-
-    ```sh
-    npx @comet/upgrade@latest v8/admin/after-install/rename-menu-components-in-admin.ts
-    ```
-
-:::
+You should also use `useContentScope` from `@comet/cms-admin`.
 
 <details>
 
-<summary>Handled by @comet/upgrade</summary>
+<summary>However, if you need custom behavior, you can keep `admin/src/common/ContentScopeProvider.tsx` while skipping above change.</summary>
 
-To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
+Make sure to remove the generics:
 
-- `Menu` → `MainNavigation`
-- `MenuProps` → `MainNavigationProps`
-- `MenuClassKey` → `MainNavigationClassKey`
-- `MenuItem` → `MainNavigationItem`
-- `MenuItemProps` → `MainNavigationItemProps`
-- `MenuItemClassKey` → `MainNavigationItemClassKey`
-- `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
-- `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
-- `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
-- `IWithMenu` → `WithMainNavigation`
-- `withMenu` → `withMainNavigation`
-- `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
-- `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
-- `MenuItemGroup` → `MainNavigationItemGroup`
-- `MenuItemGroupClassKey` → `MainNavigationItemGroupClassKey`
-- `MenuItemGroupProps` → `MainNavigationItemGroupProps`
-- `MenuItemRouterLink` → `MainNavigationItemRouterLink`
-- `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
+```diff title="admin/src/common/ContentScopeProvider.tsx"
+-   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
+-       return useContentScopeConfigLibrary(p);
+-   }
 
-The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
+-    ContentScopeValues<ContentScope>
++    ContentScopeValues
+-    <ContentScopeProviderLibrary<ContentScope>>
++    <ContentScopeProviderLibrary>
+```
 
 </details>
 
-### DataGrid-related changes
+### React-related changes
+
+The React dependency has been bumped to v18.
+
+Follow the official [migration guide](https://react.dev/blog/2022/03/08/react-18-upgrade-guide) to upgrade.
+
+:::info
+Probably, there's not much to do here.
+You can also fix potential errors later during the lint step.
+:::
+
+:::tip
+
+Use [types-react-codemod](https://github.com/eps1lon/types-react-codemod) to fix potential TypeScript compile errors when upgrading to `@types/react@^18.0.0`.
+
+:::
+
+### MUI-related changes
+
+The MUI dependencies (`@mui/material`, `@mui/system`, `@mui/utils`, `@mui/icons-material`, `@mui/lab`) were bumped to v7.
+
+1. 🤖 Execute MUI codemods to update your code
+
+    :::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade@latest v8/admin/after-install/mui-codemods.ts
+    ```
+
+    :::
+
+    :::info
+    When executing the codemods, some errors relating to `fragmentTypes.json` or `comet-config.json` can occur.
+    You can just ignore them.
+    :::
+
+2. Follow the official migration guides to upgrade:
+    - [Upgrade to MUI v6](https://mui.com/material-ui/migration/upgrade-to-v6/)
+    - [Upgrade to MUI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+      :::info
+      Probably, there's not much to do here.
+      You can also fix potential errors later during the lint step.
+      :::
+
+### MUI X (DataGrid)-related changes
+
+The MUI dependencies (`@mui/x-data-grid`, `@mui/x-data-grid-pro`) were bumped to v7.
+
+1.  Search for columns with the `type: "dateTime"`. You must add a `valueGetter`:
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+            }]
+        />
+    ```
+
+2.  Search for `valueGetter` and `valueFormatter`
+
+    Change the arguments passed to the functions.
+    Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+    ```diff
+        <DataGrid
+            //other props
+            columns=[
+            {
+                field: "updatedAt",
+                type: "dateTime",
+    -           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
+    +           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+    -           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+    +           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+            }]
+        />
+    ```
+
+3.  A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/).
+
+    There is also a codemod from MUI which handles most of the changes:
+
+    :::note Execute the following upgrade script:
+
+        ```sh
+        npx @comet/upgrade@latest v8/admin/after-install/mui-x-codemods.ts
+        ```
+
+    :::
 
 #### Update usage of `DataGridToolbar`
 
@@ -2183,71 +2298,50 @@ Be aware that you must pass `rowCount` to the DataGrid when using the `useDataGr
 
 :::
 
-#### `DataGrid` Date / DateTime filters now use MUI pickers
+#### i18n for MUI X date picker
+
+In the before-install script, a `LocalizationProvider` was added to `App.tsx`.
+A `adapterLocale` is passed to the provider.
+If your application uses internationalization or a language other than English (US), make sure to pass the right locale based on the supported languages.
+
+### 🤖 Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
+
+:::note Execute the following upgrade script:
+
+    ```sh
+    npx @comet/upgrade@latest v8/admin/after-install/rename-menu-components-in-admin.ts
+    ```
+
+:::
 
 <details>
 
 <summary>Handled by @comet/upgrade</summary>
 
-:::note Execute the following upgrade script:
+To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
 
-```sh
-npx @comet/upgrade@latest v8/admin/after-install/use-mui-date-picker-in-grid.ts
-```
+- `Menu` → `MainNavigation`
+- `MenuProps` → `MainNavigationProps`
+- `MenuClassKey` → `MainNavigationClassKey`
+- `MenuItem` → `MainNavigationItem`
+- `MenuItemProps` → `MainNavigationItemProps`
+- `MenuItemClassKey` → `MainNavigationItemClassKey`
+- `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
+- `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
+- `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
+- `IWithMenu` → `WithMainNavigation`
+- `withMenu` → `withMainNavigation`
+- `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`
+- `MenuItemAnchorLinkProps` → `MainNavigationItemAnchorLinkProps`
+- `MenuItemGroup` → `MainNavigationItemGroup`
+- `MenuItemGroupClassKey` → `MainNavigationItemGroupClassKey`
+- `MenuItemGroupProps` → `MainNavigationItemGroupProps`
+- `MenuItemRouterLink` → `MainNavigationItemRouterLink`
+- `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
 
-:::
+The `MenuContext` has been removed, use the new `useMainNavigation` hook instead.
 
 </details>
-
-This update improves the UX of date filtering by replacing the current date picker solution with MUI's `DatePicker`.
-
-It **requires installation of new dependencies** and setup of `LocalizationProvider` in your app.
-
-**Migration steps:**
-
-- **Install dependencies:**
-  Add the following dependencies to your `package.json`:
-
-```diff
-    "dependencies": {
-+       "@mui/x-date-pickers": "^7.29.4",
-+       "date-fns": "^4.1.0",
-    }
-```
-
-Update your application root to include `LocalizationProvider from @mui/x-date-pickers:
-
-```diff
-+    import { LocalizationProvider } from "@mui/x-date-pickers";
-+    import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-+    import { enUS } from "date-fns/locale";
-
-    <IntlProvider locale="en" messages={getMessages()}>
-+        <LocalizationProvider adapterLocale={enUS} dateAdapter={AdapterDateFns}>
-            <MuiThemeProvider theme={theme}>{/* App Content */}</MuiThemeProvider>
-+        </LocalizationProvider>
-    </IntlProvider>;
-```
-
-If you are already using the `dataGridDateColumn` or `dataGridDateTimeColumn` helpers, the new MUI DatePicker will be used automatically for filtering:
-
-```tsx
-import { dataGridDateTimeColumn } from "@comet/admin";
-
-const columns: GridColDef[] = [
-    {
-        ...dataGridDateTimeColumn,
-        field: "createdAt",
-        headerName: "Created at",
-    },
-];
-```
-
-:::info Action required
-
-If your application uses internationalization or a language other than English (US), additional configuration is required. The codemod will add a TODO comment at the relevant location to remind you to configure the appropriate locale for the LocalizationProvider.
-
-:::
 
 ### Dialog-related changes
 
@@ -2343,90 +2437,24 @@ Example:
 
 </details>
 
-### Adapt to changes in ContentScopeProvider
+### 🤖 Import `Button` from `@comet/admin` package
 
-#### Use interface augmentation for ContentScope
+:::note Execute the following upgrade script:
 
-```diff title="admin/src/App.tsx"
-+   import { type ContentScope as BaseContentScope } from "@src/site-configs";
+    ```sh
+    npx @comet/upgrade@latest v8/admin/after-install/replace-mui-button-with-comet-admin-button.ts
+    ```
 
-+   declare module "@comet/cms-admin" {
-+       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-+       interface ContentScope extends BaseContentScope {}
-+   }
-
-    export function App() {
-```
-
-The `ContentScopeInterface` export from `@comet/cms-admin` was removed.
-Instead, use `ContentScope` directly:
-
-```diff
-- import { type ContentScopeInterface } from "@comet/cms-admin";
-+ import { type ContentScope } from "@comet/cms-admin";
-```
-
-#### Preferably use ContentScopeProvider directly from Comet
-
-Move the scope labels from admin to the API, for example:
-
-```diff
-UserPermissionsModule.forRootAsync({
-    useFactory: (userService: StaticUsersUserService, accessControlService: AccessControlService) => ({
-        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
--           siteConfig.scope.languages.map((language) => ({
--               domain: siteConfig.scope.domain,
--               language,
--           })),
-+           siteConfig.scope.languages.map((language) => ({
-+               scope: {
-+                   domain: siteConfig.scope.domain,
-+                   language,
-+               },
-+               label: { domain: siteConfig.name },
-+           })),
-        ),
-        // ...
-    }),
-    // ...
-}),
-```
-
-Then you can use the `ContentScopeProvider` from `@comet/cms-admin` directly in your `App.tsx` and delete `admin/src/common/ContentScopeProvider.tsx`:
-
-```diff title="admin/src/App.tsx"
--   import { ContentScopeProvider } from "./common/ContentScopeProvider";
-+   import { ContentScopeProvider } from "@comet/cms-admin";
-    // Delete `admin/src/common/ContentScopeProvider.tsx`
-```
-
-You should also use `useContentScope` from `@comet/cms-admin`.
+:::
 
 <details>
-
-<summary>However, if you need custom behavior, you can keep `admin/src/common/ContentScopeProvider.tsx` while skipping above change.</summary>
-
-Make sure to remove the generics:
-
-```diff title="admin/src/common/ContentScopeProvider.tsx"
--   export function useContentScopeConfig(p: ContentScopeConfigProps): void {
--       return useContentScopeConfigLibrary(p);
--   }
-
--    ContentScopeValues<ContentScope>
-+    ContentScopeValues
--    <ContentScopeProviderLibrary<ContentScope>>
-+    <ContentScopeProviderLibrary>
-```
-
-</details>
-
-### Import `Button` from `@comet/admin` package
 
 ```diff
 - import { Button } from "@mui/material";
 + import { Button } from "@comet/admin";
 ```
+
+</details>
 
 ### `FinalFormToggleButtonGroup` deprecated
 
@@ -2551,6 +2579,35 @@ export const RedirectsPage = createRedirectsPage({
 
 This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
 
+### Fix linting errors
+
+#### EsLint
+
+1. `cd admin`
+2. `npm run lint:eslint -- --fix`
+3. Commit with `--no-verify`
+4. Manually fix all remaining errors
+5. Commit with `--no-verify`
+
+#### Type errors
+
+1. `npm run lint:tsc`
+2. Fix all occurring errors
+3. Commit with `--no-verify`
+
+#### Overall lint
+
+1. `npm run lint`
+2. Fix all occurring errors
+3. Commit **without** `--no-verify`
+
+### Fix runtime errors
+
+1. Start the api with `dpm start admin`
+2. Check the logs with `dpm logs admin`
+3. Fix occurring errors
+4. Once the API runs without problems: Commit **without** `--no-verify`
+
 ## Site
 
 ### Switch from `@comet/cms-site` to `@comet/site-nextjs`
@@ -2611,3 +2668,33 @@ scalars: rootBlocks.reduce(
 +   { LocalDate: "string" }
 )
 ```
+
+### Fix linting errors
+
+#### EsLint
+
+1. `cd site`
+2. `npm run lint:eslint -- --fix`
+3. Commit with `--no-verify`
+4. Manually fix all remaining errors
+5. Commit with `--no-verify`
+
+#### Type errors
+
+1. `npm run lint:tsc`
+2. Fix all occurring errors
+3. Commit with `--no-verify`
+
+#### Overall lint
+
+1. `npm run lint`
+2. Fix all occurring errors
+3. Commit **without** `--no-verify`
+
+### Fix runtime errors
+
+1. Start the api with `dpm start site`
+2. Check the logs with `dpm logs site`
+3. Fix occurring errors
+4. Execute a local prod build: `./build-and-run-site.sh` (if you don't have the script yet, get it from the [COMET Starter](https://github.com/vivid-planet/comet-starter/blob/main/build-and-run-site.sh))
+5. Once the API runs without problems: Commit **without** `--no-verify`
