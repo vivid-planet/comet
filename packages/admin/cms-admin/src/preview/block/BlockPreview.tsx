@@ -45,10 +45,10 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
     useEffect(() => {
         if (iFrameBridge.iFrameReady && data?.blockPreviewJwt) {
             iFrameBridge.sendBlockState(previewState);
-            iFrameBridge.sendContentScope(scope, data.blockPreviewJwt);
+            iFrameBridge.sendContentScopeJwt(data.blockPreviewJwt);
             iFrameBridge.sendGraphQLApiUrl(graphQLApiUrl);
         }
-    }, [iFrameBridge, previewState, scope, graphQLApiUrl, data]);
+    }, [iFrameBridge, previewState, graphQLApiUrl, data?.blockPreviewJwt]);
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);
