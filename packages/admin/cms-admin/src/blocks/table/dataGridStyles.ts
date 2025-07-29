@@ -1,7 +1,8 @@
-import { SxProps, Theme } from "@mui/material";
+import { type SxProps, type Theme } from "@mui/material";
 
+// TODO: Can we remove the `!important`s?
 export const dataGridStyles: SxProps<Theme> = (theme) => ({
-    minHeight: "min(740px, calc(100vh - 40px))",
+    "--DataGrid-rowBorderColor": theme.palette.grey[100],
     borderLeft: 0,
     borderRight: 0,
 
@@ -9,52 +10,64 @@ export const dataGridStyles: SxProps<Theme> = (theme) => ({
         width: "100%",
         justifyContent: "flex-end",
     },
-    ".MuiDataGrid-columnHeader": {
-        borderBottom: `1px solid ${theme.palette.grey[100]}`,
-    },
-    ".MuiDataGrid-cell": {
-        position: "relative",
-        borderBottom: `1px solid ${theme.palette.grey[100]} !important`, // TODO: Can we fix this?
-        borderTop: "none",
-    },
-    ".MuiDataGrid-cell:not(:last-child), .MuiDataGrid-columnHeader:not(:last-child)": {
-        borderRight: `1px solid ${theme.palette.grey[100]}`,
-    },
-    '.MuiDataGrid-cell[data-field="actions"]': {
-        padding: 0,
-        justifyContent: "center",
-    },
-    ".MuiDataGrid-columnSeparator": {
+
+    ".MuiDataGrid-columnHeaders .MuiDataGrid-filler[role='presentation']": {
         display: "none",
     },
-    ".MuiDataGrid-columnHeaders, .MuiDataGrid-cell": {
-        borderBottom: "none",
-    },
-    ".MuiDataGrid-rowReorderCell": {
-        height: "100%",
-    },
-    ".MuiDataGrid-pinnedColumns": {
-        boxShadow: "none",
 
-        "&--left .MuiDataGrid-cell": {
+    ".MuiDataGrid-columnHeader": {
+        borderRight: `1px solid ${theme.palette.grey[100]}`,
+
+        "&.MuiDataGrid-columnHeader--pinnedLeft.MuiDataGrid-columnHeader--withRightBorder": {
             borderRight: `1px solid ${theme.palette.grey[100]}`,
-            paddingLeft: 0,
-            paddingRight: 0,
+            boxShadow: "none",
         },
 
-        "&--right .MuiDataGrid-cell": {
+        "&.MuiDataGrid-columnHeader--pinnedRight.MuiDataGrid-columnHeader--withLeftBorder": {
             borderLeft: `1px solid ${theme.palette.grey[100]}`,
+            boxShadow: "none",
+        },
+
+        "&:nth-last-child(4)": {
+            // The last non-pinned cell should not have a border, as the pinned column already has one
+            borderRight: "none",
         },
     },
-    ".MuiDataGrid-pinnedColumnHeaders": {
-        boxShadow: "none",
 
-        "&--left .MuiDataGrid-columnHeader": {
-            borderRight: `1px solid ${theme.palette.grey[100]}`,
+    ".MuiDataGrid-cell": {
+        borderBottom: `1px solid ${theme.palette.grey[100]}`,
+        borderRight: `1px solid ${theme.palette.grey[100]}`,
+        borderTop: "none",
+
+        "&.MuiDataGrid-cellEmpty[role='presentation']": {
+            display: "none",
         },
 
-        "&--right .MuiDataGrid-columnHeader": {
-            borderLeft: `1px solid ${theme.palette.grey[100]}`,
+        "&.MuiDataGrid-cell--pinnedLeft.MuiDataGrid-cell--withRightBorder": {
+            borderRightWidth: 1,
+            boxShadow: "none",
         },
+
+        "&.MuiDataGrid-cell--pinnedRight.MuiDataGrid-cell--withLeftBorder": {
+            borderLeftWidth: 1,
+            boxShadow: "none",
+        },
+
+        "&:nth-last-child(3)": {
+            // The last non-pinned cell should not have a border, as the pinned column already has one
+            borderRight: "none",
+        },
+
+        '&[data-field="actions"]': {
+            display: "flex",
+            borderRight: "none",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 0,
+        },
+    },
+
+    ".MuiDataGrid-columnSeparator": {
+        display: "none",
     },
 });
