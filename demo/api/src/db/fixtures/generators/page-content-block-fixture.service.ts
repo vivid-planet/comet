@@ -56,6 +56,7 @@ export class PageContentBlockFixtureService {
         type SupportedBlocks = (typeof blocks)[number]["type"];
 
         // TODO add fixtures for newsDetail and newsList
+        // @ts-expect-error TODO: Add table fixture
         const fixtures: Record<Exclude<SupportedBlocks, "newsDetail" | "newsList">, [BlockCategory, BlockFixture]> = {
             accordion: ["layout", this.accordionBlockFixtureService],
             columns: ["layout", this.columnsBlockFixtureService],

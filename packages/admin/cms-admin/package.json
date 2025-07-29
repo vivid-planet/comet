@@ -142,11 +142,6 @@
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0"
     },
-    "peerDependenciesMeta": {
-        "@mui/x-data-grid-pro": {
-            "optional": true
-        }
-    },
     "engines": {
         "node": ">=22.0.0"
     },
