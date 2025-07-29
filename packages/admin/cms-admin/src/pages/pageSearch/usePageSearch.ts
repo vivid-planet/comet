@@ -29,12 +29,12 @@ export interface PageSearchApi {
 interface UsePageSearchOptions {
     tree: Map<string, GQLPageSearchFragment[]>;
     pagesToRender: PageTreePage[];
-    domain: string;
+    siteUrl: string;
     setExpandedIds: Dispatch<SetStateAction<string[]>>;
     onUpdateCurrentMatch: (pageId: string, pages: PageTreePage[]) => void;
 }
 
-const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pagesToRender }: UsePageSearchOptions): PageSearchApi => {
+const usePageSearch = ({ tree, siteUrl, setExpandedIds, onUpdateCurrentMatch, pagesToRender }: UsePageSearchOptions): PageSearchApi => {
     const [matches, setMatches] = useState<PageSearchMatch[] | null>(null);
     const [currentMatchIndex, setCurrentMatchIndex] = useState<number | null>(null);
     const [query, setQuery] = useState("");
@@ -42,9 +42,9 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
     let domainHost: string;
 
     try {
-        domainHost = new URL(domain).host;
+        domainHost = new URL(siteUrl).host;
     } catch (error) {
-        console.error("Invalid domain provided:", domain, error);
+        console.error("Invalid siteUrl provided:", siteUrl, error);
         domainHost = "";
     }
 

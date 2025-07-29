@@ -119,7 +119,7 @@ export function PagesPage({
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        domain: siteConfig.url,
+        siteUrl: siteConfig.url,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
