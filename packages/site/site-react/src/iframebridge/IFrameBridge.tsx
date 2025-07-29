@@ -1,5 +1,6 @@
 "use client";
 
+import { decodeJwt } from "jose";
 import isEqual from "lodash.isequal";
 import { createContext, type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
@@ -74,25 +75,9 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
     },
 });
 
-function parseJwt(token: string) {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-        window
-            .atob(base64)
-            .split("")
-            .map(function (c) {
-                return `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`;
-            })
-            .join(""),
-    );
-
-    return JSON.parse(jsonPayload);
-}
-
 function getContentScopeFromJwt(jwt: string): unknown {
     try {
-        const parsedJwt = parseJwt(jwt);
+        const parsedJwt = decodeJwt(jwt);
         return parsedJwt.scope;
     } catch (e) {
         console.error("Failed to parse content scope JWT", e);
