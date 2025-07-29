@@ -51,7 +51,7 @@ type InputBaseFieldConfig = {
 };
 
 export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
-export function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
+function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
     return arg && arg.type !== undefined && ["component"].includes(arg.type);
 }
 
