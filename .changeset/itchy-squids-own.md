@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Fix usePageSearch by using domain extracted from `siteConfig.url`
+Fix searching for pages via domain by using the site's URL from the site config
