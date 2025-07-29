@@ -50,8 +50,17 @@ export const FormValidation: Story = {
                                 />
                                 <TextField name="text3" label="Text" fullWidth required />
 
-                                <SaveBoundarySaveButton />
-                                <Alert title="FormState">
+                                <SaveBoundarySaveButton data-testid="saveButton" />
+                                <Alert
+                                    title="FormState"
+                                    slotProps={{
+                                        text: {
+                                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                            // @ts-expect-error
+                                            component: "div",
+                                        },
+                                    }}
+                                >
                                     <pre>
                                         {JSON.stringify(
                                             { submitError, submitFailed, submitSucceeded, hasSubmitErrors, touched, values, errors },

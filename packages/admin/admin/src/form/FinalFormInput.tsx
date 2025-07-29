@@ -28,6 +28,14 @@ export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable,
             <InputBase
                 {...input}
                 {...props}
+                data-testid={input.name}
+                slotProps={{
+                    input: {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
+                        "data-testid": `${input.name}-input`,
+                    },
+                }}
                 endAdornment={
                     (endAdornment || clearable || isTranslatable) && (
                         <>
