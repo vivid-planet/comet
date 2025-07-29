@@ -96,7 +96,7 @@ export function createColumnsBlock<T extends BlockInterface>(
 
         displayName,
 
-        tags,
+        tags: tags ? tags : contentBlock.tags,
 
         category,
 

@@ -155,6 +155,15 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         return Object.entries(supportedBlocks).find(([, block]) => block.name === targetBlock.name)?.[0] ?? null;
     }
 
+    const childTags = Object.values(supportedBlocks).reduce<Array<MessageDescriptor | string>>((acc, block) => {
+        if (block.tags) {
+            return [...acc, ...block.tags];
+        }
+        return acc;
+    }, []);
+
+    const allTags = tags ? [...childTags, ...tags] : childTags;
+
     const BlocksBlock: BlockInterface<
         BlocksBlockFragment<AdditionalItemFields>,
         BlocksBlockState<AdditionalItemFields>,
@@ -166,7 +175,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
         displayName,
 
-        tags,
+        tags: allTags,
 
         defaultValues: () => ({ blocks: [] }),
 
