@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useListenToEscapeKey } from "@src/util/useListenToEscapeKey";
+import { useState } from "react";
 import FocusLock from "react-focus-lock";
 import styled from "styled-components";
 
@@ -18,20 +19,7 @@ function Header({ header }: Props): JSX.Element {
         setOpenMenuId(openMenuId === id ? null : id);
     };
 
-    const useEscapeKeyPressed = (keyPressed: () => void) => {
-        useEffect(() => {
-            const handleKeyDown = (event: KeyboardEvent) => {
-                if (event.key === "Escape") keyPressed();
-            };
-
-            window.addEventListener("keydown", handleKeyDown);
-            return () => {
-                window.removeEventListener("keydown", handleKeyDown);
-            };
-        }, [keyPressed]);
-    };
-
-    useEscapeKeyPressed(() => {
+    useListenToEscapeKey(() => {
         setOpenMenuId(null);
     });
 
