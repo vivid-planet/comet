@@ -118,6 +118,15 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         };
     }
 
+    const childTags = Object.values(supportedBlocks).reduce<Array<MessageDescriptor | string>>((acc, block) => {
+        if (block.tags) {
+            return [...acc, ...block.tags];
+        }
+        return acc;
+    }, []);
+
+    const allTags = tags ? [...childTags, ...tags] : childTags;
+
     const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
 
@@ -125,7 +134,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
 
         displayName,
 
-        tags,
+        tags: allTags,
 
         category,
 
