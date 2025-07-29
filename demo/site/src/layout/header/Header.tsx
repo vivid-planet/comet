@@ -48,6 +48,7 @@ function Header({ header }: Props): JSX.Element {
                                                     </Link>
                                                 </li>
                                             ))}
+                                            <ReturnButton onClick={() => setOpenMenuId(null)}>Return to {item.node.name}</ReturnButton>
                                         </SubLevelNavigation>
                                     </FocusLock>
                                 </SubLevelNavigationRoot>
@@ -93,6 +94,21 @@ const TopLevelLinkContainer = styled.li`
         & > ${SubLevelNavigationRoot} {
             display: block;
         }
+    }
+`;
+
+const ReturnButton = styled.button`
+    opacity: 0;
+    background-color: white;
+    text-align: left;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    padding-left: 10px;
+
+    &:focus-visible {
+        opacity: 1;
     }
 `;
 
