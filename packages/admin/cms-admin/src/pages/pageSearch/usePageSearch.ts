@@ -39,13 +39,13 @@ const usePageSearch = ({ tree, siteUrl, setExpandedIds, onUpdateCurrentMatch, pa
     const [currentMatchIndex, setCurrentMatchIndex] = useState<number | null>(null);
     const [query, setQuery] = useState("");
 
-    let domainHost: string;
+    let domainHost: string | undefined;
 
     try {
         domainHost = new URL(siteUrl).host;
     } catch (error) {
         console.error("Invalid siteUrl provided:", siteUrl, error);
-        domainHost = "";
+        domainHost = undefined;
     }
 
     const inorderPages = useMemo(() => {
@@ -103,7 +103,7 @@ const usePageSearch = ({ tree, siteUrl, setExpandedIds, onUpdateCurrentMatch, pa
         try {
             const url = new URL(query);
 
-            if (!url.host.includes(domainHost)) {
+            if (domainHost && !url.host.includes(domainHost)) {
                 return;
             }
 
