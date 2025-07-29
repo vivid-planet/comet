@@ -90,6 +90,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
                 {...fieldContainerProps}
+                data-testid={`${name}-field-container`}
             >
                 {render()}
             </FieldContainer>

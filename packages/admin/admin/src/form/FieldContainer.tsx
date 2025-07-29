@@ -30,6 +30,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     helperText?: ReactNode;
     secondaryHelperText?: ReactNode;
     helperTextIcon?: ReactNode;
+    "data-testid"?: string;
 };
 
 export type FieldContainerClassKey =
@@ -311,6 +312,7 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         scrollTo = false,
         fieldMargin = "onlyIfNotLast",
         slotProps,
+        "data-testid": dataTestId,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFormFieldContainer" });
     const fullWidth = passedFullWidth ?? variant === "horizontal";
@@ -339,14 +341,23 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
     };
 
     return (
-        <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
+        <Root
+            ownerState={ownerState}
+            fullWidth={fullWidth}
+            disabled={disabled}
+            required={required}
+            ref={ref}
+            {...slotProps?.root}
+            {...restProps}
+            data-testid={dataTestId}
+        >
             <InnerContainer ownerState={ownerState} {...slotProps?.innerContainer}>
                 <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
                     {label}
                 </Label>
                 <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
                     {children}
-                    <HelperTextsWrapper {...slotProps?.helperTextsWrapper}>
+                    <HelperTextsWrapper {...slotProps?.helperTextsWrapper} data-testid={`${dataTestId}-helper-texts-wrapper`}>
                         {hasError && (
                             <Error error {...slotProps?.error}>
                                 {Boolean(helperTextIcon) && helperTextIcon}
