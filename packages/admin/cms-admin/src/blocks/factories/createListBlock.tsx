@@ -139,7 +139,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
         displayName,
 
-        tags,
+        tags: tags ? tags : block.tags,
 
         defaultValues: () => ({
             blocks:
