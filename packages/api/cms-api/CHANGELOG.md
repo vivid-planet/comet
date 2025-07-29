@@ -208,6 +208,25 @@
 - 7e7a4aa: Fix `title` field not added to types in `createLinkBlock`
 - f20ec6c: Make class-validator a peer dependency
 
+## 7.25.3
+
+### Patch Changes
+
+- @comet/blocks-api@7.25.3
+
+## 7.25.2
+
+### Patch Changes
+
+- 98104babc: API Generator: fix nullable input for many-to-many relations
+    - @comet/blocks-api@7.25.2
+
+## 7.25.1
+
+### Patch Changes
+
+- @comet/blocks-api@7.25.1
+
 ## 7.25.0
 
 ### Minor Changes

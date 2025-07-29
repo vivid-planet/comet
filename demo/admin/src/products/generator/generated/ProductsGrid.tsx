@@ -103,7 +103,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     const dataGridProps = { ...useDataGridRemote({ initialSort: [{ field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" }],
             initialFilter: {
-                items: [{ field: "type", operator: "is", value: "Shirt" }],
+                items: [{ field: "type", operator: "is", value: "shirt" }],
             },
             queryParamsPrefix: "products",
         }), ...usePersistentColumnState("ProductsGrid") };
@@ -151,6 +151,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                                             <InfoIcon sx={{ marginLeft: 1 }}/>
                                         </Tooltip>
                                     </>),
+            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
             type: "number",
             renderCell: ({ value }) => {
                 return (typeof value === "number") ? <FormattedNumber value={value} style="currency" currency="EUR" minimumFractionDigits={2} maximumFractionDigits={2}/> : "";

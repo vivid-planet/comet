@@ -1,4 +1,4 @@
-import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { PageTreeNodeBaseCreateInput, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
@@ -47,10 +47,9 @@ export class ManyImagesTestPageFixtureService {
                     id: uuidDocument,
                     type: "Page",
                 },
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
-            PageTreeNodeCategory.MainNavigation,
+                userGroup: UserGroup.all,
+            } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+            PageTreeNodeCategory.mainNavigation,
             scope,
         );
 
@@ -72,7 +71,7 @@ export class ManyImagesTestPageFixtureService {
                 visible: true,
                 type: "image",
                 props: c,
-                userGroup: UserGroup.All,
+                userGroup: UserGroup.all,
             })),
         });
         pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
