@@ -157,7 +157,7 @@ describe("parseConfig", () => {
         expect(config.fields[0].validate).toEqual({ code: "() => true", imports: [] });
     });
 
-    it("executes import when not import is not directly supported", async () => {
+    it("executes import when import is not directly supported", async () => {
         const configImportString = `
             export const typeValues = ["Cap", "Shirt", "Tie"];
         `;
