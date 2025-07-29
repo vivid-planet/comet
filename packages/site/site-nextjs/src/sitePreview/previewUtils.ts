@@ -48,9 +48,12 @@ export async function setSitePreviewParams(payload: SitePreviewParams) {
  * @return If SitePreview is active the current preview settings
  */
 export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<PreviewParams | null> {
-    const headers = getHeaders();
-    if (headers.has("x-block-preview")) {
-        return verifyJwt<PreviewParams>(headers.get("x-block-preview") || "");
+    // Do not call headers() (and hence force dynamic rendering) when called from different places than middleware or API routes
+    if (options.skipDraftModeCheck) {
+        const headers = getHeaders();
+        if (headers.has("x-block-preview")) {
+            return verifyJwt<PreviewParams>(headers.get("x-block-preview") || "");
+        }
     }
 
     if (!options.skipDraftModeCheck) {
