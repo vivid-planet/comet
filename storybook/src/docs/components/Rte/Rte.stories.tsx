@@ -3,7 +3,6 @@ import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/Rich Text Editor",
@@ -19,7 +18,7 @@ export const Minimal = {
     },
 };
 
-const PrettyJson: React.FC<{ children: string }> = ({ children }) => <pre>{JSON.stringify(JSON.parse(children), null, 2)}</pre>;
+const PrettyJson = ({ children }: { children: string }) => <pre>{JSON.stringify(JSON.parse(children), null, 2)}</pre>;
 
 export const SourceDataDefault = {
     render: () => {

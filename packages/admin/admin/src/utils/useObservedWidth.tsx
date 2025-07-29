@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce";
-import { RefObject, useEffect, useMemo, useState } from "react";
+import { type RefObject, useEffect, useMemo, useState } from "react";
 
 export const useObservedWidth = (ref: RefObject<HTMLElement>): number => {
     const [containerWidth, setContainerWidth] = useState(ref.current?.clientWidth ?? 0);

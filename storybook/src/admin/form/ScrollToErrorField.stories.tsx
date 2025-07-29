@@ -1,6 +1,6 @@
-import { Field, FinalForm, FinalFormInput } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
-import * as React from "react";
+import { Button, Field, FinalForm, FinalFormInput } from "@comet/admin";
+import { Typography } from "@mui/material";
+import { useState } from "react";
 
 interface FormValues {
     foo: string;
@@ -28,12 +28,10 @@ export const ScrollToErrorField = () => {
         bar: "",
     };
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     return (
         <>
-            <Button variant="contained" color="primary" onClick={() => setOpen((s) => !s)}>
-                Click to Render Form
-            </Button>
+            <Button onClick={() => setOpen((s) => !s)}>Click to Render Form</Button>
             <Typography>The page then scrolls to the 2nd field which has an error.</Typography>
             {open && (
                 <FinalForm<FormValues>

@@ -1,20 +1,20 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
     RouterTabs,
     TextField,
-    ToolbarActions,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
+import { DialogContent, Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -33,10 +33,10 @@ const products = [
 ];
 
 type DialogProps = {
-    dialogApiRef: React.RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi>;
 };
 
-const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -47,35 +47,41 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="name" label="Name" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="name" label="Name" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
+function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarFillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            <FillSpace />
+            {toolbarAction}
         </DataGridToolbar>
     );
 }
 
 export const EditDialogInRouterTabs = {
     render: () => {
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
         return (
             <RouterTabs>
                 <RouterTab path="" label="First Tab">
@@ -92,22 +98,17 @@ export const EditDialogInRouterTabs = {
                                 { field: "name", headerName: "Name", flex: 1 },
                             ]}
                             rows={products}
-                            components={{
-                                Toolbar: Toolbar,
+                            slots={{
+                                toolbar: Toolbar,
                             }}
-                            componentsProps={{
+                            slotProps={{
                                 toolbar: {
                                     toolbarAction: (
-                                        <Button
-                                            startIcon={<Add />}
-                                            onClick={() => editDialogApi.current?.openAddDialog()}
-                                            variant="contained"
-                                            color="primary"
-                                        >
+                                        <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                             <FormattedMessage {...messages.add} />
                                         </Button>
                                     ),
-                                },
+                                } as ToolbarProps,
                             }}
                         />
                     </MainContent>

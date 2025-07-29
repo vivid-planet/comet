@@ -1,6 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveButton,
@@ -10,29 +11,29 @@ import {
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
-import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { MenuItem } from "@mui/material";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { createFinalFormBlock } from "../blocks/form/createFinalFormBlock";
+import { type BlockInterface, type BlockState } from "../blocks/types";
+import { isValidUrl } from "../blocks/validators/isValidUrl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { GQLRedirectSourceTypeValues } from "../graphql.generated";
-import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+import { type GQLRedirectSourceTypeValues } from "../graphql.generated";
+import { type GQLRedirectSourceAvailableQuery, type GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 import { redirectDetailQuery } from "./RedirectForm.gql";
 import {
-    GQLCreateRedirectMutation,
-    GQLRedirectDetailFragment,
-    GQLRedirectDetailQuery,
-    GQLRedirectDetailQueryVariables,
+    type GQLCreateRedirectMutation,
+    type GQLRedirectDetailFragment,
+    type GQLRedirectDetailQuery,
+    type GQLRedirectDetailQueryVariables,
 } from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
 
-export { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 export { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
 export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
 
@@ -183,7 +184,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                         <ToolbarTitleItem>
                             {values.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
                         </ToolbarTitleItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <FinalFormSaveButton />
                         </ToolbarActions>

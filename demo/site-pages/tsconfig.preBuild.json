@@ -1,18 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "skipLibCheck": true,
-        "strict": false,
-        "forceConsistentCasingInFileNames": true,
-        "esModuleInterop": true,
-        "strictNullChecks": true,
         "baseUrl": "./",
-        "outDir": "./preBuild/build",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
         "jsx": "preserve",
+        "module": "commonjs",
+        "outDir": "./preBuild/build",
         "paths": {
             "@src/*": ["src/*"]
-        }
+        },
+        "skipLibCheck": true,
+        "strict": false,
+        "strictNullChecks": true,
+        "target": "es5"
     },
     "include": ["preBuild/src/**/*.ts"]
 }

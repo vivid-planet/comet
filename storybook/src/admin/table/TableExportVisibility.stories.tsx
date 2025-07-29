@@ -1,17 +1,16 @@
 import {
     ExcelExportButton,
-    IRow,
+    FillSpace,
+    type IRow,
     MainContent,
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 interface IExampleRow extends IRow {
     id: number;
@@ -46,7 +45,7 @@ export const ExportVisibility = () => {
                 <ToolbarItem>
                     <Typography variant="h3">Export Visibility</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <ExcelExportButton exportApi={exportApi} />
                 </ToolbarActions>

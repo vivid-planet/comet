@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { GridColDef, TableDeleteButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Button, FillSpace, type GridColDef, TableDeleteButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
-import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
+import { Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
@@ -11,7 +11,12 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
-import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
+import {
+    type GQLPermissionForGridFragment,
+    type GQLPermissionsQuery,
+    type GQLPermissionsQueryVariables,
+    namedOperations,
+} from "./PermissionGrid.generated";
 
 export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
@@ -162,18 +167,15 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 rowCount={data?.permissions.length ?? 0}
                 loading={loading}
                 getRowHeight={() => "auto"}
-                sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
-                components={{
-                    Toolbar: () => (
+                slots={{
+                    toolbar: () => (
                         <GridToolbar>
                             <ToolbarTitleItem>
                                 <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />
                             </ToolbarTitleItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 <Button
-                                    variant="contained"
-                                    color="primary"
                                     startIcon={<Add />}
                                     onClick={() => {
                                         setPermissionId("add");

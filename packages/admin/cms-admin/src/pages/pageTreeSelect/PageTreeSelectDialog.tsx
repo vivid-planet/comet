@@ -1,29 +1,39 @@
 import { gql, useQuery } from "@apollo/client";
-import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from "@comet/admin";
+import { Button, FillSpace, Toolbar, ToolbarActions, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Select,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import { FixedSizeList as List, type ListChildComponentProps } from "react-window";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { Maybe } from "../../graphql.generated";
+import { type ContentScope } from "../../contentScope/Provider";
+import { type Maybe } from "../../graphql.generated";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
+import { createPagesQuery, type GQLPagesQuery, type GQLPagesQueryVariables, type GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
 import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
-import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
+import { type PageTreePage, usePageTree } from "../pageTree/usePageTree";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
-export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
+export { GQLSelectedPageFragment };
 
 export const selectedPageFragment = gql`
     fragment SelectedPage on PageTreeNode {
@@ -60,16 +70,16 @@ const PageSearchContainer = styled("div")`
 `;
 
 interface PageTreeSelectProps {
-    value: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | undefined | null;
-    onChange: (newValue: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | null) => void;
+    value: (GQLSelectedPageFragment & { scope?: ContentScope }) | undefined | null;
+    onChange: (newValue: (GQLSelectedPageFragment & { scope?: ContentScope }) | null) => void;
     open: boolean;
     onClose: () => void;
     defaultCategory: string;
 }
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
-    const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
-    const { scope } = useContentScope();
+    const { categories, additionalPageTreeNodeFragment } = usePageTreeConfig();
+    const scope = usePageTreeScope();
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
     const [height, setHeight] = useState(200);
@@ -111,6 +121,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
+        // TODO remove hardcoded domain here
         domain: scope.domain,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
@@ -197,14 +208,14 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
-                    {pageTreeCategories && (
+                    {categories && (
                         <Select
                             value={category}
                             onChange={(event) => {
                                 setCategory(event.target.value as string);
                             }}
                         >
-                            {pageTreeCategories.map(({ category, label }) => (
+                            {categories.map(({ category, label }) => (
                                 <MenuItem key={category} value={category}>
                                     {label}
                                 </MenuItem>
@@ -212,7 +223,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                         </Select>
                     )}
                 </ToolbarActions>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <PageSearchContainer>
                     <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                 </PageSearchContainer>
@@ -220,9 +231,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
                     value={{
-                        allCategories: pageTreeCategories,
                         currentCategory: category,
-                        documentTypes: pageTreeDocumentTypes,
                         tree,
                         query: pagesQuery,
                     }}
@@ -243,12 +252,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <StyledDialogAction>
                 {value && (
                     <Button
+                        variant="textDark"
                         onClick={() => {
                             onChange(null);
                             onClose();
                         }}
                         startIcon={<Delete />}
-                        color="info"
                     >
                         <FormattedMessage id="comet.pages.pageTreeSelect.removeSelection" defaultMessage="Remove Selection" />
                     </Button>

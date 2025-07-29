@@ -13,7 +13,44 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 Pull requests with minor or patch changes should target the [`main`](https://github.com/vivid-planet/comet/tree/main) branch, while major/breaking changes should target the [`next`](https://github.com/vivid-planet/comet/tree/next) branch.
 
-### Changesets
+## Pull requests
+
+> [!WARNING]
+> Please make sure to keep the pull request size at a minium!
+> Smaller pull requests are easier to review and tend to get merged faster.
+> Unrelated changes, refactorings, fixes etc. should be made in follow-up pull requests.
+
+### Description
+
+The description should describe the change you're making.
+It will be used as the commit message for the squashed commit once the pull request gets merged.
+Therefore, make sure to keep the description up-to-date as the pull request changes.
+
+> [!WARNING]
+> Please describe why you're making the change, not what you're changing.
+> Reviewers see what you're changing when reviewing the code.
+> However, they might not understand your motives as to why you're making the change.
+
+Your description should include:
+
+-   The problem you're facing
+-   Your solution to the problem
+-   An example usage of your change
+
+### Example
+
+Make sure to provide an example of your change if your change includes a new API.
+This can be either:
+
+-   A unit test (preferred)
+-   The implementation in Demo
+-   A development story in Storybook
+
+### Screenshots/screencasts
+
+When making a visual change, please provide either screenshots or screencasts.
+
+### Changeset
 
 Changes are documented using [changesets](https://github.com/changesets/changesets). Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md) when making a notable change.
 
@@ -46,7 +83,7 @@ Example for a good changeset:
 
 ````md
 ---
-"@comet/cms-site": minor
+"@comet/site-nextjs": minor
 ---
 
 Add `ErrorHandlerProvider`
@@ -73,7 +110,7 @@ The `ErrorHandler` receives the errors in the application and can report them to
 ```tsx
 "use client";
 
-import { ErrorHandlerProvider } from "@comet/cms-site";
+import { ErrorHandlerProvider } from "@comet/site-nextjs";
 import { PropsWithChildren } from "react";
 
 export function ErrorHandler({ children }: PropsWithChildren) {
@@ -90,3 +127,19 @@ export function ErrorHandler({ children }: PropsWithChildren) {
 }
 ```
 ````
+
+### Open TODOs/questions
+
+Anything that needs to be done before merging the pull request, for instance, add a changeset.
+
+### Further information
+
+Further information that helps reviewing the pull request, for instance:
+
+-   Alternative solutions you have considered
+-   Related pull requests
+-   Links to relevant tasks, documentation, blog posts etc.
+
+> [!WARNING]
+> Make sure that everything required to understand your change is in the pull request description.
+> Reviewers shouldn't need to review tasks, JIRA conversations etc. to understand what you're doing.

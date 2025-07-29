@@ -1,13 +1,13 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from "@mui/material";
-import Button from "@mui/material/Button";
-import { css, Theme } from "@mui/material/styles";
+// eslint-disable-next-line no-restricted-imports
+import { Button, buttonClasses, type ButtonProps, type ComponentsOverrides, svgIconClasses } from "@mui/material";
+import { css, type Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
-import { ComponentType } from "react";
+import { type ComponentType } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
-import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { FilterBarActiveFilterBadge, type FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

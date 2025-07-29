@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from "react";
+import { type RefObject, useEffect, useState } from "react";
 
 export const useTopOffset = (ref: RefObject<HTMLElement>) => {
     const [topOffset, setTopOffset] = useState(0);

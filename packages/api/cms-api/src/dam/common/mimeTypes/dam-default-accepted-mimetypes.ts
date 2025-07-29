@@ -12,8 +12,8 @@ export const damDefaultAcceptedMimetypes = [
     "image/gif",
     "image/webp",
     "image/tiff",
-    "image/psd",
     "image/vnd.microsoft.icon",
+    "image/x-icon",
     "image/bmp",
     // audio
     "audio/mpeg",
@@ -24,9 +24,9 @@ export const damDefaultAcceptedMimetypes = [
     "video/mp4",
     "video/quicktime",
     "video/ogg",
-    "video/avi",
-    "video/x-m4v",
     "video/webm",
+    // captions
+    "text/vtt",
     // pdf
     "application/pdf",
     // text document

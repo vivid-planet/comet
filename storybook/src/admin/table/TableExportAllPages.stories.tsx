@@ -2,19 +2,18 @@ import { gql } from "@apollo/client";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
+    FillSpace,
     MainContent,
     Table,
     TableQuery,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportPagedTableQuery,
     useTableQuery,
     useTableQueryPaging,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
@@ -98,7 +97,7 @@ export const ExportAllPages = () => {
                         <ToolbarItem>
                             <Typography variant="h3">Export All Pages</Typography>
                         </ToolbarItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <ExcelExportButton exportApi={exportApi} />
                         </ToolbarActions>

@@ -1,8 +1,8 @@
-import { AutocompleteProps } from "@mui/material";
+import { type AutocompleteProps } from "@mui/material";
 
-import { AsyncOptionsProps } from "../../hooks/useAsyncOptionsProps";
-import FinalFormAutocomplete from "../Autocomplete";
-import { Field, FieldProps } from "../Field";
+import { type AsyncOptionsProps } from "../../hooks/useAsyncOptionsProps";
+import { FinalFormAutocomplete } from "../Autocomplete";
+import { Field, type FieldProps } from "../Field";
 
 export type AutocompleteFieldProps<
     T extends Record<string, any>,

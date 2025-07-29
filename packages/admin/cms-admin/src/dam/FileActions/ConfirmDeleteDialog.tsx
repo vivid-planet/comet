@@ -1,5 +1,10 @@
 import { CancelButton, DeleteButton, messages } from "@comet/admin";
-import { Dialog, DialogActions, DialogTitle } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogTitle,
+} from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import * as sc from "./ConfirmDeleteDialog.sc";

@@ -2,9 +2,7 @@ import { RuleTester } from "eslint";
 
 import noOtherModuleRelativeImport from "./no-other-module-relative-import";
 
-const ruleTester = new RuleTester({
-    parser: require.resolve("@typescript-eslint/parser"),
-});
+const ruleTester = new RuleTester();
 
 const errors = [{ message: "Avoid relative import from other module" }];
 

@@ -1,11 +1,11 @@
-import { BaseEntity, Entity, Index, PrimaryKey, Property, Unique } from "@mikro-orm/core";
+import { BaseEntity, Entity, Index, PrimaryKey, Property, Unique } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 @ObjectType()
 @Entity({ tableName: "PageTreeNodeDocument" })
 @Unique({ properties: ["pageTreeNodeId", "documentId"] })
-export class AttachedDocument extends BaseEntity<AttachedDocument, "id"> {
+export class AttachedDocument extends BaseEntity {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();

@@ -1,6 +1,5 @@
 import { Field, FieldContainer, FinalFormRadio } from "@comet/admin";
 import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -23,7 +22,7 @@ export const Radio = () => {
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Card variant="outlined">
                                     <CardContent>
                                         <FieldContainer label="Radios">

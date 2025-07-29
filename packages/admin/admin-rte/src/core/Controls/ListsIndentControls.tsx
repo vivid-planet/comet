@@ -1,4 +1,4 @@
-import { IControlProps } from "../types";
+import { type IControlProps } from "../types";
 import { FeaturesButtonGroup } from "./FeaturesButtonGroup";
 import useListIndent from "./useListIndent";
 

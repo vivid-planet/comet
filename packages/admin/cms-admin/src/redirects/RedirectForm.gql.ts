@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const redirectDetailFragment = gql`
+const redirectDetailFragment = gql`
     fragment RedirectDetail on Redirect {
         id
         sourceType

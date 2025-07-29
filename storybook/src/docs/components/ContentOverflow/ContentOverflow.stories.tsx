@@ -1,8 +1,7 @@
-import { ContentOverflow, GridColDef } from "@comet/admin";
-import { Box, Link, Paper, Typography, TypographyProps } from "@mui/material";
+import { ContentOverflow, type GridColDef } from "@comet/admin";
+import { Box, Link, Paper, Typography, type TypographyProps } from "@mui/material";
 import {} from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/ContentOverflow",
@@ -101,7 +100,7 @@ export const InDataGrid = {
             },
         ];
 
-        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} rowHeight={100} disableSelectionOnClick />;
+        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} rowHeight={100} />;
     },
     name: "In DataGrid",
 };

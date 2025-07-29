@@ -1,8 +1,7 @@
-import { GridCellContent, GridColDef } from "@comet/admin";
+import { GridCellContent, type GridColDef } from "@comet/admin";
 import { StateFilled } from "@comet/admin-icons";
 import { faker } from "@faker-js/faker";
 import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/GridCellContent",
@@ -48,7 +47,7 @@ export const Basic = {
             },
         ];
 
-        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} disableSelectionOnClick />;
+        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} />;
     },
     name: "GridCellContent",
 };

@@ -1,19 +1,19 @@
 import { useQuery } from "@apollo/client";
 import {
+    Button,
     DataGridToolbar,
-    GridColDef,
+    FillSpace,
+    type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarFillSpace,
-    ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
@@ -23,9 +23,9 @@ import {
     //GQLCreateProductMutationVariables,
     //GQLDeleteProductMutation,
     //GQLDeleteProductMutationVariables,
-    GQLProductVariantsListFragment,
-    GQLProductVariantsListQuery,
-    GQLProductVariantsListQueryVariables,
+    type GQLProductVariantsListFragment,
+    type GQLProductVariantsListQuery,
+    type GQLProductVariantsListQueryVariables,
     //GQLUpdateProductVisibilityMutation,
     //GQLUpdateProductVisibilityMutationVariables,
 } from "./ProductVariantsGrid.generated";
@@ -33,18 +33,12 @@ import {
 function ProductVariantsGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarFillSpace />
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
-            <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="products.newVariant" defaultMessage="New Variant" />
-                </Button>
-            </ToolbarItem>
+            <GridToolbarQuickFilter />
+            <GridFilterButton />
+            <FillSpace />
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="products.newVariant" defaultMessage="New Variant" />
+            </Button>
         </DataGridToolbar>
     );
 }
@@ -83,6 +77,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         */
         {
             field: "actions",
+            type: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
@@ -109,25 +104,26 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         variables: {
             product: productId,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productVariants.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
 
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            error={error}
-            components={{
-                Toolbar: ProductVariantsGridToolbar,
+            slots={{
+                toolbar: ProductVariantsGridToolbar,
             }}
         />
     );

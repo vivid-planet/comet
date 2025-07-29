@@ -1,14 +1,13 @@
-import { Field, FinalForm, FinalFormInput, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { Button } from "@mui/material";
-import * as React from "react";
+import { Button, Field, FinalForm, FinalFormInput, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Path() {
     const location = useLocation();
-    const [, rerender] = React.useState(0);
-    React.useEffect(() => {
+    const [, rerender] = useState(0);
+    useEffect(() => {
         const timer = setTimeout(() => {
             rerender(new Date().getTime());
         }, 1000);

@@ -1,4 +1,4 @@
-import { AnyEntity } from "@mikro-orm/core";
+import { AnyEntity } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Args, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 

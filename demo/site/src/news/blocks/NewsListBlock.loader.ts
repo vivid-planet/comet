@@ -1,7 +1,7 @@
-import { BlockLoader, gql } from "@comet/cms-site";
-import { NewsListBlockData } from "@src/blocks.generated";
+import { type BlockLoader, gql } from "@comet/site-nextjs";
+import { type NewsListBlockData } from "@src/blocks.generated";
 
-import { GQLNewsListBlockNewsFragment, GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.loader.generated";
+import { type GQLNewsListBlockNewsFragment, type GQLNewsListBlockQuery, type GQLNewsListBlockQueryVariables } from "./NewsListBlock.loader.generated";
 
 export type LoadedData = GQLNewsListBlockNewsFragment[];
 

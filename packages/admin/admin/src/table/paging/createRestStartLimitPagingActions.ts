@@ -1,5 +1,5 @@
-import { IPagingApi } from "../useTableQueryPaging";
-import { IPagingInfo } from "./IPagingInfo";
+import { type IPagingApi } from "../useTableQueryPaging";
+import { type IPagingInfo } from "./IPagingInfo";
 
 interface IRestPagingData {
     totalPages: number;

@@ -1,4 +1,4 @@
-import { MikroORM } from "@mikro-orm/core";
+import { MikroORM } from "@mikro-orm/postgresql";
 import { ExecutionContext, Injectable, Optional, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef, Reflector } from "@nestjs/core";
@@ -82,7 +82,7 @@ export class ContentScopeService {
                 }
 
                 for (const id of ids) {
-                    const row = await repo.findOneOrFail(id);
+                    const row = await repo.findOneOrFail(id, { filters: false }); // disable all default filters, e.g., excludeDeleted
                     if (row.scope) {
                         contentScopes.push([row.scope as ContentScope]);
                     } else {

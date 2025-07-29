@@ -1,0 +1,272 @@
+# Predefined pages
+
+Certain pages in the page tree are not typical content pages.
+An example of this would be a news page that is automatically generated from structured data.
+In Comet, we call such pages "Predefined pages".
+
+## Basic idea
+
+Predefined pages are implemented using a dedicated document type in the page tree.
+This document type has a single `type` field.
+The type represents the predefined page that should be rendered.
+For instance, if the type "News" is selected in the Admin, the news page should be rendered at the corresponding position in the page tree.
+
+## Adding predefined pages to a project
+
+This section shows the changes necessary to support predefined pages in a Comet project.
+
+:::note
+
+This guide uses news as an example of structured data.
+The implementation of the news in the project is not covered here.
+Have a look at the implementation in the Demo project:
+[API](https://github.com/vivid-planet/comet/blob/main/demo/api/src/news/entities/news.entity.ts),
+[Admin](https://github.com/vivid-planet/comet/blob/main/demo/admin/crud-generator-config.ts),
+[Site](https://github.com/vivid-planet/comet/tree/main/demo/site/src/app/%5Blang%5D/news).
+
+:::
+
+### API
+
+The following steps are required in the API:
+
+1. Creation of the predefined pages module
+2. Creation of the migration
+3. Registration of the `PredefinedPagesModule`
+4. Registration of the `PredefinedPage` document type
+
+#### Creation of the predefined pages module
+
+Create the module in `src/documents/predefined-pages`.
+To do this, copy the corresponding [folder](https://github.com/vivid-planet/comet/tree/main/demo/api/src/documents/predefined-pages) from the Demo project.
+The following files should be copied:
+
+- `predefined-pages.module.ts`: The module
+- `predefined-pages.resolver.ts`: The GraphQL resolver with the required operations
+- `entities/predefined-page.entity.ts`: The entity
+- `dto/predefined-page.input.ts`: The input
+
+#### Creation of the migration
+
+Execute the command `npx --prefix api mikro-orm migration:create` to create a migration for the new entity.
+Ensure the database is running (`npx dev-pm start docker`).
+The created migration should look like this:
+
+```ts title="src/db/migrations/Migration20220701145254.ts"
+import { Migration } from "@mikro-orm/migrations";
+
+export class Migration20220701145254 extends Migration {
+    async up(): Promise<void> {
+        this.addSql(
+            'create table "PredefinedPage" ("id" uuid not null, "createdAt" timestamp with time zone not null, "updatedAt" timestamp with time zone not null, "type" text null);',
+        );
+        this.addSql(
+            'alter table "PredefinedPage" add constraint "PredefinedPage_pkey" primary key ("id");',
+        );
+    }
+}
+```
+
+#### Registration of the `PredefinedPagesModule`
+
+Register the newly created `PredefinedPagesModule` in the `AppModule`:
+
+```diff title="src/app.module.ts"
++ import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
+
+@Module({})
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                /* ... */,
++               PredefinedPagesModule,
+            ],
+        };
+    }
+}
+```
+
+#### Registration of the `PredefinedPage` document type
+
+Register the newly created `PredefinedPage` document type in the `PageTreeModule`:
+
+```diff title="src/app.module.ts"
++ import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
+import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
+
+@Module({})
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                /* ... */,
+                PageTreeModule.forRoot({
+                    PageTreeNode: PageTreeNode,
+                    Documents: [
+                        Page,
+                        Link,
++                       PredefinedPage
+                    ],
+                    Scope: PageTreeNodeScope,
+                }),
+            ],
+        };
+    }
+}
+```
+
+### Admin
+
+The following steps are required in the Admin:
+
+1. Creation of the predefined pages module
+2. Registration of the `PredefinedPage` document type
+
+#### Creation of the predefined pages module
+
+Create the module in `src/documents/predefinedPages`.
+To do this, copy the corresponding [folder](https://github.com/vivid-planet/comet/tree/main/demo/admin/src/documents/predefinedPages) from the Demo project.
+The following files should be copied:
+
+- `EditPredefinedPage.tsx`: The editing component
+- `EditPredefinedPage.gql.ts`: The GraphQL operations for the edit component
+- `PredefinedPage.tsx`: The document type
+- `PredefinedPageLabels`: The labels for the predefined page types
+
+#### Registration of the `PredefinedPage` document type
+
+Add the newly created document type to the page tree document types:
+
+```diff title"=src/common/MasterMenu.tsx"
+import { Link } from "@src/documents/links/Link";
+import { Page } from "@src/documents/pages/Page";
++ import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
+
+export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {
+    Page,
+    Link,
++   PredefinedPage
+};
+```
+
+### Site
+
+The following steps are required in the Site:
+
+1. Creation of the predefined pages module
+2. Adding the predefined pages to the middleware
+3. Adding the predefined page document type to the `PageLink`
+
+#### Creation of the predefined pages module
+
+Create the module in `src/documents/predefinedPages`.
+To do this, copy the corresponding [folder](https://github.com/vivid-planet/comet/tree/main/demo/site/src/documents/predefinedPages) from the Demo project.
+The following files should be copied:
+
+- `predefinedPagePaths.ts`: The paths where the predefined pages are located in the code
+
+#### Adding the predefined pages to the middleware
+
+We use a combination of a redirect and a rewrite in the middleware to ensure that a predefined page can be viewed at the expected location in the page tree.
+
+For example, consider a Comet website that is available in English and German.
+For the German site, the news page should be located at `https://example.com/de/aktuelles`.
+However, in code, the news page is located at `/app/[language]/news`, resulting in `https://example.com/de/news`.
+To ensure that the page can be viewed at the expected location, we need the following redirect and rewrite:
+
+- A **rewrite** from `/de/aktuelles` to `/de/news` (to ensure that the page can be viewed at the expected location)
+- A **redirect** from `/de/news` to `/de/aktuelles` (to avoid duplicate content)
+
+Perform the following changes in the middleware:
+
+1.  Copy the predefined pages [helper functions](https://github.com/vivid-planet/comet/tree/main/demo/site/src/middleware/predefinedPages.ts) from the Demo project
+
+    :::warning
+
+    Support for filtering by document type in the `paginatedPageTreeNodes` query has been added in version 7.4.0.
+    Make sure your project uses Comet 7.4.0 or later.
+
+    :::
+
+2.  Add the rewrite and redirect to the middleware:
+
+    ```diff
+    + import { getPredefinedPageRedirect, getPredefinedPageRewrite } from "./middleware/predefinedPages";
+
+    export async function middleware(request: NextRequest) {
+        /* ... */
+
+    +   const predefinedPageRedirect = await getPredefinedPageRedirect(scope, pathname);
+    +
+    +   if (predefinedPageRedirect) {
+    +       return NextResponse.redirect(new URL(predefinedPageRedirect, request.url), 307);
+    +   }
+    +
+    +   const predefinedPageRewrite = await getPredefinedPageRewrite(scope, pathname);
+    +
+    +   if (predefinedPageRewrite) {
+    +       return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+    +   }
+
+        return NextResponse.next();
+    }
+    ```
+
+#### Adding the predefined page document type to the `PageLink`
+
+Add the newly created document type to the `PageLink` component for links to work correctly:
+
+```diff title="src/layout/header/PageLink.tsx"
+function PageLink({ page, children, className: passedClassName, activeClassName, }: Props): JSX.Element | null {
+    /* ... */
+
+    if (page.documentType === "Link") {
+        /* ... */
+    } else if (page.documentType === "Page") {
+        /* ... */
++   } else if (page.documentType === "PredefinedPage") {
++       return (
++           <Link href={`/${page.scope.language}${page.path}`} className={className}>
++               {children}
++           </Link>
++       );
+    }
+}
+```
+
+Now, all the necessary changes should have been made to the project.
+Add a new page tree node with the document type "Predefined Page" to test whether it works correctly in the Site.
+
+## Adding a new predefined page type
+
+If you want to add another predefined page type (e.g., products), make the following changes:
+
+1. API: Add the new type to the GraphQL enum:
+
+    ```diff title="src/documents/predefined-pages/entities/predefined-page.entity.ts"
+    export enum PredefinedPageType {
+        News = "News",
+    +   Products = "Products",
+    }
+    ```
+
+2. Admin: Add the new type to the labels:
+
+    ```diff title="src/documents/predefinedPages/predefinedPageLabels.tsx"
+    export const predefinedPageLabels: Record<GQLPredefinedPageType, ReactNode> = {
+        News: <FormattedMessage id="predefinedPages.news" defaultMessage="News" />,
+    +   Products: <FormattedMessage id="predefinedPages.products" defaultMessage="Products" />,
+    };
+    ```
+
+3. Site: Add the new type to the code paths:
+
+    ```diff title="src/documents/predefinedPages/predefinedPagePaths.ts"
+    export const predefinedPagePaths = {
+        News: "/news",
+    +   Products: "/products",
+    };
+    ```

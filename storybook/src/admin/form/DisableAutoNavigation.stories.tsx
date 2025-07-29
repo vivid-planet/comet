@@ -14,13 +14,13 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
-import * as React from "react";
+import { useContext } from "react";
 import { Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-const SampleTable: React.FunctionComponent = () => {
-    const stackApi = React.useContext(StackSwitchApiContext);
+const SampleTable = () => {
+    const stackApi = useContext(StackSwitchApiContext);
 
     return (
         <>
@@ -63,7 +63,7 @@ const SampleTable: React.FunctionComponent = () => {
     );
 };
 
-const SampleForm: React.FunctionComponent = () => {
+const SampleForm = () => {
     const onSubmit = async () => {
         alert("Submit successful");
         return Promise.resolve();

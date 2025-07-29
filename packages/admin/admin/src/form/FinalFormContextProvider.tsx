@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext } from "react";
-import { FieldMetaState } from "react-final-form";
+import { createContext, type ReactNode, useContext } from "react";
+import { type FieldMetaState } from "react-final-form";
 
 export interface FinalFormContext {
     shouldScrollToField: (fieldMeta: FieldMetaState<any>) => boolean;

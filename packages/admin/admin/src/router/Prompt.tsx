@@ -1,11 +1,11 @@
-import * as History from "history";
-import { createContext, PropsWithChildren, useContext, useEffect, useRef } from "react";
+import type * as History from "history";
+import { createContext, type PropsWithChildren, useContext, useEffect, useRef } from "react";
 import { __RouterContext } from "react-router";
 import useConstant from "use-constant";
 import { v4 as uuid } from "uuid";
 
 import { RouterContext } from "./Context";
-import { ResetAction, SaveAction } from "./PromptHandler";
+import { type ResetAction, type SaveAction } from "./PromptHandler";
 import { SubRoute, useSubRoutePrefix } from "./SubRoute";
 
 type PromptRoute = {

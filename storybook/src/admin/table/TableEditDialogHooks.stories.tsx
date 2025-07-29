@@ -1,5 +1,7 @@
 import {
+    Button,
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     MainContent,
@@ -7,13 +9,12 @@ import {
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
-import * as React from "react";
+import { DialogContent, IconButton, Typography } from "@mui/material";
+import { useMemo, useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -29,7 +30,7 @@ export const EditDialogHooks = {
             mode: "edit" | "add";
         }
         // Defined in story to be able to call setData, hence using useMemo to avoid multiple rendering
-        const EditForm = React.useMemo(() => {
+        const EditForm = useMemo(() => {
             return (props: IEditFormProps) => (
                 <FinalForm
                     mode={props.mode}
@@ -61,7 +62,7 @@ export const EditDialogHooks = {
             foo: string;
             bar: string;
         }
-        const [data, setData] = React.useState<IExampleRow[]>([
+        const [data, setData] = useState<IExampleRow[]>([
             { id: 1, foo: "blub", bar: "blub" },
             { id: 2, foo: "blub", bar: "blub" },
         ]);
@@ -74,11 +75,9 @@ export const EditDialogHooks = {
                     <ToolbarItem>
                         <Typography variant="h3">Edit Dialog Hooks</Typography>
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button
-                            color="primary"
-                            variant="contained"
                             startIcon={<AddIcon />}
                             onClick={(ev) => {
                                 api.openAddDialog();
@@ -118,13 +117,15 @@ export const EditDialogHooks = {
                         ]}
                     />
                     <EditDialog>
-                        {selection.mode && (
-                            <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
-                                {(row, { selectionMode: sm }) => {
-                                    return <EditForm mode={sm} row={row} />;
-                                }}
-                            </Selected>
-                        )}
+                        <DialogContent>
+                            {selection.mode && (
+                                <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
+                                    {(row, { selectionMode: sm }) => {
+                                        return <EditForm mode={sm} row={row} />;
+                                    }}
+                                </Selected>
+                            )}
+                        </DialogContent>
                     </EditDialog>
                 </MainContent>
             </>

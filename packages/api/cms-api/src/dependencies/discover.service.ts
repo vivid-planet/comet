@@ -1,10 +1,10 @@
-import { Block } from "@comet/blocks-api";
-import { RootBlockEntityOptions } from "@comet/blocks-api/lib/blocks/decorators/root-block-entity";
-import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
-import { EntityClass } from "@mikro-orm/core/typings";
+import { EntityClass, EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 import { ObjectTypeMetadata } from "@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata";
+
+import { Block } from "../blocks/block";
+import { RootBlockEntityOptions } from "../blocks/decorators/root-block-entity";
 
 interface DiscoverRootBlocksResult {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,7 +1,6 @@
 import { CopyToClipboardButton, HoverActions, Table } from "@comet/admin";
 import { Download, Maximize } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/HoverActions",

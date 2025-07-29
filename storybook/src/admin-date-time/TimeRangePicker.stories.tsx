@@ -1,7 +1,6 @@
 import { Field } from "@comet/admin";
-import { FinalFormTimeRangePicker, TimeRange } from "@comet/admin-date-time";
+import { FinalFormTimeRangePicker, type TimeRange } from "@comet/admin-date-time";
 import { Card, CardContent } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {

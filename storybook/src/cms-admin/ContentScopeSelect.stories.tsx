@@ -1,9 +1,9 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { Domain, Language } from "@comet/admin-icons";
 import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
-import { Meta } from "@storybook/react";
-import React, { useState } from "react";
+import { type Meta } from "@storybook/react-webpack5";
+import { useState } from "react";
 
 export default {
     title: "@comet/cms-admin/Content Scope Select",
@@ -13,7 +13,7 @@ export default {
             <AppHeader position="relative" headerHeight={60}>
                 <AppHeaderMenuButton />
                 <CometLogo />
-                <AppHeaderFillSpace />
+                <FillSpace />
                 {story()}
             </AppHeader>
         ),
@@ -25,13 +25,13 @@ export const Basic = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" } },
-                { domain: { label: "Secondary", value: "secondary" } },
-                { domain: { label: "Tertiary", value: "tertiary" } },
+                { scope: { domain: "main" }, label: { domain: "Main" } },
+                { scope: { domain: "secondary" }, label: { domain: "Secondary" } },
+                { scope: { domain: "tertiary" }, label: { domain: "Tertiary" } },
             ]}
         />
     );
@@ -42,14 +42,14 @@ export const MultipleDimensions = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
+                { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
+                { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
+                { scope: { domain: "secondary", language: "de" }, label: { domain: "Secondary", language: "German" } },
             ]}
         />
     );
@@ -62,14 +62,14 @@ export const Searchable = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
+                { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
+                { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
+                { scope: { domain: "secondary", language: "de" }, label: { domain: "Secondary", language: "German" } },
             ]}
             searchable
         />
@@ -81,14 +81,14 @@ export const Groups = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
+                { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
+                { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
+                { scope: { domain: "secondary", language: "de" }, label: { domain: "Secondary", language: "German" } },
             ]}
             groupBy="domain"
             searchable
@@ -101,14 +101,14 @@ export const CustomIcon = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
+                { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
+                { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
+                { scope: { domain: "secondary", language: "de" }, label: { domain: "Secondary", language: "German" } },
             ]}
             icon={<Language />}
         />
@@ -122,14 +122,14 @@ export const CustomRenderOption = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
+                { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
+                { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
+                { scope: { domain: "secondary", language: "de" }, label: { domain: "Secondary", language: "German" } },
             ]}
             renderOption={(option) => (
                 <>
@@ -139,7 +139,7 @@ export const CustomRenderOption = function () {
                     <ListItemText
                         primary={
                             <>
-                                {option.domain.label} – {option.language.label}
+                                {option.label!.domain} – {option.label!.language}
                             </>
                         }
                     />
@@ -158,17 +158,29 @@ export const CustomRenderOptionWithSearchHighlighting = {
             <ContentScopeSelect
                 value={value}
                 searchable
-                onChange={(value) => {
+                onChange={(value: { domain: string; language: string }) => {
                     setValue(value);
                 }}
                 options={[
-                    { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                    { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                    { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                    { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                    {
+                        scope: { domain: "main", language: "en" },
+                        label: { domain: "Main", language: "English" },
+                    },
+                    {
+                        scope: { domain: "main", language: "de" },
+                        label: { domain: "Main", language: "German" },
+                    },
+                    {
+                        scope: { domain: "secondary", language: "en" },
+                        label: { domain: "Secondary", language: "English" },
+                    },
+                    {
+                        scope: { domain: "secondary", language: "de" },
+                        label: { domain: "Secondary", language: "German" },
+                    },
                 ]}
                 renderOption={(option, query) => {
-                    const text = `${option.domain.label} – ${option.language.label}`;
+                    const text = `${option.label!.domain} – ${option.label!.language}`;
                     const matches = findTextMatches(text, query);
                     return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
                 }}
@@ -183,18 +195,18 @@ export const CustomRenderSelectedOption = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { domain: string; language: string }) => {
                 setValue(value);
             }}
             options={[
-                { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
-                { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                { scope: { domain: "main", language: "en" }, label: { domain: "Main", language: "English" } },
+                { scope: { domain: "main", language: "de" }, label: { domain: "Main", language: "German" } },
+                { scope: { domain: "secondary", language: "en" }, label: { domain: "Secondary", language: "English" } },
+                { scope: { domain: "secondary", language: "de" }, label: { domain: "Secondary", language: "German" } },
             ]}
             renderSelectedOption={(option) => (
                 <>
-                    {option.domain.label}: {option.language.label}
+                    {option.label!.domain}: {option.label!.language}
                 </>
             )}
         />
@@ -208,44 +220,37 @@ export const ThreeDimensions = function () {
     return (
         <ContentScopeSelect
             value={value}
-            onChange={(value) => {
+            onChange={(value: { company: string; country: string; language: string }) => {
                 setValue(value);
             }}
             options={[
                 {
-                    company: { label: "A Inc.", value: "a-inc" },
-                    country: { label: "Austria", value: "at" },
-                    language: { label: "German", value: "de" },
+                    scope: { company: "a-inc", country: "at", language: "de" },
+                    label: { company: "A Inc.", country: "Austria", language: "German" },
                 },
                 {
-                    company: { label: "A Inc.", value: "a-inc" },
-                    country: { label: "Austria", value: "at" },
-                    language: { label: "English", value: "en" },
+                    scope: { company: "a-inc", country: "at", language: "en" },
+                    label: { company: "A Inc.", country: "Austria", language: "English" },
                 },
                 {
-                    company: { label: "B Inc.", value: "b-inc" },
-                    country: { label: "Austria", value: "at" },
-                    language: { label: "German", value: "de" },
+                    scope: { company: "b-inc", country: "at", language: "de" },
+                    label: { company: "B Inc.", country: "Austria", language: "German" },
                 },
                 {
-                    company: { label: "B Inc.", value: "b-inc" },
-                    country: { label: "Austria", value: "at" },
-                    language: { label: "English", value: "en" },
+                    scope: { company: "b-inc", country: "at", language: "en" },
+                    label: { company: "B Inc.", country: "Austria", language: "English" },
                 },
                 {
-                    company: { label: "C Inc.", value: "c-inc" },
-                    country: { label: "Switzerland", value: "ch" },
-                    language: { label: "German", value: "de" },
+                    scope: { company: "c-inc", country: "ch", language: "de" },
+                    label: { company: "C Inc.", country: "Switzerland", language: "German" },
                 },
                 {
-                    company: { label: "C Inc.", value: "c-inc" },
-                    country: { label: "Switzerland", value: "ch" },
-                    language: { label: "English", value: "en" },
+                    scope: { company: "c-inc", country: "ch", language: "en" },
+                    label: { company: "C Inc.", country: "Switzerland", language: "English" },
                 },
                 {
-                    company: { label: "C Inc.", value: "c-inc" },
-                    country: { label: "Switzerland", value: "ch" },
-                    language: { label: "French", value: "fr" },
+                    scope: { company: "c-inc", country: "ch", language: "fr" },
+                    label: { company: "C Inc.", country: "Switzerland", language: "French" },
                 },
             ]}
             groupBy="company"
@@ -255,3 +260,68 @@ export const ThreeDimensions = function () {
 };
 
 ThreeDimensions.storyName = "Three dimensions";
+
+export const GroupingWithOptionalScopeParts = function () {
+    const [value, setValue] = useState({ country: "at" });
+    return (
+        <ContentScopeSelect
+            value={value}
+            onChange={(value: { country: string; company?: string }) => {
+                setValue(value);
+            }}
+            options={[
+                {
+                    scope: { country: "at" },
+                    label: { country: "AT Overview" },
+                },
+                {
+                    scope: { country: "de" },
+                    label: { country: "DE Overview" },
+                },
+                {
+                    scope: { country: "at", company: "a-inc" },
+                    label: { country: "Austria", company: "A Inc." },
+                },
+                {
+                    scope: { country: "at", company: "b-inc" },
+                    label: { country: "Austria", company: "B Inc." },
+                },
+                {
+                    scope: { country: "de", company: "a-inc" },
+                    label: { country: "Germany", company: "A Inc." },
+                },
+                {
+                    scope: { country: "de", company: "b-inc" },
+                    label: { country: "Germany", company: "B Inc." },
+                },
+            ]}
+            groupBy="country"
+            searchable
+            renderOption={(option, query, isSelected) => {
+                let text: string;
+                if (option.scope.company === undefined) {
+                    text = option.label?.country ?? option.scope.country;
+                } else {
+                    text = option.label?.company ?? option.scope.company;
+                }
+
+                const matches = findTextMatches(text, query);
+
+                return (
+                    <>
+                        <ListItemIcon>
+                            <Domain />
+                        </ListItemIcon>
+                        <ListItemText
+                            slotProps={{ primary: { variant: isSelected ? "subtitle2" : "body2" } }}
+                            sx={{ margin: 0 }}
+                            primary={<MarkedMatches text={text} matches={matches} />}
+                        />
+                    </>
+                );
+            }}
+        />
+    );
+};
+
+GroupingWithOptionalScopeParts.storyName = "Grouping with optional scope parts";

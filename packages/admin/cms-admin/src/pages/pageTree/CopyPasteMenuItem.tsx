@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl";
 
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
 import { useCopyPastePages } from "./useCopyPastePages";
-import { PageTreePage } from "./usePageTree";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
