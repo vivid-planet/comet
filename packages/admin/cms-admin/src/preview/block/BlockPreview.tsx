@@ -27,8 +27,8 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
 
     const { data, error } = useQuery<GQLBlockPreviewJwtQuery>(
         gql`
-            query BlockPreviewJwt($scope: JSONObject!, $url: String!) {
-                blockPreviewJwt(scope: $scope, url: $url)
+            query BlockPreviewJwt($scope: JSONObject!, $url: String!, $includeInvisible: Boolean!) {
+                blockPreviewJwt(scope: $scope, url: $url, includeInvisible: $includeInvisible)
             }
         `,
         {
@@ -36,6 +36,7 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
             variables: {
                 scope,
                 url,
+                includeInvisible: showOnlyVisible ? false : true,
             },
             pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
         },

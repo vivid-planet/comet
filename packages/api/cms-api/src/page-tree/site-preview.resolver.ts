@@ -40,10 +40,17 @@ export class SitePreviewResolver {
 
     @Query(() => String)
     @RequiredPermission("pageTree")
-    async blockPreviewJwt(@Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope, @Args("url") url: string): Promise<string> {
+    async blockPreviewJwt(
+        @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope,
+        @Args("url") url: string,
+        @Args("includeInvisible") includeInvisible: boolean,
+    ): Promise<string> {
         return new SignJWT({
             scope,
             url,
+            previewData: {
+                includeInvisible,
+            },
         })
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("1 day")
