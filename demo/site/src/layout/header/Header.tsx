@@ -28,7 +28,7 @@ function Header({ header }: Props): JSX.Element {
             <nav>
                 <TopLevelNavigation>
                     {header.items.map((item) => (
-                        <TopLevelLinkContainer key={item.id}>
+                        <TopLevelLinkContainer key={item.id} onMouseEnter={() => setOpenMenuId(item.id)}>
                             <Link page={item.node} activeClassName="active">
                                 {item.node.name}
                             </Link>
