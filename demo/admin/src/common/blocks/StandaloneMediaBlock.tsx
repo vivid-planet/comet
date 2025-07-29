@@ -23,8 +23,8 @@ export const StandaloneMediaBlock = createCompositeBlock(
         tags: [
             defineMessage({ id: "standaloneMedia.tag.image", defaultMessage: "Image" }),
             defineMessage({ id: "standaloneMedia.tag.video", defaultMessage: "Video" }),
-            defineMessage({ id: "standaloneMedia.tag.youtube", defaultMessage: "Youtube" }),
-            defineMessage({ id: "standaloneMedia.tag.vimeo", defaultMessage: "Vimeo" }),
+            "Youtube",
+            "Vimeo",
         ],
     },
     (block) => {
