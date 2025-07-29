@@ -107,7 +107,7 @@ export class UserResolver {
 
     @ResolveField(() => Int)
     async permissionsCount(@Parent() user: UserPermissionsUser): Promise<number> {
-        return (await this.userService.getPermissions(user)).length;
+        return [...new Set((await this.userService.getPermissions(user)).map((p) => p.permission))].length;
     }
 
     @ResolveField(() => Int)
