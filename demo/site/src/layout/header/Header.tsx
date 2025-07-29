@@ -34,25 +34,26 @@ function Header({ header }: Props): JSX.Element {
                                 {item.node.name}
                             </Link>
                             {item.node.childNodes.length > 0 && (
-                                <ToggleSubLevelNavigationButton onClick={() => handleToggleMenu(item.id)}>
-                                    <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
-                                </ToggleSubLevelNavigationButton>
-                            )}
-                            {item.node.childNodes.length > 0 && (
-                                <SubLevelNavigationRoot $isOpen={openMenuId === item.id}>
-                                    <FocusLock disabled={openMenuId !== item.id}>
-                                        <SubLevelNavigation>
-                                            {item.node.childNodes.map((node) => (
-                                                <li key={node.id}>
-                                                    <Link page={node} activeClassName="active">
-                                                        {node.name}
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                            <ReturnButton onClick={() => setOpenMenuId(null)}>Return to {item.node.name}</ReturnButton>
-                                        </SubLevelNavigation>
-                                    </FocusLock>
-                                </SubLevelNavigationRoot>
+                                <>
+                                    <ToggleSubLevelNavigationButton onClick={() => handleToggleMenu(item.id)}>
+                                        <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
+                                    </ToggleSubLevelNavigationButton>
+
+                                    <SubLevelNavigationRoot $isOpen={openMenuId === item.id}>
+                                        <FocusLock disabled={openMenuId !== item.id}>
+                                            <SubLevelNavigation>
+                                                {item.node.childNodes.map((node) => (
+                                                    <li key={node.id}>
+                                                        <Link page={node} activeClassName="active">
+                                                            {node.name}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                                <ReturnButton onClick={() => setOpenMenuId(null)}>Return to {item.node.name}</ReturnButton>
+                                            </SubLevelNavigation>
+                                        </FocusLock>
+                                    </SubLevelNavigationRoot>
+                                </>
                             )}
                         </TopLevelLinkContainer>
                     ))}
