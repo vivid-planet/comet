@@ -1,4 +1,4 @@
-import { Alert, FinalForm, NumberField, TextField, ToggleButtonGroupField } from "@comet/admin";
+import { FinalForm, NumberField, TextField, ToggleButtonGroupField } from "@comet/admin";
 import {
     FocusPointCenter,
     FocusPointEast,
@@ -18,6 +18,8 @@ import {
 import { Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
+
+import { FormDebug } from "./FormDebug";
 
 type Story = StoryObj<typeof ToggleButtonGroupField>;
 const config: Meta<typeof ToggleButtonGroupField> = {
@@ -44,45 +46,38 @@ export const ToggleButtonFieldStory: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <ToggleButtonGroupField<SampleType>
-                                label="Sample Type"
-                                name="type"
-                                options={[
-                                    {
-                                        label: "Label",
-                                        value: "label",
-                                    },
-                                    {
-                                        label: "Label 2",
-                                        value: "label-2",
-                                    },
-                                    {
-                                        label: <Info />,
-                                        value: "icon",
-                                    },
-                                    {
-                                        label: (
-                                            <Box display="flex" gap={2} alignItems="center" component="span">
-                                                <Info />
-                                                Icon and Label
-                                            </Box>
-                                        ),
-                                        value: "icon+label",
-                                    },
-                                ]}
-                            />
+                <>
+                    <ToggleButtonGroupField<SampleType>
+                        label="Sample Type"
+                        name="type"
+                        options={[
+                            {
+                                label: "Label",
+                                value: "label",
+                            },
+                            {
+                                label: "Label 2",
+                                value: "label-2",
+                            },
+                            {
+                                label: <Info />,
+                                value: "icon",
+                            },
+                            {
+                                label: (
+                                    <Box display="flex" gap={2} alignItems="center" component="span">
+                                        <Info />
+                                        Icon and Label
+                                    </Box>
+                                ),
+                                value: "icon+label",
+                            },
+                        ]}
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -106,61 +101,54 @@ export const MultipleRowsExample: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <ToggleButtonGroupField<SampleType>
-                                label="Sample Type"
-                                name="type"
-                                optionsPerRow={3}
-                                options={[
-                                    {
-                                        label: <FocusPointNorthwest />,
-                                        value: "north-west",
-                                    },
-                                    {
-                                        label: <FocusPointNorth />,
-                                        value: "north",
-                                    },
-                                    {
-                                        label: <FocusPointNortheast />,
-                                        value: "north-east",
-                                    },
-                                    {
-                                        label: <FocusPointWest />,
-                                        value: "west",
-                                    },
-                                    {
-                                        label: <FocusPointCenter />,
-                                        value: "center",
-                                    },
-                                    {
-                                        label: <FocusPointEast />,
-                                        value: "east",
-                                    },
-                                    {
-                                        label: <FocusPointSouthwest />,
-                                        value: "south-west",
-                                    },
-                                    {
-                                        label: <FocusPointSouth />,
-                                        value: "south",
-                                    },
-                                    {
-                                        label: <FocusPointSoutheast />,
-                                        value: "south-east",
-                                    },
-                                ]}
-                            />
+                <>
+                    <ToggleButtonGroupField<SampleType>
+                        label="Sample Type"
+                        name="type"
+                        optionsPerRow={3}
+                        options={[
+                            {
+                                label: <FocusPointNorthwest />,
+                                value: "north-west",
+                            },
+                            {
+                                label: <FocusPointNorth />,
+                                value: "north",
+                            },
+                            {
+                                label: <FocusPointNortheast />,
+                                value: "north-east",
+                            },
+                            {
+                                label: <FocusPointWest />,
+                                value: "west",
+                            },
+                            {
+                                label: <FocusPointCenter />,
+                                value: "center",
+                            },
+                            {
+                                label: <FocusPointEast />,
+                                value: "east",
+                            },
+                            {
+                                label: <FocusPointSouthwest />,
+                                value: "south-west",
+                            },
+                            {
+                                label: <FocusPointSouth />,
+                                value: "south",
+                            },
+                            {
+                                label: <FocusPointSoutheast />,
+                                value: "south-east",
+                            },
+                        ]}
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -234,9 +222,7 @@ export const ToggleButtonFieldAddressSample: Story = {
                                     <NumberField name="coordinates.longitude" label="Longitude" decimals={14} />
                                 </>
                             )}
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
+                            <FormDebug />
                         </Box>
                     );
                 }}
@@ -259,40 +245,33 @@ export const MediaType: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <ToggleButtonGroupField<SampleType>
-                                label="Media Type"
-                                name="type"
-                                options={[
-                                    {
-                                        label: <Image />,
-                                        value: "image",
-                                    },
-                                    {
-                                        label: <Video />,
-                                        value: "video",
-                                    },
-                                    {
-                                        label: <Vimeo />,
-                                        value: "vimeo",
-                                    },
-                                    {
-                                        label: <YouTube />,
-                                        value: "youtube",
-                                    },
-                                ]}
-                            />
+                <>
+                    <ToggleButtonGroupField<SampleType>
+                        label="Media Type"
+                        name="type"
+                        options={[
+                            {
+                                label: <Image />,
+                                value: "image",
+                            },
+                            {
+                                label: <Video />,
+                                value: "video",
+                            },
+                            {
+                                label: <Vimeo />,
+                                value: "vimeo",
+                            },
+                            {
+                                label: <YouTube />,
+                                value: "youtube",
+                            },
+                        ]}
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -317,60 +296,53 @@ export const MediaTypeWithText: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <ToggleButtonGroupField<SampleType>
-                                label="Media Type"
-                                name="type"
-                                options={[
-                                    {
-                                        label: (
-                                            <ButtonContent>
-                                                <Image />
-                                                Image
-                                            </ButtonContent>
-                                        ),
-                                        value: "image",
-                                    },
-                                    {
-                                        label: (
-                                            <ButtonContent>
-                                                <Video />
-                                                Video
-                                            </ButtonContent>
-                                        ),
-                                        value: "video",
-                                    },
-                                    {
-                                        label: (
-                                            <ButtonContent>
-                                                <Vimeo />
-                                                Vimeo
-                                            </ButtonContent>
-                                        ),
-                                        value: "vimeo",
-                                    },
-                                    {
-                                        label: (
-                                            <ButtonContent>
-                                                <YouTube />
-                                                YouTube
-                                            </ButtonContent>
-                                        ),
-                                        value: "youtube",
-                                    },
-                                ]}
-                            />
+                <>
+                    <ToggleButtonGroupField<SampleType>
+                        label="Media Type"
+                        name="type"
+                        options={[
+                            {
+                                label: (
+                                    <ButtonContent>
+                                        <Image />
+                                        Image
+                                    </ButtonContent>
+                                ),
+                                value: "image",
+                            },
+                            {
+                                label: (
+                                    <ButtonContent>
+                                        <Video />
+                                        Video
+                                    </ButtonContent>
+                                ),
+                                value: "video",
+                            },
+                            {
+                                label: (
+                                    <ButtonContent>
+                                        <Vimeo />
+                                        Vimeo
+                                    </ButtonContent>
+                                ),
+                                value: "vimeo",
+                            },
+                            {
+                                label: (
+                                    <ButtonContent>
+                                        <YouTube />
+                                        YouTube
+                                    </ButtonContent>
+                                ),
+                                value: "youtube",
+                            },
+                        ]}
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },

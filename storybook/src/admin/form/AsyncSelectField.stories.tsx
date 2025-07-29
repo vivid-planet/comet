@@ -1,10 +1,11 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Alert, AsyncSelectField, FinalForm } from "@comet/admin";
+import { AsyncSelectField, FinalForm } from "@comet/admin";
 import { Info, WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { FormDebug } from "./FormDebug";
 
 type Story = StoryObj<typeof AsyncSelectField>;
 const config: Meta<typeof AsyncSelectField> = {
@@ -30,32 +31,25 @@ export const SimpleList: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-                                    return ["value-1", "value-2", "value-3", "value-4"];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option;
-                                }}
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 200));
+                            return ["value-1", "value-2", "value-3", "value-4"];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -86,54 +80,47 @@ export const WithObjectOptions: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 200));
 
-                                    return [
-                                        {
-                                            id: "1",
-                                            name: "Name 1",
-                                        },
-                                        {
-                                            id: "2",
-                                            name: "Name 2",
-                                        },
-                                        {
-                                            id: "3",
-                                            name: "Name 3",
-                                        },
-                                        {
-                                            id: "4",
-                                            name: "Name 4",
-                                        },
-                                        {
-                                            id: "5",
-                                            name: "Name 5",
-                                        },
-                                    ];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option.name;
-                                }}
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                            return [
+                                {
+                                    id: "1",
+                                    name: "Name 1",
+                                },
+                                {
+                                    id: "2",
+                                    name: "Name 2",
+                                },
+                                {
+                                    id: "3",
+                                    name: "Name 3",
+                                },
+                                {
+                                    id: "4",
+                                    name: "Name 4",
+                                },
+                                {
+                                    id: "5",
+                                    name: "Name 5",
+                                },
+                            ];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option.name;
+                        }}
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -154,32 +141,25 @@ export const LongLoading: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 4000));
-                                    return ["value-1", "value-2", "value-3", "value-4"];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option;
-                                }}
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 4000));
+                            return ["value-1", "value-2", "value-3", "value-4"];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -200,32 +180,25 @@ export const NoOptions: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
-                                    return [];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option;
-                                }}
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 200));
+                            return [];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -246,39 +219,32 @@ export const NoOptionsWithCustomNoOptionsLabel: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 200));
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 200));
 
-                                    return [];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option;
-                                }}
-                                noOptionsLabel={
-                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                        <Info color="info" />
-                                        No options available at this point in time
-                                    </div>
-                                }
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                            return [];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        noOptionsLabel={
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <Info color="info" />
+                                No options available at this point in time
+                            </div>
+                        }
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -299,33 +265,26 @@ export const ErrorLoadingOptions: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 500));
-                                    throw Error("Error loading options");
-                                    return [];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option;
-                                }}
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 500));
+                            throw Error("Error loading options");
+                            return [];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -343,39 +302,32 @@ export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    // simulate loading
-                                    await new Promise((resolve) => setTimeout(resolve, 500));
-                                    throw Error("Error loading options");
-                                    return [];
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option;
-                                }}
-                                errorLabel={
-                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                        <WarningSolid color="error" />
-                                        Error loading options
-                                    </div>
-                                }
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            // simulate loading
+                            await new Promise((resolve) => setTimeout(resolve, 500));
+                            throw Error("Error loading options");
+                            return [];
+                        }}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        errorLabel={
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <WarningSolid color="error" />
+                                Error loading options
+                            </div>
+                        }
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
@@ -405,41 +357,34 @@ export const AsyncLoadingDataFromApi: Story = {
                 onSubmit={() => {
                     // not handled
                 }}
-                subscription={{ values: true }}
             >
-                {({ values }) => {
-                    return (
-                        <>
-                            <AsyncSelectField
-                                loadOptions={async () => {
-                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }>({
-                                        query: gql`
-                                            query Manufacturers {
-                                                manufacturers {
-                                                    id
-                                                    name
-                                                }
-                                            }
-                                        `,
-                                    });
+                <>
+                    <AsyncSelectField
+                        loadOptions={async () => {
+                            const { data } = await client.query<{ manufacturers: Manufacturer[] }>({
+                                query: gql`
+                                    query Manufacturers {
+                                        manufacturers {
+                                            id
+                                            name
+                                        }
+                                    }
+                                `,
+                            });
 
-                                    return data.manufacturers;
-                                }}
-                                getOptionLabel={(option) => {
-                                    return option.name;
-                                }}
-                                name="type"
-                                label="AsyncSelectField"
-                                fullWidth
-                                variant="horizontal"
-                            />
+                            return data.manufacturers;
+                        }}
+                        getOptionLabel={(option) => {
+                            return option.name;
+                        }}
+                        name="type"
+                        label="AsyncSelectField"
+                        fullWidth
+                        variant="horizontal"
+                    />
 
-                            <Alert title="FormState">
-                                <pre>{JSON.stringify(values, null, 2)}</pre>
-                            </Alert>
-                        </>
-                    );
-                }}
+                    <FormDebug />
+                </>
             </FinalForm>
         );
     },
