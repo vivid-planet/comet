@@ -108,7 +108,7 @@ export interface BlockInterface<
     name: string;
     displayName: ReactNode;
     category: BlockCategory | CustomBlockCategory;
-    tags?: Array<ReactNode>;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export interface RootBlockInterface<

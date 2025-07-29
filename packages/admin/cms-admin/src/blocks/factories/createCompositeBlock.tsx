@@ -1,7 +1,7 @@
 import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { Fragment, type ReactNode } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 
 import { BlockAdminComponentNestedButton } from "../common/BlockAdminComponentNestedButton";
 import { BlockAdminComponentPaper, useBlockAdminComponentPaper } from "../common/BlockAdminComponentPaper";
@@ -43,7 +43,7 @@ interface CreateCompositeBlockOptionsBase {
     category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
-    tags?: Array<ReactNode>;
+    tags?: Array<MessageDescriptor | string>;
     /**
      * Function to determine the order of the blocks in the admin component. If a block is not included in the array, it will not be rendered.
      * @param state The current state of the composite block

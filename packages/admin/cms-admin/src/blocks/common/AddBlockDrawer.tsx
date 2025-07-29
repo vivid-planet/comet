@@ -62,10 +62,9 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
                 blockTags = block.tags.map((tag) => {
                     if (typeof tag === "string") {
                         return tag.toLocaleLowerCase();
-                    } else if (isFormattedMessage(tag)) {
-                        return intl.formatMessage(tag.props).toLocaleLowerCase();
+                    } else {
+                        return intl.formatMessage(tag).toLocaleLowerCase();
                     }
-                    return String(tag).toLocaleLowerCase();
                 });
             }
             const tagMatches = blockTags.some((tag) => tag.includes(searchValueLower));

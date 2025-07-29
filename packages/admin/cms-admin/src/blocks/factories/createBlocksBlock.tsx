@@ -23,7 +23,7 @@ import {
     useMemo,
     useState,
 } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, type MessageDescriptor } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
@@ -117,7 +117,7 @@ interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, u
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
-    tags?: Array<ReactNode>;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>(

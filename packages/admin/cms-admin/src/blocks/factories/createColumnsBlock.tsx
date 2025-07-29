@@ -3,7 +3,7 @@ import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons
 import { Checkbox, Divider, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { type Dispatch, type ReactNode, type SetStateAction } from "react";
-import { FormattedMessage, type IntlShape, useIntl } from "react-intl";
+import { FormattedMessage, type IntlShape, type MessageDescriptor, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
@@ -65,7 +65,7 @@ interface CreateColumnsBlockOptions<T extends BlockInterface> {
     category?: BlockCategory | CustomBlockCategory;
     contentBlock: T;
     layouts: ColumnsBlockLayout[];
-    tags?: Array<ReactNode>;
+    tags?: Array<MessageDescriptor | string>;
 }
 
 export function createColumnsBlock<T extends BlockInterface>(

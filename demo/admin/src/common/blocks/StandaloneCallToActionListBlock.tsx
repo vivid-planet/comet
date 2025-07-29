@@ -1,7 +1,7 @@
 import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { type StandaloneCallToActionListBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
-import { FormattedMessage } from "react-intl";
+import { defineMessage, FormattedMessage } from "react-intl";
 
 export const StandaloneCallToActionListBlock = createCompositeBlock(
     {
@@ -25,8 +25,8 @@ export const StandaloneCallToActionListBlock = createCompositeBlock(
             },
         },
         tags: [
-            <FormattedMessage id="callToActionBlock.tag.link" defaultMessage="Link" />,
-            <FormattedMessage id="callToActionBlock.tag.button" defaultMessage="Button" />,
+            defineMessage({ id: "callToActionBlock.tag.link", defaultMessage: "Link" }),
+            defineMessage({ id: "callToActionBlock.tag.button", defaultMessage: "Button" }),
         ],
     },
     (block) => {

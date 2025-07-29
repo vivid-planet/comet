@@ -13,7 +13,10 @@ createCompositeBlock({
     blocks: {
         /* ... */
     },
-    tags: [<FormattedMessage id="media.tag.image" defaultMessage="Image" />, <FormattedMessage id="media.tag.video" defaultMessage="Video" />],
+    tags: [
+        defineMessage({ id: "standaloneMedia.tag.image", defaultMessage: "Image" }),
+        defineMessage({ id: "standaloneMedia.tag.video", defaultMessage: "Video" }),
+    ],
     /* ... */
 });
 ```
