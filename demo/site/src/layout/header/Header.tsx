@@ -1,5 +1,6 @@
 "use client";
 
+import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useListenToEscapeKey } from "@src/util/useListenToEscapeKey";
 import { useState } from "react";
 import FocusLock from "react-focus-lock";
@@ -34,7 +35,7 @@ function Header({ header }: Props): JSX.Element {
                             </Link>
                             {item.node.childNodes.length > 0 && (
                                 <ToggleSubLevelNavigationButton onClick={() => handleToggleMenu(item.id)}>
-                                    <Chevron />
+                                    <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
                                 </ToggleSubLevelNavigationButton>
                             )}
                             {item.node.childNodes.length > 0 && (
@@ -129,25 +130,21 @@ const Link = styled(PageLink)`
 const ToggleSubLevelNavigationButton = styled.button`
     position: absolute;
     top: 50%;
-    right: 0;
+    right: -5px;
     border: none;
-    width: 10px;
-    height: 10px;
+    width: 16px;
+    height: 16px;
     transform: translate(0, -50%);
     background-color: transparent;
     opacity: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:focus-visible {
         opacity: 1;
     }
-`;
-
-const Chevron = styled.div`
-    width: 5px;
-    height: 5px;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-    transform: rotate(45deg);
 `;
 
 export { Header };
