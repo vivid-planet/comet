@@ -6,3 +6,7 @@ export const MenuItemDisabledOverrideOpacity = styled(MenuItem)({
         opacity: 1.0,
     },
 });
+
+export const LinearLoadingContainer = styled("div")({
+    minHeight: "2px",
+});
