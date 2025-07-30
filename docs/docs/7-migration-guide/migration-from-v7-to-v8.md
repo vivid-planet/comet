@@ -1279,7 +1279,7 @@ If you're unsure about how to structure the AuthModule, look at the [COMET Start
         ),
     ```
 
-3. Replace `createAuthResolver` with the class name:
+3. Replace `createCometAuthGuard` with the class name:
 
     ```diff title=api/src/auth/auth.module.ts
     -   useClass: createCometAuthGuard([...]),
