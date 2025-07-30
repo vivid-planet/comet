@@ -181,13 +181,16 @@ type InitialFilterConfig = {
     linkOperator?: "and" | "or";
 };
 
+// Additional type is necessary to avoid "TS2589: Type instantiation is excessively deep and possibly infinite."
+type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
+    columns: Array<GridConfigGridColumnDef<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;

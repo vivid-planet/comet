@@ -27,6 +27,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests",
+        "test:updateSnapshot": "NODE_OPTIONS=--experimental-vm-modules jest --updateSnapshot",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
     },
     "dependencies": {

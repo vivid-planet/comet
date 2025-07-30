@@ -147,17 +147,21 @@ const getValueOptionsLabelData = (messageId: string, label: string | StaticSelec
     };
 };
 
-export function generateGrid(
+export function generateGrid<T extends { __typename?: string }>(
     {
         exportName,
         baseOutputFilename,
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-
-    config: GridConfig<any>,
+    config: GridConfig<T>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
+
+    if (!gqlType) {
+        throw new Error("gqlType is required in grid config");
+    }
+
     const gqlTypePlural = plural(gqlType);
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -223,25 +227,15 @@ export function generateGrid(
     const props: Prop[] = [];
 
     const fieldList = generateGqlFieldList({
-        columns: config.columns.filter((column) => {
-            return (
-                // exclude id because it's always required
-                column.type !== "actions" && column.name !== "id"
-            );
-        }),
+        // exclude id because it's always required
+        columns: config.columns.filter((column) => column.type !== "actions" && column.name !== "id"),
     });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
-    const rootBlockColumns = config.columns
-        .filter((column) => column.type == "block")
-        .map((column) => {
-            // map is for ts to infer block type correctly
-            if (column.type !== "block") throw new Error("Field is not a block field");
-            return column;
-        });
+    const rootBlockColumns = config.columns.filter((column) => column.type == "block");
 
     rootBlockColumns.forEach((field) => {
         if (rootBlocks[String(field.name)]) {
