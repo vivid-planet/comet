@@ -121,6 +121,7 @@ export function ProductVariantForm({ id, productId }: FormProps) {
                 <>
                     {saveConflict.dialogs}
                     <Field
+                        required
                         fullWidth
                         name="name"
                         component={FinalFormInput}

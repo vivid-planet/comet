@@ -22,6 +22,14 @@
     border: none;
     padding: 0;
     cursor: pointer;
+
+    &:focus {
+        .playIcon {
+            outline: 4px solid white;
+            outline-offset: 10px;
+            border-radius: 2px;
+        }
+    }
 }
 
 .playIcon {

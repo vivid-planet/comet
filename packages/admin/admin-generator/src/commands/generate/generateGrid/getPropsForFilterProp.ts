@@ -4,12 +4,11 @@ import { type GridConfig } from "../generate-command";
 import { type Imports } from "../utils/generateImportsCode";
 import { type Prop } from "./generateGrid";
 
-export function getPropsForFilterProp({
+export function getPropsForFilterProp<T extends { __typename?: string }>({
     config,
     filterType,
 }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: GridConfig<any>;
+    config: GridConfig<T>;
     filterType: IntrospectionInputObjectType;
 }): {
     hasFilterProp: boolean;

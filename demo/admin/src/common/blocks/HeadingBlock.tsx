@@ -81,6 +81,7 @@ export const HeadingBlock = createCompositeBlock(
                         { value: "h5", label: <FormattedMessage id="headingBlock.headline5" defaultMessage="Headline 5" /> },
                         { value: "h6", label: <FormattedMessage id="headingBlock.headline6" defaultMessage="Headline 6" /> },
                     ],
+                    required: true,
                 }),
             },
         },

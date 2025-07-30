@@ -72,8 +72,6 @@ export function transformConfigFile(fileName: string, sourceText: string) {
                                 ],
                                 true,
                             );
-                        } else {
-                            throw new Error(`Following the import is not supported: ${path} ${node.text}`);
                         }
                     }
                 }

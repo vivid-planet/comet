@@ -13,6 +13,7 @@ import {
     FileUploadsModule,
     ImgproxyModule,
     KubernetesModule,
+    MailerModule,
     PageTreeModule,
     RedirectsModule,
     SentryModule,
@@ -24,6 +25,7 @@ import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apoll
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
+import { AppPermission } from "@src/auth/app-permission.enum";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
@@ -112,6 +114,7 @@ export class AppModule {
                     }),
                     inject: [UserService, AccessControlService],
                     imports: [authModule],
+                    AppPermission,
                 }),
                 BlocksModule,
                 DependenciesModule,
@@ -186,6 +189,7 @@ export class AppModule {
                 FooterModule,
                 PredefinedPagesModule,
                 CronJobsModule,
+                MailerModule.register(config.mailer),
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
