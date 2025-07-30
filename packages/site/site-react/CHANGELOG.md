@@ -1,5 +1,13 @@
 # @comet/site-react
 
+## 8.0.0-beta.7
+
+### Minor Changes
+
+- 2a9f23d: Support block preview scope for BFF requests
+
+    The current scope will be sent via a monkey patched fetch and interpreted in `previewParams()`.
+
 ## 8.0.0-beta.6
 
 ## 8.0.0-beta.5

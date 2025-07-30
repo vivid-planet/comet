@@ -1,5 +1,47 @@
 # @comet/admin
 
+## 8.0.0-beta.7
+
+### Major Changes
+
+- 46edfd6: Require `intl` in `MuiThemeProvider`
+
+    This is necessary to support translating the labels for custom Data Grid filter operators, namely "search".
+
+    **How to upgrade**
+
+    Make sure that `MuiThemeProvider` is wrapped by `IntlProvider` in your application:
+
+    ```tsx
+    // IntlProvider needs to be rendered before MuiThemeProvider.
+    <IntlProvider locale="en" messages={getMessages()}>
+        <MuiThemeProvider theme={theme}>{/* ... */}</MuiThemeProvider>
+    </IntlProvider>
+    ```
+
+### Minor Changes
+
+- e74ef46: `DateTimePicker` from `@mui/x-date-pickers` is now used inside `DataGrid` filters
+- e15895a: Add new `dataGridIdColumn` column definition
+
+    The column definition sets `filterOperators` to match the `IdFilter` GraphQL input type.
+
+- c48ca03: Add new `dataGridOneToManyColumn` column definition
+
+    The column definition sets `filterOperators` to match the `OneToManyFilter` GraphQL input type.
+
+- 66abe0a: Add new `dataGridManyToManyColumn` column definition
+
+    The column definition sets `filterOperators` to match the `ManyToManyFilter` GraphQL input type.
+
+- 1450882: Add support for `notContains` to `StringFilter`
+
+### Patch Changes
+
+- d148091: Display FinalForm field-level validation errors after form submit
+- bb3e809: Fix layout spacing in `TableComponent` footer: add missing gap between item count and pagination (“Page X of Y”)
+    - @comet/admin-icons@8.0.0-beta.7
+
 ## 8.0.0-beta.6
 
 ### Major Changes
