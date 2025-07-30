@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 import { useStoredState } from "@comet/admin";
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
 
-import { PageSearchMatch } from "../pageSearch/usePageSearch";
-import { arrayToTreeMap, subTreeFromNodes, TreeMap } from "./treemap/TreeMapUtils";
-import { GQLPageTreePageFragment } from "./usePageTree.generated";
+import { type PageSearchMatch } from "../pageSearch/usePageSearch";
+import { arrayToTreeMap, subTreeFromNodes, type TreeMap } from "./treemap/TreeMapUtils";
+import { type GQLPageTreePageFragment } from "./usePageTree.generated";
 
 export { GQLPageTreePageFragment } from "./usePageTree.generated";
 
@@ -23,7 +23,7 @@ export const pageTreePageFragment = gql`
     }
 `;
 
-export interface PageTreePageAdditionalFieldsForUi {
+interface PageTreePageAdditionalFieldsForUi {
     selected: boolean;
     expanded: boolean | null;
     ancestorIds: Array<string>;

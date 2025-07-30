@@ -1,7 +1,7 @@
-import { ISortInformation, SortDirection } from "@comet/admin";
+import { type ISortInformation, SortDirection } from "@comet/admin";
 import { Check, ChevronDown } from "@comet/admin-icons";
-import { List, ListItem, Typography } from "@mui/material";
-import { PropsWithChildren, ReactNode, useState } from "react";
+import { List, ListItemButton, Typography } from "@mui/material";
+import { type PropsWithChildren, type ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import * as sc from "./DamSortPopover.sc";
@@ -42,12 +42,12 @@ interface SortListItemProps {
 
 const SortListItem = ({ children, selected, onClick }: PropsWithChildren<SortListItemProps>) => {
     return (
-        <ListItem button selected={selected} onClick={onClick}>
+        <ListItemButton selected={selected} onClick={onClick}>
             <sc.InnerListItem>
                 <div>{children}</div>
                 {selected && <Check />}
             </sc.InnerListItem>
-        </ListItem>
+        </ListItemButton>
     );
 };
 
@@ -79,7 +79,7 @@ export const DamSortPopover = ({ onChoose, currentSort }: DamSortPopoverProps) =
                     setAnchorEl(event.currentTarget);
                 }}
                 disableRipple
-                color="info"
+                variant="outlined"
             >
                 <sc.LabelWrapper>
                     <FormattedMessage

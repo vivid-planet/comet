@@ -1,6 +1,6 @@
-import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
-import { Button } from "@mui/material";
-import * as React from "react";
+import { Button, Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
+import { DialogContent } from "@mui/material";
+import { useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -8,7 +8,7 @@ interface RootPageProps {
     counter: number;
 }
 
-const RootPage = ({ counter }: RootPageProps): React.ReactElement => {
+const RootPage = ({ counter }: RootPageProps) => {
     const [EditDialog, selection, editDialogApi, selectionApi] = useEditDialog();
 
     return (
@@ -46,30 +46,32 @@ const RootPage = ({ counter }: RootPageProps): React.ReactElement => {
                 </Button>
             </p>
             <EditDialog>
-                {selection.id === "without_deselect" && (
-                    <FinalForm
-                        mode={selection.mode!}
-                        onSubmit={async () => {
-                            console.log("submitted without deselect");
-                        }}
-                    >
-                        <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
-                    </FinalForm>
-                )}
-                {selection.id === "with_deselect" && (
-                    <FinalForm
-                        mode={selection.mode!}
-                        onSubmit={async () => {
-                            console.log("submitted with deselect");
-                        }}
-                        onAfterSubmit={() => {
-                            // override stackApi.goBack()
-                            selectionApi.handleDeselect();
-                        }}
-                    >
-                        <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
-                    </FinalForm>
-                )}
+                <DialogContent>
+                    {selection.id === "without_deselect" && (
+                        <FinalForm
+                            mode={selection.mode!}
+                            onSubmit={async () => {
+                                console.log("submitted without deselect");
+                            }}
+                        >
+                            <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
+                        </FinalForm>
+                    )}
+                    {selection.id === "with_deselect" && (
+                        <FinalForm
+                            mode={selection.mode!}
+                            onSubmit={async () => {
+                                console.log("submitted with deselect");
+                            }}
+                            onAfterSubmit={() => {
+                                // override stackApi.goBack()
+                                selectionApi.handleDeselect();
+                            }}
+                        >
+                            <Field label="Write something and press enter" name="field" component={FinalFormInput} required />
+                        </FinalForm>
+                    )}
+                </DialogContent>
             </EditDialog>
         </>
     );
@@ -80,7 +82,7 @@ interface InnerNestedStackProps {
 }
 
 const InnerNestedStack = ({ counter }: InnerNestedStackProps) => {
-    const [nestedCounter, setNestedCounter] = React.useState<number>();
+    const [nestedCounter, setNestedCounter] = useState<number>();
 
     return (
         <StackSwitch initialPage="root">

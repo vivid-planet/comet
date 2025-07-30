@@ -1,4 +1,3 @@
-import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
@@ -7,11 +6,13 @@ import { printSchema } from "graphql";
 import {
     BuildsResolver,
     createAuthResolver,
+    createOneOfBlock,
     createPageTreeResolver,
     createRedirectsResolver,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
+    ExternalLinkBlock,
     FileImagesResolver,
     FileUpload,
     InternalLinkBlock,
@@ -21,9 +22,11 @@ import {
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./src/content-generation/generate-image-title.resolver";
+import { GenerateSeoTagsResolver } from "./src/content-generation/generate-seo-tags.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { createDamMediaAlternativeResolver } from "./src/dam/files/dam-media-alternatives/dam-media-alternative.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
@@ -37,6 +40,7 @@ import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
+import { WarningResolver } from "./src/warnings/warning.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -113,8 +117,11 @@ async function generateSchema(): Promise<void> {
         AzureAiTranslatorResolver,
         GenerateAltTextResolver,
         GenerateImageTitleResolver,
+        GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
+        WarningResolver,
+        createDamMediaAlternativeResolver({ File }),
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

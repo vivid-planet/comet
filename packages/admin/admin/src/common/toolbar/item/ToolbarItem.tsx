@@ -1,9 +1,9 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { type ComponentsOverrides } from "@mui/material";
+import { css, type Theme, useThemeProps } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarItemClassKey = "root";
 
@@ -15,11 +15,7 @@ const Root = createComponentSlot("div")<ToolbarItemClassKey>({
         display: flex;
         justify-items: center;
         align-items: center;
-        padding: 0 ${theme.spacing(1)};
-
-        ${theme.breakpoints.up("sm")} {
-            padding: 0 ${theme.spacing(1)};
-        }
+        padding-right: ${theme.spacing(2)};
     `,
 );
 

@@ -1,8 +1,8 @@
-import { EditorState } from "draft-js";
+import { type EditorState } from "draft-js";
 import { handleDraftEditorPastedText } from "draftjs-conductor";
 
 import defaultFilterEditorStateBeforeUpdate from "../filterEditor/default";
-import { defaultOptions, IOptions } from "../Rte";
+import { defaultOptions, type IOptions } from "../Rte";
 
 function pasteAndFilterText(
     html: string | undefined,

@@ -1,6 +1,6 @@
-import { AutocompleteProps } from "@mui/material";
+import { type AutocompleteProps } from "@mui/material";
 
-import { Field, FieldProps } from "../Field";
+import { Field, type FieldProps } from "../Field";
 import { FinalFormAsyncAutocomplete } from "../FinalFormAsyncAutocomplete";
 
 export type AsyncAutocompleteFieldProps<

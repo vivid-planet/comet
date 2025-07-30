@@ -1,7 +1,7 @@
 import { FinalForm, MainContent, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, TextField, useEditDialog } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
+import { Edit } from "@comet/admin-icons";
+import { DialogContent, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -28,15 +28,17 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
                         { field: "name", headerName: "Name", flex: 1 },
                         {
                             field: "actions",
+                            type: "actions",
                             headerName: "",
+                            width: 52,
                             renderCell: ({ row }) => (
-                                <Button
+                                <IconButton
                                     onClick={() => {
                                         editDialogApi.openEditDialog(row.id);
                                     }}
                                 >
-                                    Edit
-                                </Button>
+                                    <Edit color="primary" />
+                                </IconButton>
                             ),
                         },
                     ]}
@@ -44,20 +46,22 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
                 />
             </MainContent>
             <EditDialog>
-                <Typography variant="h6" py={2}>
-                    EditDialog selection ID: {editDialogSelectionId}
-                </Typography>
-                <FinalForm
-                    mode="edit"
-                    onSubmit={() => {
-                        console.log("Submitted!");
-                    }}
-                    onAfterSubmit={() => {
-                        editDialogApi.closeDialog();
-                    }}
-                >
-                    <TextField name="name" label="Name" fullWidth />
-                </FinalForm>
+                <DialogContent>
+                    <Typography variant="h6" py={2}>
+                        EditDialog selection ID: {editDialogSelectionId}
+                    </Typography>
+                    <FinalForm
+                        mode="edit"
+                        onSubmit={() => {
+                            console.log("Submitted!");
+                        }}
+                        onAfterSubmit={() => {
+                            editDialogApi.closeDialog();
+                        }}
+                    >
+                        <TextField name="name" label="Name" fullWidth />
+                    </FinalForm>
+                </DialogContent>
             </EditDialog>
         </>
     );
@@ -81,6 +85,7 @@ export const NestedEditDialogInStack = function Story() {
                                 { field: "name", headerName: "Name", flex: 1 },
                                 {
                                     field: "actions",
+                                    type: "actions",
                                     headerName: "",
                                     renderCell: ({ row }) => (
                                         <StackLink pageName="detail" payload={row.id}>

@@ -1,10 +1,10 @@
 import { CrudMoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { Slide, Snackbar } from "@mui/material";
-import { PopoverOrigin } from "@mui/material/Popover/Popover";
-import { SlideProps } from "@mui/material/Slide/Slide";
+import { type PopoverOrigin } from "@mui/material/Popover/Popover";
+import { type SlideProps } from "@mui/material/Slide/Slide";
 import { useRef } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
@@ -49,7 +49,9 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
         );
 
         downloadSelected();
-        isFolderInSelection && snackbarApi.showSnackbar(snackbarElement);
+        if (isFolderInSelection) {
+            snackbarApi.showSnackbar(snackbarElement);
+        }
     };
 
     const {
@@ -118,11 +120,15 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         transformOrigin,
                         anchorOrigin,
                     },
+                    button: {
+                        sx: {
+                            marginLeft: 0,
+                            marginRight: 0,
+                        },
+                    },
                 }}
             />
 
-            {/* the directory property is needed for the folder upload to work but not known to eslint */}
-            {/* eslint-disable-next-line react/no-unknown-property */}
             <input type="file" hidden {...getInputProps()} webkitdirectory="webkitdirectory" directory="directory" ref={folderInputRef} />
             {fileUploadDialogs}
         </>

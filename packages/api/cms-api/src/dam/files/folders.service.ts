@@ -1,6 +1,5 @@
-import { MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, MikroORM, QueryBuilder, raw } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import JSZip from "jszip";
 import isEqual from "lodash.isequal";
@@ -17,7 +16,7 @@ import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
-export const withFoldersSelect = (
+const withFoldersSelect = (
     qb: QueryBuilder<FolderInterface>,
     args: {
         includeArchived?: boolean;
@@ -214,7 +213,7 @@ export class FoldersService {
             const qb = this.foldersRepository.createQueryBuilder();
             await qb
                 .update({
-                    mpath: qb.raw("array_cat(ARRAY[?]::uuid[], mpath[(array_position(mpath, ?)):array_length(mpath,1)])", [folder.mpath, folder.id]),
+                    mpath: raw("array_cat(ARRAY[?]::uuid[], mpath[(array_position(mpath, ?)):array_length(mpath,1)])", [folder.mpath, folder.id]),
                 })
                 .where("? = ANY(mpath)", [folder.id])
                 .execute();
@@ -298,7 +297,7 @@ export class FoldersService {
         const subQb = withFoldersSelect(
             this.foldersRepository
                 .createQueryBuilder("folder")
-                .select(`folder.id, ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`),
+                .select(["folder.id", raw(`ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)]),
             {
                 includeArchived: args.includeArchived,
                 parentId: args.parentId,
@@ -309,7 +308,7 @@ export class FoldersService {
             },
         );
 
-        const result: { rows: Array<{ row_number: string }> } = await this.foldersRepository.createQueryBuilder().raw(
+        const result: { rows: Array<{ row_number: string }> } = await this.foldersRepository.getKnex().raw(
             `select "folder_with_row_number".row_number
                 from "${FOLDER_TABLE_NAME}" as "folder"
                 join (${subQb.getFormattedQuery()}) as "folder_with_row_number" ON folder_with_row_number.id = folder.id
@@ -402,9 +401,9 @@ export class FoldersService {
             .createQueryBuilder("folder")
             .select("*")
             .leftJoinAndSelect("folder.parent", "parent")
-            .addSelect('COUNT(DISTINCT children.id) as "numberOfChildFolders"')
+            .addSelect(raw('COUNT(DISTINCT children.id) as "numberOfChildFolders"'))
             .leftJoin("folder.children", "children")
-            .addSelect('COUNT(DISTINCT files.id) as "numberOfFiles"')
+            .addSelect(raw('COUNT(DISTINCT files.id) as "numberOfFiles"'))
             .leftJoin("folder.files", "files")
             .groupBy(["folder.id", "parent.id"]);
     }

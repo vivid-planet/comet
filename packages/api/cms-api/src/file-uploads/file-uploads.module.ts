@@ -2,7 +2,8 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 
 import { BlobStorageModule } from "../blob-storage/blob-storage.module";
-import { FileValidationService } from "../dam/files/file-validation.service";
+import { FileValidationService } from "../file-utils/file-validation.service";
+import { ImgproxyModule } from "../imgproxy/imgproxy.module";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG, FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
@@ -38,12 +39,17 @@ export class FileUploadsModule {
 
             const FileUploadsDownloadController = createFileUploadsDownloadController({ public: options.download.public ?? false });
             controllers.push(FileUploadsDownloadController);
-            providers.push(FileUploadsResolver);
+
+            const shouldAddResolver = options.download.createFieldResolvers ?? true;
+
+            if (shouldAddResolver) {
+                providers.push(FileUploadsResolver);
+            }
         }
 
         return {
             module: FileUploadsModule,
-            imports: [MikroOrmModule.forFeature([FileUpload]), BlobStorageModule],
+            imports: [MikroOrmModule.forFeature([FileUpload]), BlobStorageModule, ImgproxyModule],
             providers,
             controllers,
             exports: [FileUploadsService],

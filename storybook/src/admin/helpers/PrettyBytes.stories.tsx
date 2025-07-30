@@ -1,7 +1,6 @@
 import { PrettyBytes } from "@comet/admin";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
 const Content = styled("div")`
     display: grid;
@@ -143,13 +142,13 @@ export const _PrettyBytes = {
     render: () => {
         return (
             <Grid container spacing={4}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Normal />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <FixedUnit />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <CustomMaximumFractionDigits />
                 </Grid>
             </Grid>

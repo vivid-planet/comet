@@ -1,15 +1,17 @@
 import helmet from "helmet";
 
 if (process.env.TRACING == "production") {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("./tracing.production");
 } else if (process.env.TRACING == "dev") {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("./tracing.dev");
 }
 
-import { CdnGuard, ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
+import { CdnGuard, ExceptionFilter, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { NestExpressApplication } from "@nestjs/platform-express";
+import { type NestExpressApplication } from "@nestjs/platform-express";
 import * as Sentry from "@sentry/node";
 import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
@@ -24,21 +26,20 @@ async function bootstrap(): Promise<void> {
     const appModule = AppModule.forRoot(config);
     const app = await NestFactory.create<NestExpressApplication>(appModule);
 
-    app.use(Sentry.Handlers.requestHandler());
-    app.use(Sentry.Handlers.tracingHandler());
-    app.use(Sentry.Handlers.errorHandler());
+    Sentry.setupExpressErrorHandler(app);
 
     // class-validator should use Nest for dependency injection.
     // See https://github.com/nestjs/nest/issues/528,
     //     https://github.com/typestack/class-validator#using-service-container.
     useContainer(app.select(appModule), { fallbackOnErrors: true });
 
+    app.setGlobalPrefix("api");
     app.enableCors({
         credentials: true,
         origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
     });
 
-    app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
+    app.useGlobalFilters(new ExceptionFilter(config.debug));
     app.useGlobalPipes(
         new ValidationPipe({
             exceptionFactory: ValidationExceptionFactory,
@@ -70,7 +71,8 @@ async function bootstrap(): Promise<void> {
     }
 
     const port = config.apiPort;
-    await app.listen(port);
-    console.log(`Application is running on: http://localhost:${port}/`);
+    const host = config.serverHost;
+    await app.listen(port, host);
+    console.log(`Application is running on: http://${host}:${port}/`);
 }
 bootstrap();

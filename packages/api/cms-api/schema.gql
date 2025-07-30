@@ -1,31 +1,3 @@
-type UserPermissionsUser {
-  id: String!
-  name: String!
-  email: String!
-  permissionsCount: Int!
-  contentScopesCount: Int!
-}
-
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
-}
-
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  permissions: [CurrentUserPermission!]!
-  impersonated: Boolean
-  authenticatedUser: UserPermissionsUser
-  permissionsForScope(scope: JSONObject!): [String!]!
-}
-
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
@@ -49,6 +21,41 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
+
+type UserPermissionsUser {
+  id: String!
+  name: String!
+  email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
+  impersonationAllowed: Boolean!
+}
+
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]!
+}
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: UserPermissionsUser
+  permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [ContentScopeWithLabel!]!
+}
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -64,6 +71,18 @@ type Dependency {
 type PaginatedDependencies {
   nodes: [Dependency!]!
   totalCount: Int!
+}
+
+type DamMediaAlternative {
+  id: ID!
+  language: String!
+  type: DamMediaAlternativeType!
+  for: DamFile!
+  alternative: DamFile!
+}
+
+enum DamMediaAlternativeType {
+  captions
 }
 
 type ImageCropArea {
@@ -151,6 +170,13 @@ enum KubernetesJobStatus {
   failed
 }
 
+type SeoTags {
+  htmlTitle: String!
+  metaDescription: String!
+  openGraphTitle: String!
+  openGraphDescription: String!
+}
+
 type KubernetesCronJob {
   id: ID!
   name: String!
@@ -177,6 +203,11 @@ type KubernetesJob {
   completionTime: DateTime
 }
 
+type PaginatedDamMediaAlternatives {
+  nodes: [DamMediaAlternative!]!
+  totalCount: Int!
+}
+
 type FilenameResponse {
   name: String!
   folderId: ID
@@ -200,6 +231,48 @@ type UserPermissionPaginatedUserList {
   totalCount: Int!
 }
 
+type WarningSourceInfo {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
+  status: WarningStatus!
+  scope: JSONObject
+  entityInfo: EntityInfo
+}
+
+enum WarningSeverity {
+  high
+  medium
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
+}
+
+type PaginatedWarnings {
+  nodes: [Warning!]!
+  totalCount: Int!
+}
+
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -212,7 +285,7 @@ type PageTreeNode {
   updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
-  numberOfDescendants: Float!
+  numberOfDescendants: Int!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
@@ -251,6 +324,7 @@ type Redirect {
   target: JSONObject!
   comment: String
   active: Boolean!
+  activatedAt: DateTime
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -315,6 +389,8 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  alternativesForThisFile: [DamMediaAlternative!]!
+  thisFileIsAlternativeFor: [DamMediaAlternative!]!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -342,6 +418,14 @@ type PaginatedDamFiles {
 type PaginatedDamFolders {
   nodes: [DamFolder!]!
   totalCount: Int!
+}
+
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
 }
 
 type Query {
@@ -381,10 +465,14 @@ type Query {
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
+  userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+  warning(id: ID!): Warning!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  damMediaAlternative(id: ID!): DamMediaAlternative!
+  damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
 }
 
 input RedirectScopeInput {
@@ -399,6 +487,7 @@ enum SortDirection {
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
+  target: StringFilter
   active: BooleanFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -408,10 +497,14 @@ input RedirectFilter {
 
 input StringFilter {
   contains: String
+  notContains: String
   startsWith: String
   endsWith: String
   equal: String
   notEqual: String
+  isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input BooleanFilter {
@@ -425,6 +518,8 @@ input DateTimeFilter {
   lowerThanEqual: DateTime
   greaterThanEqual: DateTime
   notEqual: DateTime
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input RedirectSort {
@@ -498,8 +593,15 @@ input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
+  permission: PermissionFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
+}
+
+input PermissionFilter {
+  equal: String
+  notEqual: String
+  isAnyOf: [String!]
 }
 
 input UserPermissionsUserSort {
@@ -516,6 +618,63 @@ enum UserPermissionsUserSortField {
 input AzureAiTranslationInput {
   text: String!
   targetLanguage: String!
+}
+
+input WarningFilter {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  message: StringFilter
+  type: StringFilter
+  severity: WarningSeverityEnumFilter
+  status: WarningStatusEnumFilter
+  scope: ScopeFilter
+  and: [WarningFilter!]
+  or: [WarningFilter!]
+}
+
+input WarningSeverityEnumFilter {
+  isAnyOf: [WarningSeverity!]
+  equal: WarningSeverity
+  notEqual: WarningSeverity
+}
+
+input WarningStatusEnumFilter {
+  isAnyOf: [WarningStatus!]
+  equal: WarningStatus
+  notEqual: WarningStatus
+}
+
+input ScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
+}
+
+input WarningSort {
+  field: WarningSortField!
+  direction: SortDirection! = ASC
+}
+
+enum WarningSortField {
+  createdAt
+  updatedAt
+  message
+  type
+  severity
+  status
+}
+
+input DamMediaAlternativeSort {
+  field: DamMediaAlternativeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum DamMediaAlternativeSortField {
+  id
+  language
+  type
+  for
+  alternative
 }
 
 type Mutation {
@@ -552,8 +711,12 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
-  generateAltText(fileId: String!): String!
-  generateImageTitle(fileId: String!): String!
+  generateAltText(fileId: String!, language: String): String!
+  generateImageTitle(fileId: String!, language: String): String!
+  generateSeoTags(content: String!, language: String!): SeoTags!
+  createDamMediaAlternative(for: ID!, alternative: ID!, input: DamMediaAlternativeInput!): DamMediaAlternative!
+  updateDamMediaAlternative(id: ID!, input: DamMediaAlternativeUpdateInput!): DamMediaAlternative!
+  deleteDamMediaAlternative(id: ID!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -661,4 +824,16 @@ input UserPermissionOverrideContentScopesInput {
 
 input UserContentScopesInput {
   contentScopes: [JSONObject!]! = []
+}
+
+input DamMediaAlternativeInput {
+  language: String!
+  type: DamMediaAlternativeType!
+}
+
+input DamMediaAlternativeUpdateInput {
+  language: String
+  type: DamMediaAlternativeType
+  for: ID
+  alternative: ID
 }

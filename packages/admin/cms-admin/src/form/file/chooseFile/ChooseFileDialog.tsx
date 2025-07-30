@@ -1,27 +1,29 @@
-import { StackLink, SubRoute } from "@comet/admin";
+import { Button, StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogTitle,
+    IconButton,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { SyntheticEvent } from "react";
+import { type SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
+import { useDamConfig } from "../../../dam/config/damConfig";
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
-import { useDamConfig } from "../../../dam/config/useDamConfig";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import { type GQLDamFileTableFragment, type GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
-import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
+import { type RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
 import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
-        height: 80vh;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: max-content max-content auto;
+        height: 100%; // The fixed height prevents the height of the dialog from changing when navigating between folders which may have different heights depending on the number of items in the folder
     }
 `;
 
@@ -32,7 +34,6 @@ const StyledDialogTitle = styled(DialogTitle)`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 `;
 
 const CloseButton = styled(IconButton)`
@@ -50,31 +51,32 @@ const TableRowButton = styled(Button)`
     }
 `;
 
+const StyledStackLink = styled(StackLink)`
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: ${({ theme }) => theme.palette.grey[900]};
+`;
+
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
     { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
-        <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
+        <TableRowButton disableRipple={true} variant="textDark" onClick={() => onChooseFile(row.id)} fullWidth>
             <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
         </TableRowButton>
     ) : (
-        <Link
-            underline="none"
-            component={StackLink}
+        <StyledStackLink
             pageName="folder"
             payload={row.id}
-            sx={{
-                width: "100%",
-                height: "100%",
-            }}
             onClick={() => {
                 filterApi.formApi.change("searchText", undefined);
             }}
         >
             <DamItemLabel asset={row} matches={matches} />
-        </Link>
+        </StyledStackLink>
     );
 };
 

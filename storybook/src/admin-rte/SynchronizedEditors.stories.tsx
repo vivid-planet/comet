@@ -1,7 +1,7 @@
-import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Grid, Typography } from "@mui/material";
 import { EditorState } from "draft-js";
-import * as React from "react";
+import { useRef, useState } from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
 
@@ -14,15 +14,15 @@ export default {
 export const SynchronizedRtEs = {
     render: () => {
         const { editorState, setEditorState } = useRteApi();
-        const [activeEditor, setActiveEditor] = React.useState<"left" | "right">("left");
+        const [activeEditor, setActiveEditor] = useState<"left" | "right">("left");
 
         // focus the editor to see the cursor immediately
-        const leftEditorRef = React.useRef<IRteRef>();
+        const leftEditorRef = useRef<IRteRef>();
         useAutoFocus(leftEditorRef);
 
         return (
             <Grid container spacing={4}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Typography variant="h4" gutterBottom>
                         Left Editor
                     </Typography>
@@ -36,7 +36,7 @@ export const SynchronizedRtEs = {
                         ref={leftEditorRef}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Typography variant="h4" gutterBottom>
                         Right Editor
                     </Typography>
@@ -49,7 +49,7 @@ export const SynchronizedRtEs = {
                         }}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <PrintEditorState editorState={editorState} />
                 </Grid>
             </Grid>

@@ -1,6 +1,11 @@
 import { PrettyBytes } from "@comet/admin";
 import { BallTriangle } from "@comet/admin-icons";
-import { Dialog, LinearProgress, Typography } from "@mui/material";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    LinearProgress,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 

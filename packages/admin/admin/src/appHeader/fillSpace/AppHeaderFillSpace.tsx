@@ -1,8 +1,8 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { type ComponentsOverrides, type Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type AppHeaderFillSpaceClassKey = "root";
 
@@ -17,6 +17,9 @@ const Root = createComponentSlot("div")<AppHeaderFillSpaceClassKey>({
     flex-grow: 1;
 `);
 
+/**
+ * @deprecated Use `FillSpace` instead.
+ */
 export function AppHeaderFillSpace(inProps: AppHeaderFillSpaceProps) {
     const { slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderFillSpace" });
 

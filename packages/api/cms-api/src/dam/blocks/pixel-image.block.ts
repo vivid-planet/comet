@@ -1,18 +1,18 @@
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
+
 import {
-    AnnotationBlockMeta,
     BlockContext,
     BlockData,
     BlockIndexData,
     BlockInput,
+    blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
-    inputToData,
-} from "@comet/blocks-api";
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
-
-import { FocalPoint } from "../common/enums/focal-point.enum";
+} from "../../blocks/block";
+import { AnnotationBlockMeta } from "../../blocks/decorators/field";
+import { FocalPoint } from "../../file-utils/focal-point.enum";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
 import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
@@ -33,7 +33,7 @@ class PixelImageBlockData extends BlockData {
 
     async previewImageUrlTemplate(
         { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls, relativeDamUrls }: BlockContext,
+        { previewDamUrls }: BlockContext,
     ): Promise<string | undefined> {
         if (!this.damFileId) {
             return undefined;
@@ -45,7 +45,7 @@ class PixelImageBlockData extends BlockData {
             return undefined;
         }
 
-        return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls, relativeDamUrls });
+        return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls });
     }
 
     indexData(): BlockIndexData {
@@ -76,7 +76,7 @@ class PixelImageBlockInput extends BlockInput {
     cropArea?: ImageCropAreaInput;
 
     transformToBlockData(): PixelImageBlockData {
-        return inputToData(PixelImageBlockData, this);
+        return blockInputToData(PixelImageBlockData, this);
     }
 }
 

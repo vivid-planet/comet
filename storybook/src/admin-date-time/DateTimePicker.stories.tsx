@@ -1,7 +1,6 @@
 import { Field } from "@comet/admin";
 import { FinalFormDateTimePicker } from "@comet/admin-date-time";
 import { Card, CardContent } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -13,11 +12,13 @@ export const DateTimePicker = {
         interface Values {
             dateTimeOne?: Date;
             dateTimeTwo?: Date;
+            dateTimeThree?: Date;
         }
 
         const initialValues: Partial<Values> = {
             dateTimeOne: undefined,
             dateTimeTwo: new Date(),
+            dateTimeThree: new Date(),
         };
 
         return (
@@ -29,6 +30,7 @@ export const DateTimePicker = {
                                 <CardContent>
                                     <Field name="dateTimeOne" label="Date-Time" fullWidth component={FinalFormDateTimePicker} />
                                     <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
+                                    <Field name="dateTimeThree" label="Disabled" fullWidth disabled component={FinalFormDateTimePicker} />
                                 </CardContent>
                             </Card>
                             <pre>{JSON.stringify(values, null, 4)}</pre>

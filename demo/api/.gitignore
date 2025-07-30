@@ -34,3 +34,8 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Hot reloading for API packages
+src/reload.ts
+
+.nestjs_repl_history

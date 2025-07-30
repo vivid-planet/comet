@@ -1,6 +1,5 @@
 import { Field, FinalFormFileSelect } from "@comet/admin";
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 type FormValues = {
@@ -25,14 +24,14 @@ export const _FinalFormFileSelect = {
                     render={({ handleSubmit, values }) => (
                         <form onSubmit={handleSubmit}>
                             <Grid container spacing={4}>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <Card variant="outlined">
                                         <CardContent>
                                             <Field name="singleFile" label="Single file select" component={FinalFormFileSelect} fullWidth />
                                         </CardContent>
                                     </Card>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <Card variant="outlined">
                                         <CardContent>
                                             <Field
@@ -46,7 +45,7 @@ export const _FinalFormFileSelect = {
                                         </CardContent>
                                     </Card>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <Card variant="outlined">
                                         <CardContent>
                                             <Field
@@ -60,14 +59,14 @@ export const _FinalFormFileSelect = {
                                         </CardContent>
                                     </Card>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <Card variant="outlined">
                                         <CardContent>
                                             <Field name="disabled" label="Disabled file select" component={FinalFormFileSelect} disabled fullWidth />
                                         </CardContent>
                                     </Card>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Card variant="outlined">
                                         <CardContent>
                                             <Typography variant="h4" sx={{ mb: 4 }}>
@@ -93,7 +92,7 @@ export const _FinalFormFileSelect = {
                                         </CardContent>
                                     </Card>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Card variant="outlined">
                                         <CardContent>
                                             <Typography variant="h4" sx={{ mb: 4 }}>

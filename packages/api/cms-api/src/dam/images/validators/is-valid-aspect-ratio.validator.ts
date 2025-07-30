@@ -2,11 +2,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 import { ValidationArguments } from "class-validator/types/validation/ValidationArguments";
 
+import { calculateInheritAspectRatio } from "../../../file-utils/images.util";
 import { DamConfig } from "../../dam.config";
 import { DAM_CONFIG } from "../../dam.constants";
 import { FilesService } from "../../files/files.service";
 import { ImageParams } from "../dto/image.params";
-import { calculateInheritAspectRatio } from "../images.util";
 
 export const IsValidImageAspectRatio = (validationOptions?: ValidationOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +24,10 @@ export const IsValidImageAspectRatio = (validationOptions?: ValidationOptions) =
 @ValidatorConstraint({ name: "IsValidImageAspectRatio" })
 @Injectable()
 export class IsValidImageAspectRatioConstraint implements ValidatorConstraintInterface {
-    constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig, private readonly filesService: FilesService) {}
+    constructor(
+        @Inject(DAM_CONFIG) private readonly config: DamConfig,
+        private readonly filesService: FilesService,
+    ) {}
 
     async validate(value: number, validationArguments: ValidationArguments): Promise<boolean> {
         const params = validationArguments.object as ImageParams;

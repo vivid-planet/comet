@@ -1,6 +1,6 @@
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 export function withCspHeadersMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
@@ -20,7 +20,7 @@ export function withCspHeadersMiddleware(middleware: CustomMiddleware) {
                     frame-ancestors ${process.env.ADMIN_URL ?? "none"};
                     upgrade-insecure-requests; 
                     block-all-mixed-content;
-                    frame-src 'self' https://*.youtube.com https://*.youtube-nocookie.com;
+                    frame-src 'self' https://*.youtube-nocookie.com https://player.vimeo.com;
                 `
                 .replace(/\s{2,}/g, " ")
                 .trim(),

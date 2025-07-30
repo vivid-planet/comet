@@ -1,19 +1,19 @@
 import {
     AppHeader,
     AppHeaderButton,
-    AppHeaderFillSpace,
     AppHeaderMenuButton,
+    FillSpace,
     MainContent,
+    MainNavigation,
+    MainNavigationItem,
     MasterLayout,
-    Menu,
-    MenuItem,
     RouterBrowserRouter,
     Toolbar,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Dashboard, Wrench } from "@comet/admin-icons";
 import { AppBar, Box, Card, CardContent, Drawer, Toolbar as MuiToolbar, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 export default {
     title: "Docs/Components/Master",
@@ -32,19 +32,19 @@ export const Master = {
 
         function MasterMenu() {
             return (
-                <Menu>
-                    <MenuItem primary="Menu button" icon={<Dashboard />} />
-                </Menu>
+                <MainNavigation>
+                    <MainNavigationItem primary="Menu button" icon={<Dashboard />} />
+                </MainNavigation>
             );
         }
 
         function MasterHeader() {
-            const [showDrawer, setShowDrawer] = React.useState<boolean>(false);
+            const [showDrawer, setShowDrawer] = useState<boolean>(false);
             return (
                 <>
                     <AppHeader>
                         <AppHeaderMenuButton />
-                        <AppHeaderFillSpace />
+                        <FillSpace />
                         <AppHeaderButton startIcon={<Wrench />} onClick={() => setShowDrawer(true)}>
                             Open drawer
                         </AppHeaderButton>

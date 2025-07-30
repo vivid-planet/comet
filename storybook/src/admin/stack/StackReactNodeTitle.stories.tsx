@@ -1,6 +1,5 @@
-import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
-import * as React from "react";
+import { Button, Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
+import { Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -31,5 +30,5 @@ export const StackWithReactReactNodeTitle = {
         );
     },
 
-    name: "Stack with React.ReactNode title",
+    name: "Stack with ReactNode title",
 };

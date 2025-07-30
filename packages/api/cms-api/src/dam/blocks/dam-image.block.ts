@@ -1,5 +1,4 @@
-import { createOneOfBlock, OneOfBlock } from "@comet/blocks-api";
-
+import { createOneOfBlock, type OneOfBlock } from "../../blocks/factories/createOneOfBlock";
 import { PixelImageBlock } from "./pixel-image.block";
 import { SvgImageBlock } from "./svg-image.block";
 

@@ -1,5 +1,4 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
-import * as React from "react";
 
 export default {
     title: "Docs/Form/Components/Field",

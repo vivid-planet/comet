@@ -1,20 +1,20 @@
 import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi } from "@comet/admin";
 import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
-import { DispatchSetStateAction } from "@comet/blocks-admin";
-import { ButtonBase, Divider, Snackbar, styled } from "@mui/material";
-import { GridColumnHeaderParams } from "@mui/x-data-grid";
-import { ReactNode } from "react";
+import { ButtonBase, Divider, Snackbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { type GridColumnHeaderParams } from "@mui/x-data-grid";
+import { type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { TableBlockData } from "../../blocks.generated";
-import { ColumnSize } from "./TableBlockGrid";
+import { type TableBlockData } from "../../blocks.generated";
+import { type ColumnSize } from "./TableBlockGrid";
 import { getNewColumn } from "./utils";
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
     highlighted: boolean;
-    updateState: DispatchSetStateAction<TableBlockData>;
+    updateState: Dispatch<SetStateAction<TableBlockData>>;
     columnIndex: number;
 };
 

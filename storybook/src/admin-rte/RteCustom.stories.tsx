@@ -1,6 +1,6 @@
-import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
+import { type IRteOptions, type IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import * as React from "react";
+import { useRef } from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
 
@@ -20,7 +20,7 @@ export const RteCustomized = {
         const { editorState, setEditorState } = useRteApi();
 
         // focus the editor to see the cursor immediately
-        const editorRef = React.useRef<IRteRef>();
+        const editorRef = useRef<IRteRef>();
         useAutoFocus(editorRef);
 
         return (

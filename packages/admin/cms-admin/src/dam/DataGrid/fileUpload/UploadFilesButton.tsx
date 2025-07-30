@@ -1,7 +1,7 @@
+import { Button } from "@comet/admin";
 import { Upload } from "@comet/admin-icons";
-import { Button } from "@mui/material";
 import { useRef } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
@@ -37,13 +37,12 @@ export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps) 
     return (
         <>
             <Button
-                variant="contained"
-                color="primary"
                 startIcon={<Upload />}
                 onClick={() => {
                     // Trigger file input with button click
                     fileInputRef.current?.click();
                 }}
+                responsive
             >
                 <FormattedMessage id="comet.pages.dam.uploadFiles" defaultMessage="Upload files" />
             </Button>

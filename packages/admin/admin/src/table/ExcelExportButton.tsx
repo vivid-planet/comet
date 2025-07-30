@@ -1,9 +1,10 @@
-import { Button, CircularProgress } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
+import { CircularProgress } from "@mui/material";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button } from "../common/buttons/Button";
 import { FileIcon } from "../fileIcons/FileIcon";
-import { IExportApi } from "./excelexport/IExportApi";
+import { type IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {
     exportApi: IExportApi<any>;
@@ -28,6 +29,7 @@ export const ExcelExportButton = ({ onClick, children, exportApi, loadingCompone
     return (
         <Button
             onClick={onClickButtonPressed}
+            variant="textDark"
             startIcon={
                 loading ? (
                     <>

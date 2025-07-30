@@ -1,6 +1,7 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
-import { NewsDetailBlockData, NewsDetailBlockInput } from "@src/blocks.generated";
+import { type BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/cms-admin";
+import { type NewsDetailBlockData, type NewsDetailBlockInput } from "@src/blocks.generated";
+import { FormattedMessage } from "react-intl";
 
 type State = NewsDetailBlockData;
 
@@ -16,7 +17,12 @@ const NewsDetailBlock: BlockInterface<NewsDetailBlockData, State, NewsDetailBloc
     AdminComponent: ({ state, updateState }) => {
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                <Field name="id" label="ID" fullWidth component={FinalFormInput} />
+                <Field
+                    name="id"
+                    label={<FormattedMessage id="blocks.newsDetail.id.label" defaultMessage="ID" />}
+                    fullWidth
+                    component={FinalFormInput}
+                />
             </BlocksFinalForm>
         );
     },

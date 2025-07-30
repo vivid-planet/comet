@@ -1,8 +1,10 @@
 import {
+    Button,
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
-    IEditDialogApi,
+    type IEditDialogApi,
     MainContent,
     messages,
     RouterTab,
@@ -18,13 +20,11 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
-    ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
+import { DialogContent, IconButton, Typography } from "@mui/material";
+import { DataGrid, type GridToolbarProps } from "@mui/x-data-grid";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -67,10 +67,10 @@ const stocks = [
 ];
 
 type DialogProps = {
-    dialogApiRef: React.RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi>;
 };
 
-const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -81,24 +81,26 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="name" label="Name" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="name" label="Name" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
     );
 };
 
-const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddStocksDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -109,36 +111,40 @@ const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
         >
             {() => {
                 return (
-                    <FinalForm
-                        mode="edit"
-                        onSubmit={() => {
-                            console.log("Submitted!");
-                        }}
-                        onAfterSubmit={() => {
-                            dialogApiRef.current?.closeDialog();
-                        }}
-                    >
-                        <TextField name="amount" label="Amount" fullWidth />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={() => {
+                                console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
+                            }}
+                        >
+                            <TextField name="amount" label="Amount" fullWidth />
+                        </FinalForm>
+                    </DialogContent>
                 );
             }}
         </EditDialog>
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: ReactNode;
+}
+
+function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <Typography>
-                    <FormattedMessage
-                        id="toolbar.helperText"
-                        defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
-                    />
-                </Typography>
-            </ToolbarItem>
-            <ToolbarFillSpace />
-            <ToolbarActions>{toolbarAction}</ToolbarActions>
+            <Typography>
+                <FormattedMessage
+                    id="toolbar.helperText"
+                    defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
+                />
+            </Typography>
+            <FillSpace />
+            {toolbarAction}
         </DataGridToolbar>
     );
 }
@@ -147,9 +153,9 @@ type ProductDetailsProps = {
     productId: string;
 };
 
-export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }: ProductDetailsProps) => {
+export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
     const intl = useIntl();
-    const editDialogApi = React.useRef<IEditDialogApi>(null);
+    const editDialogApi = useRef<IEditDialogApi>(null);
 
     const rows: { id: string; productId: string; amount: string }[] = [];
     stocks.forEach((row) => {
@@ -200,22 +206,17 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                     },
                                 ]}
                                 rows={rows}
-                                components={{
-                                    Toolbar: Toolbar,
+                                slots={{
+                                    toolbar: Toolbar,
                                 }}
-                                componentsProps={{
+                                slotProps={{
                                     toolbar: {
                                         toolbarAction: (
-                                            <Button
-                                                startIcon={<Add />}
-                                                onClick={() => editDialogApi.current?.openAddDialog()}
-                                                variant="contained"
-                                                color="primary"
-                                            >
+                                            <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                 <FormattedMessage {...messages.add} />
                                             </Button>
                                         ),
-                                    },
+                                    } as ToolbarProps,
                                 }}
                             />
                         </MainContent>
@@ -227,7 +228,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                     <StackToolbar>
                                         <ToolbarBackButton />
                                         <ToolbarAutomaticTitleItem />
-                                        <ToolbarFillSpace />
+                                        <FillSpace />
                                         <ToolbarActions>
                                             <SaveBoundarySaveButton />
                                         </ToolbarActions>
@@ -254,7 +255,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
 export const EditDialogInRouterTabsWithinStack = {
     render: () => {
         const intl = useIntl();
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
             <>
@@ -284,22 +285,17 @@ export const EditDialogInRouterTabsWithinStack = {
                                         },
                                     ]}
                                     rows={products}
-                                    components={{
-                                        Toolbar: Toolbar,
+                                    slots={{
+                                        toolbar: Toolbar,
                                     }}
-                                    componentsProps={{
+                                    slotProps={{
                                         toolbar: {
                                             toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
+                                                <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                                     <FormattedMessage {...messages.add} />
                                                 </Button>
                                             ),
-                                        },
+                                        } as ToolbarProps,
                                     }}
                                 />
                             </MainContent>
@@ -311,7 +307,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                         <StackToolbar>
                                             <ToolbarBackButton />
                                             <ToolbarAutomaticTitleItem />
-                                            <ToolbarFillSpace />
+                                            <FillSpace />
                                             <ToolbarActions>
                                                 <SaveBoundarySaveButton />
                                             </ToolbarActions>

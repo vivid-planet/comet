@@ -1,5 +1,5 @@
-import { styled } from "@mui/material";
-import { ReactNode } from "react";
+import { styled } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 type Props = {
     highlighted: boolean;

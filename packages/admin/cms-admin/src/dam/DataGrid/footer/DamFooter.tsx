@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 const FooterBar = styled(Paper)`
     position: fixed;

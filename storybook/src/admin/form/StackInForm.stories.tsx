@@ -1,5 +1,4 @@
 import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

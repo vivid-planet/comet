@@ -1,25 +1,20 @@
 import { Filter } from "@comet/admin-icons";
-import { Button } from "@mui/material";
 import { useGridApiContext } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Button, type ButtonProps } from "../common/buttons/Button";
 import { messages } from "../messages";
 
-export function GridFilterButton() {
+export function GridFilterButton(props: ButtonProps) {
     const apiRef = useGridApiContext();
+
     const handleFilterClick = useCallback(() => {
         apiRef.current.showFilterPanel();
     }, [apiRef]);
+
     return (
-        <Button
-            startIcon={<Filter />}
-            variant="outlined"
-            onClick={handleFilterClick}
-            sx={{
-                borderColor: (theme) => theme.palette.grey[100],
-            }}
-        >
+        <Button responsive startIcon={<Filter />} variant="outlined" onClick={handleFilterClick} {...props}>
             <FormattedMessage {...messages.filter} />
         </Button>
     );

@@ -1,17 +1,17 @@
 import { DragIndicator } from "@comet/admin-icons";
-import { DispatchSetStateAction } from "@comet/blocks-admin";
-import { GridColDef, GridColumnHeaderParams } from "@mui/x-data-grid";
+// eslint-disable-next-line no-restricted-imports
+import { type GridColDef, type GridColumnHeaderParams } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GRID_REORDER_COL_DEF,
-    GridEventListener,
-    GridRenderCellParams,
-    GridRenderEditCellParams,
+    type GridEventListener,
+    type GridRenderCellParams,
+    type GridRenderEditCellParams,
     useGridApiRef,
 } from "@mui/x-data-grid-pro";
-import { useEffect } from "react";
+import { type ComponentProps, type Dispatch, type SetStateAction, useEffect } from "react";
 
-import { TableBlockData } from "../../blocks.generated";
+import { type TableBlockData } from "../../blocks.generated";
 import { ActionsCell } from "./ActionsCell";
 import { CellValue } from "./CellValue";
 import { ColumnHeader } from "./ColumnHeader";
@@ -38,35 +38,38 @@ const flexForColumnSize: Record<ColumnSize, number> = {
 
 type Props = {
     state: TableBlockData;
-    updateState: DispatchSetStateAction<TableBlockData>;
+    updateState: Dispatch<SetStateAction<TableBlockData>>;
 };
 
 export const TableBlockGrid = ({ state, updateState }: Props) => {
     const apiRef = useGridApiRef();
 
-    const setRowData: DispatchSetStateAction<TableBlockData["rows"]> = (newRows) => {
+    const setRowData: Dispatch<SetStateAction<TableBlockData["rows"]>> = (newRows) => {
         updateState((state) => {
             return { ...state, rows: typeof newRows === "function" ? newRows(state.rows) : newRows };
         });
     };
 
-    const handleCellEditCommit: GridEventListener<"cellEditCommit"> = ({ value: newValue, field: columnId, id: rowId }) => {
+    // TODO: Verify this still does what it did previously
+    const processRowUpdate: ComponentProps<typeof DataGridPro>["processRowUpdate"] = (newRow) => {
         setRowData((previousRowData) => {
-            return previousRowData.map((row) => {
-                if (row.id === rowId) {
+            return previousRowData.map((existingRow) => {
+                if (existingRow.id === newRow.id) {
                     return {
-                        ...row,
-                        cellValues: row.cellValues.map((cellValue) => {
-                            if (cellValue.columnId === columnId) {
-                                return { ...cellValue, value: newValue };
+                        ...existingRow,
+                        cellValues: existingRow.cellValues.map((cellValue) => {
+                            if (cellValue.columnId === newRow.field) {
+                                return { ...cellValue, value: newRow.value };
                             }
                             return cellValue;
                         }),
                     };
                 }
-                return row;
+                return existingRow;
             });
         });
+
+        return newRow;
     };
 
     const moveRow = (targetIndex: number, rowId: string) => {
@@ -115,7 +118,6 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             field: columnId,
             editable: true,
             sortable: false,
-            type: "string",
             flex: flexForColumnSize[size],
             minWidth: widthForColumnSize[size],
             renderHeader: (params: GridColumnHeaderParams) => (
@@ -155,20 +157,20 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             rowReordering
             disableColumnResize
             disableColumnMenu
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             hideFooter
             pinnedColumns={{
                 left: ["__reorder__"],
                 right: ["actions"],
             }}
-            components={{
-                RowReorderIcon: DragIndicator,
+            slots={{
+                rowReorderIcon: DragIndicator,
             }}
             sx={dataGridStyles}
             onRowOrderChange={({ targetIndex, row }) => {
                 moveRow(targetIndex, row.id);
             }}
-            onCellEditCommit={handleCellEditCommit}
+            processRowUpdate={processRowUpdate}
         />
     );
 };

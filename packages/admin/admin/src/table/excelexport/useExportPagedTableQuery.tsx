@@ -1,10 +1,10 @@
-import { useApolloClient } from "@apollo/client";
+import { type OperationVariables, useApolloClient } from "@apollo/client";
 import { useState } from "react";
 
-import { Table } from "../Table";
-import { ITableQueryApi } from "../TableQueryContext";
-import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
-import { IExportApi } from "./IExportApi";
+import { type Table } from "../Table";
+import { type ITableQueryApi } from "../TableQueryContext";
+import { createExcelExportDownload, type IExcelExportOptions } from "./createExcelExportDownload";
+import { type IExportApi } from "./IExportApi";
 
 interface IOptions<IVariables> {
     variablesForPage: (page: number) => IVariables;
@@ -15,7 +15,7 @@ interface IOptions<IVariables> {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function useExportPagedTableQuery<IVariables>(
+export function useExportPagedTableQuery<IVariables extends OperationVariables>(
     api: ITableQueryApi,
     options: IOptions<IVariables>,
     excelOptions?: IExcelExportOptions,
@@ -31,8 +31,8 @@ export function useExportPagedTableQuery<IVariables>(
 
     async function exportTable() {
         if (tableRef != null) {
-            await setProgress(0);
-            await setLoading(true);
+            setProgress(0);
+            setLoading(true);
 
             const { fromPage = 1, toPage = 1 } = options;
 
@@ -56,13 +56,13 @@ export function useExportPagedTableQuery<IVariables>(
                         exportData.push(...data.data);
                     }
                     const progressInPercent = (i / (toPage - fromPage)) * 100;
-                    await setProgress(progressInPercent);
+                    setProgress(progressInPercent);
                 }
                 createExcelExportDownload<any>(tableRef.props.columns, exportData, excelOptions);
-            } catch (e) {
+            } catch {
                 throw new Error("Error happend while exporting data");
             } finally {
-                await setLoading(false);
+                setLoading(false);
             }
         }
     }

@@ -33,7 +33,29 @@ export class EnvironmentVariables {
     @IsString()
     API_URL: string;
 
+    @IsOptional()
+    @IsBoolean()
+    @Transform(({ value }) => value === "true")
+    USE_AUTHPROXY: boolean;
+
     @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    IDP_CLIENT_ID: string;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    IDP_JWKS_URI: string;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    IDP_END_SESSION_ENDPOINT: string;
+
+    @IsString()
+    @ValidateIf((v) => v.USE_AUTHPROXY === "true")
+    POST_LOGOUT_REDIRECT_URI: string;
+
+    @IsString()
+    @MinLength(16)
     BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
 
     @IsString()
@@ -54,9 +76,6 @@ export class EnvironmentVariables {
 
     @IsString()
     IMGPROXY_KEY: string;
-
-    @IsInt()
-    IMGPROXY_QUALITY = 80;
 
     @IsString()
     @MinLength(16)
@@ -142,10 +161,9 @@ export class EnvironmentVariables {
 
     @IsString()
     @MinLength(16)
-    @ValidateIf(() => process.env.NODE_ENV === "production")
     SITE_PREVIEW_SECRET: string;
 
     @IsArray()
-    @Transform(({ value }) => JSON.parse(value))
+    @Transform(({ value }) => JSON.parse(Buffer.from(value, "base64").toString()))
     PRIVATE_SITE_CONFIGS: PrivateSiteConfig[];
 }

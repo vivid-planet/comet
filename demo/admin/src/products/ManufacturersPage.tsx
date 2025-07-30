@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
@@ -9,7 +10,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
@@ -20,7 +20,7 @@ const FormToolbar = () => (
     <StackToolbar>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
-        <ToolbarFillSpace />
+        <FillSpace />
         <ToolbarActions>
             <SaveBoundarySaveButton />
         </ToolbarActions>

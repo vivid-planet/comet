@@ -1,18 +1,19 @@
-import { createSpaceBlock } from "@comet/blocks-admin";
-import { ReactNode } from "react";
+import { createSpaceBlock } from "@comet/cms-admin";
+import { type SpaceBlockData } from "@src/blocks.generated";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-const options: { value: string; label: ReactNode }[] = [
-    { value: "d150", label: <FormattedMessage id="spacing.d150" defaultMessage="Dynamic 150" /> },
-    { value: "d200", label: <FormattedMessage id="spacing.d200" defaultMessage="Dynamic 200" /> },
-    { value: "d250", label: <FormattedMessage id="spacing.d250" defaultMessage="Dynamic 250" /> },
-    { value: "d300", label: <FormattedMessage id="spacing.d300" defaultMessage="Dynamic 300" /> },
-    { value: "d350", label: <FormattedMessage id="spacing.d350" defaultMessage="Dynamic 350" /> },
-    { value: "d400", label: <FormattedMessage id="spacing.d400" defaultMessage="Dynamic 400" /> },
-    { value: "d450", label: <FormattedMessage id="spacing.d450" defaultMessage="Dynamic 450" /> },
-    { value: "d500", label: <FormattedMessage id="spacing.d500" defaultMessage="Dynamic 500" /> },
-    { value: "d550", label: <FormattedMessage id="spacing.d550" defaultMessage="Dynamic 550" /> },
-    { value: "d600", label: <FormattedMessage id="spacing.d600" defaultMessage="Dynamic 600" /> },
+const options: { value: SpaceBlockData["spacing"]; label: ReactNode }[] = [
+    { value: "d100", label: <FormattedMessage id="spaceBlock.d100" defaultMessage="Dynamic 100" /> },
+    { value: "d200", label: <FormattedMessage id="spaceBlock.d200" defaultMessage="Dynamic 200" /> },
+    { value: "d300", label: <FormattedMessage id="spaceBlock.d300" defaultMessage="Dynamic 300" /> },
+    { value: "d400", label: <FormattedMessage id="spaceBlock.d400" defaultMessage="Dynamic 400" /> },
+    { value: "s100", label: <FormattedMessage id="spaceBlock.s100" defaultMessage="Static 100" /> },
+    { value: "s200", label: <FormattedMessage id="spaceBlock.s200" defaultMessage="Static 200" /> },
+    { value: "s300", label: <FormattedMessage id="spaceBlock.s300" defaultMessage="Static 300" /> },
+    { value: "s400", label: <FormattedMessage id="spaceBlock.s400" defaultMessage="Static 400" /> },
+    { value: "s500", label: <FormattedMessage id="spaceBlock.s500" defaultMessage="Static 500" /> },
+    { value: "s600", label: <FormattedMessage id="spaceBlock.s600" defaultMessage="Static 600" /> },
 ];
 
-export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
+export const SpaceBlock = createSpaceBlock<SpaceBlockData["spacing"]>({ defaultValue: options[0].value, options });
