@@ -1290,7 +1290,16 @@ If you're unsure about how to structure the AuthModule, look at the [COMET Start
     `CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
     :::
 
-4. Import `JwtModule` from `@nestjs/jwt`:
+4. Remove `currentUser` prop from `createAuthResolver`:
+
+    ```diff
+     createAuthResolver({
+        // ...
+    -   currentUser: CurrentUser,
+     }),
+    ```
+
+5. Import `JwtModule` from `@nestjs/jwt`:
 
     ```diff title=api/src/auth/auth.module.ts
         exports: [UserService, AccessControlService],
