@@ -15,8 +15,8 @@ import {
     type GeneratorReturn,
     type GQLDocumentConfigMap,
     type GridColumnConfig,
+    type GridColumnStaticSelectLabelCellContent,
     type GridConfig,
-    type StaticSelectLabelCellContent,
     type VirtualGridColumnConfig,
 } from "../generate-command";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
@@ -98,7 +98,7 @@ type LabelData = {
     gridCellContent?: ReactNode;
 };
 
-const getValueOptionsLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
+const getValueOptionsLabelData = (messageId: string, label: string | GridColumnStaticSelectLabelCellContent): LabelData => {
     if (typeof label === "string") {
         return {
             textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
