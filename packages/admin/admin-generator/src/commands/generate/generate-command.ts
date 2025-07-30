@@ -76,7 +76,42 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filter?: { type: "field"; fieldName: string; gqlName?: string } | { type: "formProp"; propName: string; gqlName?: string };
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?:
+              | {
+                    /**
+                     * Filter by value of field in current form
+                     */
+                    type: "field";
+                    /**
+                     * Name of the field in current form, that will be used to filter the query
+                     */
+                    fieldName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    gqlName?: string;
+                }
+              | {
+                    /**
+                     * Filter by a prop passed into the form, this prop will be generated
+                     */
+                    type: "formProp";
+                    /**
+                     * Name of the prop generated for this form
+                     */
+                    propName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    gqlName?: string;
+                };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
