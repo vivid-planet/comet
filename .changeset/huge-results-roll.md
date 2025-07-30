@@ -4,7 +4,7 @@
 "@comet/cms-api": major
 ---
 
-Introduced a strongly-typed permission system using the new CorePermission enum and Permission type, replacing previous string-based permissions.
+Introduce a strongly-typed permission system using the new `Permission` GraphQL enum and `Permission` type, replacing previous string-based permissions.
 
 **Breaking changes**
 
