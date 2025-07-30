@@ -6,7 +6,7 @@ import { convertConfigImport } from "../../utils/convertConfigImport";
 import { type Imports } from "../../utils/generateImportsCode";
 import { isGeneratorConfigImport } from "../../utils/runtimeTypeGuards";
 
-export type AdornmentData = {
+type AdornmentData = {
     adornmentString: string;
     adornmentImport?: { name: string; importPath: string };
 };
