@@ -5,4 +5,4 @@ export const RedirectsLinkBlock = createRedirectsLinkBlock({
     news: NewsLinkBlock,
 });
 
-export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock, scopeParts: ["domain"] });
+export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock });

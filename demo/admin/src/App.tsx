@@ -66,7 +66,9 @@ export function App() {
                 documentTypes: pageTreeDocumentTypes,
                 additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
                 scopeParts: ["domain", "language"],
-                scopePartsForRedirects: ["domain"],
+            }}
+            redirects={{
+                scopeParts: ["domain"],
             }}
             dam={{
                 ...config.dam,

@@ -13,7 +13,6 @@ import slugify from "slugify";
 import { useDebounce } from "use-debounce";
 
 import { useContentLanguage } from "../contentLanguage/useContentLanguage";
-import { useContentScope } from "../contentScope/Provider";
 import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
 import { type GQLSlugAvailability } from "../graphql.generated";
@@ -32,7 +31,7 @@ import {
     type GQLUpdatePageNodeMutation,
     type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
-import { usePageTreeConfig } from "./pageTreeConfig";
+import { useRedirectsScope } from "./redirectsConfig";
 
 type SerializedInitialValues = string;
 
@@ -109,16 +108,7 @@ export function createEditPageNode({
         const apollo = useApolloClient();
         const scope = usePageTreeScope();
         const language = useContentLanguage({ scope });
-        const { scopePartsForRedirects } = usePageTreeConfig();
-
-        const { scope: completeScope } = useContentScope();
-        const redirectScope = (scopePartsForRedirects ?? []).reduce(
-            (acc, scopePartsForRedirects) => {
-                acc[scopePartsForRedirects] = completeScope[scopePartsForRedirects];
-                return acc;
-            },
-            {} as { [key: string]: unknown },
-        );
+        const redirectScope = useRedirectsScope();
 
         const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
 
