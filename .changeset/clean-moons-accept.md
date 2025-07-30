@@ -1,5 +1,5 @@
 ---
-"@comet/cms-admin": minor
+"@comet/cms-admin": major
 ---
 
 Remove passed `scopeParts` from `createRedirectsPage`
@@ -8,8 +8,9 @@ Add optional `redirectsConfig` to `CometConfigProvider` instead.
 
 **Example**
 
-```tsx
-export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock });
+```diff
+- export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock, scopeParts: ["domain"]})
++ export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock });
 ```
 
 ```tsx
