@@ -25,7 +25,7 @@
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ **/*.json --no-warn-ignored",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
-        "lint:tsc": "tsc",
+        "lint:tsc": "tsc --noEmit",
         "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
     },
