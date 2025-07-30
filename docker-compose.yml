@@ -1,6 +1,6 @@
 services:
     postgres:
-        image: bitnami/postgresql:15
+        image: bitnami/postgresql:17
         tty: true
         volumes:
             - postgres:/bitnami/postgresql
