@@ -68,7 +68,7 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
     return null;
 }
 
-export async function previewParamsForRequest(req: NextApiRequest): Promise<PreviewParams | null> {
+export async function legacyPagesRouterPreviewParams(req: NextApiRequest): Promise<PreviewParams | null> {
     if (req.headers["x-block-preview"]) {
         return verifyJwt<PreviewParams>(req.headers["x-block-preview"].toString());
     }

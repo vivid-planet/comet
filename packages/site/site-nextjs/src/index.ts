@@ -18,7 +18,7 @@ export { sitePreviewRoute } from "./sitePreview/appRouter/sitePreviewRoute";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
-export { previewParams, previewParamsForRequest, type SitePreviewParams } from "./sitePreview/previewUtils";
+export { legacyPagesRouterPreviewParams, previewParams, type SitePreviewParams } from "./sitePreview/previewUtils";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export {
     AdminMessageType,
