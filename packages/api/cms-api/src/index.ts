@@ -250,7 +250,7 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
-export { DisablePermissionCheck, DisablePermissionCheckType, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
+export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { CurrentUserPermission } from "./user-permissions/dto/current-user";
