@@ -1,8 +1,16 @@
 import { type IntrospectionQuery } from "graphql";
 
-import { type FormConfig, type GeneratorReturn, type GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generate-command";
+import {
+    type FormConfig,
+    type FormFieldConfig,
+    type GeneratorReturn,
+    type GQLDocumentConfigMap,
+    isFormFieldConfig,
+    isFormLayoutConfig,
+} from "../generate-command";
 import { type Imports } from "../utils/generateImportsCode";
 import { generateComponentFormField } from "./generateComponentFormField";
+import { type Prop } from "./generateForm";
 import { generateFormField } from "./generateFormField";
 import { generateFormLayout } from "./generateFormLayout";
 
@@ -11,6 +19,7 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     hooksCode: string;
     formFragmentFields: string[];
     formValueToGqlInputCode: string;
+    formProps: Prop[];
     formValuesConfig: {
         omitFromFragmentType?: string;
         destructFromFormValues?: string; // equals omitting from formValues copied directly to mutation-input
@@ -25,7 +34,7 @@ export type GenerateFieldsReturn = GeneratorReturn & {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function findFieldByName(name: string, fields: FormConfig<any>["fields"]): FormConfig<any>["fields"][0] | undefined {
+export function findFieldByName(name: string, fields: FormConfig<any>["fields"]): FormFieldConfig<unknown> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return fields.reduce<FormConfig<any>["fields"][0] | undefined>((acc, field) => {
         return acc
@@ -35,7 +44,7 @@ export function findFieldByName(name: string, fields: FormConfig<any>["fields"])
               : isFormLayoutConfig(field)
                 ? findFieldByName(name, field.fields)
                 : undefined;
-    }, undefined);
+    }, undefined) as FormFieldConfig<unknown> | undefined;
 }
 
 export function generateFields({
@@ -62,6 +71,7 @@ export function generateFields({
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
+    const formProps: Prop[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
@@ -101,6 +111,7 @@ export function generateFields({
                 gqlDocuments[name] = generated.gqlDocuments[name];
             }
             imports.push(...generated.imports);
+            formProps.push(...generated.formProps);
             hooksCode += generated.hooksCode;
             formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
@@ -120,6 +131,7 @@ export function generateFields({
         formFragmentFields,
         gqlDocuments,
         imports,
+        formProps,
         formValuesConfig,
         finalFormConfig,
     };
