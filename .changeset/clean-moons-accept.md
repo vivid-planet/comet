@@ -2,23 +2,24 @@
 "@comet/cms-admin": minor
 ---
 
-Add optional `scopePartsForRedirects` to `pageTreeConfig` to check for existing redirects per scope when changing a page's slug
+Remove passed `scopeParts` from `createRedirectsPage`
+
+Add optional `redirectsConfig` to `CometConfigProvider` instead.
 
 **Example**
 
 ```tsx
- export function App() {
-    return (
-        <CometConfigProvider
-            //...
-            pageTree={{
-                //...
-+               scopePartsForRedirects: ["domain"],
-            }}
-            //...
-        >
-        )
-    }
+export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock });
 ```
 
-When editing a page and changing its slug, the form now checks if a redirect for the old path already exists (using the configured `scopePartsForRedirects`). If a redirect exists, the option to create an automatic redirect is disabled.
+```tsx
+<CometConfigProvider
+    //...
+    redirects={{
+        scopeParts: ["domain"],
+    }}
+    //...
+>
+    {/* Application */}
+</CometConfigProvider>
+```
