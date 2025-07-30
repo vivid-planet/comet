@@ -7,7 +7,7 @@ type RequiredPermissionOptions = {
 };
 
 export const DisablePermissionCheck = "disablePermissionCheck";
-export type DisablePermissionCheckType = typeof DisablePermissionCheck;
+type DisablePermissionCheckType = typeof DisablePermissionCheck;
 
 export type RequiredPermissionMetadata = {
     requiredPermission: Array<Permission | DisablePermissionCheckType>;
