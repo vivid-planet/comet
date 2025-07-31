@@ -4,6 +4,7 @@ import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useListenToEscapeKey } from "@src/util/useListenToEscapeKey";
 import { useState } from "react";
 import FocusLock from "react-focus-lock";
+import { useIntl } from "react-intl";
 import styled from "styled-components";
 
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
@@ -14,6 +15,7 @@ interface Props {
 }
 
 function Header({ header }: Props): JSX.Element {
+    const intl = useIntl();
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
     const handleToggleMenu = (id: string) => {
@@ -35,7 +37,15 @@ function Header({ header }: Props): JSX.Element {
                             </Link>
                             {item.node.childNodes.length > 0 && (
                                 <>
-                                    <ToggleSubLevelNavigationButton onClick={() => handleToggleMenu(item.id)}>
+                                    <ToggleSubLevelNavigationButton
+                                        aria-label={intl.formatMessage(
+                                            { id: "header.subMenu.ariaLabel", defaultMessage: "Submenu of {name}" },
+                                            { name: item.node.name },
+                                        )}
+                                        aria-controls={item.node.id}
+                                        aria-expanded={openMenuId === item.id}
+                                        onClick={() => handleToggleMenu(item.id)}
+                                    >
                                         <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
                                     </ToggleSubLevelNavigationButton>
 
