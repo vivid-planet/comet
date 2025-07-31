@@ -1,12 +1,12 @@
 import { Error } from "@comet/admin-icons";
-import { InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
+import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
+import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     noOptionsLabel?: ReactNode;
@@ -100,6 +100,12 @@ export const FinalFormSelect = <T,>({
         );
     }
 
+    const showLoadingMessage = loading === true && options.length === 0 && loadingError == null;
+    const showLinearProgress = loading === true && !showLoadingMessage;
+    const showOptions = options.length > 0 && loadingError == null;
+    const showError = loadingError != null && !loading;
+    const showNoOptions = loading === false && loadingError == null && options.length === 0;
+
     return (
         <Select
             {...selectProps}
@@ -127,7 +133,8 @@ export const FinalFormSelect = <T,>({
                 }
             }}
         >
-            {loading && (
+            <LinearLoadingContainer>{showLinearProgress && <LinearProgress />}</LinearLoadingContainer>
+            {showLoadingMessage && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
                 </MenuItemDisabledOverrideOpacity>
@@ -147,18 +154,18 @@ export const FinalFormSelect = <T,>({
                     </MenuItem>
                 ))}
 
-            {loading === false && loadingError == null && options.length === 0 && (
+            {showNoOptions && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {noOptionsLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
-            {loading === false && loadingError != null && (
+            {showError && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {errorLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
 
-            {!loading &&
+            {showOptions &&
                 options.map((option: T) => (
                     <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
                         {getOptionLabel(option)}
