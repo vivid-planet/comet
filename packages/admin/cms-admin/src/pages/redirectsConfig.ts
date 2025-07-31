@@ -5,7 +5,7 @@ export interface RedirectsConfig {
     scopeParts?: string[];
 }
 
-export function useRedirectsConfig(): RedirectsConfig {
+function useRedirectsConfig(): RedirectsConfig {
     const cometConfig = useCometConfig();
 
     if (!cometConfig.redirects) {
