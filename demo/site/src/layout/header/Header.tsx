@@ -119,10 +119,17 @@ const ReturnButton = styled.button`
     left: 0;
     padding-left: 10px;
     pointer-events: none;
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    width: 1px;
 
     &:focus-visible {
         opacity: 1;
         pointer-events: auto;
+        width: 100%;
+        height: auto;
+        clip-path: none;
     }
 `;
 
