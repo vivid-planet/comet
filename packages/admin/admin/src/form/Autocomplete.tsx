@@ -32,6 +32,11 @@ export const FinalFormAutocomplete = <
     loading = false,
     isAsync = false,
     clearable,
+    loadingText = (
+        <Typography variant="body2" sx={{ color: "text.primary" }}>
+            <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
+        </Typography>
+    ),
     popupIcon = <ChevronDown />,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
@@ -40,11 +45,7 @@ export const FinalFormAutocomplete = <
             popupIcon={popupIcon}
             disableClearable
             loading={loading}
-            loadingText={
-                <Typography variant="body2" sx={{ color: "text.primary" }}>
-                    <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
-                </Typography>
-            }
+            loadingText={loadingText}
             isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
                 return option === value;
