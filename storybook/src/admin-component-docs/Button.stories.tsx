@@ -12,6 +12,7 @@ type Story = StoryObj<typeof Button>;
 const meta: Meta<typeof Button> = {
     component: Button,
     title: "Component Docs/Button",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {

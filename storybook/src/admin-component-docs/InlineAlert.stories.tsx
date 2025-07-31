@@ -11,6 +11,7 @@ type Story = StoryObj<typeof InlineAlert>;
 const meta: Meta<typeof InlineAlert> = {
     component: InlineAlert,
     title: "Component Docs/InlineAlert",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
