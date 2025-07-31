@@ -1,5 +1,9 @@
+import { gql, useApolloClient } from "@apollo/client";
 import { Alert, AsyncAutocompleteField, FinalForm } from "@comet/admin";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
+
+import type { Manufacturer } from "../../../.storybook/mocks/handlers";
+import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
 type Story = StoryObj<typeof AsyncAutocompleteField>;
 const config: Meta<typeof AsyncAutocompleteField> = {
@@ -195,6 +199,76 @@ export const LongLoading: Story = {
                                 }}
                                 name="department"
                                 label="Department"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    if (typeof option === "string") {
+                                        return option;
+                                    }
+                                    return option.label;
+                                }}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const AsyncAutocompleteLoadingDataFromApi: Story = {
+    decorators: [apolloStoryDecorator("/graphql")],
+
+    render: () => {
+        const client = useApolloClient();
+
+        interface FormValues {
+            manufacturer: {
+                id: string;
+                name: string;
+            };
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{}}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncAutocompleteField
+                                loadOptions={async (search) => {
+                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }, { search?: string }>({
+                                        query: gql`
+                                            query Manufacturers($search: String) {
+                                                manufacturers(search: $search) {
+                                                    id
+                                                    name
+                                                }
+                                            }
+                                        `,
+                                        variables: {
+                                            search,
+                                        },
+                                    });
+
+                                    return data.manufacturers.map((manufacturer) => {
+                                        return {
+                                            value: manufacturer.id,
+                                            label: manufacturer.name,
+                                        };
+                                    });
+                                }}
+                                name="manufacturer"
+                                label="Manufacturer"
                                 fullWidth
                                 variant="horizontal"
                                 getOptionLabel={(option) => {
