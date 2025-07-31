@@ -1,5 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Alert, AsyncAutocompleteField, FinalForm } from "@comet/admin";
+import { WarningSolid } from "@comet/admin-icons";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import type { Manufacturer } from "../../../.storybook/mocks/handlers";
@@ -277,6 +278,114 @@ export const AsyncAutocompleteLoadingDataFromApi: Story = {
                                     }
                                     return option.label;
                                 }}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const ErrorLoadingOptions: Story = {
+    render: () => {
+        interface FormValues {
+            department: {
+                label: string;
+                value: string;
+            };
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{
+                    department: allOptions[0],
+                }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncAutocompleteField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                }}
+                                name="department"
+                                label="Department"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    if (typeof option === "string") {
+                                        return option;
+                                    }
+                                    return option.label;
+                                }}
+                            />
+
+                            <Alert title="FormState">
+                                <pre>{JSON.stringify(values, null, 2)}</pre>
+                            </Alert>
+                        </>
+                    );
+                }}
+            </FinalForm>
+        );
+    },
+};
+
+export const ErrorLoadingOptionsWithCustomErrorLabel: Story = {
+    render: () => {
+        interface FormValues {
+            department: {
+                label: string;
+                value: string;
+            };
+        }
+        return (
+            <FinalForm<FormValues>
+                initialValues={{
+                    department: allOptions[0],
+                }}
+                mode="edit"
+                onSubmit={() => {
+                    // not handled
+                }}
+                subscription={{ values: true }}
+            >
+                {({ values }) => {
+                    return (
+                        <>
+                            <AsyncAutocompleteField
+                                loadOptions={async () => {
+                                    // simulate loading
+                                    await new Promise((resolve) => setTimeout(resolve, 500));
+                                    throw Error("Error loading options");
+                                }}
+                                name="department"
+                                label="Department"
+                                fullWidth
+                                variant="horizontal"
+                                getOptionLabel={(option) => {
+                                    if (typeof option === "string") {
+                                        return option;
+                                    }
+                                    return option.label;
+                                }}
+                                errorLabel={
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "black" }}>
+                                        <WarningSolid color="error" />
+                                        Error loading options
+                                    </div>
+                                }
                             />
 
                             <Alert title="FormState">
