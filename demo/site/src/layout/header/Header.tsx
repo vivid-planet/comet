@@ -2,7 +2,7 @@
 
 import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useListenToEscapeKey } from "@src/util/useListenToEscapeKey";
-import { useState } from "react";
+import { useId, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { useIntl } from "react-intl";
 import styled from "styled-components";
@@ -17,6 +17,7 @@ interface Props {
 function Header({ header }: Props): JSX.Element {
     const intl = useIntl();
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+    const sublevelMenuId = useId();
 
     const handleToggleMenu = (id: string) => {
         setOpenMenuId(openMenuId === id ? null : id);
@@ -42,7 +43,7 @@ function Header({ header }: Props): JSX.Element {
                                             { id: "header.subMenu.ariaLabel", defaultMessage: "Submenu of {name}" },
                                             { name: item.node.name },
                                         )}
-                                        aria-controls={item.node.id}
+                                        aria-controls={sublevelMenuId}
                                         aria-expanded={openMenuId === item.id}
                                         onClick={() => handleToggleMenu(item.id)}
                                     >
