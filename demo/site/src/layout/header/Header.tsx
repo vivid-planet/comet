@@ -108,9 +108,11 @@ const ReturnButton = styled.button`
     right: 0;
     left: 0;
     padding-left: 10px;
+    pointer-events: none;
 
     &:focus-visible {
         opacity: 1;
+        pointer-events: auto;
     }
 `;
 
