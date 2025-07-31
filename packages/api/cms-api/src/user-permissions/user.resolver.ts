@@ -4,11 +4,18 @@ import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { AbstractAccessControlService } from "./access-control.service";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { ContentScopeFilter } from "./dto/content-scope-filter.input";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs, PermissionFilter } from "./dto/paginated-user-list";
 import { UserPermissionsUser } from "./dto/user";
 import { User } from "./interfaces/user";
 import { UserPermissionsService } from "./user-permissions.service";
+
+type Filter<T> = {
+    isAnyOf?: Array<T>;
+    equal?: T;
+    notEqual?: T;
+};
 
 @ObjectType()
 class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsUser) {}
@@ -26,12 +33,14 @@ export class UserResolver {
     @Query(() => UserPermissionPaginatedUserList)
     async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionPaginatedUserList> {
         const permissionAndFilters = args.filter?.and?.filter((f) => f.permission).map((f) => f.permission) as PermissionFilter[];
+        const scopeAndFilters = args.filter?.and?.filter((f) => f.scope).map((f) => f.scope) as ContentScopeFilter[];
         const permissionOrFilters = args.filter?.or?.filter((f) => f.permission).map((f) => f.permission) as PermissionFilter[];
-        if (permissionAndFilters && permissionOrFilters) {
+        const scopeOrFilters = args.filter?.or?.filter((f) => f.scope).map((f) => f.scope) as ContentScopeFilter[];
+        if ((permissionAndFilters || scopeAndFilters) && (permissionOrFilters || scopeOrFilters)) {
             throw new Error("You cannot use both 'and' and 'or' permission filters at the same time.");
         }
-        if (permissionAndFilters && permissionAndFilters.length > 0) {
-            await this.userService.warmupHasPermissionCache();
+        if ((permissionAndFilters && permissionAndFilters.length > 0) || (scopeAndFilters && scopeAndFilters.length > 0)) {
+            await this.userService.warmupCache();
             // If a permission filter is provided, we need to get all users and filter them
             const filteredUsers: User[] = [];
             let offset = 0;
@@ -39,7 +48,10 @@ export class UserResolver {
             do {
                 [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
                 for (let i = 0; i < users.length; i++) {
-                    if (await this.permissionAndFiltersApplies(users[i], permissionAndFilters)) {
+                    if (
+                        (await this.andFiltersApply(permissionAndFilters, (filter) => this.userService.hasPermission(users[i], filter))) &&
+                        (await this.andFiltersApply(scopeAndFilters, (filter) => this.userService.hasContentScope(users[i], filter)))
+                    ) {
                         filteredUsers.push(users[i]);
                     }
                 }
@@ -47,11 +59,11 @@ export class UserResolver {
             } while (users.length > 0);
             return new UserPermissionPaginatedUserList(filteredUsers.slice(args.offset, args.offset + args.limit), filteredUsers.length);
         } else if (permissionOrFilters && permissionOrFilters.length > 0) {
-            await this.userService.warmupHasPermissionCache();
+            await this.userService.warmupCache();
             const matchedUsers = new Set<User>();
             let users: User[] = [];
-            // Add all users that match other than permission filters
-            if (args.filter?.or?.some((f) => !f.permission)) {
+            // Add all users that match other than permission and scope filters
+            if (args.filter?.or?.some((f) => !f.permission && !f.scope)) {
                 let offset = 0;
                 do {
                     [users] = await this.userService.findUsers({ filter: args.filter, sort: args.sort, offset, limit: 100 });
@@ -66,7 +78,10 @@ export class UserResolver {
             do {
                 [users] = await this.userService.findUsers({ sort: args.sort, offset, limit: 100 });
                 for (let i = 0; i < users.length; i++) {
-                    if (await this.permissionOrFiltersApplies(users[i], permissionOrFilters)) {
+                    if (
+                        (await this.orFiltersApply(permissionOrFilters, (filter) => this.userService.hasPermission(users[i], filter))) ||
+                        (await this.orFiltersApply(scopeOrFilters, (filter) => this.userService.hasContentScope(users[i], filter)))
+                    ) {
                         matchedUsers.add(users[i]);
                     }
                 }
@@ -79,12 +94,12 @@ export class UserResolver {
         }
     }
 
-    async permissionAndFiltersApplies(user: User, filters: PermissionFilter[]): Promise<boolean> {
+    async andFiltersApply<T>(filters: Filter<T>[], callback: (filter: Array<T>) => Promise<boolean>): Promise<boolean> {
         for (const filter of filters) {
             if (
-                (filter.equal && !(await this.userService.hasPermission(user, filter.equal))) ||
-                (filter.isAnyOf && !(await this.userService.hasPermission(user, filter.isAnyOf))) ||
-                (filter.notEqual && (await this.userService.hasPermission(user, filter.notEqual)))
+                (filter.equal && !(await callback([filter.equal]))) ||
+                (filter.isAnyOf && !(await callback(filter.isAnyOf))) ||
+                (filter.notEqual && (await callback([filter.notEqual])))
             ) {
                 return false;
             }
@@ -92,12 +107,12 @@ export class UserResolver {
         return true;
     }
 
-    async permissionOrFiltersApplies(user: User, filters: PermissionFilter[]): Promise<boolean> {
+    async orFiltersApply<T>(filters: Filter<T>[], callback: (filter: Array<T>) => Promise<boolean>): Promise<boolean> {
         for (const filter of filters) {
             if (
-                (filter.equal && (await this.userService.hasPermission(user, filter.equal))) ||
-                (filter.isAnyOf && (await this.userService.hasPermission(user, filter.isAnyOf))) ||
-                (filter.notEqual && !(await this.userService.hasPermission(user, filter.notEqual)))
+                (filter.equal && (await callback([filter.equal]))) ||
+                (filter.isAnyOf && (await callback(filter.isAnyOf))) ||
+                (filter.notEqual && !(await callback([filter.notEqual])))
             ) {
                 return true;
             }
