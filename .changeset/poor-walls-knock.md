@@ -1,10 +1,11 @@
 ---
 "@comet/admin": minor
+"@comet/admin-date-time": minor
 ---
 
 Add new `Future_DatePicker` and `Future_DatePickerField` components
 
-These will replace the existing `DatePicker`, `FinalFormDatePicker` and `DateField` components from `@comet/admin-date-time` as a mostly drop-in replacement.
+These will replace the existing `DatePicker`, `FinalFormDatePicker` and `DateField` components from `@comet/admin-date-time` as a mostly drop-in replacement, the existing components have been deprecated.
 
 The new components are based on the `@mui/x-date-pickers` package, so you can refer to the [MUI documentation](https://v7.mui.com/x/react-date-pickers/date-picker/) for more details.
 Unlike the MUI components, these components use a `string` (`YYYY-MM-DD`) as the value, instead of `Date`, just like the existing components from `@comet/admin-date-time`.

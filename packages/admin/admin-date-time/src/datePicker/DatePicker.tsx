@@ -23,6 +23,9 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     slotProps?: SlotProps;
 }
 
+/**
+ * @deprecated `DatePicker` from `@comet/admin-date-time` will be replaced by `DatePicker` (currently `Future_DatePicker`) from `@comet/admin` in a future major release.
+ */
 export const DatePicker = (inProps: DatePickerProps) => {
     const {
         onChange,
