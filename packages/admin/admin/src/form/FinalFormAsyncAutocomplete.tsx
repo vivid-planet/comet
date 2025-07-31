@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { FinalFormAutocomplete, type FinalFormAutocompleteProps } from "./Autocomplete";
 import { useAsyncAutocompleteOptionsProps } from "./useAsyncAutocompleteOptionsProps";
 
@@ -8,6 +10,7 @@ export interface FinalFormAsyncAutocompleteProps<
     FreeSolo extends boolean | undefined,
 > extends FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo> {
     loadOptions: () => Promise<T[]>;
+    errorLabel?: ReactNode;
 }
 
 /**
