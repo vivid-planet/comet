@@ -12,9 +12,9 @@ const getIsoDateString = (date: Date) => {
     return format(date, "yyyy-MM-dd");
 };
 
-export type DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment" | "openPickerButton";
+export type Future_DatePickerClassKey = "root" | "clearInputAdornment" | "readOnlyAdornment" | "openPickerAdornment" | "openPickerButton";
 
-export type DatePickerProps = ThemedComponentBaseProps<{
+export type Future_DatePickerProps = ThemedComponentBaseProps<{
     root: typeof MuiDatePicker<Date, true>;
     clearInputAdornment: typeof CometClearInputAdornment;
     readOnlyAdornment: typeof InputAdornment;
@@ -45,7 +45,7 @@ const getDateValue = (value: string | undefined): Date | null => {
     return date;
 };
 
-export const DatePicker = (inProps: DatePickerProps) => {
+export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
     const {
         iconMapping = {},
         fullWidth,
@@ -58,7 +58,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminDatePicker",
+        name: "CometAdminFutureDatePicker",
     });
     const [open, setOpen] = useState(false);
     const dateValue = getDateValue(stringValue);
@@ -133,8 +133,8 @@ export const DatePicker = (inProps: DatePickerProps) => {
     );
 };
 
-const Root = createComponentSlot(MuiDatePicker<Date, true>)<DatePickerClassKey>({
-    componentName: "DatePicker",
+const Root = createComponentSlot(MuiDatePicker<Date, true>)<Future_DatePickerClassKey>({
+    componentName: "Future_DatePicker",
     slotName: "root",
 })(css`
     .${inputLabelClasses.root} {
@@ -145,46 +145,46 @@ const Root = createComponentSlot(MuiDatePicker<Date, true>)<DatePickerClassKey>(
         }
     }
 
-    .MuiPickersInputBase-root.Mui-readOnly .CometAdminDatePicker-openPickerButton:disabled {
+    .MuiPickersInputBase-root.Mui-readOnly .CometAdminFutureDatePicker-openPickerButton:disabled {
         color: inherit;
     }
 `);
 
-const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<DatePickerClassKey>({
-    componentName: "DatePicker",
+const ClearInputAdornment = createComponentSlot(CometClearInputAdornment)<Future_DatePickerClassKey>({
+    componentName: "Future_DatePicker",
     slotName: "clearInputAdornment",
 })();
 
-const ReadOnlyAdornment = createComponentSlot(InputAdornment)<DatePickerClassKey>({
-    componentName: "DatePicker",
+const ReadOnlyAdornment = createComponentSlot(InputAdornment)<Future_DatePickerClassKey>({
+    componentName: "Future_DatePicker",
     slotName: "readOnlyAdornment",
 })(css`
     font-size: 12px;
 `);
 
-const OpenPickerAdornment = createComponentSlot(InputAdornment)<DatePickerClassKey>({
-    componentName: "DatePicker",
+const OpenPickerAdornment = createComponentSlot(InputAdornment)<Future_DatePickerClassKey>({
+    componentName: "Future_DatePicker",
     slotName: "openPickerAdornment",
 })();
 
-const OpenPickerButton = createComponentSlot(IconButton)<DatePickerClassKey>({
-    componentName: "DatePicker",
+const OpenPickerButton = createComponentSlot(IconButton)<Future_DatePickerClassKey>({
+    componentName: "Future_DatePicker",
     slotName: "openPickerButton",
 })();
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminDatePicker: DatePickerProps;
+        CometAdminFutureDatePicker: Future_DatePickerProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminDatePicker: DatePickerClassKey;
+        CometAdminFutureDatePicker: Future_DatePickerClassKey;
     }
 
     interface Components {
-        CometAdminDatePicker?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePicker"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePicker"];
+        CometAdminFutureDatePicker?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFutureDatePicker"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFutureDatePicker"];
         };
     }
 }

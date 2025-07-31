@@ -2,7 +2,7 @@
 "@comet/admin": minor
 ---
 
-Add new `DatePicker` and `DatePickerField` components
+Add new `Future_DatePicker` and `Future_DatePickerField` components
 
 These will replace the existing `DatePicker`, `FinalFormDatePicker` and `DateField` components from `@comet/admin-date-time` as a mostly drop-in replacement.
 
@@ -14,7 +14,7 @@ Unlike the MUI components, these components use a `string` (`YYYY-MM-DD`) as the
 ```diff
 -import { FieldContainer } from "@comet/admin";
 -import { DatePicker } from "@comet/admin-date-time";
-+import { DatePicker, FieldContainer } from "@comet/admin";
++import { Future_DatePicker as DatePicker, FieldContainer } from "@comet/admin";
  import { useState } from "react";
 
  export const Example = () => {
@@ -32,7 +32,7 @@ Unlike the MUI components, these components use a `string` (`YYYY-MM-DD`) as the
 
 ```diff
 -import { DateField } from "@comet/admin-date-time";
-+import { DatePickerField } from "@comet/admin";
++import { Future_DatePickerField as DatePickerField } from "@comet/admin";
  import { Form } from "react-final-form";
 
  type Values = {
