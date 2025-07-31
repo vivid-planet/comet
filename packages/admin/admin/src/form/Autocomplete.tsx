@@ -1,6 +1,7 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
+import { Autocomplete, type AutocompleteProps, type AutocompleteRenderInputParams, InputBase, Typography } from "@mui/material";
 import { type FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
@@ -38,6 +39,12 @@ export const FinalFormAutocomplete = <
         <Autocomplete
             popupIcon={popupIcon}
             disableClearable
+            loading={loading}
+            loadingText={
+                <Typography variant="body2" sx={{ color: "text.primary" }}>
+                    <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
+                </Typography>
+            }
             isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
                 return option === value;
@@ -54,17 +61,10 @@ export const FinalFormAutocomplete = <
                     {...params}
                     {...params.InputProps}
                     endAdornment={
-                        loading || clearable ? (
-                            <>
-                                {loading && <CircularProgress color="inherit" size={16} />}
-                                {clearable && (
-                                    <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
-                                )}
-                                {params.InputProps.endAdornment}
-                            </>
-                        ) : (
-                            params.InputProps.endAdornment
-                        )
+                        <>
+                            {clearable && <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />}
+                            {params.InputProps.endAdornment}
+                        </>
                     }
                 />
             )}
