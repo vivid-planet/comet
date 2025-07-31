@@ -260,3 +260,68 @@ export const ThreeDimensions = function () {
 };
 
 ThreeDimensions.storyName = "Three dimensions";
+
+export const GroupingWithOptionalScopeParts = function () {
+    const [value, setValue] = useState({ country: "at" });
+    return (
+        <ContentScopeSelect
+            value={value}
+            onChange={(value: { country: string; company?: string }) => {
+                setValue(value);
+            }}
+            options={[
+                {
+                    scope: { country: "at" },
+                    label: { country: "AT Overview" },
+                },
+                {
+                    scope: { country: "de" },
+                    label: { country: "DE Overview" },
+                },
+                {
+                    scope: { country: "at", company: "a-inc" },
+                    label: { country: "Austria", company: "A Inc." },
+                },
+                {
+                    scope: { country: "at", company: "b-inc" },
+                    label: { country: "Austria", company: "B Inc." },
+                },
+                {
+                    scope: { country: "de", company: "a-inc" },
+                    label: { country: "Germany", company: "A Inc." },
+                },
+                {
+                    scope: { country: "de", company: "b-inc" },
+                    label: { country: "Germany", company: "B Inc." },
+                },
+            ]}
+            groupBy="country"
+            searchable
+            renderOption={(option, query, isSelected) => {
+                let text: string;
+                if (option.scope.company === undefined) {
+                    text = option.label?.country ?? option.scope.country;
+                } else {
+                    text = option.label?.company ?? option.scope.company;
+                }
+
+                const matches = findTextMatches(text, query);
+
+                return (
+                    <>
+                        <ListItemIcon>
+                            <Domain />
+                        </ListItemIcon>
+                        <ListItemText
+                            slotProps={{ primary: { variant: isSelected ? "subtitle2" : "body2" } }}
+                            sx={{ margin: 0 }}
+                            primary={<MarkedMatches text={text} matches={matches} />}
+                        />
+                    </>
+                );
+            }}
+        />
+    );
+};
+
+GroupingWithOptionalScopeParts.storyName = "Grouping with optional scope parts";

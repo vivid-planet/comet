@@ -1,9 +1,16 @@
+import { type Permission } from "../userPermissions/hooks/currentUser";
 import { type MasterMenuData } from "./MasterMenu";
 import { useRoutePropsFromMasterMenuData } from "./MasterMenuRoutes";
 
 jest.mock("../userPermissions/hooks/currentUser", () => ({
     useUserPermissionCheck: () => (permission: string) => permission === "allowed",
 }));
+
+const permissions = {
+    allowed: "allowed" as Permission,
+    disallowed: "disallowed" as Permission,
+    alsoDisallowed: "alsoDisallowed" as Permission,
+};
 
 describe("useRoutePropsFromMasterMenuData", () => {
     it("should include item without requiredPermission", () => {
@@ -28,14 +35,14 @@ describe("useRoutePropsFromMasterMenuData", () => {
                 route: { path: "/allowed" },
                 primary: "Allowed",
                 icon: undefined,
-                requiredPermission: "allowed",
+                requiredPermission: permissions.allowed,
             },
             {
                 type: "route",
                 route: { path: "/disallowed" },
                 primary: "Disallowed",
                 icon: undefined,
-                requiredPermission: "disallowed",
+                requiredPermission: permissions.disallowed,
             },
         ];
 
@@ -50,7 +57,7 @@ describe("useRoutePropsFromMasterMenuData", () => {
                 type: "collapsible",
                 primary: "Allowed",
                 icon: undefined,
-                requiredPermission: "allowed",
+                requiredPermission: permissions.allowed,
                 items: [
                     {
                         type: "route",
@@ -73,7 +80,7 @@ describe("useRoutePropsFromMasterMenuData", () => {
                 type: "collapsible",
                 primary: "Allowed",
                 icon: undefined,
-                requiredPermission: ["allowed", "disallowed"],
+                requiredPermission: [permissions.allowed, permissions.disallowed],
                 items: [
                     {
                         type: "route",
@@ -96,13 +103,13 @@ describe("useRoutePropsFromMasterMenuData", () => {
                 type: "collapsible",
                 primary: "Disallowed",
                 icon: undefined,
-                requiredPermission: "disallowed",
+                requiredPermission: permissions.disallowed,
                 items: [
                     {
                         type: "route",
                         route: { path: "/allowed" },
                         primary: "Allowed",
-                        requiredPermission: "allowed",
+                        requiredPermission: permissions.allowed,
                         icon: undefined,
                     },
                 ],
@@ -120,13 +127,13 @@ describe("useRoutePropsFromMasterMenuData", () => {
                 type: "collapsible",
                 primary: "Disallowed",
                 icon: undefined,
-                requiredPermission: ["disallowed", "alsoDisallowed"],
+                requiredPermission: [permissions.disallowed, permissions.alsoDisallowed],
                 items: [
                     {
                         type: "route",
                         route: { path: "/allowed" },
                         primary: "Allowed",
-                        requiredPermission: "allowed",
+                        requiredPermission: permissions.allowed,
                         icon: undefined,
                     },
                 ],

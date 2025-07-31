@@ -4,6 +4,7 @@ import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
+import { productTypeValues } from "./productTypeValues";
 
 export default defineConfig<GQLProduct>({
     type: "form",
@@ -36,7 +37,7 @@ export default defineConfig<GQLProduct>({
                     label: "Type",
                     required: true,
                     inputType: "radio",
-                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                    values: productTypeValues,
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {

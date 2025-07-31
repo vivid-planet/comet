@@ -1,4 +1,5 @@
 import * as AWS from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import { type SdkError } from "@aws-sdk/types";
 import { createReadStream } from "fs";
 import { Readable } from "stream";
@@ -83,14 +84,32 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
             ContentLength: size,
         };
 
+        let body: NodeJS.ReadableStream | Buffer;
         if (typeof data === "string") {
-            input.Body = createReadStream(data);
+            body = createReadStream(data);
         } else if (Buffer.isBuffer(data)) {
-            input.Body = data;
+            body = data;
         } else {
-            input.Body = Readable.from(data);
+            body = data;
         }
-        await this.client.send(new AWS.PutObjectCommand(input));
+
+        if ("pipe" in body) {
+            const upload = new Upload({
+                client: this.client,
+                params: {
+                    ...input,
+                    Body: Readable.from(body),
+                },
+            });
+            await upload.done();
+        } else {
+            await this.client.send(
+                new AWS.PutObjectCommand({
+                    ...input,
+                    Body: body,
+                }),
+            );
+        }
     }
 
     async getFile(folderName: string, fileName: string): Promise<Readable> {

@@ -24,6 +24,6 @@ export class PageTreeNode extends PageTreeNodeBase {
     category: PageTreeNodeCategory;
 
     @Enum({ items: () => UserGroup })
-    @Field(() => UserGroup, { defaultValue: UserGroup.All })
+    @Field(() => UserGroup, { defaultValue: UserGroup.all })
     userGroup: UserGroup;
 }

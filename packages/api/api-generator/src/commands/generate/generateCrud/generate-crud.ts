@@ -1256,9 +1256,8 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
 
     const generatedFiles: GeneratedFile[] = [];
 
-    const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
+    const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata, generatorOptions);
-    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {
@@ -1330,5 +1329,5 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const crudInput = await generateCrudInput(generatorOptions, metadata);
     const crudResolver = await generateCrudResolver();
 
-    return generatorOptions.create || generatorOptions.update ? [...crudInput, ...crudResolver] : [...crudResolver];
+    return [...crudInput, ...crudResolver];
 }

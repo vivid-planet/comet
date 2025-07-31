@@ -55,7 +55,7 @@ export class RedirectTargetUrlService implements RedirectTargetUrlServiceInterfa
 
                 const scope = news.scope;
                 const baseUrl = this.getSiteUrl(scope);
-                const path = `${await this.predefinedPagesService.predefinedPagePath(PredefinedPageType.News, scope)}/${news.slug}`;
+                const path = `${await this.predefinedPagesService.predefinedPagePath(PredefinedPageType.news, scope)}/${news.slug}`;
 
                 return `${baseUrl}/${scope.language}${path}`;
             }
