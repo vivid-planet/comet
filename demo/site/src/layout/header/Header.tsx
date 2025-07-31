@@ -4,7 +4,7 @@ import { SvgUse } from "@src/common/helpers/SvgUse";
 import { useListenToEscapeKey } from "@src/util/useListenToEscapeKey";
 import { useId, useState } from "react";
 import FocusLock from "react-focus-lock";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import styled from "styled-components";
 
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
@@ -60,7 +60,12 @@ function Header({ header }: Props): JSX.Element {
                                                         </Link>
                                                     </li>
                                                 ))}
-                                                <ReturnButton onClick={() => setOpenMenuId(null)}>Return to {item.node.name}</ReturnButton>
+                                                <ReturnButton onClick={() => setOpenMenuId(null)}>
+                                                    <FormattedMessage
+                                                        id="header.returnButton.returnTo"
+                                                        defaultMessage={`Return to ${item.node.name}`}
+                                                    />
+                                                </ReturnButton>
                                             </SubLevelNavigation>
                                         </FocusLock>
                                     </SubLevelNavigationRoot>
