@@ -35,6 +35,7 @@ type Story = StoryObj<typeof MyComponent>;
 const meta: Meta<typeof MyComponent> = {
     component: MyComponent,
     title: "Component Docs/MyComponent",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
@@ -143,6 +144,7 @@ export const argTypes = {
 const meta: Meta<typeof MyInputComponent> = {
     component: MyInputComponent,
     title: "Component Docs/MyInputComponent",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
@@ -188,6 +190,7 @@ type Story = StoryObj<typeof MyInputComponentField>;
 const meta: Meta<typeof MyInputComponentField> = {
     component: MyInputComponentField,
     title: "Component Docs/MyInputComponentField",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {

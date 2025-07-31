@@ -9,6 +9,7 @@ type Story = StoryObj<typeof Typography>;
 const meta: Meta<typeof Typography> = {
     component: Typography,
     title: "Component Docs/Typography",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {

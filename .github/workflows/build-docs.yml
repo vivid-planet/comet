@@ -4,12 +4,14 @@ on:
     pull_request:
         paths:
             - docs/**
+            - storybook/**
         branches:
             - main
             - next
     push:
         paths:
             - docs/**
+            - storybook/**
         branches:
             - main
             - next
@@ -33,6 +35,9 @@ jobs:
                   cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
             - run: pnpm install --frozen-lockfile
+
+            - name: Build storybook
+              run: (cd storybook && pnpm run build-storybook)
 
             - name: Build docs
               run: pnpm run build:docs

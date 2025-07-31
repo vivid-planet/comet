@@ -66,6 +66,7 @@ export const argTypes = {
 const meta: Meta<typeof ColorPicker> = {
     component: ColorPicker,
     title: "Component Docs/ColorPicker",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {

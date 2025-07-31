@@ -10,6 +10,7 @@ type Story = StoryObj<typeof FieldSet>;
 const meta: Meta<typeof FieldSet> = {
     component: FieldSet,
     title: "Component Docs/FieldSet",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {

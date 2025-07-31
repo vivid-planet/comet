@@ -14,6 +14,7 @@ type Story = StoryObj<typeof ColorField>;
 const meta: Meta<typeof ColorField> = {
     component: ColorField,
     title: "Component Docs/ColorField",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
