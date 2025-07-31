@@ -144,9 +144,11 @@ const ToggleSubLevelNavigationButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 
     &:focus-visible {
         opacity: 1;
+        pointer-events: auto;
     }
 `;
 
