@@ -100,7 +100,6 @@ const SubLevelNavigation = styled.ol`
     padding: 5px;
     background-color: white;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
 `;
 
 const TopLevelLinkContainer = styled.li`
