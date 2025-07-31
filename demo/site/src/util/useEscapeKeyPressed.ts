@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const useListenToEscapeKey = (keyPressed: () => void) => {
+export const useEscapeKeyPressed = (keyPressed: () => void) => {
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") keyPressed();

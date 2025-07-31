@@ -1,7 +1,7 @@
 "use client";
 
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { useListenToEscapeKey } from "@src/util/useListenToEscapeKey";
+import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
 import { useId, useState } from "react";
 import FocusLock from "react-focus-lock";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -23,7 +23,7 @@ function Header({ header }: Props): JSX.Element {
         setOpenMenuId(openMenuId === id ? null : id);
     };
 
-    useListenToEscapeKey(() => {
+    useEscapeKeyPressed(() => {
         setOpenMenuId(null);
     });
 
