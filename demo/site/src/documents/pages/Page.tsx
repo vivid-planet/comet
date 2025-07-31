@@ -99,6 +99,11 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
                 { [scope.language]: canonicalUrl } as Record<string, string>,
             ),
         },
+        ...(document.seo.structuredData && {
+            other: {
+                "application/ld+json": document.seo.structuredData,
+            },
+        }),
     };
 }
 
