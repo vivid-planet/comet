@@ -50,7 +50,7 @@ function Header({ header }: Props): JSX.Element {
                                         <SvgUse href="/assets/icons/chevron-down.svg#root" width={16} height={16} />
                                     </ToggleSubLevelNavigationButton>
 
-                                    <SubLevelNavigationRoot $isOpen={openMenuId === item.id}>
+                                    <SubLevelNavigationRoot $isOpen={openMenuId === item.id} id={sublevelMenuId}>
                                         <FocusLock disabled={openMenuId !== item.id}>
                                             <SubLevelNavigation>
                                                 {item.node.childNodes.map((node) => (
