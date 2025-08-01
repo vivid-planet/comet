@@ -1,3 +1,6 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 import eslintConfigReact from "@comet/eslint-config/react.js";
 import cometPlugin from "@comet/eslint-plugin";
 
@@ -28,6 +31,7 @@ const config = [
             "@comet/no-private-sibling-import": ["error", ["gql", "sc", "styles", "generated"]],
         },
     },
+    ...storybook.configs["flat/recommended"],
 ];
 
 export default config;

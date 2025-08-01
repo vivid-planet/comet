@@ -208,7 +208,14 @@ module.exports = {
         },
         {
             name: "storybook",
+            group: ["storybook"],
             script: "pnpm --filter comet-storybook run storybook",
+        },
+        {
+            name: "storybook comet-admin",
+            script: "pnpm --filter @comet/admin run storybook",
+            group: ["storybook"],
+            waitOn: waitOnPackages("@comet/admin-icons"),
         },
     ],
 };
