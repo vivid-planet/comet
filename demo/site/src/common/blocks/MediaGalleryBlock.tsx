@@ -8,7 +8,9 @@ import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";
 import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
+
+import { BasicSwiper } from "../components/BasicSwiper";
 
 type MediaGalleryBlockProps = PropsWithData<MediaGalleryBlockData>;
 
@@ -78,7 +80,7 @@ const MediaCaption = styled(Typography)`
     }
 `;
 
-const SwiperWrapper = styled(Swiper)<{ $aspectRatioHorizontal: string; $aspectRatioVertical: string }>`
+const SwiperWrapper = styled(BasicSwiper)<{ $aspectRatioHorizontal: string; $aspectRatioVertical: string }>`
     --swiper-button-size: 16px;
 
     .swiper-button-prev,
