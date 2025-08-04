@@ -128,5 +128,5 @@
         }
     ],
     "labels": ["dependencies"],
-    "baseBranches": ["next"]
+    "baseBranches": ["main"]
 }
