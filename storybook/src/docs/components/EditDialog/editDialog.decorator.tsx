@@ -1,6 +1,6 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { RouterMemoryRouter } from "@comet/admin";
-import { type Decorator } from "@storybook/react-webpack5";
+import { type Decorator } from "@storybook/react-vite";
 
 export function editDialogDecorator(): Decorator {
     return (Story) => {

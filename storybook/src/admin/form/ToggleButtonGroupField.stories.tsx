@@ -17,7 +17,7 @@ import {
 } from "@comet/admin-icons";
 import { Box, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type Story = StoryObj<typeof ToggleButtonGroupField>;
 const config: Meta<typeof ToggleButtonGroupField> = {
