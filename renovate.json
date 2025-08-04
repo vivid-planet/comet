@@ -120,7 +120,8 @@
         },
         {
             "matchDepTypes": ["peerDependencies"],
-            "rangeStrategy": "widen"
+            "matchUpdateTypes": ["major"],
+            "baseBranches": ["next"]
         },
         {
             "groupName": "SWC",
