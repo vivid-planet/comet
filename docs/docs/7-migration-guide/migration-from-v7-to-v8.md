@@ -1925,7 +1925,7 @@ If your application uses internationalization or a language other than English (
 
 :::
 
-### Add new `redirectsConfig` to use in `createRedirectsPage`.
+### Move redirects `scopeParts` to `CometConfigProvider`.
 
 Previously `scopeParts` were passed to `createRedirectsPage`. Those need to be removed:
 
