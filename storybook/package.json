@@ -51,7 +51,7 @@
         "@comet/admin-babel-preset": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@faker-js/faker": "^9.9.0",
-        "@graphql-mocks/network-msw": "^0.3.0",
+        "@graphql-mocks/network-msw": "^0.4.4",
         "@storybook/addon-docs": "^9.0.16",
         "@storybook/addon-webpack5-compiler-babel": "^3.0.6",
         "@storybook/react": "^9.0.16",
