@@ -51,6 +51,10 @@ type InputBaseFieldConfig = {
 };
 
 export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
+function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
+    return arg && arg.type === "component";
+}
+
 export type StaticSelectValue = { value: string; label: string } | string;
 
 export type FormFieldConfig<T> = (
@@ -74,7 +78,42 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?:
+              | {
+                    /**
+                     * Filter by value of field in current form
+                     */
+                    type: "field";
+                    /**
+                     * Name of the field in current form, that will be used to filter the query
+                     */
+                    fieldName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    gqlName?: string;
+                }
+              | {
+                    /**
+                     * Filter by a prop passed into the form, this prop will be generated
+                     */
+                    type: "formProp";
+                    /**
+                     * Name of the prop generated for this form
+                     */
+                    propName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    gqlName?: string;
+                };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
@@ -90,7 +129,7 @@ export type FormFieldConfig<T> = (
 };
 
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
-    return !isFormLayoutConfig(arg);
+    return !isFormLayoutConfig(arg) && !isComponentFormFieldConfig(arg);
 }
 
 type OptionalNestedFieldsConfig<T> = {
