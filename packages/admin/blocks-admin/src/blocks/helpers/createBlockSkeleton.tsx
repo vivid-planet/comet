@@ -57,6 +57,7 @@ function common<InputApi, State, OutputApi>(): Omit<
 
             return [];
         },
+        icon: () => undefined,
     };
 }
 

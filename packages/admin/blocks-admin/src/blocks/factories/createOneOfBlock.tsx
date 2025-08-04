@@ -446,6 +446,16 @@ export const createOneOfBlock = <T extends boolean = boolean>(
             }
         },
 
+        icon: (state) => {
+            const { block, state: blockState } = getActiveBlock(state);
+
+            if (block != null) {
+                return block.icon?.(blockState.props);
+            } else {
+                return undefined;
+            }
+        },
+
         extractTextContents: (state, options) => {
             const includeInvisibleContent = options?.includeInvisibleContent ?? false;
 

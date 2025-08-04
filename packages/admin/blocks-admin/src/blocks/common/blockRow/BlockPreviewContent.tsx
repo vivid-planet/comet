@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 import { useBlockContext } from "../../../context/useBlockContext";
-import { BlockInterface, isPreviewContentIconRule, isPreviewContentImageRule, isPreviewContentTextRule } from "../../types";
+import { BlockInterface, isPreviewContentImageRule, isPreviewContentTextRule } from "../../types";
 import * as sc from "./BlockPreviewContent.sc";
 import { StackedImages } from "./image/StackedImages";
 
@@ -33,7 +33,7 @@ export function BlockPreviewContent(props: BlockPreviewContentProps): JSX.Elemen
         })
         .slice(0, TEXTS_LIMIT);
     const images = content.filter(isPreviewContentImageRule);
-    const icon = content.filter(isPreviewContentIconRule)[0]?.content;
+    const icon = props.block.icon?.(state);
 
     return (
         <sc.Root>

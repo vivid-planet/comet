@@ -91,6 +91,7 @@ export interface BlockMethods<
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
     resolveDependencyPath: (state: State, jsonPath: string) => string;
     extractTextContents?: (state: State, options: { includeInvisibleContent: boolean }) => string[];
+    icon?: (state: State) => ReactNode;
 }
 
 export interface AnonymousBlockInterface<

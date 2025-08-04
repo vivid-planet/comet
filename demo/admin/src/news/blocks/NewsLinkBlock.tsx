@@ -26,6 +26,7 @@ const NewsLinkBlock: BlockInterface<NewsLinkBlockData, State, NewsLinkBlockInput
         ...(state.id !== undefined ? [{ type: "text" as const, content: state.id }] : []),
         { type: "icon", content: <FileData color="primary" /> },
     ],
+    icon: (state) => <FileData color="primary" />,
 };
 
 export { NewsLinkBlock };

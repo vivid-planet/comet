@@ -22,6 +22,7 @@ const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {
         ...(state.targetPage?.path ? [{ type: "text" as const, content: state.targetPage.path }] : []),
         { type: "icon", content: <Document color="primary" /> },
     ],
+    icon: (state) => state.targetPage && <Document color="primary" />,
     dynamicDisplayName: (state) => state.targetPage?.name ?? InternalLinkBlock.displayName,
 };
 
@@ -31,6 +32,7 @@ const RedirectsExternalLinkBlock: typeof ExternalLinkBlock = {
         ...(state.targetUrl ? [{ type: "text" as const, content: ExternalLinkBlock.displayName }] : []),
         { type: "icon", content: <LinkExternal color="primary" /> },
     ],
+    icon: (state) => state.targetUrl && <LinkExternal color="primary" />,
     dynamicDisplayName: (state) => state.targetUrl ?? ExternalLinkBlock.displayName,
 };
 
