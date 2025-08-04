@@ -23,15 +23,19 @@ export const FooterContentBlock = withPreview(
                         </TopContainer>
                         <HorizontalLine />
                         <LinkCopyrightWrapper>
-                            {linkList.blocks.length > 0 && (
-                                <LinksWrapper>
-                                    {linkList.blocks.map((block) => (
-                                        <LinkText key={block.key} as={LinkBlock} data={block.props.link} variant="p200">
-                                            {block.props.text}
-                                        </LinkText>
-                                    ))}
-                                </LinksWrapper>
-                            )}
+                            <nav>
+                                {linkList.blocks.length > 0 && (
+                                    <LinksWrapper>
+                                        {linkList.blocks.map((block) => (
+                                            <li key={block.key}>
+                                                <LinkText as={LinkBlock} data={block.props.link} variant="p200">
+                                                    {block.props.text}
+                                                </LinkText>
+                                            </li>
+                                        ))}
+                                    </LinksWrapper>
+                                )}
+                            </nav>
                             {copyrightNotice && <CopyrightNotice variant="p200">{copyrightNotice}</CopyrightNotice>}
                         </LinkCopyrightWrapper>
                     </PageLayoutContent>
@@ -120,11 +124,14 @@ const LinkCopyrightWrapper = styled.div`
     }
 `;
 
-const LinksWrapper = styled.div`
+const LinksWrapper = styled.ul`
     display: flex;
     gap: ${({ theme }) => theme.spacing.S500};
     flex-wrap: wrap;
     justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 `;
 
 const CopyrightNotice = styled(Typography)`

@@ -46,6 +46,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
 }
 function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props) {
     const { scope } = useContentScope();
+    const siteConfig = useSiteConfig({ scope });
 
     //initialPath: path the preview is initialized with; WITHOUT resolvePath called, might be not the path actually used in site
     //doesn't change during navigation within site
@@ -55,11 +56,11 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     //use case for resolvePath: i18n urls, for example `/${scope.language}${path}`;
     //changes during navigation within site (iframe bridge reports new path)
     const [sitePath, setSitePath] = useSearchState("sitePath", (v) => {
-        if (v) {
-            return v;
-        } else {
-            return resolvePath ? resolvePath(initialPath, scope) : initialPath;
+        if (!v) {
+            v = resolvePath ? resolvePath(initialPath, scope) : initialPath;
         }
+        const url = new URL(v, siteConfig.url); // prevents phishing attacks
+        return url.pathname;
     });
 
     //iframePath: path set for iframe
@@ -77,8 +78,6 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
     const [linkToOpen, setLinkToOpen] = useState<ExternalLinkBlockData | undefined>(undefined);
-
-    const siteConfig = useSiteConfig({ scope });
 
     const intl = useIntl();
 

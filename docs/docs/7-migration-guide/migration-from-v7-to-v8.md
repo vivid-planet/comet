@@ -2205,3 +2205,66 @@ This rule ensures that TypeScript type-only imports are explicitly marked with i
   Using import type ensures that types do not introduce unintended runtime dependencies.
 
 </details>
+
+---
+
+### **Typed Permissions System**
+
+Search for all `@CrudGenerator` or `@RequiredPermission` decorators and move all permissions into the AppPermission enum. Add also module augmentation for `PermissionOverrides` to include the new `AppPermission` enum.
+
+1. Create a new `AppPermission` enum:
+
+```typescript title="api/src/auth/app-permission.enum.ts"
+export enum AppPermission {
+    news = "news",
+    products = "products",
+    manufacturers = "manufacturers",
+}
+```
+
+2. Add `AppPermission` to `UserPermissionsModule`:
+
+```diff title="api/src/app.module.ts"
+UserPermissionsModule.forRootAsync({
+    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
+        ...
+    }),
+    inject: [UserService, AccessControlService],
+    imports: [authModule],
++   AppPermission,
+}),
+```
+
+3. Create a new file and add module augmentation for `PermissionOverrides`:
+
+```typescript title="api/src/auth/permission.interface.ts"
+import { type AppPermission } from "@src/auth/app-permission.enum";
+
+declare module "@comet/cms-api" {
+    export interface PermissionOverrides {
+        app: AppPermission;
+    }
+}
+```
+
+4. Update all `@CrudGenerator` decorators where required permissions are not defined:
+
+```diff title="api/src/news/entities/news.entity.ts"
+-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
++@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["news"] })
+```
+
+5. Create a new file and add also module augmentation for `PermissionOverrides` with created types from GraphQL Codegen:
+
+```diff title="demo/admin/src/App.tsx"
++import type { GQLPermission } from "@src/graphql.generated";
+...
+declare module "@comet/cms-admin" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface ContentScope extends BaseContentScope {}
++
++   export interface PermissionOverrides {
++       permission: GQLPermission;
++   }
+}
+```

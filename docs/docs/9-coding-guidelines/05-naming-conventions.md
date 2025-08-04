@@ -27,6 +27,8 @@ Entities: Always singular starting with a capital letter (e.g., Product)
 - test (optional)
 - staging
 
+## File/Folder Naming Conventions
+
 |        | API (TLDR: like Nest)                                                                            | ADMIN (TLDR: like MUI/React)                                                                                   | SITE (TLDR: like Next)                                                                                                                                    |
 | ------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Folder | kebab-case<br/><br/>page-tree                                                                    | camelCase<br/><br/>pageTree                                                                                    | camelCase<br/>contentScope                                                                                                                                |
