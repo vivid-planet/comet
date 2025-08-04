@@ -3,7 +3,7 @@ import { mswResolver } from "@graphql-mocks/network-msw";
 import { compareAsc, compareDesc } from "date-fns";
 import { type GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 
 type StringFilter = {
     contains: string;
@@ -206,8 +206,8 @@ const launchesPastPagePaging: GraphQLFieldResolver<unknown, unknown, { page?: nu
     };
 };
 
-const launchesPastRest = http.get("/launches", () => {
-    return Response.json(allLaunches);
+const launchesPastRest = http.get("/launches", (info) => {
+    return HttpResponse.json(allLaunches);
 });
 
 export type Manufacturer = {
