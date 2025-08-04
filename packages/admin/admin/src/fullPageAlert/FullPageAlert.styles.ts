@@ -1,5 +1,7 @@
 import { Card, css, Divider, Typography } from "@mui/material";
 
+import background1x from "../../../assets/background@1x.png";
+import background2x from "../../../assets/background@2x.png";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { InlineAlert } from "../inlineAlert/InlineAlert";
 import { type FullPageAlertClassKey } from "./FullPageAlert";
@@ -14,6 +16,14 @@ export const Root = createComponentSlot("div")<FullPageAlertClassKey>({
         align-items: center;
         height: 100vh;
         background-color: ${theme.palette.grey["100"]};
+        background-image: url(${background1x});
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            background-image: url(${background2x});
+        }
     `,
 );
 
