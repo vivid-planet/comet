@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsNumber, IsOptional } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional } from "class-validator";
 
 @InputType()
 export class NumberFilter {
@@ -37,4 +37,14 @@ export class NumberFilter {
     @IsOptional()
     @IsNumber(undefined, { each: true })
     isAnyOf?: number[];
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isEmpty?: boolean;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isNotEmpty?: boolean;
 }

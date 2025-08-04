@@ -12,10 +12,10 @@ const { previewType, showPreviewSkeletons, isSelected, isHovered } = usePreview(
 
 The hook returns an object with the following properties:
 
--   `previewType` indicates which preview is currently active, e.g., the site preview
--   `showPreviewSkeletons` indicates if the currently active preview shows preview skeletons
--   `isSelected` is used to check whether the block is currently selected in the admin
--   `isHovered` is used to check whether the block is currently hovered in the admin
+- `previewType` indicates which preview is currently active, e.g., the site preview
+- `showPreviewSkeletons` indicates if the currently active preview shows preview skeletons
+- `isSelected` is used to check whether the block is currently selected in the admin
+- `isHovered` is used to check whether the block is currently hovered in the admin
 
 These properties can now be used to open accordion items based on the user's interactions:
 

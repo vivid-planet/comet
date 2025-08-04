@@ -1,8 +1,8 @@
-import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useRef } from "react";
+import { type ComponentsOverrides, css, type Theme, useThemeProps } from "@mui/material";
+import { type ReactNode, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useTopOffset } from "../helpers/useTopOffset";
 
 export type FullHeightContentClassKey = "root" | "disableBottomContentSpacing";

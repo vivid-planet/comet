@@ -1,6 +1,6 @@
-import { Field, FieldProps } from "@comet/admin";
+import { Field, type FieldProps } from "@comet/admin";
 
-import { DateRange } from "./DateRangePicker";
+import { type DateRange } from "./DateRangePicker";
 import { FinalFormDateRangePicker } from "./FinalFormDateRangePicker";
 
 export type DateRangeFieldProps = FieldProps<DateRange, HTMLInputElement>;

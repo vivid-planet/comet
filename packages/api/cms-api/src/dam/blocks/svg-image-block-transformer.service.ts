@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
 import { SvgImageBlockData } from "./svg-image.block";
@@ -24,7 +24,7 @@ type TransformResponse = {
 export class SvgImageBlockTransformerService implements BlockTransformerServiceInterface<SvgImageBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
-    async transformToPlain(block: SvgImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
+    async transformToPlain(block: SvgImageBlockData, { includeInvisibleContent, previewDamUrls }: BlockContext) {
         if (!block.damFileId) {
             return {};
         }
@@ -35,7 +35,7 @@ export class SvgImageBlockTransformerService implements BlockTransformerServiceI
             return {};
         }
 
-        const fileUrl = await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls });
+        const fileUrl = await this.filesService.createFileUrl(file, { previewDamUrls });
 
         return {
             damFile: {

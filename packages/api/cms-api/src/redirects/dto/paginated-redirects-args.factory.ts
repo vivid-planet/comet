@@ -8,7 +8,7 @@ import { EmptyRedirectScope } from "./empty-redirect-scope";
 import { RedirectSort } from "./redirect.sort";
 import { RedirectFilter } from "./redirects.filter";
 
-export interface PaginatedRedirectsArgsInterface {
+interface PaginatedRedirectsArgsInterface {
     scope: RedirectScopeInterface;
     search?: string;
     filter?: RedirectFilter;

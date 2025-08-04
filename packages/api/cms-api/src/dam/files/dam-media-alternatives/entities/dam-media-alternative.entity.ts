@@ -13,10 +13,10 @@ registerEnumType(DamMediaAlternativeType, { name: "DamMediaAlternativeType" });
 @Entity()
 @ObjectType()
 @ScopedEntity(async (damMediaAlternative: DamMediaAlternative) => {
-    const scope = (await damMediaAlternative.for.load()).scope;
+    const scope = (await damMediaAlternative.for.load())?.scope;
     return scope;
 })
-export class DamMediaAlternative extends BaseEntity<DamMediaAlternative, "id"> {
+export class DamMediaAlternative extends BaseEntity {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
@@ -32,7 +32,7 @@ export class DamMediaAlternative extends BaseEntity<DamMediaAlternative, "id"> {
     @ManyToOne({
         entity: () => FILE_ENTITY,
         inversedBy: (file: FileInterface) => file.alternativesForThisFile,
-        onDelete: "cascade",
+        deleteRule: "cascade",
         ref: true,
     })
     for: Ref<FileInterface>;
@@ -40,7 +40,7 @@ export class DamMediaAlternative extends BaseEntity<DamMediaAlternative, "id"> {
     @ManyToOne({
         entity: () => FILE_ENTITY,
         inversedBy: (file: FileInterface) => file.thisFileIsAlternativeFor,
-        onDelete: "cascade",
+        deleteRule: "cascade",
         ref: true,
     })
     alternative: Ref<FileInterface>;

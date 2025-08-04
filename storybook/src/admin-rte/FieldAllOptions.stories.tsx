@@ -4,7 +4,7 @@ import { Card, CardContent, Grid } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
 
-import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions.stories";
+import { type ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions.stories";
 
 const { RteField, RteReadOnly } = createFinalFormRte<ContentFormat>({
     rteApiOptions: makeApiOptions, // see ./RteAllOptions for details
@@ -21,7 +21,7 @@ export const FieldAllOptions = {
 
         return (
             <Grid container spacing={4} style={{ maxWidth: 800 }}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Card variant="outlined">
                         <CardContent>
                             <Form
@@ -41,7 +41,7 @@ export const FieldAllOptions = {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Card variant="outlined">
                         <CardContent>
                             <FormSection title="Readonly Component" disableMarginBottom>

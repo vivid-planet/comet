@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLLicenseType } from "../../graphql.generated";
+import { type GQLLicenseType } from "../../graphql.generated";
 
 export type LicenseType = GQLLicenseType | "NO_LICENSE";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, type PropsWithChildren, useContext } from "react";
 
 export type CookieApi = {
     initialized: boolean;
@@ -12,7 +12,7 @@ export type CookieApiHook = () => CookieApi;
 
 const CookieApiContext = createContext<CookieApi | undefined>(undefined);
 
-type CookieApiProviderProps = React.PropsWithChildren<{
+type CookieApiProviderProps = PropsWithChildren<{
     api: CookieApiHook;
 }>;
 

@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
+import { SvgIcon, type SvgIconProps } from "@mui/material";
 
 export default function Html(props: SvgIconProps) {
     return (

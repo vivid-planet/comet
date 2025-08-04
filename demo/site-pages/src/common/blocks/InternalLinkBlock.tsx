@@ -1,7 +1,7 @@
-import { PropsWithData } from "@comet/cms-site";
-import { InternalLinkBlockData } from "@src/blocks.generated";
+import { type PropsWithData } from "@comet/site-nextjs";
+import { type InternalLinkBlockData } from "@src/blocks.generated";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
     title?: string;

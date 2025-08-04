@@ -1,4 +1,4 @@
-import { GeneratedIconName } from "./generated/GeneratedIconName";
+import { type GeneratedIconName } from "./generated/GeneratedIconName";
 
 export { default as BallTriangle } from "./BallTriangle";
 export { default as CheckboxChecked } from "./CheckboxChecked";

@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink } from "@comet/admin";
-import { Decorator } from "@storybook/react";
+import { type Decorator } from "@storybook/react-webpack5";
 
 const createApolloClient = (uri: string) => {
     const link = ApolloLink.from([
@@ -13,6 +13,11 @@ const createApolloClient = (uri: string) => {
     return new ApolloClient({
         link,
         cache,
+        defaultOptions: {
+            watchQuery: {
+                fetchPolicy: "cache-and-network",
+            },
+        },
     });
 };
 

@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 import escapeRegExp from "lodash.escaperegexp";
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
-import { TextMatch } from "../../common/MarkedMatches";
-import { PageTreePage } from "../pageTree/usePageTree";
-import { GQLPageSearchFragment } from "./usePageSearch.generated";
+import { type TextMatch } from "../../common/MarkedMatches";
+import { type PageTreePage } from "../pageTree/usePageTree";
+import { type GQLPageSearchFragment } from "./usePageSearch.generated";
 
 export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] }; where: "name" | "path" };
 
@@ -29,15 +29,24 @@ export interface PageSearchApi {
 interface UsePageSearchOptions {
     tree: Map<string, GQLPageSearchFragment[]>;
     pagesToRender: PageTreePage[];
-    domain: string;
+    siteUrl: string;
     setExpandedIds: Dispatch<SetStateAction<string[]>>;
     onUpdateCurrentMatch: (pageId: string, pages: PageTreePage[]) => void;
 }
 
-const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pagesToRender }: UsePageSearchOptions): PageSearchApi => {
+const usePageSearch = ({ tree, siteUrl, setExpandedIds, onUpdateCurrentMatch, pagesToRender }: UsePageSearchOptions): PageSearchApi => {
     const [matches, setMatches] = useState<PageSearchMatch[] | null>(null);
     const [currentMatchIndex, setCurrentMatchIndex] = useState<number | null>(null);
     const [query, setQuery] = useState("");
+
+    let domainHost: string | undefined;
+
+    try {
+        domainHost = new URL(siteUrl).host;
+    } catch (error) {
+        console.error("Invalid siteUrl provided:", siteUrl, error);
+        domainHost = undefined;
+    }
 
     const inorderPages = useMemo(() => {
         const buildPagesForParent = (parentId = "root", ancestorIds: string[] = []) => {
@@ -94,7 +103,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         try {
             const url = new URL(query);
 
-            if (!url.host.includes(domain)) {
+            if (domainHost && !url.host.includes(domainHost)) {
                 return;
             }
 
@@ -141,7 +150,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         setCurrentMatchIndex(0);
 
         expandTreeForMatches(matches);
-    }, [query, inorderPages, domain, expandTreeForMatches]);
+    }, [query, inorderPages, expandTreeForMatches, domainHost]);
 
     const pagesToRenderWithMatches = useMemo(
         () => pagesToRender.map((c) => ({ ...c, matches: matches?.filter((match) => match.page.id === c.id) ?? [] })),

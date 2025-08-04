@@ -154,12 +154,12 @@ export function createDamMediaAlternativeResolver({
 
         @ResolveField(() => File)
         async for(@Parent() damMediaAlternative: DamMediaAlternative): Promise<FileInterface> {
-            return damMediaAlternative.for.load();
+            return damMediaAlternative.for.loadOrFail();
         }
 
         @ResolveField(() => File)
         async alternative(@Parent() damMediaAlternative: DamMediaAlternative): Promise<FileInterface> {
-            return damMediaAlternative.alternative.load();
+            return damMediaAlternative.alternative.loadOrFail();
         }
     }
 

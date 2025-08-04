@@ -38,7 +38,7 @@ class HeadlineWithBackgroundBlockInput extends BlockInput {
 +   background: BackgroundColor;
 
     transformToBlockData(): HeadlineWithBackgroundBlockData {
-        return inputToData(HeadlineWithBackgroundBlockData, this);
+        return blockInputToData(HeadlineWithBackgroundBlockData, this);
     }
 }
 
@@ -79,7 +79,7 @@ class HeadlineWithBackgroundBlockInput extends BlockInput {
     background: BackgroundColor;
 
     transformToBlockData(): HeadlineWithBackgroundBlockData {
-        return inputToData(HeadlineWithBackgroundBlockData, this);
+        return blockInputToData(HeadlineWithBackgroundBlockData, this);
     }
 }
 

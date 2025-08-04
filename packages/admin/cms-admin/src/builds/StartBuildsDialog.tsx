@@ -1,11 +1,18 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { Alert, Button, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
+import {
+    CircularProgress,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
+import { DataGrid, type GridRowSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
+import { type GQLBuildTemplatesQuery, type GQLCreateBuildsMutation, type GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
 
 const buildTemplatesQuery = gql`
     query BuildTemplates {
@@ -40,7 +47,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         refetchQueries: ["Builds"],
     });
 
-    const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
     const rows = data?.buildTemplates ?? [];
 
@@ -74,11 +81,11 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     ]}
                     checkboxSelection
                     disableColumnSelector
-                    onSelectionModelChange={(newSelectionModel) => {
+                    onRowSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
                     }}
-                    selectionModel={selectionModel}
-                    pageSize={5}
+                    rowSelectionModel={selectionModel}
+                    paginationModel={{ page: 0, pageSize: 5 }}
                     hideFooterPagination={rows.length <= 5}
                 />
             </DialogContent>

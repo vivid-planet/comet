@@ -1,5 +1,5 @@
-import { createElement } from "react";
-import { FormRenderProps, RenderableProps } from "react-final-form";
+import { createElement, type ReactNode } from "react";
+import { type FormRenderProps, type RenderableProps } from "react-final-form";
 
 // Render children like final-form does.
 export function renderFinalFormChildren<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>(
@@ -13,8 +13,8 @@ export function renderFinalFormChildren<FormValues = Record<string, any>, Initia
             // Explicit cast to remove InitialFormValues because FormRenderProps doesn't pass InitialFormValues to RenderableProps here:
             // https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L56-L67.
             // See https://github.com/final-form/react-final-form/pull/998.
-            { ...formRenderProps, render: render as ((props: FormRenderProps<FormValues>) => React.ReactNode) | undefined },
-            children,
+            { ...formRenderProps, render: render as ((props: FormRenderProps<FormValues>) => ReactNode) | undefined },
+            children as ReactNode,
         );
     }
     if (render) {

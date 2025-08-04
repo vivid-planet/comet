@@ -1,9 +1,9 @@
-import { isBlockDataInterface } from "@comet/blocks-api";
-import { ContextId, ContextIdFactory, ModuleRef } from "@nestjs/core";
+import { type ContextId, ContextIdFactory, type ModuleRef } from "@nestjs/core";
 import { REQUEST_CONTEXT_ID } from "@nestjs/core/router/request/request-constants";
-import { FieldMiddleware, MiddlewareContext, NextFn } from "@nestjs/graphql";
+import { type FieldMiddleware, type MiddlewareContext, type NextFn } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
+import { isBlockDataInterface } from "./block";
 import { transformToPlain } from "./blocks-transformer";
 
 export class BlocksTransformerMiddlewareFactory {
@@ -12,7 +12,7 @@ export class BlocksTransformerMiddlewareFactory {
             const fieldValue = await next();
 
             if (isBlockDataInterface(fieldValue)) {
-                const { includeInvisibleBlocks, previewDamUrls, relativeDamUrls } = getRequestContextHeadersFromRequest(context.req);
+                const { includeInvisibleBlocks, previewDamUrls } = getRequestContextHeadersFromRequest(context.req);
 
                 let contextId: ContextId;
 
@@ -34,12 +34,7 @@ export class BlocksTransformerMiddlewareFactory {
                     moduleRef.registerRequestByContextId(context, contextId);
                 }
 
-                return transformToPlain(
-                    fieldValue,
-                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls },
-                    moduleRef,
-                    contextId,
-                );
+                return transformToPlain(fieldValue, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls }, moduleRef, contextId);
             } else {
                 return fieldValue;
             }

@@ -9,7 +9,10 @@ export const Button = styled.button<{ variant?: ButtonVariant }>`
     cursor: pointer;
     justify-content: center;
     align-items: center;
-    transition: background-color 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
+    transition:
+        background-color 0.2s ease-out,
+        color 0.2s ease-out,
+        border-color 0.2s ease-out;
 
     text-align: center;
     text-decoration: none;
@@ -18,15 +21,14 @@ export const Button = styled.button<{ variant?: ButtonVariant }>`
     font-weight: 700;
     line-height: 110%;
 
-    ${({ variant = "contained" }) =>
-        css`
-            ${buttonVariantStyle[variant]}
+    ${({ variant = "contained" }) => css`
+        ${buttonVariantStyle[variant]}
 
-            &:disabled {
-                pointer-events: none;
-                ${disabledButtonVariantStyle[variant]};
-            }
-        `};
+        &:disabled {
+            pointer-events: none;
+            ${disabledButtonVariantStyle[variant]};
+        }
+    `};
 `;
 
 const buttonVariantStyle: Record<ButtonVariant, ReturnType<typeof css>> = {

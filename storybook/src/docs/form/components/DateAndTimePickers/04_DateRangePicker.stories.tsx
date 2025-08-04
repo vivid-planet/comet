@@ -1,5 +1,5 @@
 import { Field, FieldContainer } from "@comet/admin";
-import { DateRange, DateRangePicker, FinalFormDateRangePicker } from "@comet/admin-date-time";
+import { type DateRange, DateRangePicker, FinalFormDateRangePicker } from "@comet/admin-date-time";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 import { Form } from "react-final-form";
@@ -15,17 +15,32 @@ export const Basic = () => {
 
     return (
         <Grid container spacing={4}>
-            <Grid item xs={6} md={4}>
+            <Grid
+                size={{
+                    xs: 6,
+                    md: 4,
+                }}
+            >
                 <FieldContainer label="Date-Range Picker" fullWidth>
                     <DateRangePicker fullWidth value={dateOne} onChange={setDateOne} />
                 </FieldContainer>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid
+                size={{
+                    xs: 6,
+                    md: 4,
+                }}
+            >
                 <FieldContainer label="Required" fullWidth required>
                     <DateRangePicker fullWidth value={dateTwo} onChange={setDateTwo} required />
                 </FieldContainer>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid
+                size={{
+                    xs: 6,
+                    md: 4,
+                }}
+            >
                 <FieldContainer label="Formatted date" fullWidth>
                     <DateRangePicker
                         fullWidth
@@ -53,13 +68,28 @@ export const FinalForm = () => {
         >
             {() => (
                 <Grid container spacing={4}>
-                    <Grid item xs={6} md={4}>
+                    <Grid
+                        size={{
+                            xs: 6,
+                            md: 4,
+                        }}
+                    >
                         <Field name="dateOne" label="Date-Range Picker" fullWidth component={FinalFormDateRangePicker} />
                     </Grid>
-                    <Grid item xs={6} md={4}>
+                    <Grid
+                        size={{
+                            xs: 6,
+                            md: 4,
+                        }}
+                    >
                         <Field name="dateTwo" label="Required" fullWidth component={FinalFormDateRangePicker} required />
                     </Grid>
-                    <Grid item xs={6} md={4}>
+                    <Grid
+                        size={{
+                            xs: 6,
+                            md: 4,
+                        }}
+                    >
                         <Field
                             name="dateThree"
                             label="Formatted date"

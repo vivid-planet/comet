@@ -19,7 +19,7 @@ export function createEnumsFilter<TEnum extends { [key: string]: string }>(Enum:
             return "EnumsFilter";
         }
 
-        @Field(() => [Enum], { nullable: true })
+        @Field(() => [Enum] as [{ [key: string]: string }], { nullable: true })
         @IsOptional()
         @IsEnum(Enum, { each: true })
         contains?: TEnum;

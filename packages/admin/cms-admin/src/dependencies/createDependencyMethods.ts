@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
-import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
 
-import { Maybe } from "../graphql.generated";
-import { DependencyInterface } from "./types";
+import { type BlockInputApi, type BlockInterface } from "../blocks/types";
+import { type Maybe } from "../graphql.generated";
+import { type DependencyInterface } from "./types";
 
 interface Query<RootBlocks extends Record<string, BlockInterface>> {
     node: Maybe<{ id: string } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }>;

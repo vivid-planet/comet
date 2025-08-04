@@ -56,7 +56,7 @@ Each migration performs the necessary steps to migrate the block structure from 
 The version to which the migration migrates the block's structure is defined by the `toVersion` field.
 
 ```ts
-import { BlockMigration, BlockMigrationInterface } from "@comet/blocks-api";
+import { BlockMigration, BlockMigrationInterface } from "@comet/cms-api";
 
 export class ChangeEyebrowMigration extends BlockMigration<(from: From) => To> implements BlockMigrationInterface {
     // highlight-next-line
@@ -97,7 +97,10 @@ We then implement the `migrate` method, which performs the actual migration.
 This method receives the "old" block (`From` interface) and transforms the block into the new structure (`To` interface).
 
 ```ts
-export class ChangeEyebrowMigration extends BlockMigration<(from: From) => To> implements BlockMigrationInterface {
+export class ChangeEyebrowMigration
+    extends BlockMigration<(from: From) => To>
+    implements BlockMigrationInterface
+{
     public readonly toVersion = 1;
 
     protected migrate({ eyebrow, ...other }: From): To {
@@ -133,7 +136,7 @@ Doing so prevents the need to adapt old migrations if the code changes at a late
 Finally, we add the migration to the block using the `migrate` option in `createBlock`.
 
 ```ts
-import { createBlock, typesafeMigrationPipe } from "@comet/blocks-api";
+import { createBlock, typeSafeBlockMigrationPipe } from "@comet/cms-api";
 
 ...
 
@@ -142,7 +145,7 @@ export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, 
     migrate: {
         version: 1,
         // highlight-next-line
-        migrations: typesafeMigrationPipe([ChangeEyebrowMigration]),
+        migrations: typeSafeBlockMigrationPipe([ChangeEyebrowMigration]),
     },
 });
 ```
@@ -153,7 +156,7 @@ The next time the block is loaded from the database, the migration will be perfo
     <summary>Complete migration class</summary>
 
 ```ts title="1-change-eyebrow.migration.ts"
-import { BlockDataInterface, BlockMigration, BlockMigrationInterface } from "@comet/blocks-api";
+import { BlockDataInterface, BlockMigration, BlockMigrationInterface } from "@comet/cms-api";
 
 interface From {
     headline: any;
@@ -167,7 +170,10 @@ interface To {
     level: any;
 }
 
-export class ChangeEyebrowMigration extends BlockMigration<(from: From) => To> implements BlockMigrationInterface {
+export class ChangeEyebrowMigration
+    extends BlockMigration<(from: From) => To>
+    implements BlockMigrationInterface
+{
     public readonly toVersion = 1;
 
     protected migrate({ eyebrow, ...other }: From): To {
@@ -202,15 +208,15 @@ export class ChangeEyebrowMigration extends BlockMigration<(from: From) => To> i
 
 You will need a migration when
 
--   adding a _required_ field to the block (you will need to provide a default value for existing block instances)
--   changing an existing field of the block
+- adding a _required_ field to the block (you will need to provide a default value for existing block instances)
+- changing an existing field of the block
 
 You don't necessarily need a migration when
 
--   adding an _optional_ field to the block
--   removing an existing field from the block
--   adding an additionally supported block to a `BlocksBlock` or an `OneOfBlock`
--   removing a supported block from a `BlocksBlock` or an `OneOfBlock`
+- adding an _optional_ field to the block
+- removing an existing field from the block
+- adding an additionally supported block to a `BlocksBlock` or an `OneOfBlock`
+- removing a supported block from a `BlocksBlock` or an `OneOfBlock`
 
 ### How do I test a migration?
 

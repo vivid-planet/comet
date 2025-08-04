@@ -3,14 +3,14 @@ import {
     FilterBar,
     FilterBarPopoverFilter,
     FinalFormSearchTextField,
-    IFilterApi,
-    ISortInformation,
+    type IFilterApi,
+    type ISortInformation,
     SwitchField,
     TableFilterFinalForm,
 } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { DamFilter } from "../../DamTable";
+import { type DamFilter } from "../../DamTable";
 import { DamSortPopover } from "./DamSortPopover";
 
 interface DamTableFilterProps {
@@ -34,7 +34,7 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
                 {!hideArchiveFilter && (
                     <FilterBarPopoverFilter
                         label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}
-                        sx={{ marginRight: 2, marginLeft: 2 }}
+                        sx={{ marginRight: 2, marginLeft: 2, marginBottom: 0 }}
                     >
                         <SwitchField
                             name="archived"

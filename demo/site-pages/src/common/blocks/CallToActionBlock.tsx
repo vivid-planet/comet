@@ -1,14 +1,14 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { CallToActionBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type CallToActionBlockData } from "@src/blocks.generated";
 
-import { Button, ButtonVariant } from "../components/Button";
+import { Button, type ButtonVariant } from "../components/Button";
 import { HiddenIfInvalidLink } from "../helpers/HiddenIfInvalidLink";
 import { LinkBlock } from "./LinkBlock";
 
 const buttonVariantMap: Record<CallToActionBlockData["variant"], ButtonVariant> = {
-    Contained: "contained",
-    Outlined: "outlined",
-    Text: "text",
+    contained: "contained",
+    outlined: "outlined",
+    text: "text",
 };
 
 export const CallToActionBlock = withPreview(

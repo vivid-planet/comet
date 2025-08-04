@@ -1,22 +1,26 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
-import { ReactNode } from "react";
-import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
+import { type ReactNode } from "react";
+import { Redirect, type RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
-import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
-import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { type Permission, useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
+import { type MasterMenuData, type MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
     const checkPermission = (item: MasterMenuItem, ancestors: MasterMenuItem[]): boolean => {
+        function getRequiredPermissionsArray(permission: Permission | Permission[]): Permission[] {
+            return Array.isArray(permission) ? permission : [permission];
+        }
+
         let allowed = true;
 
         if (item.requiredPermission) {
-            allowed &&= isAllowed(item.requiredPermission);
+            allowed &&= getRequiredPermissionsArray(item.requiredPermission).some((permission) => isAllowed(permission));
         }
 
         for (const ancestor of ancestors) {
             if (ancestor.requiredPermission) {
-                allowed &&= isAllowed(ancestor.requiredPermission);
+                allowed &&= getRequiredPermissionsArray(ancestor.requiredPermission).some((permission) => isAllowed(permission));
             }
         }
 

@@ -1,21 +1,6 @@
-import { Field, FieldProps, FinalFormInput, FinalFormSelect, Loading, messages } from "@comet/admin";
+import { Field, type FieldProps, FinalFormInput, Loading, messages, SelectField } from "@comet/admin";
 import { Add, ArtificialIntelligence, Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSectionGroup,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    Collapsible,
-    CollapsibleSwitchButtonHeader,
-    composeBlocks,
-    createBlockSkeleton,
-    createOptionalBlock,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
-import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
+import { Box, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
 import { useState } from "react";
@@ -23,13 +8,25 @@ import { Field as ReactFinalFormField, useForm } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
+import { type SeoBlockData, type SeoBlockInput } from "../blocks.generated";
 import { useContentGenerationConfig } from "../documents/ContentGenerationConfigContext";
 import { validateUrl } from "../validation/validateUrl";
+import { BlockAdminComponentButton } from "./common/BlockAdminComponentButton";
+import { BlockAdminComponentPaper } from "./common/BlockAdminComponentPaper";
+import { BlockAdminComponentSectionGroup } from "./common/BlockAdminComponentSectionGroup";
+import { Collapsible } from "./common/Collapsible";
+import { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonHeader";
+import { createOptionalBlock } from "./factories/createOptionalBlock";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
-import { SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
+import { type SeoTag, useSeoTagGeneration } from "./seo/useSeoTagGeneration";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
+import { type BlockInterface, type BlockState } from "./types";
 
 interface CreateSeoBlockOptions {
     image?: BlockInterface;
@@ -226,42 +223,26 @@ export function createSeoBlock(
                                             >
                                                 <Divider />
                                                 <Box padding={4}>
-                                                    <Field
+                                                    <SelectField
                                                         label={intl.formatMessage({
                                                             id: "comet.blocks.seo.sitemap.priority",
                                                             defaultMessage: "Priority",
                                                         })}
                                                         name="priority"
                                                         fullWidth
-                                                    >
-                                                        {(props) => (
-                                                            <FinalFormSelect {...props} fullWidth>
-                                                                {priorityOptions.map((option) => (
-                                                                    <MenuItem value={option.value} key={option.value}>
-                                                                        {option.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </FinalFormSelect>
-                                                        )}
-                                                    </Field>
-                                                    <Field
+                                                        required
+                                                        options={priorityOptions}
+                                                    />
+                                                    <SelectField
                                                         label={intl.formatMessage({
                                                             id: "comet.blocks.seo.sitemap.changeFrequency",
                                                             defaultMessage: "Change Frequency",
                                                         })}
                                                         name="changeFrequency"
                                                         fullWidth
-                                                    >
-                                                        {(props) => (
-                                                            <FinalFormSelect {...props} fullWidth>
-                                                                {changeFrequencyOptions.map((option) => (
-                                                                    <MenuItem value={option.value} key={option.value}>
-                                                                        {option.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </FinalFormSelect>
-                                                        )}
-                                                    </Field>
+                                                        required
+                                                        options={changeFrequencyOptions}
+                                                    />
                                                 </Box>
                                             </Collapsible>
                                         </Paper>
@@ -280,16 +261,16 @@ export function createSeoBlock(
 
                         {/* Alternate Hreflang */}
                         <Box marginTop={8} marginBottom={8}>
-                            <AdminComponentSectionGroup
+                            <BlockAdminComponentSectionGroup
                                 title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />}
                             >
-                                <AdminComponentPaper>
+                                <BlockAdminComponentPaper>
                                     <FieldArray name="alternativeLinks">
                                         {({ fields }) => (
                                             <>
                                                 {fields.map((link, i) => (
                                                     <Grid key={i} container spacing={2} sx={{ marginBottom: 2 }}>
-                                                        <Grid item xs={3}>
+                                                        <Grid size={3}>
                                                             <Field
                                                                 label={
                                                                     <FormattedMessage
@@ -302,7 +283,7 @@ export function createSeoBlock(
                                                                 placeholder="en-US"
                                                             />
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid size="grow">
                                                             <Field
                                                                 label={<FormattedMessage {...messages.url} />}
                                                                 name={`${link}.url`}
@@ -311,7 +292,7 @@ export function createSeoBlock(
                                                                 validate={(url) => validateUrl(url)}
                                                             />
                                                         </Grid>
-                                                        <Grid item alignSelf="flex-start">
+                                                        <Grid alignSelf="flex-start">
                                                             <DeleteButtonWrapper>
                                                                 <IconButton onClick={() => fields.remove(i)} size="large">
                                                                     <Delete />
@@ -320,19 +301,19 @@ export function createSeoBlock(
                                                         </Grid>
                                                     </Grid>
                                                 ))}
-                                                <AdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
+                                                <BlockAdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
                                                     <AddButtonContent>
                                                         <AddButtonIcon />
                                                         <Typography>
                                                             <FormattedMessage {...messages.add} />
                                                         </Typography>
                                                     </AddButtonContent>
-                                                </AdminComponentButton>
+                                                </BlockAdminComponentButton>
                                             </>
                                         )}
                                     </FieldArray>
-                                </AdminComponentPaper>
-                            </AdminComponentSectionGroup>
+                                </BlockAdminComponentPaper>
+                            </BlockAdminComponentSectionGroup>
                         </Box>
                     </BlocksFinalForm>
                 </div>

@@ -1,6 +1,6 @@
 import { FileDropzone } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { Meta } from "@storybook/react";
+import { type Meta } from "@storybook/react-webpack5";
 
 export default {
     title: "Docs/Components/FileDropzone",

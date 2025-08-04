@@ -1,5 +1,5 @@
-import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
-import { Route, RouteComponentProps, useHistory, useLocation } from "react-router";
+import { type PropsWithChildren, type ReactNode, useCallback, useEffect, useState } from "react";
+import { Route, type RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";

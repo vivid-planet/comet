@@ -3,20 +3,20 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { IsEnum } from "class-validator";
 
 import { TextLinkBlock } from "./text-link.block";
 
 export enum Variant {
-    Contained = "Contained",
-    Outlined = "Outlined",
-    Text = "Text",
+    contained = "contained",
+    outlined = "outlined",
+    text = "text",
 }
 
 class CallToActionBlockData extends BlockData {
@@ -36,7 +36,7 @@ class CallToActionBlockInput extends BlockInput {
     variant: Variant;
 
     transformToBlockData(): CallToActionBlockData {
-        return inputToData(CallToActionBlockData, this);
+        return blockInputToData(CallToActionBlockData, this);
     }
 }
 

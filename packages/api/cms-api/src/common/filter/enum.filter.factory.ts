@@ -21,17 +21,17 @@ export function createEnumFilter<TEnum extends { [key: string]: string }>(Enum: 
             return "EnumFilter";
         }
 
-        @Field(() => [Enum], { nullable: true })
+        @Field(() => [Enum] as [{ [key: string]: string }], { nullable: true })
         @IsOptional()
         @IsEnum(Enum, { each: true })
         isAnyOf?: TEnum[];
 
-        @Field(() => Enum, { nullable: true })
+        @Field(() => Enum as { [key: string]: string }, { nullable: true })
         @IsOptional()
         @IsEnum(Enum)
         equal?: TEnum;
 
-        @Field(() => Enum, { nullable: true })
+        @Field(() => Enum as { [key: string]: string }, { nullable: true })
         @IsOptional()
         @IsEnum(Enum)
         notEqual?: TEnum;

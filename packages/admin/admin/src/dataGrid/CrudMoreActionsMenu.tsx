@@ -1,30 +1,41 @@
 import { MoreVertical } from "@comet/admin-icons";
 import {
     Chip,
-    ComponentsOverrides,
+    type ComponentsOverrides,
     css,
     Divider,
     ListItemIcon,
     ListItemText,
     Menu,
     MenuItem,
-    MenuItemProps,
+    type MenuItemProps,
     MenuList,
-    MenuListProps,
-    Theme,
+    type MenuListProps,
+    type Theme,
     Typography,
+    useTheme,
 } from "@mui/material";
-import { Maybe } from "graphql/jsutils/Maybe";
-import { ComponentProps, createContext, isValidElement, MouseEvent, PropsWithChildren, ReactElement, ReactNode, useContext, useState } from "react";
+import { type Maybe } from "graphql/jsutils/Maybe";
+import {
+    type ComponentProps,
+    createContext,
+    isValidElement,
+    type MouseEvent,
+    type PropsWithChildren,
+    type ReactElement,
+    type ReactNode,
+    useContext,
+    useState,
+} from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Button } from "../common/buttons/Button";
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
 
-export interface ActionItem extends ComponentProps<typeof MenuItem> {
+interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
     icon?: ReactNode;
 }
@@ -50,10 +61,11 @@ interface CrudMoreActionsGroupProps {
 }
 
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
+    const { palette } = useTheme();
     return (
         <>
             {groupTitle && (
-                <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+                <Typography variant="overline" color={palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
                     {groupTitle}
                 </Typography>
             )}
@@ -70,24 +82,20 @@ const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuC
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "chip",
-})(
-    css`
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-        border-radius: 20px;
-        margin-left: 6px;
-    `,
-);
+})(css`
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    margin-left: 6px;
+`);
 
 const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "button",
-})(
-    css`
-        margin: 0 10px;
-    `,
-);
+})(css`
+    margin: 0 10px;
+    min-height: 44px;
+`);
 
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",

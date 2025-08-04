@@ -1,6 +1,6 @@
-import { IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
+import { type IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { exampleContent, PrintEditorState } from "./helper";
 

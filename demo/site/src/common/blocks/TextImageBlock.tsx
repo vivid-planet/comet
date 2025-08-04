@@ -1,6 +1,6 @@
 "use client";
-import { PropsWithData, withPreview } from "@comet/site-nextjs";
-import { TextImageBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type TextImageBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { createImageSizes } from "@src/util/createImageSizes";
 import styled, { css } from "styled-components";
@@ -8,7 +8,7 @@ import styled, { css } from "styled-components";
 import { DamImageBlock } from "./DamImageBlock";
 import { RichTextBlock } from "./RichTextBlock";
 
-export const TextImageBlock = withPreview(
+const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
             <Root $imagePosition={imagePosition}>

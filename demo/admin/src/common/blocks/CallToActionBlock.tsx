@@ -1,5 +1,5 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { CallToActionBlockData } from "@src/blocks.generated";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
+import { type CallToActionBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlock } from "./TextLinkBlock";
@@ -15,14 +15,13 @@ export const CallToActionBlock = createCompositeBlock(
             },
             variant: {
                 block: createCompositeBlockSelectField<CallToActionBlockData["variant"]>({
-                    defaultValue: "Contained",
-                    options: [
-                        { value: "Contained", label: <FormattedMessage id="callToActionBlock.variant.contained" defaultMessage="Contained" /> },
-                        { value: "Outlined", label: <FormattedMessage id="callToActionBlock.variant.outlined" defaultMessage="Outlined" /> },
-                        { value: "Text", label: <FormattedMessage id="callToActionBlock.variant.text" defaultMessage="Text" /> },
-                    ],
                     label: <FormattedMessage id="callToActionBlock.variant" defaultMessage="Variant" />,
-                    fullWidth: true,
+                    defaultValue: "contained",
+                    options: [
+                        { value: "contained", label: <FormattedMessage id="callToActionBlock.variant.contained" defaultMessage="Contained" /> },
+                        { value: "outlined", label: <FormattedMessage id="callToActionBlock.variant.outlined" defaultMessage="Outlined" /> },
+                        { value: "text", label: <FormattedMessage id="callToActionBlock.variant.text" defaultMessage="Text" /> },
+                    ],
                 }),
             },
         },

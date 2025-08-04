@@ -1,5 +1,5 @@
 import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace, MainContent } from "@comet/admin";
-import { ContentScopeControls, ContentScopeIndicator, ContentScopeProvider, ContentScopeValues, useContentScope } from "@comet/cms-admin";
+import { ContentScopeControls, ContentScopeIndicator, ContentScopeProvider, type ContentScopeValues, useContentScope } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -10,13 +10,11 @@ export default {
 };
 
 export const OptionalDimensions = function () {
-    type ContentScope = { organizationId?: string; channelId?: string };
-
-    const values: ContentScopeValues<ContentScope> = [
-        { organizationId: { value: "organization-1", label: "Organization 1" } },
-        { organizationId: { value: "organization-2", label: "Organization 2" } },
-        { channelId: { value: "channel-1", label: "Channel 1" } },
-        { channelId: { value: "channel-2", label: "Channel 2" } },
+    const values: ContentScopeValues = [
+        { scope: { organizationId: "organization-1" }, label: { organizationId: "Organization 1" } },
+        { scope: { organizationId: "organization-2" }, label: { organizationId: "Organization 2" } },
+        { scope: { channelId: "channel-1" }, label: { channelId: "Channel 1" } },
+        { scope: { channelId: "channel-2" }, label: { channelId: "Channel 2" } },
     ];
 
     function PrintContentScope() {
@@ -62,4 +60,4 @@ export const OptionalDimensions = function () {
     );
 };
 
-OptionalDimensions.storyName = "Optional dimensions";
+OptionalDimensions.name = "Optional dimensions";

@@ -84,7 +84,7 @@ export enum AdminMessageType {
 /**
  * The `IAdminBlockMessage` is sent from the admin to the site, whih block should be displayed in the iFrame.
  */
-export interface IAdminBlockMessage {
+interface IAdminBlockMessage {
     cometType: AdminMessageType.Block;
     data: {
         block: unknown;
@@ -104,7 +104,7 @@ export interface IAdminShowOnlyVisibleMessage {
 /**
  * The `IAdminSelectComponentMessage` is sent from the admin to the site, when a component is selected in the admin interface.
  */
-export interface IAdminSelectComponentMessage {
+interface IAdminSelectComponentMessage {
     cometType: AdminMessageType.SelectComponent;
     data: {
         adminRoute: string;
@@ -127,10 +127,13 @@ export interface IAdminHoverComponentMessage {
 export interface IAdminContentScopeMessage {
     cometType: AdminMessageType.ContentScope;
     data: {
-        contentScope: unknown;
+        contentScopeJwt: string;
     };
 }
 
+/**
+ * The `IAdminGraphQLApiUrlMessage` is sent from the admin to the site.
+ */
 export interface IAdminGraphQLApiUrlMessage {
     cometType: AdminMessageType.GraphQLApiUrl;
     data: {

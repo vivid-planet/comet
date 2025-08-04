@@ -1,14 +1,16 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
-import { AdminComponentPaper, BlockCategory, BlockDependency, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
+import { type DamFileDownloadLinkBlockData, type DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import { BlockAdminComponentPaper } from "../../blocks/common/BlockAdminComponentPaper";
+import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
+import { createBlockSkeleton } from "../../blocks/helpers/createBlockSkeleton";
+import { BlockCategory, type BlockDependency, type BlockInterface } from "../../blocks/types";
 import { FileField } from "../../form/file/FileField";
-import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
+import { type GQLDamFileDownloadLinkFileQuery, type GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
 export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput> = {
     ...createBlockSkeleton(),
@@ -30,7 +32,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         openFileType: state.openFileType,
     }),
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<DamFileDownloadLinkBlockData> => {
+    output2State: async (output, { apolloClient }): Promise<DamFileDownloadLinkBlockData> => {
         const ret: DamFileDownloadLinkBlockData = {
             openFileType: output.openFileType,
         };
@@ -115,7 +117,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             >
                 <Field name="file" component={FileField} fullWidth />
                 <Divider />
-                <AdminComponentPaper>
+                <BlockAdminComponentPaper>
                     <Field
                         name="openFileType"
                         fullWidth
@@ -132,7 +134,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                             </FinalFormSelect>
                         )}
                     </Field>
-                </AdminComponentPaper>
+                </BlockAdminComponentPaper>
             </BlocksFinalForm>
         );
     },

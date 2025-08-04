@@ -1,16 +1,7 @@
-import {
-    AnnotationBlockMeta,
-    BlockData,
-    BlockField,
-    BlockIndexData,
-    BlockInput,
-    BlockMetaField,
-    BlockMetaFieldKind,
-    createBlock,
-    inputToData,
-} from "@comet/blocks-api";
 import { IsEnum, IsUUID } from "class-validator";
 
+import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
+import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { DamFileDownloadLinkBlockTransformerService } from "./dam-file-download-link-block-transformer.service";
@@ -57,7 +48,7 @@ class DamFileDownloadLinkBlockInput extends BlockInput {
     openFileType: OpenFileTypeMethod;
 
     transformToBlockData(): DamFileDownloadLinkBlockData {
-        return inputToData(DamFileDownloadLinkBlockData, this);
+        return blockInputToData(DamFileDownloadLinkBlockData, this);
     }
 }
 

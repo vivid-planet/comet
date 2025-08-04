@@ -1,0 +1,37 @@
+name: Validate renovate config
+
+on:
+    pull_request:
+        paths:
+            - renovate.json
+            - renovate.json5
+        branches:
+            - main
+            - next
+    push:
+        paths:
+            - renovate.json
+            - renovate.json5
+        branches:
+            - main
+            - next
+
+jobs:
+    validate:
+        name: Validate
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "${{ github.actor }}"
+
+            - uses: actions/checkout@v4
+
+            - uses: pnpm/action-setup@v4
+
+            - name: Use Node.js 22.x
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  registry-url: "https://registry.npmjs.org"
+
+            - name: Validate renovate config
+              run: npx --yes --package renovate -- renovate-config-validator

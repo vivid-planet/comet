@@ -7,8 +7,8 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
-    IEditDialogApi,
-    ISelectionApi,
+    type IEditDialogApi,
+    type ISelectionApi,
     Table,
     Toolbar,
     ToolbarItem,
@@ -16,8 +16,8 @@ import {
     useEditDialogApi,
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
-import { IconButton, MenuItem, Typography } from "@mui/material";
-import { useRef, useState, VoidFunctionComponent } from "react";
+import { DialogContent, IconButton, MenuItem, Typography } from "@mui/material";
+import { useRef, useState, type VoidFunctionComponent } from "react";
 import { useLocation } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -37,14 +37,16 @@ export const Hook = {
                 <h2>useEditDialog Variant:</h2>
                 <Button onClick={() => editDialogApi.openAddDialog()}>Open Edit Dialog</Button>
                 <EditDialog>
-                    <FinalForm
-                        mode="add"
-                        onSubmit={async ({ name }) => {
-                            window.alert(`Name: ${name}`);
-                        }}
-                    >
-                        <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="add"
+                            onSubmit={async ({ name }) => {
+                                window.alert(`Name: ${name}`);
+                            }}
+                        >
+                            <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
+                        </FinalForm>
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -63,14 +65,16 @@ export const Component = {
                 <EditDialog ref={editDialogApi}>
                     {() => {
                         return (
-                            <FinalForm
-                                mode="add"
-                                onSubmit={async ({ name }) => {
-                                    window.alert(`Name: ${name}`);
-                                }}
-                            >
-                                <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
-                            </FinalForm>
+                            <DialogContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={async ({ name }) => {
+                                        window.alert(`Name: ${name}`);
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
+                                </FinalForm>
+                            </DialogContent>
                         );
                     }}
                 </EditDialog>
@@ -94,14 +98,16 @@ export const UseEditDialogApi = {
             <EditDialogApiContext.Provider value={editDialogApi}>
                 <ChildComponentWithOpenButton />
                 <EditDialog>
-                    <FinalForm
-                        mode="add"
-                        onSubmit={async ({ name }) => {
-                            window.alert(`Name: ${name}`);
-                        }}
-                    >
-                        <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="add"
+                            onSubmit={async ({ name }) => {
+                                window.alert(`Name: ${name}`);
+                            }}
+                        >
+                            <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
+                        </FinalForm>
+                    </DialogContent>
                 </EditDialog>
             </EditDialogApiContext.Provider>
         );
@@ -118,34 +124,36 @@ export const WithForm = {
                 <h2>Loading and Error State of EditDialog:</h2>
                 <Button onClick={() => editDialogApi.openAddDialog()}>Open Edit Dialog</Button>
                 <EditDialog>
-                    <FinalForm
-                        mode="add"
-                        onSubmit={async ({ desiredOutcome }) => {
-                            return new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    if (desiredOutcome === "success") {
-                                        resolve();
-                                    } else {
-                                        reject("This is an Error Message");
-                                    }
-                                }, 3000);
-                            });
-                        }}
-                        initialValues={{
-                            desiredOutcome: "success",
-                        }}
-                    >
-                        <Field name="desiredOutcome" label="Desired Outcome" fullWidth>
-                            {(props) => (
-                                <FinalFormSelect {...props} fullWidth required>
-                                    <MenuItem value="success" selected>
-                                        Success
-                                    </MenuItem>
-                                    <MenuItem value="error">Error</MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
-                    </FinalForm>
+                    <DialogContent>
+                        <FinalForm
+                            mode="add"
+                            onSubmit={async ({ desiredOutcome }) => {
+                                return new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                        if (desiredOutcome === "success") {
+                                            resolve();
+                                        } else {
+                                            reject("This is an Error Message");
+                                        }
+                                    }, 3000);
+                                });
+                            }}
+                            initialValues={{
+                                desiredOutcome: "success",
+                            }}
+                        >
+                            <Field name="desiredOutcome" label="Desired Outcome" fullWidth>
+                                {(props) => (
+                                    <FinalFormSelect {...props} fullWidth required>
+                                        <MenuItem value="success" selected>
+                                            Success
+                                        </MenuItem>
+                                        <MenuItem value="error">Error</MenuItem>
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
+                        </FinalForm>
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -256,7 +264,9 @@ export const WithTable = {
                     ]}
                 />
                 <EditDialog>
-                    <UserForm mode={selectionMode} id={selectedId} selectionApi={selectionApi} />
+                    <DialogContent>
+                        <UserForm mode={selectionMode} id={selectedId} selectionApi={selectionApi} />
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -315,17 +325,19 @@ export const SelectionWithHook = {
                     ]}
                 />
                 <EditDialog>
-                    <Typography>
-                        <strong>Mode:</strong> {mode}
-                    </Typography>
+                    <DialogContent>
+                        <Typography>
+                            <strong>Mode:</strong> {mode}
+                        </Typography>
 
-                    <Typography>
-                        <strong>ID:</strong> {id}
-                    </Typography>
+                        <Typography>
+                            <strong>ID:</strong> {id}
+                        </Typography>
 
-                    <Typography>
-                        <strong>URL:</strong> {location.pathname}
-                    </Typography>
+                        <Typography>
+                            <strong>URL:</strong> {location.pathname}
+                        </Typography>
+                    </DialogContent>
                 </EditDialog>
             </>
         );
@@ -386,7 +398,7 @@ export const SelectionWithComponent = {
                 <EditDialog ref={editDialogApi}>
                     {({ selectionMode, selectedId }) => {
                         return (
-                            <>
+                            <DialogContent>
                                 <Typography>
                                     <strong>Mode:</strong> {selectionMode}
                                 </Typography>
@@ -398,7 +410,7 @@ export const SelectionWithComponent = {
                                 <Typography>
                                     <strong>URL:</strong> {location.pathname}
                                 </Typography>
-                            </>
+                            </DialogContent>
                         );
                     }}
                 </EditDialog>
