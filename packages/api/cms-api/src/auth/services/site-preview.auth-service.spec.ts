@@ -5,7 +5,7 @@ import { createSitePreviewAuthService, type SitePreviewAuthServiceConfig } from 
 
 describe("createSitePreviewAuthService", () => {
     const instantianteService = (config: SitePreviewAuthServiceConfig) => new (createSitePreviewAuthService(config))();
-    const mockRequest = (cookieValue: string) => jest.fn().mockReturnValue({ cookies: { __comet_preview: cookieValue } })();
+    const mockRequest = (cookieValue: string) => jest.fn().mockReturnValue({ cookies: { __comet_site_preview: cookieValue } })();
     const authenticationError = expect.objectContaining({ authenticationError: expect.any(String) });
 
     it("throws Error on empty secret", async () => {

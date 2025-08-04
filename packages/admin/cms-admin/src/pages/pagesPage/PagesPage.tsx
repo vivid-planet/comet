@@ -119,8 +119,7 @@ export function PagesPage({
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        // TODO remove hardcoded domain here
-        domain: pageTreeScope.domain,
+        siteUrl: siteConfig.url,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);

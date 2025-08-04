@@ -5,7 +5,7 @@
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
-  permission: String!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -18,6 +18,23 @@ type UserPermission {
 enum UserPermissionSource {
   MANUAL
   BY_RULE
+}
+
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  news
+  products
+  manufacturers
 }
 
 """
@@ -45,7 +62,7 @@ type UserPermissionsUser {
 }
 
 type CurrentUserPermission {
-  permission: String!
+  permission: Permission!
   contentScopes: [JSONObject!]!
 }
 
@@ -864,6 +881,7 @@ type Query {
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], documentType: String, offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+  blockPreviewJwt(scope: JSONObject!, url: String!, includeInvisible: Boolean!): String!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -935,9 +953,9 @@ input StringFilter {
 }
 
 input PermissionFilter {
-  equal: String
-  notEqual: String
-  isAnyOf: [String!]
+  equal: Permission
+  notEqual: Permission
+  isAnyOf: [Permission!]
 }
 
 input UserPermissionsUserSort {
@@ -1430,7 +1448,7 @@ type Mutation {
 }
 
 input UserPermissionInput {
-  permission: String!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
