@@ -2,8 +2,8 @@
 "@comet/blocks-admin": minor
 ---
 
-Enable displaying icons in `BlockPreviewContent` by extending the `BlockInterface.previewContent` method to support objects of type `"icon"`
+Enable displaying icons in `BlockPreviewContent`
 
-To display an icon, pass an object like `{ type: "icon", content: <Icon /> }` to the `previewContent` prop.
+Use the `icon?: (state: State) => ReactNode;` block method to add an icon to your block.
 
 Add optional prop `showIcon` to `BlockPreviewContent` to control icon visibility.
