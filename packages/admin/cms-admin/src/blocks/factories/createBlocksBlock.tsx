@@ -162,8 +162,6 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         return acc;
     }, []);
 
-    const allTags = tags ? [...childTags, ...tags] : childTags;
-
     const BlocksBlock: BlockInterface<
         BlocksBlockFragment<AdditionalItemFields>,
         BlocksBlockState<AdditionalItemFields>,
@@ -175,7 +173,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
         displayName,
 
-        tags: allTags,
+        tags: tags ? tags : childTags,
 
         defaultValues: () => ({ blocks: [] }),
 

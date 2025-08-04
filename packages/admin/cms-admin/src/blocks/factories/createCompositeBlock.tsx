@@ -128,7 +128,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
 
         category,
 
-        tags,
+        tags: tags ? tags : options.tags,
 
         createPreviewState: (state, previewContext) => {
             const blockPreviewState = block.createPreviewState(state, previewContext);

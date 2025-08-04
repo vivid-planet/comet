@@ -125,8 +125,6 @@ export const createOneOfBlock = <T extends boolean = boolean>(
         return acc;
     }, []);
 
-    const allTags = tags ? [...childTags, ...tags] : childTags;
-
     const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
 
@@ -134,7 +132,7 @@ export const createOneOfBlock = <T extends boolean = boolean>(
 
         displayName,
 
-        tags: allTags,
+        tags: tags ? tags : childTags,
 
         category,
 
