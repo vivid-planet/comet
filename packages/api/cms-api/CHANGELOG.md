@@ -1,5 +1,96 @@
 # @comet/cms-api
 
+## 8.0.0-beta.7
+
+### Major Changes
+
+- b3e73a5: Remove `ImagesController` export from `@comet/cms-api`
+- 8e193a3: Introduce a strongly-typed permission system using the new `Permission` GraphQL enum and `Permission` type, replacing previous string-based permissions.
+
+    **Breaking changes**
+    1. **Mandatory `requiredPermission`**: The `@CrudGenerator` decorator now requires the `requiredPermission` parameter to be explicitly specified
+    2. **Permission Type Changes**: All permission-related APIs now expect typed permissions instead of plain strings
+
+- 8ef9a56: Use `GraphQLLocalDate` instead of `GraphQLDate` for date-only columns
+
+    The `GraphQLDate` scalar coerces strings (e.g., `2025-06-30`) to `Date` objects when used as an input type.
+    This causes problems when used in combination with MikroORM v6, which treats date-only columns as strings.
+    Since using strings is preferred, the `GraphQLLocalDate` scalar is used instead, which performs no type coercion.
+
+    **How to upgrade**
+    1. Use `string` instead of `Date` for date-only columns:
+
+    ```diff
+    class Product {
+        @Property({ type: types.date, nullable: true })
+        @Field(() => GraphQLDate, { nullable: true })
+    -   availableSince?: Date = undefined;
+    +   availableSince?: string = undefined;
+    }
+    ```
+
+    2. Use `GraphQLLocalDate` instead of `GraphQLDate`:
+
+    ```diff
+    - import { GraphQLDate } from "graphql-scalars";
+    + import { GraphQLLocalDate } from "graphql-scalars";
+
+    class Product {
+        @Property({ type: types.date, nullable: true })
+    -   @Field(() => GraphQLDate, { nullable: true })
+    +   @Field(() => GraphQLLocalDate, { nullable: true })
+        availableSince?: string = undefined;
+    }
+    ```
+
+    3. Add the `LocalDate` scalar to `codegen.ts`:
+
+    ```diff
+    scalars: rootBlocks.reduce(
+        (scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }),
+    +   { LocalDate: "string" }
+    )
+    ```
+
+### Minor Changes
+
+- b3e73a5: Add configuration option `basePath` to the DAM settings in `comet-config.json`.
+
+    ```diff
+    {
+        "dam": {
+            ...
+    +        "basePath": "foo"
+        },
+        ...
+    }
+    ```
+
+- cbfa595: Add support for searching UUIDs to `searchToMikroOrmQuery`
+- 1e39c70: Add `MailerModule` to send mails from API
+
+    See https://docs.comet-dxp.com/docs/features-modules/mailer-module for more information
+
+- 2a9f23d: Support block preview scope for BFF requests
+
+    The current scope will be sent via a monkey patched fetch and interpreted in `previewParams()`.
+
+- 1450882: Add support for `notContains` to `StringFilter`
+- 864e6de: Add the possibility to filter users by permission
+
+### Patch Changes
+
+- 5cca3e1: Fix `createFile` in `BlobStorageS3Storage`
+
+    Previously, uploading files to an S3 bucket caused this error:
+
+    > Are you using a Stream of unknown length as the Body of a PutObject request? Consider using Upload instead from @aws-sd k/lib-storage.
+    > An error was encountered in a non-retryable streaming request.
+
+- ebf05cf: Only regenerate warnings for the row that changed in the `WarningEventSubscriber`
+
+    Previously, the warnings were regenerated for all rows of the entity using a lot of memory.
+
 ## 8.0.0-beta.6
 
 ### Major Changes

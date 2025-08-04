@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "8.0.0-beta.6",
+    "version": "8.0.0-beta.7",
     "description": "Comet Admin package",
     "repository": {
         "directory": "packages/admin/admin",
