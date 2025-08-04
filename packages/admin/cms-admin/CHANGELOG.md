@@ -1,5 +1,89 @@
 # @comet/cms-admin
 
+## 8.0.0-beta.7
+
+### Major Changes
+
+- 8e193a3: Introduce a strongly-typed permission system using the new `Permission` GraphQL enum and `Permission` type, replacing previous string-based permissions.
+
+    **Breaking changes**
+    1. **Mandatory `requiredPermission`**: The `@CrudGenerator` decorator now requires the `requiredPermission` parameter to be explicitly specified
+    2. **Permission Type Changes**: All permission-related APIs now expect typed permissions instead of plain strings
+
+- e7ad83b: Remove `Grid` layout responsibility from `DashboardWidgetRoot`.
+
+    The component `DashboardWidgetRoot` no longer wraps its content inside a `<Grid>` component. This change delegates layout responsibility (e.g., grid column sizing) to the parent component.
+
+    **Before:**
+    `DashboardWidgetRoot` was always wrapped in `<Grid size={{ xs: 12, lg: 6 }}>`.
+
+    **After:**
+    No layout assumptions — parent components must now position the widget explicitly.
+
+    This change may require updates where `DashboardWidgetRoot` is used inside grid layouts.
+
+### Minor Changes
+
+- b3e73a5: Add configuration option `basePath` to the DAM settings in `comet-config.json`.
+
+    ```diff
+    {
+        "dam": {
+            ...
+    +        "basePath": "foo"
+        },
+        ...
+    }
+    ```
+
+- 604a363: Rework `createRedirectsPage` usage to accept `linkBlock` instead of `customTargets`.
+
+    Previously, `customTargets` were passed directly:
+
+    ```ts
+    const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
+    ```
+
+    Now, you should first create the `RedirectsLinkBlock` and then provide it to `createRedirectsPage`:
+
+    ```ts
+    export const RedirectsLinkBlock = createRedirectsLinkBlock({
+        news: NewsLinkBlock,
+    });
+
+    export const RedirectsPage = createRedirectsPage({ linkBlock: RedirectsLinkBlock, scopeParts: ["domain"] });
+    ```
+
+    This change was made because `RedirectsLinkBlock` is also needed by `RedirectDependency`, and can therefore be reused.
+
+- aacfb36: Redirect to the most recently visited content scope when returning to the application
+- 2a9f23d: Support block preview scope for BFF requests
+
+    The current scope will be sent via a monkey patched fetch and interpreted in `previewParams()`.
+
+- 864e6de: Add the possibility to filter users by permission
+
+### Patch Changes
+
+- 04c9225: Validate path parameter in site preview
+
+    Prevents phishing attacks.
+
+- 3621949: Fix searching for pages via domain by using the site's URL from the site config
+- adf73a3: Remove the hardcoded default category in the page tree select
+- Updated dependencies [e74ef46]
+- Updated dependencies [46edfd6]
+- Updated dependencies [d148091]
+- Updated dependencies [bb3e809]
+- Updated dependencies [e15895a]
+- Updated dependencies [c48ca03]
+- Updated dependencies [66abe0a]
+- Updated dependencies [1450882]
+    - @comet/admin@8.0.0-beta.7
+    - @comet/admin-date-time@8.0.0-beta.7
+    - @comet/admin-rte@8.0.0-beta.7
+    - @comet/admin-icons@8.0.0-beta.7
+
 ## 8.0.0-beta.6
 
 ### Major Changes
