@@ -8,8 +8,8 @@ import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
 import { type BlockInterface } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
-import { useRedirectsScope } from "../pages/redirectsConfig";
 import { RedirectForm } from "./RedirectForm";
+import { useRedirectsScope } from "./redirectsConfig";
 import { RedirectsGrid } from "./RedirectsGrid";
 
 const RedirectsInternalLinkBlock: typeof InternalLinkBlock = {

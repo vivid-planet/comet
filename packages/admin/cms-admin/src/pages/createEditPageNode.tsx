@@ -16,6 +16,7 @@ import { useContentLanguage } from "../contentLanguage/useContentLanguage";
 import { type DocumentInterface, type DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
 import { type GQLSlugAvailability } from "../graphql.generated";
+import { useRedirectsScope } from "../redirects/redirectsConfig";
 import { usePageTreeScope } from "./config/usePageTreeScope";
 import {
     type GQLCreatePageNodeMutation,
@@ -31,7 +32,6 @@ import {
     type GQLUpdatePageNodeMutation,
     type GQLUpdatePageNodeMutationVariables,
 } from "./createEditPageNode.generated";
-import { useRedirectsScope } from "./redirectsConfig";
 
 type SerializedInitialValues = string;
 
