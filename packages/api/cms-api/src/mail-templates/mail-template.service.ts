@@ -1,0 +1,98 @@
+import { DiscoveryService } from "@golevelup/nestjs-discovery";
+import { EntityManager } from "@mikro-orm/postgresql";
+import { Injectable } from "@nestjs/common";
+import { Options as MailOptions } from "nodemailer/lib/mailer";
+import { createIntl, createIntlCache, IntlCache, IntlShape } from "react-intl";
+import { ContentScope } from "src/user-permissions/interfaces/content-scope.interface";
+
+import { MailerService } from "../mailer/mailer.service";
+import { MAIL_TEMPLATE_METADATA_KEY, MailTemplateMetadata } from "./mail-template.decorator";
+
+export type MailTemplateInterface<T> = {
+    id: string;
+    type: string;
+    name: string;
+
+    availableForScopes?: () => Promise<ContentScope[]>;
+    generateMail: (intl: IntlShape, params: T) => Promise<MailOptions>; // TODO remove messages from MailProps
+    getPreparedTestParams: () => Promise<PreparedTestParams<T>[]>;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isMailTemplate(arg: any): arg is MailTemplateInterface<unknown> {
+    return (
+        arg.id !== undefined &&
+        arg.type !== undefined &&
+        arg.name !== undefined &&
+        arg.generateMail !== undefined &&
+        typeof arg.generateMail === "function"
+    );
+}
+export type PreparedTestParams<T> = {
+    name: string;
+    params: T;
+};
+
+@Injectable()
+export class MailTemplateService {
+    private readonly intlCache: IntlCache;
+    constructor(
+        private readonly entityManager: EntityManager,
+        private readonly mailerService: MailerService,
+        private readonly discoveryService: DiscoveryService,
+    ) {
+        this.intlCache = createIntlCache();
+    }
+
+    async getMailTemplates(filter?: { scope?: ContentScope; type?: string }): Promise<MailTemplateInterface<unknown>[]> {
+        const { scope, type } = filter || {};
+
+        const mailTemplates: MailTemplateInterface<unknown>[] = [];
+        for (const discovery of await this.discoveryService.providersWithMetaAtKey<MailTemplateMetadata>(MAIL_TEMPLATE_METADATA_KEY)) {
+            const mailTemplate = discovery.discoveredClass.instance;
+            if (!isMailTemplate(mailTemplate)) throw new Error(`Class ${discovery.discoveredClass.name} does not implement MailTemplateInterface`);
+            if (type && mailTemplate.type !== type) continue;
+            if (scope && mailTemplate.availableForScopes && !(await mailTemplate.availableForScopes()).includes(scope)) continue;
+
+            mailTemplates.push(mailTemplate);
+        }
+        return mailTemplates;
+    }
+
+    async getMailTemplate<T>(id: string): Promise<MailTemplateInterface<T>> {
+        const ret = (await this.getMailTemplates()).find((mailTemplate) => mailTemplate.id === id);
+        if (!ret) throw new Error(`MailTemplate not found: ${id}`);
+        return ret as MailTemplateInterface<T>; // ATTENTION: this is a cast, we should check if the type is correct
+    }
+
+    /**
+     * Generates a mail from the template and the params, can for example be used to render the template in admin
+     * @param mailTemplate
+     * @param params
+     */
+    async generateMail<T>(mailTemplate: MailTemplateInterface<T>, params: T): Promise<MailOptions> {
+        const language = "en"; // TODO correctly set the language, maybe move into the mail template
+        const messages = await getMessages(language);
+        const intl = createIntl(
+            {
+                // Locale of the application
+                locale: language,
+                // Locale of the fallback defaultMessage
+                defaultLocale: language,
+                messages: messages,
+            },
+            this.intlCache,
+        );
+        return mailTemplate.generateMail(intl, { ...params, messages });
+    }
+
+    async sendMail<T>(mailTemplate: MailTemplateInterface<T>, params: T): Promise<boolean> {
+        const mail = await this.generateMail(mailTemplate, params);
+
+        const response = await this.mailerService.sendMail({
+            type: mailTemplate.type,
+            ...mail,
+        });
+        return !!response.messageId;
+    }
+}
