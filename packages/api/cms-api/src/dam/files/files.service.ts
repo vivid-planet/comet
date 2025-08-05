@@ -25,6 +25,7 @@ import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
+import { DamMediaAlternative } from "./dam-media-alternatives/entities/dam-media-alternative.entity";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
@@ -106,6 +107,7 @@ export class FilesService {
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+        @InjectRepository(DamMediaAlternative) private readonly damMediaAlternativesRepository: EntityRepository<DamMediaAlternative>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
@@ -458,6 +460,8 @@ export class FilesService {
             image: ignoreImage,
             scope: ignoreScope,
             copies: ignoreCopies,
+            alternativesForThisFile: ignoreAlternativesForThisFile,
+            thisFileIsAlternativeFor: ignoreThisFileIsAlternativeFor,
             ...fileProps
         } = file;
 
@@ -469,7 +473,30 @@ export class FilesService {
             scope: inboxFolder.scope,
         };
 
-        return this.create(fileInput);
+        const copiedFile = await this.create(fileInput);
+
+        const copiedAlternatives: DamMediaAlternative[] = [];
+        if ((await file.alternativesForThisFile.loadItems()).length > 0) {
+            for (const alternative of file.alternativesForThisFile) {
+                const copiedAlternativeFile = await this.createCopyOfFile(await alternative.alternative.load(), { inboxFolder });
+
+                const { id: ignoreId, for: ignoreFor, alternative: ignoreAlternative, ...alternativeProps } = alternative;
+                const copiedDamMediaAlternative = this.damMediaAlternativesRepository.create({
+                    ...alternativeProps,
+
+                    for: copiedFile,
+                    alternative: copiedAlternativeFile,
+                });
+
+                copiedAlternatives.push(copiedDamMediaAlternative);
+            }
+        }
+
+        copiedFile.alternativesForThisFile.set(copiedAlternatives);
+
+        await this.entityManager.flush();
+
+        return copiedFile;
     }
 
     async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
