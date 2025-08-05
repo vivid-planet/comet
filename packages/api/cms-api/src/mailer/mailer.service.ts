@@ -38,7 +38,7 @@ export class MailerService {
         mailTypeForLogging,
         additionalData,
         ...originMailOptions
-    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown }) {
+    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown }): Promise<Mail> {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
 
         // this is needed because only on production stage we are allowed to send mails to customers
