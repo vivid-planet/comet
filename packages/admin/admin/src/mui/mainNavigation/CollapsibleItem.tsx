@@ -68,6 +68,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
 
     const location = useLocation();
 
+    const [isMenuSelected, setIsMenuSelected] = useState<boolean>(hasSelectedChild.current);
     const [isSubmenuOpen, setIsSubmenuOpen] = useState<boolean>(openByDefault || hasSelectedChild.current);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -82,12 +83,12 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
         ) {
             return "to" in child.props && matchPath(location.pathname, { path: child.props.to, strict: true });
         }
-        hasSelectedChild.current = false;
+        setIsMenuSelected(false);
 
         return Children.map(children, (child: MainNavigationChild) => {
             // child is selected
             if (checkIfPathInLocation(child)) {
-                hasSelectedChild.current = true;
+                setIsMenuSelected(true);
                 setIsSubmenuOpen(true);
             }
 
@@ -97,7 +98,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
                     ? Children.map(child?.props?.children, (child: MainNavigationChild) => child)
                     : ([] as MainNavigationChild[]);
             if (subChildElements?.some((child: MainNavigationChild) => child.props && checkIfPathInLocation(child))) {
-                hasSelectedChild.current = true;
+                setIsMenuSelected(true);
                 setIsSubmenuOpen(true);
             }
 
@@ -142,7 +143,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
     }
 
     const ownerState: OwnerState = {
-        childSelected: hasSelectedChild.current,
+        childSelected: isMenuSelected,
         open: isSubmenuOpen,
         menuOpen: Boolean(isMenuOpen),
         subMenuOpen: Boolean(isSubmenuOpen),
