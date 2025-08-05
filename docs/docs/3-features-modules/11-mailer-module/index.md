@@ -107,7 +107,7 @@ send mail
 async publishAllProducts(): Promise<boolean> {
     ...
     await this.mailerService.sendMail({
-        type: "products-published",
+        mailTypeForLogging: "products-published",
         to: "product-manager@comet-dxp.com",
         cc: "vice-product-manager@comet-dxp.com",
         subject: "All products have been published",
