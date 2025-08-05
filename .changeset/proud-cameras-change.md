@@ -2,4 +2,4 @@
 "@comet/admin-icons": minor
 ---
 
-add `CometDigitalExperienceLogo`
+Add `CometDigitalExperienceLogo`
