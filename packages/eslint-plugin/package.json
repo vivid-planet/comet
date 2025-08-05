@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-plugin",
-    "version": "7.25.4",
+    "version": "7.25.5",
     "main": "lib/index.js",
     "scripts": {
         "build": "$npm_execpath run clean && tsc",
