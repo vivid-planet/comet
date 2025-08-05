@@ -1,7 +1,11 @@
+import { EntityManager } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Transporter } from "nodemailer";
-import { Address, Options as MailOptions } from "nodemailer/lib/mailer";
+import Mail, { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
+import { MailerLog } from "./entities/mailer-log.entity";
 import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
 import { MailerModuleConfig } from "./mailer.module";
 
@@ -14,6 +18,8 @@ export class MailerService {
     constructor(
         @Inject(MAILER_SERVICE_CONFIG) private readonly mailerConfig: MailerServiceConfig,
         @Inject(MAILER_MODULE_TRANSPORT) private readonly mailerTransport: Transporter,
+        private readonly entityManager: EntityManager,
+        @InjectRepository(MailerLog) private readonly mailerLogRepository: EntityRepository<MailerLog<unknown>>,
     ) {}
 
     private fillMailOptionsDefaults(originMailOptions: MailOptions): MailOptions {
@@ -33,13 +39,27 @@ export class MailerService {
      * @param mailTypeForLogging Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
      * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
+     * @param logMail When set to false, the email will not be logged to the database.
      */
     async sendMail({
         mailTypeForLogging,
         additionalData,
+        logMail = true,
         ...originMailOptions
-    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown }): Promise<Mail> {
+    }: MailOptions & { mailTypeForLogging?: string; additionalData?: unknown; logMail?: boolean }): Promise<Mail> {
         const mailOptionsWithDefaults = this.fillMailOptionsDefaults(originMailOptions);
+
+        let logEntry: MailerLog<unknown> | undefined;
+        if (logMail && !this.mailerConfig.disableMailLog) {
+            logEntry = this.mailerLogRepository.create({
+                to: this.normalizeToArray(originMailOptions.to).map<string>(this.convertAddressToString),
+                subject: originMailOptions.subject,
+                mailOptions: mailOptionsWithDefaults,
+                additionalData,
+                mailTypeForLogging, // for statistic and filter purposes
+            });
+            await this.entityManager.flush();
+        }
 
         // this is needed because only on production stage we are allowed to send mails to customers
         const mailOptions: MailOptions = this.mailerConfig.sendAllMailsTo
@@ -49,7 +69,16 @@ export class MailerService {
         const result = await this.mailerTransport.sendMail(mailOptions);
         if (!result.messageId) throw new Error(`Sending mail failed, no messageId returned. MailOptions: ${JSON.stringify(mailOptions)}`);
 
+        if (logMail && !this.mailerConfig.disableMailLog && logEntry) {
+            logEntry.assign({ result });
+            await this.entityManager.flush();
+        }
+
         return result;
+    }
+
+    private convertAddressToString(item: string | Mail.Address) {
+        return typeof item === "string" ? item : `${item.name} <${item.address}>`;
     }
 
     private normalizeToArray(item: string | Address | Array<string | Address> | undefined): Array<string | Address> {
