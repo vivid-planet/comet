@@ -115,3 +115,45 @@ async publishAllProducts(): Promise<boolean> {
     ...
 }
 ```
+
+---
+
+## Deleting Old Mail Logs
+
+You can delete old mail logs from the database using the CLI command:
+
+```
+npm run console -- mailer:delete-mail-logs-older-than <count> <duration> [--type <type>]
+```
+
+- `<count>`: Number of units (e.g., 30)
+- `<duration>`: Time unit (years, months, weeks, days, hours, minutes, seconds)
+- `--type <type>` (optional): Filter logs by mail type
+
+**Example:**
+
+To delete all mail logs older than 30 days:
+
+```
+npm run console -- mailer:delete-mail-logs-older-than 30 days
+```
+
+To delete all mail logs of type `notification` older than 7 days:
+
+```
+npm run console -- mailer:delete-mail-logs-older-than 7 days --type notification
+```
+
+This command will remove all mail logs created before the specified duration. Use with caution, as this operation is irreversible.
+
+---
+
+## Mail Log Creation and Updates
+
+Mail logs are created automatically whenever an email is sent using the `sendMail` method of the `MailerService`. Each log entry records details such as recipients, subject, mail options, additional data, and the mail type for filtering and statistics. The log is created before the email is sent.
+
+After the email is sent, the log entry is updated with the result of the send operation (such as the message ID and status). If mail logging is disabled via configuration, no log entries are created or updated.
+
+Mail logs are not created when using the `logMail` option of `sendMail`.
+
+---
