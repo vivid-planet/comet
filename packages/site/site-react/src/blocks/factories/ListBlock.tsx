@@ -1,4 +1,4 @@
-import { type ReactNode, Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";

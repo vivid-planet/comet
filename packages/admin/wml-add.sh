@@ -25,7 +25,7 @@ target=$(custom_realpath "$1/node_modules/@comet");
 source=$(custom_realpath "$(dirname "$0")")
 echo $target
 echo $source
-packages=( admin blocks-admin cms-admin admin-color-picker admin-icons admin-react-select admin-rte admin-theme )
+packages=( admin cms-admin admin-color-picker admin-icons admin-rte )
 for package in "${packages[@]}"; do
     cmd="wml add $source/$package $target/$package"
     echo $cmd

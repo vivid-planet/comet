@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export interface MasterLayoutContextValues {
+interface MasterLayoutContextValues {
     headerHeight: number;
 }
 

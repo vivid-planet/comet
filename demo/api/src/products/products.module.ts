@@ -1,7 +1,6 @@
 import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
-import { ProductVariantsService } from "@src/products/generated/product-variants.service";
 
 import { CustomProductResolver } from "./custom-product.resolver";
 import { Manufacturer } from "./entities/manufacturer.entity";
@@ -18,9 +17,11 @@ import { ManufacturerCountryResolver } from "./generated/manufacturer-country.re
 import { ProductResolver } from "./generated/product.resolver";
 import { ProductCategoriesService } from "./generated/product-categories.service";
 import { ProductCategoryResolver } from "./generated/product-category.resolver";
+import { ProductColorResolver } from "./generated/product-color.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
+import { ProductVariantsService } from "./generated/product-variants.service";
 
 @Module({
     imports: [
@@ -47,6 +48,7 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
         ManufacturerResolver,
         ManufacturerCountryResolver,
         ProductToTagResolver,
+        ProductColorResolver,
         CustomProductResolver,
     ],
     exports: [],

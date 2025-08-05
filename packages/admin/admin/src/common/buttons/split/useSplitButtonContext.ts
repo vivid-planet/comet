@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { SplitButtonContext, SplitButtonContextOptions } from "./SplitButtonContext";
+import { SplitButtonContext, type SplitButtonContextOptions } from "./SplitButtonContext";
 
 /**
  * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.

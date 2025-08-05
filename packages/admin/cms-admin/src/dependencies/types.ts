@@ -1,5 +1,5 @@
-import { ApolloClient } from "@apollo/client";
-import { ReactNode } from "react";
+import { type ApolloClient } from "@apollo/client";
+import { type ReactNode } from "react";
 
 export interface DependencyInterface {
     displayName: ReactNode;

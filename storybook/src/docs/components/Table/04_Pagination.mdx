@@ -1,4 +1,4 @@
-import { Canvas, Meta } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as PaginationStories from "./04_Pagination.stories";
 
@@ -21,10 +21,10 @@ After performing the steps above, a `TableFooter` is automatically added to the 
 
 Comet Admin supports multiple types of pagination:
 
--   **(Recommended)** [Offset-based Pagination](https://betterprogramming.pub/building-apis-a-comparison-between-cursor-and-offset-pagination-88261e3885f8#1c1a) (`createOffsetLimitPagingAction()`)
--   [Cursor-based Pagination](https://betterprogramming.pub/building-apis-a-comparison-between-cursor-and-offset-pagination-88261e3885f8#3cf7) (`createRelayPagingActions()`)
--   Page-based Pagination (`createPagePagingActions()`)
--   Offset-based Pagination for REST APIs (`createRestStartLimitPagingActions()`)
--   Page-based Pagination for REST APIs (`createRestPagingActions()`)
+- **(Recommended)** [Offset-based Pagination](https://betterprogramming.pub/building-apis-a-comparison-between-cursor-and-offset-pagination-88261e3885f8#1c1a) (`createOffsetLimitPagingAction()`)
+- [Cursor-based Pagination](https://betterprogramming.pub/building-apis-a-comparison-between-cursor-and-offset-pagination-88261e3885f8#3cf7) (`createRelayPagingActions()`)
+- Page-based Pagination (`createPagePagingActions()`)
+- Offset-based Pagination for REST APIs (`createRestStartLimitPagingActions()`)
+- Page-based Pagination for REST APIs (`createRestPagingActions()`)
 
 <Canvas of={PaginationStories.PaginationTable} />

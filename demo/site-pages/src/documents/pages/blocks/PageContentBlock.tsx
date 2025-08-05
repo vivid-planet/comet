@@ -1,5 +1,5 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
-import { PageContentBlockData } from "@src/blocks.generated";
+import { BlocksBlock, type PropsWithData, type SupportedBlocks } from "@comet/site-nextjs";
+import { type PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";

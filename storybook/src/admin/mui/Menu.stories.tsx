@@ -4,12 +4,12 @@ import {
     CometLogo,
     FillSpace,
     MainContent,
+    MainNavigation,
+    MainNavigationCollapsibleItem,
+    MainNavigationItemAnchorLink,
+    MainNavigationItemGroup,
+    MainNavigationItemRouterLink,
     MasterLayout,
-    Menu,
-    MenuCollapsibleItem,
-    MenuItemAnchorLink,
-    MenuItemGroup,
-    MenuItemRouterLink,
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, Settings, Sort } from "@comet/admin-icons";
@@ -24,33 +24,33 @@ const AppMenu = () => {
     const windowSize = useWindowSize();
 
     return (
-        <Menu variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
-            <MenuItemGroup title="Some Group">
-                <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
-                <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
-                    <MenuItemRouterLink primary="Foo1" to="/foo1" />
-                    <MenuItemRouterLink primary="Foo2" to="/foo2" />
-                </MenuCollapsibleItem>
-                <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
-                    <MenuItemRouterLink primary="Foo3" to="/foo3" />
-                    <MenuItemRouterLink primary="Foo4" to="/foo4" />
-                    <MenuCollapsibleItem primary="Wow there can be even more">
-                        <MenuItemRouterLink primary="Foo5" to="/foo5" />
-                        <MenuItemRouterLink primary="Foo6" to="/foo6" />
-                    </MenuCollapsibleItem>
-                </MenuCollapsibleItem>
-            </MenuItemGroup>
-            <MenuItemGroup title="Further Layers">
-                <MenuItemRouterLink primary="Settings" badgeContent={2} icon={<Settings />} to="/settings" />
-                <MenuItemAnchorLink
+        <MainNavigation variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
+            <MainNavigationItemGroup title="Some Group">
+                <MainNavigationItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
+                <MainNavigationCollapsibleItem primary="More Items" icon={<Sort />}>
+                    <MainNavigationItemRouterLink primary="Foo1" to="/foo1" />
+                    <MainNavigationItemRouterLink primary="Foo2" to="/foo2" />
+                </MainNavigationCollapsibleItem>
+                <MainNavigationCollapsibleItem primary="Even More Items" icon={<Sort />}>
+                    <MainNavigationItemRouterLink primary="Foo3" to="/foo3" />
+                    <MainNavigationItemRouterLink primary="Foo4" to="/foo4" />
+                    <MainNavigationCollapsibleItem primary="Wow there can be even more">
+                        <MainNavigationItemRouterLink primary="Foo5" to="/foo5" />
+                        <MainNavigationItemRouterLink primary="Foo6" to="/foo6" />
+                    </MainNavigationCollapsibleItem>
+                </MainNavigationCollapsibleItem>
+            </MainNavigationItemGroup>
+            <MainNavigationItemGroup title="Further Layers">
+                <MainNavigationItemRouterLink primary="Settings" badgeContent={2} icon={<Settings />} to="/settings" />
+                <MainNavigationItemAnchorLink
                     primary="Comet Admin"
                     secondary="View on GitHub"
                     target="_blank"
                     href="https://github.com/vivid-planet/comet"
                     icon={<CometColor />}
                 />
-            </MenuItemGroup>
-        </Menu>
+            </MainNavigationItemGroup>
+        </MainNavigation>
     );
 };
 

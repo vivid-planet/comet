@@ -1,6 +1,6 @@
 import { Button, CancelButton, CheckboxField, Dialog, OkayButton, SelectField, TextField } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { DialogActions, DialogContent, DialogContentText, DialogProps } from "@mui/material";
+import { DialogActions, DialogContent, DialogContentText, type DialogProps } from "@mui/material";
 import { Form } from "react-final-form";
 
 type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";
@@ -43,6 +43,8 @@ export default {
             control: "select",
             options: {
                 "Dialog Title Example": "Dialog Title Example",
+                "Really long dialog title":
+                    "Really long dialog title that is really long and takes up a lot of space because of all the words that are used in this title of the dialog you are seeing here in the storybook example inside comet that is used to test the dialog title",
                 None: "",
             },
         },

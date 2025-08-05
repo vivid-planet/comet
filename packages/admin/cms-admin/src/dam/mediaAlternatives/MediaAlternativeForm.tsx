@@ -1,17 +1,17 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, ISelectionApi, Loading } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, type ISelectionApi, Loading } from "@comet/admin";
 import { FormattedMessage } from "react-intl";
 
 import { FileField } from "../../form/file/FileField";
-import { GQLDamMediaAlternativeType } from "../../graphql.generated";
+import { type GQLDamMediaAlternativeType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import {
-    GQLCreateDamMediaAlternativeMutation,
-    GQLCreateDamMediaAlternativeMutationVariables,
-    GQLEditMediaAlternativeQuery,
-    GQLEditMediaAlternativeQueryVariables,
-    GQLUpdateDamMediaAlternativeMutation,
-    GQLUpdateDamMediaAlternativeMutationVariables,
+    type GQLCreateDamMediaAlternativeMutation,
+    type GQLCreateDamMediaAlternativeMutationVariables,
+    type GQLEditMediaAlternativeQuery,
+    type GQLEditMediaAlternativeQueryVariables,
+    type GQLUpdateDamMediaAlternativeMutation,
+    type GQLUpdateDamMediaAlternativeMutationVariables,
 } from "./MediaAlternativeForm.generated";
 import { mediaAlternativesGridRefetchQueries } from "./MediaAlternativesGrid";
 

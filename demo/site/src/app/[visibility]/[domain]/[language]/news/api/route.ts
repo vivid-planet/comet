@@ -2,7 +2,7 @@ import { fetchNewsList } from "@src/news/NewsPage.loader";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { PageParams } from "../page";
+import { type PageParams } from "../page";
 
 export async function GET(request: NextRequest, { params: { domain, language } }: { params: PageParams }) {
     const result = z
@@ -20,5 +20,12 @@ export async function GET(request: NextRequest, { params: { domain, language } }
         scope: { domain, language },
         ...result.data,
     });
-    return NextResponse.json(data);
+
+    // 7.5 min (CDN) + 7.5 min (Data Cache) = 15 min effective cache duration
+    return NextResponse.json(data, {
+        headers: {
+            "Cache-Control": "public, max-age=450, stale-while-revalidate=450",
+        },
+        status: 200,
+    });
 }

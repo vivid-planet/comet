@@ -1,9 +1,9 @@
 import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, svgIconClasses, useThemeProps } from "@mui/material";
-import { ComponentsOverrides, css, Theme } from "@mui/material/styles";
-import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
+import { type ComponentsOverrides, css, type Theme } from "@mui/material/styles";
+import { type PropsWithChildren, type ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { type ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
     root: typeof FormControl;

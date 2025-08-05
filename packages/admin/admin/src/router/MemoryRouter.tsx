@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { MemoryRouter as ReactMemoryRouter, MemoryRouterProps } from "react-router-dom";
+import { MemoryRouter as ReactMemoryRouter, type MemoryRouterProps } from "react-router-dom";
 
-import { PromptHandlerApi, RouterPromptHandler } from "./PromptHandler";
+import { type PromptHandlerApi, RouterPromptHandler } from "./PromptHandler";
 
 // MemoryRouter that sets up a material-ui confirmation dialog
 // plus a PromptHandler that works with our Prompt (supporting multiple Prompts)

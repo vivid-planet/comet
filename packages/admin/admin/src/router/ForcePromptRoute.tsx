@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Route, RouteProps } from "react-router";
+import { Route, type RouteProps } from "react-router";
 import useConstant from "use-constant";
 import { v4 as uuid } from "uuid";
 

@@ -1,5 +1,5 @@
-import { EntityCaseNamingStrategy, MigrationObject } from "@mikro-orm/core";
 import { MikroOrmModule as MikroOrmNestjsModule, MikroOrmModuleOptions as MikroOrmNestjsOptions } from "@mikro-orm/nestjs";
+import { EntityCaseNamingStrategy, MigrationObject, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { DynamicModule, Module } from "@nestjs/common";
 import fs from "fs";
 import path from "path";
@@ -29,9 +29,8 @@ import { Migration20240814090503 } from "./migrations/Migration20240814090503";
 import { Migration20240814090541 } from "./migrations/Migration20240814090541";
 import { Migration20240814090653 } from "./migrations/Migration20240814090653";
 import { Migration20250403134629 } from "./migrations/Migration20250403134629";
+import { Migration20250623085054 } from "./migrations/Migration20250623085054";
 import { Migration20250623113026 } from "./migrations/Migration20250623113026";
-
-export const PG_UNIQUE_CONSTRAINT_VIOLATION = "23505";
 
 export interface MikroOrmModuleOptions {
     ormConfig: MikroOrmNestjsOptions;
@@ -58,13 +57,13 @@ export function createMigrationsList(migrationsDir: string): MigrationObject[] {
 
             return {
                 name,
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
                 class: require(`${migrationsDir}/${file}`)[name],
             };
         });
 }
 
-export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptions): MikroOrmNestjsOptions {
+export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptions<PostgreSqlDriver>): MikroOrmNestjsOptions<PostgreSqlDriver> {
     return {
         ...defaults,
         namingStrategy: EntityCaseNamingStrategy,
@@ -96,6 +95,7 @@ export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptio
                 { name: "Migration20240814090541", class: Migration20240814090541 },
                 { name: "Migration20240814090653", class: Migration20240814090653 },
                 { name: "Migration20250403134629", class: Migration20250403134629 },
+                { name: "Migration20250623085054", class: Migration20250623085054 },
                 { name: "Migration20250623113026", class: Migration20250623113026 },
                 ...(migrations?.migrationsList || []),
             ].sort((migrationA, migrationB) => {

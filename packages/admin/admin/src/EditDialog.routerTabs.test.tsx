@@ -1,19 +1,18 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridSlotsComponent } from "@mui/x-data-grid";
 import { screen, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
-import { ReactNode, RefObject, useRef } from "react";
+import { type ReactNode, type RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Router } from "react-router";
 import { render } from "test-utils";
 
 import { Button } from "./common/buttons/Button";
-import { ToolbarActions } from "./common/toolbar/actions/ToolbarActions";
+import { FillSpace } from "./common/FillSpace";
 import { DataGridToolbar } from "./common/toolbar/DataGridToolbar";
-import { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
 import { EditDialog } from "./EditDialog";
-import { IEditDialogApi } from "./EditDialogApiContext";
+import { type IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
 import { StackLink } from "./stack/StackLink";
@@ -49,11 +48,15 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     };
 
-    function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+    type ToolbarProps = {
+        toolbarAction?: ReactNode;
+    };
+
+    function Toolbar({ toolbarAction }: ToolbarProps) {
         return (
             <DataGridToolbar>
-                <ToolbarFillSpace />
-                <ToolbarActions>{toolbarAction}</ToolbarActions>
+                <FillSpace />
+                {toolbarAction}
             </DataGridToolbar>
         );
     }
@@ -74,6 +77,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             { field: "id", headerName: "ID", width: 90 },
                             {
                                 field: "actions",
+                                type: "actions",
                                 headerName: "",
                                 sortable: false,
                                 filterable: false,
@@ -102,17 +106,17 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             { id: "4", productId: "1" },
                             { id: "5", productId: "1" },
                         ]}
-                        components={{
-                            Toolbar: Toolbar,
+                        slots={{
+                            toolbar: Toolbar as GridSlotsComponent["toolbar"],
                         }}
-                        componentsProps={{
+                        slotProps={{
                             toolbar: {
                                 toolbarAction: (
                                     <Button startIcon={<Add />} onClick={() => editDialogApi.current?.openAddDialog()}>
                                         Add product
                                     </Button>
                                 ),
-                            },
+                            } as ToolbarProps,
                         }}
                         disableVirtualization
                     />
@@ -156,11 +160,15 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
 
         rendered.getByText("Products").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Products")).toBeInTheDocument();
+        });
 
         expect(rendered.getByText("Add product")).toBeInTheDocument();
         rendered.getByText("Add product").click();
-        expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        });
     });
 
     it("should stay on the products page when closing the edit dialog", async () => {
@@ -179,11 +187,15 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         expect(screen.getByText("Customers Page")).toBeInTheDocument();
 
         rendered.getByText("Products").click();
-        expect(rendered.getByText("Add product")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(rendered.getByText("Add product")).toBeInTheDocument();
+        });
         expect(history.location.pathname).toBe("/products");
 
         rendered.getByText("Add product").click();
-        expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        });
         expect(history.location.pathname).toBe("/products/add");
 
         rendered.getByText("Cancel").click();

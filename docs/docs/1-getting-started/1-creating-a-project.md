@@ -5,8 +5,8 @@ sidebar_position: 1
 
 ## Requirements
 
--   [Docker](https://www.docker.com/products/docker-desktop)
--   [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- [Docker](https://www.docker.com/products/docker-desktop)
+- [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 :::tip
 
@@ -33,9 +33,9 @@ To start the installation process, execute the command:
 
 The _install.sh_ script executes several commands necessary for development, such as:
 
--   Installing required packages
--   Creation of folders
--   Creation of shortcuts
+- Installing required packages
+- Creation of folders
+- Creation of shortcuts
 
 And can be customized with other commands required for your application.
 

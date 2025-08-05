@@ -1,17 +1,19 @@
-import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
-import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, registerEnumType, Resolver } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
 import {
     BuildsResolver,
+    CorePermission,
     createAuthResolver,
+    createOneOfBlock,
     createPageTreeResolver,
     createRedirectsResolver,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
+    ExternalLinkBlock,
     FileImagesResolver,
     FileUpload,
     InternalLinkBlock,
@@ -39,6 +41,8 @@ import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
+import { WarningResolver } from "./src/warnings/warning.resolver";
+import { CombinedPermission } from "./src/user-permissions/user-permissions.types";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -92,34 +96,39 @@ async function generateSchema(): Promise<void> {
         }
     }
 
-    const schema = await gqlSchemaFactory.create([
-        BuildsResolver,
-        BuildTemplatesResolver,
-        redirectsResolver,
-        createDamItemsResolver({ File, Folder }),
-        createFilesResolver({ File, Folder }),
-        FileLicensesResolver,
-        FileImagesResolver,
-        createFoldersResolver({ Folder }),
-        pageTreeResolver,
-        CronJobsResolver,
-        JobsResolver,
-        AuthResolver,
-        RedirectsDependenciesResolver,
-        PageTreeDependentsResolver,
-        FileDependentsResolver,
-        UserResolver,
-        UserPermissionResolver,
-        UserContentScopesResolver,
-        MockFileUploadResolver,
-        AzureAiTranslatorResolver,
-        GenerateAltTextResolver,
-        GenerateImageTitleResolver,
-        GenerateSeoTagsResolver,
-        FileUploadsResolver,
-        SitePreviewResolver,
-        createDamMediaAlternativeResolver({ File }),
-    ]);
+    registerEnumType(CombinedPermission, { name: "Permission" });
+
+    const schema = await gqlSchemaFactory.create(
+        [
+            BuildsResolver,
+            BuildTemplatesResolver,
+            redirectsResolver,
+            createDamItemsResolver({ File, Folder }),
+            createFilesResolver({ File, Folder }),
+            FileLicensesResolver,
+            FileImagesResolver,
+            createFoldersResolver({ Folder }),
+            pageTreeResolver,
+            CronJobsResolver,
+            JobsResolver,
+            AuthResolver,
+            RedirectsDependenciesResolver,
+            PageTreeDependentsResolver,
+            FileDependentsResolver,
+            UserResolver,
+            UserPermissionResolver,
+            UserContentScopesResolver,
+            MockFileUploadResolver,
+            AzureAiTranslatorResolver,
+            GenerateAltTextResolver,
+            GenerateImageTitleResolver,
+            GenerateSeoTagsResolver,
+            FileUploadsResolver,
+            SitePreviewResolver,
+            WarningResolver,
+            createDamMediaAlternativeResolver({ File }),
+        ]
+    );
 
     await writeFile("schema.gql", printSchema(schema));
 

@@ -5,10 +5,10 @@ sidebar_position: 2
 
 A COMET DXP application consists of multiple processes, such as:
 
--   [an API](packages-tools#apiPackage)
--   [an admin application](packages-tools#adminPackage)
--   [a frontend site application](packages-tools#sitePackage)
--   type generators
+- [an API](packages-tools#apiPackage)
+- [an admin application](packages-tools#adminPackage)
+- [a frontend site application](packages-tools#sitePackage)
+- type generators
 
 We recommend using a process manager to avoid starting all these processes manually. Luckily, the steps in the [installation section](creating-a-project#installation) automatically installed the package: [@vivid-planet/dev-process-manager](https://github.com/vivid-planet/dev-process-manager).
 
@@ -22,8 +22,8 @@ Your COMET DXP application is up and running.
 
 :::info
 
--   Execute `npm run browser` to display your application in the browser
--   Adding a custom process can be done in the file: _ecosystem.config.js_
+- Execute `npm run browser` to display your application in the browser
+- Adding a custom process can be done in the file: _ecosystem.config.js_
 
 :::
 

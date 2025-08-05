@@ -1,7 +1,8 @@
 import { messages } from "@comet/admin";
+import { type ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-export const formatStrong = (chunks: string) => <strong>{chunks}</strong>;
+export const formatStrong = (chunks: ReactNode[]) => <strong>{chunks}</strong>;
 
 export const NetworkError = () => (
     <FormattedMessage

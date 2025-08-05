@@ -1,12 +1,12 @@
 "use client";
 import {
-    type ImageDimensions,
-    type PropsWithData,
     calculateInheritAspectRatio,
     generateImageUrl,
     getMaxDimensionsFromArea,
+    type ImageDimensions,
     parseAspectRatio,
     PreviewSkeleton,
+    type PropsWithData,
     withPreview,
 } from "@comet/site-react";
 // eslint-disable-next-line no-restricted-imports
@@ -25,7 +25,7 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
 
 export const PixelImageBlock = withPreview(
     ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
-        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} fill={fill} />;
 
         // If we have a crop area set, DAM setting are overwritten, so we use that
         const usedCropArea = cropArea ?? damFile.image.cropArea;

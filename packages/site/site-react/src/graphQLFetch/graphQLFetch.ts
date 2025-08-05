@@ -22,6 +22,7 @@ export function convertPreviewDataToHeaders(previewData?: PreviewData) {
     // authentication is required when this header is used
     if (includeInvisibleContentHeaderEntries.length > 0) {
         headers["x-include-invisible-content"] = includeInvisibleContentHeaderEntries.join(",");
+        headers["x-preview-dam-urls"] = "1";
     }
     return headers;
 }
@@ -81,7 +82,20 @@ export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
             const fetchUrl = new URL(url);
             fetchUrl.searchParams.append("query", query);
             fetchUrl.searchParams.append("variables", JSON.stringify(variables));
-            response = await fetch(fetchUrl, init);
+            response = await fetch(fetchUrl, {
+                ...init,
+                headers: {
+                    /**
+                     * It's recommended to add the `Apollo-Require-Preflight` header to GET requests, running on an Apollo Server 4.
+                     *
+                     * If this header is missing, Apollo Server 4 will return: This operation has been blocked as a potential Cross-Site Request Forgery (CSRF).
+                     *
+                     * see: https://www.apollographql.com/docs/graphos/routing/security/csrf#enable-csrf-prevention
+                     */
+                    "Apollo-Require-Preflight": "true",
+                    ...init.headers,
+                },
+            });
         } else {
             response = await fetch(url, {
                 method: "POST",
@@ -104,7 +118,7 @@ export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
                 if (errors) {
                     errorMessage += `\n\nGraphQL error(s):\n- ${errors.map((error: { message: string }) => error.message).join("\n- ")}`;
                 }
-            } catch (error) {
+            } catch {
                 errorMessage += `\n${body}`;
             }
 

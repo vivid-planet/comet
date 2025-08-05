@@ -1,4 +1,16 @@
-import { ArrayType, BaseEntity, Cascade, Embedded, Entity, Index, ManyToOne, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+    ArrayType,
+    BaseEntity,
+    Cascade,
+    Embedded,
+    Entity,
+    Index,
+    ManyToOne,
+    OneToMany,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -6,7 +18,7 @@ import { v4 as uuid } from "uuid";
 import { DamScopeInterface } from "../../types";
 import { FileInterface } from "./file.entity";
 
-export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
+export interface FolderInterface extends BaseEntity {
     [OptionalProps]?:
         | "createdAt"
         | "updatedAt"
@@ -34,7 +46,7 @@ export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
 export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> } = {}): Type<FolderInterface> {
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
-    class FolderBase extends BaseEntity<FolderBase, "id"> implements FolderInterface {
+    class FolderBase extends BaseEntity implements FolderInterface {
         [OptionalProps]?:
             | "createdAt"
             | "updatedAt"

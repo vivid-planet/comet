@@ -2,30 +2,30 @@
 title: Console Commands
 ---
 
-We use [NestJS Console](https://github.com/Pop-Code/nestjs-console) to create console commands. Console commands can be used locally or deployed.
+We use [nest-commander](https://nest-commander.jaymcdoniel.dev/) to create console commands. Console commands can be used locally or deployed.
 
 ## Defining Commands
 
 ```ts title="Demo console command"
-import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
-import { Command, Console } from "nestjs-console";
+import { Command, CommandRunner } from "nest-commander";
 
-@Injectable()
-@Console()
-export class DemoConsole {
+@Command({
+    command: "demo-command",
+    description: "Demo-Command for cronjob-deployment",
+})
+export class DemoCommand extends CommandRunner {
     private readonly logger = new Logger(DemoConsole.name);
 
     constructor(
         private readonly orm: MikroORM, // MikroORM is injected so we can use the request context
-    ) {}
+    ) {
+        super();
+    }
 
-    @Command({
-        command: "demo-command",
-        description: "Demo-Command for cronjob-deployment",
-    })
     @CreateRequestContext()
-    async demoCommand(): Promise<void> {
+    async run(): Promise<void> {
         this.logger.log("Execute demo-command.");
     }
 }
@@ -61,8 +61,8 @@ npm run console:prod demo-command
 
 ## Best practices
 
--   Use kebab case for command names and arguments.
--   Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
+- Use kebab case for command names and arguments.
+- Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
 
 ```ts
 async execute(): Promise<void> {

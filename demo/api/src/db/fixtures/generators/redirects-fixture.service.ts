@@ -61,9 +61,9 @@ export class RedirectsFixtureService {
                         documentType: "Page",
                         visibility: PageTreeNodeVisibility.Published,
                         scope: { domain: "secondary", language: "en" },
-                        userGroup: UserGroup.All,
+                        userGroup: UserGroup.all,
                         pos: i,
-                        category: PageTreeNodeCategory.MainNavigation,
+                        category: PageTreeNodeCategory.mainNavigation,
                     }),
                 );
                 this.entityManager.persist(this.attachedDocumentsRepository.create({ pageTreeNodeId, documentId: pageId, type: "Page" }));

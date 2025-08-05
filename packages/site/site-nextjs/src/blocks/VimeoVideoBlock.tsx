@@ -1,10 +1,10 @@
 "use client";
-import { type PropsWithData, PreviewSkeleton, useIsElementInViewport, withPreview } from "@comet/site-react";
+import { PreviewSkeleton, type PropsWithData, useIsElementInViewport, withPreview } from "@comet/site-react";
 import clsx from "clsx";
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactElement, type ReactNode, useRef, useState } from "react";
 
 import { type VimeoVideoBlockData } from "../blocks.generated";
-import { type VideoPreviewImageProps, VideoPreviewImage } from "./helpers/VideoPreviewImage";
+import { VideoPreviewImage, type VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import styles from "./VimeoVideoBlock.module.scss";
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
@@ -26,7 +26,7 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
 interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
-    renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+    renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
     previewImageIcon?: ReactNode;
 }

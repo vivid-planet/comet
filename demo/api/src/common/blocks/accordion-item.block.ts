@@ -3,14 +3,14 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     createBlocksBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { IsUndefinable } from "@comet/cms-api";
+    IsUndefinable,
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
@@ -54,7 +54,7 @@ class AccordionItemBlockInput extends BlockInput {
     openByDefault: boolean;
 
     transformToBlockData(): AccordionItemBlockData {
-        return inputToData(AccordionItemBlockData, this);
+        return blockInputToData(AccordionItemBlockData, this);
     }
 }
 

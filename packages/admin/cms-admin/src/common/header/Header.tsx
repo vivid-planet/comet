@@ -1,6 +1,6 @@
 import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/admin";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 interface Props {
     logo?: ReactNode;

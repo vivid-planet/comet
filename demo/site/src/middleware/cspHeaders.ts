@@ -1,6 +1,6 @@
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
-import { CustomMiddleware } from "./chain";
+import { type CustomMiddleware } from "./chain";
 
 export function withCspHeadersMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {

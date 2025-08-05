@@ -5,8 +5,6 @@ import {
     GridColumnsButton,
     GridFilterButton,
     StackLink,
-    ToolbarActions,
-    ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
@@ -49,21 +47,13 @@ export const _DataGridToolbar = {
         const Toolbar = () => {
             return (
                 <DataGridToolbar>
-                    <ToolbarItem>
-                        <GridToolbarQuickFilter />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridFilterButton />
-                    </ToolbarItem>
-                    <ToolbarItem>
-                        <GridColumnsButton />
-                    </ToolbarItem>
+                    <GridToolbarQuickFilter />
+                    <GridFilterButton />
+                    <GridColumnsButton />
                     <FillSpace />
-                    <ToolbarActions>
-                        <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
-                            Add person
-                        </Button>
-                    </ToolbarActions>
+                    <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                        Add person
+                    </Button>
                 </DataGridToolbar>
             );
         };
@@ -76,8 +66,8 @@ export const _DataGridToolbar = {
                 autoHeight
                 columns={columns}
                 rows={data}
-                components={{
-                    Toolbar,
+                slots={{
+                    toolbar: Toolbar,
                 }}
             />
         );

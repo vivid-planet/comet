@@ -1,13 +1,16 @@
 import { useApolloClient } from "@apollo/client";
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, type PropsWithChildren, useCallback, useContext, useState } from "react";
 
-import { GQLFilenameResponse } from "../../../graphql.generated";
+import { type GQLFilenameResponse } from "../../../graphql.generated";
 import { useDamScope } from "../../config/useDamScope";
 import { damAreFilenamesOccupied } from "./ManualDuplicatedFilenamesHandler.gql";
-import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables } from "./ManualDuplicatedFilenamesHandler.gql.generated";
+import {
+    type GQLDamAreFilenamesOccupiedQuery,
+    type GQLDamAreFilenamesOccupiedQueryVariables,
+} from "./ManualDuplicatedFilenamesHandler.gql.generated";
 import { ManuallyHandleDuplicatedFilenamesDialog } from "./ManuallyHandleDuplicatedFilenamesDialog";
 
-export interface ManualDuplicatedFilenamesHandlerApi {
+interface ManualDuplicatedFilenamesHandlerApi {
     checkForDuplicates: (fileData: FilenameData[]) => Promise<GQLFilenameResponse[]>;
     letUserHandleDuplicates: (fileData: FilenameData[]) => Promise<{ filenames: FilenameData[]; duplicateAction: DuplicateAction }>;
 }
@@ -17,7 +20,7 @@ export interface FilenameData {
     folderId?: string;
 }
 
-export const ManualDuplicatedFilenamesHandlerContext = createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
+const ManualDuplicatedFilenamesHandlerContext = createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
 
 export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenamesHandlerApi | undefined => {
     return useContext(ManualDuplicatedFilenamesHandlerContext);
@@ -25,7 +28,7 @@ export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenames
 
 export type DuplicateAction = "replace" | "copy" | "skip";
 
-export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent = ({ children }) => {
+export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: PropsWithChildren) => {
     const client = useApolloClient();
     const scope = useDamScope();
 

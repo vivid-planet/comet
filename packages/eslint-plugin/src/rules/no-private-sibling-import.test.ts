@@ -2,9 +2,7 @@ import { RuleTester } from "eslint";
 
 import noPrivateSiblingImport from "./no-private-sibling-import";
 
-const ruleTester = new RuleTester({
-    parser: require.resolve("@typescript-eslint/parser"),
-});
+const ruleTester = new RuleTester();
 
 const errors = [{ message: "Avoid private sibling import from other files" }];
 

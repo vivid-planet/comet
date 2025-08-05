@@ -2,38 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserPermissionsUser {
-  id: String!
-  name: String!
-  email: String!
-  permissionsCount: Int!
-  contentScopesCount: Int!
-}
-
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
-}
-
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  permissions: [CurrentUserPermission!]!
-  impersonated: Boolean
-  authenticatedUser: UserPermissionsUser
-  permissionsForScope(scope: JSONObject!): [String!]!
-}
-
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
-  permission: String!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -48,10 +20,62 @@ enum UserPermissionSource {
   BY_RULE
 }
 
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  news
+  products
+  manufacturers
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
+
+type UserPermissionsUser {
+  id: String!
+  name: String!
+  email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
+  impersonationAllowed: Boolean!
+}
+
+type CurrentUserPermission {
+  permission: Permission!
+  contentScopes: [JSONObject!]!
+}
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: UserPermissionsUser
+  permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [ContentScopeWithLabel!]!
+}
 
 type Dependency {
   rootId: String!
@@ -221,6 +245,48 @@ type UserPermissionPaginatedUserList {
   totalCount: Int!
 }
 
+type WarningSourceInfo {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  message: String!
+  severity: WarningSeverity!
+  sourceInfo: WarningSourceInfo!
+  status: WarningStatus!
+  scope: JSONObject
+  entityInfo: EntityInfo
+}
+
+enum WarningSeverity {
+  high
+  medium
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type EntityInfo {
+  name: String!
+  secondaryInformation: String
+}
+
+type PaginatedWarnings {
+  nodes: [Warning!]!
+  totalCount: Int!
+}
+
 type DamScope {
   domain: String!
 }
@@ -295,17 +361,22 @@ scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publica
 """Stage root block data"""
 scalar StageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
 type AlternativeAddress {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type Address {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddress
 }
@@ -313,14 +384,14 @@ type Address {
 type AlternativeAddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 type AddressAsEmbeddable {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddable!
 }
@@ -330,6 +401,7 @@ type Manufacturer {
   name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
+  coordinates: Coordinates
   updatedAt: DateTime!
 }
 
@@ -349,6 +421,7 @@ type ProductColor implements DocumentInterface {
   name: String!
   hexCode: String!
   createdAt: DateTime!
+  product: Product!
 }
 
 type ProductStatistics {
@@ -408,14 +481,14 @@ type Product {
   title: String!
   status: ProductStatus!
   slug: String!
-  description: String!
+  description: String
   type: ProductType!
   additionalTypes: [ProductType!]!
   price: Float
   priceRange: ProductPriceRange
   inStock: Boolean!
   soldCount: Int
-  availableSince: Date
+  availableSince: LocalDate
   lastCheckedAt: DateTime
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
@@ -441,15 +514,15 @@ enum ProductStatus {
 }
 
 enum ProductType {
-  Cap
-  Shirt
-  Tie
+  cap
+  shirt
+  tie
 }
 
 """
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+A local date string (i.e., with no associated timezone) in `YYYY-MM-DD` format, e.g. `2020-01-01`.
 """
-scalar Date
+scalar LocalDate
 
 type PageTreeNodeScope {
   domain: String!
@@ -485,14 +558,14 @@ enum PageTreeNodeVisibility {
 }
 
 enum PageTreeNodeCategory {
-  MainNavigation
-  TopMenu
+  mainNavigation
+  topMenu
 }
 
 enum UserGroup {
-  All
-  Admin
-  User
+  all
+  admin
+  editor
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
@@ -516,7 +589,7 @@ type PredefinedPage implements DocumentInterface {
 }
 
 enum PredefinedPageType {
-  News
+  news
 }
 
 type FooterScope {
@@ -588,14 +661,14 @@ type News {
 }
 
 enum NewsStatus {
-  Active
-  Deleted
+  active
+  deleted
 }
 
 enum NewsCategory {
-  Events
-  Company
-  Awards
+  events
+  company
+  awards
 }
 
 """NewsContent root block data"""
@@ -706,21 +779,34 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
+input WarningSourceInfoInput {
+  rootEntityName: String!
+  targetId: String!
+  rootColumnName: String
+  rootPrimaryKey: String!
+  jsonPath: String
+}
+
 input DamScopeInput {
   domain: String!
+}
+
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
 }
 
 input AlternativeAddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressInput
 }
@@ -728,14 +814,14 @@ input AddressInput {
 input AlternativeAddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
 }
 
 input AddressAsEmbeddableInput {
   street: String!
   streetNumber: Float
-  zip: Float!
+  zip: String!
   country: String!
   alternativeAddress: AlternativeAddressAsEmbeddableInput!
 }
@@ -783,7 +869,7 @@ type Query {
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
+  userPermissionsAvailableContentScopes: [ContentScopeWithLabel!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -795,6 +881,7 @@ type Query {
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], documentType: String, offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+  blockPreviewJwt(scope: JSONObject!, url: String!, includeInvisible: Boolean!): String!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -815,7 +902,7 @@ type Query {
   damMediaAlternatives(offset: Int! = 0, limit: Int! = 25, search: String, sort: [DamMediaAlternativeSort!], for: ID, alternative: ID, type: DamMediaAlternativeType): PaginatedDamMediaAlternatives!
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -829,7 +916,7 @@ type Query {
   kubernetesJobLogs(name: String!): String!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
@@ -839,25 +926,36 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
-  manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
+  warning(id: ID!): Warning!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, scopes: [JSONObject!]!, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
+  permission: PermissionFilter
   and: [UserPermissionsUserFilter!]
   or: [UserPermissionsUserFilter!]
 }
 
 input StringFilter {
   contains: String
+  notContains: String
   startsWith: String
   endsWith: String
   equal: String
   notEqual: String
   isAnyOf: [String!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
+}
+
+input PermissionFilter {
+  equal: Permission
+  notEqual: Permission
+  isAnyOf: [Permission!]
 }
 
 input UserPermissionsUserSort {
@@ -914,6 +1012,8 @@ input DateTimeFilter {
   lowerThanEqual: DateTime
   greaterThanEqual: DateTime
   notEqual: DateTime
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input RedirectSort {
@@ -973,6 +1073,7 @@ enum DamMediaAlternativeSortField {
 }
 
 input NewsFilter {
+  id: IdFilter
   slug: StringFilter
   title: StringFilter
   status: NewsStatusEnumFilter
@@ -983,6 +1084,12 @@ input NewsFilter {
   updatedAt: DateTimeFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input IdFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
 }
 
 input NewsStatusEnumFilter {
@@ -1019,6 +1126,7 @@ enum NewsSortField {
 }
 
 input ProductFilter {
+  id: IdFilter
   title: StringFilter
   status: ProductStatusEnumFilter
   slug: StringFilter
@@ -1068,15 +1176,19 @@ input NumberFilter {
   greaterThanEqual: Float
   notEqual: Float
   isAnyOf: [Float!]
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input DateFilter {
-  equal: Date
-  lowerThan: Date
-  greaterThan: Date
-  lowerThanEqual: Date
-  greaterThanEqual: Date
-  notEqual: Date
+  equal: LocalDate
+  lowerThan: LocalDate
+  greaterThan: LocalDate
+  lowerThanEqual: LocalDate
+  greaterThanEqual: LocalDate
+  notEqual: LocalDate
+  isEmpty: Boolean
+  isNotEmpty: Boolean
 }
 
 input ManyToOneFilter {
@@ -1116,6 +1228,7 @@ enum ProductSortField {
 }
 
 input ProductCategoryFilter {
+  id: IdFilter
   title: StringFilter
   slug: StringFilter
   products: OneToManyFilter
@@ -1139,6 +1252,7 @@ enum ProductCategorySortField {
 }
 
 input ProductTagFilter {
+  id: IdFilter
   title: StringFilter
   products: ManyToManyFilter
   productsWithStatus: OneToManyFilter
@@ -1160,6 +1274,7 @@ enum ProductTagSortField {
 }
 
 input ProductVariantFilter {
+  id: IdFilter
   name: StringFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1181,14 +1296,15 @@ enum ProductVariantSortField {
 }
 
 input ManufacturerFilter {
+  id: IdFilter
   name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
-  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_zip: StringFilter
   addressAsEmbeddable_country: StringFilter
   addressAsEmbeddable_alternativeAddress_street: StringFilter
   addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
-  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: StringFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
   updatedAt: DateTimeFilter
   and: [ManufacturerFilter!]
@@ -1219,6 +1335,50 @@ input ManufacturerCountryFilter {
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]
+}
+
+input WarningFilter {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  message: StringFilter
+  type: StringFilter
+  severity: WarningSeverityEnumFilter
+  status: WarningStatusEnumFilter
+  scope: ScopeFilter
+  and: [WarningFilter!]
+  or: [WarningFilter!]
+}
+
+input WarningSeverityEnumFilter {
+  isAnyOf: [WarningSeverity!]
+  equal: WarningSeverity
+  notEqual: WarningSeverity
+}
+
+input WarningStatusEnumFilter {
+  isAnyOf: [WarningStatus!]
+  equal: WarningStatus
+  notEqual: WarningStatus
+}
+
+input ScopeFilter {
+  isAnyOf: [JSONObject!]
+  equal: JSONObject
+  notEqual: JSONObject
+}
+
+input WarningSort {
+  field: WarningSortField!
+  direction: SortDirection! = ASC
+}
+
+enum WarningSortField {
+  createdAt
+  updatedAt
+  message
+  type
+  severity
+  status
 }
 
 type Mutation {
@@ -1288,7 +1448,7 @@ type Mutation {
 }
 
 input UserPermissionInput {
-  permission: String!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -1338,7 +1498,7 @@ input PageTreeNodeUpdateInput {
   attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
-  userGroup: UserGroup! = All
+  userGroup: UserGroup! = all
 }
 
 input AttachedDocumentInput {
@@ -1369,7 +1529,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: UserGroup! = All
+  userGroup: UserGroup! = all
 }
 
 input RedirectInput {
@@ -1433,7 +1593,7 @@ input DamMediaAlternativeUpdateInput {
 input NewsInput {
   slug: String!
   title: String!
-  status: NewsStatus! = Active
+  status: NewsStatus! = active
   date: DateTime!
   category: NewsCategory!
   image: DamImageBlockInput!
@@ -1482,13 +1642,13 @@ input ProductInput {
   title: String!
   status: ProductStatus! = Unpublished
   slug: String!
-  description: String!
+  description: String = null
   type: ProductType!
   additionalTypes: [ProductType!]! = []
   price: Float = null
   priceRange: ProductPriceRangeInput
   inStock: Boolean! = true
-  availableSince: Date = null
+  availableSince: LocalDate = null
   lastCheckedAt: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
@@ -1528,7 +1688,7 @@ input ProductUpdateInput {
   price: Float
   priceRange: ProductPriceRangeInput
   inStock: Boolean
-  availableSince: Date
+  availableSince: LocalDate
   lastCheckedAt: DateTime
   image: DamImageBlockInput
   discounts: [ProductDiscountsInput!]
@@ -1591,10 +1751,12 @@ input ManufacturerInput {
   name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
+  coordinates: CoordinatesInput
 }
 
 input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
+  coordinates: CoordinatesInput
 }

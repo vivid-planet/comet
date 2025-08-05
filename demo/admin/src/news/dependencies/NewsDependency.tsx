@@ -1,4 +1,4 @@
-import { createDependencyMethods, DamImageBlock, DependencyInterface } from "@comet/cms-admin";
+import { createDependencyMethods, DamImageBlock, type DependencyInterface } from "@comet/cms-admin";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
 import { FormattedMessage } from "react-intl";
 

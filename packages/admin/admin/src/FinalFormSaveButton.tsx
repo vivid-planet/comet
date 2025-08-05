@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { SaveButton } from "./common/buttons/save/SaveButton";
+import { SaveButton } from "./common/buttons/SaveButton";
 import { messages } from "./messages";
 
 interface FinalFormSaveButtonProps {
@@ -18,12 +18,10 @@ export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.s
 
     return (
         <SaveButton
-            hasConflict={hasConflict}
+            hasErrors={hasConflict || hasSubmitErrors}
+            tooltipErrorMessage={hasConflict ? <FormattedMessage {...messages.saveConflict} /> : undefined}
             disabled={isDisabled}
-            color="primary"
-            variant="contained"
-            saving={submitting}
-            hasErrors={hasSubmitErrors}
+            loading={submitting}
             onClick={() => {
                 if (!isDisabled) form.submit();
             }}

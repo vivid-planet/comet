@@ -1,12 +1,14 @@
-import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/blocks-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ClassProvider, DynamicModule, Global, Module, ModuleMetadata, Type, ValueProvider } from "@nestjs/common";
 
+import { Block } from "../blocks/block";
+import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
+import { createOneOfBlock, OneOfBlock } from "../blocks/factories/createOneOfBlock";
 import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
-import { ImportRedirectsConsole } from "./import-redirects.console";
+import { ImportRedirectsCommand } from "./import-redirects.command";
 import { DefaultRedirectTargetUrlService, RedirectTargetUrlServiceInterface } from "./redirect-target-url.service";
 import { REDIRECTS_LINK_BLOCK, REDIRECTS_TARGET_URL_SERVICE } from "./redirects.constants";
 import { createRedirectsResolver } from "./redirects.resolver";
@@ -61,7 +63,7 @@ export class RedirectsModule {
                 RedirectsDependenciesResolver,
                 RedirectsService,
                 linkBlockProvider,
-                ImportRedirectsConsole,
+                ImportRedirectsCommand,
                 targetUrlServiceProvider,
             ],
             exports: [RedirectsService, REDIRECTS_LINK_BLOCK, mikroOrmModule],

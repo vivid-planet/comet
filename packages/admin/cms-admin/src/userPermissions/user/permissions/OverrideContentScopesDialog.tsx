@@ -1,15 +1,24 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, DataGridToolbar, Field, FinalForm, FinalFormSwitch, SaveButton, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { CancelButton, DataGridToolbar, Field, FillSpace, FinalForm, FinalFormSwitch, type GridColDef, SaveButton } from "@comet/admin";
+import {
+    CircularProgress,
+    // eslint-disable-next-line no-restricted-imports
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
+import { type ContentScope } from "../../../contentScope/Provider";
 import { generateGridColumnsFromContentScopeProperties } from "./ContentScopeGrid";
 import {
-    GQLOverrideContentScopesMutation,
-    GQLOverrideContentScopesMutationVariables,
-    GQLPermissionContentScopesQuery,
-    GQLPermissionContentScopesQueryVariables,
+    type GQLOverrideContentScopesMutation,
+    type GQLOverrideContentScopesMutationVariables,
+    type GQLPermissionContentScopesQuery,
+    type GQLPermissionContentScopesQueryVariables,
     namedOperations,
 } from "./OverrideContentScopesDialog.generated";
 
@@ -22,17 +31,12 @@ interface FormProps {
     userId: string;
     handleDialogClose: () => void;
 }
-type ContentScope = {
-    [key: string]: string;
-};
 
 function OverrideContentScopesDialogGridToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
-            <ToolbarFillSpace />
+            <GridToolbarQuickFilter />
+            <FillSpace />
         </DataGridToolbar>
     );
 }
@@ -64,7 +68,10 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    scope
+                    label
+                }
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
@@ -121,25 +128,28 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                         return (
                                             <DataGrid
                                                 autoHeight={true}
-                                                rows={
+                                                rows={(
                                                     data.availableContentScopes.filter(
                                                         (obj) => !Object.values(obj).every((value) => value === undefined),
                                                     ) ?? []
-                                                }
+                                                ).map((obj) => obj.scope)}
                                                 columns={columns}
                                                 rowCount={data.availableContentScopes.length}
                                                 loading={false}
                                                 getRowHeight={() => "auto"}
                                                 getRowId={(row) => JSON.stringify(row)}
                                                 checkboxSelection={!disabled}
-                                                selectionModel={props.input.value}
-                                                onSelectionModelChange={(selectionModel) => {
+                                                rowSelectionModel={props.input.value}
+                                                onRowSelectionModelChange={(selectionModel) => {
                                                     props.input.onChange(selectionModel.map((id) => String(id)));
                                                 }}
-                                                components={{
-                                                    Toolbar: OverrideContentScopesDialogGridToolbar,
+                                                slots={{
+                                                    toolbar: OverrideContentScopesDialogGridToolbar,
                                                 }}
-                                                pageSize={25}
+                                                initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                                                isRowSelectable={(params) => {
+                                                    return !data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, params.row));
+                                                }}
                                             />
                                         );
                                     }}

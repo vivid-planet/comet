@@ -3,10 +3,11 @@ import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { MovePage } from "@comet/admin-icons";
 import { FormattedMessage } from "react-intl";
 
-import { DocumentInterface, DocumentType } from "../../documents/types";
+import { type DocumentInterface, type DocumentType } from "../../documents/types";
 import { usePageTreeScope } from "../config/usePageTreeScope";
-import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
-import { PageTreePage } from "./usePageTree";
+import { usePageTreeConfig } from "../pageTreeConfig";
+import { type GQLUpdatePageTreeNodeCategoryMutation, type GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
+import { type PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
@@ -26,9 +27,10 @@ export function MovePageMenuItem({ page }: Props) {
         }
     `);
     const scope = usePageTreeScope();
-    const { allCategories, query, getDocumentTypesByCategory } = usePageTreeContext();
+    const { categories } = usePageTreeConfig();
+    const { query, getDocumentTypesByCategory } = usePageTreeContext();
 
-    if (allCategories.length <= 1) {
+    if (categories.length <= 1) {
         return null;
     }
 
@@ -50,7 +52,7 @@ export function MovePageMenuItem({ page }: Props) {
 
     return (
         <RowActionsMenu icon={<MovePage />} text={<FormattedMessage id="comet.pages.pages.page.movePage" defaultMessage="Move page" />}>
-            {allCategories.map(({ category, label }) => {
+            {categories.map(({ category, label }) => {
                 const canMoveToTargetCategory = categorySupportsDocumentType(category, page.documentType, getDocumentTypesByCategory);
 
                 return (

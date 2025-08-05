@@ -4,7 +4,6 @@ import { validateSync } from "class-validator";
 
 import { EnvironmentVariables } from "./environment-variables";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createConfig(processEnv: NodeJS.ProcessEnv) {
     const envVars = plainToClass(EnvironmentVariables, { ...processEnv });
     const errors = validateSync(envVars, { skipMissingProperties: false });
@@ -52,6 +51,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
+            allowedImageSizes: [...cometConfig.images.imageSizes, ...cometConfig.images.deviceSizes],
         },
         azureAiTranslator:
             envVars.AZURE_AI_TRANSLATOR_ENDPOINT && envVars.AZURE_AI_TRANSLATOR_KEY && envVars.AZURE_AI_TRANSLATOR_REGION
@@ -75,11 +75,23 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                     region: envVars.S3_REGION,
                     endpoint: envVars.S3_ENDPOINT,
                     bucket: envVars.S3_BUCKET,
-                    accessKeyId: envVars.S3_ACCESS_KEY_ID,
-                    secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
+                    credentials: {
+                        accessKeyId: envVars.S3_ACCESS_KEY_ID,
+                        secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
+                    },
                 },
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
+        },
+        mailer: {
+            defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
+            sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
+            sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
+
+            transport: {
+                host: "localhost",
+                port: 1025,
+            },
         },
         cdn: {
             originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,

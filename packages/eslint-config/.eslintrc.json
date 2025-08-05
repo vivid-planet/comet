@@ -1,6 +1,0 @@
-{
-    "plugins": ["json-files"],
-    "rules": {
-        "json-files/sort-package-json": "error"
-    }
-}

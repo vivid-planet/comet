@@ -1,7 +1,7 @@
-/* eslint-disable @calm/react-intl/missing-formatted-message */
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
+import { IntlProvider } from "react-intl";
 import { Route, Router, Switch, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -74,11 +74,13 @@ test("Subrote other route hidden", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
 
     fireEvent.click(rendered.getByText("Cmp1 SubLink"));
@@ -155,11 +157,13 @@ test("Subrote other route hidden", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
 
     fireEvent.click(rendered.getByText("Cmp2 SubLink"));
@@ -203,11 +207,13 @@ test("Route below Subroute", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
 
     fireEvent.click(rendered.getByText("Sub"));
@@ -248,11 +254,13 @@ test("SubRouteIndexRoute nested Switch", async () => {
     const history = createMemoryHistory();
 
     const rendered = render(
-        <MuiThemeProvider theme={createTheme()}>
-            <Router history={history}>
-                <Story />
-            </Router>
-        </MuiThemeProvider>,
+        <IntlProvider locale="en">
+            <MuiThemeProvider theme={createTheme()}>
+                <Router history={history}>
+                    <Story />
+                </Router>
+            </MuiThemeProvider>
+        </IntlProvider>,
     );
 
     fireEvent.click(rendered.getByText("Cmp1 SubLink"));

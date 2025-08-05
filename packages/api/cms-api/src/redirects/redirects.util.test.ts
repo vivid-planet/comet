@@ -1,7 +1,7 @@
 import { addDays, subDays } from "date-fns";
 
 import { RedirectGenerationType } from "./redirects.enum";
-import { FilterableRedirect, isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
+import { type FilterableRedirect, isEmptyFilter, redirectMatchesFilter } from "./redirects.util";
 
 describe("redirectMatchesFilter", () => {
     it("should match for empty filter", () => {
@@ -29,6 +29,9 @@ describe("redirectMatchesFilter", () => {
 
         expect(redirectMatchesFilter(redirect, { source: { contains: "our" } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { source: { contains: "arg" } })).toBe(false);
+
+        expect(redirectMatchesFilter(redirect, { source: { notContains: "our" } })).toBe(false);
+        expect(redirectMatchesFilter(redirect, { source: { notContains: "arg" } })).toBe(true);
 
         expect(redirectMatchesFilter(redirect, { source: { startsWith: "/sou" } })).toBe(true);
         expect(redirectMatchesFilter(redirect, { source: { startsWith: "/arg" } })).toBe(false);

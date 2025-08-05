@@ -1,5 +1,4 @@
-import { BlockInputInterface } from "@comet/blocks-api";
-import { RootBlockInputScalar } from "@comet/cms-api";
+import { BlockInputInterface, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { Transform } from "class-transformer";

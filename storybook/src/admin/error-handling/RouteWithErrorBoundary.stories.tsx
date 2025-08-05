@@ -1,4 +1,4 @@
-import { Alert, MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary } from "@comet/admin";
+import { Alert, MainNavigation, MainNavigationItemRouterLink, MasterLayout, RouteWithErrorBoundary } from "@comet/admin";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -31,10 +31,10 @@ const ViewWithError = () => {
 
 function MasterMenu() {
     return (
-        <Menu>
-            <MenuItemRouterLink primary="No Error Route" to="/no-error-route" />
-            <MenuItemRouterLink primary="Error Route" to="/error-route" />
-        </Menu>
+        <MainNavigation>
+            <MainNavigationItemRouterLink primary="No Error Route" to="/no-error-route" />
+            <MainNavigationItemRouterLink primary="Error Route" to="/error-route" />
+        </MainNavigation>
     );
 }
 

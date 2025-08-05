@@ -10,11 +10,16 @@ import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
 import { setNotFoundContext } from "@src/util/ServerContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
-import { PropsWithChildren } from "react";
+import type { Metadata } from "next";
+import { type PropsWithChildren } from "react";
 
-import { GQLLayoutQuery, GQLLayoutQueryVariables } from "./layout.generated";
+import { type GQLLayoutQuery, type GQLLayoutQueryVariables } from "./layout.generated";
 
-export default async function Page({ children, params: { domain, language } }: PropsWithChildren<{ params: { domain: string; language: string } }>) {
+interface LayoutProps {
+    params: { domain: string; language: string };
+}
+
+export default async function Layout({ children, params: { domain, language } }: PropsWithChildren<LayoutProps>) {
     const siteConfig = getSiteConfigForDomain(domain);
     if (!siteConfig.scope.languages.includes(language)) {
         language = "en";
@@ -45,6 +50,7 @@ export default async function Page({ children, params: { domain, language } }: P
     );
 
     const messages = await loadMessages(language);
+
     return (
         <IntlProvider locale={language} messages={messages}>
             <TopNavigation data={topMenu} />
@@ -53,4 +59,12 @@ export default async function Page({ children, params: { domain, language } }: P
             {footer && <Footer footer={footer} />}
         </IntlProvider>
     );
+}
+
+export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
+    const siteConfig = getSiteConfigForDomain(params.domain);
+
+    return {
+        metadataBase: new URL(siteConfig.url),
+    };
 }

@@ -1,4 +1,4 @@
-import { Canvas, Meta } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as DataGridStories from "./DataGrid.stories";
 
@@ -39,16 +39,16 @@ It's up to the application code to pass filterModel, sortModel and page/pageSize
 
 <Canvas of={DataGridStories.UseDataGridRemoteInitialFilter} />
 
-## usePersistentColumnState
+### usePersistentColumnState
 
 Returns props for DataGrid that persists all column states into localStorage, DataGrid will have a controlled state for those.
 
 Supported states:
 
--   columnVisibility
--   pinnedColumns (MUI X Pro feature)
--   columnDimensions (MUI X Pro feature)
--   columnOrder (MUI X Pro feature)
+- columnVisibility
+- pinnedColumns (MUI X Pro feature)
+- columnDimensions (MUI X Pro feature)
+- columnOrder (MUI X Pro feature)
 
 #### Arguments
 
@@ -60,7 +60,7 @@ Supported states:
 
 <Canvas of={DataGridStories.UsePersistentColumnState} />
 
-## useBufferedRowCount
+### useBufferedRowCount
 
 Small hook that can be used to prevent rowCount from being undefined during the loading.
 
@@ -68,7 +68,7 @@ Small hook that can be used to prevent rowCount from being undefined during the 
 const rowCount = useBufferedRowCount(data?.products.totalCount);
 ```
 
-## useDataGridExcelExport
+### useDataGridExcelExport
 
 Hook for excel export functionality. To use it, the following steps are necessary:
 
@@ -78,6 +78,21 @@ Hook for excel export functionality. To use it, the following steps are necessar
 Typical Usage Example:
 
 <Canvas of={DataGridStories.UseDataGridExcelExport} />
+
+## Column definitions
+
+Use the existing column-type helpers to make sure columns of certain types are rendered consistently.
+
+```ts
+import { GridColDef, dataGridDateColumn, dataGridDateTimeColumn } from "@comet/admin";
+
+const columns: GridColDef[] = [
+    { ...dataGridDateColumn, field: "createdAt" },
+    { ...dataGridDateTimeColumn, field: "updatedAt" },
+];
+```
+
+<Canvas of={DataGridStories.GridColumnTypes} />
 
 ## Responsive column visibility
 
@@ -103,11 +118,11 @@ Small Component that can be placed in the Toolbar that will show the Filter. Mus
 
 Component that can be rendered as ContextMenu in a row that has some basic CRUD features:
 
--   `url: string`: Shows a "Copy Url" Menu Item that copies the given Url into the clipboard
--   `copyData: () => Promise<CopyData> | CopyData;`: Shows a "Copy" Menu Item, should return JSON representation of the row
--   `onPaste: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;`: Shows as "Paste" Menu Item, implementation should insert a new row based on the passed `input` JSON. Attention: `input` is not validated.
--   `onDelete: (options: { client: ApolloClient<object> }) => Promise<void>;`: Shows a "Delete" Menu Item, implementation should delete the row.
--   `refetchQueries: RefetchQueriesOptions<any, unknown>["include"];`: called on apollo after executing delete or paste
+- `url: string`: Shows a "Copy Url" Menu Item that copies the given Url into the clipboard
+- `copyData: () => Promise<CopyData> | CopyData;`: Shows a "Copy" Menu Item, should return JSON representation of the row
+- `onPaste: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;`: Shows as "Paste" Menu Item, implementation should insert a new row based on the passed `input` JSON. Attention: `input` is not validated.
+- `onDelete: (options: { client: ApolloClient<object> }) => Promise<void>;`: Shows a "Delete" Menu Item, implementation should delete the row.
+- `refetchQueries: RefetchQueriesOptions<any, unknown>["include"];`: called on apollo after executing delete or paste
 
 <Canvas of={DataGridStories._CrudContextMenu} />
 
@@ -115,15 +130,15 @@ Component that can be rendered as ContextMenu in a row that has some basic CRUD 
 
 This component is a button with a context menu, that can also display of the number of items selected. It has been designed to enable CRUD actions for batch processing and general actions for a Data Grid. It is normally placed in a toolbar above the Data Grid.
 
--   `selectionSize?: number`: Number of selected items, used to determine if selective actions should be enabled. The number will be displayed in the button.
--   `overallActions?: Maybe<ActionItem>[]`: An array of actions that can be executed, if no items are selected (`selectionSize` is `0` or `undefined`).
--   `selectiveActions?: Maybe<ActionItem>[]`: An array of actions that can be executed, if items are selected (`selectionSize` is greater than `0`).
+- `selectionSize?: number`: Number of selected items, used to determine if selective actions should be enabled. The number will be displayed in the button.
+- `overallActions?: Maybe<ActionItem>[]`: An array of actions that can be executed, if no items are selected (`selectionSize` is `0` or `undefined`).
+- `selectiveActions?: Maybe<ActionItem>[]`: An array of actions that can be executed, if items are selected (`selectionSize` is greater than `0`).
 
 The `ActionItem` type has the following properties:
 
--   `label: ReactNode`: The label of the action.
--   `icon?: ReactNode`: The icon of the action displayed at the start of an action.
--   `divider?: boolean`: If true, a divider will be displayed below the action.
+- `label: ReactNode`: The label of the action.
+- `icon?: ReactNode`: The icon of the action displayed at the start of an action.
+- `divider?: boolean`: If true, a divider will be displayed below the action.
 
 <Canvas of={DataGridStories._CrudMoreActionsMenu} />
 
@@ -131,13 +146,13 @@ The `ActionItem` type has the following properties:
 
 Comet Admin comes with three helpers that convert MUI DataGrid state to standard Comet GraphQL API variables.
 
--   `muiGridFilterToGql`
--   `muiGridSortToGql`
--   `muiGridPagingToGql`
+- `muiGridFilterToGql`
+- `muiGridSortToGql`
+- `muiGridPagingToGql`
 
 Typical Usage Example:
 
-```
+```ts
 const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 const sortModel = dataGridProps.sortModel;
 const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
@@ -147,5 +162,4 @@ const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQ
         sort: muiGridSortToGql(sortModel),
     },
 });
-
 ```

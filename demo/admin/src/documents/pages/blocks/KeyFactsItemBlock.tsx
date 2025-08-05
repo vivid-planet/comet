@@ -1,5 +1,4 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
-import { createRichTextBlock, SvgImageBlock } from "@comet/cms-admin";
+import { BlockCategory, createCompositeBlock, createCompositeBlockTextField, createRichTextBlock, SvgImageBlock } from "@comet/cms-admin";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { FormattedMessage } from "react-intl";
 
@@ -23,13 +22,11 @@ export const KeyFactsItemBlock = createCompositeBlock(
             },
             fact: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="keyFactsItemBlock.fact" defaultMessage="Fact" />,
                 }),
             },
             label: {
                 block: createCompositeBlockTextField({
-                    fullWidth: true,
                     label: <FormattedMessage id="keyFactsItemBlock.label" defaultMessage="Label" />,
                 }),
             },

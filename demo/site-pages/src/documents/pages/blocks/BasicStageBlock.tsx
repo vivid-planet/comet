@@ -1,11 +1,11 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { BasicStageBlockData } from "@src/blocks.generated";
+import { type PropsWithData, withPreview } from "@comet/site-nextjs";
+import { type BasicStageBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { PageLayout } from "@src/layout/PageLayout";
-import { CSSProperties } from "react";
+import { type CSSProperties } from "react";
 import styled from "styled-components";
 
 export const BasicStageBlock = withPreview(
