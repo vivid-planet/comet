@@ -88,6 +88,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
             // child is selected
             if (checkIfPathInLocation(child)) {
                 hasSelectedChild.current = true;
+                setIsSubmenuOpen(true);
             }
 
             // sub child is selected
@@ -97,6 +98,7 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
                     : ([] as MainNavigationChild[]);
             if (subChildElements?.some((child: MainNavigationChild) => child.props && checkIfPathInLocation(child))) {
                 hasSelectedChild.current = true;
+                setIsSubmenuOpen(true);
             }
 
             const newItemLevel = itemLevel + 1;
@@ -106,12 +108,6 @@ export const MainNavigationCollapsibleItem = (inProps: MainNavigationCollapsible
                 isMenuOpen,
             });
         });
-    }, [children, isMenuOpen, itemLevel, location.pathname]);
-
-    useEffect(() => {
-        if (hasSelectedChild.current) {
-            setIsSubmenuOpen(true);
-        }
     }, [children, isMenuOpen, itemLevel, location.pathname]);
 
     const closeMenu = () => {
