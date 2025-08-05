@@ -25,6 +25,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { DeleteDialog } from "./common/DeleteDialog";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { FillSpace, FillSpaceClassKey, FillSpaceProps } from "./common/FillSpace";

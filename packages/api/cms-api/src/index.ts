@@ -126,6 +126,7 @@ export {
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
+export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
 export { ExceptionFilter } from "./common/errors/exception.filter";
@@ -213,6 +214,9 @@ export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
+export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
+export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
+export { MailerService } from "./mailer/mailer.service";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
@@ -249,8 +253,7 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
-export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
-export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
+export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { CurrentUserPermission } from "./user-permissions/dto/current-user";
@@ -262,6 +265,8 @@ export { UserPermissionsPublicService as UserPermissionsService } from "./user-p
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
+    Permission,
+    PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
     UserPermissionsUserServiceInterface,
