@@ -2526,6 +2526,32 @@ Example:
 
 </details>
 
+### Choose correct `Button` variant
+
+The `Button` from `@comet/admin` only has a smaller set of variants defined by UX:
+
+```ts
+type Variant =
+    | "primary"
+    | "secondary"
+    | "outlined"
+    | "destructive"
+    | "success"
+    | "textLight"
+    | "textDark";
+```
+
+You must choose visually, which variant is correct for you.
+Probably the two most common cases are:
+
+```tsx
+-(<Button color="primary" variant="contained" />) + <Button variant="primary" />;
+```
+
+```tsx
+-(<Button variant="text" />) + <Button variant="textDark" />;
+```
+
 ### `FinalFormToggleButtonGroup` deprecated
 
 `FinalFormToggleButtonGroup` has been deprecated and a new component `ToggleButtonGroupField` got introduced that has the Final Form Field wrapped around it.
