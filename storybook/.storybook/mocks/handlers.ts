@@ -6,6 +6,8 @@ import { GraphQLHandler } from "graphql-mocks";
 import { type ResponseResolver, rest } from "msw";
 import { type RestContext } from "msw/lib/types/handlers/RestHandler";
 
+import { currentUserHandler } from "./currentUserHandler";
+
 type StringFilter = {
     contains: string;
     equal: string;
@@ -59,6 +61,7 @@ schema {
 
 scalar Date
 scalar DateTime
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Launch {
     id: ID!
@@ -110,11 +113,59 @@ type Product {
     manufacturer: Manufacturer!
 }
 
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: UserPermissionsUser
+  permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [ContentScopeWithLabel!]!
+}
+
+type CurrentUserPermission {
+  permission: Permission!
+  contentScopes: [JSONObject!]!
+}
+
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  news
+  products
+  manufacturers
+}
+
+type UserPermissionsUser {
+  id: String!
+  name: String!
+  email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
+  impersonationAllowed: Boolean!
+}
+
+type ContentScopeWithLabel {
+  scope: JSONObject!
+  label: JSONObject!
+}
+
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
     manufacturers: [Manufacturer!]!
     products(manufacturer: ID): [Product!]!
+    currentUser: CurrentUser!
 }
 `;
 
@@ -225,7 +276,7 @@ for (let i = 0; i < 10; i += 1) {
     });
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const manufacturers: GraphQLFieldResolver<unknown, unknown> = async () => {
     await sleep(500);
@@ -265,6 +316,7 @@ const graphqlHandler = new GraphQLHandler({
             launchesPastPagePaging,
             manufacturers,
             products,
+            currentUser: currentUserHandler,
         },
     },
 
