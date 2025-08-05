@@ -14,9 +14,6 @@ MAILER_HOST: string;
 @IsInt()
 MAILER_PORT: number;
 
-@IsString()
-MAILER_DEFAULT_FROM: string;
-
 @IsUndefinable()
 @IsArray()
 @Transform(({ value }) => value.split(","))
@@ -35,7 +32,7 @@ MAILER_SEND_ALL_MAILS_BCC?: string;
 ```
 mailer: {
     // Mailer configuration
-    defaultFrom: envVars.MAILER_DEFAULT_FROM,
+    defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
     sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
     sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 
@@ -62,25 +59,15 @@ mailhog:
 # mailer
 MAILER_HOST=localhost
 MAILER_PORT=1025
-MAILER_DEFAULT_FROM='"Comet Demo" <comet-demo@comet-dxp.com>'
 MAILER_SEND_ALL_MAILS_TO=demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com
 ```
 
-#### /api/src/app.module.ts or specific module file
+#### /api/src/app.module.ts
 
 ```
 imports: [
     ...
     MailerModule.register(config.mailer),
-]
-```
-
-#### specific module file
-
-```
-imports: [
-    ...
-    MailerModule,
 ]
 ```
 
@@ -92,7 +79,6 @@ api:
     ...
     MAILER_HOST: "localhost"
     MAILER_PORT: 25
-    MAILER_DEFAULT_FROM: '"Comet Demo" <comet-demo@comet-dxp.com>'
     MAILER_SEND_ALL_MAILS_TO: "demo-leaddev@comet-dxp.com,demo-pm@comet-dxp.com"
 ```
 
@@ -100,19 +86,7 @@ api:
 
 ### Sending a Mail
 
-Add as import to your module
-
-```typescript
-@Module({
-    imports: [
-        MailerModule,
-        ...,
-    ],
-})
-export class ProductsModule {}
-```
-
-Then inject the `MailerService` into your service or controller:
+Inject the `MailerService` into your service or controller: (MailerModule is global, so no module import is needed)
 
 ```typescript
 @Resolver(() => Product)

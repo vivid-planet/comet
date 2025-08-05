@@ -1,7 +1,6 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
-    createRedirectsPage,
     CronJobsPage,
     DamPage,
     type DocumentInterface,
@@ -11,6 +10,7 @@ import {
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
+    WarningsPage,
 } from "@comet/cms-admin";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
@@ -20,7 +20,6 @@ import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { type GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
-import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { CreateCapProductPage } from "@src/products/generator/CreateCapProductPage";
@@ -28,14 +27,16 @@ import { ManufacturersPage } from "@src/products/generator/ManufacturersPage";
 import { ProductCategoriesPage } from "@src/products/generator/ProductCategoriesPage";
 import { ProductsPage } from "@src/products/generator/ProductsPage";
 import { ProductsWithLowPricePage } from "@src/products/generator/ProductsWithLowPricePage";
+import { ProductTagsPage } from "@src/products/generator/ProductTagsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
-import { ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
+import { ProductCategoriesPage as ProductCategoriesHandmadePage } from "@src/products/ProductCategoriesPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
+import { ProductTagsPage as ProductTagsHandmadePage } from "@src/products/tags/ProductTagsPage";
+import { RedirectsPage } from "@src/redirects/RedirectsPage";
 import { type ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
 
-import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,7 +44,6 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Page,
     Link,
 };
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {
@@ -183,17 +183,16 @@ export const masterMenuData: MasterMenuData = [
                 },
                 requiredPermission: "pageTree",
             },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
+                route: {
+                    path: "/system/warnings",
+                    component: WarningsPage,
+                },
+                requiredPermission: "warnings",
+            },
         ],
-    },
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
-        icon: <Snips />,
-        route: {
-            path: "/component-demo",
-            component: ComponentDemo,
-        },
-        requiredPermission: "pageTree",
     },
     {
         type: "route",
@@ -254,6 +253,14 @@ export const masterMenuData: MasterMenuData = [
                             component: ProductCategoriesPage,
                         },
                     },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productTags" defaultMessage="Product Tags" />,
+                        route: {
+                            path: "/product-tags",
+                            component: ProductTagsPage,
+                        },
+                    },
                 ],
             },
             {
@@ -279,10 +286,18 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productCategoryHandmade" defaultMessage="Product Category Handmade" />,
+                        primary: <FormattedMessage id="menu.productCategoriesHandmade" defaultMessage="Product Categories Handmade" />,
                         route: {
-                            path: "/product-category-handmade",
+                            path: "/product-categories-handmade",
                             component: ProductCategoriesHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productTagsHandmade" defaultMessage="Product Tags Handmade" />,
+                        route: {
+                            path: "/product-tags-handmade",
+                            component: ProductTagsHandmadePage,
                         },
                     },
                 ],

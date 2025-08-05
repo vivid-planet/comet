@@ -1,4 +1,11 @@
-import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import {
+    BlobStorageBackendService,
+    DependenciesService,
+    PageTreeNodeBaseCreateInput,
+    PageTreeNodeInterface,
+    PageTreeNodeVisibility,
+    PageTreeService,
+} from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
@@ -147,10 +154,9 @@ export class FixturesCommand extends CommandRunner {
                             slug: slugify(name),
                             parentId: level > 0 ? faker.helpers.arrayElement(pages[level - 1]).id : undefined,
                             attachedDocument: { type: "Page" },
-                            // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                            userGroup: UserGroup.All,
-                        },
-                        PageTreeNodeCategory.MainNavigation,
+                            userGroup: UserGroup.all,
+                        } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+                        PageTreeNodeCategory.mainNavigation,
                         {
                             domain,
                             language: "en",

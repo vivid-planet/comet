@@ -211,12 +211,9 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
 
         const doSave = useCallback(async () => {
             const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
-            if (hasValidationErrors) {
-                return false;
-            }
 
             const submissionErrors = await formRenderProps.form.submit();
-            if (submissionErrors) {
+            if (hasValidationErrors || submissionErrors) {
                 return false;
             }
 
@@ -229,7 +226,18 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
-                        {(props) => <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />}
+                        {(props) => {
+                            return (
+                                <Savable
+                                    hasChanges={props.dirty}
+                                    doSave={doSave}
+                                    doReset={doReset}
+                                    checkForChanges={() => {
+                                        return formRenderProps.form.getState().dirty;
+                                    }}
+                                />
+                            );
+                        }}
                     </FormSpy>
                 )}
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>

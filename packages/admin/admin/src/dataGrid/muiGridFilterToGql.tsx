@@ -4,7 +4,9 @@ import { type GridColDef } from "./GridColDef";
 
 const muiGridOperatorValueToGqlOperator: { [key: string]: string } = {
     contains: "contains",
+    doesNotContain: "notContains",
     equals: "equal",
+    doesNotEqual: "notEqual",
     ">": "greaterThan",
     ">=": "greaterThanEqual",
     "<": "lowerThan",
@@ -46,33 +48,18 @@ type GqlFilter = {
     or?: GqlFilter[] | null;
 };
 
-function convertValueByType(value: any, type?: string) {
-    if (type === "number") {
-        return parseFloat(value);
-    } else if (type === "boolean") {
-        if (value === "true") return true;
-        if (value === "false") return false;
-        return undefined;
-    } else {
-        return value;
-    }
-}
-
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
-    const filterItems = filterModel.items
-        .filter((filterItem) => filterItem.value !== undefined)
-        .map((filterItem) => {
-            if (!filterItem.operator) throw new Error("operaturValue not set");
-            const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
-            const column = columns.find((i) => i.field == filterItem.field);
-            const convertedValue = convertValueByType(filterItem.value, column?.type);
-            return {
-                [filterItem.field]: {
-                    [gqlOperator]: convertedValue,
-                } as GqlStringFilter | GqlNumberFilter,
-            };
-        });
+    const filterItems = filterModel.items.map((filterItem) => {
+        if (!filterItem.operator) throw new Error("operator not set");
+        const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operator] || filterItem.operator;
+        const value = ["isEmpty", "isNotEmpty"].includes(gqlOperator) ? true : filterItem.value;
+        return {
+            [filterItem.field]: {
+                [gqlOperator]: value,
+            } as GqlStringFilter | GqlNumberFilter,
+        };
+    });
     const filter: GqlFilter = {};
     const op: "and" | "or" = filterModel.logicOperator ?? "and";
     filter[op] = filterItems;

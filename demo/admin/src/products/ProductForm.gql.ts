@@ -41,6 +41,7 @@ export const productFormFragment = gql`
             height
             depth
         }
+        availableSince
     }
     ${finalFormFileUploadFragment}
 `;

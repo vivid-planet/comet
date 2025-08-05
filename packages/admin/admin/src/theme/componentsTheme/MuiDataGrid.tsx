@@ -2,21 +2,25 @@ import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search }
 import {
     autocompleteClasses,
     buttonBaseClasses,
+    Checkbox,
     checkboxClasses,
     iconButtonClasses,
     inputBaseClasses,
     inputLabelClasses,
     nativeSelectClasses,
+    Select,
     svgIconClasses,
     type SvgIconProps,
     tablePaginationClasses,
+    TextField,
     toolbarClasses,
 } from "@mui/material";
 import { COMFORTABLE_DENSITY_FACTOR, COMPACT_DENSITY_FACTOR, getDataGridUtilityClass, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import { FormattedMessage, FormattedNumber } from "react-intl";
 
+import { DataGridColumnsManagement } from "../../dataGrid/columnsManagement/DataGridColumnsManagement";
 import { DataGridPanel } from "../../dataGrid/DataGridPanel";
+import { DataGridPagination } from "../../dataGrid/pagination/DataGridPagination";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { type GetMuiComponentTheme } from "./getComponentsTheme";
 
@@ -53,15 +57,20 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             return getDensityHeightValue("standard");
         },
         slots: {
+            baseCheckbox: Checkbox,
             quickFilterIcon: Search,
             quickFilterClearIcon: Clear,
             filterPanelDeleteIcon: (props: SvgIconProps) => <Delete {...props} fontSize="medium" />,
+            baseTextField: TextField,
+            baseSelect: Select,
             booleanCellTrueIcon: Check,
             booleanCellFalseIcon: Close,
             columnSortedAscendingIcon: ArrowUp,
             columnSortedDescendingIcon: ArrowDown,
             columnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             panel: DataGridPanel,
+            pagination: DataGridPagination,
+            columnsManagement: DataGridColumnsManagement,
             ...component?.defaultProps?.slots,
         },
         slotProps: {
@@ -72,21 +81,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         localeText: {
-            MuiTablePagination: {
-                labelDisplayedRows: ({ from, to, count }) => (
-                    <FormattedMessage
-                        id="dataGrid.pagination.labelDisplayedRows"
-                        defaultMessage="{from}–{to} of {formattedCount} {count, plural, one {item} other {items}}"
-                        values={{
-                            from: <FormattedNumber value={from} />,
-                            to: <FormattedNumber value={to} />,
-                            formattedCount: <FormattedNumber value={count} />,
-                            count,
-                        }}
-                    />
-                ),
-                ...component?.defaultProps?.localeText?.MuiTablePagination,
-            },
             ...component?.defaultProps?.localeText,
         },
     },
@@ -123,11 +117,20 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&:focus-within": {
                 outline: "none",
             },
+
+            [`&.${gridClasses["columnHeader--pinnedLeft"]}.${gridClasses["columnHeader--withRightBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 -8px 0 0)",
+                borderRightWidth: 0,
+            },
+
+            [`&.${gridClasses["columnHeader--pinnedRight"]}.${gridClasses["columnHeader--withLeftBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 0 0 -8px)",
+                borderLeftWidth: 0,
+            },
         }),
-        pinnedColumns: {
-            backgroundColor: "white",
-            boxShadow: shadows[2],
-        },
+
         cell: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
@@ -140,12 +143,25 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: palette.grey[900],
             },
             alignContent: "center",
+
+            [`&.${gridClasses["cell--pinnedLeft"]}.${gridClasses["cell--withRightBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 -8px 0 0)",
+                borderRightWidth: 0,
+            },
+
+            [`&.${gridClasses["cell--pinnedRight"]}.${gridClasses["cell--withLeftBorder"]}`]: {
+                boxShadow: shadows[2],
+                clipPath: "inset(0 0 0 -8px)",
+                borderLeftWidth: 0,
+            },
         }),
         footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
             boxSizing: "border-box",
             minHeight: getDensityHeightValue(ownerState?.density),
 
+            justifyContent: "start",
             [`& .${tablePaginationClasses.selectLabel}, & .${tablePaginationClasses.displayedRows}`]: {
                 marginTop: 0,
                 marginBottom: 0,
@@ -274,10 +290,24 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             [`&& .${autocompleteClasses.inputRoot}`]: {
-                paddingBottom: 0,
+                padding: 0,
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+                border: `1px solid ${palette.grey[100]}`,
 
                 [`& > .${autocompleteClasses.input}`]: {
                     padding: `calc(${spacing(2)} - 1px)`,
+                    display: "flex",
+                    alignItems: "center",
+                },
+
+                [`& > .MuiOutlinedInput-notchedOutline`]: {
+                    display: "none",
+                },
+
+                "&.Mui-focused": {
+                    border: `1px solid ${palette.primary.main}`,
                 },
             },
 

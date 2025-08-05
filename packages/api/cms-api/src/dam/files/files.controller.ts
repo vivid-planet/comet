@@ -48,7 +48,7 @@ import { FoldersService } from "./folders.service";
 
 const fileUrl = `:fileId/:filename`;
 
-export function createFilesController({ Scope: PassedScope }: { Scope?: Type<DamScopeInterface> }): Type<unknown> {
+export function createFilesController({ Scope: PassedScope, damBasePath }: { Scope?: Type<DamScopeInterface>; damBasePath: string }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -58,7 +58,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
     const UploadFileBody = createUploadFileBody({ Scope });
 
-    @Controller("dam/files")
+    @Controller(`${damBasePath}/files`)
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
         private readonly logger = new Logger(FilesController.name);
@@ -261,7 +261,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             res.setHeader("Content-Disposition", "attachment");
-            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, s-maxage=86400, public" } }); // Public cache, 1 year for browsers, 1 day for proxies/cdn's
         }
 
         @DisableCometGuards()
@@ -285,7 +285,12 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new BadRequestException("Content Hash mismatch!");
             }
 
-            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
+            return this.streamFile(file, res, {
+                range,
+                overrideHeaders: {
+                    "cache-control": "max-age=31536000, s-maxage=86400, public", // Public cache, 1 year for browsers, 1 day for proxies/cdn's
+                },
+            });
         }
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {
@@ -329,6 +334,15 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 } catch (err) {
                     throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
                 }
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
 
                 res.writeHead(206, {
                     ...headers,

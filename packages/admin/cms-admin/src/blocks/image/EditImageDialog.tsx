@@ -158,7 +158,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             </Grid>
                         </DialogTitle>
                         <DialogContent>
-                            <ImageCrop src={image.url} imageStyle={imageStyle} disabled={values.useInheritedDamSettings} />
+                            <ImageCrop src={image.url} style={imageStyle} disabled={values.useInheritedDamSettings} />
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>

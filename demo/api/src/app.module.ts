@@ -18,12 +18,14 @@ import {
     RedirectsModule,
     SentryModule,
     UserPermissionsModule,
+    WarningsModule,
 } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
+import { AppPermission } from "@src/auth/app-permission.enum";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
@@ -71,7 +73,8 @@ export class AppModule {
                     imports: [BlocksModule],
                     useFactory: (moduleRef: ModuleRef) => ({
                         debug: config.debug,
-                        playground: config.debug,
+                        graphiql: config.debug ? { url: "/api/graphql" } : undefined,
+                        playground: false,
                         autoSchemaFile: "schema.gql",
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
@@ -101,8 +104,8 @@ export class AppModule {
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
                             siteConfig.scope.languages.map((language) => ({
-                                domain: siteConfig.scope.domain,
-                                language,
+                                scope: { domain: siteConfig.scope.domain, language },
+                                label: { domain: siteConfig.name },
                             })),
                         ),
                         userService,
@@ -111,6 +114,7 @@ export class AppModule {
                     }),
                     inject: [UserService, AccessControlService],
                     imports: [authModule],
+                    AppPermission,
                 }),
                 BlocksModule,
                 DependenciesModule,
@@ -199,6 +203,7 @@ export class AppModule {
                 }),
                 OpenTelemetryModule,
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
+                WarningsModule,
             ],
         };
     }

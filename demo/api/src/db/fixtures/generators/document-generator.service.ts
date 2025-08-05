@@ -1,4 +1,4 @@
-import { PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { PageTreeNodeBaseCreateInput, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { faker } from "@faker-js/faker";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
@@ -39,7 +39,7 @@ export class DocumentGeneratorService {
         name,
         scope,
         parentId,
-        category = PageTreeNodeCategory.MainNavigation,
+        category = PageTreeNodeCategory.mainNavigation,
         blockCategory,
     }: GeneratePageInput): Promise<PageTreeNodeInterface> {
         const id = faker.string.uuid();
@@ -54,9 +54,8 @@ export class DocumentGeneratorService {
                     type: "Page",
                 },
                 parentId,
-                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
-                userGroup: UserGroup.All,
-            },
+                userGroup: UserGroup.all,
+            } as PageTreeNodeBaseCreateInput, // Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
             category,
             scope,
         );

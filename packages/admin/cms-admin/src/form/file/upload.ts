@@ -22,6 +22,7 @@ interface UploadFileParams {
     data: UploadFileData;
     cancelToken: CancelToken;
     options?: Omit<AxiosRequestConfig, "cancelToken">;
+    damBasePath: string;
 }
 
 export function upload<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
@@ -38,6 +39,7 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
     cancelToken,
     options,
     replace = false,
+    damBasePath,
 }: UploadFileParams & { replace?: boolean }): Promise<AxiosResponse<ResponseData>> {
     const formData = new FormData();
     formData.append("file", data.file);
@@ -64,7 +66,7 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
         formData.append("folderId", data.folderId);
     }
 
-    const endpoint = replace ? "/dam/files/replace-by-filename-and-folder" : "/dam/files/upload";
+    const endpoint = replace ? `/${damBasePath}/files/replace-by-filename-and-folder` : `/${damBasePath}/files/upload`;
 
     return apiClient.post<ResponseData>(endpoint, formData, {
         ...options,
@@ -85,6 +87,7 @@ export function replaceById<ResponseData>({
     data,
     cancelToken,
     options,
+    damBasePath,
 }: Omit<UploadFileParams, "data"> & { data: ReplaceFileByIdData }): Promise<AxiosResponse<ResponseData>> {
     const formData = new FormData();
     formData.append("file", data.file);
@@ -99,7 +102,7 @@ export function replaceById<ResponseData>({
         formData.append("altText", data.file.altText);
     }
 
-    return apiClient.post<ResponseData>("/dam/files/replace-by-id", formData, {
+    return apiClient.post<ResponseData>(`/${damBasePath}/files/replace-by-id`, formData, {
         ...options,
         cancelToken,
         headers: {

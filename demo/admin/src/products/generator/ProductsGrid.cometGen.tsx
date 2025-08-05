@@ -8,7 +8,11 @@ import { ProductsGridPreviewAction } from "../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "./ManufacturerFilter";
 import { ProductTitle } from "./ProductTitle";
 
-const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
+const typeValues = [
+    { value: "Cap", label: { primaryText: "Great cap", icon: { name: "Education" as const, color: "primary" as const } } },
+    "Shirt",
+    "Tie",
+];
 
 export default defineConfig<GQLProduct>({
     type: "grid",
@@ -24,7 +28,7 @@ export default defineConfig<GQLProduct>({
         { field: "price", sort: "asc" },
     ],
     initialFilter: {
-        items: [{ field: "type", operator: "is", value: "Shirt" }],
+        items: [{ field: "type", operator: "is", value: "shirt" }],
     },
     columns: [
         {
@@ -87,7 +91,7 @@ export default defineConfig<GQLProduct>({
             type: "text",
             renderCell: ({ value, row }) => <ProductTitle title={value} />,
             name: "title",
-            headerName: "Custom",
+            headerName: "Title",
             minWidth: 200,
             visible: "down('md')",
         },
@@ -103,29 +107,12 @@ export default defineConfig<GQLProduct>({
             visible: "up('md')",
         },
         {
-            // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
-            type: "staticSelect",
+            type: "boolean",
             name: "inStock",
             headerName: "In stock",
             flex: 1,
             minWidth: 80,
             visible: "up('md')",
-            values: [
-                {
-                    value: "true",
-                    label: {
-                        primaryText: "In stock",
-                        icon: { name: "StateFilled", color: "success" },
-                    },
-                },
-                {
-                    value: "false",
-                    label: {
-                        primaryText: "Out of stock",
-                        icon: { name: "StateFilled", color: "error" },
-                    },
-                },
-            ],
         },
         // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
         { type: "staticSelect", name: "type", maxWidth: 150, values: typeValues, visible: "up('md')" },
@@ -141,11 +128,16 @@ export default defineConfig<GQLProduct>({
             filterOperators: ManufacturerFilterOperators,
         },
         {
-            type: "virtual",
+            type: "manyToMany",
             name: "tags",
             headerName: "Tags",
-            queryFields: ["tags.title"],
-            renderCell: ({ row }) => <>{row.tags.map((tag) => tag.title).join(", ")}</>,
+            labelField: "title",
+        },
+        {
+            type: "oneToMany",
+            name: "variants",
+            headerName: "Variants",
+            labelField: "name",
         },
         {
             type: "actions",

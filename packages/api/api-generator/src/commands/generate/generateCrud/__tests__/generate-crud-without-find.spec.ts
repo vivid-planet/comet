@@ -3,7 +3,7 @@ import { BaseEntity, defineConfig, Embeddable, Embedded, Entity, MikroORM, Prima
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatGeneratedFiles, parseSource } from "../../utils/test-helper";
+import { formatGeneratedFiles, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrud } from "../generate-crud";
 
 @Embeddable()
@@ -15,7 +15,7 @@ export class TestEntityScope {
 @Entity()
 export class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
-    @CrudField({ filter: false })
+    @CrudField({ filter: false, search: false })
     id: string = uuid();
 
     @Embedded(() => TestEntityScope)
@@ -33,7 +33,7 @@ describe("GenerateCrud without find condition", () => {
             }),
         );
 
-        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
+        const out = await generateCrud({ targetDirectory: __dirname, requiredPermission: testPermission }, orm.em.getMetadata().get("TestEntity"));
         const formattedOut = await formatGeneratedFiles(out);
 
         {

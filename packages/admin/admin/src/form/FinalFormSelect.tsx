@@ -1,18 +1,21 @@
-import { CircularProgress, InputAdornment, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
+import { Error } from "@comet/admin-icons";
+import { InputAdornment, LinearProgress, MenuItem, Select, type SelectProps, Typography } from "@mui/material";
 import { type ReactNode } from "react";
 import { type FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { type AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
+import { LinearLoadingContainer, MenuItemDisabledOverrideOpacity } from "./FinalFormSelect.sc";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     noOptionsLabel?: ReactNode;
+    errorLabel?: ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: ReactNode;
     required?: boolean;
+    loadingError?: Error | null;
 }
 
 const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
@@ -23,12 +26,18 @@ const getHasClearableContent = (value: unknown, multiple: boolean | undefined) =
     return value !== undefined && value !== "";
 };
 
+/**
+ * Final Form-compatible Select component.
+ *
+ * @see {@link SelectField} – preferred for typical form use. Use this only if no Field wrapper is needed.
+ */
 export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
     loading = false,
+    loadingError,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
@@ -44,9 +53,15 @@ export const FinalFormSelect = <T,>({
             return String(option);
         }
     },
+
     noOptionsLabel = (
         <Typography variant="body2">
             <FormattedMessage id="finalFormSelect.noOptions" defaultMessage="No options." />
+        </Typography>
+    ),
+    errorLabel = (
+        <Typography variant="body2">
+            <FormattedMessage id="finalFormSelect.error" defaultMessage="Error loading options." />
         </Typography>
     ),
     children,
@@ -85,20 +100,21 @@ export const FinalFormSelect = <T,>({
         );
     }
 
+    const showLoadingMessage = loading === true && options.length === 0 && loadingError == null;
+    const showLinearProgress = loading === true && !showLoadingMessage;
+    const showOptions = options.length > 0 && loadingError == null;
+    const showError = loadingError != null && !loading;
+    const showNoOptions = loading === false && loadingError == null && options.length === 0;
+
     return (
         <Select
             {...selectProps}
             endAdornment={
-                <>
-                    {loading ? (
-                        <InputAdornment position="end">
-                            <CircularProgress size={16} color="inherit" />
-                            {endAdornment}
-                        </InputAdornment>
-                    ) : (
-                        <InputAdornment position="end">{endAdornment}</InputAdornment>
-                    )}
-                </>
+                <InputAdornment position="end">
+                    {loadingError && <Error color="error" />}
+
+                    {endAdornment}
+                </InputAdornment>
             }
             onChange={(event) => {
                 const value = event.target.value;
@@ -108,16 +124,17 @@ export const FinalFormSelect = <T,>({
                         : options.find((i) => getOptionValue(i) == value),
                 );
             }}
-            value={value}
+            value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
             renderValue={() => {
                 if (Array.isArray(value)) {
-                    return value.map((i) => getOptionValue(i));
+                    return value.map((i) => getOptionLabel(i));
                 } else {
-                    return getOptionValue(value);
+                    return getOptionLabel(value);
                 }
             }}
         >
-            {loading && (
+            <LinearLoadingContainer>{showLinearProgress && <LinearProgress />}</LinearLoadingContainer>
+            {showLoadingMessage && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
                 </MenuItemDisabledOverrideOpacity>
@@ -137,13 +154,18 @@ export const FinalFormSelect = <T,>({
                     </MenuItem>
                 ))}
 
-            {loading === false && options.length === 0 && (
+            {showNoOptions && (
                 <MenuItemDisabledOverrideOpacity value="" disabled>
                     {noOptionsLabel}
                 </MenuItemDisabledOverrideOpacity>
             )}
+            {showError && (
+                <MenuItemDisabledOverrideOpacity value="" disabled>
+                    {errorLabel}
+                </MenuItemDisabledOverrideOpacity>
+            )}
 
-            {!loading &&
+            {showOptions &&
                 options.map((option: T) => (
                     <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
                         {getOptionLabel(option)}

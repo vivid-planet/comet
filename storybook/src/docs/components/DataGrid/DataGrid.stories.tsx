@@ -633,3 +633,81 @@ export const _CrudMoreActionsMenu = {
     },
     name: "CrudMoreActionsMenu",
 };
+
+/**
+ * This story demonstrates how to use the dataGridDateColumn helper for rendering date values in a DataGrid.
+ */
+export const DateColumn = {
+    render: () => {
+        return (
+            <Box height={600}>
+                <DataGrid
+                    paginationMode="client"
+                    rows={[
+                        {
+                            id: "1",
+                            title: "Max Mustermann",
+                            birthdate: "1999-12-07",
+                        },
+                        {
+                            id: "2",
+                            title: "Maxim Musterfrau",
+                            birthdate: "1985-12-05",
+                        },
+                    ]}
+                    columns={[
+                        {
+                            field: "title",
+                            headerName: "Title",
+                        },
+                        {
+                            ...dataGridDateColumn,
+                            field: "birthdate",
+                            headerName: "Birthdate",
+                        },
+                    ]}
+                />
+            </Box>
+        );
+    },
+};
+
+/**
+ * This story demonstrates how to use the dataGridDateTimeColumn helper for rendering date and time values in a DataGrid.
+ */
+export const DateTimeColumn = {
+    render: () => {
+        return (
+            <Box height={600}>
+                <DataGrid
+                    paginationMode="client"
+                    rows={[
+                        {
+                            id: "1",
+                            name: "Product 1",
+                            createdAt: "2025-12-07T10:15:30Z",
+                        },
+                        {
+                            id: "2",
+                            name: "Product 2",
+                            createdAt: "2023-01-23T12:00:00Z",
+                        },
+                    ]}
+                    columns={[
+                        {
+                            field: "name",
+                            headerName: "Product Name",
+                            minWidth: 150,
+                        },
+                        {
+                            ...dataGridDateTimeColumn,
+                            field: "createdAt",
+                            headerName: "Created At",
+                            minWidth: 150,
+                        },
+                    ]}
+                />
+            </Box>
+        );
+    },
+};

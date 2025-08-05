@@ -1,32 +1,32 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    Button,
     CrudContextMenu,
     DataGridToolbar,
-    filterByFragment,
+    FillSpace,
     type GridColDef,
+    StackLink,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { useTheme } from "@mui/material";
-import { DataGridPro, type GridRenderCellParams, type GridRowOrderChangeParams, type GridToolbarProps } from "@mui/x-data-grid-pro";
-import { type ReactNode } from "react";
-import { useIntl } from "react-intl";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
+import { DataGridPro, type GridRowOrderChangeParams, type GridSlotsComponent } from "@mui/x-data-grid-pro";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
-    type GQLCreateProductCategoryMutation,
-    type GQLCreateProductCategoryMutationVariables,
     type GQLDeleteProductCategoryMutation,
     type GQLDeleteProductCategoryMutationVariables,
+    type GQLProductCategoriesGridFragment,
     type GQLProductCategoriesGridQuery,
     type GQLProductCategoriesGridQueryVariables,
-    type GQLProductCategoryGridFutureFragment,
     type GQLUpdateProductCategoryPositionMutation,
     type GQLUpdateProductCategoryPositionMutationVariables,
 } from "./ProductCategoriesGrid.generated";
 
 const productCategoriesFragment = gql`
-    fragment ProductCategoryGridFuture on ProductCategory {
+    fragment ProductCategoriesGrid on ProductCategory {
         id
         title
         slug
@@ -38,12 +38,22 @@ const productCategoriesQuery = gql`
     query ProductCategoriesGrid($offset: Int!, $limit: Int!, $sort: [ProductCategorySort!]) {
         productCategories(offset: $offset, limit: $limit, sort: $sort) {
             nodes {
-                ...ProductCategoryGridFuture
+                ...ProductCategoriesGrid
             }
             totalCount
         }
     }
     ${productCategoriesFragment}
+`;
+
+const updateProductCategoryPositionMutation = gql`
+    mutation UpdateProductCategoryPosition($id: ID!, $input: ProductCategoryUpdateInput!) {
+        updateProductCategory(id: $id, input: $input) {
+            id
+            position
+            updatedAt
+        }
+    }
 `;
 
 const deleteProductCategoryMutation = gql`
@@ -52,43 +62,21 @@ const deleteProductCategoryMutation = gql`
     }
 `;
 
-const createProductCategoryMutation = gql`
-    mutation CreateProductCategory($input: ProductCategoryInput!) {
-        createProductCategory(input: $input) {
-            id
-        }
-    }
-`;
-
-const updateProductCategoryPositionMutation = gql`
-    mutation UpdateProductCategoryPosition($id: ID!, $input: ProductCategoryUpdateInput!) {
-        updateProductCategory(id: $id, input: $input) {
-            id
-            updatedAt
-            position
-        }
-    }
-`;
-
-interface ProductCategoriesGridToolbarProps extends GridToolbarProps {
-    toolbarAction?: ReactNode;
+function ProductCategoriesGridToolbar() {
+    return (
+        <DataGridToolbar>
+            <FillSpace />
+            <Button responsive startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add">
+                <FormattedMessage id="productCategory.productCategoriesGrid.newEntry" defaultMessage="New Product Category" />
+            </Button>
+        </DataGridToolbar>
+    );
 }
 
-function ProductCategoriesGridToolbar({ toolbarAction }: ProductCategoriesGridToolbarProps) {
-    return <DataGridToolbar>{toolbarAction}</DataGridToolbar>;
-}
-
-type Props = {
-    toolbarAction?: ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductCategoryGridFutureFragment, any>) => ReactNode;
-    actionsColumnWidth?: number;
-};
-
-export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
+export function ProductCategoriesGrid() {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
+    const dataGridProps = { ...useDataGridRemote({ queryParamsPrefix: "productCategories" }), ...usePersistentColumnState("ProductCategoriesGrid") };
 
     const handleRowOrderChange = async ({ row: { id }, targetIndex }: GridRowOrderChangeParams) => {
         await client.mutate<GQLUpdateProductCategoryPositionMutation, GQLUpdateProductCategoryPositionMutationVariables>({
@@ -98,26 +86,22 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
             refetchQueries: [productCategoriesQuery],
         });
     };
-
-    const theme = useTheme();
-
-    const columns: GridColDef<GQLProductCategoryGridFutureFragment>[] = [
+    const columns: GridColDef<GQLProductCategoriesGridFragment>[] = [
         {
             field: "title",
-            headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Titel" }),
-            flex: 1,
-            visible: theme.breakpoints.up("md"),
-            minWidth: 150,
+            headerName: intl.formatMessage({ id: "productCategory.title", defaultMessage: "Title" }),
             filterable: false,
             sortable: false,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "slug",
             headerName: intl.formatMessage({ id: "productCategory.slug", defaultMessage: "Slug" }),
-            flex: 1,
-            minWidth: 150,
             filterable: false,
             sortable: false,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "position",
@@ -125,6 +109,9 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
             type: "number",
             filterable: false,
             sortable: false,
+            renderCell: ({ value }) => {
+                return typeof value === "number" ? <FormattedNumber value={value} minimumFractionDigits={0} maximumFractionDigits={0} /> : "";
+            },
             flex: 1,
             minWidth: 150,
         },
@@ -136,23 +123,14 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
             type: "actions",
             align: "right",
             pinned: "right",
-            width: actionsColumnWidth,
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>
-                        {rowAction && rowAction(params)}
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <EditIcon />
+                        </IconButton>
                         <CrudContextMenu
-                            copyData={() => {
-                                // Don't copy id, because we want to create a new entity with this data
-                                const { id, ...filteredData } = filterByFragment(productCategoriesFragment, params.row);
-                                return filteredData;
-                            }}
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
-                                    mutation: createProductCategoryMutation,
-                                    variables: { input },
-                                });
-                            }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
                                     mutation: deleteProductCategoryMutation,
@@ -191,10 +169,7 @@ export function ProductCategoriesGrid({ toolbarAction, rowAction, actionsColumnW
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductCategoriesGridToolbar,
-            }}
-            slotProps={{
-                toolbar: { toolbarAction } as ProductCategoriesGridToolbarProps,
+                toolbar: ProductCategoriesGridToolbar as GridSlotsComponent["toolbar"],
             }}
             rowReordering
             onRowOrderChange={handleRowOrderChange}

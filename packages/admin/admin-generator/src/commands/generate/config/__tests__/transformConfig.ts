@@ -131,21 +131,6 @@ describe("transformConfig", () => {
         }).toThrow();
     });
 
-    it("parser throws error for import at unsupported location", () => {
-        expect(() => {
-            parseString(`
-                import { defineConfig } from "@comet/admin-generator";
-                import { GQLProduct } from "@src/graphql.generated";
-
-                import { Foo } from "./Foo";
-        
-                export default defineConfig<GQLProduct>({
-                    foo: Foo
-                });
-            `);
-        }).toThrow();
-    });
-
     it("doesn't transform a function call", () => {
         const config = parseString(`
             import { defineConfig } from "@comet/admin-generator";

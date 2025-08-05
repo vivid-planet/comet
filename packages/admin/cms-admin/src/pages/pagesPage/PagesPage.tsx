@@ -21,12 +21,12 @@ import { Box, DialogContent, Divider, FormControlLabel, LinearProgress, Paper, S
 import { type ComponentType, type ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { type ContentScope, createEditPageNode } from "../..";
+import { type ContentScope, createEditPageNode, useSiteConfig } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { type DocumentInterface, type DocumentType } from "../../documents/types";
-import { useSiteConfig } from "../../siteConfigs/useSiteConfig";
+import { usePageTreeScope } from "../config/usePageTreeScope";
 import { type EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -57,6 +57,7 @@ export function PagesPage({
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
     const { additionalPageTreeNodeFragment } = usePageTreeConfig();
+    const pageTreeScope = usePageTreeScope();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
@@ -73,7 +74,7 @@ export function PagesPage({
     const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         fetchPolicy: "cache-and-network",
         variables: {
-            contentScope: scope,
+            contentScope: pageTreeScope,
             category,
         },
         context: LocalErrorScopeApolloContext,
@@ -118,7 +119,7 @@ export function PagesPage({
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
-        domain: scope.domain,
+        siteUrl: siteConfig.url,
         setExpandedIds,
         onUpdateCurrentMatch: (pageId, pagesToRender) => {
             const index = pagesToRender.findIndex((c) => c.id === pageId);
@@ -138,7 +139,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(pageTreeScope)}>
                             <ToolbarItem sx={{ flexGrow: 1 }}>
                                 <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             </ToolbarItem>

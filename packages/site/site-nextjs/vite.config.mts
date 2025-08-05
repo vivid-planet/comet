@@ -22,7 +22,10 @@ export default defineConfig({
                 // otherwise vite will bundle them into the library which caused issues with client / server components
                 // supposedly because server code was bundled into the client code
                 return (
-                    source !== "@comet/site-react/css" && // include css from site-react in site-nextjs build
+                    // We include @comet/site-react in the build. There are two reasons
+                    //      1. we want to include the css from @comet/site-react/css in the generated css file
+                    //      2. we want to avoid false-positive edge runtime errors in next when using methods from @comet/site-react in the middleware
+                    !source.startsWith("@comet/site-react") &&
                     !source.startsWith(".") &&
                     !source.startsWith("/")
                 );

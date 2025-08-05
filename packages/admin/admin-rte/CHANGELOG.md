@@ -1,5 +1,20 @@
 # @comet/admin-rte
 
+## 8.0.0-beta.6
+
+### Patch Changes
+
+- Updated dependencies [9e3e943]
+- Updated dependencies [afc306b]
+- Updated dependencies [afc306b]
+- Updated dependencies [9e3e943]
+- Updated dependencies [06d5600]
+- Updated dependencies [15b7dd3]
+- Updated dependencies [d6a004a]
+- Updated dependencies [77b52a8]
+    - @comet/admin@8.0.0-beta.6
+    - @comet/admin-icons@8.0.0-beta.6
+
 ## 8.0.0-beta.5
 
 ### Patch Changes
@@ -101,6 +116,58 @@
     - @comet/admin@8.0.0-beta.0
     - @comet/admin-icons@8.0.0-beta.0
 
+## 7.25.3
+
+### Patch Changes
+
+- @comet/admin@7.25.3
+- @comet/admin-icons@7.25.3
+
+## 7.25.2
+
+### Patch Changes
+
+- @comet/admin@7.25.2
+- @comet/admin-icons@7.25.2
+
+## 7.25.1
+
+### Patch Changes
+
+- @comet/admin@7.25.1
+- @comet/admin-icons@7.25.1
+
+## 7.25.0
+
+### Patch Changes
+
+- @comet/admin@7.25.0
+- @comet/admin-icons@7.25.0
+
+## 7.24.0
+
+### Patch Changes
+
+- Updated dependencies [fc900f217]
+    - @comet/admin@7.24.0
+    - @comet/admin-icons@7.24.0
+
+## 7.23.0
+
+### Patch Changes
+
+- @comet/admin@7.23.0
+- @comet/admin-icons@7.23.0
+
+## 7.22.0
+
+### Patch Changes
+
+- Updated dependencies [2cf573b72]
+- Updated dependencies [086774f01]
+    - @comet/admin@7.22.0
+    - @comet/admin-icons@7.22.0
+
 ## 7.21.1
 
 ### Patch Changes
@@ -178,7 +245,6 @@
 - bb041f7a7: Add content generation capabilities to `createSeoBlock`
 
     The SEO block (when created using the `createSeoBlock` factory) now supports automatic generation of:
-
     - HTML title
     - Meta description
     - Open Graph title
@@ -191,7 +257,6 @@
     `extractTextContents` can be used to extract plain text from blocks. This functionality is particularly useful for operations such as search indexing or using the content for LLM-based tasks. The option `includeInvisibleContent` can be set to include the content of invisible blocks in the extracted text.
 
     The method is optional for now, but it is recommended to implement it for all blocks and documents. The default behavior is to return
-
     - if the state is a string: the string itself
     - otherwise: an empty array
 
@@ -415,7 +480,6 @@
 ### Major Changes
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -494,7 +558,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`
@@ -618,7 +681,6 @@
 ### Major Changes
 
 - 92eae2ba9: Change the method of overriding the styling of Admin components
-
     - Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
     - Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
     - Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
@@ -697,7 +759,6 @@
       Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
 
         This affects the following components:
-
         - `AppHeader`
         - `AppHeaderMenuButton`
         - `ClearInputAdornment`

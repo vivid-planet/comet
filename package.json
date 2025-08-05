@@ -5,6 +5,7 @@
         "type": "git",
         "url": "https://github.com/vivid-planet/comet"
     },
+    "description": "Comet Monorepo",
     "license": "BSD-2-Clause",
     "scripts": {
         "create-site-configs-env": "npx @comet/cli inject-site-configs -f demo/site-configs/site-configs.ts -i demo/.env.site-configs.tpl -o demo/.env.site-configs --base64",
@@ -18,7 +19,6 @@
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",
         "dev:cms:api": "dev-pm start @cms-api",
-        "dev:cms:site": "dev-pm start @cms-site",
         "dev:cms:site-nextjs": "dev-pm start @site-nextjs",
         "dev:cms:site-react": "dev-pm start @site-react",
         "dev:demo": "dev-pm start @demo",
@@ -44,26 +44,26 @@
         "browser:demo:jaeger": "dotenv -- sh -c 'open-cli http://localhost:$JAEGER_UI_PORT'"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.28.1",
+        "@changesets/cli": "^2.29.5",
         "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.7.0",
-        "@formatjs/cli": "^6.6.3",
-        "@types/node": "^22.15.21",
-        "knip": "^5.46.0",
+        "@formatjs/cli": "^6.7.2",
+        "@types/node": "^22.16.3",
+        "knip": "^5.61.3",
         "cspell": "^8.19.4",
         "dotenv-cli": "^7.4.4",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.2",
         "npm-run-all2": "^7.0.2",
         "open-cli": "^8.0.0",
-        "prettier": "^3.5.3",
+        "prettier": "^3.6.2",
         "rimraf": "^6.0.1",
         "typescript": "^5.7.3",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@9.15.9",
+    "packageManager": "pnpm@10.14.0",
     "engines": {
         "node": "22",
-        "pnpm": "9.15.9"
+        "pnpm": "10.14.0"
     }
 }

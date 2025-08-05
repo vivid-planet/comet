@@ -34,7 +34,7 @@ export class MailerLog<AdditionalData> extends BaseEntity {
     additionalData?: AdditionalData;
 
     @Property({ nullable: true, index: true })
-    type?: string;
+    mailTypeForLogging?: string;
 
     // @Field(() => [File])
     // @OneToMany(() => File, (file) => file.mailerLog, { orphanRemoval: true })

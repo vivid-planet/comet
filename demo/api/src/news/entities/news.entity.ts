@@ -18,15 +18,15 @@ import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
 
 export enum NewsStatus {
-    Active = "Active",
-    Deleted = "Deleted",
+    active = "active",
+    deleted = "deleted",
 }
 registerEnumType(NewsStatus, { name: "NewsStatus" });
 
 export enum NewsCategory {
-    Events = "Events",
-    Company = "Company",
-    Awards = "Awards",
+    events = "events",
+    company = "company",
+    awards = "awards",
 }
 registerEnumType(NewsCategory, {
     name: "NewsCategory",
@@ -51,7 +51,7 @@ export class NewsContentScope {
 @RootBlockEntity()
 @ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["news"] })
 export class News extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
@@ -73,7 +73,7 @@ export class News extends BaseEntity {
 
     @Enum({ items: () => NewsStatus })
     @Field(() => NewsStatus)
-    status: NewsStatus = NewsStatus.Active;
+    status: NewsStatus = NewsStatus.active;
 
     @Property()
     @Field()

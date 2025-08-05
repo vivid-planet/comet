@@ -25,6 +25,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { DeleteDialog } from "./common/DeleteDialog";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { FillSpace, FillSpaceClassKey, FillSpaceProps } from "./common/FillSpace";
@@ -50,6 +51,16 @@ export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar
 export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/ToolbarBreadcrumbs";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
+export {
+    DataGridColumnsManagement,
+    DataGridColumnsManagementClassKey,
+    DataGridColumnsManagementProps,
+} from "./dataGrid/columnsManagement/DataGridColumnsManagement";
+export {
+    DataGridColumnsManagementListItem,
+    DataGridColumnsManagementListItemClassKey,
+    DataGridColumnsManagementListItemProps,
+} from "./dataGrid/columnsManagement/DataGridColumnsManagementListItem";
 export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";
 export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuContext, CrudMoreActionsMenuItem, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
@@ -59,11 +70,23 @@ export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDat
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
-export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
+export {
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
+    dataGridIdColumn,
+    dataGridManyToManyColumn,
+    dataGridOneToManyColumn,
+} from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
+export { DataGridPagination, DataGridPaginationClassKey, DataGridPaginationProps } from "./dataGrid/pagination/DataGridPagination";
+export {
+    DataGridPaginationActions,
+    DataGridPaginationActionsClassKey,
+    DataGridPaginationActionsProps,
+} from "./dataGrid/pagination/paginationActions/DataGridPaginationActions";
 export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
@@ -88,26 +111,8 @@ export {
     FinalFormSaveCancelButtonsLegacyProps,
 } from "./FinalFormSaveCancelButtonsLegacy";
 export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
-export {
-    /**
-     * @deprecated Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
-     */
-    FinalFormAutocomplete,
-    /**
-     * @deprecated Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
-     */
-    FinalFormAutocompleteProps,
-} from "./form/Autocomplete";
-export {
-    /**
-     * @deprecated Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
-     */
-    FinalFormCheckbox,
-    /**
-     * @deprecated Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
-     */
-    FinalFormCheckboxProps,
-} from "./form/Checkbox";
+export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autocomplete";
+export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerProps } from "./form/FieldContainer";
 export { AsyncAutocompleteField, AsyncAutocompleteFieldProps } from "./form/fields/AsyncAutocompleteField";
@@ -122,78 +127,26 @@ export { SelectField, SelectFieldOption, SelectFieldProps } from "./form/fields/
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";
+export { ToggleButtonGroupField, ToggleButtonGroupFieldProps } from "./form/fields/ToggleButtonGroupField";
 export { commonErrorMessages as commonFileErrorMessages } from "./form/file/commonErrorMessages";
 export { FileDropzone, FileDropzoneClassKey, FileDropzoneProps } from "./form/file/FileDropzone";
 export { FileSelect, FileSelectClassKey, FileSelectProps } from "./form/file/FileSelect";
 export { ErrorFileSelectItem, FileSelectItem, LoadingFileSelectItem, ValidFileSelectItem } from "./form/file/fileSelectItemTypes";
 export { FileSelectListItem, FileSelectListItemClassKey, FileSelectListItemProps } from "./form/file/FileSelectListItem";
-export {
-    /**
-     * @deprecated Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
-     */
-    FinalFormAsyncAutocomplete,
-    /**
-     * @deprecated Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
-     */
-    FinalFormAsyncAutocompleteProps,
-} from "./form/FinalFormAsyncAutocomplete";
-export {
-    /**
-     * @deprecated Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
-     */
-    FinalFormAsyncSelect,
-    /**
-     * @deprecated Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
-     */
-    FinalFormAsyncSelectProps,
-} from "./form/FinalFormAsyncSelect";
+export { FinalFormAsyncAutocomplete, FinalFormAsyncAutocompleteProps } from "./form/FinalFormAsyncAutocomplete";
+export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFormAsyncSelect";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FinalFormFileSelect, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
-export {
-    /**
-     * @deprecated Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
-     */
-    FinalFormNumberInput,
-    /**
-     * @deprecated Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
-     */
-    FinalFormNumberInputProps,
-} from "./form/FinalFormNumberInput";
+export { FinalFormNumberInput, FinalFormNumberInputProps } from "./form/FinalFormNumberInput";
 export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputProps } from "./form/FinalFormRangeInput";
-export {
-    /**
-     * @deprecated Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
-     */
-    FinalFormSearchTextField,
-    /**
-     * @deprecated Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
-     */
-    FinalFormSearchTextFieldProps,
-} from "./form/FinalFormSearchTextField";
-export {
-    /**
-     * @deprecated Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
-     */
-    FinalFormSelect,
-    /**
-     * @deprecated Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
-     */
-    FinalFormSelectProps,
-} from "./form/FinalFormSelect";
+export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
+export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
+export { FinalFormToggleButtonGroup, FinalFormToggleButtonGroupProps } from "./form/FinalFormToggleButtonGroup";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
 export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
-export {
-    /**
-     * @deprecated Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
-     */
-    FinalFormSwitch,
-    /**
-     * @deprecated Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
-     */
-    FinalFormSwitchProps,
-} from "./form/Switch";
+export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
 export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";

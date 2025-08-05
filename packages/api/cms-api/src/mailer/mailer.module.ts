@@ -1,10 +1,11 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { type DynamicModule, Global, Module } from "@nestjs/common";
+import { createTransport } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { DeleteMailLogsCommand } from "./delete-mail-logs.command";
 import { MailerLog } from "./entities/mailer-log.entity";
-import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
+import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
 import { MailerService } from "./mailer.service";
 import { SendTestMailCommand } from "./send-test-mail.command";
 
@@ -19,11 +20,18 @@ export type MailerModuleConfig = {
 @Global()
 @Module({})
 export class MailerModule {
-    static register(config: MailerModuleConfig): DynamicModule {
+    static register({ transport, ...config }: MailerModuleConfig): DynamicModule {
+        const mailerTransport = createTransport(transport);
         return {
             module: MailerModule,
             imports: [MikroOrmModule.forFeature([MailerLog])],
-            providers: [{ provide: MAILER_MODULE_OPTIONS, useValue: config }, MailerService, SendTestMailCommand, DeleteMailLogsCommand],
+            providers: [
+                { provide: MAILER_SERVICE_CONFIG, useValue: config },
+                { provide: MAILER_MODULE_TRANSPORT, useValue: mailerTransport },
+                MailerService,
+                SendTestMailCommand,
+                DeleteMailLogsCommand,
+            ],
             exports: [MailerService],
         };
     }

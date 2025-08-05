@@ -4,6 +4,7 @@ import { type GQLProduct } from "@src/graphql.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FutureProductNotice } from "../helpers/FutureProductNotice";
+import { productTypeValues } from "./productTypeValues";
 
 export default defineConfig<GQLProduct>({
     type: "form",
@@ -21,22 +22,22 @@ export default defineConfig<GQLProduct>({
                     type: "text",
                     name: "title",
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
-                    required: true,
+                    required: true, // default is inferred from gql schema
                     validate: (value: string) =>
                         value.length < 3 ? (
                             <FormattedMessage id="product.validate.titleMustBe3CharsLog" defaultMessage="Title must be at least 3 characters long" />
                         ) : undefined,
                 },
-                { type: "text", name: "slug", required: true },
+                { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
-                { type: "text", name: "description", label: "Description", multiline: true, required: false },
+                { type: "text", name: "description", label: "Description", multiline: true },
                 {
                     type: "staticSelect",
                     name: "type",
                     label: "Type",
                     required: true,
                     inputType: "radio",
-                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                    values: productTypeValues,
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {
@@ -67,8 +68,9 @@ export default defineConfig<GQLProduct>({
                     type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
-                    filterField: {
-                        name: "type",
+                    filter: {
+                        type: "formProp",
+                        propName: "manufacturerCountry",
                         gqlName: "addressAsEmbeddable_country",
                     },
                     startAdornment: { icon: "Location" },

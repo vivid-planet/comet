@@ -2,25 +2,25 @@ import { EntityManager } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import { createTransport, Transporter } from "nodemailer";
-import Mail, { Address, Options as MailOptions } from "nodemailer/lib/mailer";
+import { Transporter } from "nodemailer";
+import { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
 import { MailerLog } from "./entities/mailer-log.entity";
-import { MAILER_MODULE_OPTIONS } from "./mailer.constants";
+import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";
 import { MailerModuleConfig } from "./mailer.module";
+
+type MailerServiceConfig = Omit<MailerModuleConfig, "transport">;
 
 @Injectable()
 export class MailerService {
-    private mailerTransport: Transporter;
     private readonly logger = new Logger(MailerService.name);
 
     constructor(
-        @Inject(MAILER_MODULE_OPTIONS) private readonly mailerConfig: MailerModuleConfig,
+        @Inject(MAILER_SERVICE_CONFIG) private readonly mailerConfig: MailerServiceConfig,
+        @Inject(MAILER_MODULE_TRANSPORT) private readonly mailerTransport: Transporter,
         private readonly entityManager: EntityManager,
         @InjectRepository(MailerLog) private readonly mailerLogRepository: EntityRepository<MailerLog<unknown>>,
-    ) {
-        this.mailerTransport = createTransport(mailerConfig.transport);
-    }
+    ) {}
 
     private fillMailOptionsDefaults(originMailOptions: MailOptions): MailOptions {
         return {
@@ -34,7 +34,9 @@ export class MailerService {
 
     /**
      * Sends a mail and logs it in the database.
-     * @param type Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
+     * If mailerConfig.sendAllMailsTo is set, the mail will be sent to this address instead of the `to` address and `bcc` will be omitted. This can
+     * be used to prevent non-prod environments from sending mails to real customers.
+     * @param mailTypeForLogging Mail type, e.g. order confirmation, order cancellation, etc. to filter in the mailer log
      * @param additionalData Put your additional data here, e.g. orderId, resourcePoolId, etc.
      * @param originMailOptions `from` defaults to this.config.mailer.defaultFrom, sendAllMailsBcc is always added to `bcc`
      * @param logMail When set to false, the email will not be logged to the database.
@@ -54,7 +56,7 @@ export class MailerService {
                 subject: originMailOptions.subject,
                 mailOptions: mailOptionsWithDefaults,
                 additionalData,
-                type: mailTypeForLogging, // for statistic and filter purposes
+                mailTypeForLogging, // for statistic and filter purposes
             });
             await this.entityManager.flush();
         }

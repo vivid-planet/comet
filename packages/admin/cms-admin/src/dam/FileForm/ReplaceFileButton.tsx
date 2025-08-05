@@ -9,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 import { useCometConfig } from "../../config/CometConfigContext";
 import { replaceById } from "../../form/file/upload";
 import { createHttpClient } from "../../http/createHttpClient";
-import { useDamConfig } from "../config/damConfig";
+import { useDamBasePath, useDamConfig } from "../config/damConfig";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import { type DamFileDetails } from "./EditFile";
 
@@ -21,6 +21,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
     const { apiUrl } = useCometConfig();
     const damConfig = useDamConfig();
+    const damBasePath = useDamBasePath();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const maxFileSizeInMegabytes = damConfig.uploadsMaxFileSize;
@@ -52,6 +53,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                     apiClient: createHttpClient(apiUrl),
                     data: { file: acceptedFiles[0], fileId: file.id },
                     cancelToken: cancelUpload.current.token,
+                    damBasePath,
                 });
 
                 if (response.status === 201 && response.data) {

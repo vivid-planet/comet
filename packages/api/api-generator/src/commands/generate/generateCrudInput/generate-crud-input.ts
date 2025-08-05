@@ -1,4 +1,4 @@
-import { hasCrudFieldFeature } from "@comet/cms-api";
+import { hasCrudFieldFeature, type Permission } from "@comet/cms-api";
 import { type EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
@@ -42,7 +42,7 @@ function findReferenceTargetType(
 }
 
 export async function generateCrudInput(
-    generatorOptions: { targetDirectory: string },
+    generatorOptions: { targetDirectory: string; requiredPermission: Permission | Permission[] },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
     options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[]; generateUpdateInput?: boolean } = {
@@ -163,9 +163,9 @@ export async function generateCrudInput(
             const defaultValue =
                 prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
-            decorators.push("@IsDate()");
-            decorators.push(`@Field(() => GraphQLDate, ${fieldOptions})`);
-            type = "Date";
+            decorators.push("@IsDateString()");
+            decorators.push(`@Field(() => GraphQLLocalDate, ${fieldOptions})`);
+            type = "string";
         } else if (prop.type === "Date") {
             // DateTime
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
@@ -277,7 +277,7 @@ export async function generateCrudInput(
             }
         } else if (prop.kind == "m:n") {
             decorators.length = 0;
-            decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable" : "defaultValue: []"}})`);
+            decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
             decorators.push(`@IsArray()`);
 
             if (prop.referencedColumnNames.length > 1) {
@@ -434,9 +434,8 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
-import { GraphQLJSONObject } from "graphql-scalars";
-import { GraphQLDate } from "graphql-scalars";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsDateString, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
+import { GraphQLJSONObject, GraphQLLocalDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 
 @InputType()

@@ -19,12 +19,12 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
     actionsContainer: "div";
 }> & {
     /**
-     * A description message providing more details about the error.
+     * A description providing more details.
      */
     description?: ReactNode;
 
     /**
-     * A mapping of descriptions for each error variant.
+     * A mapping of descriptions for each severity option.
      */
     descriptionMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
 
@@ -35,7 +35,7 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
     icon?: ReactNode;
 
     /**
-     * A mapping of icons for each error variant.
+     * A mapping of icons for each severity option.
      */
     iconMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
 
@@ -49,17 +49,17 @@ export type InlineAlertProps = ThemedComponentBaseProps<{
 
     /**
      * Action elements such as buttons or links that allow users to take corrective action.
-     * The actions are shown below the error message.
+     * The actions are shown below the description.
      */
     actions?: ReactNode;
 
     /**
-     * The title of the error message.
+     * The title of the alert.
      */
     title?: ReactNode;
 
     /**
-     * A mapping of titles for each error variant.
+     * A mapping of titles for each severity option.
      */
     titleMapping?: Partial<Record<InlineAlertSeverity, ReactNode>>;
 };

@@ -1,4 +1,4 @@
-import { SitePreviewProvider } from "@comet/cms-site";
+import { SitePreviewProvider } from "@comet/site-nextjs";
 import { theme } from "@src/theme";
 import { type AppProps, type NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         -webkit-text-size-adjust: none;
         color: ${({ theme }) => theme.palette.text.primary};
-        font-family: ${({ theme }) => theme.fonts.primary};
+        font-family: ${({ theme }) => theme.fontFamily};
         font-weight: 400;
     }
 `;

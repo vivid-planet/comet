@@ -77,9 +77,6 @@ export class EnvironmentVariables {
     @IsString()
     IMGPROXY_KEY: string;
 
-    @IsInt()
-    IMGPROXY_QUALITY = 80;
-
     @IsString()
     @MinLength(16)
     DAM_SECRET: string;
@@ -121,6 +118,18 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsUndefinable()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsEmail({}, { each: true })
+    MAILER_SEND_ALL_MAILS_TO?: string[];
+
+    @IsUndefinable()
+    @IsArray()
+    @Transform(({ value }) => value.split(","))
+    @IsEmail({}, { each: true })
+    MAILER_SEND_ALL_MAILS_BCC?: string[];
 
     @IsString()
     MAILER_HOST: string;

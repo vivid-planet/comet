@@ -84,7 +84,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
         mailer: {
-            defaultFrom: envVars.MAILER_DEFAULT_FROM,
+            defaultFrom: '"Comet Demo" <comet-demo@comet-dxp.com>',
             sendAllMailsTo: envVars.MAILER_SEND_ALL_MAILS_TO,
             sendAllMailsBcc: envVars.MAILER_SEND_ALL_MAILS_BCC,
 

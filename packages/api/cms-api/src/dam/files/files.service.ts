@@ -244,27 +244,32 @@ export class FilesService {
                 );
             }
 
-            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(uploadedFile);
-            await this.blobStorageBackendService.upload(uploadedFile, contentHash, this.config.filesDirectory);
+            const uploadedFileMetadata = await this.getFileMetadataForUpload(uploadedFile);
+            const oldAndNewFileAreIdentical = fileToReplace.contentHash === uploadedFileMetadata.contentHash;
 
-            // Check if the current file is the only one using the contentHash before deleting from blob storage
-            if (
-                (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: fileToReplace.contentHash }).getResult())
-                    .length === 1
-            ) {
-                await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
+            if (!oldAndNewFileAreIdentical) {
+                // Don't upload the file if it is identical to the existing one
+                await this.blobStorageBackendService.upload(uploadedFile, uploadedFileMetadata.contentHash, this.config.filesDirectory);
+
+                // Check if the current file is the only one using the contentHash before deleting from blob storage
+                if (
+                    (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: fileToReplace.contentHash }).getResult())
+                        .length === 1
+                ) {
+                    await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
+                }
             }
 
-            if (image && image.width && image.height && fileToReplace.image) {
-                fileToReplace.image.width = image.width;
-                fileToReplace.image.height = image.height;
-                fileToReplace.image.exif = exifData;
+            if (uploadedFileMetadata.image && uploadedFileMetadata.image.width && uploadedFileMetadata.image.height && fileToReplace.image) {
+                fileToReplace.image.width = uploadedFileMetadata.image.width;
+                fileToReplace.image.height = uploadedFileMetadata.image.height;
+                fileToReplace.image.exif = uploadedFileMetadata.exifData;
             }
 
             Object.assign(fileToReplace, {
                 size: uploadedFile.size,
                 mimetype: uploadedFile.mimetype,
-                contentHash,
+                contentHash: uploadedFileMetadata.contentHash,
                 ...assignData,
             });
 
@@ -539,7 +544,7 @@ export class FilesService {
     async createFileUrl(file: FileInterface, { previewDamUrls = false }: { previewDamUrls?: boolean }): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`/dam/files`];
+        const baseUrl = [`/${this.config.basePath}/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

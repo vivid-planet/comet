@@ -36,6 +36,7 @@ export {
     BlockMetaInterface,
     BlockMetaLiteralFieldKind,
     BlockTransformerServiceInterface,
+    BlockWarning,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,
@@ -124,6 +125,8 @@ export {
 } from "./common/decorators/crud-generator.decorator";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
+export { EntityInfo, EntityInfoServiceInterface } from "./common/entityInfo/entity-info.decorator";
+export { CorePermission } from "./common/enum/core-permission.enum";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
 export { ExceptionFilter } from "./common/errors/exception.filter";
@@ -185,12 +188,10 @@ export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
 export { ImageCropAreaInput } from "./dam/images/dto/image-crop-area.input";
 export { ImageCropArea } from "./dam/images/entities/image-crop-area.entity";
-export { ImagesController } from "./dam/images/images.controller";
 export { ImagesService } from "./dam/images/images.service";
 export { IsAllowedImageAspectRatio, IsAllowedImageAspectRatioConstraint } from "./dam/images/validators/is-allowed-aspect-ratio.validator";
 export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/validators/is-allowed-image-size.validator";
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
-export { EntityInfo, EntityInfoServiceInterface } from "./dependencies/decorators/entity-info.decorator";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
@@ -213,7 +214,7 @@ export { ImgproxyModule } from "./imgproxy/imgproxy.module";
 export { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
-export { MAILER_MODULE_OPTIONS } from "./mailer/mailer.constants";
+export { MAILER_SERVICE_CONFIG } from "./mailer/mailer.constants";
 export { MailerModule, MailerModuleConfig } from "./mailer/mailer.module";
 export { MailerService } from "./mailer/mailer.service";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
@@ -252,8 +253,7 @@ export { SentryModule } from "./sentry/sentry.module";
 export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
-export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
-export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
+export { DisablePermissionCheck, RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { CurrentUserPermission } from "./user-permissions/dto/current-user";
@@ -265,8 +265,12 @@ export { UserPermissionsPublicService as UserPermissionsService } from "./user-p
 export {
     AccessControlServiceInterface,
     ContentScopesForUser,
+    Permission,
+    PermissionOverrides,
     PermissionsForUser,
     UserPermissions,
     UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
+export { CreateWarnings } from "./warnings/decorators/create-warnings.decorator";
+export { WarningsModule } from "./warnings/warning.module";

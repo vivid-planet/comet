@@ -2,7 +2,7 @@ import { AppHeader, AppHeaderMenuButton, CometLogo, FillSpace } from "@comet/adm
 import { Domain, Language } from "@comet/admin-icons";
 import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
-import { type Meta } from "@storybook/react";
+import { type Meta } from "@storybook/react-webpack5";
 import { useState } from "react";
 
 export default {
@@ -55,7 +55,7 @@ export const MultipleDimensions = function () {
     );
 };
 
-MultipleDimensions.storyName = "Multiple dimensions";
+MultipleDimensions.name = "Multiple dimensions";
 
 export const Searchable = function () {
     const [value, setValue] = useState({ domain: "main", language: "en" });
@@ -115,7 +115,7 @@ export const CustomIcon = function () {
     );
 };
 
-CustomIcon.storyName = "Custom icon";
+CustomIcon.name = "Custom icon";
 
 export const CustomRenderOption = function () {
     const [value, setValue] = useState({ domain: "main", language: "en" });
@@ -149,7 +149,7 @@ export const CustomRenderOption = function () {
     );
 };
 
-CustomRenderOption.storyName = "Custom renderOption";
+CustomRenderOption.name = "Custom renderOption";
 
 export const CustomRenderOptionWithSearchHighlighting = {
     render: () => {
@@ -213,7 +213,7 @@ export const CustomRenderSelectedOption = function () {
     );
 };
 
-CustomRenderSelectedOption.storyName = "Custom renderSelectedOption";
+CustomRenderSelectedOption.name = "Custom renderSelectedOption";
 
 export const ThreeDimensions = function () {
     const [value, setValue] = useState({ company: "a-inc", country: "at", language: "de" });
@@ -259,4 +259,69 @@ export const ThreeDimensions = function () {
     );
 };
 
-ThreeDimensions.storyName = "Three dimensions";
+ThreeDimensions.name = "Three dimensions";
+
+export const GroupingWithOptionalScopeParts = function () {
+    const [value, setValue] = useState({ country: "at" });
+    return (
+        <ContentScopeSelect
+            value={value}
+            onChange={(value: { country: string; company?: string }) => {
+                setValue(value);
+            }}
+            options={[
+                {
+                    scope: { country: "at" },
+                    label: { country: "AT Overview" },
+                },
+                {
+                    scope: { country: "de" },
+                    label: { country: "DE Overview" },
+                },
+                {
+                    scope: { country: "at", company: "a-inc" },
+                    label: { country: "Austria", company: "A Inc." },
+                },
+                {
+                    scope: { country: "at", company: "b-inc" },
+                    label: { country: "Austria", company: "B Inc." },
+                },
+                {
+                    scope: { country: "de", company: "a-inc" },
+                    label: { country: "Germany", company: "A Inc." },
+                },
+                {
+                    scope: { country: "de", company: "b-inc" },
+                    label: { country: "Germany", company: "B Inc." },
+                },
+            ]}
+            groupBy="country"
+            searchable
+            renderOption={(option, query, isSelected) => {
+                let text: string;
+                if (option.scope.company === undefined) {
+                    text = option.label?.country ?? option.scope.country;
+                } else {
+                    text = option.label?.company ?? option.scope.company;
+                }
+
+                const matches = findTextMatches(text, query);
+
+                return (
+                    <>
+                        <ListItemIcon>
+                            <Domain />
+                        </ListItemIcon>
+                        <ListItemText
+                            slotProps={{ primary: { variant: isSelected ? "subtitle2" : "body2" } }}
+                            sx={{ margin: 0 }}
+                            primary={<MarkedMatches text={text} matches={matches} />}
+                        />
+                    </>
+                );
+            }}
+        />
+    );
+};
+
+GroupingWithOptionalScopeParts.name = "Grouping with optional scope parts";

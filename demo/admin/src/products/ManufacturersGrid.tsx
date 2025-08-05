@@ -2,9 +2,9 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Button,
     CrudContextMenu,
+    dataGridIdColumn,
     DataGridToolbar,
     FillSpace,
-    filterByFragment,
     type GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
@@ -19,8 +19,6 @@ import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
-    type GQLCreateManufacturerMutation,
-    type GQLCreateManufacturerMutationVariables,
     type GQLDeleteManufacturerMutation,
     type GQLDeleteManufacturerMutationVariables,
     type GQLManufacturersListQuery,
@@ -52,6 +50,7 @@ export function ManufacturersGrid() {
 
     const columns: GridColDef<GridValues>[] = [
         {
+            ...dataGridIdColumn,
             field: "id",
             width: 150,
             renderHeader: () => (
@@ -123,18 +122,6 @@ export function ManufacturersGrid() {
                             <Edit />
                         </IconButton>
                         <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
-                                    mutation: createManufacturerMutation,
-                                    variables: {
-                                        input: {
-                                            name: input.name,
-                                            address: input.address,
-                                            addressAsEmbeddable: input.addressAsEmbeddable,
-                                        },
-                                    },
-                                });
-                            }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteManufacturerMutation, GQLDeleteManufacturerMutationVariables>({
                                     mutation: deleteManufacturerMutation,
@@ -142,9 +129,6 @@ export function ManufacturersGrid() {
                                 });
                             }}
                             refetchQueries={["ManufacturersList"]}
-                            copyData={() => {
-                                return filterByFragment(manufacturersFragment, params.row);
-                            }}
                         />
                     </>
                 );
@@ -225,13 +209,5 @@ const manufacturersQuery = gql`
 const deleteManufacturerMutation = gql`
     mutation DeleteManufacturer($id: ID!) {
         deleteManufacturer(id: $id)
-    }
-`;
-
-const createManufacturerMutation = gql`
-    mutation CreateManufacturer($input: ManufacturerInput!) {
-        createManufacturer(input: $input) {
-            id
-        }
     }
 `;

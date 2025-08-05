@@ -3,7 +3,7 @@ import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { formatSource, parseSource } from "../../utils/test-helper";
+import { formatSource, parseSource, testPermission } from "../../utils/test-helper";
 import { generateCrudInput } from "../generate-crud-input";
 
 @Entity()
@@ -98,7 +98,10 @@ describe("GenerateCrudInput", () => {
                 }),
             );
 
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithString"),
+            );
             //console.log(out);
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
@@ -133,7 +136,10 @@ describe("GenerateCrudInput", () => {
                     entities: [TestEntityWithDate],
                 }),
             );
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithDate"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithDate"),
+            );
             //console.log(out);
             const formattedOut = await formatSource(out[0].content);
             const source = parseSource(formattedOut);
@@ -149,10 +155,10 @@ describe("GenerateCrudInput", () => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const prop = structure.properties![0];
                 expect(prop.name).toBe("foo");
-                expect(prop.type).toBe("Date");
+                expect(prop.type).toBe("string");
                 const decorators = prop.decorators?.map((i) => i.name);
                 expect(decorators).toContain("Field");
-                expect(decorators).toContain("IsDate");
+                expect(decorators).toContain("IsDateString");
                 expect(decorators).toContain("IsNotEmpty");
             }
 
@@ -169,7 +175,10 @@ describe("GenerateCrudInput", () => {
                     entities: [TestEntityWithBoolean],
                 }),
             );
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBoolean"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithBoolean"),
+            );
             //console.log(out);
             const formattedOut = await formatSource(out[0].content);
             const source = parseSource(formattedOut);
@@ -206,7 +215,10 @@ describe("GenerateCrudInput", () => {
                     entities: [TestEntityWithEnum],
                 }),
             );
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithEnum"),
+            );
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -243,7 +255,10 @@ describe("GenerateCrudInput", () => {
                     entities: [TestEntityWithUuid],
                 }),
             );
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithUuid"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithUuid"),
+            );
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -280,7 +295,10 @@ describe("GenerateCrudInput", () => {
                     entities: [TestEntityWithTextRuntimeType],
                 }),
             );
-            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname, requiredPermission: testPermission },
+                orm.em.getMetadata().get("TestEntityWithTextRuntimeType"),
+            );
             const formattedOut = await formatSource(out[0].content);
             //console.log(formattedOut);
             const source = parseSource(formattedOut);
@@ -318,7 +336,7 @@ describe("GenerateCrudInput", () => {
                 }),
             );
             const out = await generateCrudInput(
-                { targetDirectory: __dirname },
+                { targetDirectory: __dirname, requiredPermission: testPermission },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithInitializer"),
             );
             const formattedOut = await formatSource(out[0].content);
@@ -365,7 +383,7 @@ describe("GenerateCrudInput", () => {
                 }),
             );
             const out = await generateCrudInput(
-                { targetDirectory: __dirname },
+                { targetDirectory: __dirname, requiredPermission: testPermission },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithoutInitializer"),
             );
             const formattedOut = await formatSource(out[0].content);

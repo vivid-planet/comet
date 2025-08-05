@@ -23,7 +23,9 @@
         "docs": {
             "ignore": ["*"],
             "entry": [],
-            "project": []
+            "project": [],
+            "ignoreDependencies": [".*"],
+            "ignoreUnresolved": [".*"]
         },
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
@@ -71,11 +73,6 @@
             "entry": ["./src/apiGenerator.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/site/cms-site": {
-            "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./src/**/*.generated.ts"]
-        },
         "packages/site/site-react": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
@@ -102,7 +99,9 @@
                 "./src/db/fixtures/**/*.ts",
                 "./src/db/migrations/**/*.ts",
                 "./src/auth/user.interface.ts",
-                "./src/generator/generate.ts"
+                "./src/generator/generate.ts",
+                "./src/auth/permission.interface.ts",
+                "./src/reload.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"],
@@ -128,7 +127,8 @@
         },
         "storybook": {
             "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
-            "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["ts-dedent"]
         }
     },
     "rules": {
