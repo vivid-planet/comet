@@ -2,7 +2,7 @@ import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } 
 import { type StandaloneMediaBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { mediaAspectRatioOptions } from "@src/util/mediaAspectRatios";
-import { defineMessage, FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 export const StandaloneMediaBlock = createCompositeBlock(
     {
@@ -20,12 +20,6 @@ export const StandaloneMediaBlock = createCompositeBlock(
                 }),
             },
         },
-        tags: [
-            defineMessage({ id: "standaloneMedia.tag.image", defaultMessage: "Image" }),
-            defineMessage({ id: "standaloneMedia.tag.video", defaultMessage: "Video" }),
-            "Youtube",
-            "Vimeo",
-        ],
     },
     (block) => {
         block.category = BlockCategory.Media;
