@@ -475,6 +475,7 @@ export class FilesService {
 
         const copiedFile = await this.create(fileInput);
 
+        // handled DAM alternatives
         const copiedAlternatives: DamMediaAlternative[] = [];
         if ((await file.alternativesForThisFile.loadItems()).length > 0) {
             for (const alternative of file.alternativesForThisFile) {
@@ -493,8 +494,6 @@ export class FilesService {
         }
 
         copiedFile.alternativesForThisFile.set(copiedAlternatives);
-
-        await this.entityManager.flush();
 
         return copiedFile;
     }
