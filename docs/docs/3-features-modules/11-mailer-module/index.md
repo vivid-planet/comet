@@ -154,6 +154,6 @@ Mail logs are created automatically whenever an email is sent using the `sendMai
 
 After the email is sent, the log entry is updated with the result of the send operation (such as the message ID and status). If mail logging is disabled via configuration, no log entries are created or updated.
 
-Mail logs are not created when using the `sendMailWithoutLog` method.
+Mail logs are not created when using the `logMail` option of `sendMail`.
 
 ---

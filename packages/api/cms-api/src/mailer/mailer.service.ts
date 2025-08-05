@@ -3,7 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Transporter } from "nodemailer";
-import { Address, Options as MailOptions } from "nodemailer/lib/mailer";
+import Mail, { Address, Options as MailOptions } from "nodemailer/lib/mailer";
 
 import { MailerLog } from "./entities/mailer-log.entity";
 import { MAILER_MODULE_TRANSPORT, MAILER_SERVICE_CONFIG } from "./mailer.constants";

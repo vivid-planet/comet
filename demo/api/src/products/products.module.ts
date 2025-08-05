@@ -1,4 +1,4 @@
-import { FileUpload, MailerModule } from "@comet/cms-api";
+import { FileUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 
@@ -25,7 +25,6 @@ import { ProductVariantsService } from "./generated/product-variants.service";
 
 @Module({
     imports: [
-        MailerModule,
         MikroOrmModule.forFeature([
             Product,
             ProductCategory,

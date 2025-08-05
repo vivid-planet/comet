@@ -132,28 +132,6 @@ export class EnvironmentVariables {
     MAILER_SEND_ALL_MAILS_BCC?: string[];
 
     @IsString()
-    MAILER_HOST: string;
-
-    @Type(() => Number)
-    @IsInt()
-    MAILER_PORT: number;
-
-    @IsString()
-    MAILER_DEFAULT_FROM: string;
-
-    @IsUndefinable()
-    @IsArray()
-    @Transform(({ value }) => value.split(","))
-    @IsEmail({}, { each: true })
-    MAILER_SEND_ALL_MAILS_TO?: string[];
-
-    @IsUndefinable()
-    @IsArray()
-    @Transform(({ value }) => value.split(","))
-    @IsEmail({}, { each: true })
-    MAILER_SEND_ALL_MAILS_BCC?: string[];
-
-    @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")
     CDN_ORIGIN_CHECK_SECRET: string;
 
