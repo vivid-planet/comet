@@ -2649,6 +2649,40 @@ The `DashboardWidgetRoot` / `LatestContentUpdates` component no longer wraps its
 **Action required:**  
 Review all usages of `DashboardWidgetRoot` / `LatestContentUpdates` in your dashboards and ensure they are wrapped in a `<Grid>` (or another layout component as appropriate). This gives you full control over widget placement and sizing.
 
+### Move redirects `scopeParts` to `CometConfigProvider`.
+
+Previously `scopeParts` were passed to `createRedirectsPage`. Those need to be removed:
+
+```diff
+const RedirectsPage = createRedirectsPage({
+    customTargets: { news: NewsLinkBlock },
+-   scopeParts: ["domain"],
+});
+```
+
+Instead add the redirect config to your `CometConfigProvider`:
+
+```diff
+ <CometConfigProvider
+    apiUrl={config.apiUrl}
+    graphQLApiUrl={`${config.apiUrl}/graphql`}
+    adminUrl={config.adminUrl}
+    dam={{
+        ...config.dam,
+        scopeParts: ["domain"],
+        contentGeneration: {
+            generateAltText: true,
+            generateImageTitle: true,
+        },
+    }}
++   redirects={{
++       scopeParts: ["domain"]
++   }}
+ >
+     {/* Application */}
+ </CometConfigProvider>
+```
+
 ### Rework `createRedirectsPage` usage to accept `linkBlock` instead of `customTargets`.
 
 Previously, `customTargets` were passed directly:
@@ -2656,7 +2690,6 @@ Previously, `customTargets` were passed directly:
 ```ts
 const RedirectsPage = createRedirectsPage({
     customTargets: { news: NewsLinkBlock },
-    scopeParts: ["domain"],
 });
 ```
 
@@ -2669,7 +2702,6 @@ export const RedirectsLinkBlock = createRedirectsLinkBlock({
 
 export const RedirectsPage = createRedirectsPage({
     linkBlock: RedirectsLinkBlock,
-    scopeParts: ["domain"],
 });
 ```
 
