@@ -1,7 +1,6 @@
 import { Card, css, Divider, Typography } from "@mui/material";
 
-import background1x from "../../../assets/background@1x.png";
-import background2x from "../../../assets/background@2x.png";
+import background from "../../../assets/background.jpg";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { type ErrorPageClassKey } from "./ErrorPage";
 
@@ -15,14 +14,10 @@ export const Root = createComponentSlot("div")<ErrorPageClassKey>({
         align-items: center;
         height: 100vh;
         background-color: ${theme.palette.grey["100"]};
-        background-image: url(${background1x});
+        background-image: url(${background});
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            background-image: url(${background2x});
-        }
     `,
 );
 
