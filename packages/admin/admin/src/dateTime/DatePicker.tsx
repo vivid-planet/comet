@@ -104,29 +104,33 @@ export const Future_DatePicker = (inProps: Future_DatePickerProps) => {
             {...restProps}
             slotProps={{
                 ...slotProps?.root?.slotProps,
-                textField: {
-                    fullWidth,
-                    required,
-                    ...slotProps?.root?.slotProps?.textField,
-                    InputProps: {
-                        // @ts-expect-error It's unclear in the types which variant of `textField` is used here and we can't pass through the correct generic type to it
-                        ...slotProps?.root?.slotProps?.textField?.InputProps,
-                        startAdornment: (
-                            <>
-                                {openPickerAdornment}
-                                {/* @ts-expect-error It's unclear in the types which variant of `textField` is used here and we can't pass through the correct generic type to it */}
-                                {slotProps?.root?.slotProps?.textField?.InputProps?.startAdornment}
-                            </>
-                        ),
-                        endAdornment: (
-                            <>
-                                {/* @ts-expect-error It's unclear in the types which variant of `textField` is used here and we can't pass through the correct generic type to it */}
-                                {slotProps?.root?.slotProps?.textField?.InputProps?.endAdornment}
-                                {readOnlyAdornment}
-                                {clearButtonEndAdornment}
-                            </>
-                        ),
-                    },
+                textField: (ownerState) => {
+                    const textFieldProps = {
+                        ...slotProps?.root?.slotProps?.textField,
+                        ownerState,
+                    };
+
+                    return {
+                        fullWidth,
+                        required,
+                        ...textFieldProps,
+                        InputProps: {
+                            ...textFieldProps?.InputProps,
+                            startAdornment: (
+                                <>
+                                    {openPickerAdornment}
+                                    {textFieldProps?.InputProps?.startAdornment}
+                                </>
+                            ),
+                            endAdornment: (
+                                <>
+                                    {textFieldProps?.InputProps?.endAdornment}
+                                    {readOnlyAdornment}
+                                    {clearButtonEndAdornment}
+                                </>
+                            ),
+                        },
+                    };
                 },
             }}
         />
