@@ -36,4 +36,4 @@ export const DialogStory: Story = {
         );
     },
 };
-DialogStory.storyName = "Dialog";
+DialogStory.name = "Dialog";

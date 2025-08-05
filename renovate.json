@@ -110,6 +110,10 @@
             "matchPackageNames": ["/^lodash.*/", "/^@types/lodash.*/"]
         },
         {
+            "groupName": "msw",
+            "matchPackageNames": ["msw", "@graphql-mocks/network-msw"]
+        },
+        {
             "groupName": "node",
             "matchPackageNames": ["node"],
             "rangeStrategy": "widen"
@@ -120,7 +124,8 @@
         },
         {
             "matchDepTypes": ["peerDependencies"],
-            "rangeStrategy": "widen"
+            "matchUpdateTypes": ["major"],
+            "baseBranches": ["next"]
         },
         {
             "groupName": "SWC",
@@ -128,5 +133,5 @@
         }
     ],
     "labels": ["dependencies"],
-    "baseBranches": ["next"]
+    "baseBranches": ["main"]
 }
