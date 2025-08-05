@@ -475,7 +475,12 @@ export class FilesService {
         const copiedAlternatives: DamMediaAlternative[] = [];
         if ((await file.alternativesForThisFile.loadItems()).length > 0) {
             for (const alternative of file.alternativesForThisFile) {
-                const copiedAlternativeFile = await this.createCopyOfFile(await alternative.alternative.load(), { inboxFolder });
+                const alternativeFile = await alternative.alternative.load();
+                if (alternativeFile === null) {
+                    continue;
+                }
+
+                const copiedAlternativeFile = await this.createCopyOfFile(alternativeFile, { inboxFolder });
 
                 const { id: ignoreId, for: ignoreFor, alternative: ignoreAlternative, ...alternativeProps } = alternative;
                 const copiedDamMediaAlternative = this.damMediaAlternativesRepository.create({
