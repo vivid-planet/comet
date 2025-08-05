@@ -96,6 +96,14 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
 
     const blockConfigs: Record<string, BlockConfiguration> = Object.values(groups).reduce((blocks, group) => ({ ...blocks, ...group.blocks }), {});
 
+    const childTags = Object.values(blockConfigs).reduce<Array<MessageDescriptor | string>>((acc, blockConfig) => {
+        const [blockInterface] = normalizedBlockConfig(blockConfig.block);
+        if (isBlockInterface(blockInterface) && blockInterface.tags) {
+            return [...acc, ...blockInterface.tags];
+        }
+        return acc;
+    }, []);
+
     // internally use the lower level composeBlocks-api
     const {
         api: { adminComponents, childBlockCounts, isValids, previews },
@@ -128,7 +136,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
 
         category,
 
-        tags: tags ? tags : options.tags,
+        tags: tags ? tags : childTags,
 
         createPreviewState: (state, previewContext) => {
             const blockPreviewState = block.createPreviewState(state, previewContext);
