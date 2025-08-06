@@ -36,6 +36,7 @@
     },
     "dependencies": {
         "clsx": "^2.1.1",
+        "graphql": "^16.11.0",
         "jose": "^5.10.0",
         "lodash.isequal": "^4.5.0",
         "rimraf": "^3.0.2",
@@ -45,6 +46,7 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+        "@graphql-typed-document-node/core": "^3.2.0",
         "@types/draft-js": "^0.11.18",
         "@types/jest": "^29.5.14",
         "@types/lodash.isequal": "^4.5.8",

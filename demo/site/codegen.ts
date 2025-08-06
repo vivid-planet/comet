@@ -45,6 +45,17 @@ const config: CodegenConfig = {
                 "typescript-operations",
             ],
         },
+        './src/gql/': {
+            documents: ["./src/**/!(*.generated).{tsx,ts}"],
+            preset: 'client',
+            presetConfig: {
+                persistedDocuments: true,
+                documentMode: 'string',
+            },
+            config: {
+                documentMode: 'string'
+            }
+        }
     },
 };
 

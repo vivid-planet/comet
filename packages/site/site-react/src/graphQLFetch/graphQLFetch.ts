@@ -1,3 +1,5 @@
+import { type DocumentTypeDecoration } from "@graphql-typed-document-node/core";
+
 type Fetch = typeof fetch;
 
 export type PreviewData = {
@@ -73,14 +75,38 @@ export function createFetchWithDefaults(fetch: Fetch, defaults: RequestInit): Fe
     };
 }
 
-export type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestInit) => Promise<T>;
+/*
+class TypedDocumentString<T, V> extends String implements DocumentTypeDecoration<T, V> {
+    __apiType?: NonNullable<DocumentTypeDecoration<T, V>["__apiType"]>;
+    private value: string;
+
+    constructor(value: string) {
+        super(value);
+        this.value = value;
+    }
+    override toString(): string & DocumentTypeDecoration<T, V> {
+        return this.value;
+    }
+}
+*/
+// | TypedDocumentNode<T, V>
+export class TypedDocumentString<T, V> extends String {
+    __apiType?: NonNullable<DocumentTypeDecoration<T, V>["__apiType"]>;
+}
+export type GraphQLFetch = <T = unknown, V = unknown>(query: string | TypedDocumentString<T, V>, variables?: V, init?: RequestInit) => Promise<T>;
 
 export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
-    return async function <T, V>(query: string, variables?: V, init?: RequestInit): Promise<T> {
+    return async function <T, V>(query: string | TypedDocumentString<T, V>, variables?: V, init?: RequestInit): Promise<T> {
+        const stringQuery = typeof query === "string" ? query : query.toString();
+        //const stringQuery = query;
+        if (!stringQuery) {
+            throw new Error("GraphQL query must be a string or a TypedDocumentNode with a valid source.");
+        }
+
         let response;
         if (init?.method === "GET") {
             const fetchUrl = new URL(url);
-            fetchUrl.searchParams.append("query", query);
+            fetchUrl.searchParams.append("query", stringQuery);
             fetchUrl.searchParams.append("variables", JSON.stringify(variables));
             response = await fetch(fetchUrl, {
                 ...init,
@@ -102,7 +128,7 @@ export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
                 ...init,
                 headers: { "Content-Type": "application/json", ...init?.headers },
                 body: JSON.stringify({
-                    query,
+                    query: stringQuery,
                     variables,
                 }),
             });

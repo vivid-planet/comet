@@ -1,15 +1,18 @@
 "use client";
 
+import { type FragmentType, useFragment } from "@src/gql";
 import styled from "styled-components";
 
-import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import { headerFragment } from "./Header.fragment";
 import { PageLink } from "./PageLink";
 
 interface Props {
-    header: GQLHeaderFragment;
+    //header: GQLHeaderFragment;
+    header: FragmentType<typeof headerFragment>;
 }
 
-function Header({ header }: Props): JSX.Element {
+function Header(props: Props): JSX.Element {
+    const header = useFragment(headerFragment, props.header);
     return (
         <Root>
             <nav>

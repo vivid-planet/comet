@@ -147,7 +147,7 @@ module.exports = {
         //group demo api
         {
             name: "demo-docker",
-            script: "docker compose up",
+            script: "docker-compose up",
             group: ["demo-api", "demo"],
         },
         {

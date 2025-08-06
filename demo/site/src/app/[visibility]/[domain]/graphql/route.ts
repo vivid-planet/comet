@@ -1,6 +1,16 @@
-import { queryMap } from "@src/queryMap.generated";
+import fs from "fs/promises";
 
 const GRAPHQL_TARGET = `${process.env.API_URL_INTERNAL}/graphql`;
+
+let queryMap: Record<string, string>;
+async function getQueryByHash(hash: string): Promise<string | null> {
+    if (!queryMap) {
+        // load persisten-documents.json
+        const file = await fs.readFile("src/gql/persisted-documents.json", "utf-8");
+        queryMap = JSON.parse(file) as Record<string, string>;
+    }
+    return queryMap[hash] || null;
+}
 
 async function handler(req: Request) {
     let hash: string | null | undefined;
@@ -24,7 +34,7 @@ async function handler(req: Request) {
         return Response.json({ error: "OnlyPersistedQueriesAllowed" }, { status: 400 });
     }
 
-    const finalQuery = queryMap[hash];
+    const finalQuery = await getQueryByHash(hash);
 
     if (!finalQuery) {
         return Response.json({ error: "PersistedQueryNotFound", hash }, { status: 400 });

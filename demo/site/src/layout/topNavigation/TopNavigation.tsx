@@ -1,14 +1,17 @@
 "use client";
+import { type FragmentType, useFragment } from "@src/gql";
 import { PageLink } from "@src/layout/header/PageLink";
 import styled from "styled-components";
 
-import { type GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
+import { topMenuPageTreeNodeFragment } from "./TopNavigation.fragment";
 
 interface Props {
-    data: GQLTopMenuPageTreeNodeFragment[];
+    //data: GQLTopMenuPageTreeNodeFragment[];
+    data: FragmentType<typeof topMenuPageTreeNodeFragment>[];
 }
 
-export function TopNavigation({ data }: Props): JSX.Element {
+export function TopNavigation(props: Props): JSX.Element {
+    const data = useFragment(topMenuPageTreeNodeFragment, props.data);
     return (
         <TopLevelNavigation>
             {data.map((item) => (

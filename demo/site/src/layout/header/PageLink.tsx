@@ -1,19 +1,22 @@
 "use client";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { type FragmentType, useFragment } from "@src/gql";
 import { createSitePath } from "@src/util/createSitePath";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type PropsWithChildren } from "react";
 
-import { type GQLPageLinkFragment } from "./PageLink.fragment.generated";
+import { pageLinkFragment } from "./PageLink.fragment";
 
 interface Props extends PropsWithChildren {
-    page: GQLPageLinkFragment;
+    //page: GQLPageLinkFragment;
+    page: FragmentType<typeof pageLinkFragment>;
     className?: string;
     activeClassName?: string;
 }
 
-function PageLink({ page, children, className: passedClassName, activeClassName }: Props): JSX.Element | null {
+function PageLink({ page: passedPage, children, className: passedClassName, activeClassName }: Props): JSX.Element | null {
+    const page = useFragment(pageLinkFragment, passedPage);
     const pathname = usePathname();
     const active = (pathname.substring(3) || "/") === page.path; // Remove language prefix
 
@@ -24,7 +27,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
     }
 
     if (page.documentType === "Link") {
-        if (page.document === null || page.document.__typename !== "Link") {
+        if (!page.document || page.document.__typename !== "Link") {
             return null;
         }
 

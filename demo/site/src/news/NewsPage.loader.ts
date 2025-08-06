@@ -1,8 +1,6 @@
-import { gql } from "@comet/site-nextjs";
+import { graphql } from "@src/gql";
 import { type GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-
-import { type GQLNewsIndexPageQuery, type GQLNewsIndexPageQueryVariables } from "./NewsPage.loader.generated";
 
 type NewsListParams = {
     scope: GQLNewsContentScopeInput;
@@ -10,33 +8,32 @@ type NewsListParams = {
     limit: number;
 };
 
+const query = graphql(/* GraphQL */ `
+    query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!, $offset: Int!, $limit: Int!) {
+        newsList(scope: $scope, sort: $sort, offset: $offset, limit: $limit) {
+            nodes {
+                id
+                title
+                slug
+                image
+                createdAt
+                scope {
+                    language
+                }
+            }
+            totalCount
+        }
+    }
+`);
+
 export async function fetchNewsList(params: NewsListParams) {
     const graphqlFetch = createGraphQLFetch();
 
-    const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
-        gql`
-            query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!, $offset: Int!, $limit: Int!) {
-                newsList(scope: $scope, sort: $sort, offset: $offset, limit: $limit) {
-                    nodes {
-                        id
-                        title
-                        slug
-                        image
-                        createdAt
-                        scope {
-                            language
-                        }
-                    }
-                    totalCount
-                }
-            }
-        `,
-        {
-            scope: params.scope,
-            sort: [{ field: "date", direction: "DESC" }],
-            offset: params.offset || 0,
-            limit: params.limit,
-        },
-    );
+    const { newsList } = await graphqlFetch(query, {
+        scope: params.scope,
+        sort: [{ field: "date", direction: "DESC" }],
+        offset: params.offset || 0,
+        limit: params.limit,
+    });
     return newsList;
 }

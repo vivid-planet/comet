@@ -1,8 +1,6 @@
-import { gql } from "@comet/site-nextjs";
+import { graphql } from "@src/gql";
 
-import { pageLinkFragment } from "./PageLink.fragment";
-
-export const headerFragment = gql`
+export const headerFragment = graphql(/* GraphQL */ `
     fragment Header on MainMenu {
         items {
             id
@@ -18,6 +16,4 @@ export const headerFragment = gql`
             }
         }
     }
-
-    ${pageLinkFragment}
-`;
+`);

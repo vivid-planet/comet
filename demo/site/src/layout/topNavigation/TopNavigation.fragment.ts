@@ -1,6 +1,6 @@
-import { gql } from "@comet/site-nextjs";
+import { graphql } from "@src/gql";
 
-export const topMenuPageTreeNodeFragment = gql`
+export const topMenuPageTreeNodeFragment = graphql(/* GraphQL */ `
     fragment TopMenuPageTreeNode on PageTreeNode {
         id
         name
@@ -12,4 +12,4 @@ export const topMenuPageTreeNodeFragment = gql`
             ...PageLink
         }
     }
-`;
+`);

@@ -1,6 +1,6 @@
-import { gql } from "@comet/site-nextjs";
+import { graphql } from "@src/gql";
 
-export const pageLinkFragment = gql`
+export const pageLinkFragment = graphql(/* GraphQL */ `
     fragment PageLink on PageTreeNode {
         path
         documentType
@@ -14,4 +14,4 @@ export const pageLinkFragment = gql`
             }
         }
     }
-`;
+`);
