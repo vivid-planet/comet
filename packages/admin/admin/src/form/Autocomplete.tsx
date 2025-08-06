@@ -33,7 +33,7 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     clearable,
     loadingText = (
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
+        <Typography variant="body2">
             <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
         </Typography>
     ),

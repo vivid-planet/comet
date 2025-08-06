@@ -11,6 +11,9 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
         ...component?.defaultProps,
     },
     styleOverrides: mergeOverrideStyles<"MuiAutocomplete">(component?.styleOverrides, {
+        loading: {
+            color: "unset",
+        },
         endAdornment: {
             top: 0,
             bottom: 0,
