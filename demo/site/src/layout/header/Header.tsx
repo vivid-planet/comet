@@ -10,6 +10,7 @@ import styled from "styled-components";
 
 import { PageLayout } from "../PageLayout";
 import { type GQLHeaderFragment } from "./Header.fragment.generated";
+import { MobileMenu } from "./MobileMenu";
 import { PageLink } from "./PageLink";
 
 interface Props {
@@ -115,6 +116,7 @@ function Header({ header }: Props): JSX.Element {
                                 })}
                             </TopLevelNavigation>
                         </DesktopHeaderFullHeightNav>
+                        <MobileMenu header={header} />
                     </Root>
                 </PageLayoutContent>
             </PageLayout>
