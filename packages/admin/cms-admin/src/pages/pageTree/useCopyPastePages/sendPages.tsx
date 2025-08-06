@@ -117,7 +117,8 @@ export async function sendPages(
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //file already handled (same file used multiple times on page)
-                    } else if (damFile.fileUrl.startsWith(apiUrl) && (!hasDamScope || isEqual(damFile.scope, targetDamScope))) {
+                    } else if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
+                        console.log("same scope");
                         //same scope, same server, no need to copy
                     } else {
                         // TODO eventually handle multiple files in one request for better performance
