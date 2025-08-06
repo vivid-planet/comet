@@ -2,19 +2,18 @@ import BrowserOnly from "@docusaurus/BrowserOnly";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
-    title: string;
+    storyId: string;
 };
 
 const fallbackIframeHeight = 800;
 
-export const StorybookAdminComponentDocsIframe = ({ title }: Props) => {
-    return <BrowserOnly>{() => <IFrame title={title} />}</BrowserOnly>;
+export const StorybookAdminComponentDocsIframe = ({ storyId }: Props) => {
+    return <BrowserOnly>{() => <IFrame storyId={storyId} />}</BrowserOnly>;
 };
 
-const IFrame = ({ title }: Props) => {
-    const pathName = title.toLowerCase();
+const IFrame = ({ storyId }: Props) => {
     const storybookDomain = getStorybookDomain();
-    const storybookDocsUrl = `${storybookDomain}/iframe.html?viewMode=docs&id=component-docs-${pathName}--docs&isEmbeddedInDocs=true`;
+    const storybookDocsUrl = `${storybookDomain}/iframe.html?viewMode=docs&id=${storyId}&isEmbeddedInDocs=true`;
     const { iframeContentHeight, iframeRef } = useIframeContentHeight();
 
     return <iframe src={storybookDocsUrl} width="100%" height={iframeContentHeight} ref={iframeRef} />;

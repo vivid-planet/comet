@@ -10,6 +10,7 @@ type Story = StoryObj<typeof NumberField>;
 const meta: Meta<typeof NumberField> = {
     component: NumberField,
     title: "Component Docs/NumberField",
+    tags: ["adminComponentDocs"],
     decorators: [componentDocsDecorator()],
     parameters: {
         docs: {
