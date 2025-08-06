@@ -32,6 +32,7 @@ export const BasicSwiper = ({ children, modules = [], ...restProps }: SwiperProp
                 prevSlideMessage: intl.formatMessage({ defaultMessage: "Previous slide", id: "swiper.prevButton.ariaLabel" }),
             }}
             keyboard={{ enabled: true }}
+            navigation={{ enabled: true }}
             modules={[...modules, A11y, Keyboard, Navigation]}
             {...restProps}
         >
