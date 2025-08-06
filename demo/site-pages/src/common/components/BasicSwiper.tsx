@@ -5,7 +5,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import { useIntl } from "react-intl";
-import { A11y, Keyboard, Navigation, Pagination } from "swiper/modules";
+import { A11y, Keyboard, Navigation } from "swiper/modules";
 import { Swiper, type SwiperProps } from "swiper/react";
 
 export const BasicSwiper = ({ children, modules = [], ...restProps }: SwiperProps) => {
@@ -32,7 +32,7 @@ export const BasicSwiper = ({ children, modules = [], ...restProps }: SwiperProp
                 prevSlideMessage: intl.formatMessage({ defaultMessage: "Previous slide", id: "swiper.prevButton.ariaLabel" }),
             }}
             keyboard={{ enabled: true }}
-            modules={[...modules, A11y, Keyboard, Navigation, Pagination]}
+            modules={[...modules, A11y, Keyboard, Navigation]}
             {...restProps}
         >
             {children}
