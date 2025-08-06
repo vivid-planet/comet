@@ -199,6 +199,10 @@ class ProductPrePersist extends Transform {
 
 ### 4. Using the Importer
 
+:::note
+This is usually done in a console job.
+:::
+
 After setting up your importer, you can use it like this:
 
 ```typescript
