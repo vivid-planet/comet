@@ -9,7 +9,6 @@ import { type BlockDependency, type ReplaceDependencyObject } from "../../../blo
 import { type ContentScope } from "../../../contentScope/Provider";
 import { type DocumentInterface, type GQLDocument, type GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { type GQLDamFile } from "../../../graphql.generated";
-import { createHttpClient } from "../../../http/createHttpClient";
 import { type PageTreeConfig } from "../../pageTreeConfig";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { type PageClipboard, type PagesClipboard } from "../useCopyPastePages";
@@ -19,8 +18,6 @@ import {
     type GQLCopyFilesToScopeMutationVariables,
     type GQLCreatePageNodeMutation,
     type GQLCreatePageNodeMutationVariables,
-    type GQLDownloadDamFileMutation,
-    type GQLDownloadDamFileMutationVariables,
     type GQLFindCopiesOfFileInScopeQuery,
     type GQLFindCopiesOfFileInScopeQueryVariables,
     type GQLSlugAvailableQuery,
@@ -116,11 +113,13 @@ export async function sendPages(
                 for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
+                        console.log("already handled");
                         //file already handled (same file used multiple times on page)
                     } else if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
-                        console.log("same scope");
+                        console.log("no scope or same scope");
                         //same scope, same server, no need to copy
                     } else {
+                        console.log("checking");
                         // TODO eventually handle multiple files in one request for better performance
                         const { data } = await client.query<GQLFindCopiesOfFileInScopeQuery, GQLFindCopiesOfFileInScopeQueryVariables>({
                             query: gql`
@@ -137,6 +136,7 @@ export async function sendPages(
                             },
                         });
                         if (data.findCopiesOfFileInScope.length > 0) {
+                            console.log("existing file found");
                             // use already existing file
                             dependencyReplacements.push({
                                 type: "DamFile",
@@ -144,6 +144,7 @@ export async function sendPages(
                                 replaceWithId: data.findCopiesOfFileInScope[0].id,
                             });
                         } else {
+                            console.log("no existing file found -> copying required");
                             // copying is required
                             if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
                                 sourceScopes.push(damFile.scope);
@@ -274,65 +275,13 @@ export async function sendPages(
                 for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //already copied
-                    } else if (damFile.fileUrl.startsWith(apiUrl)) {
+                    } else {
                         //our own api, no need to download&upload
                         if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
                             //same scope, same server, no need to copy
                         } else {
                             //batch copy below
                             fileIdsToCopyDirectly.push(damFile.id);
-                        }
-                    } else {
-                        if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
-                        if (damFile.fileUrl.match(/^https?:\/\/(localhost|.*\.dev\.vivid-planet\.cloud|192\.168\.\d{1,3}\.\d{1,3}):\d{2,4}/)) {
-                            //source is local dev server, download client side and upload
-                            const fileResponse = await fetch(damFile.fileUrl);
-                            const fileBlob = await fileResponse.blob();
-                            const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
-                            const formData = new FormData();
-                            formData.append("file", file);
-                            if (hasDamScope) formData.append("scope", JSON.stringify(targetDamScope));
-                            formData.append("folderId", inboxFolderIdForCopiedFiles);
-                            if (damFile.title) formData.append("title", damFile.title);
-                            if (damFile.altText) formData.append("altText", damFile.altText);
-                            if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
-                            if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
-
-                            const apiClient = createHttpClient(apiUrl);
-                            const response: { data: { id: string } } = await apiClient.post(`/${damBasePath}/files/upload`, formData, {
-                                // cancelToken, //TODO support cancel?
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                },
-                            });
-                            dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
-                        } else {
-                            //remote source, download server side
-                            const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
-                                mutation: gql`
-                                    mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
-                                        importDamFileByDownload(url: $url, scope: $scope, input: $input) {
-                                            id
-                                        }
-                                    }
-                                `,
-                                variables: {
-                                    url: damFile.fileUrl,
-                                    scope: targetDamScope,
-                                    input: {
-                                        name: damFile.name,
-                                        folderId: inboxFolderIdForCopiedFiles,
-                                        title: damFile.title,
-                                        altText: damFile.altText,
-                                        license: damFile.license,
-                                        image: damFile.image ? { cropArea: damFile.image.cropArea } : undefined,
-                                    },
-                                },
-                            });
-                            if (!data?.importDamFileByDownload.id) {
-                                throw Error("Did not receive new id for imported dam file");
-                            }
-                            dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data.importDamFileByDownload.id });
                         }
                     }
                 }
