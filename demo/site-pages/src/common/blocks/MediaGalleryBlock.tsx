@@ -23,9 +23,6 @@ export const MediaGalleryBlock = withPreview(
                 modules={[Navigation]}
                 slidesPerView={1}
                 slidesPerGroup={1}
-                navigation={{
-                    enabled: true,
-                }}
                 pagination={{
                     clickable: true,
                 }}
