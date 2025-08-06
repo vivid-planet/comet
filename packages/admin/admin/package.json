@@ -59,6 +59,7 @@
         "@mui/x-data-grid": "^7.29.8",
         "@mui/x-data-grid-pro": "^7.29.8",
         "@mui/x-date-pickers": "^7.29.4",
+        "@mui/x-date-pickers-pro": "^7.29.4",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/react": "^16.3.0",
@@ -103,6 +104,7 @@
         "@mui/x-data-grid-premium": "^7.0.0",
         "@mui/x-data-grid-pro": "^7.0.0",
         "@mui/x-date-pickers": "^7.0.0",
+        "@mui/x-date-pickers-pro": "^7.0.0",
         "final-form": "^4.16.1",
         "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
         "history": "^4.10.1",
@@ -119,6 +121,9 @@
             "optional": true
         },
         "@mui/x-data-grid-pro": {
+            "optional": true
+        },
+        "@mui/x-date-pickers-pro": {
             "optional": true
         }
     },
