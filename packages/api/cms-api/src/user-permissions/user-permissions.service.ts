@@ -21,6 +21,7 @@ import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER
 import {
     AccessControlServiceInterface,
     AvailableContentScope,
+    Permission,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
@@ -37,8 +38,8 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    private manualPermissions: { userId: string; permission: string }[] | undefined;
-    private availablePermissions: string[] | undefined;
+    private manualPermissions: { userId: string; permission: Permission }[] | undefined;
+    private availablePermissions: Permission[] | undefined;
 
     async getAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
         let contentScopes: AvailableContentScope[] = [];
@@ -77,7 +78,7 @@ export class UserPermissionsService {
         return uniqWith(contentScopesWithLabel, (value: ContentScopeWithLabel, other: ContentScopeWithLabel) => isEqual(value.scope, other.scope));
     }
 
-    async getAvailablePermissions(): Promise<string[]> {
+    async getAvailablePermissions(): Promise<Permission[]> {
         if (this.availablePermissions === undefined) {
             this.availablePermissions = [
                 ...new Set(
@@ -127,7 +128,7 @@ export class UserPermissionsService {
             .map((p) => ({ userId: p.userId, permission: p.permission }));
     }
 
-    async hasPermission(user: User, permission: string | string[]): Promise<boolean> {
+    async hasPermission(user: User, permission: Permission | Permission[]): Promise<boolean> {
         const permissions = Array.isArray(permission) ? permission : [permission];
         if (this.accessControlService.getPermissionsForUser) {
             const availablePermissions = await this.getAvailablePermissions();

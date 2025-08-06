@@ -26,8 +26,14 @@ subpage
 Traefik
 typesafe
 Undeprecate
+mailhog
+leaddev
 blocklist
 cbdf
+FIRSTNAME
+LASTNAME
+Unsubscription
+Sendinblue
 Timr
 Bundlephobia
 myproject
@@ -43,4 +49,5 @@ Lightbox
 kwfscripts
 codegen
 usehooks
+graphiql
 retryable

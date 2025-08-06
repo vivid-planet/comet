@@ -51,6 +51,11 @@ type InputBaseFieldConfig = {
 };
 
 export type ComponentFormFieldConfig = { type: "component"; component: ComponentType };
+function isComponentFormFieldConfig(arg: any): arg is ComponentFormFieldConfig {
+    return arg && arg.type === "component";
+}
+
+export type StaticSelectValue = { value: string; label: string } | string;
 
 export type FormFieldConfig<T> = (
     | ({ type: "text"; multiline?: boolean } & InputBaseFieldConfig)
@@ -66,14 +71,49 @@ export type FormFieldConfig<T> = (
     | ({ type: "dateTime" } & InputBaseFieldConfig)
     | ({
           type: "staticSelect";
-          values?: Array<{ value: string; label: string } | string>;
+          values?: StaticSelectValue[];
           inputType?: "select" | "radio";
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | ({
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          /**
+           * filter for query, passed as variable to graphql query
+           */
+          filter?:
+              | {
+                    /**
+                     * Filter by value of field in current form
+                     */
+                    type: "field";
+                    /**
+                     * Name of the field in current form, that will be used to filter the query
+                     */
+                    fieldName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    gqlName?: string;
+                }
+              | {
+                    /**
+                     * Filter by a prop passed into the form, this prop will be generated
+                     */
+                    type: "formProp";
+                    /**
+                     * Name of the prop generated for this form
+                     */
+                    propName: string;
+                    /**
+                     * Name of the graphql argument the prop will be applied to. Defaults to propdName.
+                     *
+                     * Root Argument or filter argument are supported.
+                     */
+                    gqlName?: string;
+                };
       } & Omit<InputBaseFieldConfig, "endAdornment">)
     | { type: "block"; block: BlockInterface }
     | SingleFileFormFieldConfig
@@ -89,7 +129,7 @@ export type FormFieldConfig<T> = (
 };
 
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
-    return !isFormLayoutConfig(arg);
+    return !isFormLayoutConfig(arg) && !isComponentFormFieldConfig(arg);
 }
 
 type OptionalNestedFieldsConfig<T> = {
@@ -129,14 +169,20 @@ type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "
     fieldName?: string; // this can be used to overwrite field-prop of column-config
 };
 
-export type StaticSelectLabelCellContent = {
+export type GridColumnStaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
     icon?: Icon;
 };
 
-type StaticSelectValue = string | number | boolean;
-type StaticSelectValueObject = { value: StaticSelectValue; label: string | StaticSelectLabelCellContent };
+export type GridColumnStaticSelectValue =
+    | StaticSelectValue
+    | {
+          value: string | number | boolean;
+          label: string | GridColumnStaticSelectLabelCellContent;
+      }
+    | number
+    | boolean;
 
 export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "text"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
@@ -144,7 +190,7 @@ export type GridColumnConfig<T extends GridValidRowModel> = (
     | { type: "boolean"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "date"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | { type: "dateTime"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
-    | { type: "staticSelect"; values?: Array<StaticSelectValue | StaticSelectValueObject> }
+    | { type: "staticSelect"; values?: GridColumnStaticSelectValue[] }
     | { type: "block"; block: BlockInterface }
     | { type: "id"; renderCell?: (params: GridRenderCellParams<T, any, any>) => JSX.Element }
     | {
@@ -181,13 +227,16 @@ type InitialFilterConfig = {
     linkOperator?: "and" | "or";
 };
 
+// Additional type is necessary to avoid "TS2589: Type instantiation is excessively deep and possibly infinite."
+type GridConfigGridColumnDef<T extends { __typename?: string }> = GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
     queryParamsPrefix?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig | VirtualGridColumnConfig<T>>;
+    columns: Array<GridConfigGridColumnDef<T>>;
     excelExport?: boolean;
     add?: boolean;
     edit?: boolean;

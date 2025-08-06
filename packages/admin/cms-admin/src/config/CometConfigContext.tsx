@@ -8,6 +8,7 @@ import { type ContentLanguageConfig } from "../contentLanguage/contentLanguageCo
 import { type DamConfig } from "../dam/config/damConfig";
 import { type DependenciesConfig } from "../dependencies/dependenciesConfig";
 import { type PageTreeConfig } from "../pages/pageTreeConfig";
+import { type RedirectsConfig } from "../redirects/redirectsConfig";
 import { type SiteConfigsConfig } from "../siteConfigs/siteConfigsConfig";
 import { type WarningsConfig } from "../warnings/warningsConfig";
 
@@ -17,6 +18,7 @@ export interface CometConfig<SiteConfigs = unknown> {
     adminUrl: string;
     pageTree?: PageTreeConfig;
     dam?: DamConfig;
+    redirects?: RedirectsConfig;
     dependencies?: DependenciesConfig;
     siteConfigs?: SiteConfigsConfig<SiteConfigs>;
     buildInformation?: BuildInformation;
