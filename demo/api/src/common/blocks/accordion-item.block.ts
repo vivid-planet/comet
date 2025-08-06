@@ -17,6 +17,8 @@ import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-c
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { IsBoolean, IsString } from "class-validator";
 
+import { TextImageBlock } from "./text-image.block";
+
 export const AccordionContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
@@ -24,6 +26,7 @@ export const AccordionContentBlock = createBlocksBlock(
             heading: StandaloneHeadingBlock,
             space: SpaceBlock,
             callToActionList: StandaloneCallToActionListBlock,
+            textImage: TextImageBlock,
         },
     },
     "AccordionContent",

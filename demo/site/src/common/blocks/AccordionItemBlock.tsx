@@ -9,12 +9,14 @@ import { useId } from "react";
 import styled, { css } from "styled-components";
 
 import { Typography } from "../components/Typography";
+import { TextImageBlock } from "./TextImageBlock";
 
 const supportedBlocks: SupportedBlocks = {
     richtext: (props) => <RichTextBlock data={props} />,
     heading: (props) => <StandaloneHeadingBlock data={props} />,
     space: (props) => <SpaceBlock data={props} />,
     callToActionList: (props) => <StandaloneCallToActionListBlock data={props} />,
+    textImage: (props) => <TextImageBlock data={props} />,
 };
 
 const AccordionContentBlock = withPreview(

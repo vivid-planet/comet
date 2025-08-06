@@ -86,7 +86,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -123,7 +124,8 @@
                                 "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
-                                "callToActionList": "StandaloneCallToActionList"
+                                "callToActionList": "StandaloneCallToActionList",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
