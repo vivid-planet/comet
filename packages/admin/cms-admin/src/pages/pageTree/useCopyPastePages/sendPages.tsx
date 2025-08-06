@@ -276,7 +276,7 @@ export async function sendPages(
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //already copied
                     } else {
-                        //our own api, no need to download&upload
+                        // not copied yet
                         if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
                             //same scope, same server, no need to copy
                         } else {
@@ -309,7 +309,9 @@ export async function sendPages(
                 const unhandledDependencies = unhandledDependenciesFromDocument(documentType, sourcePage.document, {
                     existingReplacements: dependencyReplacements,
                     hasDamScope,
+                    targetDamScope,
                 });
+
                 const replacementsForUnhandledDependencies = createUndefinedReplacementsForDependencies(unhandledDependencies);
                 dependencyReplacements.push(...replacementsForUnhandledDependencies);
             }
@@ -363,12 +365,24 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
 function unhandledDependenciesFromDocument(
     documentType: DocumentInterface,
     document: GQLDocument,
-    { existingReplacements, hasDamScope = false }: { existingReplacements: ReplaceDependencyObject[]; hasDamScope?: boolean },
+    {
+        existingReplacements,
+        hasDamScope = false,
+        targetDamScope,
+    }: { existingReplacements: ReplaceDependencyObject[]; hasDamScope?: boolean; targetDamScope: Record<string, unknown> },
 ) {
     const unhandledDependencies = documentType.dependencies(document).filter((dependency) => {
-        if (dependency.targetGraphqlObjectType === "DamFile" && !hasDamScope) {
-            // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
-            return false;
+        if (dependency.targetGraphqlObjectType === "DamFile") {
+            if (!hasDamScope) {
+                // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
+                return false;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (isEqual(((dependency.data as any).damFile as GQLDamFile & { scope?: Record<string, unknown> }).scope, targetDamScope)) {
+                // Source and target DAM scope are the same, so no need to handle this dependency
+                return false;
+            }
         }
 
         return !existingReplacements.some(
