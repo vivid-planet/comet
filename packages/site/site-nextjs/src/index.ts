@@ -70,6 +70,7 @@ export {
     useBlockPreviewFetch,
     useCookieApi,
     useCookieBotCookieApi,
+    useEscapeKeyPressed,
     useIFrameBridge,
     useIsElementInViewport,
     useLocalStorageCookieApi,

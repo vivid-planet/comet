@@ -1,7 +1,7 @@
 "use client";
 
+import { useEscapeKeyPressed } from "@comet/site-nextjs";
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { useEscapeKeyPressed } from "@src/util/useEscapeKeyPressed";
 import Link from "next/link";
 import { useId, useState } from "react";
 import FocusLock from "react-focus-lock";
