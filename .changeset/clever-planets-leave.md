@@ -1,5 +1,5 @@
 ---
-"@comet/blocks-admin": minor
+"@comet/cms-admin": minor
 ---
 
 Enable displaying icons in `BlockPreviewContent`
