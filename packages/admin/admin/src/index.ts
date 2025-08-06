@@ -25,6 +25,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { DeleteDialog } from "./common/DeleteDialog";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { FillSpace, FillSpaceClassKey, FillSpaceProps } from "./common/FillSpace";
@@ -90,6 +91,8 @@ export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
+export { Future_DatePicker, Future_DatePickerClassKey, Future_DatePickerProps } from "./dateTime/DatePicker";
+export { Future_DatePickerField, Future_DatePickerFieldProps } from "./dateTime/DatePickerField";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";

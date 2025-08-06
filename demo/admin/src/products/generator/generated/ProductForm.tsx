@@ -41,7 +41,6 @@ import { FormControlLabel } from "@mui/material";
 import { FieldSet } from "@comet/admin";
 import { FormSpy } from "react-final-form";
 import { Location as LocationIcon } from "@comet/admin-icons";
-import { OnChangeField } from "@comet/admin";
 import { GQLManufacturersSelectQuery } from "./ProductForm.generated";
 import { GQLManufacturersSelectQueryVariables } from "./ProductForm.generated";
 import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
@@ -76,9 +75,10 @@ type FormValues = Omit<ProductFormDetailsFragment, keyof typeof rootBlocks | "di
     lastCheckedAt?: Date | null;
 };
 interface FormProps {
+    manufacturerCountry: string;
     id?: string;
 }
-export function ProductForm({ id }: FormProps) {
+export function ProductForm({ manufacturerCountry, id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -160,13 +160,13 @@ export function ProductForm({ id }: FormProps) {
         <RadioGroupField required variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type"/>} options={[
                 {
                     label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap"/>,
-                    value: "Cap",
+                    value: "cap",
                 }, {
                     label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt"/>,
-                    value: "Shirt",
+                    value: "shirt",
                 }, {
                     label: <FormattedMessage id="product.type.tie" defaultMessage="Tie"/>,
-                    value: "Tie",
+                    value: "tie",
                 }
             ]}/>
         <AsyncSelectField variant="horizontal" fullWidth name="category" label={<FormattedMessage id="product.category" defaultMessage="Category"/>} loadOptions={async () => {
@@ -209,16 +209,10 @@ export function ProductForm({ id }: FormProps) {
                                     name
                                 }
                             }
-                        }`, variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } }
+                        }`, variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } }
                 });
                 return data.manufacturers.nodes;
-            }} getOptionLabel={(option) => option.name} disabled={!values?.type}/><OnChangeField name="type">
-                            {(value, previousValue) => {
-                if (value.id !== previousValue.id) {
-                    form.change("manufacturer", undefined);
-                }
-            }}
-                        </OnChangeField>
+            }} getOptionLabel={(option) => option.name}/>
         <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock"/>} name="inStock" fullWidth variant="horizontal"/>
 
             <Field variant="horizontal" fullWidth name="availableSince" component={FinalFormDatePicker} label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since"/>} startAdornment={<InputAdornment position="start"><CalendarTodayIcon /></InputAdornment>}/>

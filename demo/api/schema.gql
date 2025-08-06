@@ -5,7 +5,7 @@
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
-  permission: String!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -18,6 +18,23 @@ type UserPermission {
 enum UserPermissionSource {
   MANUAL
   BY_RULE
+}
+
+enum Permission {
+  builds
+  dam
+  pageTree
+  cronJobs
+  translation
+  userPermissions
+  prelogin
+  impersonation
+  fileUploads
+  dependencies
+  warnings
+  news
+  products
+  manufacturers
 }
 
 """
@@ -45,7 +62,7 @@ type UserPermissionsUser {
 }
 
 type CurrentUserPermission {
-  permission: String!
+  permission: Permission!
   contentScopes: [JSONObject!]!
 }
 
@@ -497,9 +514,9 @@ enum ProductStatus {
 }
 
 enum ProductType {
-  Cap
-  Shirt
-  Tie
+  cap
+  shirt
+  tie
 }
 
 """
@@ -541,14 +558,14 @@ enum PageTreeNodeVisibility {
 }
 
 enum PageTreeNodeCategory {
-  MainNavigation
-  TopMenu
+  mainNavigation
+  topMenu
 }
 
 enum UserGroup {
-  All
-  Admin
-  User
+  all
+  admin
+  editor
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
@@ -572,7 +589,7 @@ type PredefinedPage implements DocumentInterface {
 }
 
 enum PredefinedPageType {
-  News
+  news
 }
 
 type FooterScope {
@@ -644,14 +661,14 @@ type News {
 }
 
 enum NewsStatus {
-  Active
-  Deleted
+  active
+  deleted
 }
 
 enum NewsCategory {
-  Events
-  Company
-  Awards
+  events
+  company
+  awards
 }
 
 """NewsContent root block data"""
@@ -864,6 +881,7 @@ type Query {
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], documentType: String, offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
+  blockPreviewJwt(scope: JSONObject!, url: String!, includeInvisible: Boolean!): String!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -935,9 +953,9 @@ input StringFilter {
 }
 
 input PermissionFilter {
-  equal: String
-  notEqual: String
-  isAnyOf: [String!]
+  equal: Permission
+  notEqual: Permission
+  isAnyOf: [Permission!]
 }
 
 input UserPermissionsUserSort {
@@ -1430,7 +1448,7 @@ type Mutation {
 }
 
 input UserPermissionInput {
-  permission: String!
+  permission: Permission!
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -1480,7 +1498,7 @@ input PageTreeNodeUpdateInput {
   attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
-  userGroup: UserGroup! = All
+  userGroup: UserGroup! = all
 }
 
 input AttachedDocumentInput {
@@ -1511,7 +1529,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: UserGroup! = All
+  userGroup: UserGroup! = all
 }
 
 input RedirectInput {
@@ -1575,7 +1593,7 @@ input DamMediaAlternativeUpdateInput {
 input NewsInput {
   slug: String!
   title: String!
-  status: NewsStatus! = Active
+  status: NewsStatus! = active
   date: DateTime!
   category: NewsCategory!
   image: DamImageBlockInput!

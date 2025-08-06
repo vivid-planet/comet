@@ -5,7 +5,7 @@ import { IsEnum, IsOptional } from "class-validator";
 
 @InputType()
 export class PageTreeNodeCreateInput extends PageTreeNodeBaseCreateInput {
-    @Field(() => UserGroup, { defaultValue: UserGroup.All })
+    @Field(() => UserGroup, { defaultValue: UserGroup.all })
     @IsEnum(UserGroup)
     @IsOptional()
     userGroup?: UserGroup;
@@ -13,7 +13,7 @@ export class PageTreeNodeCreateInput extends PageTreeNodeBaseCreateInput {
 
 @InputType()
 export class PageTreeNodeUpdateInput extends PageTreeNodeBaseUpdateInput {
-    @Field(() => UserGroup, { defaultValue: UserGroup.All })
+    @Field(() => UserGroup, { defaultValue: UserGroup.all })
     @IsEnum(UserGroup)
     @IsOptional()
     userGroup?: UserGroup;

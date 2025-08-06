@@ -37,6 +37,8 @@ interface Props {
     renderSelectedOption?: (option: Option) => ReactNode;
 }
 
+export const contentScopeLocalStorageKey = "contentScopeSelect.selectedScope";
+
 export function ContentScopeSelect({
     value,
     onChange,
@@ -51,7 +53,7 @@ export function ContentScopeSelect({
     const [searchValue, setSearchValue] = useState<string>("");
     const theme = useTheme();
 
-    const hasMultipleDimensions = Object.keys(value).length > 1;
+    const hasMultipleDimensions = options.some((option) => Object.keys(option.scope).length > 1);
 
     let filteredOptions = options;
 
@@ -86,7 +88,7 @@ export function ContentScopeSelect({
     }
 
     const selectedOption = options.find((option) => {
-        return Object.keys(option.scope).every((key) => value[key] === option.scope[key]);
+        return valueMatchesOption(value, option);
     });
 
     if (!selectedOption) {
@@ -127,6 +129,11 @@ export function ContentScopeSelect({
                 .join(" / ");
         };
     }
+
+    const handleChange = (selectedScope: ContentScope) => {
+        localStorage.setItem(contentScopeLocalStorageKey, JSON.stringify(selectedScope));
+        onChange(selectedScope);
+    };
 
     return (
         <AppHeaderDropdown
@@ -273,7 +280,7 @@ export function ContentScopeSelect({
                                                 key={JSON.stringify(option)}
                                                 onClick={() => {
                                                     hideDropdown();
-                                                    onChange(option.scope);
+                                                    handleChange(option.scope);
                                                     setSearchValue("");
                                                 }}
                                                 selected={isSelected}
@@ -307,4 +314,11 @@ export function ContentScopeSelect({
 
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {
     return label ?? capitalCase(value);
+}
+
+function valueMatchesOption(value: ContentScope, option: Option) {
+    const optionMatchesAllValueDimensions = Object.keys(value).every((dimension) => value[dimension] === option.scope[dimension]);
+    const valueMatchesAllOptionDimensions = Object.keys(option.scope).every((dimension) => option.scope[dimension] === value[dimension]);
+
+    return optionMatchesAllValueDimensions && valueMatchesAllOptionDimensions;
 }
