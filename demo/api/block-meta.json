@@ -534,7 +534,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -575,7 +576,8 @@
                                 "heading": "StandaloneHeading",
                                 "callToActionList": "StandaloneCallToActionList",
                                 "media": "StandaloneMedia",
-                                "mediaGallery": "MediaGallery"
+                                "mediaGallery": "MediaGallery",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
