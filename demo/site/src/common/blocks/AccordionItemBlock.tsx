@@ -42,7 +42,7 @@ export const AccordionItemBlock = withPreview(
                         <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
                     </IconWrapper>
                 </TitleWrapper>
-                <ContentWrapper id={contentId} $isExpanded={isExpanded} role="region" aria-labelledby={headlineId}>
+                <ContentWrapper id={contentId} $isExpanded={isExpanded} aria-labelledby={headlineId}>
                     <ContentWrapperInner>
                         <AccordionContentBlock data={content} />
                     </ContentWrapperInner>
@@ -81,7 +81,7 @@ const AnimatedChevron = styled(SvgUse)<{ $isExpanded: boolean }>`
     transition: transform 0.4s ease;
 `;
 
-const ContentWrapper = styled.div<{ $isExpanded: boolean }>`
+const ContentWrapper = styled.section<{ $isExpanded: boolean }>`
     position: relative;
     display: grid;
     grid-template-rows: 0fr;
