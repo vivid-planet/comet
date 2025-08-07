@@ -15,7 +15,7 @@ async function bootstrap() {
     // See https://github.com/nestjs/nest/issues/528,
     //     https://github.com/typestack/class-validator#using-service-container.
     const app = await NestFactory.create<NestExpressApplication>(appModule);
-    useContainer(app, { fallbackOnErrors: true });
+    useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     try {
         await CommandFactory.run(appModule, {
