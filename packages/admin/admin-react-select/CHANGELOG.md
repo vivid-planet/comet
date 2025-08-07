@@ -1,5 +1,12 @@
 # @comet/admin-react-select
 
+## 7.25.6
+
+### Patch Changes
+
+-   @comet/admin@7.25.6
+-   @comet/admin-icons@7.25.6
+
 ## 7.25.5
 
 ### Patch Changes
