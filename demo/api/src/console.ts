@@ -32,7 +32,6 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err) => {
-    // Log the error if not already logged, then exit with failure
     console.error(err);
     process.exit(1);
 });
