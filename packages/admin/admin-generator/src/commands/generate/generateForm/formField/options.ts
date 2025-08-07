@@ -11,7 +11,7 @@ type AdornmentData = {
     adornmentImport?: { name: string; importPath: string };
 };
 
-const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): AdornmentData => {
+const buildAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): AdornmentData => {
     let adornmentString = "";
     let adornmentImport = { name: "", importPath: "" };
 
@@ -47,9 +47,9 @@ const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ador
 };
 
 /**
- * Helper function that generates various options needed for generating form fields.
+ * Helper function that builds various options needed for generating form fields.
  */
-export function formFieldOptions({
+export function generateFormFieldOptions({
     config,
     formConfig,
     gqlIntrospection,
@@ -82,7 +82,7 @@ export function formFieldOptions({
     let endAdornment: AdornmentData = { adornmentString: "" };
 
     if ("startAdornment" in config && config.startAdornment) {
-        startAdornment = getAdornmentData({
+        startAdornment = buildAdornmentData({
             adornmentData: config.startAdornment,
         });
         if (startAdornment.adornmentImport) {
@@ -91,7 +91,7 @@ export function formFieldOptions({
     }
 
     if ("endAdornment" in config && config.endAdornment) {
-        endAdornment = getAdornmentData({
+        endAdornment = buildAdornmentData({
             adornmentData: config.endAdornment,
         });
         if (endAdornment.adornmentImport) {
